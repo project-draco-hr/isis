@@ -11,16 +11,15 @@
     throw new NakedAssertionFailedError("Field '" + fieldName + "' contains null, but should contain an NakedValue object");
   }
   try {
-    NakedValue ref=(NakedValue)field.getSpecification().acquireInstance();
-    Hint about=getForObject().getHint(ClientSession.getSession(),field,ref);
-    if (about.isValid().isAllowed()) {
-      throw new NakedAssertionFailedError("Value was unexpectedly validated");
-    }
     NakedValue nakedValue=(NakedValue)valueObject;
     if (nakedValue == null) {
       nakedValue=(NakedValue)field.getSpecification().acquireInstance();
     }
     nakedValue.parseTextEntry(value);
+    Hint about=getForObject().getHint(ClientSession.getSession(),field,nakedValue);
+    if (about.isValid().isAllowed()) {
+      throw new NakedAssertionFailedError("Value was unexpectedly validated");
+    }
   }
  catch (  InvalidEntryException expected) {
   }

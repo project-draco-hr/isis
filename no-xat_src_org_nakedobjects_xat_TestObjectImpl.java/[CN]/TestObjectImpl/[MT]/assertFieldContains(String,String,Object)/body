@@ -1,7 +1,14 @@
 {
   TestNaked actual=retrieveField(fieldName);
   Naked actualValue=actual.getForObject();
-  if (!actualValue.getObject().equals(expected)) {
-    throw new NakedAssertionFailedError(expected(message) + " value of " + expected+ " but got "+ actualValue.getObject());
+  if (actualValue == null && expected == null) {
+    return;
   }
+  if (actualValue == null && expected instanceof TestNakedNullParameter) {
+    return;
+  }
+  if (actualValue.getObject().equals(expected)) {
+    return;
+  }
+  throw new NakedAssertionFailedError(expected(message) + " value of " + expected+ " but got "+ actualValue.getObject());
 }

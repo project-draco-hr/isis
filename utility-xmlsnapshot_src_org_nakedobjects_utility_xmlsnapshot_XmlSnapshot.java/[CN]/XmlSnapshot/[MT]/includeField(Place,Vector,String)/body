@@ -1,4 +1,5 @@
 {
+  LOG.debug("includeField(: " + log("place",place) + andlog("fieldNames",fieldNames)+ andlog("annotation",annotation)+ ")");
   NakedObject object=place.getObject();
   Element xmlElement=place.getXmlElement();
   Vector fieldNamesOrig=fieldNames;
@@ -11,16 +12,20 @@
   }
   String fieldName=(String)fieldNames.elementAt(0);
   fieldNames.removeElementAt(0);
+  LOG.debug("includeField(Pl, Vec, Str):" + log("processing field",fieldName) + andlog("left","" + fieldNames.size()));
   NakedObjectSpecification nos=object.getSpecification();
   NakedObjectField field=null;
   try {
     field=nos.getField(fieldName);
   }
  catch (  NakedObjectSpecificationException ex) {
+    LOG.info("includeField(Pl, Vec, Str): could not locate field, skipping");
     return false;
   }
+  LOG.debug("includeField(Pl, Vec, Str): locating corresponding XML element");
   Vector xmlFieldElements=elementsUnder(xmlElement,field.getName());
   if (xmlFieldElements.size() != 1) {
+    LOG.info("includeField(Pl, Vec, Str): could not locate " + log("field",field.getName()) + andlog("xmlFieldElements.size","" + xmlFieldElements.size()));
     return false;
   }
   Element xmlFieldElement=(Element)xmlFieldElements.elementAt(0);
@@ -29,25 +34,33 @@
   }
   Place fieldPlace=new Place(object,xmlFieldElement);
   if (field.isValue()) {
+    LOG.debug("includeField(Pl, Vec, Str): field is value; done");
     return false;
   }
  else   if (field instanceof OneToOneAssociation) {
+    LOG.debug("includeField(Pl, Vec, Str): field is 1->1");
     OneToOneAssociation oneToOneAssociation=((OneToOneAssociation)field);
     NakedObject referencedObject=fieldPlace.getObject().getAssociation(oneToOneAssociation);
     if (referencedObject == null) {
       return true;
     }
-    return appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
+    boolean appendedXml=appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
+    LOG.debug("includeField(Pl, Vec, Str): 1->1: invoked appendXmlThenIncludeRemaining for " + log("referencedObj",referencedObject) + andlog("returned","" + appendedXml));
+    return appendedXml;
   }
  else   if (field instanceof OneToManyAssociation) {
+    LOG.debug("includeField(Pl, Vec, Str): field is 1->M");
     OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
     InternalCollection collection=(InternalCollection)fieldPlace.getObject().getField(oneToManyAssociation);
+    LOG.debug("includeField(Pl, Vec, Str): 1->M: " + log("collection.size","" + collection.size()));
     boolean allFieldsNavigated=true;
     for (int i=0; i < collection.size(); i++) {
       NakedObject referencedObject=(NakedObject)collection.elementAt(i);
-      boolean hasRemaining=appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
-      allFieldsNavigated=allFieldsNavigated && hasRemaining;
+      boolean appendedXml=appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
+      LOG.debug("includeField(Pl, Vec, Str): 1->M: + invoked appendXmlThenIncludeRemaining for " + log("referencedObj",referencedObject) + andlog("returned","" + appendedXml));
+      allFieldsNavigated=allFieldsNavigated && appendedXml;
     }
+    LOG.debug("includeField(Pl, Vec, Str): " + log("returning","" + allFieldsNavigated));
     return allFieldsNavigated;
   }
   return false;

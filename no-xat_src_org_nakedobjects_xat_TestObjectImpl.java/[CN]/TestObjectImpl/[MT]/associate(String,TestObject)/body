@@ -2,7 +2,6 @@
   NakedObjectField field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
-  assertEmpty(fieldName);
   TestNaked targetField=getField(fieldName);
   if (targetField instanceof TestValue) {
     throw new IllegalActionError("drop(..) not allowed on value target field; use fieldEntry(..) instead");
@@ -18,6 +17,7 @@
   NakedObject nakedObject=(NakedObject)getForObject();
   Hint about;
   if (association instanceof OneToOneAssociation) {
+    assertEmpty(fieldName);
     about=nakedObject.getHint(session,association,obj);
   }
  else   if (association instanceof OneToManyAssociation) {

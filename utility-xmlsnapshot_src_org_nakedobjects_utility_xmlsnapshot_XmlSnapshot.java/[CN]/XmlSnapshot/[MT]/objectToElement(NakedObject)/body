@@ -1,23 +1,30 @@
 {
+  LOG.debug("objectToElement(" + log("object",object) + ")");
   NakedObjectSpecification nos=object.getSpecification();
+  LOG.debug("objectToElement(NO): create element and nof:title");
   Element element=schema.createElement(getXmlDocument(),nos.getShortName(),nos.getFullName(),nos.getSingularName(),nos.getPluralName());
   nofMeta.appendNofTitle(element,object.titleString());
+  LOG.debug("objectToElement(NO): create XS element for NOF class");
   Element xsElement=schema.createXsElementForNofClass(getXsdDocument(),element,topLevelElementWritten);
   topLevelElementWritten=true;
   Place place=new Place(object,element);
   nofMeta.setAttributesForClass(element,oidOrHashCode(object).toString());
   NakedObjectField[] fields=nos.getFields();
+  LOG.debug("objectToElement(NO): processing fields");
   eachField:   for (int i=0; i < fields.length; i++) {
     NakedObjectField field=fields[i];
     String fieldName=field.getName();
+    LOG.debug("objectToElement(NO): " + log("field",fieldName));
     eachPreviousField:     for (int j=0; j < i; j++) {
       if (fieldName.equals(fields[i])) {
+        LOG.debug("objectToElement(NO): " + log("field",fieldName) + " SKIPPED");
         continue eachField;
       }
     }
     Element xmlFieldElement=getXmlDocument().createElementNS(schema.getUri(),schema.getPrefix() + ":" + fieldName);
     Element xsdFieldElement=null;
     if (field.isValue()) {
+      LOG.debug("objectToElement(NO): " + log("field",fieldName) + " is value");
       if (field.getSpecification() != null && field.getSpecification().getFullName() != null && field.getSpecification().getFullName().endsWith("XmlValue")) {
         continue eachField;
       }
@@ -39,6 +46,7 @@
       xsdFieldElement=schema.createXsElementForNofValue(xsElement,xmlValueElement);
     }
  else     if (field instanceof OneToOneAssociation) {
+      LOG.debug("objectToElement(NO): " + log("field",fieldName) + " is OneToOneAssociation");
       OneToOneAssociation oneToOneAssocSpec=((OneToOneAssociation)field);
       NakedObject referencedNakedObject=object.getAssociation(oneToOneAssocSpec);
       String fullyQualifiedClassName=oneToOneAssocSpec.getSpecification().getFullName();
@@ -53,6 +61,7 @@
       xsdFieldElement=schema.createXsElementForNofReference(xsElement,xmlReferenceElement);
     }
  else     if (field instanceof OneToManyAssociation) {
+      LOG.debug("objectToElement(NO): " + log("field",fieldName) + " is OneToManyAssociation");
       OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
       InternalCollection collection=(InternalCollection)oneToManyAssociation.get(object);
       String fullyQualifiedClassName=collection.getElementSpecification().getFullName();
@@ -61,13 +70,16 @@
       xsdFieldElement=schema.createXsElementForNofCollection(xsElement,xmlCollectionElement);
     }
  else {
+      LOG.info("objectToElement(NO): " + log("field",fieldName) + " is unknown type; ignored");
       continue;
     }
     if (xsdFieldElement != null) {
       Place.setXsdElement(xmlFieldElement,xsdFieldElement);
     }
+    LOG.debug("objectToElement(NO): invoking mergeTree for field");
     xmlFieldElement=mergeTree(element,xmlFieldElement);
     if (xsdFieldElement != null) {
+      LOG.debug("objectToElement(NO): adding XS element for field to schema");
       schema.addFieldXsElement(xsElement,xsdFieldElement);
     }
   }

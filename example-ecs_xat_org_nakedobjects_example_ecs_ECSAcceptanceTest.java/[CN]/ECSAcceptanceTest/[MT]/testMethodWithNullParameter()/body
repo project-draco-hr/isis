@@ -1,2 +1,15 @@
 {
+  TestObject customer=getTestClass(Customer.class.getName()).newInstance();
+  TestObject location=getTestClass(Location.class.getName()).newInstance();
+  TextString textEntry=new TextString("002");
+  TestValue value1=createParameterTestValue(textEntry);
+  Date dateEntry=new Date(2001,1,23);
+  TestValue value2=createParameterTestValue(dateEntry);
+  TestObject booking=customer.invokeAction("create booking",new TestNaked[]{location,createNullParameter(Location.class),value1,value2});
+  customer.assertFieldContains("bookings",booking);
+  booking.assertFieldContains("pick up",location);
+  booking.assertFieldContains("drop off",(Object)null);
+  booking.assertEmpty("dropoff");
+  booking.assertFieldContains("reference","002");
+  booking.assertFieldContains("date","Jan 23, 2001");
 }

@@ -1,14 +1,20 @@
 {
+  LOG.debug("appendXml(" + log("obj",object) + "')");
   String fullyQualifiedClassName=object.getSpecification().getFullName();
   schema.setUri(fullyQualifiedClassName);
   Place place=objectToElement(object);
   Element element=place.getXmlElement();
   Element xsElementElement=place.getXsdElement();
+  LOG.debug("appendXml(NO): add as element to XML doc");
   getXmlDocument().appendChild(element);
+  LOG.debug("appendXml(NO): add as xs:element to xs:schema of the XSD document");
   getXsdElement().appendChild(xsElementElement);
+  LOG.debug("appendXml(NO): set target name in XSD, derived from FQCN of obj");
   schema.setTargetNamespace(getXsdDocument(),fullyQualifiedClassName);
+  LOG.debug("appendXml(NO): set schema location file name to XSD, derived from FQCN of obj");
   String schemaLocationFileName=fullyQualifiedClassName + ".xsd";
   schema.assignSchema(getXmlDocument(),fullyQualifiedClassName,schemaLocationFileName);
+  LOG.debug("appendXml(NO): copy into snapshot obj");
   setXmlElement(element);
   setSchemaLocationFileName(schemaLocationFileName);
   return place;
