@@ -2,7 +2,9 @@
   FieldSpecification field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
-  assertEmpty(fieldName);
+  if (field instanceof OneToOneAssociationSpecification) {
+    assertEmpty(fieldName);
+  }
   TestNaked targetField=getField(fieldName);
   if (targetField instanceof TestValue) {
     throw new IllegalActionError("drop(..) not allowed on value target field; use fieldEntry(..) instead");
@@ -20,7 +22,7 @@
   if (association instanceof OneToOneAssociationSpecification) {
     about=((OneToOneAssociationSpecification)association).getAbout(session,nakedObject,obj);
   }
- else   if (association instanceof OneToOneAssociationSpecification) {
+ else   if (association instanceof OneToManyAssociationSpecification) {
     about=((OneToManyAssociationSpecification)association).getAbout(session,nakedObject,obj,true);
   }
  else {
