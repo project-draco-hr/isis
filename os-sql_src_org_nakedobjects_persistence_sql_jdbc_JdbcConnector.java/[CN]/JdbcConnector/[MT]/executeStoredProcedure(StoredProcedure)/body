@@ -1,8 +1,9 @@
 {
+  Parameter[] parameters=storedProcedure.getParameters();
   StringBuffer sql=new StringBuffer("{call ");
-  sql.append(name);
+  sql.append(storedProcedure.getName());
   sql.append(" (");
-  for (int i=0; i < parameters.length; i++) {
+  for (int i=0, no=parameters.length; i < no; i++) {
     sql.append(i == 0 ? "?" : ",?");
   }
   sql.append(")}");
@@ -10,7 +11,6 @@
   CallableStatement statement;
   try {
     statement=connection.prepareCall(sql.toString());
-    StoredProcedure storedProcedure=new JdbcStoredProcedure(statement);
     for (int i=0; i < parameters.length; i++) {
       LOG.debug("  setup param " + i + " "+ parameters[i]);
       parameters[i].setupParameter(i + 1,parameters[i].getName(),storedProcedure);
@@ -21,7 +21,6 @@
       parameters[i].retrieve(i + 1,parameters[i].getName(),storedProcedure);
       LOG.debug("  retrieve param " + i + " "+ parameters[i]);
     }
-    return new JdbcResults(statement);
   }
  catch (  SQLException e) {
     throw new NakedObjectRuntimeException(e);
