@@ -1,0 +1,14 @@
+{
+  ActionSpecification action=null;
+  try {
+    NakedObjectSpecification nakedClass=((NakedObject)getForObject()).getSpecification();
+    action=getAction(nakedClass,name);
+  }
+ catch (  NakedObjectSpecificationException e) {
+    throw new NakedAssertionFailedError(e.getMessage());
+  }
+  if (action == null) {
+    throw new NakedAssertionFailedError("Method not found: " + name);
+  }
+  return action;
+}
