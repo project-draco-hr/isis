@@ -1,12 +1,24 @@
 {
   UserAction[] actions=new UserAction[2];
   actions[0]=new ButtonAction("Find"){
+    public Permission disabled(    View view){
+      NakedObject target=((ObjectContent)view.getContent()).getObject();
+      Action action=target.getNakedClass().getObjectAction(Action.USER,"Find");
+      About about=action.getAbout(Session.getSession().getSecurityContext(),target);
+      return about.canUse();
+    }
     public void execute(    Workspace workspace,    View view,    Location at){
+      NakedObject target=((ObjectContent)view.getContent()).getObject();
+      Action action=target.getNakedClass().getObjectAction(Action.USER,"Find");
+      NakedObject result=action.execute(target);
+      at.move(30,60);
+      workspace.addOpenViewFor(result,at);
     }
   }
 ;
   actions[1]=new ButtonAction("Cancel"){
     public void execute(    Workspace workspace,    View view,    Location at){
+      workspace.removeView(view);
     }
   }
 ;

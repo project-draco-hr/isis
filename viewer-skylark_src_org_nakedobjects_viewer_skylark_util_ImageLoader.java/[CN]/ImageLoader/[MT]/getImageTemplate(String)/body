@@ -11,21 +11,16 @@
     Image image=null;
     if (pos >= 0) {
       image=load(path);
+      return new ImageTemplate(image);
     }
  else {
       for (int i=0; i < EXTENSIONS.length; i++) {
         image=load(root + "." + EXTENSIONS[i]);
         if (image != null) {
-          break;
+          return new ImageTemplate(image);
         }
       }
     }
-    if (image == null) {
-      LOG.info("using fallback image for " + path);
-      image=unknownImage;
-    }
-    ImageTemplate template=new ImageTemplate(image);
-    images.put(root,template);
-    return template;
+    return null;
   }
 }

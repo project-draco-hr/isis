@@ -26,14 +26,20 @@
     text.append("    none\n");
   }
   for (int i=0; i < objectActions.length; i++) {
-    debugAboutDetail(text,objectActions[i],objectActions[i].getAbout(context,example));
+    Action action=objectActions[i];
+    int paramCount=action.getParameterCount();
+    NakedObject[] params=new NakedObject[paramCount];
+    debugAboutDetail(text,action,action.getAbout(context,example,params));
   }
   text.append("\n  Class Actions" + "\n");
   if (classActions.length == 0) {
     text.append("    none\n");
   }
   for (int i=0; i < classActions.length; i++) {
-    debugAboutDetail(text,classActions[i],classActions[i].getAbout(context,example));
+    Action action=classActions[i];
+    int paramCount=action.getParameterCount();
+    NakedObject[] params=new NakedObject[paramCount];
+    debugAboutDetail(text,classActions[i],action.getAbout(context,example));
   }
   text.append("\n");
   return text.toString();

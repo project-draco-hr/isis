@@ -1,0 +1,18 @@
+{
+  String entry=textContent.getText();
+  if (!entry.equals(getValue().title().toString())) {
+    LOG.debug("Field edited: \'" + entry + "\' to replace \'"+ getValue().title()+ "\'");
+    try {
+      parseEntry(entry.toString());
+      invalidReason=null;
+      isSaved=true;
+      markDamaged();
+      getViewManager().setStatus("VALID ENTRY: " + entry);
+    }
+ catch (    InvalidEntryException e) {
+      invalidReason="INVALID ENTRY: " + e.getMessage();
+      getViewManager().setStatus(invalidReason);
+      markDamaged();
+    }
+  }
+}

@@ -1,16 +1,23 @@
 {
   super(content,specification,axis);
-  iconSelected=new IconGraphic(this,85){
-    protected String iconName(    NakedObject object){
-      return super.iconName(object) + "_class_selected";
-    }
-  }
-;
-  iconUnselected=new IconGraphic(this,85){
+  int iconSize=Configuration.getInstance().getInteger("viewer.skylark.class-icon-size",85);
+  iconUnselected=new IconGraphic(this,iconSize){
     protected String iconName(    NakedObject object){
       return super.iconName(object) + "_class";
     }
   }
 ;
+  if (!iconUnselected.isImageAvailable()) {
+    iconUnselected=new IconGraphic(this,iconSize);
+  }
+  iconSelected=new IconGraphic(this,iconSize){
+    protected String iconName(    NakedObject object){
+      return super.iconName(object) + "_class_selected";
+    }
+  }
+;
+  if (!iconSelected.isImageAvailable()) {
+    iconSelected=iconUnselected;
+  }
   icon=iconUnselected;
 }

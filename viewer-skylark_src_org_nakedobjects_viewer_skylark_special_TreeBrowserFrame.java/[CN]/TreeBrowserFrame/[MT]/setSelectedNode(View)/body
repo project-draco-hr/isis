@@ -1,6 +1,13 @@
 {
-  if (mainViewSpec.canDisplay(((ObjectContent)view.getContent()).getObject())) {
-    selectedNode=view;
-    replaceView(null,mainViewSpec.createView(view.getContent(),null));
+  NakedObject object=((ObjectContent)view.getContent()).getObject();
+  if (object != null) {
+    if (mainViewFormSpec.canDisplay(object)) {
+      selectedNode=view;
+      showInRightPane(mainViewFormSpec.createView(view.getContent(),null));
+    }
+    if (mainViewTableSpec.canDisplay(object)) {
+      selectedNode=view;
+      showInRightPane(mainViewTableSpec.createView(view.getContent(),null));
+    }
   }
 }

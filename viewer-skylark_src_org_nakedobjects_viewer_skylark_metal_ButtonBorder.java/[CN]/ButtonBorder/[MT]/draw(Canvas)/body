@@ -6,10 +6,12 @@
   y+=VPADDING + 2;
   for (int i=0; i < actions.length; i++) {
     String text=actions[i].getName(getView());
+    Color color=actions[i].disabled(getView()).isVetoed() ? Style.DISABLED_MENU : Style.BLACK;
+    Color border=actions[i].disabled(getView()).isVetoed() ? Style.DISABLED_MENU : Style.SECONDARY2;
     int buttonWidth=TEXT_PADDING + Style.NORMAL.stringWidth(text) + TEXT_PADDING;
     canvas.drawRectangle(x + 1,y + 1,buttonWidth - 1,buttonHeight,Style.WHITE);
-    canvas.drawRectangle(x,y,buttonWidth - 1,buttonHeight,Style.SECONDARY1);
-    canvas.drawText(text,x + 1 + TEXT_PADDING,y + VPADDING + Style.NORMAL.getAscent(),Style.BLACK,Style.NORMAL);
+    canvas.drawRectangle(x,y,buttonWidth - 1,buttonHeight,border);
+    canvas.drawText(text,x + 1 + TEXT_PADDING,y + VPADDING + Style.NORMAL.getAscent(),color,Style.NORMAL);
     x+=BUTTON_SPACING + buttonWidth;
   }
   super.draw(canvas);

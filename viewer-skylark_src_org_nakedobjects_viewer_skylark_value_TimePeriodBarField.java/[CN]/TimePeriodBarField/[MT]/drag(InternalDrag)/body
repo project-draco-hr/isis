@@ -3,18 +3,7 @@
   float max=getSize().getWidth() - 4;
   if ((x >= 0) && (x <= max)) {
     int time=(int)(x / max * 3600 * 24);
-    Time end=getPeriod().getEnd();
-    end.setValue(time);
-    Time start=getPeriod().getStart();
-    TimePeriod tp=new TimePeriod();
-    tp.setValue(start,end);
-    try {
-      set(tp.title().toString());
-    }
- catch (    InvalidEntryException e) {
-      throw new NotImplementedException();
-    }
-    LOG.debug("adjust time " + time + " "+ getPeriod());
-    markDamaged();
+    endTime=time;
+    initiateSave();
   }
 }

@@ -1,0 +1,17 @@
+{
+  try {
+    Thread.sleep(500);
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  try {
+    NakedObject parent=((ObjectContent)getParent().getContent()).getObject();
+    getObjectField().parseAndSave(parent,entryText);
+    getState().setValid();
+  }
+ catch (  InvalidEntryException e) {
+    getState().setInvalid();
+    throw e;
+  }
+}

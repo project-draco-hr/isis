@@ -1,16 +1,21 @@
 {
-  View dragSource=drag.getSourceView();
   if (canDrop(drag)) {
-    NakedObject source=((ObjectContent)dragSource.getContent()).getObject();
     NakedObject target=((ObjectContent)getParent().getContent()).getObject();
+    View dragSource=drag.getSourceView();
+    NakedObject source=((ObjectContent)dragSource.getContent()).getObject();
+    NakedObject associatedObject;
     OneToOneAssociation field=getEmptyField();
     LOG.debug("drop " + source + " on "+ field+ "/"+ target);
-    if (field.getType().isAssignableFrom(source.getClass())) {
-      field.setAssociation(target,source);
+    if (source instanceof NakedClass) {
+      associatedObject=((NakedClass)source).createInstance();
     }
  else {
-      View view=ViewFactory.getViewFactory().createIconizedSubview(new OneToOneContent(source,field));
-      getParent().replaceView(getView(),view);
+      associatedObject=source;
+    }
+    OneToOneContent content=new OneToOneContent(associatedObject,field);
+    field.setAssociation(target,associatedObject);
+    if (!target.isPersistent()) {
+      getParent().invalidateContent();
     }
   }
 }
