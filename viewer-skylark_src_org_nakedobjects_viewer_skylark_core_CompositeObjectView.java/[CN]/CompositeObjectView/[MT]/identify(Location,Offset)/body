@@ -13,17 +13,11 @@
       locationWithinContent.move(-subview.getLocation().getX(),-subview.getLocation().getY());
       getViewManager().getSpy().addTrace(this,"mouse location within subview",locationWithinContent);
       getViewManager().getSpy().addTrace("--> subview: " + subview);
-      IdentifiedView identified=subview.identify(locationWithinContent,new Offset(0,0));
-      identified.translate(getLocation());
-      getViewManager().getSpy().addTrace("....");
-      Padding padding=getView().getPadding();
-      getViewManager().getSpy().addTrace(this,"offset by (parent location)",getLocation());
-      identified.translate(padding.getLeft(),padding.getTop());
-      getViewManager().getSpy().addTrace(this,"offset by (parent padding)",padding);
+      View identified=subview.identify(locationWithinContent,new Offset(0,0));
       return identified;
     }
   }
   getViewManager().getSpy().addTrace("----");
   getViewManager().getSpy().addTrace(this,"mouse location within composite view",location);
-  return new IdentifiedView(getView(),location,getLocation());
+  return getView();
 }

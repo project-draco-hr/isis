@@ -4,20 +4,23 @@
   }
   mouseDetails(me,true);
   Location locationInView=new Location(downAt);
+  Location locationOfView=previouslyIdentifiedView.getAbsoluteLocation();
+  locationInView.subtract(locationOfView);
   ViewAreaType type=previouslyIdentifiedView.viewAreaType(new Location(locationInView));
-  spy.addAction("Drag start " + type + ": "+ locationInView);
+  spy.addAction("Drag start " + type + ": "+ mouseLocation);
+  spy.setLocationInView(locationInView);
   if (type == ViewAreaType.INTERNAL) {
-    drag=InternalDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
+    drag=InternalDrag.create(previouslyIdentifiedView,mouseLocation,me.getModifiers());
     spy.addAction("drag from " + drag);
   }
  else {
     saveCurrentFieldEntry();
-    spy.addAction("pickup " + type + ": "+ previouslyIdentifiedView+ " "+ locationInView);
+    spy.addAction("pickup " + type + ": "+ previouslyIdentifiedView);
     if (type == ViewAreaType.VIEW) {
-      drag=ViewDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
+      drag=ViewDrag.create(previouslyIdentifiedView,mouseLocation,me.getModifiers());
     }
  else {
-      drag=ContentDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
+      drag=ContentDrag.create(previouslyIdentifiedView,mouseLocation,me.getModifiers());
     }
   }
   if (drag == null) {

@@ -1,13 +1,18 @@
 {
   super.viewMenuOptions(options);
-  options.add(MenuOptionSet.VIEW,new MenuOption("New Workspace"){
-    public void execute(    Workspace workspace,    View view,    Location at){
-      View newWorkspace;
-      newWorkspace=ViewFactory.getViewFactory().createInnerWorkspace(getObject());
-      newWorkspace.setLocation(at);
-      getWorkspace().addView(newWorkspace);
-      newWorkspace.markDamaged();
+  if (getObject() instanceof UserContext) {
+    options.add(MenuOptionSet.VIEW,new MenuOption("New Workspace"){
+      public Permission disabled(      View component){
+        return AbstractPermission.allow(getObject() instanceof UserContext);
+      }
+      public void execute(      Workspace workspace,      View view,      Location at){
+        View newWorkspace;
+        newWorkspace=ViewFactory.getViewFactory().createInnerWorkspace(getObject());
+        newWorkspace.setLocation(at);
+        getWorkspace().addView(newWorkspace);
+        newWorkspace.markDamaged();
+      }
     }
-  }
 );
+  }
 }

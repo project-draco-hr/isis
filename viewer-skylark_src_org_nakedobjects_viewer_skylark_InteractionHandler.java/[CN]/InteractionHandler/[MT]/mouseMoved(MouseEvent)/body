@@ -1,14 +1,13 @@
 {
   if (drag == null) {
     mouseDetails(me,true);
-    final View mouseOver=currentlyIdentifiedView;
-    if (mouseOver != null) {
+    if (currentlyIdentifiedView != null) {
       if (previouslyIdentifiedView == null) {
-        previouslyIdentifiedView=mouseOver;
+        previouslyIdentifiedView=currentlyIdentifiedView;
       }
  else {
-        if (mouseOver != previouslyIdentifiedView) {
-          if (mouseOver == previouslyIdentifiedView) {
+        if (currentlyIdentifiedView != previouslyIdentifiedView) {
+          if (currentlyIdentifiedView == previouslyIdentifiedView) {
             spy.addAction("moved into subview from " + previouslyIdentifiedView);
             previouslyIdentifiedView.enteredSubview();
           }
@@ -17,24 +16,26 @@
             previouslyIdentifiedView.exited();
           }
           View previouslyIdentified=previouslyIdentifiedView;
-          previouslyIdentifiedView=mouseOver;
-          if (mouseOver != null) {
-            if (mouseOver == previouslyIdentified) {
+          previouslyIdentifiedView=currentlyIdentifiedView;
+          if (currentlyIdentifiedView != null) {
+            if (currentlyIdentifiedView == previouslyIdentified) {
               spy.addAction("moved back to from " + previouslyIdentified);
-              mouseOver.exitedSubview();
+              currentlyIdentifiedView.exitedSubview();
             }
  else {
-              spy.addAction("entered " + mouseOver);
-              mouseOver.entered();
+              spy.addAction("entered " + currentlyIdentifiedView);
+              currentlyIdentifiedView.entered();
             }
           }
           redraw();
         }
       }
-      Location pointer=mouseLocationWithinView;
-      spy.setType(mouseOver.viewAreaType(new Location(pointer)));
-      spy.addAction("mouseMoved " + pointer);
-      mouseOver.mouseMoved(pointer);
+      Location locationInView=new Location(mouseLocation);
+      Location locationOfView=currentlyIdentifiedView.getAbsoluteLocation();
+      locationInView.subtract(locationOfView);
+      spy.setType(currentlyIdentifiedView.viewAreaType(new Location(locationInView)));
+      spy.addAction("mouseMoved " + locationInView);
+      currentlyIdentifiedView.mouseMoved(locationInView);
       redraw();
     }
   }

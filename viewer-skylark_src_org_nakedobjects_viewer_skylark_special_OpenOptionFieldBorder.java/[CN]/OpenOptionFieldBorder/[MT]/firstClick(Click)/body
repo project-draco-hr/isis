@@ -1,0 +1,16 @@
+{
+  float x=click.getMouseLocationRelativeToView().getX() - 2;
+  float boundary=getSize().getWidth() - right;
+  if (x >= boundary) {
+    View overlay=createOverlay();
+    Size size=overlay.getRequiredSize();
+    size.ensureWidth(getSize().getWidth());
+    overlay.setSize(size);
+    Location location=getAbsoluteLocation();
+    location.add(getView().getPadding().getLeft(),getSize().getHeight());
+    overlay.setLocation(location);
+    overlay.markDamaged();
+    getViewManager().setOverlayView(overlay);
+    overlay.layout();
+  }
+}

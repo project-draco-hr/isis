@@ -1,14 +1,14 @@
 {
-  Location locationWithinBorder=new Location(locationWithinViewer);
+  Location locationWithinBorder=new Location(mouseLocation);
   locationWithinBorder.translate(offset);
   getViewManager().getSpy().addTrace(this,"mouse location within border",locationWithinBorder);
   getViewManager().getSpy().addTrace(this,"non border area",contentArea());
   if (overBorder(locationWithinBorder)) {
     getViewManager().getSpy().addTrace(this,"over border area",contentArea());
-    return new IdentifiedView(getView(),locationWithinViewer,getLocation());
+    return getView();
   }
  else {
     offset.add(-getLeft(),-getTop());
-    return super.identify(locationWithinViewer,offset);
+    return super.identify(mouseLocation,offset);
   }
 }

@@ -1,19 +1,21 @@
 {
   StringBuffer text=new StringBuffer();
-  FieldSpecification[] fields=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
-  Session session=ClientSession.getSession();
-  for (int i=0; i < fields.length; i++) {
-    if (fields[i] instanceof ValueFieldSpecification) {
-      ValueFieldSpecification f=(ValueFieldSpecification)fields[i];
-      debugAboutDetail(text,f,f.getAbout(session,(NakedObject)object));
-    }
- else     if (fields[i] instanceof OneToManyAssociationSpecification) {
-      OneToManyAssociationSpecification f=(OneToManyAssociationSpecification)fields[i];
-      debugAboutDetail(text,f,f.getAbout(session,(NakedObject)object));
-    }
- else     if (fields[i] instanceof OneToOneAssociationSpecification) {
-      OneToOneAssociationSpecification f=(OneToOneAssociationSpecification)fields[i];
-      debugAboutDetail(text,f,f.getAbout(session,(NakedObject)object,null));
+  if (object != null) {
+    FieldSpecification[] fields=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
+    Session session=ClientSession.getSession();
+    for (int i=0; i < fields.length; i++) {
+      if (fields[i] instanceof ValueFieldSpecification) {
+        ValueFieldSpecification f=(ValueFieldSpecification)fields[i];
+        debugAboutDetail(text,f,f.getAbout(session,(NakedObject)object));
+      }
+ else       if (fields[i] instanceof OneToManyAssociationSpecification) {
+        OneToManyAssociationSpecification f=(OneToManyAssociationSpecification)fields[i];
+        debugAboutDetail(text,f,f.getAbout(session,(NakedObject)object));
+      }
+ else       if (fields[i] instanceof OneToOneAssociationSpecification) {
+        OneToOneAssociationSpecification f=(OneToOneAssociationSpecification)fields[i];
+        debugAboutDetail(text,f,f.getAbout(session,(NakedObject)object,null));
+      }
     }
   }
   return text.toString();

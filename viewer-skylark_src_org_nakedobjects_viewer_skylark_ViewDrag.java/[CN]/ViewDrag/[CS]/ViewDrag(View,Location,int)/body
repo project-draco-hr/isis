@@ -1,0 +1,15 @@
+{
+  super(source,modifiers);
+  viewsWorkspace=source.getParent().getWorkspace();
+  viewsDecoratedWorkspace=viewsWorkspace.getView();
+  Location viewLocation=source.getAbsoluteLocation();
+  overlayOffset=mouseLocation.offsetFrom(viewLocation);
+  overlayView=source.pickup(this);
+  if (overlayView != null) {
+    source.exited();
+    source.getViewManager().setOverlayView(overlayView);
+    source.getViewManager().showMoveCursor();
+    update(mouseLocation,overlayView);
+    updateDraggingLocation();
+  }
+}
