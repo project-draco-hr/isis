@@ -1,5 +1,11 @@
 {
-  ConfigurationFactory.setConfiguration(new Configuration("xat.properties"));
+  File f=new File("xat.properties");
+  if (f.exists()) {
+    ConfigurationFactory.setConfiguration(new Configuration(f.getAbsolutePath()));
+  }
+ else {
+    ConfigurationFactory.setConfiguration(new Configuration());
+  }
   Properties logProperties=ConfigurationFactory.getConfiguration().getProperties("log4j");
   if (logProperties.size() == 0) {
     LogManager.getRootLogger().setLevel(Level.OFF);
@@ -8,6 +14,7 @@
     PropertyConfigurator.configure(logProperties);
   }
   Logger.getLogger(AcceptanceTestCase.class).debug("XAT Logging enabled - new test: " + getName());
+  fixtureBuilder=createFixtureBuilder();
   if (testObjectFactory == null) {
     testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent(TEST_OBJECT_FACTORY,NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
   }
@@ -16,14 +23,14 @@
   String className=getClass().getName();
   String methodName=getName().substring(4);
   testObjectFactory.testStarting(className,methodName);
-  explorationSetUp=explorationSetup();
+  setupFramework();
   ClientSession.setSession(new Session());
   Session session=ClientSession.getSession();
   PojoAdapter.setPojoAdapterHash(new PojoAdapterHashImpl());
   setUpFixtures();
   try {
-    explorationSetUp.installFixtures();
-    String[] cls=explorationSetUp.getClasses();
+    fixtureBuilder.installFixtures();
+    String[] cls=fixtureBuilder.getClasses();
     for (int i=0; i < cls.length; i++) {
       NakedObjectSpecification nc=NakedObjectSpecificationLoader.getInstance().loadSpecification(cls[i]);
       NakedClass spec=new NakedClass(cls[i]);

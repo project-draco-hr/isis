@@ -1,0 +1,12 @@
+{
+  NakedObjectSpecification nc=NakedObjectSpecificationLoader.getInstance().loadSpecification(className);
+  if (nc == null) {
+    NakedObjectManager objectManager=NakedObjects.getObjectManager();
+    return objectManager.generatorError("Could not create an object of class " + className,null);
+  }
+  NakedObjectManager objectManager=NakedObjects.getObjectManager();
+  NakedObject object=objectManager.createTransientInstance(nc);
+  LOG.info("Adding " + object);
+  newInstances.addElement(object);
+  return object.getObject();
+}

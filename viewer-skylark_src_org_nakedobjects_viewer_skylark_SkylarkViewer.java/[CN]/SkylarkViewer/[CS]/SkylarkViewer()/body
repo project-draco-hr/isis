@@ -1,0 +1,22 @@
+{
+  frame=new ViewerFrame();
+  viewer=new Viewer();
+  viewer.setRenderingArea(frame);
+  frame.setViewer(viewer);
+  updateNotifier=new ViewUpdateNotifier();
+  InteractionSpy spy=new InteractionSpy();
+  ViewerAssistant viewerAssistant=new ViewerAssistant();
+  viewerAssistant.setViewer(viewer);
+  viewerAssistant.setDebugFrame(spy);
+  viewerAssistant.setUpdateNotifier(updateNotifier);
+  viewer.setUpdateNotifier(updateNotifier);
+  viewer.setSpy(spy);
+  setShutdownListener(new ObjectViewingMechanismListener(){
+    public void viewerClosing(){
+      System.out.println("EXITED");
+      System.exit(0);
+    }
+  }
+);
+  viewer.start();
+}

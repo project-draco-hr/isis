@@ -1,0 +1,23 @@
+{
+  NakedObjectManager objectManager=NakedObjects.getObjectManager();
+  objectManager.startTransaction();
+  for (int i=0, last=fixtures.size(); i < last; i++) {
+    Fixture fixture=(Fixture)fixtures.elementAt(i);
+    fixture.setBuilder(this);
+    fixture.install();
+  }
+  try {
+    for (int i=0; i < newInstances.size(); i++) {
+      NakedObject object=(NakedObject)newInstances.elementAt(i);
+      LOG.info("Persisting " + object);
+      boolean notPersistent=object.getOid() == null;
+      if (notPersistent) {
+        objectManager.makePersistent(object);
+      }
+    }
+    objectManager.endTransaction();
+  }
+ catch (  RuntimeException e) {
+    objectManager.abortTransaction();
+  }
+}
