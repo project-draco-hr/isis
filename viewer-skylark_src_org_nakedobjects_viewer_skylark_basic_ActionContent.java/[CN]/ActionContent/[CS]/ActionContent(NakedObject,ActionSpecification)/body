@@ -1,16 +1,9 @@
 {
   this.target=target;
   this.action=action;
-  parameterTypes=action.parameters();
-  parameterValues=new Naked[parameterTypes.length];
-  for (int i=0; i < parameterTypes.length; i++) {
-    if (parameterTypes[i].isValue()) {
-      parameterValues[i]=parameterTypes[i].acquireInstance();
-    }
- else {
-      parameterValues[i]=null;
-    }
-  }
+  parameterSet=new ParameterSet(action);
+  Naked[] parameterValues;
+  parameterValues=parameterSet.getParameterValues();
   About about=action.getAbout(ClientSession.getSession(),target,parameterValues);
   String[] labels;
   Naked[] defaultValues;
@@ -20,18 +13,18 @@
     defaultValues=a.getDefaultParameterValues();
   }
  else {
-    labels=new String[parameterTypes.length];
-    defaultValues=new Naked[parameterTypes.length];
+    labels=new String[parameterSet.length()];
+    defaultValues=new Naked[parameterSet.length()];
   }
-  parameters=new ActionField[parameterTypes.length];
-  for (int i=0; i < parameterTypes.length; i++) {
-    String label=labels[i] == null ? parameterTypes[i].getShortName() : labels[i];
+  parameters=new ActionField[parameterSet.length()];
+  for (int i=0; i < parameterSet.length(); i++) {
+    String label=labels[i] == null ? parameterSet.type(i).getShortName() : labels[i];
     Naked value=defaultValues[i] == null ? parameterValues[i] : defaultValues[i];
-    if (parameterTypes[i].isValue()) {
-      parameters[i]=new ValueParameter(label,value);
+    if (parameterSet.type(i).isValue()) {
+      parameters[i]=new ValueParameter(label,value,this,i);
     }
  else {
-      parameters[i]=new ObjectParameter(label,value,parameterTypes[i]);
+      parameters[i]=new ObjectParameter(label,value,this,i);
     }
   }
 }

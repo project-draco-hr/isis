@@ -1,16 +1,4 @@
 {
-  InternalCollection collection=(InternalCollection)((ObjectContent)view.getParent().getContent()).getObject();
-  NakedObject parentObject=collection.parent();
-  OneToManyElement content=(OneToManyElement)view.getContent();
-  OneToManyAssociationSpecification association=content.getOneToManyAssociation();
-  NakedObject associatedObject=content.getObject();
-  About about=association.getAbout(ClientSession.getSession(),parentObject,associatedObject,false);
-  Permission edit=about.canUse();
-  if (edit.isAllowed()) {
-    String status="Clear the association to this object from '" + parentObject.titleString() + "'";
-    return new Allow(status);
-  }
- else {
-    return new Veto(edit.getReason());
-  }
+  OneToManyFieldElement content=(OneToManyFieldElement)view.getContent();
+  return content.canClear();
 }

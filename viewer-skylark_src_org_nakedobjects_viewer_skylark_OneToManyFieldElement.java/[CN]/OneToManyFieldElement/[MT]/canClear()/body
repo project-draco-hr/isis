@@ -1,0 +1,14 @@
+{
+  NakedObject parentObject=getParent();
+  OneToManyAssociationSpecification association=getOneToManyAssociation();
+  NakedObject associatedObject=getObject();
+  About about=association.getAbout(ClientSession.getSession(),parentObject,associatedObject,false);
+  Permission edit=about.canUse();
+  if (edit.isAllowed()) {
+    String status="Clear the association to this object from '" + parentObject.titleString() + "'";
+    return new Allow(status);
+  }
+ else {
+    return new Veto(edit.getReason());
+  }
+}

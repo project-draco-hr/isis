@@ -1,20 +1,5 @@
 {
   NakedObject target=((ObjectContent)getParent().getContent()).getObject();
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
-  if (canDrop(source,target).isAllowed()) {
-    NakedObject associatedObject;
-    OneToOneAssociationSpecification field=getEmptyField();
-    LOG.debug("drop " + source + " on "+ field+ "/"+ target);
-    if (source instanceof NakedClass) {
-      associatedObject=((NakedClass)source).newInstance();
-    }
- else {
-      associatedObject=source;
-    }
-    getViewManager().getUndoStack().add(new AssociateCommand(target,associatedObject,field));
-    boolean isNotPersistent=target.getOid() == null;
-    if (isNotPersistent) {
-      getParent().invalidateContent();
-    }
-  }
+  setField(target,source);
 }
