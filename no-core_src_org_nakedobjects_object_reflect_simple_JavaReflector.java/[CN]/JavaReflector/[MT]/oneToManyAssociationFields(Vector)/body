@@ -4,7 +4,7 @@
   while (e.hasMoreElements()) {
     Method getMethod=(Method)e.nextElement();
     LOG.debug("identified 1-many association method " + getMethod);
-    String name=baseName(getMethod.getName());
+    String name=javaBaseName(getMethod.getName());
     Method aboutMethod=findMethod(OBJECT,ABOUT_PREFIX + name,null,new Class[]{FieldAbout.class,null,boolean.class});
     Class aboutType=(aboutMethod == null) ? null : aboutMethod.getParameterTypes()[1];
     if (aboutMethod == null) {
@@ -32,7 +32,6 @@
     if (((aboutType != null) && (aboutType != elementType)) || ((addType != null) && (addType != elementType)) || ((removeType != null) && (removeType != elementType))) {
       LOG.error("The add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
     }
-    String nm=naturalName(name);
-    associations.addElement(new JavaOneToManyAssociation(nm,elementType,getMethod,addMethod,removeMethod,aboutMethod));
+    associations.addElement(new JavaOneToManyAssociation(naturalName(name),elementType,getMethod,addMethod,removeMethod,aboutMethod));
   }
 }

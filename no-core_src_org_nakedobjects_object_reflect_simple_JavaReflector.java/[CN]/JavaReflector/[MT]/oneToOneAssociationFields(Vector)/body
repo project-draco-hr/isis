@@ -7,7 +7,7 @@
     if (getMethod.getName().equals("getNakedClass")) {
       continue;
     }
-    String name=baseName(getMethod.getName());
+    String name=javaBaseName(getMethod.getName());
     Class[] params=new Class[]{getMethod.getReturnType()};
     Method aboutMethod=findMethod(OBJECT,ABOUT_PREFIX + name,null,new Class[]{FieldAbout.class,getMethod.getReturnType()});
     if (aboutMethod == null) {
@@ -28,8 +28,7 @@
     if (setMethod == null) {
       throw new ReflectionException("A set" + name + " method is required in the class "+ className()+ " that corresponds to the "+ getMethod.getName()+ " method.");
     }
-    String nm=naturalName(name);
-    JavaOneToOneAssociation association=new JavaOneToOneAssociation(nm,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod);
+    JavaOneToOneAssociation association=new JavaOneToOneAssociation(naturalName(name),getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod);
     associations.addElement(association);
   }
 }

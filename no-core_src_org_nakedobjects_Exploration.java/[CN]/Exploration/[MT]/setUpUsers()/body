@@ -16,6 +16,9 @@
   }
  else {
     InstanceCollection users=InstanceCollection.findInstances(User.class.getName(),name);
+    if (users.size() == 0) {
+      throw new NakedObjectRuntimeException("No users found: " + name);
+    }
     user=(User)users.elements().nextElement();
     context=(ExplorationContext)user.getRootObject();
   }
