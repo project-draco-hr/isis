@@ -6,17 +6,18 @@
   if (!objectManager.hasInstances(userClass)) {
     user=new User(name);
     user.getRoles().add(new Role("explorer"));
-    user.makePersistent();
     context=new ExplorationContext();
-    context.makePersistent();
+    context.getName().setValue(name);
     context.associateUser(user);
+    objectManager.makePersistent(context);
     NakedClassList set=new NakedClassList();
     classSet(set);
     set.setContext(context);
   }
  else {
-    InstanceCollection users=InstanceCollection.findInstances(new User(name));
+    InstanceCollection users=InstanceCollection.findInstances(User.class.getName(),name);
     user=(User)users.elements().nextElement();
+    context=(ExplorationContext)user.getRootObject();
   }
   return user;
 }

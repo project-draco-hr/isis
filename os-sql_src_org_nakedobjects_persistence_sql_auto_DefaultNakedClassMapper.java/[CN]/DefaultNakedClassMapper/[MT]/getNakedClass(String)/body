@@ -8,6 +8,7 @@
     LOG.debug("  instance  " + oid);
     if (loadedObjects.isLoaded(oid)) {
       LOG.debug("  class already loaded   " + oid);
+      rs.close();
       return (NakedClass)loadedObjects.getLoadedObject(oid);
     }
  else {
@@ -18,10 +19,12 @@
       instance.getReflector().setValue(rs.getString(reflectorColumn));
       instance.setResolved();
       loadedObjects.loaded(instance);
+      rs.close();
       return instance;
     }
   }
  else {
+    rs.close();
     throw new ObjectNotFoundException(name);
   }
 }

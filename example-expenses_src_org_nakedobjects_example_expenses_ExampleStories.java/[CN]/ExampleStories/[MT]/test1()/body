@@ -1,0 +1,13 @@
+{
+  subtitle("Make claim for new employee");
+  nextStep("Set up employee");
+  TestObject robert=getTestClass("Employees").newInstance();
+  robert.fieldEntry("Surname","Matthews");
+  nextStep("Set up project");
+  TestObject ait=getTestClass("Projects").newInstance();
+  ait.fieldEntry("Name","AIT phone system");
+  robert.associate("Projects",ait);
+  nextStep("Create claim for employee");
+  TestObject claim=getTestClass("Claims").invokeAction("New Claim",robert);
+  claim.assertFieldContains("Total",new Money(0.0));
+}

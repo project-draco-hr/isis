@@ -3,19 +3,24 @@
   NakedObjectStore nos;
   nos=new TransientObjectStore();
   objectManager=new LocalObjectManager(nos,new NullUpdateNotifier());
-  Session.initSession();
-  context=Session.getSession().getSecurityContext();
-  clock=new ExplorationClock();
-  Date.setClock(clock);
-  Time.setClock(clock);
-  TimeStamp.setClock(clock);
-  ExplorationSetUp fs=new ExplorationSetUp();
-  fs.init(fixtures,NakedClassManager.getInstance(),objectManager,clock);
-  documentor=TestObjectFactory.getInstance().getDocumentor(getName().substring(4));
-  String[] cls=fs.getClasses();
-  for (int i=0; i < cls.length; i++) {
-    NakedClass nc=NakedClassManager.getInstance().getNakedClass(cls[i]);
-    TestClass view=TestObjectFactory.getInstance().createTestClass(context,nc);
-    classes.put(nc.getPluralName(),view);
+  try {
+    clock=new ExplorationClock();
+    Date.setClock(clock);
+    Time.setClock(clock);
+    TimeStamp.setClock(clock);
+    setUpFixture();
+    ExplorationSetUp fs=new ExplorationSetUp();
+    fs.init(fixtures,NakedClassManager.getInstance(),objectManager,clock);
+    documentor=TestObjectFactory.getInstance().getDocumentor(getName().substring(4));
+    String[] cls=fs.getClasses();
+    for (int i=0; i < cls.length; i++) {
+      NakedClass nc=NakedClassManager.getInstance().getNakedClass(cls[i]);
+      TestClass view=TestObjectFactory.getInstance().createTestClass(context,nc);
+      classes.put(nc.fullName().toLowerCase(),view);
+    }
+  }
+ catch (  Exception e) {
+    NakedObjectManager.getInstance().shutdown();
+    throw e;
   }
 }

@@ -8,6 +8,9 @@
       if (val != null && ((Value)fields[i]).getType() == Date.class) {
         val=val.substring(0,4) + val.substring(5,7) + val.substring(8,10);
       }
+      if (val != null && ((Value)fields[i]).getType() == Time.class) {
+        val=val.substring(14,16) + val.substring(17,19);
+      }
       val=val == null ? "NULL" : val;
       ((Value)fields[i]).restoreValue(object,val);
     }
@@ -15,8 +18,13 @@
       NakedClass associatedCls=NakedClassManager.getInstance().getNakedClass(fields[i].getType().getName());
       int associatedId=rs.getInt(columnNames[i]);
       if (associatedId != 0) {
-        NakedObject reference=loadObject(associatedCls,new SqlOid(associatedId,associatedCls.fullName()));
-        ((OneToOneAssociation)fields[i]).initData(object,reference);
+        if (associatedCls.isAbstract()) {
+          LOG.warn("NOT DEALING WITH POLYMORPHIC ASSOCIATIONS");
+        }
+ else {
+          NakedObject reference=loadObject(associatedCls,new SqlOid(associatedId,associatedCls.fullName()));
+          ((OneToOneAssociation)fields[i]).initData(object,reference);
+        }
       }
     }
  else {
