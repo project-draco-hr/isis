@@ -1,11 +1,16 @@
 {
   if (invalidLayout) {
-    left.layout();
-    left.setSize(left.getRequiredSize());
+    Size treeBrowserSize=left.getRequiredSize();
     if (right != null) {
       right.layout();
-      right.setLocation(new Location(rightViewOffet(),0));
       right.setSize(right.getRequiredSize());
+      treeBrowserSize.ensureHeight(right.getSize().getHeight());
+    }
+    left.layout();
+    left.setRequiredSize(treeBrowserSize);
+    left.setSize(left.getRequiredSize());
+    if (right != null) {
+      right.setLocation(new Location(rightViewOffet(),0));
     }
     invalidLayout=false;
   }

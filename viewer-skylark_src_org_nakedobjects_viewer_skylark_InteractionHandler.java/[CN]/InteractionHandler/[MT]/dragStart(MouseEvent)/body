@@ -6,14 +6,14 @@
   Location locationInView=new Location(downAt);
   viewer.setLiveDebugPositionInformation("mouse dragged ",mouseLocation,locationInView,previouslyIdentifiedView);
   ViewAreaType type=previouslyIdentifiedView.viewAreaType(new Location(locationInView));
-  spy.setAction("drag start " + type);
+  spy.addAction("drag start " + type);
   if (type == ViewAreaType.INTERNAL) {
     drag=InternalDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
-    spy.setAction("drag from " + drag);
+    spy.addAction("drag from " + drag);
   }
  else {
     saveCurrentFieldEntry();
-    spy.setAction("pickup " + type + ": "+ previouslyIdentifiedView+ " "+ locationInView);
+    spy.addAction("pickup " + type + ": "+ previouslyIdentifiedView+ " "+ locationInView);
     if (type == ViewAreaType.VIEW) {
       drag=ViewDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
     }

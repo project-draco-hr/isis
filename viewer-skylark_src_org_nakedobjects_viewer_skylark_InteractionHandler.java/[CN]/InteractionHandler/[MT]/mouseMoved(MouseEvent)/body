@@ -10,22 +10,22 @@
  else {
         if (mouseOver != previouslyIdentifiedView) {
           if (mouseOver == previouslyIdentifiedView) {
-            spy.setAction("moved into subview from " + previouslyIdentifiedView);
+            spy.addAction("moved into subview from " + previouslyIdentifiedView);
             previouslyIdentifiedView.enteredSubview();
           }
  else {
-            spy.setAction("exited " + previouslyIdentifiedView);
+            spy.addAction("exited " + previouslyIdentifiedView);
             previouslyIdentifiedView.exited();
           }
           View previouslyIdentified=previouslyIdentifiedView;
           previouslyIdentifiedView=mouseOver;
           if (mouseOver != null) {
             if (mouseOver == previouslyIdentified) {
-              spy.setAction("moved back to from " + previouslyIdentified);
+              spy.addAction("moved back to from " + previouslyIdentified);
               mouseOver.exitedSubview();
             }
  else {
-              spy.setAction("entered " + mouseOver);
+              spy.addAction("entered " + mouseOver);
               mouseOver.entered();
             }
           }
@@ -34,7 +34,7 @@
       }
       Location pointer=mouseLocationWithinView;
       spy.setType(mouseOver.viewAreaType(new Location(pointer)));
-      spy.setAction("mouseMoved " + pointer);
+      spy.addAction("mouseMoved " + pointer);
       mouseOver.mouseMoved(pointer);
       redraw();
     }
