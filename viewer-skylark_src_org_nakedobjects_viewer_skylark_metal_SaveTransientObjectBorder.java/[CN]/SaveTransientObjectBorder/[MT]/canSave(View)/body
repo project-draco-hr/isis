@@ -1,0 +1,13 @@
+{
+  Action action=view.getContent().getSpecification().getObjectAction(Action.USER,"save");
+  if (action == null) {
+    action=view.getContent().getSpecification().getObjectAction(Action.USER,"persist");
+  }
+  if (action == null) {
+    return Allow.DEFAULT;
+  }
+ else {
+    Naked transientObject=(NakedObject)view.getContent().getNaked();
+    return transientObject.getHint(ClientSession.getSession(),action,new Naked[0]).canUse();
+  }
+}

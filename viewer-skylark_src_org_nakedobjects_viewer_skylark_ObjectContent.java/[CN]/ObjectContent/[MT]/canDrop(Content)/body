@@ -1,0 +1,26 @@
+{
+  NakedObject source=((ObjectContent)sourceContent).getObject();
+  NakedObject target=(NakedObject)getObject();
+  Action action=dropAction(source,target);
+  Session session=ClientSession.getSession();
+  if (action != null) {
+    Hint about=target.getHint(session,action,new NakedObject[]{source});
+    return about.canUse();
+  }
+ else {
+    if (target.getOid() != null && source.getOid() == null) {
+      return new Veto("Can't set field in persistent object with reference to non-persistent object");
+    }
+ else {
+      NakedObjectField[] fields=target.getSpecification().getVisibleFields(target,session);
+      for (int i=0; i < fields.length; i++) {
+        if (source.getSpecification().isOfType(fields[i].getSpecification())) {
+          if (target.getField(fields[i]) == null) {
+            return new Allow("Set field " + target.getLabel(session,fields[i]));
+          }
+        }
+      }
+      return new Veto("No empty field accepting object of type " + source.getSpecification().getSingularName());
+    }
+  }
+}

@@ -7,10 +7,11 @@
   Padding padding=workspace.getView().getPadding();
   location.move(-padding.getLeft(),-padding.getTop());
   location.move(30,0);
-  showStatus("Executing " + item);
   dispose();
-  LOG.debug("execute " + item.name + " on "+ forView+ " in "+ workspace);
   if (!item.isBlank && item.action != null && item.action.disabled(forView).isAllowed()) {
+    showStatus("Executing " + item);
+    LOG.debug("execute " + item.name + " on "+ forView+ " in "+ workspace);
     item.action.execute(workspace,forView,location);
+    showStatus("");
   }
 }

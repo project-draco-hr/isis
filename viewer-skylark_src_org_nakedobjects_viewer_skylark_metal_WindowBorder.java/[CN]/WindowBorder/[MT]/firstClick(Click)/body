@@ -1,25 +1,29 @@
 {
-  Bounds bounds=new Bounds(getSize().getWidth() - right - 3 * (BUTTON_WIDTH + padding) - 1,LINE_THICKNESS + padding,BUTTON_WIDTH,BUTTON_WIDTH);
-  if (bounds.contains(click.getLocation())) {
-    View iconView=new RootIconSpecification().createView(getContent(),null);
-    iconView.setLocation(getView().getLocation());
-    getWorkspace().removeView(getView());
-    getWorkspace().addView(iconView);
-    return;
-  }
-  bounds.translate(BUTTON_WIDTH + padding,0);
-  bounds.translate(BUTTON_WIDTH + padding,0);
-  if (bounds.contains(click.getLocation())) {
-    dispose();
-    return;
-  }
-  Workspace workspace=getWorkspace();
-  if (workspace != null) {
-    if (click.isButton2() || (click.isButton1() && click.isShift())) {
-      workspace.lower(getView());
+  if (!getContent().isTransient()) {
+    Bounds buttonBounds=new Bounds(getSize().getWidth() - right - 3 * (BUTTON_WIDTH + padding) - 1,LINE_THICKNESS + padding,BUTTON_WIDTH,BUTTON_WIDTH);
+    if (buttonBounds.contains(click.getLocation())) {
+      View iconView=new RootIconSpecification().createView(getContent(),null);
+      iconView.setLocation(getView().getLocation());
+      getWorkspace().removeView(getView());
+      getWorkspace().addView(iconView);
+      return;
     }
- else     if (click.isButton1() || (click.isButton2() && click.isShift())) {
-      workspace.raise(getView());
+    buttonBounds.translate(BUTTON_WIDTH + padding,0);
+    buttonBounds.translate(BUTTON_WIDTH + padding,0);
+    if (buttonBounds.contains(click.getLocation())) {
+      dispose();
+      return;
+    }
+  }
+  if (overBorder(click.getLocation())) {
+    Workspace workspace=getWorkspace();
+    if (workspace != null) {
+      if (click.button2()) {
+        workspace.lower(getView());
+      }
+ else       if (click.button1()) {
+        workspace.raise(getView());
+      }
     }
   }
   super.firstClick(click);

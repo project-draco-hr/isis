@@ -30,16 +30,16 @@
   for (int i=0; i < parameterValues.length; i++) {
     parameterValues[i]=values[i];
   }
-  parameters=new ActionParameter[numberParameters];
+  parameters=new ParameterContent[numberParameters];
   for (int i=0; i < numberParameters; i++) {
     NakedObjectSpecification type=types[i];
     String label=labels[i] == null ? type.getShortName() : labels[i];
     Object value=defaultValues[i] == null ? parameterValues[i] : PojoAdapter.createAdapter(defaultValues[i]);
     if (type.isValue()) {
-      parameters[i]=new ValueParameter(label,(Naked)value,type,this,i);
+      parameters[i]=new ValueParameter(label,(Naked)value,type,this);
     }
  else {
-      parameters[i]=new ObjectParameter(label,(Naked)value,type,this,i);
+      parameters[i]=new ObjectParameter(label,(Naked)value,type,this);
     }
   }
 }

@@ -1,0 +1,28 @@
+{
+  if (getObject() instanceof UserContext) {
+    options.add(MenuOptionSet.VIEW,new MenuOption("New Workspace"){
+      public Consent disabled(      View component){
+        return AbstractConsent.allow(getObject() instanceof UserContext);
+      }
+      public void execute(      Workspace workspace,      View view,      Location at){
+        View newWorkspace;
+        Content content=Skylark.getInstance().getContentFactory().createRootContent(getObject());
+        newWorkspace=Skylark.getInstance().getViewFactory().createInnerWorkspace(content);
+        newWorkspace.setLocation(at);
+        workspace.addView(newWorkspace);
+        newWorkspace.markDamaged();
+      }
+    }
+);
+  }
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Class"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+    }
+  }
+);
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Clone"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+    }
+  }
+);
+}

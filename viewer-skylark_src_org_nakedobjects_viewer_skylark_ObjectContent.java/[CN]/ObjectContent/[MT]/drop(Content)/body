@@ -1,0 +1,22 @@
+{
+  NakedObject source=(NakedObject)sourceContent.getNaked();
+  Assert.assertNotNull(source);
+  NakedObject target=(NakedObject)getObject();
+  Assert.assertNotNull(target);
+  if (canDrop(sourceContent).isAllowed()) {
+    Action action=dropAction(source,target);
+    if ((action != null) && target.getHint(ClientSession.getSession(),action,new NakedObject[]{source}).canUse().isAllowed()) {
+      return target.execute(action,new NakedObject[]{source});
+    }
+ else {
+      NakedObjectField[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
+      for (int i=0; i < fields.length; i++) {
+        if (source.getSpecification().isOfType(fields[i].getSpecification()) && target.getField(fields[i]) == null) {
+          target.setAssociation(((NakedObjectAssociation)fields[i]),source);
+          break;
+        }
+      }
+    }
+  }
+  return null;
+}

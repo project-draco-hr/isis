@@ -3,7 +3,7 @@
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
   TestValue view=(TestValue)field(fieldName);
-  if (!(view.getForObject() instanceof NakedValue)) {
+  if (!(view.getForNaked() instanceof NakedValue)) {
     throw new IllegalActionError("Can only make an entry (eg by keyboard) into a value field");
   }
   Naked valueObject=forObject.getField(field);
@@ -16,7 +16,7 @@
       nakedValue=(NakedValue)field.getSpecification().acquireInstance();
     }
     nakedValue.parseTextEntry(value);
-    Hint about=getForObject().getHint(ClientSession.getSession(),field,nakedValue);
+    Hint about=getForNaked().getHint(ClientSession.getSession(),field,nakedValue);
     if (about.isValid().isAllowed()) {
       throw new NakedAssertionFailedError("Value was unexpectedly validated");
     }

@@ -1,21 +1,26 @@
 {
-  Naked returnedObject;
-  try {
-    returnedObject=object.execute(action,null);
-  }
- catch (  Exception e) {
-    returnedObject=PojoAdapter.createAdapter(object.getContext().getObjectManager().generatorError("System error",e));
-  }
-  if (returnedObject != null) {
-    if (returnedObject instanceof NakedError) {
-      Logger.getLogger(getClass()).error(((NakedError)returnedObject));
-      workspace.addOpenViewFor(returnedObject,at);
-    }
- else {
-      if (!(returnedObject instanceof Naked)) {
-        returnedObject=PojoAdapter.createAdapter(returnedObject);
+  BackgroundThread.run(view,new BackgroundTask(){
+    protected void execute(){
+      Naked returnedObject;
+      try {
+        returnedObject=object.execute(action,null);
       }
-      view.objectActionResult(returnedObject,at);
+ catch (      Exception e) {
+        returnedObject=PojoAdapter.createAdapter(object.getContext().getObjectManager().generatorError("System error",e));
+      }
+      if (returnedObject != null) {
+        if (returnedObject instanceof NakedError) {
+          Logger.getLogger(getClass()).error(((NakedError)returnedObject));
+          workspace.addOpenViewFor(returnedObject,at);
+        }
+ else {
+          if (!(returnedObject instanceof Naked)) {
+            returnedObject=PojoAdapter.createAdapter(returnedObject);
+          }
+          view.objectActionResult(returnedObject,at);
+        }
+      }
     }
   }
+);
 }

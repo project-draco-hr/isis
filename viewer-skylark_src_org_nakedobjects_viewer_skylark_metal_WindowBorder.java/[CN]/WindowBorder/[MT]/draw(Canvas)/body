@@ -34,22 +34,25 @@
       canvas.drawIcon(icon,x,y,BUTTON_HEIGHT,BUTTON_HEIGHT);
     }
   }
-  x+=BUTTON_WIDTH + padding;
-  canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
-  canvas.drawRectangle(x,y,w,h,Style.BLACK);
-  canvas.drawLine(x + 3,y + 9,x + 8,y + 9,Style.BLACK);
-  canvas.drawLine(x + 3,y + 10,x + 8,y + 10,Style.BLACK);
-  x+=BUTTON_WIDTH + padding;
-  canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
-  canvas.drawRectangle(x,y,w,h,Style.SECONDARY1);
-  canvas.drawRectangle(x + 3,y + 2,8,8,Style.SECONDARY2);
-  canvas.drawLine(x + 3,y + 3,x + 10,y + 3,Style.SECONDARY2);
-  x+=BUTTON_WIDTH + padding;
-  canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
-  canvas.drawRectangle(x,y,w,h,Style.SECONDARY1);
-  canvas.drawLine(x + 4,y + 3,x + 10,y + 9,Style.BLACK);
-  canvas.drawLine(x + 5,y + 3,x + 11,y + 9,Style.BLACK);
-  canvas.drawLine(x + 10,y + 3,x + 4,y + 9,Style.BLACK);
-  canvas.drawLine(x + 11,y + 3,x + 5,y + 9,Style.BLACK);
+  if (!getContent().isTransient()) {
+    x+=BUTTON_WIDTH + padding;
+    canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
+    canvas.drawRectangle(x,y,w,h,Style.BLACK);
+    canvas.drawLine(x + 3,y + 9,x + 8,y + 9,Style.BLACK);
+    canvas.drawLine(x + 3,y + 10,x + 8,y + 10,Style.BLACK);
+    x+=BUTTON_WIDTH + padding;
+    canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
+    canvas.drawRectangle(x,y,w,h,Style.SECONDARY1);
+    canvas.drawRectangle(x + 3,y + 2,8,8,Style.SECONDARY2);
+    canvas.drawLine(x + 3,y + 3,x + 10,y + 3,Style.SECONDARY2);
+    x+=BUTTON_WIDTH + padding;
+    canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
+    canvas.drawRectangle(x,y,w,h,Style.SECONDARY1);
+    Color crossColor=getContent().isTransient() ? Style.SECONDARY1 : Style.BLACK;
+    canvas.drawLine(x + 4,y + 3,x + 10,y + 9,crossColor);
+    canvas.drawLine(x + 5,y + 3,x + 11,y + 9,crossColor);
+    canvas.drawLine(x + 10,y + 3,x + 4,y + 9,crossColor);
+    canvas.drawLine(x + 11,y + 3,x + 5,y + 9,crossColor);
+  }
   super.draw(canvas);
 }

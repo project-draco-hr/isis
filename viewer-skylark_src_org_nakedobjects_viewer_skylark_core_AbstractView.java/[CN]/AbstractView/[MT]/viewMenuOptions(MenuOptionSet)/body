@@ -1,6 +1,5 @@
 {
   options.setColor(Style.VIEW_MENU);
-  Content content=getContent();
   if (getParent() != null) {
     Enumeration possibleViews=ViewFactory.getViewFactory().openRootViews(content,null);
     while (possibleViews.hasMoreElements()) {
@@ -24,5 +23,35 @@
       options.add(MenuOptionSet.VIEW,CLOSE_OPTION);
       options.add(MenuOptionSet.VIEW,CLOSE_ALL_OPTION);
     }
+  }
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Refresh view"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      refresh();
+    }
+  }
+);
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Invalidate content"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      invalidateContent();
+    }
+  }
+);
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Invalidate layout"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      invalidateLayout();
+    }
+  }
+);
+  final UndoStack undoStack=getViewManager().getUndoStack();
+  if (!undoStack.isEmpty()) {
+    options.add(MenuOptionSet.VIEW,new MenuOption("Undo " + undoStack.getNameOfUndo()){
+      public Consent disabled(      View component){
+        return new Allow(undoStack.descriptionOfUndo());
+      }
+      public void execute(      Workspace workspace,      View view,      Location at){
+        undoStack.undoLastCommand();
+      }
+    }
+);
   }
 }

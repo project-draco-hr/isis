@@ -1,0 +1,14 @@
+{
+  NakedObject transientObject=(NakedObject)view.getContent().getNaked();
+  Action action=view.getContent().getSpecification().getObjectAction(Action.USER,"save");
+  if (action == null) {
+    action=view.getContent().getSpecification().getObjectAction(Action.USER,"persist");
+  }
+  if (action == null) {
+    transientObject.getContext().getObjectManager().makePersistent(transientObject);
+  }
+ else {
+    transientObject.execute(action,new Naked[0]);
+  }
+  return transientObject;
+}

@@ -2,7 +2,8 @@
   NakedObject object=((ObjectContent)view.getContent()).getObject();
   if (object != null && view.getSubviews().length == 0) {
     NakedObjectField[] flds=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
-    ViewFactory factory=ViewFactory.getViewFactory();
+    ViewFactory viewFactory=Skylark.getInstance().getViewFactory();
+    ContentFactory contentFactory=Skylark.getInstance().getContentFactory();
     for (int f=0; f < flds.length; f++) {
       NakedObjectField field=flds[f];
       Naked attribute=object.getField(field);
@@ -10,7 +11,8 @@
         Enumeration elements=((InternalCollection)attribute).elements();
         while (elements.hasMoreElements()) {
           NakedObject cls=(NakedObject)elements.nextElement();
-          View classIcon=factory.createIconizedRootView(cls);
+          Content content=contentFactory.createRootContent(cls);
+          View classIcon=viewFactory.createIcon(content);
           classIcon.setLocation(WorkspaceBuilder.UNPLACED);
           view.addView(classIcon);
         }
@@ -19,7 +21,8 @@
         Enumeration elements=((InternalCollection)attribute).elements();
         while (elements.hasMoreElements()) {
           NakedObject obj=(NakedObject)elements.nextElement();
-          View objectIcon=factory.createIconizedRootView(obj);
+          Content content=contentFactory.createRootContent(obj);
+          View objectIcon=viewFactory.createIcon(content);
           view.addView(objectIcon);
         }
       }

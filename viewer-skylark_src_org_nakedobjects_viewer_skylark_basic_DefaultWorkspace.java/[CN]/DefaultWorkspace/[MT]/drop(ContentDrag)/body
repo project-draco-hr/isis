@@ -4,7 +4,7 @@
   View newView;
   if (source.getObject() instanceof NakedClass && drag.isCtrl()) {
     NakedObjectSpecification spec=((NakedClass)source).forObjectType();
-    Hint classAbout=spec.getClassAbout();
+    Hint classAbout=spec.getClassHint();
     if (classAbout != null && classAbout.canUse().isVetoed()) {
       return;
     }
@@ -13,7 +13,7 @@
   }
  else {
     if (drag.isShift()) {
-      newView=ViewFactory.getViewFactory().createOpenRootView(source);
+      newView=createSubviewFor(source,false);
     }
  else {
       View icon=drag.getSource();
@@ -30,7 +30,7 @@
           }
         }
       }
-      newView=ViewFactory.getViewFactory().createIconizedRootView(source);
+      newView=createSubviewFor(source,true);
     }
   }
   newView.setSize(newView.getRequiredSize());

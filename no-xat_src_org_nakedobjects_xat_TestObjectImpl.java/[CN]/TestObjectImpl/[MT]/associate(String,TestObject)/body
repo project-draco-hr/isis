@@ -6,15 +6,15 @@
   if (targetField instanceof TestValue) {
     throw new IllegalActionError("drop(..) not allowed on value target field; use fieldEntry(..) instead");
   }
-  if ((targetField.getForObject() != null) && !(targetField.getForObject() instanceof InternalCollection)) {
-    throw new IllegalActionError("Field already contains an object: " + targetField.getForObject());
+  if ((targetField.getForNaked() != null) && !(targetField.getForNaked() instanceof InternalCollection)) {
+    throw new IllegalActionError("Field already contains an object: " + targetField.getForNaked());
   }
   NakedObjectAssociation association=(NakedObjectAssociation)fieldFor(fieldName);
-  NakedObject obj=(NakedObject)object.getForObject();
+  NakedObject obj=(NakedObject)object.getForNaked();
   if (association.getSpecification() != null && !obj.getSpecification().isOfType(association.getSpecification())) {
-    throw new IllegalActionError("Can't drop a " + object.getForObject().getSpecification().getShortName() + " on to the "+ fieldName+ " field (which accepts "+ association.getSpecification()+ ")");
+    throw new IllegalActionError("Can't drop a " + object.getForNaked().getSpecification().getShortName() + " on to the "+ fieldName+ " field (which accepts "+ association.getSpecification()+ ")");
   }
-  NakedObject nakedObject=(NakedObject)getForObject();
+  NakedObject nakedObject=(NakedObject)getForNaked();
   Hint about;
   if (association instanceof OneToOneAssociation) {
     assertEmpty(fieldName);

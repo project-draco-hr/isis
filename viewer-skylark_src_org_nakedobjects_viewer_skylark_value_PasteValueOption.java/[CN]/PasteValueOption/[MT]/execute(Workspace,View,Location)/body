@@ -1,6 +1,14 @@
 {
   String pasteValue=getClipboard();
-  OneToOneField objectContent=((OneToOneField)view.getContent());
-  objectContent.getParent().setValue((OneToOneAssociation)objectContent.getField(),pasteValue);
-  updateParent(view);
+  ValueField objectContent=((ValueField)view.getContent());
+  try {
+    objectContent.parseEntry(pasteValue);
+    updateParent(view);
+  }
+ catch (  TextEntryParseException e) {
+    LOG.error("Invalid clipboard operation " + e);
+  }
+catch (  InvalidEntryException e) {
+    LOG.error("Invalid clipboard operation " + e);
+  }
 }
