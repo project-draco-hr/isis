@@ -1,5 +1,15 @@
 {
-  super(view,locationWithinView,mods);
-  this.location=new Location(locationWithinView);
-  this.locationWithinViewer=new Location(locationWithinViewer);
+  super(source,locationWithinView,modifiers);
+  this.locationWithinView=new Location(locationWithinView);
+  this.mouseLocation=new Location(mouseLocation);
+  View parent=source.getParent();
+  if (parent == null) {
+    workspaceOffset=new Location(0,0);
+  }
+ else {
+    View viewsWorkspace=parent.getWorkspace().getView();
+    workspaceOffset=viewsWorkspace.getAbsoluteLocation();
+    Padding padding=viewsWorkspace.getPadding();
+    workspaceOffset.move(padding.getLeft(),padding.getTop());
+  }
 }
