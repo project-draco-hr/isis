@@ -1,6 +1,27 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
+  ConfigurationFactory.setConfiguration(new Configuration());
   XmlDataManager.clearTestDirectory();
   manager=new XmlDataManager("tmp/tests");
+  MockObjectManager.setup();
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationLoaderImpl.setReflectorFactory(new JavaReflectorFactory());
+  ConfigurationFactory.setConfiguration(new Configuration());
+  oids=new SerialOid[SIZE];
+  data=new ObjectData[SIZE];
+  NakedObjectSpecification type=NakedObjectSpecificationLoader.getInstance().loadSpecification(Role.class.getName());
+  pattern=new ObjectData(type,null);
+  for (int i=0; i < SIZE; i++) {
+    oids[i]=new SerialOid(i);
+    data[i]=new ObjectData(type,oids[i]);
+    manager.insert(data[i]);
+  }
+  assertEquals(SIZE,manager.numberOfInstances(pattern));
+  for (int i=0; i < SIZE; i++) {
+    assertEquals(data[i],manager.loadData(oids[i]));
+    assertTrue(manager.getInstances(pattern).contains(data[i]));
+  }
   super.setUp();
+  LOG.debug("Test starting...");
 }
