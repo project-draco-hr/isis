@@ -1,16 +1,29 @@
 {
+  left.layout();
+  if (right != null) {
+    right.layout();
+  }
   if (invalidLayout) {
-    Size treeBrowserSize=left.getRequiredSize();
-    if (right != null) {
-      right.layout();
-      right.setSize(right.getRequiredSize());
-      treeBrowserSize.ensureHeight(right.getSize().getHeight());
+    Bounds workspaceLimit=getWorkspace().getBounds();
+    workspaceLimit.contract(getWorkspace().getPadding());
+    Size rightPanelRequiredSize=(right == null) ? new Size() : right.getRequiredSize();
+    Size leftPanelRequiredSize=left.getRequiredSize();
+    Bounds subviews=new Bounds(leftPanelRequiredSize);
+    subviews.extendWidth(rightPanelRequiredSize.getWidth());
+    subviews.ensureHeight(rightPanelRequiredSize.getHeight());
+    if (workspaceLimit.limitBounds(subviews)) {
+      if (right != null) {
+        rightPanelRequiredSize.setWidth(workspaceLimit.getWidth() - leftPanelRequiredSize.getWidth());
+      }
     }
+    leftPanelRequiredSize.setHeight(subviews.getHeight());
+    left.setSize(leftPanelRequiredSize);
     left.layout();
-    left.setRequiredSize(treeBrowserSize);
-    left.setSize(left.getRequiredSize());
     if (right != null) {
       right.setLocation(new Location(rightViewOffet(),0));
+      rightPanelRequiredSize.setHeight(subviews.getHeight());
+      right.setSize(rightPanelRequiredSize);
+      right.layout();
     }
     invalidLayout=false;
   }

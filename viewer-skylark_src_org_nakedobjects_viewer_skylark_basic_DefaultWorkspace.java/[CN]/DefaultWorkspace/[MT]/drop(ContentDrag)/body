@@ -1,5 +1,27 @@
 {
   getViewManager().showArrowCursor();
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
-  throw new NotImplementedException();
+  View newView;
+  if (source instanceof NakedClass) {
+    NakedObjectSpecification spec=((NakedClass)source).forNakedClass();
+    ClassAbout classAbout=spec.getClassAbout();
+    if (classAbout != null && classAbout.canUse().isVetoed()) {
+      return;
+    }
+    LOG.info("new " + spec.getShortName() + " instance");
+    newView=newInstance(spec,!drag.isCtrl());
+  }
+ else {
+    if (drag.isShift()) {
+      newView=ViewFactory.getViewFactory().createOpenRootView(source);
+    }
+ else {
+      newView=ViewFactory.getViewFactory().createIconizedRootView(source);
+    }
+  }
+  newView.setSize(newView.getRequiredSize());
+  Location location=drag.getTargetLocation();
+  location.add(40,-40);
+  newView.setLocation(location);
+  drag.getTargetView().addView(newView);
 }
