@@ -1,0 +1,15 @@
+{
+  String fullyQualifiedClassName=object.getSpecification().getFullName();
+  schema.setUri(fullyQualifiedClassName);
+  Place place=objectToElement(object);
+  Element element=place.getXmlElement();
+  Element xsElementElement=place.getXsdElement();
+  getXmlDocument().appendChild(element);
+  getXsdElement().appendChild(xsElementElement);
+  schema.setTargetNamespace(getXsdDocument(),fullyQualifiedClassName);
+  String schemaLocationFileName=fullyQualifiedClassName + ".xsd";
+  schema.assignSchema(getXmlDocument(),fullyQualifiedClassName,schemaLocationFileName);
+  setXmlElement(element);
+  setSchemaLocationFileName(schemaLocationFileName);
+  return place;
+}

@@ -1,0 +1,13 @@
+{
+  Element parentElement=parentPlace.getXmlElement();
+  Element parentXsElement=parentPlace.getXsdElement();
+  if (parentElement.getOwnerDocument() != getXmlDocument()) {
+    throw new IllegalArgumentException("parent XML Element must have snapshot's XML document as its owner");
+  }
+  Place childPlace=objectToElement(childObject);
+  Element childElement=childPlace.getXmlElement();
+  Element childXsElement=childPlace.getXsdElement();
+  addElementIfNotPresent(parentElement,childElement);
+  schema.addXsElementIfNotPresent(parentXsElement,childXsElement);
+  return childElement;
+}

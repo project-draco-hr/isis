@@ -1,0 +1,53 @@
+{
+  NakedObject object=place.getObject();
+  Element xmlElement=place.getXmlElement();
+  Vector fieldNamesOrig=fieldNames;
+  fieldNames=new Vector();
+  for (java.util.Enumeration enum=fieldNamesOrig.elements(); enum.hasMoreElements(); ) {
+    fieldNames.addElement(enum.nextElement());
+  }
+  if (fieldNames.size() == 0) {
+    return true;
+  }
+  String fieldName=(String)fieldNames.elementAt(0);
+  fieldNames.removeElementAt(0);
+  NakedObjectSpecification nos=object.getSpecification();
+  FieldSpecification field=null;
+  try {
+    field=nos.getField(fieldName);
+  }
+ catch (  NakedObjectSpecificationException ex) {
+    return false;
+  }
+  NodeList xmlFieldElements=xmlElement.getElementsByTagNameNS("*",field.getName());
+  if (xmlFieldElements.getLength() != 1) {
+    return false;
+  }
+  Element xmlFieldElement=(Element)xmlFieldElements.item(0);
+  if (fieldNames.size() == 0 && annotation != null) {
+    nofMeta.setAnnotationAttribute(xmlFieldElement,annotation);
+  }
+  Place fieldPlace=new Place(object,xmlFieldElement);
+  if (field instanceof ValueFieldSpecification) {
+    return false;
+  }
+ else   if (field instanceof OneToOneAssociationSpecification) {
+    OneToOneAssociationSpecification oneToOneAssociation=((OneToOneAssociationSpecification)field);
+    NakedObject referencedObject=(NakedObject)oneToOneAssociation.get(fieldPlace.getObject());
+    if (referencedObject == null) {
+      return true;
+    }
+    return appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
+  }
+ else   if (field instanceof OneToManyAssociationSpecification) {
+    OneToManyAssociationSpecification oneToManyAssociation=(OneToManyAssociationSpecification)field;
+    InternalCollection collection=(InternalCollection)oneToManyAssociation.get(fieldPlace.getObject());
+    boolean allFieldsNavigated=true;
+    for (int i=0; i < collection.size(); i++) {
+      NakedObject referencedObject=(NakedObject)collection.elementAt(i);
+      allFieldsNavigated=allFieldsNavigated && appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
+    }
+    return allFieldsNavigated;
+  }
+  return false;
+}

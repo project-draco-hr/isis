@@ -1,0 +1,15 @@
+{
+  String fieldName=xmlCollectionElement.getLocalName();
+  Element parentXsComplexTypeElement=xsMeta.complexTypeFor(parentXsElementElement);
+  Element parentXsSequenceElement=xsMeta.sequenceFor(parentXsComplexTypeElement);
+  Element xsFieldElementElement=xsMeta.createXsElementElement(helper.docFor(parentXsSequenceElement),fieldName);
+  parentXsSequenceElement.appendChild(xsFieldElementElement);
+  Element xsFieldComplexTypeElement=xsMeta.complexTypeFor(xsFieldElementElement);
+  Element xsFieldChoiceElement=xsMeta.choiceFor(xsFieldComplexTypeElement);
+  xsMeta.setXsCardinality(xsFieldChoiceElement,0,Integer.MAX_VALUE);
+  xsMeta.addXsNofFeatureAttributeElements(xsFieldComplexTypeElement,"collection");
+  xsMeta.addXsNofAttribute(xsFieldComplexTypeElement,"type");
+  xsMeta.addXsNofAttribute(xsFieldComplexTypeElement,"size");
+  xsMeta.addXsNofAttribute(xsFieldComplexTypeElement,"annotation");
+  return xsFieldElementElement;
+}

@@ -1,0 +1,70 @@
+{
+  NakedObjectSpecification nos=object.getSpecification();
+  Element element=schema.createElement(getXmlDocument(),nos.getShortName(),nos.getFullName());
+  Element xsElement=schema.createXsElementForNofClass(getXsdDocument(),element);
+  Place place=new Place(object,element);
+  nofMeta.setAttributesForClass(element,oidOrHashCode(object).toString());
+  FieldSpecification[] fields=nos.getFields();
+  eachField:   for (int i=0; i < fields.length; i++) {
+    FieldSpecification field=fields[i];
+    String fieldName=field.getName();
+    eachSkipField:     for (int j=0; j < SKIP_FIELDS.length; j++) {
+      if (fieldName.equals(SKIP_FIELDS[j])) {
+        continue eachField;
+      }
+    }
+    Element xmlFieldElement=getXmlDocument().createElementNS(schema.getUri(),schema.getPrefix() + ":" + fieldName);
+    Element xsdFieldElement=null;
+    if (field instanceof ValueFieldSpecification) {
+      ValueFieldSpecification valueFieldSpec=((ValueFieldSpecification)field);
+      Naked value=valueFieldSpec.get(object);
+      Element xmlValueElement=xmlFieldElement;
+      if (value == null) {
+        continue;
+      }
+      nofMeta.setAttributesForValue(xmlValueElement,value.getSpecification().getShortName());
+      boolean isEmpty=(value.titleString().length() > 0);
+      if (isEmpty) {
+        String valueStr=value.titleString();
+        xmlValueElement.appendChild(getXmlDocument().createTextNode(valueStr));
+      }
+ else {
+        nofMeta.setIsEmptyAttribute(xmlValueElement,true);
+      }
+      xsdFieldElement=schema.createXsElementForNofValue(xsElement,xmlValueElement);
+    }
+ else     if (field instanceof OneToOneAssociationSpecification) {
+      OneToOneAssociationSpecification oneToOneAssocSpec=((OneToOneAssociationSpecification)field);
+      NakedObject referencedNakedObject=(NakedObject)oneToOneAssocSpec.get(object);
+      String fullyQualifiedClassName=oneToOneAssocSpec.getType().getFullName();
+      Element xmlReferenceElement=xmlFieldElement;
+      nofMeta.setAttributesForReference(xmlReferenceElement,schema.getPrefix(),fullyQualifiedClassName);
+      if (referencedNakedObject != null) {
+        nofMeta.appendNofTitle(xmlReferenceElement,referencedNakedObject.titleString());
+      }
+ else {
+        nofMeta.setIsEmptyAttribute(xmlReferenceElement,true);
+      }
+      xsdFieldElement=schema.createXsElementForNofReference(xsElement,xmlReferenceElement);
+    }
+ else     if (field instanceof OneToManyAssociationSpecification) {
+      OneToManyAssociationSpecification oneToManyAssociation=(OneToManyAssociationSpecification)field;
+      InternalCollection collection=(InternalCollection)oneToManyAssociation.get(object);
+      String fullyQualifiedClassName=collection.getElementSpecification().getFullName();
+      Element xmlCollectionElement=xmlFieldElement;
+      nofMeta.setNofCollection(xmlCollectionElement,schema.getPrefix(),fullyQualifiedClassName,collection.size());
+      xsdFieldElement=schema.createXsElementForNofCollection(xsElement,xmlCollectionElement);
+    }
+ else {
+      continue;
+    }
+    if (xsdFieldElement != null) {
+      Place.setXsdElement(xmlFieldElement,xsdFieldElement);
+    }
+    xmlFieldElement=addElementIfNotPresent(element,xmlFieldElement);
+    if (xsdFieldElement != null) {
+      schema.addFieldXsElement(xsElement,xsdFieldElement);
+    }
+  }
+  return place;
+}
