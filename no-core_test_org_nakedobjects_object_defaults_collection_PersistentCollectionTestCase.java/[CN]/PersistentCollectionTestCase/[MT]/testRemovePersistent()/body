@@ -1,0 +1,17 @@
+{
+  ArbitraryNakedCollection collection=new ArbitraryCollectionVector();
+  Role[] e=setupCollection(collection,26);
+  ExpectationSet set=new ExpectationSet("remove");
+  for (int i=0; i < 5; i++) {
+    set.addExpected(e[i]);
+  }
+  for (int i=11; i < e.length; i++) {
+    set.addExpected(e[i]);
+  }
+  for (int i=5; i < 11; i++) {
+    collection.remove(e[i]);
+    assertTrue("removed BasicExample " + i,!collection.contains(e[i]));
+  }
+  set.addActualMany(collection.elements());
+  set.verify();
+}

@@ -3,7 +3,7 @@
   String statement="select " + idColumn + ", "+ nameColumn+ " from "+ table+ " where "+ nameColumn+ " = '"+ name+ "'";
   Results rs=connector.select(statement);
   if (rs.next()) {
-    Oid oid=recreateOid(rs,NakedObjectSpecification.getNakedClass(NakedObjectSpecification.class),idColumn);
+    Oid oid=recreateOid(rs,NakedObjectSpecification.getSpecification(NakedObjectSpecification.class),idColumn);
     LOG.debug("  instance  " + oid);
     if (loadedObjects.isLoaded(oid)) {
       LOG.debug("  class already loaded   " + oid);
@@ -11,10 +11,10 @@
       return (NakedClass)loadedObjects.getLoadedObject(oid);
     }
  else {
-      NakedClass instance;
-      instance=new NakedClass();
+      SimpleNakedClass instance;
+      instance=new SimpleNakedClass();
       instance.setOid(oid);
-      instance.getName().setValue(rs.getString(nameColumn));
+      instance.getClassName().setValue(rs.getString(nameColumn));
       instance.setResolved();
       loadedObjects.loaded(instance);
       rs.close();
