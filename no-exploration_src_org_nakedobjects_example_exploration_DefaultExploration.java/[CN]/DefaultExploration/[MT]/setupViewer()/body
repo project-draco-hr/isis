@@ -1,0 +1,37 @@
+{
+  ViewUpdateNotifier updateNotifier=new ViewUpdateNotifier();
+  ViewerFrame frame=new ViewerFrame();
+  frame.setTitle("Exploration");
+  Viewer viewer=new Viewer();
+  viewer.setRenderingArea(frame);
+  frame.setViewer(viewer);
+  viewer.setListener(new ObjectViewingMechanismListener(){
+    public void viewerClosing(){
+    }
+  }
+);
+  InteractionSpy spy=new InteractionSpy();
+  ViewerAssistant viewerAssistant=new ViewerAssistant();
+  viewerAssistant.setViewer(viewer);
+  viewerAssistant.setDebugFrame(spy);
+  viewerAssistant.setUpdateNotifier(updateNotifier);
+  viewer.setUpdateNotifier(updateNotifier);
+  viewer.setSpy(spy);
+  AbstractUserContext applicationContext=applicationContext();
+  if (applicationContext != null) {
+    applicationContext.created();
+  }
+ else {
+    ExplorationContext explorationContext=new ExplorationContext();
+    String[] classes=explorationSetUp.getClasses();
+    for (int i=0; i < classes.length; i++) {
+      explorationContext.addClass(classes[i]);
+    }
+    applicationContext=explorationContext;
+  }
+  NakedObject rootObject=PojoAdapter.createAdapter(applicationContext);
+  RootWorkspaceSpecification spec=new RootWorkspaceSpecification();
+  View view=spec.createView(new RootObject(rootObject),null);
+  viewer.setRootView(view);
+  return frame;
+}

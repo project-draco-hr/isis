@@ -1,0 +1,33 @@
+{
+  String configurationFile=configurationFile();
+  loadConfiguration(configurationFile,DEFAULT_CONFIG);
+  String localeSpec=ConfigurationFactory.getConfiguration().getString("locale");
+  if (localeSpec != null) {
+    int pos=localeSpec.indexOf('_');
+    Locale locale;
+    if (pos == -1) {
+      locale=new Locale(localeSpec,"");
+    }
+ else {
+      String language=localeSpec.substring(0,pos);
+      String country=localeSpec.substring(pos + 1);
+      locale=new Locale(language,country);
+    }
+    Locale.setDefault(locale);
+    LOG.info("Locale set to " + locale);
+  }
+  LOG.debug("locale is " + Locale.getDefault());
+  displaySplash();
+  try {
+    run();
+  }
+ catch (  StartupException e) {
+    System.err.println("Fatal startup failure, exiting");
+    e.printStackTrace(System.err);
+    e.getCause().printStackTrace(System.err);
+    System.exit(0);
+  }
+ finally {
+    removeSplashImmediately();
+  }
+}
