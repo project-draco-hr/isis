@@ -1,0 +1,18 @@
+{
+  final String id=name + "/" + height+ "/"+ tint;
+  if (templateImages.containsKey(id)) {
+    return true;
+  }
+ else {
+    String directory=UiConfiguration.getInstance().imageDirectory();
+    TemplateImage template=loader.getTemplateImage(directory + name);
+    if (template == null) {
+      return false;
+    }
+ else {
+      Image icon=template.getIcon(height,tint);
+      templateImages.put(id,icon);
+      return true;
+    }
+  }
+}

@@ -1,11 +1,13 @@
 {
   final NakedObject object=content.getObject();
   final String iconName=iconName(object);
-  if (iconName == null && icon != null) {
+  if (icon != null && (iconName == null || iconName.equals(lastIconName))) {
     return icon;
   }
+  lastIconName=iconName;
   if (iconName != null) {
-    final Picture loadIcon=loadIcon(iconName);
+    Logger.getLogger(this.getClass()).debug("loading icon " + iconName);
+    final Image loadIcon=loadIcon(iconName);
     if (loadIcon != null) {
       icon=loadIcon;
       return loadIcon;
