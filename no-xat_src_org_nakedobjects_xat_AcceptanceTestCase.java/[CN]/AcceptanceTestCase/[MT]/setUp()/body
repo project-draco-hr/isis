@@ -1,5 +1,6 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.ERROR);
+  loadReflector();
   objectManager=createObjectManager();
   try {
     NakedObjectContext context=new NakedObjectContext(objectManager);
@@ -8,7 +9,7 @@
     setUpFixtures();
     if (testObjectFactory == null) {
       Configuration.installConfiguration("xat.properties");
-      testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent("test-object-factory",NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
+      testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent(TEST_OBJECT_FACTORY,NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
     }
     documentor=testObjectFactory.getDocumentor();
     documentor.start();
