@@ -1,34 +1,6 @@
 {
   super(session,factory);
+  LOG.debug("created test object for " + object);
   setForObject(object);
-  fields=new Hashtable();
-  if (object != null) {
-    viewCache.put(object,this);
-    NakedObjectField[] a=object.getSpecification().getFields();
-    for (int i=0; i < a.length; i++) {
-      NakedObjectField att=a[i];
-      if (att instanceof NakedObjectAssociation) {
-        TestNaked associatedView=null;
-        Naked associate;
-        associate=((PojoAdapter)object).getField(att);
-        if (att.isValue()) {
-          associatedView=factory.createTestValue(session,(NakedValue)associate);
-        }
- else {
-          if (associate != null) {
-            associatedView=(TestObject)viewCache.get(associate);
-          }
-          if (associatedView == null) {
-            if (att.isCollection()) {
-              associatedView=factory.createTestCollection(session,(NakedCollection)associate);
-            }
- else {
-              associatedView=factory.createTestObject(session,(NakedObject)associate,viewCache);
-            }
-          }
-        }
-        fields.put(a[i].getName(),associatedView);
-      }
-    }
-  }
+  existingTestObjects=viewCache;
 }
