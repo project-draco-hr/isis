@@ -1,30 +1,5 @@
 {
   this.target=target;
   this.action=action;
-  parameterSet=new ParameterSet(action);
-  Naked[] parameterValues;
-  parameterValues=parameterSet.getParameterValues();
-  About about=action.getAbout(ClientSession.getSession(),target,parameterValues);
-  String[] labels;
-  Naked[] defaultValues;
-  if (about instanceof ActionAbout) {
-    ActionAbout a=(ActionAbout)about;
-    labels=a.getParameterLabels();
-    defaultValues=a.getDefaultParameterValues();
-  }
- else {
-    labels=new String[parameterSet.length()];
-    defaultValues=new Naked[parameterSet.length()];
-  }
-  parameters=new ActionField[parameterSet.length()];
-  for (int i=0; i < parameterSet.length(); i++) {
-    String label=labels[i] == null ? parameterSet.type(i).getShortName() : labels[i];
-    Naked value=defaultValues[i] == null ? parameterValues[i] : defaultValues[i];
-    if (parameterSet.type(i).isValue()) {
-      parameters[i]=new ValueParameter(label,value,this,i);
-    }
- else {
-      parameters[i]=new ObjectParameter(label,value,this,i);
-    }
-  }
+  parameterSet=new ParameterSet(action,target,this);
 }
