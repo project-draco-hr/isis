@@ -1,8 +1,15 @@
 {
   Assert.assertEquals(view.getView(),view);
-  NakedObject object=((ObjectContent)view.getContent()).getObject();
+  Content content=view.getContent();
+  NakedObject object=((ObjectContent)content).getObject();
   LOG.debug("rebuild view " + view + " for "+ object);
-  NakedObjectSpecification cls=object.getSpecification();
+  NakedObjectSpecification cls=null;
+  if (useFieldType && content instanceof ObjectField) {
+    cls=((ObjectField)content).getType();
+  }
+  if (cls == null) {
+    cls=object.getSpecification();
+  }
   FieldSpecification[] flds=cls.getVisibleFields(object,ClientSession.getSession());
   if (view.getSubviews().length == 0) {
     newBuild(view,object,flds);
