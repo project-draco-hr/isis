@@ -27,27 +27,25 @@
         View fieldView;
         ViewAxis axis=view.getViewAxis();
         if (attribute instanceof NakedCollection) {
-          InternalCollectionContent content;
-          content=new InternalCollectionContent(object,(InternalCollection)attribute,(OneToManyAssociation)field);
+          OneToManyField content;
+          content=new OneToManyField(object,(InternalCollection)attribute,(OneToManyAssociation)field);
           specification=internalList;
           fieldView=specification.createView(content,axis);
         }
- else         if (attribute instanceof NakedObject) {
-          OneToOneContent content;
-          content=new OneToOneContent(object,(NakedObject)attribute,(OneToOneAssociation)field);
+ else         if (attribute instanceof NakedObject || attribute == null) {
+          OneToOneField content;
+          content=new OneToOneField(object,(NakedObject)attribute,(OneToOneAssociation)field);
           specification=factory.getIconizedSubViewSpecification(content);
           fieldView=specification.createView(content,axis);
         }
  else         if (attribute instanceof NakedValue) {
-          ValueContent content;
-          content=new ValueContent(object,(NakedValue)attribute,(Value)field);
+          ValueField content;
+          content=new ValueField(object,(NakedValue)attribute,(Value)field);
           specification=factory.getValueFieldSpecification(content);
           fieldView=specification.createView(content,axis);
         }
  else {
-          OneToOneContent content=new OneToOneContent(object,null,(OneToOneAssociation)field);
-          specification=factory.getEmptyFieldSpecification();
-          fieldView=specification.createView(content,axis);
+          throw new NakedObjectRuntimeException();
         }
         String label=field.getLabel(Session.getSession().getSecurityContext(),object);
         fieldView=new LabelBorder(label,fieldView);
