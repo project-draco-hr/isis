@@ -3,9 +3,9 @@
   NakedObjectSpecification elementSpecification=NakedObjectSpecificationLoader.getInstance().loadSpecification(coll.getElementSpecification().getFullName());
   NakedObject exampleObject=(NakedObject)elementSpecification.acquireInstance();
   FieldSpecification[] viewFields=elementSpecification.getVisibleFields(exampleObject,ClientSession.getSession());
-  TableColumnAxis tableAxis=new TableColumnAxis(viewFields,120);
+  TableAxis tableAxis=new TableAxis(tableFields(viewFields),exampleObject);
+  tableAxis.setupColumnWidths(new TypeBasedColumnWidthStrategy());
   View table=super.createView(content,tableAxis);
   tableAxis.setRoot(table);
-  View view=new ScrollBorder(table);
-  return view;
+  return table;
 }

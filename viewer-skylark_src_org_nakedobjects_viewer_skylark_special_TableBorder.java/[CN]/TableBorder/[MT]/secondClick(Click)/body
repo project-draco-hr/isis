@@ -1,0 +1,27 @@
+{
+  if (isOverColumnBorder(click.getLocation())) {
+    TableAxis axis=((TableAxis)getViewAxis());
+    int column=axis.getColumnBorderAt(click.getLocation().getX()) - 1;
+    if (column == -1) {
+      View[] subviews=getSubviews();
+      for (int i=0; i < subviews.length; i++) {
+        View row=subviews[i];
+        axis.ensureOffset(((TableRowBorder)row).requiredTitleWidth());
+      }
+    }
+ else {
+      View[] subviews=getSubviews();
+      int max=0;
+      for (int i=0; i < subviews.length; i++) {
+        View row=subviews[i];
+        View cell=row.getSubviews()[column];
+        max=Math.max(max,cell.getRequiredSize().getWidth());
+      }
+      axis.setWidth(column,max);
+    }
+    axis.invalidateLayout();
+  }
+ else {
+    super.secondClick(click);
+  }
+}

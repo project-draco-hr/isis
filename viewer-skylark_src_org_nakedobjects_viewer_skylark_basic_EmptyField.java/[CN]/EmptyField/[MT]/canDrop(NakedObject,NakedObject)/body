@@ -11,6 +11,12 @@
     if (parent.getOid() != null && dragSource.getOid() == null) {
       return new Veto("Can't drop a non-persistent into this persistent object");
     }
+    if (dragSource instanceof Aggregated) {
+      Aggregated aggregated=((Aggregated)dragSource);
+      if (aggregated.isAggregated() && aggregated.parent() != parent) {
+        return new Veto("Object is already associated with another object: " + aggregated.parent());
+      }
+    }
     Permission perm=getEmptyField().getAbout(ClientSession.getSession(),parent,dragSource).canUse();
     return perm;
   }

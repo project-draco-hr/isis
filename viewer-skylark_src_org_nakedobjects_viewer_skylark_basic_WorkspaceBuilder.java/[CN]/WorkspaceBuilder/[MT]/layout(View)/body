@@ -4,46 +4,44 @@
     View subview=views[i];
     subview.layout();
   }
-  if (layoutInvalid) {
-    Size size=view.getSize();
-    size.contract(view.getPadding());
-    LOG.debug("Laying out workspace within " + size);
-    int maxHeight=size.getHeight();
-    int xClass=PADDING;
-    int yClass=PADDING;
-    int maxClassWidth=0;
-    int xObject=size.getWidth() - PADDING;
-    int yObject=PADDING;
-    int xWindow=150;
-    int yWindow=PADDING;
-    for (int i=0; i < views.length; i++) {
-      View v=views[i];
-      Size componentSize=v.getRequiredSize();
-      v.setSize(componentSize);
-      if (v.getLocation().equals(ZERO)) {
-        int height=componentSize.getHeight() + 6;
-        if (v.getSpecification().isOpen()) {
-          v.setLocation(new Location(xWindow,yWindow));
-          yWindow+=height;
+  Size size=view.getSize();
+  size.contract(view.getPadding());
+  LOG.debug("Laying out workspace within " + size);
+  int maxHeight=size.getHeight();
+  int xClass=PADDING;
+  int yClass=PADDING;
+  int maxClassWidth=0;
+  int xObject=size.getWidth() - PADDING;
+  int yObject=PADDING;
+  int xWindow=150;
+  int yWindow=PADDING;
+  for (int i=0; i < views.length; i++) {
+    View v=views[i];
+    Size componentSize=v.getRequiredSize();
+    v.setSize(componentSize);
+    if (v.getLocation().equals(ZERO)) {
+      int height=componentSize.getHeight() + 6;
+      if (v.getSpecification().isOpen()) {
+        v.setLocation(new Location(xWindow,yWindow));
+        yWindow+=height;
+      }
+ else {
+        NakedObject object=((ObjectContent)v.getContent()).getObject();
+        if (object instanceof NakedClass) {
+          if (yClass + height > maxHeight) {
+            yClass=PADDING;
+            xClass+=maxClassWidth + PADDING;
+            maxClassWidth=0;
+            LOG.debug("Creating new column at " + xClass + ", "+ yClass);
+          }
+          LOG.debug("Class icon at " + xClass + ", "+ yClass);
+          v.setLocation(new Location(xClass,yClass));
+          maxClassWidth=Math.max(maxClassWidth,componentSize.getWidth());
+          yClass+=height;
         }
  else {
-          NakedObject object=((ObjectContent)v.getContent()).getObject();
-          if (object instanceof NakedClass) {
-            if (yClass + height > maxHeight) {
-              yClass=PADDING;
-              xClass+=maxClassWidth + PADDING;
-              maxClassWidth=0;
-              LOG.debug("Creating new column at " + xClass + ", "+ yClass);
-            }
-            LOG.debug("Class icon at " + xClass + ", "+ yClass);
-            v.setLocation(new Location(xClass,yClass));
-            maxClassWidth=Math.max(maxClassWidth,componentSize.getWidth());
-            yClass+=height;
-          }
- else {
-            v.setLocation(new Location(xObject - componentSize.getWidth(),yObject));
-            yObject+=height;
-          }
+          v.setLocation(new Location(xObject - componentSize.getWidth(),yObject));
+          yObject+=height;
         }
       }
     }

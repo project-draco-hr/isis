@@ -1,0 +1,21 @@
+{
+  int x=0;
+  int rowHeight=row.getSize().getHeight();
+  TableAxis axis=((TableAxis)row.getViewAxis());
+  View[] cells=row.getSubviews();
+  int maxBaseline=maxBaseline(cells);
+  for (int i=0; i < cells.length; i++) {
+    View cell=cells[i];
+    Size s=cell.getRequiredSize();
+    s.setWidth(axis.getColumnWidth(i));
+    s.setHeight(rowHeight);
+    cell.setSize(s);
+    int b=cell.getBaseline();
+    int baselineOffset=Math.max(0,maxBaseline - b);
+    cell.setLocation(new Location(x,baselineOffset));
+    x+=s.getWidth();
+  }
+  Padding padding=row.getPadding();
+  Size size=new Size(padding.getLeftRight(),padding.getTopBottom());
+  row.setSize(size);
+}
