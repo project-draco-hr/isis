@@ -1,0 +1,18 @@
+{
+  DatabaseConnector db;
+  db=new JdbcConnector();
+  try {
+    db.open();
+    if (!db.hasTable("NO_SERIAL_ID")) {
+      db.update("create table no_serial_id (number INTEGER)");
+      db.update("insert into no_serial_id values (1)");
+    }
+    Results rs=db.select("select number from no_serial_id");
+    rs.next();
+    number=rs.getLong("number");
+    db.close();
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+}

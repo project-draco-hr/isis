@@ -1,0 +1,39 @@
+{
+  ObjectMapperFactory mapperFactory=(ObjectMapperFactory)ComponentLoader.loadComponent(BASE_NAME + ".automapper",ObjectMapperFactory.class);
+  DatabaseConnectorFactory connectorFactory=(DatabaseConnectorFactory)ComponentLoader.loadComponent(BASE_NAME + ".connector",DatabaseConnectorFactory.class);
+  factory=new ObjectMapperLookup(loaded,connectorFactory);
+  factory.init();
+  try {
+    factory.setDefault((ObjectMapper)ComponentLoader.loadComponent(BASE_NAME + ".default-mapper",ObjectMapper.class));
+  }
+ catch (  ObjectStoreException e) {
+    throw new ComponentException("Failed to set up default mapper",e);
+  }
+  try {
+    factory.setNakedClassMapper((NakedClassMapper)ComponentLoader.loadComponent(BASE_NAME + ".class-mapper",NakedClassMapper.class));
+  }
+ catch (  ObjectStoreException e) {
+    throw new ComponentException("Failed to set up class mapper",e);
+  }
+  Properties properties=Configuration.getInstance().getPropertySubset(BASE_NAME + ".mapper");
+  Enumeration e=properties.keys();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    String value=properties.getProperty(key);
+    if (value.startsWith("auto.")) {
+      factory.add(key,mapperFactory.createMapper(key,BASE_NAME + ".automapper." + value.substring(5)+ "."));
+    }
+ else     if (value.trim().equals("auto")) {
+      factory.add(key,mapperFactory.createMapper(key,BASE_NAME + ".automapper.default"));
+    }
+ else {
+      LOG.debug("mapper " + key + "="+ value);
+      try {
+        factory.add(key,(ObjectMapper)ComponentLoader.loadNamedComponent(value,ObjectMapper.class));
+      }
+ catch (      ObjectStoreException ex) {
+        throw new ComponentException("Failed to set up mapper for " + key,ex);
+      }
+    }
+  }
+}

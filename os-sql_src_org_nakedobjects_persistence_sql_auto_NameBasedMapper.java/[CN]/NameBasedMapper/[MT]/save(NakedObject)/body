@@ -1,0 +1,40 @@
+{
+  NakedClass cls=object.getNakedClass();
+  String table=table(cls);
+  StringBuffer sb=new StringBuffer();
+  Field[] fields=cls.getFields();
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i].isDerived()) {
+      continue;
+    }
+    Naked fieldValue=fields[i].get(object);
+    if (fields[i] instanceof OneToManyAssociation) {
+      saveInternalCollection(fields[i],(InternalCollection)fieldValue);
+    }
+ else {
+      if (i > 0) {
+        sb.append(", ");
+      }
+      sb.append(columnName(fields[i]));
+      sb.append('=');
+      if (fieldValue instanceof NakedObject) {
+        if (fieldValue == null) {
+          sb.append("NULL");
+        }
+ else {
+          sb.append(primaryKey((NakedObject)fieldValue));
+        }
+      }
+ else       if (fieldValue instanceof NakedValue) {
+        sb.append(typeMapper.valueAsDBString(fields[i],(NakedValue)fieldValue));
+      }
+ else {
+        sb.append("NULL");
+      }
+    }
+  }
+  String assignments=sb.toString();
+  long id=((SimpleOid)object.getOid()).getSerialNo();
+  String statement="update " + table + " set "+ assignments+ " where ID = "+ id;
+  db.update(statement);
+}

@@ -1,0 +1,34 @@
+{
+  try {
+    Configuration params=Configuration.getInstance();
+    String BASE="sql-object-store.jdbc.";
+    String driver=params.getString(BASE + "driver");
+    String url=params.getString(BASE + "connection");
+    String user=params.getString(BASE + "user");
+    String password=params.getString(BASE + "password");
+    if (driver == null) {
+      throw new ObjectStoreException("No driver specified for database connection");
+    }
+    if (url == null) {
+      throw new ObjectStoreException("No connection URL specified to database");
+    }
+    if (user == null) {
+      throw new ObjectStoreException("No user specified for database connection");
+    }
+    if (password == null) {
+      throw new ObjectStoreException("No password specified for database connection");
+    }
+    Class.forName(driver);
+    LOG.info("Connecting to " + url + " as "+ user);
+    connection=DriverManager.getConnection(url,user,password);
+    if (connection == null) {
+      throw new ObjectStoreException("No connection established to " + url);
+    }
+  }
+ catch (  SQLException e) {
+    throw new ObjectStoreException("Failed to start",e);
+  }
+catch (  ClassNotFoundException e) {
+    throw new ObjectStoreException("Could not find database driver",e);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  Vector instances=new Vector();
+  String table=table(cls);
+  LOG.debug("loading instances from SQL " + table);
+  String statement="select id from " + table + " order by id";
+  Results rs=db.select(statement);
+  while (rs.next()) {
+    int id=rs.getInt("id");
+    NakedObject instance=setupReference(loadedObjects,cls,id);
+    LOG.debug("  instance  " + instance);
+    instances.addElement(instance);
+  }
+  return instances;
+}
