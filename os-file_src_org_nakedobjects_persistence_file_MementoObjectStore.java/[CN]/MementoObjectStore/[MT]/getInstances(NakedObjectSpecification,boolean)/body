@@ -1,6 +1,20 @@
 {
   LOG.debug("getInstances of " + cls);
-  ObjectData patternData=new ObjectData(cls,null);
-  NakedObject[] instances=getInstances(patternData,null);
-  return instances;
+  if (includeSubclasses) {
+    NakedObject[] instances=getInstances(cls);
+    NakedObjectSpecification[] subclasses=cls.subclasses();
+    for (int i=0; i < subclasses.length; i++) {
+      NakedObject[] subclassInstances=getInstances(subclasses[i],true);
+      if (subclassInstances != null) {
+        NakedObject[] in=new NakedObject[instances.length + subclassInstances.length];
+        System.arraycopy(instances,0,in,0,instances.length);
+        System.arraycopy(subclassInstances,0,in,0,subclassInstances.length);
+        instances=in;
+      }
+    }
+    return instances;
+  }
+ else {
+    return getInstances(cls);
+  }
 }

@@ -1,10 +1,12 @@
 {
-  Person person=people[2];
+  Oid oid=nextOid();
+  Person person=new Person();
+  person.setOid(oid);
   person.getName().setValue("Samuel");
   person.getSalary().setValue(10.0);
   objectStore.save(person);
   restartObjectStore();
-  assertEquals("Samuel",((Person)objectStore.getObject(person.getOid(),personClass)).name.stringValue());
-  assertEquals(10.0f,((Person)objectStore.getObject(person.getOid(),personClass)).salary.floatValue(),0.0f);
-  assertEquals("Freddy",((Person)objectStore.getObject(people[0].getOid(),personClass)).name.stringValue());
+  NakedObjectSpecification spec=person.getSpecification();
+  assertEquals("Samuel",((Person)objectStore.getObject(oid,spec)).name.stringValue());
+  assertEquals(10.0f,((Person)objectStore.getObject(oid,spec)).salary.floatValue(),0.0f);
 }

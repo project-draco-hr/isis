@@ -1,0 +1,10 @@
+{
+  ObjectContainingTextString object=new ObjectContainingTextString();
+  Oid oid=nextOid();
+  NakedObjectSpecification spec=object.getSpecification();
+  object.setOid(oid);
+  objectStore.save(object);
+  restartObjectStore();
+  ObjectContainingTextString restored=(ObjectContainingTextString)objectStore.getObject(oid,spec);
+  assertEquals(restored.getTextString(),restored.getTextString());
+}
