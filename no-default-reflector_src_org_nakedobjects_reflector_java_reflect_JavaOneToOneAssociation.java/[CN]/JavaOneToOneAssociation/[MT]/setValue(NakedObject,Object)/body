@@ -1,14 +1,12 @@
 {
   LOG.debug("local setValue() " + inObject.getOid() + "/"+ getName()+ "/"+ setValue);
   try {
-    NakedObjectManager objectManager=inObject.getContext().getObjectManager();
-    objectManager.startTransaction();
     if (setMethod == null) {
+      inObject.markDirty();
     }
  else {
       setMethod.invoke(inObject.getObject(),new Object[]{setValue});
     }
-    objectManager.endTransaction();
   }
  catch (  InvocationTargetException e) {
     invocationException("Exception executing " + setMethod,e);
@@ -18,5 +16,6 @@ catch (  IllegalAccessException ignore) {
   }
 catch (  ValueParseException e) {
     e.printStackTrace();
+    throw e;
   }
 }

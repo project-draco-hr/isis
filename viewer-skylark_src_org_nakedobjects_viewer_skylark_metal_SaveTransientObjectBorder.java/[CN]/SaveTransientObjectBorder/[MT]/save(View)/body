@@ -5,7 +5,16 @@
     action=view.getContent().getSpecification().getObjectAction(Action.USER,"persist");
   }
   if (action == null) {
-    transientObject.getContext().getObjectManager().makePersistent(transientObject);
+    NakedObjectManager objectManager=NakedObjects.getObjectManager();
+    try {
+      objectManager.startTransaction();
+      objectManager.makePersistent(transientObject);
+      objectManager.endTransaction();
+    }
+ catch (    RuntimeException e) {
+      objectManager.abortTransaction();
+      throw e;
+    }
   }
  else {
     transientObject.execute(action,new Naked[0]);

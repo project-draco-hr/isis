@@ -1,0 +1,37 @@
+{
+  NakedObject object=instance;
+  NakedObjectSpecification nc=object.getSpecification();
+  NakedObjectField[] fields=nc.getFields();
+  for (int f=0; f < fields.length; f++) {
+    NakedObjectField fld=fields[f];
+    if (fld.isDerived()) {
+      continue;
+    }
+    if (fld.isValue()) {
+      NakedObject reqd=(NakedObject)pattern.getField(fld);
+      NakedObject search=(NakedObject)object.getField(fld);
+      if (reqd.isEmpty(fld)) {
+        continue;
+      }
+      String r=reqd.titleString().toString().toLowerCase();
+      String s=search.titleString().toString().toLowerCase();
+      if (s.indexOf(r) == -1) {
+        return false;
+      }
+    }
+ else {
+      NakedObject reqd=(NakedObject)pattern.getField(fld);
+      NakedObject search=(NakedObject)object.getField(fld);
+      if (reqd == null) {
+        continue;
+      }
+      if (search == null) {
+        return false;
+      }
+      if (reqd != search) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

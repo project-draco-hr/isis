@@ -1,7 +1,7 @@
 {
   options.setColor(Style.VIEW_MENU);
   if (getParent() != null) {
-    Enumeration possibleViews=ViewFactory.getViewFactory().openRootViews(content,null);
+    Enumeration possibleViews=Skylark.getViewFactory().openRootViews(content,null);
     while (possibleViews.hasMoreElements()) {
       ViewSpecification specification=(ViewSpecification)possibleViews.nextElement();
       MenuOption viewAs=new OpenViewOption(specification);
@@ -10,13 +10,13 @@
   }
   if (view.getSpecification().isSubView()) {
     if (view.getSpecification().isReplaceable()) {
-      replaceOptions(ViewFactory.getViewFactory().openSubviews(content,this),options);
-      replaceOptions(ViewFactory.getViewFactory().closedSubviews(content,this),options);
+      replaceOptions(Skylark.getViewFactory().openSubviews(content,this),options);
+      replaceOptions(Skylark.getViewFactory().closedSubviews(content,this),options);
     }
   }
  else {
     if (view.getSpecification().isReplaceable()) {
-      replaceOptions(ViewFactory.getViewFactory().openRootViews(content,this),options);
+      replaceOptions(Skylark.getViewFactory().openRootViews(content,this),options);
     }
     options.add(MenuOptionSet.VIEW,new PrintOption());
     if (getParent() != null) {

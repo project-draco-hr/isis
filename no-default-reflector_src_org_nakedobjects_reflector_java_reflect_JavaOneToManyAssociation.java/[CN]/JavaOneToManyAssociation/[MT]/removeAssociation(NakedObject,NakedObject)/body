@@ -1,10 +1,7 @@
 {
   LOG.debug("local clear association " + associate + " from field "+ getName()+ " in "+ inObject);
   try {
-    NakedObjectManager objectManager=inObject.getContext().getObjectManager();
-    objectManager.startTransaction();
     removeMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
-    objectManager.endTransaction();
   }
  catch (  IllegalArgumentException e) {
     throw new IllegalArgumentException(e.getMessage() + " object: " + inObject.getObject()+ ", parameter: "+ associate.getObject());

@@ -1,0 +1,28 @@
+{
+  Object oid=object.getOid();
+  if (oid != null && !oid.equals(state.oid)) {
+    throw new IllegalArgumentException("This memento can only be used to " + "update the naked object with the Oid " + state.oid);
+  }
+ else {
+    if (!(state instanceof ObjectData)) {
+      throw new NakedObjectRuntimeException("Expected an ObjectData but got " + state.getClass());
+    }
+ else {
+      ObjectData od=(ObjectData)state;
+      NakedObjectField[] fields=object.getSpecification().getFields();
+      for (int i=0; i < fields.length; i++) {
+        NakedObjectField field=fields[i];
+        Object fieldData=od.getEntry(field.getName());
+        if (!field.isDerived()) {
+          if (field instanceof OneToManyAssociation) {
+            updateOneToManyAssociation(object,loadedObjects,(OneToManyAssociation)field,(InternalCollectionData)fieldData);
+          }
+ else           if (field instanceof OneToOneAssociation) {
+            updateOneToOneAssociation(object,loadedObjects,(OneToOneAssociation)field,(Data)fieldData);
+          }
+        }
+      }
+    }
+    LOG.debug("object updated " + object.getOid());
+  }
+}

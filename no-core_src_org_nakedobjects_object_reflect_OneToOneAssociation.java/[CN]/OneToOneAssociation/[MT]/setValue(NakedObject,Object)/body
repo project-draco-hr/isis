@@ -1,3 +1,17 @@
 {
-  reflectiveAdapter.setValue(inObject,associate);
+  NakedObjectManager objectManager=NakedObjects.getObjectManager();
+  try {
+    if (inObject.isPersistent()) {
+      objectManager.startTransaction();
+    }
+    reflectiveAdapter.setValue(inObject,associate);
+    objectManager.saveChanges();
+    if (inObject.isPersistent()) {
+      objectManager.endTransaction();
+    }
+  }
+ catch (  RuntimeException e) {
+    objectManager.abortTransaction();
+    throw e;
+  }
 }

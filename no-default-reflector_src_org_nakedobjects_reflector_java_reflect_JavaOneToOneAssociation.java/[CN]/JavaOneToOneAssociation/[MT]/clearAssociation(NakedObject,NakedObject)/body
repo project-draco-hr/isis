@@ -1,15 +1,12 @@
 {
   LOG.debug("local clear association " + inObject + "/"+ associate);
   try {
-    NakedObjectManager objectManager=inObject.getContext().getObjectManager();
-    objectManager.startTransaction();
     if (removeMethod != null) {
       removeMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
     }
  else {
       setMethod.invoke(inObject.getObject(),new Object[]{null});
     }
-    objectManager.endTransaction();
   }
  catch (  IllegalArgumentException e) {
     throw new IllegalArgumentException("set method expects a " + getType().getFullName() + " object; not a "+ associate.getClass().getName());

@@ -1,0 +1,13 @@
+{
+  LOG.debug("collating changes");
+  Enumeration e=loadedObjects.dirtyObjects();
+  while (e.hasMoreElements()) {
+    NakedObject object=(NakedObject)e.nextElement();
+    LOG.debug("  changed " + object);
+    if (isPersistent(object)) {
+      getTransaction().addCommand(objectStore.createSaveObjectCommand(object));
+    }
+    getTransaction().addNotify(object);
+    object.clearPersistDirty();
+  }
+}

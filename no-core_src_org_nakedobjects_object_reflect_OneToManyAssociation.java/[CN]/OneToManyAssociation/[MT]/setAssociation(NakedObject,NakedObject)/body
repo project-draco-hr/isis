@@ -2,5 +2,19 @@
   if (associate == null) {
     throw new IllegalArgumentException("Can't use null to add an item to a collection");
   }
-  reflectiveAdapter.addAssociation(inObject,associate);
+  NakedObjectManager objectManager=NakedObjects.getObjectManager();
+  try {
+    if (inObject.isPersistent()) {
+      objectManager.startTransaction();
+    }
+    reflectiveAdapter.addAssociation(inObject,associate);
+    objectManager.saveChanges();
+    if (inObject.isPersistent()) {
+      objectManager.endTransaction();
+    }
+  }
+ catch (  RuntimeException e) {
+    objectManager.abortTransaction();
+    throw e;
+  }
 }

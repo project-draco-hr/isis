@@ -1,0 +1,9 @@
+{
+  LOG.debug("destroyObject " + object);
+  getTransaction().addCommand(objectStore.createDestroyObjectCommand(object));
+  object.deleted();
+  clear(object);
+  if (objectStore.getLoadedObjects().isLoaded(object.getOid())) {
+    objectStore.getLoadedObjects().unloaded(object);
+  }
+}

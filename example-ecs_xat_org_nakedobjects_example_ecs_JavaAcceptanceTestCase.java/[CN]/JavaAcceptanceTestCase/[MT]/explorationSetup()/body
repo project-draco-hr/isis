@@ -14,6 +14,7 @@
   objectManager.setFactory(objectFactory);
   objectManager.setOidGenerator(oidGenerator);
   objectManager.setLoadedObjects(loadedObjectsHashtable);
+  NakedObjects.setObjectManager(objectManager);
   container.setObjectManger(objectManager);
   new NakedObjectSpecificationLoaderImpl();
   LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
@@ -22,8 +23,7 @@
   NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
   NakedObjectSpecificationLoaderImpl.setReflectorFactory(reflectorFactory);
   reflectorFactory.setObjectFactory(objectFactory);
-  NakedObjectContext context=new NakedObjectContext(objectManager);
   SimpleExplorationSetup explorationSetup=new SimpleExplorationSetup();
-  explorationSetup.setContext(context);
+  explorationSetup.setObjectManager(objectManager);
   return explorationSetup;
 }

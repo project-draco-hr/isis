@@ -1,10 +1,12 @@
 {
   BasicConfigurator.configure();
-  ConfigurationFactory.setConfiguration(new Configuration(DEFAULT_CONFIG));
-  if (ConfigurationFactory.getConfiguration().getString(SHOW_EXPLORATION_OPTIONS) == null) {
-    ConfigurationFactory.getConfiguration().add(SHOW_EXPLORATION_OPTIONS,"yes");
+  Configuration configuration=new Configuration(DEFAULT_CONFIG);
+  NakedObjects.setConfiguration(configuration);
+  ConfigurationFactory.setConfiguration(configuration);
+  if (NakedObjects.getConfiguration().getString(SHOW_EXPLORATION_OPTIONS) == null) {
+    NakedObjects.getConfiguration().add(SHOW_EXPLORATION_OPTIONS,"yes");
   }
-  PropertyConfigurator.configure(ConfigurationFactory.getConfiguration().getProperties("log4j"));
+  PropertyConfigurator.configure(NakedObjects.getConfiguration().getProperties("log4j"));
   Logger log=Logger.getLogger("Naked Objects");
   log.info(AboutNakedObjects.getName());
   log.info(AboutNakedObjects.getVersion());
@@ -24,13 +26,14 @@
     container.setObjectFactory(objectFactory);
     TransientObjectStore objectStore=new TransientObjectStore();
     objectStore.setLoadedObjects(loadedObjectsHashtable);
-    OidGenerator oidGenerator=new TimeBasedOidGenerator();
+    OidGenerator oidGenerator=new SimpleOidGenerator();
     LocalObjectManager objectManager=new LocalObjectManager();
     objectManager.setObjectStore(objectStore);
     objectManager.setNotifier(updateNotifier);
     objectManager.setFactory(objectFactory);
     objectManager.setOidGenerator(oidGenerator);
     objectManager.setLoadedObjects(loadedObjectsHashtable);
+    NakedObjects.setObjectManager(objectManager);
     container.setObjectManger(objectManager);
     new NakedObjectSpecificationLoaderImpl();
     LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
@@ -40,9 +43,7 @@
     NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
     NakedObjectSpecificationLoaderImpl.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
-    NakedObjectContext context=new NakedObjectContext(objectManager);
     SimpleExplorationSetup explorationSetup=new SimpleExplorationSetup();
-    explorationSetup.setContext(context);
     explorationSetup.addFixture(new EcsFixture());
     ViewerFrame frame=new ViewerFrame();
     frame.setTitle("ECS");
@@ -73,6 +74,7 @@
     frame.setBounds(10,10,800,600);
     viewer.sizeChange();
     frame.show();
+    explorationSetup.setObjectManager(objectManager);
     explorationSetup.installFixtures();
   }
   finally {

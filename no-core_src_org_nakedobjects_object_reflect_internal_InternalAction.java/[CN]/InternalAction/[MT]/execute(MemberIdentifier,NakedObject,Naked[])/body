@@ -1,0 +1,38 @@
+{
+  if (parameters.length != paramCount) {
+    LOG.error(actionMethod + " requires " + paramCount+ " parameters, not "+ parameters.length);
+  }
+  NakedObjectManager objectManager=NakedObjects.getObjectManager();
+  try {
+    LOG.debug("Action: invoke " + inObject + "."+ getName());
+    Object[] executionParameters=new Object[parameters.length];
+    for (int i=0; i < parameters.length; i++) {
+      executionParameters[i]=parameters[i] == null ? null : parameters[i].getObject();
+    }
+    Object result=actionMethod.invoke(inObject.getObject(),executionParameters);
+    LOG.debug(" action result " + result);
+    if (result != null && result instanceof Naked) {
+      return (Naked)result;
+    }
+    if (result != null) {
+      return PojoAdapter.createAdapter(result);
+    }
+  }
+ catch (  InvocationTargetException e) {
+    e.fillInStackTrace();
+    if (e.getTargetException() instanceof TransactionException) {
+      LOG.info("TransactionException thrown while executing " + actionMethod + " "+ e.getTargetException().getMessage());
+      objectManager.abortTransaction();
+    }
+ else {
+      String error="Exception executing " + actionMethod + "; aborted";
+      LOG.error(error);
+      throw new NakedObjectRuntimeException(error,e.getTargetException());
+    }
+  }
+catch (  IllegalAccessException e) {
+    LOG.error("Illegal access of " + actionMethod,e);
+    objectManager.abortTransaction();
+  }
+  return null;
+}
