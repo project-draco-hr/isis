@@ -2,7 +2,9 @@
   ActionContent actionContent=((ActionContent)view.getContent());
   NakedObject result=actionContent.execute();
   NakedObject actionObject=actionContent.getObject();
-  actionObject.getContext().getObjectManager().objectChanged(actionObject);
+  if (!(actionObject instanceof NakedClass)) {
+    actionObject.getContext().getObjectManager().objectChanged(actionObject);
+  }
   if (result != null) {
     move(at);
     workspace.addOpenViewFor(result,at);
