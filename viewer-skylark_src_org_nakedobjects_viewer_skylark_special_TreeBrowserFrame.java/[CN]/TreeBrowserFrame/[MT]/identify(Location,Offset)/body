@@ -1,0 +1,15 @@
+{
+  getViewManager().getSpy().addTrace(this,"mouse location within browser frame",location);
+  Location locationWithinContent=new Location(location);
+  locationWithinContent.add(offset);
+  getViewManager().getSpy().addTrace(this,"mouse location within browser frame content",locationWithinContent);
+  if (left != null && left.getBounds().contains(locationWithinContent)) {
+    getViewManager().getSpy().addTrace("--> subview: " + left);
+    return left.identify(locationWithinContent,new Offset(0,0));
+  }
+  if (right != null && right.getBounds().contains(locationWithinContent)) {
+    getViewManager().getSpy().addTrace("--> subview: " + right);
+    return right.identify(locationWithinContent,new Offset(-rightViewOffet(),0));
+  }
+  return new IdentifiedView(getView(),location,getLocation());
+}

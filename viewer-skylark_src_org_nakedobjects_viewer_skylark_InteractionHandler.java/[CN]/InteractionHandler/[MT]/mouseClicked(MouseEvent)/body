@@ -1,10 +1,9 @@
 {
-  viewer.setLiveDebugPositionInformation("mouse clicked ",downAt,mouseLocationWithinView,currentlyIdentifiedView);
   spy.addAction("Mouse clicked " + mouseLocationWithinView);
   if (currentlyIdentifiedView != null) {
     Click click=new Click(currentlyIdentifiedView,mouseLocationWithinView,mouseLocation,me.getModifiers());
     LOG.debug(click);
-    if (click.isButton3()) {
+    if (click.isButton3() && viewer.getOverlayView() == null) {
       saveCurrentFieldEntry();
       if (currentlyIdentifiedView != null) {
         spy.addAction(" popup " + mouseLocation + " over "+ currentlyIdentifiedView);

@@ -1,10 +1,9 @@
 {
-  if (includeOverlay && overlayView != null && overlayView.getBounds().contains(location)) {
-    location.move(-overlayView.getLocation().getX(),-overlayView.getLocation().getY());
-    return overlayView;
+  if (includeOverlay && overlayView != null && overlayView.getBounds().contains(locationWithinViewer)) {
+    locationWithinViewer.move(-overlayView.getLocation().getX(),-overlayView.getLocation().getY());
+    return new IdentifiedView(overlayView,locationWithinViewer,locationWithinViewer);
   }
  else {
-    View identified=rootView.identify(location);
-    return identified;
+    return rootView.identify(locationWithinViewer,new Offset(0,0));
   }
 }

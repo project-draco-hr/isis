@@ -2,7 +2,7 @@
   int height=0;
   int width=0;
   View[] cells=row.getSubviews();
-  int[] widths=((TableColumnAxis)row.getViewAxis()).getWidths();
+  TableColumnAxis axis=((TableColumnAxis)row.getViewAxis());
   int maxBaseline=0;
   for (int i=0; i < cells.length; i++) {
     View cell=cells[i];
@@ -13,7 +13,7 @@
     Size s=cell.getRequiredSize();
     int b=cell.getBaseline();
     height=Math.max(height,s.getHeight() + (b < maxBaseline ? maxBaseline - b : 0));
-    width+=widths[i];
+    width+=axis.getColumnWidth(i);
   }
   return new Size(width,height);
 }

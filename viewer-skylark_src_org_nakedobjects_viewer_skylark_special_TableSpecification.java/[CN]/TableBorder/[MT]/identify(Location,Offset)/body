@@ -1,0 +1,11 @@
+{
+  Location l=new Location(locationWithinView);
+  l.add(offset);
+  getViewManager().getSpy().addTrace("1- Identify over column " + locationWithinView);
+  getViewManager().getSpy().addTrace("2- Identify over column " + l);
+  if (isOverColumnBorder(l)) {
+    getViewManager().getSpy().addAction("Identified over column ");
+    return new IdentifiedView(this,l,locationWithinView);
+  }
+  return super.identify(locationWithinView,offset);
+}
