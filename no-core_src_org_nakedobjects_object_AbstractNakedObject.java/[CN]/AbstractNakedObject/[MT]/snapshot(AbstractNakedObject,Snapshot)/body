@@ -1,0 +1,21 @@
+{
+  NakedClass nc=object.getNakedClass();
+  StringBuffer str=new StringBuffer();
+  Field[] fields=nc.getFields();
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    if (field instanceof Value) {
+      str.append(((Value)field).get(object).title().toString());
+    }
+ else     if (field instanceof OneToOneAssociation) {
+      str.append(((OneToOneAssociation)field).get(object).title().toString());
+    }
+ else     if (field instanceof OneToManyAssociation) {
+      InternalCollection coll=(InternalCollection)((OneToManyAssociation)field).get(object);
+      for (int j=0; j < coll.size(); j++) {
+        str.append(coll.elementAt(i).title().toString());
+      }
+    }
+    str.append(",  ");
+  }
+}
