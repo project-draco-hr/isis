@@ -1,0 +1,24 @@
+{
+  super.draw(canvas);
+  int left=0;
+  int top=0;
+  int width=getSize().getWidth();
+  int height=getSize().getHeight();
+  canvas.drawSolidRectangle(left,top,width - 1,height - 1,Style.WHITE);
+  canvas.drawRectangle(left,top,width - 1,height - 1,Style.BLACK);
+  left=20;
+  top+=Style.TITLE.getHeight();
+  canvas.drawText("ERROR",left,top,Style.INVALID,Style.TITLE);
+  Error error=(Error)((ObjectContent)getContent()).getObject();
+  top+=30;
+  canvas.drawText(error.getError().stringValue(),left,top,Style.INVALID,Style.NORMAL);
+  top+=30;
+  canvas.drawText(error.getException().stringValue(),left,top,Style.INVALID,Style.NORMAL);
+  top+=30;
+  String trace=error.getTrace().stringValue();
+  StringTokenizer st=new StringTokenizer(trace,"\n\r");
+  while (st.hasMoreTokens()) {
+    canvas.drawText(st.nextToken(),left,top,Style.INVALID,Style.NORMAL);
+    top+=Style.NORMAL.getHeight();
+  }
+}
