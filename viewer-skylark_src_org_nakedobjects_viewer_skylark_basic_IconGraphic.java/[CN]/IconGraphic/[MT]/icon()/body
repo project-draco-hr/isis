@@ -1,3 +1,16 @@
 {
-  return ImageFactory.getImageFactory().createIcon(iconName(content.getObject()),iconHeight,null);
+  final NakedObject object=content.getObject();
+  final String iconName=iconName(object);
+  if (iconName == null && icon != null) {
+    return icon;
+  }
+  if (iconName != null) {
+    final Picture loadIcon=loadIcon(iconName);
+    if (loadIcon != null) {
+      icon=loadIcon;
+      return loadIcon;
+    }
+  }
+  icon=iconPicture(object);
+  return icon;
 }

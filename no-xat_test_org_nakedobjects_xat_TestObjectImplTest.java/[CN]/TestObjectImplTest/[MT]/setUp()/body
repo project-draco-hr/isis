@@ -5,16 +5,15 @@
   om=MockObjectManager.setup();
   NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
   NakedObjectContext context=new NakedObjectContext(om);
-  Session.getSession().setSecurityContext(context);
+  Session session=ClientSession.getSession();
   targetObject=new TestObjectExample();
   targetObject.setContext(context);
-  context=null;
   TestObjectFactory factory=new DefaultTestObjectFactory();
-  target=factory.createTestObject(context,targetObject);
-  singleParameter=factory.createTestObject(context,new TestObjectExample());
-  TestObject parameter2=factory.createTestObject(context,new TestObjectExample());
+  target=factory.createTestObject(session,targetObject);
+  singleParameter=factory.createTestObject(session,new TestObjectExample());
+  TestObject parameter2=factory.createTestObject(session,new TestObjectExample());
   TestValue valueParameter=factory.createParamerTestValue(new TextString("a value"));
   multipleParameters=new TestNaked[]{singleParameter,parameter2,valueParameter};
-  targetObject.getCollection().add(elementOne=new TestElement("one"));
+  targetObject.getCollection().add(new TestElement("one"));
   targetObject.getCollection().add(elementTwo=new TestElement("two"));
 }

@@ -17,11 +17,10 @@
     ObjectViewingMechanism viewer=installViewer();
     NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
     objectManager=installObjectManager(viewer.getUpdateNotifier());
-    NakedObjectContext context=new NakedObjectContext(objectManager);
+    context=new NakedObjectContext(objectManager);
     explorationSetUp=new ExplorationSetUp(context);
     setUpFixtures();
     setUpFixture();
-    Session.getSession().setSecurityContext(context);
     ExplorationContext applicationContext;
     User user;
     NakedObjectSpecification userClass=NakedObjectSpecification.getSpecification(User.class.getName());
@@ -50,7 +49,7 @@
     }
     NakedCollection coll=objectManager.allInstances(userClass);
     applicationContext.setUpUsers(coll);
-    context.setUser(user);
+    ClientSession.getSession().setUser(user);
     NakedObject rootObject=user.getRootObject();
     if (rootObject == null) {
       LOG.warn("User had no root context, a default one has been assigned");
