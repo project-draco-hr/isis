@@ -2,6 +2,8 @@
   OneToManyField internalCollectionContent=(OneToManyField)getContent();
   OneToManyAssociationSpecification field=(OneToManyAssociationSpecification)internalCollectionContent.getField();
   NakedObject target=((ObjectContent)getParent().getContent()).getObject();
-  field.setAssociation(target,(NakedObject)result);
+  if (field.canAssociate(target,(NakedObject)result)) {
+    field.setAssociation(target,(NakedObject)result);
+  }
   super.objectActionResult(result,at);
 }

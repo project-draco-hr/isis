@@ -1,5 +1,4 @@
 {
-  NakedObject object=((ObjectContent)view.getContent()).getObject();
   NakedObject returnedObject;
   try {
     returnedObject=action.execute(object);
@@ -8,6 +7,12 @@
     returnedObject=object.getContext().getObjectManager().generatorError("System error",e);
   }
   if (returnedObject != null) {
-    view.objectActionResult(returnedObject,at);
+    if (returnedObject instanceof NakedError) {
+      Logger.getLogger(getClass()).error(((NakedError)returnedObject));
+      workspace.addOpenViewFor(returnedObject,at);
+    }
+ else {
+      view.objectActionResult(returnedObject,at);
+    }
   }
 }
