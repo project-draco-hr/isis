@@ -2,20 +2,29 @@
   StringBuffer data=new StringBuffer();
   data.append("Objects\n");
   data.append("----------\n");
-  Enumeration e=persistentObjectVector.elements();
+  Enumeration e=objectInstances.keys();
   while (e.hasMoreElements()) {
-    data.append(e.nextElement());
-    data.append('\n');
+    NakedObjectSpecification spec=(NakedObjectSpecification)e.nextElement();
+    Hashtable instances=instancesFor(spec);
+    Enumeration f=instances.elements();
+    while (f.hasMoreElements()) {
+      data.append(f.nextElement());
+      data.append('\n');
+    }
   }
   data.append("\n\nObjects\n");
   data.append("----------\n");
   Vector dump=new Vector();
-  e=persistentObjectVector.elements();
   while (e.hasMoreElements()) {
-    NakedObject object=(NakedObject)e.nextElement();
-    data.append(object);
-    data.append(debugGraph(object,"name???",0,dump));
-    data.append('\n');
+    NakedObjectSpecification spec=(NakedObjectSpecification)e.nextElement();
+    Hashtable instances=instancesFor(spec);
+    Enumeration f=instances.elements();
+    while (f.hasMoreElements()) {
+      NakedObject object=(NakedObject)f.nextElement();
+      data.append(object);
+      data.append(debugGraph(object,"name???",0,dump));
+      data.append('\n');
+    }
   }
   return data.toString();
 }

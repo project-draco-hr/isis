@@ -3,7 +3,6 @@
   if (object.getObject() instanceof NakedClass) {
     throw new ObjectStoreException("Can't make changes to a NakedClass object");
   }
-  if (!persistentObjectVector.contains(object)) {
-    persistentObjectVector.addElement(object);
-  }
+  Hashtable persistentObjectVector=instancesFor(object.getSpecification());
+  persistentObjectVector.put(object.getOid(),object);
 }

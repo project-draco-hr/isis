@@ -2,7 +2,8 @@
   return new DestroyObjectCommand(){
     public void execute() throws ObjectStoreException {
       LOG.info("  delete requested on '" + object + "'");
-      persistentObjectVector.removeElement(object);
+      Hashtable persistentObjectVector=instancesFor(object.getSpecification());
+      persistentObjectVector.remove(object.getOid());
     }
   }
 ;
