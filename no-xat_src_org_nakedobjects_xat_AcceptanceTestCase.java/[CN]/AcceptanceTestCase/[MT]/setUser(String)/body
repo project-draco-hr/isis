@@ -1,0 +1,10 @@
+{
+  Session.logoff();
+  NakedClass cls=NakedClassManager.getInstance().getNakedClass(User.class.getName());
+  InstanceCollection coll=InstanceCollection.findInstances(cls,name);
+  if (coll.size() == 0) {
+    throw new NakedObjectRuntimeException("No user " + name);
+  }
+  User user=(User)coll.elements().nextElement();
+  Session.setLoggedOn(new SecurityContext(null,user));
+}

@@ -1,5 +1,18 @@
 {
+  clock=new ExplorationClock();
+  Date.setClock(clock);
+  Time.setClock(clock);
+  TimeStamp.setClock(clock);
   setUp();
+  ExplorationSetUp fs=new ExplorationSetUp();
+  fs.init(fixtures,NakedClassManager.getInstance(),objectManager,clock);
+  String[] classes=fs.getClasses();
+  for (int i=0; i < classes.length; i++) {
+    NakedClass nc=NakedClassManager.getInstance().getNakedClass(classes[i]);
+    context.getClasses().add(nc);
+  }
+  InstanceCollection coll=InstanceCollection.allInstances(User.class.getName());
+  context.setUpUsers(coll);
   for (int i=0; i < newInstances.size(); i++) {
     NakedObject object=(NakedObject)newInstances.elementAt(i);
     LOG.info("Persisting " + object);

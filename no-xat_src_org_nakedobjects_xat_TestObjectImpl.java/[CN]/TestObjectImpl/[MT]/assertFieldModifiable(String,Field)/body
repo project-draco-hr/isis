@@ -1,4 +1,5 @@
 {
-  boolean canAccess=field.canUse(new SecurityContext(),(NakedObject)getForObject());
-  assertTrue("Field " + fieldName + " is unmodifiable",canAccess);
+  SecurityContext securityContext=Session.getSession().getSecurityContext();
+  boolean canAccess=field.canUse(securityContext,(NakedObject)getForObject());
+  assertTrue("Field " + fieldName + " is unmodifiable for "+ securityContext.getUser(),canAccess);
 }

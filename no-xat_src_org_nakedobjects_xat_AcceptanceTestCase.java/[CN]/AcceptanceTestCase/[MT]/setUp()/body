@@ -2,7 +2,20 @@
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   NakedObjectStore nos;
   nos=new TransientObjectStore();
-  NakedObjectManager objectManager=new LocalObjectManager(nos,new NullUpdateNotifier());
+  objectManager=new LocalObjectManager(nos,new NullUpdateNotifier());
   Session.initSession();
+  context=Session.getSession().getSecurityContext();
+  clock=new ExplorationClock();
+  Date.setClock(clock);
+  Time.setClock(clock);
+  TimeStamp.setClock(clock);
+  ExplorationSetUp fs=new ExplorationSetUp();
+  fs.init(fixtures,NakedClassManager.getInstance(),objectManager,clock);
   documentor=TestObjectFactory.getInstance().getDocumentor(getName().substring(4));
+  String[] cls=fs.getClasses();
+  for (int i=0; i < cls.length; i++) {
+    NakedClass nc=NakedClassManager.getInstance().getNakedClass(cls[i]);
+    TestClass view=TestObjectFactory.getInstance().createTestClass(context,nc);
+    classes.put(nc.getPluralName(),view);
+  }
 }
