@@ -2,7 +2,10 @@
   try {
     Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
     if (obj == null) {
-      return null;
+      if (getType().isOfType(NakedObjectSpecificationLoader.getInstance().loadSpecification(String.class))) {
+        return new StringAdapter("");
+      }
+      throw new NakedObjectRuntimeException(getType().getFullName());
     }
  else {
       return PojoAdapter.createAdapter(obj);

@@ -1,0 +1,25 @@
+{
+  recursiveElements.addElement(object);
+  NakedObjectField[] fields;
+  fields=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
+  for (int i=0; i < fields.length; i++) {
+    NakedObjectField field=fields[i];
+    Object obj=object.getField(field);
+    String name=field.getName();
+    graphIndent(s,level);
+    if (obj instanceof NakedObject) {
+      if (recursiveElements.contains(obj)) {
+        s.append(name + ": " + obj+ "*\n");
+      }
+ else {
+        s.append(name + ": " + obj);
+        debugGraph((NakedObject)obj,name,level + 1,recursiveElements,s);
+      }
+    }
+ else {
+      s.append(name + ": " + obj);
+      s.append("\n");
+    }
+  }
+  return s.toString();
+}

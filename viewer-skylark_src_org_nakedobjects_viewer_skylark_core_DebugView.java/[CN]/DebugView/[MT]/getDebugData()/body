@@ -1,24 +1,29 @@
 {
-  StringBuffer info=new StringBuffer();
-  info.append(view.getView());
-  info.append("\n\n");
-  info.append("VIEW\n");
-  info.append("----\n");
-  info.append(view.debugDetails());
-  info.append("\n");
+  DebugString debug=new DebugString();
+  debug.append(view.getView());
+  debug.blankLine();
+  debug.blankLine();
+  debug.appendTitle("VIEW");
+  debug.append(view.debugDetails());
+  debug.append("\n");
   Content content=view.getContent();
-  info.append("CONTENT\n");
-  info.append("------\n");
-  info.append("Content:     " + (content == null ? "none" : content.debugDetails()) + "\n");
+  debug.appendTitle("CONTENT");
+  debug.append("Content:     " + (content == null ? "none" : content.debugDetails()) + "\n");
   if (content instanceof ObjectContent) {
     NakedObject object=((ObjectContent)content).getObject();
-    info.append(dumpObjectMethods(object));
-    info.append(dumpObject(object));
-    info.append("\n");
-    info.append(dumpGraph(object));
+    dumpObjectMethods(object,debug);
+    dumpObject(object,debug);
+    debug.blankLine();
+    dumpGraph(object,debug);
   }
-  info.append("\n\nDRAWING\n");
-  info.append("------\n");
-  view.draw(new DebugCanvas(info,new Bounds(view.getBounds())));
-  return info.toString();
+  if (content instanceof CollectionContent) {
+    NakedCollection collection=((CollectionContent)content).getCollection();
+    dumpObject(collection,debug);
+    debug.blankLine();
+    dumpGraph(collection,debug);
+  }
+  debug.append("\n\nDRAWING\n");
+  debug.append("------\n");
+  view.draw(new DebugCanvas(debug,new Bounds(view.getBounds())));
+  return debug.toString();
 }

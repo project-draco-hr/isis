@@ -1,15 +1,19 @@
 {
-  NakedObject object=((ObjectContent)content).getObject();
-  if (object instanceof NakedCollection) {
-    return ((NakedCollection)object).size() > 0;
+  if (content instanceof CollectionContent) {
+    NakedCollection collection=((CollectionContent)content).getCollection();
+    return collection.size() > 0;
   }
- else {
+ else   if (content instanceof ObjectContent) {
+    NakedObject object=((ObjectContent)content).getObject();
     NakedObjectField[] fields=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
     for (int i=0; i < fields.length; i++) {
       if (fields[i] instanceof NakedObjectAssociation && !(object.getSpecification().isLookup())) {
         return true;
       }
     }
+    return false;
+  }
+ else {
     return false;
   }
 }

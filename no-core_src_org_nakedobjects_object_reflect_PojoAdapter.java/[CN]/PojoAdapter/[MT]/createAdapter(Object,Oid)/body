@@ -2,7 +2,7 @@
   if (pojo == null) {
     return null;
   }
-  PojoAdapter nakedObject;
+  Naked nakedObject;
   if (pojos.containsKey(pojo)) {
     nakedObject=(PojoAdapter)pojos.get(pojo);
   }
@@ -10,16 +10,17 @@
     if (pojo instanceof PojoAdapter) {
       throw new NakedObjectRuntimeException("Warning: adapter is wrapping an adapter: " + pojo);
     }
-    nakedObject=new PojoAdapter(pojo);
-  }
-  if (oid != null) {
-    if (nakedObject.getOid() == null) {
-      nakedObject.setOid(oid);
+    if (pojo instanceof String) {
+      nakedObject=new StringAdapter((String)pojo);
+    }
+ else     if (pojo instanceof Date) {
+      nakedObject=new DateAdapter((Date)pojo);
     }
  else {
-      if (!nakedObject.getOid().equals(oid)) {
-        throw new NakedObjectRuntimeException("Different OID for same Pojo");
-      }
+      nakedObject=reflectorFactory.createAdapter(pojo);
+    }
+    if (nakedObject == null) {
+      nakedObject=new PojoAdapter(pojo);
     }
   }
   return nakedObject;

@@ -1,0 +1,20 @@
+{
+  if (naked != null) {
+    text.appendln("Summary");
+    text.appendln(2,"  Hash",naked.hashCode());
+    text.appendln(2,"  Adapter",naked.getClass().getName());
+    text.appendln(2,"  Specification",naked.getSpecification());
+    text.appendln(2,"  Class",naked.getObject() == null ? "none" : naked.getObject().getClass().getName());
+    Session session=ClientSession.getSession();
+    text.appendln(2,"  Session",session);
+    text.appendln(2,"  Title",naked.titleString());
+    if (naked instanceof NakedObject) {
+      NakedObject object=(NakedObject)naked;
+      text.appendln(2,"  Context",object.getContext());
+      text.appendln(2,"  ID",object.getOid());
+      text.appendln(2,"  Persistent",(object.getOid() != null));
+      text.appendln(2,"  Resolved",object.isResolved());
+    }
+  }
+  return text.toString();
+}

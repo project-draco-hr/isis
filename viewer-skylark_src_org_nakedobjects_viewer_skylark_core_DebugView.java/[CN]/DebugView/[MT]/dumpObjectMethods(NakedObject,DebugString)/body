@@ -1,0 +1,19 @@
+{
+  if (object != null) {
+    NakedObjectSpecification specification=object.getSpecification();
+    listRelatedClasses(specification,debug);
+    NakedObjectField[] fields=specification.getVisibleFields(object,ClientSession.getSession());
+    Session session=ClientSession.getSession();
+    for (int i=0; i < fields.length; i++) {
+      if (fields[i] instanceof OneToManyAssociation) {
+        OneToManyAssociation f=(OneToManyAssociation)fields[i];
+        debugAboutDetail(debug,f,f.getHint(session,(NakedObject)object));
+      }
+ else       if (fields[i] instanceof OneToOneAssociation) {
+        OneToOneAssociation f=(OneToOneAssociation)fields[i];
+        debugAboutDetail(debug,f,object.getHint(session,f,null));
+      }
+    }
+  }
+  return debug.toString();
+}

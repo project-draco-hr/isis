@@ -1,6 +1,6 @@
 {
   String entry=textContent.getText();
-  NakedObject value=getValue();
+  NakedValue value=getValue();
   if (!entry.equals(value == null ? "" : value.titleString())) {
     LOG.debug("Field edited: \'" + entry + "\' to replace \'"+ (value == null ? "" : value.titleString())+ "\'");
     try {
@@ -9,6 +9,7 @@
       getViewManager().getSpy().addAction("VALID ENTRY: " + entry);
       getState().setValid();
       markDamaged();
+      getParent().invalidateContent();
     }
  catch (    NakedObjectRuntimeException e) {
       invalidReason="UPDATE FAILURE: " + e.getMessage();

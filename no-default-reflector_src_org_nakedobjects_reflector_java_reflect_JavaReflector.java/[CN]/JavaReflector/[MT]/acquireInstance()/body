@@ -2,6 +2,13 @@
   if (Modifier.isAbstract(cls.getModifiers())) {
     throw new IllegalStateException("Handling of abstract naked classes is not yet supported: " + cls);
   }
+  Object object=objectFactory.createObject(cls);
+  if (object instanceof TextString) {
+    return new TextStringAdapter((TextString)object);
+  }
+ else   if (object instanceof Logical) {
+    return new LogicalValueObjectAdapter((Logical)object);
+  }
  else {
     return PojoAdapter.createAdapter(objectFactory.createObject(cls));
   }

@@ -7,8 +7,8 @@
     if (fields[i].isDerived()) {
       continue;
     }
-    NakedObject field=object.getField(fields[i]);
-    NakedObject fieldContent=field;
+    Naked field=object.getField(fields[i]);
+    Naked fieldContent=field;
     String fieldName=fields[i].getName();
     if (fieldContent instanceof InternalCollection) {
       data.addInternalCollection((InternalCollection)fieldContent,fieldName,ensurePersistent);
@@ -17,7 +17,7 @@
       data.saveValue(fieldName,object.isEmpty(fields[i]),field == null ? null : field.getObject().toString());
     }
  else {
-      data.addAssociation(fieldContent,fieldName,ensurePersistent);
+      data.addAssociation((NakedObject)fieldContent,fieldName,ensurePersistent);
     }
   }
   return data;

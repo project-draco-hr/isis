@@ -18,18 +18,13 @@
   viewer.setUpdateNotifier(updateNotifier);
   viewer.setSpy(spy);
   AbstractUserContext applicationContext=applicationContext();
-  if (applicationContext != null) {
-    applicationContext.created();
+  ExplorationContext explorationContext=new ExplorationContext();
+  String[] classes=explorationSetUp.getClasses();
+  for (int i=0; i < classes.length; i++) {
+    explorationContext.addClass(classes[i]);
   }
- else {
-    ExplorationContext explorationContext=new ExplorationContext();
-    String[] classes=explorationSetUp.getClasses();
-    for (int i=0; i < classes.length; i++) {
-      explorationContext.addClass(classes[i]);
-    }
-    applicationContext=explorationContext;
-  }
-  NakedObject rootObject=PojoAdapter.createAdapter(applicationContext);
+  applicationContext=explorationContext;
+  NakedObject rootObject=PojoAdapter.createNOAdapter(applicationContext);
   RootWorkspaceSpecification spec=new RootWorkspaceSpecification();
   View view=spec.createView(new RootObject(rootObject),null);
   viewer.setRootView(view);

@@ -1,0 +1,14 @@
+{
+  if (object instanceof InternalCollection) {
+    InternalCollection coll=(InternalCollection)object;
+    Data[] collData=new Data[coll.size()];
+    for (int j=0; j < coll.size(); j++) {
+      NakedObject ref=coll.elementAt(j);
+      collData[j]=new Data(ref.getOid(),ref.getSpecification().getFullName());
+    }
+    return new InternalCollectionData(coll.getOid(),InternalCollection.class.getName(),collData);
+  }
+ else {
+    return createObjectData((NakedObject)object);
+  }
+}

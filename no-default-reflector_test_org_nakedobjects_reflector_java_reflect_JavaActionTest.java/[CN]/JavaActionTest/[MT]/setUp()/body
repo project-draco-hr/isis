@@ -4,7 +4,8 @@
   Logger.getRootLogger().setLevel(Level.OFF);
   loader=new MockNakedObjectSpecificationLoader();
   javaObject=new JavaActionTestObject();
-  nakedObject=PojoAdapter.createAdapter(javaObject);
+  PojoAdapter.setReflectorFactory(new NullReflectorFactory());
+  nakedObject=PojoAdapter.createNOAdapter(javaObject);
   Class cls=Class.forName(getClass().getName() + "Object");
   Method action=cls.getDeclaredMethod("actionMethod",new Class[0]);
   Method about=cls.getDeclaredMethod("aboutMethod",new Class[]{ActionAbout.class});

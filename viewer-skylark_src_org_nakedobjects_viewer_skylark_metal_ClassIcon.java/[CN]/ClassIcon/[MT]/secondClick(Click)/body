@@ -1,23 +1,22 @@
 {
   Hint classAbout=getNakedClass().forObjectType().getClassAbout();
   if (classAbout == null || classAbout.canAccess().isAllowed()) {
-    View view=null;
+    Naked object=null;
     if (click.isCtrl()) {
       NakedCollection instances=getNakedClass().allInstances();
-      view=ViewFactory.getViewFactory().createOpenRootView(instances);
+      object=instances;
     }
  else {
       if (getNakedClass() instanceof NakedClass) {
-        FastFinder finder=((NakedClass)getNakedClass()).actionFind();
-        view=ViewFactory.getViewFactory().createOpenRootView(PojoAdapter.createAdapter(finder));
+        FastFinder finder=getNakedClass().actionFind();
+        object=PojoAdapter.createAdapter(finder);
       }
     }
-    if (view != null) {
+    if (object != null) {
       Location location=getView().getAbsoluteLocation();
       location.subtract(getWorkspace().getAbsoluteLocation());
       location.add(getSize().getWidth() + 10,0);
-      view.setLocation(location);
-      getWorkspace().addView(view);
+      getWorkspace().addOpenViewFor(object,location);
     }
   }
 }

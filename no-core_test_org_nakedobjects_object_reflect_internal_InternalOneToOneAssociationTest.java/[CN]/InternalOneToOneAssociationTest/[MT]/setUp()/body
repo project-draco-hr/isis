@@ -7,7 +7,8 @@
   NakedObjectContext context=null;
   session=new Session();
   objectWithOneToOneAssoications=new InternalObjectWithOneToOneAssociations();
-  nakedObject=PojoAdapter.createAdapter(objectWithOneToOneAssoications);
+  PojoAdapter.setReflectorFactory(new NullReflectorFactory());
+  nakedObject=PojoAdapter.createNOAdapter(objectWithOneToOneAssoications);
   nakedObject.setContext(context);
   Class cls=InternalObjectWithOneToOneAssociations.class;
   Method get=cls.getDeclaredMethod("getReferencedObject",new Class[0]);
@@ -15,5 +16,5 @@
   Method about=cls.getDeclaredMethod("aboutReferencedObject",new Class[]{InternalAbout.class,InternalObjectForReferencing.class});
   personField=new InternalOneToOneAssociation(PERSON_FIELD_NAME,InternalObjectForReferencing.class,get,set,null,null,about);
   referencedObject=new InternalObjectForReferencing();
-  associate=PojoAdapter.createAdapter(referencedObject);
+  associate=PojoAdapter.createNOAdapter(referencedObject);
 }

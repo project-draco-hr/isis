@@ -1,0 +1,21 @@
+{
+  if (text == null || text.trim().equals("")) {
+    adaptee.clear();
+  }
+ else {
+    try {
+      if (text.startsWith("0x")) {
+        setColor(Integer.parseInt(text.substring(2),16));
+      }
+ else       if (text.startsWith("#")) {
+        setColor(Integer.parseInt(text.substring(1),16));
+      }
+ else {
+        setColor(Integer.parseInt(text));
+      }
+    }
+ catch (    NumberFormatException e) {
+      throw new ValueParseException("Invalid number",e);
+    }
+  }
+}

@@ -4,7 +4,12 @@
   assertFieldModifiable(fieldName,field);
   NakedObject object=((NakedObject)getForObject());
   try {
-    object.parseTextEntry((OneToOneAssociation)field,value);
+    NakedValue value=object.getValue((OneToOneAssociation)field);
+    if (value == null) {
+      value=(NakedValue)field.getSpecification().acquireInstance();
+    }
+    value.parseTextEntry(textEntry);
+    object.setValue((OneToOneAssociation)field,value.getObject());
   }
  catch (  TextEntryParseException e) {
     throw new IllegalActionError("");

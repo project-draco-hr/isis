@@ -12,19 +12,18 @@
     try {
       Naked value=object.getField(field);
       if (field.isValue()) {
-        NakedObject existing=((ValueField)subview.getContent()).getObject();
+        NakedValue existing=((ValueField)subview.getContent()).getObject();
         if (value != existing) {
         }
         subview.refresh();
       }
  else       if (value instanceof NakedCollection) {
-        subview.update((NakedObject)value);
+        subview.update(value);
       }
  else {
         NakedObject existing=((ObjectContent)subviews[i].getContent()).getObject();
-        boolean changeToNull=value == null && existing != null;
-        boolean changedFromNull=value != null && existing == null;
-        if (changeToNull || changedFromNull) {
+        boolean changedValue=value != existing;
+        if (changedValue) {
           View fieldView=subviewDesign.createSubview(createContent(object,value,field),view.getViewAxis());
           if (fieldView != null) {
             view.replaceView(subview,decorateSubview(fieldView));
