@@ -2,6 +2,7 @@
   FieldSpecification field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
+  assertEmpty(fieldName);
   TestNaked targetField=getField(fieldName);
   if (targetField instanceof TestValue) {
     throw new IllegalActionError("drop(..) not allowed on value target field; use fieldEntry(..) instead");
@@ -14,5 +15,22 @@
   if (association.getType() != null && !obj.getSpecification().isOfType(association.getType())) {
     throw new IllegalActionError("Can't drop a " + object.getForObject().getSpecification().getShortName() + " on to the "+ fieldName+ " field (which accepts "+ association.getType()+ ")");
   }
-  association.setAssociation((NakedObject)getForObject(),obj);
+  NakedObject nakedObject=(NakedObject)getForObject();
+  About about;
+  if (association instanceof OneToOneAssociationSpecification) {
+    about=((OneToOneAssociationSpecification)association).getAbout(session,nakedObject,obj);
+  }
+ else   if (association instanceof OneToOneAssociationSpecification) {
+    about=((OneToManyAssociationSpecification)association).getAbout(session,nakedObject,obj,true);
+  }
+ else {
+    throw new NakedObjectRuntimeException();
+  }
+  if (about.canAccess().isVetoed()) {
+    throw new IllegalActionError("Cannot access the field " + field);
+  }
+  if (about.canUse().isVetoed()) {
+    throw new IllegalActionError("Cannot associate " + obj + " in the field "+ field+ " within "+ nakedObject+ ": "+ about.canUse().getReason());
+  }
+  association.setAssociation(nakedObject,obj);
 }
