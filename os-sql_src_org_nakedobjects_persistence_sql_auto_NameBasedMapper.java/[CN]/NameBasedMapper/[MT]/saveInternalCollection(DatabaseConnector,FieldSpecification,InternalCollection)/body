@@ -1,12 +1,12 @@
 {
   NakedObjectSpecification cls=collection.forParent().getSpecification();
   String table=table(cls) + "_" + field.getName().toLowerCase();
-  long parentId=((SimpleOid)collection.forParent().getOid()).getSerialNo();
+  long parentId=((SerialOid)collection.forParent().getOid()).getSerialNo();
   int size=collection.size();
   for (int i=0; i < size; i++) {
     NakedObject element=collection.elementAt(i);
     String columns=table(cls) + "_id, " + field.getName().toLowerCase()+ "_id";
-    long elementId=((SimpleOid)element.getOid()).getSerialNo();
+    long elementId=((SerialOid)element.getOid()).getSerialNo();
     String values=parentId + ", " + elementId;
     String statement="insert into " + table + " ("+ columns+ ") values ("+ values+ ")";
     connector.update(statement);

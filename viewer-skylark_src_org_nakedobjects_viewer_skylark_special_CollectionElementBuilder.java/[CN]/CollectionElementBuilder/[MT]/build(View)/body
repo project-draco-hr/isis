@@ -1,10 +1,10 @@
 {
   Assert.assertEquals(view.getView(),view);
   Content content=view.getContent();
-  NakedCollection collection=(NakedCollection)((ObjectContent)content).getObject();
   OneToManyAssociationSpecification field=(OneToManyAssociationSpecification)(content instanceof OneToManyField ? ((OneToManyField)content).getField() : null);
-  LOG.debug("rebuild view " + view + " for "+ collection);
-  Enumeration elements=collection.displayElements();
+  LOG.debug("rebuild view " + view + " for "+ content);
+  CollectionDisplayIterator iterator=((CollectionContent)content).getIterator();
+  Enumeration elements=iterator.displayElements();
   View[] subviews=view.getSubviews();
   NakedObject[] existingElements=new NakedObject[subviews.length];
   for (int i=0; i < subviews.length; i++) {

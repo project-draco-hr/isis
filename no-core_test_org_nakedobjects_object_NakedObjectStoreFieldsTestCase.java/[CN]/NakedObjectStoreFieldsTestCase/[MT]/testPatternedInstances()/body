@@ -7,6 +7,7 @@
     Person v=null;
     for (int i=0; i < obj.length; i++) {
       obj[i]=new Role();
+      obj[i].setContext(context);
       obj[i].setOid(nextOid());
       obj[i].getName().setValue(((i % 2) == 0) ? "even" : "odd");
       v=new Person();
@@ -16,6 +17,7 @@
       objectStore.createObject(obj[i]);
     }
     Role examplePattern=new Role();
+    examplePattern.setContext(context);
     examplePattern.makeFinder();
     NakedObject[] instances=objectStore.getInstances(examplePattern,false);
     assertEquals("instances size",4,instances.length);

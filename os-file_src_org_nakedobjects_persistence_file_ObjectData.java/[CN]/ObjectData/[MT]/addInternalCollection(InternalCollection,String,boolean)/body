@@ -1,8 +1,8 @@
 {
-  if (ensurePersistent && collection != null && !collection.isPersistent()) {
+  if (ensurePersistent && collection != null && collection.getOid() == null) {
     throw new IllegalStateException("Cannot save a collection that is not persistent");
   }
-  SimpleOid coid=(SimpleOid)collection.getOid();
+  SerialOid coid=(SerialOid)collection.getOid();
   initCollection(coid,fieldName);
   int size=collection.size();
   for (int i=0; i < size; i++) {
@@ -11,6 +11,6 @@
     if (elementOid == null) {
       throw new IllegalStateException("Element is not persistent " + element);
     }
-    addElement(fieldName,(SimpleOid)elementOid);
+    addElement(fieldName,(SerialOid)elementOid);
   }
 }
