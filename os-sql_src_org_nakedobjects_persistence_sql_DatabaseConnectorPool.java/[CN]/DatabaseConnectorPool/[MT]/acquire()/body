@@ -1,0 +1,10 @@
+{
+  DatabaseConnector connector=findFreeConnector();
+  if (connector == null) {
+    connector=factory.createConnector();
+    connectorPool.addElement(connector);
+    LOG.info("Added an additional database connection; now contains " + connectorPool.size() + " connections");
+  }
+  LOG.debug("acquired connection " + connector);
+  return connector;
+}
