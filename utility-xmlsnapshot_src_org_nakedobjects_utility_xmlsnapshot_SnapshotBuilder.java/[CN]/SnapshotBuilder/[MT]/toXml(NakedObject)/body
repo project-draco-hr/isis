@@ -1,0 +1,20 @@
+{
+  NamespaceManager namespaceManager=new NamespaceManager();
+  DocumentBuilderFactory dbf=DocumentBuilderFactoryImpl.newInstance();
+  dbf.setNamespaceAware(true);
+  DocumentBuilder db;
+  try {
+    db=dbf.newDocumentBuilder();
+    Document doc=db.newDocument();
+    Element rootElement=doc.createElementNS(NamespaceManager.NOF_METAMODEL_NS_URI,"nof:snapshot");
+    doc.appendChild(rootElement);
+    namespaceManager.addXmlnsNamespace(rootElement);
+    appendXml(namespaceManager,object,rootElement);
+    return rootElement;
+  }
+ catch (  ParserConfigurationException e) {
+    e.printStackTrace(System.err);
+    LOG.error("Unable to build snapshot",e);
+  }
+  return null;
+}
