@@ -6,8 +6,10 @@
       XStream xstream=new XStream();
       Request request=(Request)xstream.fromXML(requestData);
       LOG.debug("Request received " + request);
+      UpdatePackager updates=updateNotifier.createUpdatePackager();
       request.execute(server);
       Response response=new Response(request);
+      response.setUpdates(updates.getUpdates());
       LOG.debug("Sending " + response);
       String responseData=xstream.toXML(response);
       LOG.debug("Send response \n" + responseData);
