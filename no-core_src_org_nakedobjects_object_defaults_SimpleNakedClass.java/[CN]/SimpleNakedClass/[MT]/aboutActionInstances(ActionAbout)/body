@@ -1,5 +1,11 @@
 {
   about.setDescription("Get the " + getSingularName() + " instances");
   about.setName(getPluralName());
-  about.unusableOnCondition(!getObjectManager().hasInstances(forNakedClass()),"No instances available");
+  ClassAbout ca=specification.getClassAbout();
+  if (ca != null && ca.canAccess().isVetoed()) {
+    about.invisible();
+  }
+ else {
+    about.unusableOnCondition(!getObjectManager().hasInstances(forNakedClass()),"No instances available");
+  }
 }
