@@ -1,3 +1,10 @@
 {
-  return (object.getOid() != null) ? object.getOid().toString() : "" + object.hashCode();
+  Oid oid=object.getOid();
+  if (oid == null) {
+    return "" + object.hashCode();
+  }
+  InlineTransferableWriter itw=new InlineTransferableWriter();
+  oid.writeData(itw);
+  itw.close();
+  return itw.toString();
 }

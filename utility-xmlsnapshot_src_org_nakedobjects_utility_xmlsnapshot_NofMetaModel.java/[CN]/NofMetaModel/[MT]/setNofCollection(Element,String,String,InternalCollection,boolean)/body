@@ -1,0 +1,14 @@
+{
+  setAttribute(element,"feature",NOF_METAMODEL_FEATURE_COLLECTION);
+  setAttribute(element,"type",prefix + ":" + fullyQualifiedClassName);
+  setAttribute(element,"size","" + collection.size());
+  if (addOids) {
+    Element oidsElement=appendElement(element,"oids");
+    for (Enumeration e=collection.oids(); e.hasMoreElements(); ) {
+      Oid oid=(Oid)e.nextElement();
+      DomTransferableWriter dtw=new DomTransferableWriter(oidsElement,this,oid.getClass().getName());
+      oid.writeData(dtw);
+      dtw.close();
+    }
+  }
+}

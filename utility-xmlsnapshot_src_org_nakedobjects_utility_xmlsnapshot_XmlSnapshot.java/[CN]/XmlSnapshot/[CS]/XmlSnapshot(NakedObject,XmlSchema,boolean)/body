@@ -1,0 +1,21 @@
+{
+  this.addOids=addOids;
+  this.nofMeta=new NofMetaModel();
+  this.xsMeta=new XsMetaModel();
+  this.helper=new Helper();
+  this.schema=schema;
+  final DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
+  dbf.setNamespaceAware(true);
+  DocumentBuilder db;
+  try {
+    db=dbf.newDocumentBuilder();
+    this.xmlDocument=db.newDocument();
+    this.xsdDocument=db.newDocument();
+    xsdElement=xsMeta.createXsSchemaElement(xsdDocument);
+    this.rootPlace=appendXml(rootObject);
+  }
+ catch (  ParserConfigurationException e) {
+    LOG.error("Unable to build snapshot",e);
+    throw new NakedObjectRuntimeException(e);
+  }
+}
