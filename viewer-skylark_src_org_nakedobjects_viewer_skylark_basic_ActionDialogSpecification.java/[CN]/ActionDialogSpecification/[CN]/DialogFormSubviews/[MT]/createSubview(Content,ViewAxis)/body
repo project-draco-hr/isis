@@ -4,7 +4,11 @@
     return view;
   }
  else   if (content instanceof ValueParameter) {
-    return new TextField.Specification().createView(content,axis);
+    ViewFactory factory=ViewFactory.getViewFactory();
+    if (content instanceof ValueField) {
+      ViewSpecification specification=factory.getValueFieldSpecification((ValueContent)content);
+      return specification.createView(content,axis);
+    }
   }
   return null;
 }
