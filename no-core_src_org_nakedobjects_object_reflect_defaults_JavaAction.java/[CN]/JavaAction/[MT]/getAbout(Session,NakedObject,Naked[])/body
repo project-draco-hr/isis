@@ -25,10 +25,15 @@
     return about;
   }
  catch (  InvocationTargetException e) {
-    LOG.error("Exception executing " + aboutMethod,e.getTargetException());
+    invocationException("Exception whilst reflectively getting about for " + getName() + " on "+ object,e);
   }
-catch (  IllegalAccessException ignore) {
-    LOG.error("Illegal access of " + aboutMethod,ignore);
+catch (  IllegalAccessException e) {
+    if (JavaReflector.isStrict()) {
+      throw new NakedObjectRuntimeException("Exception whilst reflectively getting about for " + getName() + " on "+ object,e);
+    }
+ else {
+      LOG.error("Illegal access of " + aboutMethod,e);
+    }
   }
   return new DefaultAbout();
 }
