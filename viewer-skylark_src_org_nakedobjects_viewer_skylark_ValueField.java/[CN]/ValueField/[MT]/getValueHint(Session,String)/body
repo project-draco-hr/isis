@@ -1,4 +1,15 @@
 {
-  Naked example=(Naked)getSpecification().acquireInstance();
+  NakedValue example=(NakedValue)getSpecification().acquireInstance();
+  try {
+    example.parseTextEntry(entryText);
+  }
+ catch (  final InvalidEntryException e) {
+    return new DefaultHint(){
+      public Consent isValid(){
+        return new Veto(e.getMessage());
+      }
+    }
+;
+  }
   return getParent().getHint(ClientSession.getSession(),(NakedObjectField)getField(),example);
 }
