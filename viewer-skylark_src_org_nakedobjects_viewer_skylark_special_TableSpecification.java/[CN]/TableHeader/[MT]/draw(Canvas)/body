@@ -3,12 +3,14 @@
   TableColumnAxis axis=((TableColumnAxis)getViewAxis());
   FieldSpecification[] fields=axis.getFields();
   int[] widths=axis.getWidths();
-  int x=axis.getOffset();
+  int x=axis.getHeaderOffset();
   for (int i=0; i < fields.length; i++) {
     FieldSpecification field=fields[i];
     String label=field.getLabel();
     canvas.drawText(label,x,y,Style.SECONDARY1,Style.LABEL);
     x+=widths[i];
   }
+  canvas.drawLine(0,top,x - 1,top,Style.SECONDARY2);
   super.draw(canvas);
+  canvas.drawRectangle(0,0,getSize().getWidth() - 1,getSize().getHeight() - top - 1,Style.SECONDARY2);
 }

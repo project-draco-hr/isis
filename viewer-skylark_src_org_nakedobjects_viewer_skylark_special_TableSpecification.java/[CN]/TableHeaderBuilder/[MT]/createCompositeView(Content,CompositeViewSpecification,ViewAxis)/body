@@ -1,7 +1,9 @@
 {
   AbstractTypedNakedCollectionVector coll=(AbstractTypedNakedCollectionVector)((ObjectContent)content).getObject();
-  FieldSpecification[] viewFields=NakedObjectSpecificationLoader.getInstance().loadSpecification(coll.getElementSpecification().getFullName()).getVisibleFields(null,ClientSession.getSession());
-  TableColumnAxis tableAxis=new TableColumnAxis(viewFields,100);
+  NakedObjectSpecification elementSpecification=NakedObjectSpecificationLoader.getInstance().loadSpecification(coll.getElementSpecification().getFullName());
+  NakedObject exampleObject=(NakedObject)elementSpecification.acquireInstance();
+  FieldSpecification[] viewFields=elementSpecification.getVisibleFields(exampleObject,ClientSession.getSession());
+  TableColumnAxis tableAxis=new TableColumnAxis(viewFields,120);
   View view=wrappedBuilder.createCompositeView(content,specification,tableAxis);
   tableAxis.setRoot(view);
   return new TableHeader(view);
