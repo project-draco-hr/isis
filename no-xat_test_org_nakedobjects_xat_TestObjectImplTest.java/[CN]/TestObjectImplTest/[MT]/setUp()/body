@@ -4,8 +4,18 @@
   om=MockObjectManager.setup();
   om.setupAddClass(NakedObject.class);
   om.setupAddClass(TestObjectExample.class);
+  om.setupAddClass(InternalCollection.class);
+  om.setupAddClass(TypedCollection.class);
+  om.setupAddClass(TestElement.class);
+  om.setupAddClass(TextString.class);
   Session.initSession();
   SecurityContext context=Session.getSession().getSecurityContext();
-  object=new TestObjectExample();
-  testObject=new TestObjectImpl(context,object);
+  targetObject=new TestObjectExample();
+  target=new TestObjectImpl(context,targetObject);
+  singleParameter=new TestObjectImpl(context,new TestObjectExample());
+  TestObjectImpl parameter2=new TestObjectImpl(context,new TestObjectExample());
+  TestValue valueParameter=TestObjectFactory.getInstance().createParamerTestValue(new TextString("a value"));
+  multipleParameters=new TestNaked[]{singleParameter,parameter2,valueParameter};
+  targetObject.getCollection().add(elementOne=new TestElement("one"));
+  targetObject.getCollection().add(elementTwo=new TestElement("two"));
 }

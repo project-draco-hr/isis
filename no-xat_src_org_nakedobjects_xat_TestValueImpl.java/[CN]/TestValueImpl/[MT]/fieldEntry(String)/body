@@ -1,8 +1,12 @@
 {
   try {
+    this.value.parseAndSave(parent,value);
     ((NakedValue)getForObject()).parse(value);
   }
  catch (  ValueParseException e) {
-    throw new IllegalActionError("Field value " + value + " could not be parsed in "+ getForObject());
+    throw new IllegalActionError("Field value '" + value + "' could not be parsed in field "+ this.value.getName());
+  }
+catch (  InvalidEntryException e) {
+    throw new IllegalActionError("Field value '" + value + "' is not valid: "+ e.getMessage());
   }
 }

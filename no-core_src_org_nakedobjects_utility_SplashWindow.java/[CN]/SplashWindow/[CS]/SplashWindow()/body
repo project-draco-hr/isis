@@ -2,13 +2,22 @@
   super(new Frame());
   parent=(Frame)getParent();
   logo=ImageIcon.loadImage("logo.jpg");
+  font=new Font("SansSerif",Font.PLAIN,9);
+  FontMetrics fm=Toolkit.getDefaultToolkit().getFontMetrics(font);
+  lineHeight=(int)(fm.getHeight() * 1.05);
+  ascent=fm.getAscent();
+  int maxWidth=logo.getWidth(this);
+  maxWidth=Math.max(maxWidth,fm.stringWidth(AboutNakedObjects.getCopyrightNotice()));
+  maxWidth=Math.max(maxWidth,fm.stringWidth(AboutNakedObjects.getVersion()));
+  width=PADDING + maxWidth + PADDING;
+  height=PADDING + logo.getHeight(this) + PADDING+ lineHeight * 2 + PADDING;
   Dimension screen=getToolkit().getScreenSize();
-  setSize(WIDTH,HEIGHT);
-  int x=(screen.width / 2) - (WIDTH / 2);
+  setSize(width,height);
+  int x=(screen.width / 2) - (width / 2);
   if ((screen.width / screen.height) >= 2) {
-    x=(screen.width / 4) - (WIDTH / 2);
+    x=(screen.width / 4) - (width / 2);
   }
-  int y=(screen.height / 2) - (HEIGHT / 2);
+  int y=(screen.height / 2) - (width / 2);
   setLocation(x,y);
   setBackground(Color.black);
   show();

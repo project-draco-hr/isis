@@ -1,18 +1,17 @@
 {
   if (logo != null) {
-    g.drawImage(logo,20,10,this);
+    g.drawImage(logo,PADDING,PADDING,this);
   }
   g.setColor(Color.white);
-  g.setFont(Font.decode(FONT));
+  g.setFont(font);
+  int line=height - PADDING - (2 * lineHeight) + ascent;
   FontMetrics fm=g.getFontMetrics();
-  int lineheight=(int)(fm.getHeight() * 1.05);
-  int line=HEIGHT - (4 * lineheight);
-  String version="@VERSION@";
-  g.drawString("Naked Objects, version " + version,LEFT,line);
-  line+=lineheight;
-  g.drawString("Copyright \u00a9 2000 - 2004 Naked Objects Group Ltd",LEFT,line);
-  line+=lineheight;
-  g.drawString("This framework is released under the GPL",LEFT,line);
-  line+=lineheight;
-  g.drawString("http://www.nakedobjects.org",LEFT,line);
+  String copyrightNotice=AboutNakedObjects.getCopyrightNotice();
+  int left1=width / 2 - fm.stringWidth(copyrightNotice) / 2;
+  String version=AboutNakedObjects.getVersion();
+  int left2=width / 2 - fm.stringWidth(version) / 2;
+  int left=Math.min(left1,left2);
+  g.drawString(copyrightNotice,left,line);
+  line+=lineHeight;
+  g.drawString(version,left,line);
 }

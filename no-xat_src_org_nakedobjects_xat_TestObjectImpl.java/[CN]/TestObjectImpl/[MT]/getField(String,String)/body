@@ -1,26 +1,25 @@
 {
   Field field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
-  TestObject view=(TestObject)fields.get(fieldName);
-  view.setForObject((Naked)fieldFor(fieldName).get((NakedObject)getForObject()));
-  if (!(view.getForObject() instanceof InternalCollection)) {
+  Naked object=getField(fieldName).getForObject();
+  if (!(object instanceof InternalCollection)) {
     throw new IllegalActionError("getField(String, String) only allows an object to be selected from an InternalCollection");
   }
-  Enumeration e=((NakedCollection)view.getForObject()).elements();
-  NakedObject object=null;
+  Enumeration e=((NakedCollection)object).elements();
+  NakedObject selectedObject=null;
   int noElements=0;
   while (e.hasMoreElements()) {
     NakedObject element=(NakedObject)e.nextElement();
     if (element.title().toString().equals(title)) {
-      object=element;
+      selectedObject=element;
       noElements++;
     }
   }
   if (noElements == 0) {
-    throw new IllegalActionError("The field " + fieldName + " must contain an object titled "+ title+ " within it");
+    throw new IllegalActionError("The field '" + fieldName + "' must contain an object titled '"+ title+ "' within it");
   }
-  if (noElements > 1) {
-    throw new IllegalActionError("The field " + fieldName + " must only contain one object titled "+ title+ " within it");
+ else   if (noElements > 1) {
+    throw new IllegalActionError("The field '" + fieldName + "' must only contain one object titled '"+ title+ "' within it");
   }
-  return factory().createTestObject(context,object);
+  return factory().createTestObject(context,selectedObject);
 }

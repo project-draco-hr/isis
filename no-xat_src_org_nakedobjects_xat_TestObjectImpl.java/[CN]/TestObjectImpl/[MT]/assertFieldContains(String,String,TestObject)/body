@@ -6,25 +6,25 @@
     if (actualObject instanceof InternalCollection) {
       int size=((InternalCollection)actualObject).size();
       if (size > 0) {
-        Assert.fail(expected(message) + " " + fieldName+ " collection to contain zero elements, but found "+ size);
+        throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' collection to contain zero elements, but found "+ size);
       }
     }
  else     if (actualObject != null) {
-      Assert.fail(expected(message) + " an empty field, but found " + actualObject);
+      throw new NakedAssertionFailedError(expected(message) + " an empty field, but found " + actualObject);
     }
   }
  else {
     Naked expectedObject=expectedView.getForObject();
     if (actualObject == null) {
-      if (expectedObject != null)       Assert.fail(expected(message) + expectedObject + "  but found an empty field");
+      if (expectedObject != null)       throw new NakedAssertionFailedError(expected(message) + expectedObject + "  but found an empty field");
     }
  else     if (actualObject instanceof InternalCollection) {
       if (!((InternalCollection)actualObject).contains((NakedObject)expectedObject)) {
-        Assert.fail(expected(message) + " " + fieldName+ " collection to contain "+ expectedObject);
+        throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' collection to contain "+ expectedObject);
       }
     }
  else     if (!actualObject.equals(expectedObject)) {
-      Assert.fail(expected(message) + " object of " + expectedObject+ " but got "+ actualObject);
+      throw new NakedAssertionFailedError(expected(message) + " object of " + expectedObject+ " but got "+ actualObject);
     }
   }
 }

@@ -6,8 +6,9 @@
       parseEntry(entry.toString());
       invalidReason=null;
       isSaved=true;
-      markDamaged();
       getViewManager().setStatus("VALID ENTRY: " + entry);
+      getState().setValid();
+      markDamaged();
     }
  catch (    NakedObjectRuntimeException e) {
       invalidReason="UPDATE FAILURE: " + e.getMessage();
@@ -18,6 +19,7 @@
 catch (    InvalidEntryException e) {
       invalidReason="INVALID ENTRY: " + e.getMessage();
       getViewManager().setStatus(invalidReason);
+      getState().setInvalid();
       markDamaged();
     }
   }

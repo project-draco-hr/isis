@@ -1,0 +1,15 @@
+{
+  Action action=getAction(simpleName(name),parameters);
+  Naked[] parameterObjects=nakedObjects(parameters);
+  boolean allowed=action.getAbout(context,(NakedObject)getForObject(),parameterObjects).canUse().isAllowed();
+  assertTrue("action '" + name + "' is unusable",allowed);
+  allowed=action.getAbout(context,(NakedObject)getForObject(),parameterObjects).canAccess().isAllowed();
+  assertTrue("action '" + name + "' is invisible",allowed);
+  NakedObject result=action.execute((NakedObject)getForObject(),parameterObjects);
+  if (result == null) {
+    return null;
+  }
+ else {
+    return factory().createTestObject(context,result);
+  }
+}
