@@ -1,0 +1,19 @@
+{
+synchronized (objectManager) {
+    NakedObject ref;
+    Object oid=data.oid;
+    NakedClass nakedClass=NakedClassManager.getInstance().getNakedClass(data.className);
+    if (oid == null) {
+      ref=null;
+    }
+ else     if (objectManager.isLoaded(oid)) {
+      ref=objectManager.getLoadedObject(oid);
+    }
+ else {
+      ref=(NakedObject)nakedClass.acquireInstance();
+      ref.setOid(oid);
+      objectManager.loaded(ref);
+    }
+    return ref;
+  }
+}

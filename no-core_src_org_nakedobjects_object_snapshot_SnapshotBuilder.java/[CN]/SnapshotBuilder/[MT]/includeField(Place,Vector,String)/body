@@ -1,0 +1,50 @@
+{
+  Vector fieldNamesOrig=fieldNames;
+  fieldNames=new Vector();
+  for (java.util.Enumeration enum=fieldNamesOrig.elements(); enum.hasMoreElements(); ) {
+    fieldNames.addElement(enum.nextElement());
+  }
+  if (fieldNames.size() == 0) {
+    return true;
+  }
+  String fieldName=(String)fieldNames.elementAt(0);
+  fieldNames.removeElementAt(0);
+  NakedClass nakedClass=place.getObject().getNakedClass();
+  Field field=null;
+  try {
+    field=nakedClass.getField(fieldName);
+  }
+ catch (  NakedClassException ex) {
+    return false;
+  }
+  NodeList fieldElements=place.getElement().getElementsByTagNameNS("*",field.getName());
+  if (fieldElements.getLength() != 1) {
+    return false;
+  }
+  Element fieldElement=(Element)fieldElements.item(0);
+  if (fieldNames.size() == 0 && annotation != null) {
+    namespaceManager.setNofAttribute(fieldElement,"annotation",annotation);
+  }
+  if (field instanceof Value) {
+    return false;
+  }
+ else   if (field instanceof OneToOneAssociation) {
+    OneToOneAssociation oneToOneAssociation=((OneToOneAssociation)field);
+    SnapshotHelper referencedObject=(SnapshotHelper)oneToOneAssociation.get(place.getObject());
+    if (referencedObject == null) {
+      return true;
+    }
+    return appendXmlThenIncludeRemaining(fieldElement,referencedObject,fieldNames,annotation);
+  }
+ else   if (field instanceof OneToManyAssociation) {
+    OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
+    InternalCollection collection=(InternalCollection)oneToManyAssociation.get(place.getObject());
+    boolean allFieldsNavigated=true;
+    for (int i=0; i < collection.size(); i++) {
+      SnapshotHelper referencedObject=(SnapshotHelper)collection.elementAt(i);
+      allFieldsNavigated=allFieldsNavigated && appendXmlThenIncludeRemaining(fieldElement,referencedObject,fieldNames,annotation);
+    }
+    return allFieldsNavigated;
+  }
+  return false;
+}

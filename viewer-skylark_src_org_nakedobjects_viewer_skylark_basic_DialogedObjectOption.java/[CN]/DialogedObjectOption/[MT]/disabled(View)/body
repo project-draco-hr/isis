@@ -1,14 +1,9 @@
 {
   NakedObject object=((ObjectContent)view.getContent()).getObject();
   About about=action.getAbout(Session.getSession().getSecurityContext(),object,new NakedObject[action.getParameterCount()]);
-  if (about.canUse().isAllowed()) {
-    String description=about.getDescription();
-    if (action.hasReturn()) {
-      description+=" returns a " + action.returns();
-    }
-    return new Allow(description);
+  String description=about.getDescription();
+  if (action.hasReturn()) {
+    description+=" returns a " + action.returns();
   }
- else {
-    return about.canUse();
-  }
+  return new Allow(description);
 }

@@ -1,21 +1,11 @@
 {
-  int yy=click.getLocation().getY();
-  int xx=click.getLocation().getX();
-  if (yy > getSize().getHeight() - bottom) {
-    int width=getSize().getWidth();
-    int x=width / 2 - buttonSetWidth / 2;
-    int y=getSize().getHeight() - bottom;
-    for (int i=0; i < actions.length; i++) {
-      String text=actions[i].getName(getView());
-      int buttonWidth=TEXT_PADDING + Style.NORMAL.stringWidth(text) + TEXT_PADDING;
-      if (xx > x && xx < x + buttonWidth && yy > y && yy < y + buttonHeight) {
-        if (actions[i].disabled(getView()).isAllowed()) {
-          actions[i].execute(getWorkspace(),getView(),getLocation());
-        }
-        return;
-      }
-      x+=BUTTON_SPACING + buttonWidth;
+  UserAction action=overButton(click.getLocation());
+  if (action == null) {
+    super.firstClick(click);
+  }
+ else {
+    if (action.disabled(getView()).isAllowed()) {
+      action.execute(getWorkspace(),getView(),getLocation());
     }
   }
-  super.firstClick(click);
 }

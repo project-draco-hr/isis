@@ -1,0 +1,13 @@
+{
+  if (state == null) {
+    return null;
+  }
+ else {
+    NakedClass nc=NakedClassManager.getInstance().getNakedClass(state.className);
+    NakedObject object=(NakedObject)nc.acquireInstance();
+    object.setOid(state.oid);
+    LOG.debug("Recreated object " + object.getOid());
+    updateNakedObject(object,objectManager);
+    return object;
+  }
+}

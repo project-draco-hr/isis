@@ -1,11 +1,12 @@
 {
   if (canDrop(drag)) {
     View dragSource=drag.getSourceView();
-    ParameterContent parameterContent=((ParameterContent)getContent());
+    ObjectParameter parameterContent=((ObjectParameter)getContent());
     parameterContent.setObject(((ObjectContent)dragSource.getContent()).getObject());
     View replacement;
     replacement=new SubviewIconSpecification().createView(getContent(),getViewAxis());
-    getParent().replaceView(this,replacement);
+    String label=parameterContent.getNakedClass().getShortName();
+    getParent().replaceView(getView(),new LabelBorder(label,replacement));
     markDamaged();
   }
 }

@@ -1,9 +1,19 @@
 {
-  this.object=object;
+  this.target=target;
   this.action=action;
-  NakedClass[] parameters=action.parameters();
-  parameterContents=new ParameterContent[parameters.length];
-  for (int f=0; f < parameters.length; f++) {
-    parameterContents[f]=new ParameterContent(parameters[f]);
+  parameterTypes=action.parameters();
+  parameterValues=new Naked[parameterTypes.length];
+  parameters=new ActionField[parameterTypes.length];
+  for (int i=0; i < parameterTypes.length; i++) {
+    String label=parameterTypes[i].getShortName();
+    if (parameterTypes[i].isValue()) {
+      Naked parameterValue=parameterTypes[i].acquireInstance();
+      parameterValues[i]=parameterValue;
+      parameters[i]=new ValueParameter(label,parameterValue);
+    }
+ else {
+      parameterValues[i]=null;
+      parameters[i]=new ObjectParameter(label,null,parameterTypes[i]);
+    }
   }
 }

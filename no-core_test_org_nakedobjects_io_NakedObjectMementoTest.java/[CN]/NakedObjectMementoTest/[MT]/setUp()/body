@@ -1,0 +1,27 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  SystemClock clock=new SystemClock();
+  TimeStamp.setClock(clock);
+  Date.setClock(clock);
+  manager=MockObjectManager.setup();
+  manager.setupAddClass(NakedObject.class);
+  manager.setupAddClass(Team.class);
+  manager.setupAddClass(Person.class);
+  manager.setupAddClass(Role.class);
+  loadedObjects=new LoadedObjects();
+  team=new Team();
+  team.setOid(new SimpleOid(11));
+  team.getMembers().setOid(new SimpleOid(13));
+  person=new Person();
+  person.setOid(new SimpleOid(9));
+  person.getName().setValue("Fred");
+  team.getMembers().added(person);
+  person2=new Person();
+  person2.setOid(new SimpleOid(17));
+  person2.getName().setValue("John");
+  team.getMembers().added(person2);
+  role=new Role();
+  role.setOid(new SimpleOid(19));
+  role.getName().setValue("One");
+  role.setPerson(person2);
+}

@@ -1,0 +1,11 @@
+{
+  Memento mem=mementoTransfer(role);
+  Person expected=new Person();
+  expected.setOid(new SimpleOid(17));
+  loadedObjects.loaded(expected);
+  Role r2=(Role)mem.recreateObject(loadedObjects);
+  Person p2=(Person)r2.getPerson();
+  assertFalse(p2 == person2);
+  assertEquals(person2.getOid(),p2.getOid());
+  assertSame(expected,p2);
+}

@@ -1,0 +1,68 @@
+{
+  if (parentElement.getOwnerDocument() == null) {
+    throw new IllegalArgumentException("parentElement must have owner document");
+  }
+  final NakedObject object=this;
+  NakedClass nakedClass=object.getNakedClass();
+  Document doc=parentElement.getOwnerDocument();
+  String qname=namespaceManager.getQname(nakedClass);
+  String nsUri=namespaceManager.getUri(nakedClass);
+  String nsAlias=namespaceManager.getAlias(nakedClass);
+  Element element=doc.createElementNS(nsUri,qname);
+  namespaceManager.addNamespace(element,nsAlias,nsUri);
+  namespaceManager.setNofAttribute(element,"oid",getOid().toString());
+  Field[] fields=nakedClass.getFields();
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    String fieldName=field.getName();
+    Element fieldElement=doc.createElementNS(nsUri,namespaceManager.getAlias(nakedClass) + ":" + fieldName);
+    if (field instanceof Value) {
+      Value valueHolder=((Value)field);
+      Naked value=valueHolder.get(object);
+      if (value != null) {
+        namespaceManager.setNofAttribute(fieldElement,"feature","value");
+        namespaceManager.setNofAttribute(fieldElement,"datatype",NamespaceManager.NOF_METAMODEL_NS_ALIAS + ":" + value.getShortClassName());
+        if (!value.isEmpty()) {
+          String valueStr=value.title().toString();
+          fieldElement.appendChild(doc.createTextNode(valueStr));
+        }
+ else {
+          namespaceManager.setNofAttribute(fieldElement,"isEmpty","true");
+        }
+        element.appendChild(fieldElement);
+      }
+    }
+ else     if (field instanceof OneToOneAssociation) {
+      OneToOneAssociation oneToOneAssociation=((OneToOneAssociation)field);
+      NakedObject referencedNakedObject=(NakedObject)oneToOneAssociation.get(object);
+      namespaceManager.setNofAttribute(fieldElement,"feature","reference");
+      String fullyQualifiedClassName=oneToOneAssociation.getType().getName();
+      namespaceManager.addNamespaceIfRequired(parentElement,fullyQualifiedClassName);
+      setNofTypeAttr(fieldElement,namespaceManager,fullyQualifiedClassName);
+      if (referencedNakedObject != null) {
+        String titleStr=referencedNakedObject.title().toString();
+        Element titleElement=doc.createElementNS(NamespaceManager.NOF_METAMODEL_NS_URI,"nof:title");
+        fieldElement.appendChild(titleElement);
+        titleElement.appendChild(doc.createTextNode(titleStr));
+      }
+ else {
+        namespaceManager.setNofAttribute(fieldElement,"isEmpty","true");
+      }
+      fieldElement=addElementIfNotPresent(element,fieldElement,namespaceManager);
+    }
+ else     if (field instanceof OneToManyAssociation) {
+      namespaceManager.setNofAttribute(fieldElement,"feature","collection");
+      OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
+      InternalCollection collection=(InternalCollection)oneToManyAssociation.get(object);
+      String fullyQualifiedClassName=collection.getType().getName();
+      namespaceManager.addNamespaceIfRequired(parentElement,fullyQualifiedClassName);
+      setNofTypeAttr(fieldElement,namespaceManager,fullyQualifiedClassName);
+      Attr collectionSizeAttr=doc.createAttributeNS(NamespaceManager.NOF_METAMODEL_NS_URI,"nof:size");
+      collectionSizeAttr.setValue("" + collection.size());
+      fieldElement.setAttributeNode(collectionSizeAttr);
+      fieldElement=addElementIfNotPresent(element,fieldElement,namespaceManager);
+    }
+  }
+  element=addElementIfNotPresent(parentElement,element,namespaceManager);
+  return element;
+}

@@ -7,7 +7,12 @@
     LOG.debug("  Superclass " + superclass);
     this.superclass.subclasses.addSubclass(this);
   }
-  this.fields=fields;
+  if (isValue() && fields.length > 0) {
+    LOG.warn("Naked values cannot have fields, they will be ignored");
+  }
+ else {
+    this.fields=fields;
+  }
   this.objectActions=objectActions;
   this.classActions=classActions;
 }

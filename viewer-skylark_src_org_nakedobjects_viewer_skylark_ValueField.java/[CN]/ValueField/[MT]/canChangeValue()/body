@@ -1,0 +1,8 @@
+{
+  Value objectField=getValueField();
+  boolean persistent=!objectField.isDerived();
+  boolean fieldReadable=objectField.getAbout(Session.getSession().getSecurityContext(),getParent()).canUse().isAllowed();
+  boolean parentReadable=getParent().about().canUse().isAllowed();
+  boolean objectEditable=getValue().about().canUse().isAllowed();
+  return persistent && fieldReadable && parentReadable&& objectEditable;
+}

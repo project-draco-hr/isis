@@ -6,19 +6,19 @@
     text.append("    none\n");
   }
   SecurityContext context=new SecurityContext();
-  NakedObject example=acquireInstance();
+  Naked example=acquireInstance();
   for (int i=0; i < fields.length; i++) {
     if (fields[i] instanceof Value) {
       Value f=(Value)fields[i];
-      debugAboutDetail(text,f,f.getAbout(context,example));
+      debugAboutDetail(text,f,f.getAbout(context,(NakedObject)example));
     }
  else     if (fields[i] instanceof OneToManyAssociation) {
       OneToManyAssociation f=(OneToManyAssociation)fields[i];
-      debugAboutDetail(text,f,f.getAbout(context,example));
+      debugAboutDetail(text,f,f.getAbout(context,(NakedObject)example));
     }
  else     if (fields[i] instanceof OneToOneAssociation) {
       OneToOneAssociation f=(OneToOneAssociation)fields[i];
-      debugAboutDetail(text,f,f.getAbout(context,example,null));
+      debugAboutDetail(text,f,f.getAbout(context,(NakedObject)example,null));
     }
   }
   text.append("\n  Object Actions" + "\n");
@@ -29,7 +29,7 @@
     Action action=objectActions[i];
     int paramCount=action.getParameterCount();
     NakedObject[] params=new NakedObject[paramCount];
-    debugAboutDetail(text,action,action.getAbout(context,example,params));
+    debugAboutDetail(text,action,action.getAbout(context,(NakedObject)example,params));
   }
   text.append("\n  Class Actions" + "\n");
   if (classActions.length == 0) {
@@ -39,7 +39,7 @@
     Action action=classActions[i];
     int paramCount=action.getParameterCount();
     NakedObject[] params=new NakedObject[paramCount];
-    debugAboutDetail(text,classActions[i],action.getAbout(context,example));
+    debugAboutDetail(text,classActions[i],action.getAbout(context,(NakedObject)example));
   }
   text.append("\n");
   return text.toString();
