@@ -1,15 +1,19 @@
 {
-  Vector instances=instances(cls);
-  int i=0;
-  String match=pattern.toLowerCase();
-  while (i < instances.size()) {
-    NakedObject element=(NakedObject)instances.elementAt(i);
-    if (element.titleString().toString().toLowerCase().indexOf(match) == -1) {
-      instances.removeElementAt(i);
+  String p=pattern.toLowerCase();
+  NakedObject match=instancesFor(spec).instanceMatching(p);
+  if (match == null) {
+    Vector instances=new Vector();
+    Enumeration e=instancesFor(spec).elements();
+    while (e.hasMoreElements()) {
+      NakedObject element=(NakedObject)e.nextElement();
+      String elementTitle=element.titleString().toLowerCase();
+      if (elementTitle == p || elementTitle.indexOf(p) >= 0) {
+        instances.addElement(element);
+      }
     }
- else {
-      i++;
-    }
+    return toInstancesArray(instances);
   }
-  return toInstancesArray(instances);
+ else {
+    return new NakedObject[]{match};
+  }
 }

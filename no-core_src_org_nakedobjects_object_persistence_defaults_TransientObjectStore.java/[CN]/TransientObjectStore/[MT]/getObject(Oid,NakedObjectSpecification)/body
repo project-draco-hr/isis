@@ -1,12 +1,5 @@
 {
   LOG.debug("getObject " + oid);
-  Enumeration e=elements(hint);
-  while (e.hasMoreElements()) {
-    NakedObject instance=(NakedObject)e.nextElement();
-    if (instance.getOid().equals(oid)) {
-      LOG.debug("  got " + instance);
-      return instance;
-    }
-  }
-  throw new ObjectNotFoundException(oid);
+  TransientObjectStoreInstances ins=instancesFor(hint);
+  return ins.getObject(oid);
 }
