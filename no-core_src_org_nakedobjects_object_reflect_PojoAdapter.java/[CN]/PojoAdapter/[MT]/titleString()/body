@@ -1,6 +1,12 @@
 {
   NakedObjectSpecification specification=getSpecification();
-  String title=specification == null ? null : specification.getTitle().title(this);
+  String title;
+  if (isResolved()) {
+    title=specification == null ? null : specification.getTitle().title(this);
+  }
+ else {
+    title=specification == null ? null : specification.unresolvedTitle(this);
+  }
   if (title == null) {
     return "A " + specification.getSingularName().toLowerCase();
   }
