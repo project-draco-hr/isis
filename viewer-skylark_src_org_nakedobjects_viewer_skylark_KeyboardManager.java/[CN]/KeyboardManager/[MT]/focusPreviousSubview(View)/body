@@ -1,16 +1,16 @@
 {
-  View[] views=getParent().getSubviews();
+  View[] views=focus.getParent().getSubviews();
   for (int i=0; i < views.length; i++) {
-    if (views[i] == getView()) {
-      for (int j=i + 1; j < views.length; j++) {
+    if (views[i] == focus) {
+      for (int j=i - 1; j >= 0; j--) {
         if (views[j].canFocus()) {
-          getViewManager().makeFocus(views[j]);
+          viewer.makeFocus(views[j]);
           return;
         }
       }
-      for (int j=0; j < i; j++) {
+      for (int j=views.length - 1; j > i; j--) {
         if (views[j].canFocus()) {
-          getViewManager().makeFocus(views[j]);
+          viewer.makeFocus(views[j]);
           return;
         }
       }

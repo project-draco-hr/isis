@@ -1,0 +1,38 @@
+{
+  View keyboardFocus=getFocus();
+  if (keyboardFocus != null) {
+    keyboardFocus.keyPressed(keyCode,modifiers);
+  }
+  int action=0;
+  if (keyCode == KeyEvent.VK_TAB) {
+    if ((modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+      if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) {
+        action=KeyboardAction.PREVIOUS_WINDOW;
+      }
+ else {
+        action=KeyboardAction.NEXT_WINDOW;
+      }
+    }
+ else {
+      if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) {
+        action=KeyboardAction.PREVIOUS_VIEW;
+      }
+ else {
+        action=KeyboardAction.NEXT_VIEW;
+      }
+    }
+  }
+switch (action) {
+case KeyboardAction.NEXT_VIEW:
+    focusNextSubview(keyboardFocus);
+  break;
+case KeyboardAction.PREVIOUS_VIEW:
+focusPreviousSubview(keyboardFocus);
+break;
+case KeyboardAction.NEXT_WINDOW:
+break;
+case KeyboardAction.PREVIOUS_WINDOW:
+focusNextRootView(keyboardFocus);
+break;
+}
+}
