@@ -1,6 +1,6 @@
 {
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
-  LoadedObjectsHashtable loadedObjectsHashtable=new LoadedObjectsHashtable();
+  loadedObjectsHashtable=new ClearableLoadedObjectsHashtable();
   JavaObjectFactory objectFactory=new JavaObjectFactory();
   objectFactory.setContainer(container);
   container.setObjectFactory(objectFactory);
@@ -15,11 +15,19 @@
   objectManager.setLoadedObjects(loadedObjectsHashtable);
   NakedObjects.setObjectManager(objectManager);
   container.setObjectManger(objectManager);
-  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
+  NakedObjects.setSpecificationLoader(specificationLoader);
   LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
   JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
   PojoAdapter.setReflectorFactory(reflectorFactory);
   NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
-  NakedObjectSpecificationLoaderImpl.setReflectorFactory(reflectorFactory);
+  specificationLoader.setReflectorFactory(reflectorFactory);
   reflectorFactory.setObjectFactory(objectFactory);
+  try {
+    objectManager.init();
+  }
+ catch (  StartupException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+  Runtime.getRuntime().gc();
 }

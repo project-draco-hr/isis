@@ -43,14 +43,21 @@
     objectManager.setLoadedObjects(loadedObjectsHashtable);
     NakedObjects.setObjectManager(objectManager);
     container.setObjectManger(objectManager);
-    new NakedObjectSpecificationLoaderImpl();
+    NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
+    NakedObjects.setSpecificationLoader(specificationLoader);
     LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
     JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
     PojoAdapter.setPojoAdapterHash(new PojoAdapterHashImpl());
     PojoAdapter.setReflectorFactory(reflectorFactory);
     NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
-    NakedObjectSpecificationLoaderImpl.setReflectorFactory(reflectorFactory);
+    specificationLoader.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
+    try {
+      objectManager.init();
+    }
+ catch (    StartupException e) {
+      throw new NakedObjectRuntimeException(e);
+    }
     builder=new JavaFixtureBuilder();
   }
   finally {
