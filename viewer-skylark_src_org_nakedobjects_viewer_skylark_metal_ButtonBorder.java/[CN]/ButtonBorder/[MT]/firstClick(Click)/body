@@ -1,10 +1,14 @@
 {
-  UserAction action=overButton(click.getLocation());
-  if (action == null) {
+  int button=overButton(click.getLocation());
+  if (button == -1) {
     super.firstClick(click);
   }
  else {
+    UserAction action=actions[button];
     if (action.disabled(getView()).isAllowed()) {
+      activeButton=button;
+      markDamaged();
+      getViewManager().saveCurrentFieldEntry();
       action.execute(getWorkspace(),getView(),getLocation());
     }
   }
