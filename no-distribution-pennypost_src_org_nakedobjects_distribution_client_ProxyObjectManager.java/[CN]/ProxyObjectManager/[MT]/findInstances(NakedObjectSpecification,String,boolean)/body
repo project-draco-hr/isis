@@ -1,0 +1,11 @@
+{
+  LOG.debug("getInstances of " + cls + " with "+ criteria);
+  InstanceSet instanceSet;
+  try {
+    instanceSet=connection.findInstances(sessionId,cls.getFullName(),criteria);
+    return instanceSet.recreateInstances(loadedObjects);
+  }
+ catch (  RemoteException e) {
+    throw new UnsupportedFindException(e.getRemoteMessage());
+  }
+}

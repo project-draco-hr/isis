@@ -1,0 +1,17 @@
+{
+  if (isPersistent(inObject) && fullProxy) {
+    LOG.debug("remote clear association " + inObject + "/"+ associate);
+    try {
+      ObjectReference targetReference=factory.createObjectReference(inObject);
+      ObjectReference associateReference=factory.createObjectReference((NakedObject)associate);
+      connection.dissociateObject(securityToken,targetReference,getName(),associateReference);
+    }
+ catch (    NakedObjectRuntimeException e) {
+      LOG.error("Problem with distribution ",e.getCause());
+      throw (NakedObjectRuntimeException)e.getCause();
+    }
+  }
+ else {
+    local.removeAssociation(inObject,associate);
+  }
+}

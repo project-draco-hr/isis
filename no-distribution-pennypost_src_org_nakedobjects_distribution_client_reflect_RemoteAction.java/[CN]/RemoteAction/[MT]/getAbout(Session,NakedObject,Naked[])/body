@@ -1,0 +1,12 @@
+{
+  if (isPersistent(object) && fullProxy) {
+    ObjectReference objectReference=factory.createObjectReference(object);
+    ParameterSet parameterSet=factory.createParameterSet(parameters);
+    ActionType type=factory.createActionType(getType());
+    AboutData aboutData=connection.aboutAction(securityToken,objectReference,type,getName(),parameterSet);
+    return aboutData.recreateAbout();
+  }
+ else {
+    return local.getAbout(session,object,parameters);
+  }
+}

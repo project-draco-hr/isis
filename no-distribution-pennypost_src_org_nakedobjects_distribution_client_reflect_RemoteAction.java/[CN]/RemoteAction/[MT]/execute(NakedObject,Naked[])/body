@@ -1,0 +1,12 @@
+{
+  if (isPersistent(object)) {
+    ObjectReference objectReference=factory.createObjectReference(object);
+    ParameterSet parameterSet=factory.createParameterSet(parameters);
+    ActionType type=factory.createActionType(getType());
+    ObjectData graph=connection.executeAction(securityToken,objectReference,type,getName(),parameterSet);
+    return graph.recreateObject(loadedObjects,object.getContext());
+  }
+ else {
+    return local.execute(object,parameters);
+  }
+}

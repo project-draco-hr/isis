@@ -1,0 +1,18 @@
+{
+  if (loadedObjects.isLoaded(oid)) {
+    LOG.debug("getObject (from already loaded objects) " + oid);
+    return loadedObjects.getLoadedObject(oid);
+  }
+ else {
+    LOG.debug("getObject (remotely from server)" + oid);
+    try {
+      ObjectData graph;
+      graph=connection.getObjectRequest(sessionId,objectReferenceTo(oid,hint.getFullName()));
+      NakedObject object=graph.recreateObject(loadedObjects,getContext());
+      return object;
+    }
+ catch (    RemoteException e) {
+      throw new ObjectNotFoundException(e.getRemoteMessage());
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  if (isPersistent(inObject)) {
+    try {
+      ObjectReference objectReference=factory.createObjectReference(inObject);
+      connection.saveValue(securityToken,objectReference,getName(),encodedValue);
+    }
+ catch (    RemoteException e) {
+      throw new InvalidEntryException(e.getMessage());
+    }
+  }
+ else {
+    local.saveValue(inObject,encodedValue);
+  }
+}
