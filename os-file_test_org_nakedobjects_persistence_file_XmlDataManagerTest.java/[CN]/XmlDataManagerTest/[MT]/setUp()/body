@@ -4,13 +4,14 @@
   XmlDataManager.clearTestDirectory();
   manager=new XmlDataManager("tmp/tests");
   MockObjectManager.setup();
-  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
   NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
-  NakedObjectSpecificationLoaderImpl.setReflectorFactory(new JavaReflectorFactory());
+  specificationLoader.setReflectorFactory(new JavaReflectorFactory());
+  NakedObjects.setSpecificationLoader(specificationLoader);
   ConfigurationFactory.setConfiguration(new Configuration());
   oids=new SerialOid[SIZE];
   data=new ObjectData[SIZE];
-  NakedObjectSpecification type=NakedObjectSpecificationLoader.getInstance().loadSpecification(Role.class.getName());
+  NakedObjectSpecification type=NakedObjects.getSpecificationLoader().loadSpecification(Role.class.getName());
   pattern=new ObjectData(type,null);
   for (int i=0; i < SIZE; i++) {
     oids[i]=new SerialOid(i);
