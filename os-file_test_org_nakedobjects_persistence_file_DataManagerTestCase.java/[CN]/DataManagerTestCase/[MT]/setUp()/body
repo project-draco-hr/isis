@@ -1,10 +1,12 @@
 {
   LOG.debug("Test setup...");
-  MockObjectManager objectManager=MockObjectManager.setup();
-  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  MockObjectManager.setup();
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
   oids=new SerialOid[SIZE];
   data=new ObjectData[SIZE];
-  NakedObjectSpecification type=NakedObjectSpecification.getSpecification(Role.class.getName());
+  NakedObjectSpecification type=NakedObjectSpecificationLoader.getInstance().loadSpecification(Role.class.getName());
   pattern=new ObjectData(type,null);
   for (int i=0; i < SIZE; i++) {
     oids[i]=new SerialOid(i);

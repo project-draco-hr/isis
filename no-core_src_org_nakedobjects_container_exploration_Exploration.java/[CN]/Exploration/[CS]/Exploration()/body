@@ -15,7 +15,8 @@
     showSplash();
     setUpLocale();
     ObjectViewingMechanism viewer=installViewer();
-    NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+    NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+    NakedObjectSpecificationImpl.setReflectorFactory(installReflectorFactory());
     objectManager=installObjectManager(viewer.getUpdateNotifier());
     context=new NakedObjectContext(objectManager);
     explorationSetUp=new ExplorationSetUp(context);
@@ -23,7 +24,7 @@
     setUpFixture();
     ExplorationContext applicationContext;
     User user;
-    NakedObjectSpecification userClass=NakedObjectSpecification.getSpecification(User.class.getName());
+    NakedObjectSpecification userClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(User.class.getName());
     if (objectManager.hasInstances(userClass)) {
       NakedCollection users=objectManager.findInstances(userClass,name);
       if (users.size() == 0) {

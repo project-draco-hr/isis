@@ -1,0 +1,12 @@
+{
+  LogManager.getLoggerRepository().setThreshold(Level.OFF);
+  manager=MockObjectManager.setup();
+  new TestClock();
+  session=new Session();
+  object=new MockValueTestObject();
+  object.setContext(manager.getContext());
+  Class cls=MockValueTestObject.class;
+  Method get=cls.getDeclaredMethod("getValue",new Class[0]);
+  Method about=cls.getDeclaredMethod("aboutValue",new Class[]{FieldAbout.class});
+  field=new JavaValueField(FIELD_NAME,MockValue.class,get,about,null,false);
+}

@@ -1,8 +1,10 @@
 {
-  NakedClass nakedClass=(NakedClass)getForObject();
-  NakedCollection instances=instances((NakedClass)getForObject());
+  NakedObjectContext context=NakedObjectContext.getDefaultContext();
+  NakedCollection instances=context.getObjectManager().allInstances(((NakedClass)getForObject()).forNakedClass());
   if (instances.size() == 0) {
     throw new IllegalActionError("Find must find at least one object");
   }
-  return factory.createTestObject(session,instances);
+ else {
+    return factory.createTestObject(session,instances);
+  }
 }

@@ -1,7 +1,9 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   new TestClock();
-  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
-  reflector=new MockReflector();
-  nakedClass=NakedObjectSpecification.getSpecification(NakedClassTestObject.class.getName());
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
+  new MockReflector();
+  nakedClass=nakedClass(NakedClassTestObject.class);
 }

@@ -5,14 +5,14 @@
   }
  else   if (response instanceof ObjectProxy[]) {
     Object[] array=(Object[])response;
-    NakedObjectSpecification cls=NakedObjectSpecification.getNakedClass((String)array[0]);
+    NakedObjectSpecification cls=NakedObjectSpecification.getSpecification((String)array[0]);
     Vector elements=new Vector();
     for (int i=1; i < array.length; i++) {
       ObjectProxy proxy=(ObjectProxy)array[i];
       NakedObject recreatedObject=proxy.recreateObject(getLoadedObjects());
       elements.addElement(recreatedObject);
     }
-    return new InstanceCollection(cls,elements);
+    return new InstanceCollectionVector(cls,elements);
   }
  else   if (response instanceof Memento) {
     Memento memento=(Memento)response;

@@ -2,7 +2,9 @@
   BasicConfigurator.configure();
   Logger.getRootLogger().setLevel(Level.ERROR);
   new TestClock();
-  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
   originatingManager=MockObjectManager.setup();
   loadedObjects=new LoadedObjectsHashtable();
   context=new NakedObjectContext(originatingManager);

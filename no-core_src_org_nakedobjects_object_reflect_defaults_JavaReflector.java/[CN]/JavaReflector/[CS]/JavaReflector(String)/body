@@ -1,6 +1,11 @@
 {
   Class cls;
-  cls=Class.forName(name);
+  try {
+    cls=Class.forName(name);
+  }
+ catch (  ClassNotFoundException e) {
+    throw new ReflectionException("Could not load class " + name,e);
+  }
   if (!Naked.class.isAssignableFrom(cls)) {
     throw new NakedObjectSpecificationException("A naked object must be based on the " + "NakedObject interface, this is not the case with " + cls);
   }

@@ -1,0 +1,14 @@
+{
+  LogManager.getLoggerRepository().setThreshold(Level.OFF);
+  super.setUp();
+  manager=MockObjectManager.setup();
+  session=new Session();
+  object=new MockRole();
+  object.setContext(manager.getContext());
+  Class cls=MockRole.class;
+  Method get=cls.getDeclaredMethod("getPerson",new Class[0]);
+  Method set=cls.getDeclaredMethod("setPerson",new Class[]{MockPerson.class});
+  Method about=cls.getDeclaredMethod("aboutPerson",new Class[]{FieldAbout.class,MockPerson.class});
+  personField=new JavaOneToOneAssociation(PERSON_FIELD_NAME,MockPerson.class,get,set,null,null,about);
+  associate=new MockPerson();
+}

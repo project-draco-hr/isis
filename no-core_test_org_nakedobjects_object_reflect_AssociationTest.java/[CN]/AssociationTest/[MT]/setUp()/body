@@ -2,7 +2,9 @@
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   super.setUp();
   manager=MockObjectManager.setup();
-  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
   session=new Session();
   object=new Role();
   object.setContext(manager.getContext());

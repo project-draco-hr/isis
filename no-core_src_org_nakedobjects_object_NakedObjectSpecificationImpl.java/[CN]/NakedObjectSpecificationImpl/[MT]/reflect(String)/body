@@ -1,0 +1,19 @@
+{
+  LOG.debug("creating reflector for " + className);
+  if (reflectorFactory == null) {
+    throw new NakedObjectRuntimeException("No reflector factory has be set up");
+  }
+  Reflector reflector=reflectorFactory.createReflector(className);
+  Action delegates[];
+  delegates=reflector.actions(Reflector.OBJECT);
+  String[] order=reflector.actionSortOrder();
+  ActionSpecification[] objectActions=createActions(reflector,className,delegates,order);
+  delegates=reflector.actions(Reflector.CLASS);
+  order=reflector.classActionSortOrder();
+  ActionSpecification[] classActions=createActions(reflector,className,delegates,order);
+  Member fieldDelegates[]=reflector.fields();
+  FieldSpecification[] fieldVector=createFields(fieldDelegates);
+  FieldSpecification[] fields=(FieldSpecification[])orderArray(FieldSpecification.class,fieldVector,reflector.fieldSortOrder(),className);
+  String superclass=reflector.getSuperclass();
+  init(reflector,superclass,fields,objectActions,classActions);
+}

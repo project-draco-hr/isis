@@ -1,11 +1,12 @@
 {
-  NakedCollection c=instances((NakedClass)getForObject());
-  Enumeration e=c.elements();
-  while (e.hasMoreElements()) {
-    NakedObject object=((NakedObject)e.nextElement());
-    if (object.titleString().toString().indexOf(title) >= 0) {
-      return factory.createTestObject(session,object);
-    }
+  NakedObjectContext context=NakedObjectContext.getDefaultContext();
+  NakedObjectSpecification type=((NakedClass)getForObject()).forNakedClass();
+  TypedNakedCollection instances=context.getObjectManager().findInstances(type,title);
+  if (instances.size() == 0) {
+    throw new IllegalActionError("No instance found with title " + title);
   }
-  throw new IllegalActionError("No instance found with title " + title);
+ else {
+    NakedObject foundObject=instances.elementAt(0);
+    return factory.createTestObject(session,foundObject);
+  }
 }

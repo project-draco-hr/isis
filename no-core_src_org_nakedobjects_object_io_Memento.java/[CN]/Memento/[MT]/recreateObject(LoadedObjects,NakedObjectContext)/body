@@ -3,12 +3,12 @@
     return null;
   }
  else {
-    NakedObjectSpecification nc=NakedObjectSpecification.getSpecification(state.className);
+    NakedObjectSpecification nc=NakedObjectSpecificationLoader.getInstance().loadSpecification(state.className);
     NakedObject object=(NakedObject)nc.acquireInstance();
     object.setContext(context);
     object.setOid(state.oid);
     LOG.debug("Recreated object " + object.getOid());
-    updateNakedObject(object,loadedObjects,context);
+    updateObject(object,loadedObjects,context);
     return object;
   }
 }

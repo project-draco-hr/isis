@@ -1,30 +1,4 @@
 {
-  JavaReflector c=new JavaReflector(ContactTestObject.class.getName());
-  Member[] fields=c.fields();
-  ExpectationSet exp=new ExpectationSet("fields");
-  exp.addExpected("Favourite");
-  exp.addExpected("Address");
-  exp.addExpected("Is Contact");
-  exp.addExpected("Worth");
-  exp.addExpected("Name");
-  exp.addExpected("Date Created");
-  exp.addExpected("Last Activity");
-  exp.addActualMany(memberNames(fields));
-  exp.verify();
-  exp=new ExpectationSet("object field");
-  exp.addExpected("Favourite");
-  exp.addActualMany(objectAttributes(fields));
-  exp.verify();
-  exp=new ExpectationSet("abouts for fields");
-  exp.addExpected("Name");
-  exp.addExpected("Worth");
-  exp.addExpected("Is Contact");
-  exp.addExpected("Date Created");
-  exp.addExpected("Last Activity");
-  exp.addActualMany(abouts(fields));
-  exp.verify();
-  exp=new ExpectationSet("associate methods");
-  exp.addExpected("Favourite");
-  exp.addActualMany(associates(fields));
-  exp.verify();
+  Member[] fields=reflector.fields();
+  assertEquals(1,fields.length);
 }

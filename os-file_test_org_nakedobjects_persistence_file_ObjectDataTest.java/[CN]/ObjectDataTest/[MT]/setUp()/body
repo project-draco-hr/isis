@@ -2,9 +2,11 @@
   super.setUp();
   PropertyConfigurator.configure("log4j.testing.properties");
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
-  MockObjectManager manager=MockObjectManager.setup();
-  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
-  NakedObjectSpecification type=NakedObjectSpecification.getSpecification(ValueObjectExample.class.getName());
+  MockObjectManager.setup();
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
+  NakedObjectSpecification type=NakedObjectSpecificationLoader.getInstance().loadSpecification(ValueObjectExample.class.getName());
   data=new ObjectData(type,new SerialOid(1));
   new TestClock();
 }

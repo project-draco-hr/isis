@@ -1,8 +1,9 @@
 {
   if (getContent() instanceof OneToManyField) {
     TypedNakedCollection collection=(TypedNakedCollection)((OneToManyField)getContent()).getCollection();
-    NakedObjectSpecification nakedClass=NakedObjectSpecification.getSpecification(collection.getElementSpecification().getFullName());
+    NakedObjectSpecification nakedClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(collection.getElementSpecification().getFullName());
     ClassOption.menuOptions(nakedClass,options);
   }
   super.menuOptions(options);
+  TreeDisplayRules.menuOptions(options);
 }

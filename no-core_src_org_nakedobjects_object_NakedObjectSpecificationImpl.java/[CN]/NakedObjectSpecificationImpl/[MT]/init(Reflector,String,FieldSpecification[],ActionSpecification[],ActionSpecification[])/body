@@ -1,0 +1,20 @@
+{
+  if (reflector == null) {
+    throw new NullPointerException("No reflector specified");
+  }
+  LOG.debug("NakedClass " + this);
+  this.reflector=reflector;
+  if (superclass != null) {
+    this.superclass=(NakedObjectSpecificationImpl)NakedObjectSpecificationLoader.getInstance().loadSpecification(superclass);
+    LOG.debug("  Superclass " + superclass);
+    this.superclass.subclasses.addSubclass(this);
+  }
+  if (isValue() && fields.length > 0) {
+    LOG.warn("Naked values cannot have fields, they will be ignored");
+  }
+ else {
+    this.fields=fields;
+  }
+  this.objectActions=objectActions;
+  this.classActions=classActions;
+}
