@@ -1,13 +1,13 @@
 {
-  story("Make claim for new employee");
-  step("Set up employee");
-  View robert=getClassView("Employees").newInstance();
+  subtitle("Make claim for new employee");
+  nextStep("Set up employee");
+  TestObject robert=getTestClass("Employees").newInstance();
   robert.fieldEntry("Surname","Matthews");
-  step("Set up project");
-  View ait=getClassView("Projects").newInstance();
+  nextStep("Set up project");
+  TestObject ait=getTestClass("Projects").newInstance();
   ait.fieldEntry("Name","AIT phone system");
-  robert.drop("Projects",ait.drag());
-  step("Create claim for employee");
-  View claim=getClassView("Claims").drop(robert.drag());
-  claim.checkField("Total","$0.00");
+  robert.invokeAction("Projects",ait);
+  nextStep("Create claim for employee");
+  TestObject claim=getTestClass("Claims").invokeAction("New Claim",robert);
+  claim.assertFieldContains("Total",new Money(0.0));
 }
