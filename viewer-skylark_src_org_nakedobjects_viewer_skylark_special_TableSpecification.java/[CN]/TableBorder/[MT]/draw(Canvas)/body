@@ -2,12 +2,16 @@
   super.draw(canvas.createSubcanvas());
   int y=VPADDING + Style.LABEL.getAscent();
   TableColumnAxis axis=((TableColumnAxis)getViewAxis());
-  int x=axis.getHeaderOffset();
+  int x=axis.getHeaderOffset() - 2;
+  canvas.drawLine(0,top - 1,getSize().getWidth() - 1,top - 1,Style.SECONDARY2);
+  canvas.drawLine(x,0,x,getSize().getHeight() - 1,Style.SECONDARY2);
+  x++;
   int columns=axis.getColumnCount();
   for (int i=0; i < columns; i++) {
     canvas.drawText(axis.getColumnName(i),x + HPADDING,y,Style.SECONDARY1,Style.LABEL);
     canvas.drawLine(x,0,x,getSize().getHeight() - 1,Style.SECONDARY2);
     x+=axis.getColumnWidth(i);
   }
-  canvas.drawRectangle(0,VPADDING + Style.LABEL.getHeight(),getSize().getWidth() - 1,getSize().getHeight() - top - 1,Style.SECONDARY2);
+  canvas.drawLine(x,0,x,getSize().getHeight() - 1,Style.SECONDARY2);
+  canvas.drawRectangle(0,getTop(),getSize().getWidth() - 1,getSize().getHeight() - top - 1,Style.SECONDARY2);
 }

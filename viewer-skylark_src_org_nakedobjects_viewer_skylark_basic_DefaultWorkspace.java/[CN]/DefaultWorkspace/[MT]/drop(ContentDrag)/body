@@ -2,7 +2,7 @@
   getViewManager().showArrowCursor();
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
   View newView;
-  if (source instanceof NakedClass) {
+  if (source instanceof NakedClass && drag.isCtrl()) {
     NakedObjectSpecification spec=((NakedClass)source).forNakedClass();
     ClassAbout classAbout=spec.getClassAbout();
     if (classAbout != null && classAbout.canUse().isVetoed()) {
@@ -16,6 +16,15 @@
       newView=ViewFactory.getViewFactory().createOpenRootView(source);
     }
  else {
+      View icon=drag.getSource();
+      if (!icon.getSpecification().isOpen() && contains(icon)) {
+        icon.markDamaged();
+        Location at=drag.getTargetLocation();
+        at.translate(drag.getOffset());
+        icon.setLocation(at);
+        icon.markDamaged();
+        return;
+      }
       newView=ViewFactory.getViewFactory().createIconizedRootView(source);
     }
   }

@@ -1,26 +1,27 @@
 {
-  if (currentlyIdentifiedView != null) {
-    Click click=new Click(currentlyIdentifiedView,mouseLocation,me.getModifiers());
-    spy.addAction("Mouse clicked " + click.getMouseLocationRelativeToView());
-    if (click.isButton3() && viewer.getOverlayView() == null) {
-      saveCurrentFieldEntry();
-      if (currentlyIdentifiedView != null) {
-        spy.addAction(" popup " + mouseLocation + " over "+ currentlyIdentifiedView);
-        viewer.popupMenu(click,currentlyIdentifiedView);
-        previouslyIdentifiedView=currentlyIdentifiedView;
-      }
+  Click click=new Click(previouslyIdentifiedView,downAt,me.getModifiers());
+  spy.addAction("Mouse clicked " + click.getLocation());
+  if (click.isButton3() && viewer.getOverlayView() == null) {
+    saveCurrentFieldEntry();
+    if (previouslyIdentifiedView != null) {
+      spy.addAction(" popup " + downAt + " over "+ previouslyIdentifiedView);
+      viewer.popupMenu(previouslyIdentifiedView,click);
     }
- else     if (currentlyIdentifiedView != null) {
-      if (me.getClickCount() == 1) {
-        currentlyIdentifiedView.firstClick(click);
-      }
- else       if (me.getClickCount() == 2) {
-        currentlyIdentifiedView.secondClick(click);
-      }
- else       if (me.getClickCount() == 3) {
-        currentlyIdentifiedView.thirdClick(click);
-      }
-    }
-    redraw();
   }
+ else {
+switch (me.getClickCount()) {
+case 1:
+      viewer.firstClick(click);
+    break;
+case 2:
+  viewer.secondClick(click);
+break;
+case 3:
+viewer.thirdClick(click);
+break;
+default :
+break;
+}
+}
+redraw();
 }

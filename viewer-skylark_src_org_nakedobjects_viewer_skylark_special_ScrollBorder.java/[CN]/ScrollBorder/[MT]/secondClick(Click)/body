@@ -1,7 +1,6 @@
 {
-  click.subtract(offset());
-  int x=click.getMouseLocationRelativeToView().getX();
-  int y=click.getMouseLocationRelativeToView().getY();
+  int x=click.getLocation().getX();
+  int y=click.getLocation().getY();
   Bounds contents=contentArea();
   if (x >= contents.getWidth()) {
     int position=(y < contents.getHeight() / 2) ? verticalMinimum : verticalMaximum;
@@ -12,7 +11,7 @@
     setHorizontalPostion(position);
   }
  else {
-    addOffset(click);
-    super.firstClick(click);
+    click.add(offset());
+    super.secondClick(click);
   }
 }

@@ -1,13 +1,18 @@
 {
   if (drag == null) {
-    mouseDetails(me,true);
-    if (currentlyIdentifiedView != null) {
+    spy.reset();
+    viewer.translate(me);
+    Location location=new Location(me.getPoint());
+    spy.setLocationInViewer(location);
+    View overView=viewer.identifyView(new Location(location),true);
+    spy.setOver(overView);
+    if (overView != null) {
       if (previouslyIdentifiedView == null) {
-        previouslyIdentifiedView=currentlyIdentifiedView;
+        previouslyIdentifiedView=overView;
       }
  else {
-        if (currentlyIdentifiedView != previouslyIdentifiedView) {
-          if (currentlyIdentifiedView == previouslyIdentifiedView) {
+        if (overView != previouslyIdentifiedView) {
+          if (overView == previouslyIdentifiedView) {
             spy.addAction("moved into subview from " + previouslyIdentifiedView);
             previouslyIdentifiedView.enteredSubview();
           }
@@ -16,30 +21,24 @@
             previouslyIdentifiedView.exited();
           }
           View previouslyIdentified=previouslyIdentifiedView;
-          previouslyIdentifiedView=currentlyIdentifiedView;
-          if (currentlyIdentifiedView != null) {
-            if (currentlyIdentifiedView == previouslyIdentified) {
+          previouslyIdentifiedView=overView;
+          if (overView != null) {
+            if (overView == previouslyIdentified) {
               spy.addAction("moved back to from " + previouslyIdentified);
-              currentlyIdentifiedView.exitedSubview();
+              overView.exitedSubview();
             }
  else {
-              spy.addAction("entered " + currentlyIdentifiedView);
-              currentlyIdentifiedView.entered();
+              spy.addAction("entered " + overView);
+              overView.entered();
             }
           }
           redraw();
         }
       }
+      spy.addAction("mouseMoved " + location);
       spy.addTrace("--> mouse moved");
-      spy.addTrace(currentlyIdentifiedView," mouse location",mouseLocation);
-      Location locationInView=new Location(mouseLocation);
-      Location locationOfView=currentlyIdentifiedView.getAbsoluteLocation();
-      spy.addTrace(currentlyIdentifiedView," view location",locationOfView);
-      locationInView.subtract(locationOfView);
-      spy.addTrace(currentlyIdentifiedView," mouse location within view",locationInView);
-      spy.setType(currentlyIdentifiedView.viewAreaType(new Location(locationInView)));
-      spy.addAction("mouseMoved " + locationInView);
-      currentlyIdentifiedView.mouseMoved(locationInView);
+      viewer.mouseMoved(location);
+      spy.addTrace(overView," mouse location",location);
       redraw();
     }
   }

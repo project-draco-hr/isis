@@ -1,12 +1,11 @@
 {
   if (drag != null) {
     mouseDragged(me);
-    View target=currentlyIdentifiedView;
-    drag.update(mouseLocation,target);
-    spy.addAction("drag ended at " + mouseLocation + " over "+ target);
-    drag.end();
+    Location location=new Location(me.getPoint());
+    drag.drag(viewer,location,me.getModifiers());
+    drag.end(viewer);
     viewer.disposeOverlayView();
-    drag=null;
     redraw();
+    drag=null;
   }
 }

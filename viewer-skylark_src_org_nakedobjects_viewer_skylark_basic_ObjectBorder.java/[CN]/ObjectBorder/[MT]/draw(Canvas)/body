@@ -1,0 +1,21 @@
+{
+  Color color=null;
+  ViewState state=getState();
+  if (state.canDrop()) {
+    color=Style.VALID;
+  }
+ else   if (state.cantDrop()) {
+    color=Style.INVALID;
+  }
+ else   if (state.isObjectIdentified()) {
+    color=Style.SECONDARY2;
+  }
+  if (color != null) {
+    Size s=getSize();
+    int width=s.getWidth();
+    for (int i=0; i < left; i++) {
+      canvas.drawRectangle(i,i,width - 2 * i - 1,s.getHeight() - 2 * i - 1,color);
+    }
+  }
+  super.draw(canvas);
+}

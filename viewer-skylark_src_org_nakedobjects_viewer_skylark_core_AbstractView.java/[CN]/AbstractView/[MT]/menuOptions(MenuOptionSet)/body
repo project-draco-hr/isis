@@ -29,11 +29,11 @@
   final UndoStack undoStack=getViewManager().getUndoStack();
   if (!undoStack.isEmpty()) {
     options.add(MenuOptionSet.VIEW,new MenuOption("Undo " + undoStack.getNameOfUndo()){
-      public void execute(      Workspace workspace,      View view,      Location at){
-        undoStack.undoLastCommand();
-      }
       public Permission disabled(      View component){
         return new Allow(undoStack.descriptionOfUndo());
+      }
+      public void execute(      Workspace workspace,      View view,      Location at){
+        undoStack.undoLastCommand();
       }
     }
 );

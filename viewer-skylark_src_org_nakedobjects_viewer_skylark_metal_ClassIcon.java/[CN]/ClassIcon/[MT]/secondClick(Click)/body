@@ -1,11 +1,23 @@
 {
   ClassAbout classAbout=getNakedClass().forNakedClass().getClassAbout();
   if (classAbout == null || classAbout.canAccess().isAllowed()) {
-    NakedCollection instances=getNakedClass().allInstances();
-    View view=ViewFactory.getViewFactory().createOpenRootView(instances);
-    Location location=click.getLocationWithinWorkspace();
-    location.move(15,-30);
-    view.setLocation(location);
-    getWorkspace().addView(view);
+    View view=null;
+    if (click.isCtrl()) {
+      NakedCollection instances=getNakedClass().allInstances();
+      view=ViewFactory.getViewFactory().createOpenRootView(instances);
+    }
+ else {
+      if (getNakedClass() instanceof SimpleNakedClass) {
+        FastFinder finder=((SimpleNakedClass)getNakedClass()).actionFind();
+        view=ViewFactory.getViewFactory().createOpenRootView(finder);
+      }
+    }
+    if (view != null) {
+      Location location=getView().getAbsoluteLocation();
+      location.subtract(getWorkspace().getAbsoluteLocation());
+      location.add(getSize().getWidth() + 10,0);
+      view.setLocation(location);
+      getWorkspace().addView(view);
+    }
   }
 }

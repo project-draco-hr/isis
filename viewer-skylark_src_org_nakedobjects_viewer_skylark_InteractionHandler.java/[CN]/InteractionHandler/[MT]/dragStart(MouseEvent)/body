@@ -2,28 +2,20 @@
   if (!isOverThreshold(downAt,me.getPoint())) {
     return;
   }
-  Location locationInView=new Location(mouseLocation);
-  Location locationOfView=previouslyIdentifiedView.getAbsoluteLocation();
-  locationInView.subtract(locationOfView);
-  mouseDetails(me,true);
-  ViewAreaType type=previouslyIdentifiedView.viewAreaType(new Location(locationInView));
-  spy.addAction("Drag start " + type + ": "+ mouseLocation);
-  spy.setLocationInView(locationInView);
-  if (type == ViewAreaType.INTERNAL) {
-    drag=InternalDrag.create(previouslyIdentifiedView,mouseLocation,me.getModifiers());
-    spy.addAction("drag from " + drag);
-  }
- else {
-    saveCurrentFieldEntry();
-    spy.addAction("pickup " + type + ": "+ previouslyIdentifiedView);
-    if (type == ViewAreaType.VIEW) {
-      drag=ViewDrag.create(previouslyIdentifiedView,mouseLocation,me.getModifiers());
-    }
- else {
-      drag=ContentDrag.create(previouslyIdentifiedView,mouseLocation,me.getModifiers());
-    }
-  }
+  spy.addAction("Drag start  at " + downAt);
+  drag=viewer.dragStart(new DragStart(downAt,me.getModifiers()));
   if (drag == null) {
+    spy.addAction("drag start  ignored");
     canDrag=false;
   }
+ else {
+    spy.addAction("drag start " + drag);
+    drag.start(viewer);
+    View overlay=drag.getOverlay();
+    if (overlay != null) {
+      viewer.setOverlayView(overlay);
+    }
+    drag.drag(viewer,new Location(me.getPoint()),me.getModifiers());
+  }
+  previouslyIdentifiedView=null;
 }

@@ -1,7 +1,9 @@
 {
   int bl=getBaseline();
-  icon.draw(canvas,1,bl);
-  title.draw(canvas,icon.getSize().getWidth() + HPADDING,bl);
+  int width=((TableColumnAxis)getViewAxis()).getHeaderOffset();
+  Canvas subcanvas=canvas.createSubcanvas(0,0,width,getSize().getHeight());
+  icon.draw(subcanvas,1,bl);
+  title.draw(subcanvas,icon.getSize().getWidth() + HPADDING,bl);
   int y=getSize().getHeight() - 1;
   canvas.drawLine(0,y,getSize().getWidth(),y,Style.SECONDARY2);
   super.draw(canvas);
