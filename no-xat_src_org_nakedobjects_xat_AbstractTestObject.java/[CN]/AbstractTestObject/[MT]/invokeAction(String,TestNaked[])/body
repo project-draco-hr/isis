@@ -3,11 +3,14 @@
   assertActionUsable(name,action,parameters);
   assertActionVisible(name,action,parameters);
   Naked[] parameterObjects=nakedObjects(parameters);
-  NakedObject result=(NakedObject)getForNaked().execute(action,parameterObjects);
+  Naked result=getForNaked().execute(action,parameterObjects);
   if (result == null) {
     return null;
   }
+ else   if (result instanceof NakedCollection) {
+    return factory.createTestCollection(session,(NakedCollection)result);
+  }
  else {
-    return factory.createTestObject(session,result);
+    return factory.createTestObject(session,(NakedObject)result);
   }
 }
