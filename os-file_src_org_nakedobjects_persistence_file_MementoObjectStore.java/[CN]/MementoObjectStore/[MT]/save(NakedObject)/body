@@ -1,5 +1,12 @@
 {
   LOG.debug("Save object " + object);
-  Data data=createObjectData(object,true);
-  dataManager.save(data);
+  if (object instanceof InternalCollection) {
+    NakedObject parent=((InternalCollection)object).forParent();
+    Data data=createObjectData(parent,true);
+    dataManager.save(data);
+  }
+ else {
+    Data data=createObjectData(object,true);
+    dataManager.save(data);
+  }
 }
