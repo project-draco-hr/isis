@@ -3,12 +3,12 @@
   try {
     NakedObjectManager objectManager=NakedObjectManager.getInstance();
 synchronized (objectManager) {
-      NakedClass cls=NakedClassManager.getInstance().getNakedClass(type);
+      NakedObjectSpecification cls=NakedObjectSpecification.getNakedClass(type);
       if (loadedObjects.isLoaded(oid)) {
         object=objectManager.getObject(oid,cls);
       }
  else {
-        object=cls.acquireInstance();
+        object=(NakedObject)cls.acquireInstance();
         object.setOid(oid);
         loadedObjects.loaded(object);
       }

@@ -1,8 +1,8 @@
 {
   NakedObject dropObject=(NakedObject)parameter.getForObject();
-  Action action=nakedClass.getClassAction(Action.USER,name,new NakedClass[]{dropObject.getNakedClass()});
+  ActionSpecification action=nakedClass.forNakedClass().getClassAction(ActionSpecification.USER,name,new NakedObjectSpecification[]{dropObject.getSpecification()});
   if (action == null) {
-    throw new IllegalActionError("Can't drop a " + parameter.getForObject().getShortClassName() + " (for "+ name+ ") on the "+ nakedClass.getPluralName()+ " class.");
+    throw new IllegalActionError("Can't drop a " + parameter.getForObject().getSpecification().getShortName() + " (for "+ name+ ") on the "+ nakedClass.getPluralName()+ " class.");
   }
   NakedObject result=action.execute(nakedClass,dropObject);
   if (result == null) {

@@ -1,10 +1,11 @@
 {
-  NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
-  if (source instanceof NakedClass) {
+  NakedObject dragSource=((ObjectContent)drag.getSourceContent()).getObject();
+  if (dragSource instanceof NakedClassSpec) {
     return false;
   }
  else {
-    NakedClass nc=((ObjectParameter)getContent()).getNakedClass();
-    return nc.isOfType(source.getNakedClass());
+    NakedObjectSpecification targetType=((ObjectParameter)getContent()).getNakedClass();
+    NakedObjectSpecification sourceType=dragSource.getSpecification();
+    return sourceType.isOfType(targetType);
   }
 }

@@ -1,12 +1,12 @@
 {
   NakedObject parentObject=((ObjectContent)view.getParent().getContent()).getObject();
   OneToOneField content=((OneToOneField)view.getContent());
-  OneToOneAssociation association=content.getOneToOneAssociation();
+  OneToOneAssociationSpecification association=content.getOneToOneAssociation();
   NakedObject associatedObject=content.getObject();
-  About about=association.getAbout(Session.getSession().getSecurityContext(),parentObject,associatedObject);
+  About about=association.getAbout(Session.getSession().getContext(),parentObject,associatedObject);
   Permission edit=about.canUse();
   if (edit.isAllowed()) {
-    String status="Clear the association to this object from '" + parentObject.title() + "'";
+    String status="Clear the association to this object from '" + parentObject.titleString() + "'";
     return new Allow(status);
   }
  else {

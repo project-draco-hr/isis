@@ -1,0 +1,14 @@
+{
+  Assert.assertTrue("Only suitable for 0 param methods",action.parameters().length == 0);
+  About about=action.getAbout(Session.getSession().getContext(),object);
+  if (about.canAccess().isVetoed()) {
+    return null;
+  }
+  String labelName=action.getLabel(Session.getSession().getContext(),object);
+  ImmediateObjectOption option=new ImmediateObjectOption(labelName);
+  option.action=action;
+  if (action.hasReturn()) {
+    option.setName(labelName + "...");
+  }
+  return option;
+}

@@ -1,0 +1,19 @@
+{
+  NakedObjectSpecification cls=nakedClass(Person.class);
+  NakedObjectSpecification subclass1=nakedClass(LittlePerson.class);
+  NakedObjectSpecification subclass2=nakedClass(BigPerson.class);
+  NakedObjectSpecification subclass3=nakedClass(SmallPerson.class);
+  ExpectationSet set=new ExpectationSet("");
+  set.addExpected(subclass1);
+  set.addExpected(subclass2);
+  NakedObjectSpecification[] subclasses=cls.subclasses();
+  set.addActualMany(subclasses);
+  set.verify();
+  assertTrue(cls.isOfType(cls));
+  assertTrue(subclass1.isOfType(cls));
+  assertTrue(subclass2.isOfType(cls));
+  assertTrue(subclass3.isOfType(cls));
+  assertFalse(cls.isOfType(subclass1));
+  assertFalse(cls.isOfType(subclass2));
+  assertFalse(cls.isOfType(subclass3));
+}

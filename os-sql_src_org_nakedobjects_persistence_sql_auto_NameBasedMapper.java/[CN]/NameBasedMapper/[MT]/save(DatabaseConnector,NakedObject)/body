@@ -1,14 +1,14 @@
 {
-  NakedClass cls=object.getNakedClass();
+  NakedObjectSpecification cls=object.getSpecification();
   String table=table(cls);
   StringBuffer sb=new StringBuffer();
-  Field[] fields=cls.getFields();
+  FieldSpecification[] fields=cls.getFields();
   for (int i=0; i < fields.length; i++) {
     if (fields[i].isDerived()) {
       continue;
     }
     Naked fieldValue=fields[i].get(object);
-    if (fields[i] instanceof OneToManyAssociation) {
+    if (fields[i] instanceof OneToManyAssociationSpecification) {
       saveInternalCollection(connector,fields[i],(InternalCollection)fieldValue);
     }
  else {

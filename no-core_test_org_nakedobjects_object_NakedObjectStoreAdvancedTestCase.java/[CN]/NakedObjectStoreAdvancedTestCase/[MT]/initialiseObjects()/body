@@ -1,12 +1,6 @@
 {
-  manager.setupAddClass(Person.class);
-  manager.setupAddClass(Role.class);
-  manager.setupAddClass(Team.class);
-  manager.setupAddClass(ValueObjectExample.class);
-  manager.setupAddClass(InternalCollection.class);
-  manager.setupAddClass(NakedObject.class);
-  personClass=NakedClassManager.getInstance().getNakedClass(Person.class.getName());
-  roleClass=NakedClassManager.getInstance().getNakedClass(Role.class.getName());
+  personClass=NakedObjectSpecification.getNakedClass(Person.class.getName());
+  roleClass=NakedObjectSpecification.getNakedClass(Role.class.getName());
   personPattern=new Person();
   personPattern.makeFinder();
   rolePattern=new Role();
@@ -30,6 +24,7 @@
     objectStore.createObject(roles[i]);
   }
   team=new Team();
+  team.setContext(context);
   team.setOid(teamOid=nextOid());
   team.getMembers().setOid(membersOid=nextOid());
   teamMembers=new Person[names.length - 1];

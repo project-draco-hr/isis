@@ -4,9 +4,9 @@
     return ((NakedCollection)object).size() > 0;
   }
  else {
-    Field[] fields=object.getNakedClass().getVisibleFields(object);
+    FieldSpecification[] fields=object.getSpecification().getVisibleFields(object,Session.getSession().getContext());
     for (int i=0; i < fields.length; i++) {
-      if (fields[i] instanceof Association && !(object instanceof Lookup)) {
+      if (fields[i] instanceof AssociationSpecification && !(object instanceof Lookup)) {
         return true;
       }
     }

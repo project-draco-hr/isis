@@ -1,18 +1,9 @@
 {
-  String name="org.company.Test";
-  try {
-    objectStore.getNakedClass(name);
-    fail();
-  }
- catch (  ObjectNotFoundException expected) {
-  }
-  NakedClass nc=new NakedClass();
+  NakedClassSpec nc=new NakedClassSpec(personClassName);
+  nc.setContext(context);
   nc.setOid(nextOid());
-  nc.getName().setValue(name);
-  nc.getReflector().setValue("org.company.reflect.Reflector");
   objectStore.createNakedClass(nc);
-  NakedClass nc2=objectStore.getNakedClass(name);
+  NakedClassSpec nc2=objectStore.getNakedClass(personClassName);
   assertEquals(nc,nc2);
-  assertEquals(name,nc2.getName());
-  assertEquals(nc.getReflector(),nc2.getReflector());
+  assertEquals(personClassName,nc2.getName());
 }

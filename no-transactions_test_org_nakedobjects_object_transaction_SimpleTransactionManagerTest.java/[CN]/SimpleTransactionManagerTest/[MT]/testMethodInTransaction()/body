@@ -3,15 +3,15 @@
   Account personal=(Account)objectManager.createInstance(Account.class.getName());
   Account saving=(Account)objectManager.createInstance(Account.class.getName());
   objectManager.endTransaction();
-  assertNoInstances(2,personal.getNakedClass());
+  assertNoInstances(2,personal.getSpecification());
   objectManager.startTransaction();
   Account toAccount1=(Account)transactionalObject(personal);
   Account toSaving=(Account)transactionalObject(saving);
   Transfer transfer=toAccount1.actionCreateTransactionFrom(toSaving);
-  assertNoInstances(0,transfer.getNakedClass());
+  assertNoInstances(0,transfer.getSpecification());
   objectManager.endTransaction();
-  assertNoInstances(1,transfer.getNakedClass());
-  assertInstanceEquals(transfer.getNakedClass(),transfer);
+  assertNoInstances(1,transfer.getSpecification());
+  assertInstanceEquals(transfer.getSpecification(),transfer);
   assertEquals(saving,transfer.getFromAccount());
   assertEquals(personal,transfer.getToAccount());
 }

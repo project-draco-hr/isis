@@ -6,8 +6,8 @@
   Results rs=connector.select(statement);
   while (rs.next()) {
     String cls=rs.getString(elementClassColumn);
-    NakedClass elementCls=NakedClassManager.getInstance().getNakedClass(cls);
-    Object oid=recreateOid(rs,elementCls,elementIdColumn);
+    NakedObjectSpecification elementCls=NakedObjectSpecification.getNakedClass(cls);
+    Oid oid=recreateOid(rs,elementCls,elementIdColumn);
     NakedObject element=mapper.loadObject(elementCls,oid);
     LOG.debug("  element  " + element.getOid());
     collection.added(element);

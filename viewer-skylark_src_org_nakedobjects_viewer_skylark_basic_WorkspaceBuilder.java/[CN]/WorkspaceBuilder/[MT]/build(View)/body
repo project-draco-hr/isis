@@ -1,10 +1,10 @@
 {
   NakedObject object=((ObjectContent)view.getContent()).getObject();
   if (object != null && view.getSubviews().length == 0) {
-    Field[] flds=object.getNakedClass().getVisibleFields(object);
+    FieldSpecification[] flds=object.getSpecification().getVisibleFields(object,Session.getSession().getContext());
     ViewFactory factory=ViewFactory.getViewFactory();
     for (int f=0; f < flds.length; f++) {
-      Field field=flds[f];
+      FieldSpecification field=flds[f];
       Naked attribute=field.get(object);
       if (field.getName().equals("classes") && attribute instanceof InternalCollection) {
         Enumeration elements=((InternalCollection)attribute).elements();
@@ -28,26 +28,26 @@
         ViewAxis axis=view.getViewAxis();
         if (attribute instanceof NakedCollection) {
           OneToManyField content;
-          content=new OneToManyField(object,(InternalCollection)attribute,(OneToManyAssociation)field);
+          content=new OneToManyField(object,(InternalCollection)attribute,(OneToManyAssociationSpecification)field);
           specification=internalList;
           fieldView=specification.createView(content,axis);
         }
  else         if (attribute instanceof NakedObject || attribute == null) {
           OneToOneField content;
-          content=new OneToOneField(object,(NakedObject)attribute,(OneToOneAssociation)field);
+          content=new OneToOneField(object,(NakedObject)attribute,(OneToOneAssociationSpecification)field);
           specification=factory.getIconizedSubViewSpecification(content);
           fieldView=specification.createView(content,axis);
         }
  else         if (attribute instanceof NakedValue) {
           ValueField content;
-          content=new ValueField(object,(NakedValue)attribute,(Value)field);
+          content=new ValueField(object,(NakedValue)attribute,(ValueFieldSpecification)field);
           specification=factory.getValueFieldSpecification(content);
           fieldView=specification.createView(content,axis);
         }
  else {
           throw new NakedObjectRuntimeException();
         }
-        String label=field.getLabel(Session.getSession().getSecurityContext(),object);
+        String label=field.getLabel(Session.getSession().getContext(),object);
         fieldView=new LabelBorder(label,fieldView);
         fieldView=new SimpleBorder(1,fieldView);
         view.addView(fieldView);

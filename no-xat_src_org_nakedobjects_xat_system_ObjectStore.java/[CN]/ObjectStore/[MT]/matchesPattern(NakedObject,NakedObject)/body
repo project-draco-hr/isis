@@ -1,9 +1,9 @@
 {
   NakedObject object=instance;
-  NakedClass nc=object.getNakedClass();
-  Field[] fields=nc.getFields();
+  NakedObjectSpecification nc=object.getSpecification();
+  FieldSpecification[] fields=nc.getFields();
   for (int f=0; f < fields.length; f++) {
-    Field fld=fields[f];
+    FieldSpecification fld=fields[f];
     if (fld.isPart() || fld.isDerived()) {
       continue;
     }
@@ -13,8 +13,8 @@
       if (reqd.isEmpty()) {
         continue;
       }
-      String r=reqd.title().toString().toLowerCase();
-      String s=search.title().toString().toLowerCase();
+      String r=reqd.titleString().toLowerCase();
+      String s=search.titleString().toLowerCase();
       if (s.indexOf(r) == -1) {
         return false;
       }

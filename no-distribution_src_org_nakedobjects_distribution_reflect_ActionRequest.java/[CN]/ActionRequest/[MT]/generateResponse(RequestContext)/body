@@ -3,20 +3,20 @@
     NakedObject object=getObject(server.getLoadedObjects());
     int parameterCount=parameters.length;
     NakedObject parameters[]=new NakedObject[parameterCount];
-    NakedClass parameterTypes[]=new NakedClass[parameterCount];
+    NakedObjectSpecification parameterTypes[]=new NakedObjectSpecification[parameterCount];
     NakedObjectManager objectManager=server.getObjectManager();
     for (int i=0; i < parameterCount; i++) {
-      NakedObject parameter=objectManager.getObject(parameters[i].getOid(),parameters[i].getNakedClass());
+      NakedObject parameter=objectManager.getObject(parameters[i].getOid(),parameters[i].getSpecification());
       parameters[i]=parameter;
-      parameterTypes[i]=parameter.getNakedClass();
+      parameterTypes[i]=parameter.getSpecification();
     }
-    Action action=object.getNakedClass().getObjectAction(actionType,actionName,parameterTypes);
+    ActionSpecification action=object.getSpecification().getObjectAction(actionType,actionName,parameterTypes);
     NakedObject result=action.execute(object,parameters);
     if (result == null) {
       response=null;
     }
  else     if (result.getOid() == null) {
-      response=new NakedObjectMemento(result);
+      response=new Memento(result);
     }
  else     if (result instanceof InstanceCollection) {
       InstanceCollection instances=(InstanceCollection)result;

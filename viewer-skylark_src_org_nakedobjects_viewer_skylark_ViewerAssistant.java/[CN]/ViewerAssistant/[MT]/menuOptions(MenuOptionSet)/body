@@ -1,7 +1,7 @@
 {
   options.add(MenuOptionSet.VIEW,new MenuOption("Quit"){
     public void execute(    Workspace frame,    View view,    Location at){
-      viewer.shutdown();
+      viewer.close();
     }
   }
 );
@@ -10,6 +10,14 @@
     public void execute(    Workspace frame,    View view,    Location at){
       AbstractView.DEBUG=!AbstractView.DEBUG;
       view.markDamaged();
+    }
+  }
+);
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Vew context details..."){
+    public void execute(    Workspace frame,    View view,    Location at){
+      DebugFrame f=new DebugFrame();
+      f.setInfo(Session.getSession().getContext());
+      f.show(at.x + 50,frame.getBounds().y + 6);
     }
   }
 );
@@ -25,14 +33,6 @@
     public void execute(    Workspace frame,    View view,    Location at){
       DebugFrame f=new DebugFrame();
       f.setInfo(updateNotifier);
-      f.show(at.x + 50,frame.getBounds().y + 6);
-    }
-  }
-);
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Object store state..."){
-    public void execute(    Workspace frame,    View view,    Location at){
-      DebugFrame f=new DebugFrame();
-      f.setInfo(NakedObjectManager.getInstance());
       f.show(at.x + 50,frame.getBounds().y + 6);
     }
   }

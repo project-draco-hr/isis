@@ -2,8 +2,8 @@
   Assert.assertEquals(view.getView(),view);
   NakedObject object=((ObjectContent)view.getContent()).getObject();
   LOG.debug("rebuild view " + view + " for "+ object);
-  NakedClass cls=object.getNakedClass();
-  Field[] flds=cls.getVisibleFields(object);
+  NakedObjectSpecification cls=object.getSpecification();
+  FieldSpecification[] flds=cls.getVisibleFields(object,Session.getSession().getContext());
   if (view.getSubviews().length == 0) {
     newBuild(view,object,flds);
   }

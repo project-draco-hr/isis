@@ -1,16 +1,13 @@
 {
   BasicConfigurator.configure();
   Logger.getRootLogger().setLevel(Level.OFF);
+  new TestClock();
   om=MockObjectManager.setup();
-  om.setupAddClass(NakedObject.class);
-  om.setupAddClass(TestObjectExample.class);
-  om.setupAddClass(InternalCollection.class);
-  om.setupAddClass(TypedCollection.class);
-  om.setupAddClass(TestElement.class);
-  om.setupAddClass(TextString.class);
-  Session.initSession();
-  SecurityContext context=Session.getSession().getSecurityContext();
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectContext context=new NakedObjectContext(om);
+  Session.getSession().setSecurityContext(context);
   targetObject=new TestObjectExample();
+  targetObject.setContext(context);
   TestObjectFactory factory=new DefaultTestObjectFactory();
   target=factory.createTestObject(context,targetObject);
   singleParameter=factory.createTestObject(context,new TestObjectExample());

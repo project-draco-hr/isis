@@ -1,6 +1,5 @@
 {
   Results rs=connector.select(statement);
-  NakedObjectManager manager=NakedObjectManager.getInstance();
   Vector instances=new Vector();
   while (rs.next()) {
     int id=rs.getInt("id");
@@ -11,7 +10,7 @@
       user=(User)loadedObjects.getLoadedObject(oid);
     }
  else {
-      user=(User)NakedClassManager.getInstance().getNakedClass(User.class.getName()).acquireInstance();
+      user=(User)NakedObjectSpecification.getNakedClass(User.class.getName()).acquireInstance();
       user.setOid(oid);
       loadUser(rs,user);
       loadedObjects.loaded(user);
@@ -20,5 +19,5 @@
     instances.addElement(user);
   }
   rs.close();
-  return instances;
+  return toInstancesArray(instances);
 }

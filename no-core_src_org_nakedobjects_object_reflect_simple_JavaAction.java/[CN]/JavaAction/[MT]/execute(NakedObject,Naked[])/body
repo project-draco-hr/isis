@@ -2,20 +2,21 @@
   if (parameters.length != paramCount) {
     LOG.error(actionMethod + " requires " + paramCount+ " parameters, not "+ parameters.length);
   }
-  NakedObjectManager objectManager=NakedObjectManager.getInstance();
+  NakedObjectManager objectManager=inObject.getContext().getObjectManager();
   try {
-    LOG.debug("Action: invoke " + object + "."+ getName());
+    LOG.debug("Action: invoke " + inObject + "."+ getName());
     objectManager.startTransaction();
     Object result;
-    if (object.getOid() == null || !requiresTransaction()) {
-      result=actionMethod.invoke(object,parameters);
+    if (inObject.getOid() == null || !requiresTransaction()) {
+      result=actionMethod.invoke(inObject,parameters);
     }
  else {
-      NakedObject transactionObject=objectManager.getObject(object);
+      NakedObject transactionObject=objectManager.getObject(inObject.getOid(),inObject.getSpecification());
       Naked[] transactionParameters=new Naked[parameters.length];
       for (int i=0; i < parameters.length; i++) {
         if (parameters[i] instanceof NakedObject) {
-          transactionParameters[i]=objectManager.getObject((NakedObject)parameters[i]);
+          NakedObject parameter=(NakedObject)parameters[i];
+          transactionParameters[i]=objectManager.getObject(parameter.getOid(),parameter.getSpecification());
         }
  else {
           transactionParameters[i]=parameters[i];

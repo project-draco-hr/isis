@@ -1,9 +1,9 @@
 {
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
   NakedObject target=getObject();
-  Action action=dropAction(source,target);
+  ActionSpecification action=dropAction(source,target);
   if (action != null) {
-    About about=action.getAbout(Session.getSession().getSecurityContext(),target,source);
+    About about=action.getAbout(Session.getSession().getContext(),target,source);
     if (about.canUse().isAllowed()) {
       getViewManager().setStatus(about.getDescription());
       getState().setCanDrop();

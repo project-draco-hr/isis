@@ -1,0 +1,27 @@
+{
+  this.context=context;
+  this.factory=factory;
+  setForObject(object);
+  fields=new Hashtable();
+  if (object != null) {
+    viewCache.put(object,this);
+    FieldSpecification[] a=object.getSpecification().getFields();
+    for (int i=0; i < a.length; i++) {
+      FieldSpecification att=a[i];
+      if (att instanceof AssociationSpecification) {
+        TestObject associatedView=null;
+        NakedObject associate=(NakedObject)a[i].get(object);
+        if (null != associate) {
+          associatedView=(TestObject)viewCache.get(associate);
+        }
+        if (null == associatedView) {
+          associatedView=factory.createTestObject(context,associate,viewCache);
+        }
+        fields.put(a[i].getName(),associatedView);
+      }
+ else {
+        fields.put(att.getName(),factory.createTestValue(object,(ValueFieldSpecification)att));
+      }
+    }
+  }
+}

@@ -10,27 +10,28 @@
       obj[i].setOid(nextOid());
       obj[i].getName().setValue(((i % 2) == 0) ? "even" : "odd");
       v=new Person();
+      v.setContext(context);
       v.setOid(nextOid());
       obj[i].setPerson(v);
       objectStore.createObject(obj[i]);
     }
     Role examplePattern=new Role();
     examplePattern.makeFinder();
-    Vector instances=objectStore.getInstances(examplePattern,false);
-    assertEquals("instances size",4,instances.size());
+    NakedObject[] instances=objectStore.getInstances(examplePattern,false);
+    assertEquals("instances size",4,instances.length);
     examplePattern.getName().setValue("neither");
     instances=objectStore.getInstances(examplePattern,false);
-    assertEquals("instances size",0,instances.size());
+    assertEquals("instances size",0,instances.length);
     examplePattern.getName().setValue("even");
     instances=objectStore.getInstances(examplePattern,false);
-    assertEquals("instances size",2,instances.size());
+    assertEquals("instances size",2,instances.length);
     examplePattern.getName().setValue("odd");
     instances=objectStore.getInstances(examplePattern,false);
-    assertEquals("instances size",2,instances.size());
+    assertEquals("instances size",2,instances.length);
     examplePattern.getName().clear();
     examplePattern.setPerson(v);
     instances=objectStore.getInstances(examplePattern,false);
-    assertEquals("instances size",1,instances.size());
+    assertEquals("instances size",1,instances.length);
   }
  catch (  UnsupportedFindException e) {
   }

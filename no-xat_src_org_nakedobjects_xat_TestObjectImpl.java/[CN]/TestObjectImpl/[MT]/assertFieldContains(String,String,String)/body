@@ -1,19 +1,19 @@
 {
-  Field field=fieldFor(fieldName);
+  FieldSpecification field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   Naked object=getField(fieldName).getForObject();
   if (object instanceof InternalCollection) {
     InternalCollection collection=(InternalCollection)object;
     for (int i=0; i < collection.size(); i++) {
       NakedObject element=collection.elementAt(i);
-      if (element.title().toString().equals(expectedValue)) {
+      if (element.titleString().toString().equals(expectedValue)) {
         return;
       }
     }
     throw new NakedAssertionFailedError(expected(message) + " object titled '" + expectedValue+ "' but could not find it in the internal collection");
   }
  else {
-    String actualValue=object.title().toString();
+    String actualValue=object.titleString().toString();
     if (!actualValue.equals(expectedValue)) {
       throw new NakedAssertionFailedError(expected(message) + " value " + expectedValue+ " but got "+ actualValue);
     }

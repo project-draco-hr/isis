@@ -2,12 +2,12 @@
   InternalCollection collection=(InternalCollection)((ObjectContent)view.getParent().getContent()).getObject();
   NakedObject parentObject=collection.forParent();
   OneToManyElement content=(OneToManyElement)view.getContent();
-  OneToManyAssociation association=content.getOneToManyAssociation();
+  OneToManyAssociationSpecification association=content.getOneToManyAssociation();
   NakedObject associatedObject=content.getObject();
-  About about=association.getAbout(Session.getSession().getSecurityContext(),parentObject,associatedObject,false);
+  About about=association.getAbout(Session.getSession().getContext(),parentObject,associatedObject,false);
   Permission edit=about.canUse();
   if (edit.isAllowed()) {
-    String status="Clear the association to this object from '" + parentObject.title() + "'";
+    String status="Clear the association to this object from '" + parentObject.titleString() + "'";
     return new Allow(status);
   }
  else {

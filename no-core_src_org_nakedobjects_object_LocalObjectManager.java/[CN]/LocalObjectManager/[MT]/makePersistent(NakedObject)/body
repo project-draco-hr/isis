@@ -1,15 +1,15 @@
 {
   LOG.debug("makePersistent " + object);
-  if (object.isPersistent()) {
+  if (isPersistent(object)) {
     throw new IllegalArgumentException();
   }
   object.setOid(createOid(object));
   if (!object.isResolved()) {
     object.setResolved();
   }
-  Field[] fields=object.getNakedClass().getFields();
+  FieldSpecification[] fields=object.getSpecification().getFields();
   for (int i=0; i < fields.length; i++) {
-    Field field=fields[i];
+    FieldSpecification field=fields[i];
     if (field.isDerived()) {
       continue;
     }
@@ -22,7 +22,7 @@
       collection.setResolved();
       for (int j=0; j < collection.size(); j++) {
         NakedObject element=collection.elementAt(j);
-        if (element.isPersistent()) {
+        if (isPersistent(element)) {
           continue;
         }
         makePersistent(element);
@@ -34,14 +34,19 @@
         continue;
       }
       NakedObject association=(NakedObject)fieldValue;
-      if (association.isPersistent()) {
+      if (isPersistent(association)) {
         continue;
       }
       makePersistent(association);
     }
   }
   try {
-    createObject(object);
+    if (object instanceof NakedClassSpec) {
+      createNakedClassSpec(object);
+    }
+ else {
+      createObject(object);
+    }
   }
  catch (  ObjectStoreException e) {
     throw new NakedObjectRuntimeException(e);

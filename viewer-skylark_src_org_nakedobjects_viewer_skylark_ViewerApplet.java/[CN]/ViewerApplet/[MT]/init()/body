@@ -1,10 +1,9 @@
 {
   viewer=new Viewer();
   try {
-    new LocalObjectManager(new TransientObjectStore(),viewer.getUpdateNotifier());
-    Session.initSession();
-    NakedObject root=(NakedObject)InstanceCollection.allInstances(User.class.getName()).elements().nextElement();
-    viewer.init(this,root);
+    LocalObjectManager objectManager=new LocalObjectManager(new TransientObjectStore(),viewer.getUpdateNotifier(),new SimpleOidGenerator());
+    NakedObject root=(NakedObject)objectManager.allInstances(User.class.getName()).elements().nextElement();
+    viewer.init(this,root,null);
     setBackground(Style.APPLICATION_BACKGROUND.getAwtColor());
     Class c=getClass();
     Method m=c.getMethod("setFocusTraversalKeysEnabled",new Class[]{Boolean.TYPE});

@@ -1,12 +1,8 @@
 {
-  NakedClass nc=new NakedClass();
+  NakedClassSpec nc=new NakedClassSpec(personClassName);
   nc.setOid(nextOid());
-  String name="org.company.Test";
-  nc.getName().setValue(name);
-  nc.getReflector().setValue("org.company.reflect.Reflector");
   objectStore.createNakedClass(nc);
-  NakedClass nc2=(NakedClass)objectStore.getObject(nc.getOid(),nc.getNakedClass());
+  NakedClassSpec nc2=(NakedClassSpec)objectStore.getObject(nc.getOid(),nc.getSpecification());
   assertEquals(nc,nc2);
-  assertEquals(name,nc2.getName());
-  assertEquals(nc.getReflector(),nc2.getReflector());
+  assertEquals(personClassName,nc2.getName());
 }

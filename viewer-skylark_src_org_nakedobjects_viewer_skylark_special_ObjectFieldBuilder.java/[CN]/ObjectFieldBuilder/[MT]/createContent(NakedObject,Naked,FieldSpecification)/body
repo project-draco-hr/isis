@@ -1,0 +1,19 @@
+{
+  if (field == null) {
+    throw new NullPointerException();
+  }
+  ObjectField content;
+  if (object instanceof InternalCollection) {
+    content=new OneToManyField(parent,(InternalCollection)object,(OneToManyAssociationSpecification)field);
+  }
+ else   if (object instanceof NakedObject || object == null) {
+    content=new OneToOneField(parent,(NakedObject)object,(OneToOneAssociationSpecification)field);
+  }
+ else   if (object instanceof NakedValue) {
+    content=new ValueField(parent,(NakedValue)object,(ValueFieldSpecification)field);
+  }
+ else {
+    throw new NakedObjectRuntimeException();
+  }
+  return content;
+}

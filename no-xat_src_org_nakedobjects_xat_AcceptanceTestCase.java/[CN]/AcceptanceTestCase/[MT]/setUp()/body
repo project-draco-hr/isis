@@ -1,28 +1,29 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.ERROR);
-  clock=new ExplorationClock();
-  Date.setClock(clock);
-  Time.setClock(clock);
-  TimeStamp.setClock(clock);
   objectManager=createObjectManager();
   try {
+    NakedObjectContext con=new NakedObjectContext(objectManager);
+    explorationSetUp=new ExplorationSetUp(con);
     setUpFixture();
-    ExplorationSetUp fs=new ExplorationSetUp();
-    fs.init(fixtures,NakedClassManager.getInstance(),objectManager,clock);
+    setUpFixtures();
     if (testObjectFactory == null) {
       testObjectFactory=new HtmlTestObjectFactory();
     }
     documentor=testObjectFactory.getDocumentor(getName().substring(4));
-    String[] cls=fs.getClasses();
+    explorationSetUp.installFixtures();
+    String[] cls=explorationSetUp.getClasses();
     for (int i=0; i < cls.length; i++) {
-      NakedClass nc=NakedClassManager.getInstance().getNakedClass(cls[i]);
-      TestClass view=testObjectFactory.createTestClass(context,nc);
-      classes.put(nc.fullName().toLowerCase(),view);
+      NakedObjectSpecification nc=NakedObjectSpecification.getNakedClass(cls[i]);
+      NakedClassSpec spec=new NakedClassSpec(cls[i]);
+      spec.setContext(con);
+      spec.setNakedClass(nc);
+      TestClass view=testObjectFactory.createTestClass(context,spec);
+      classes.put(nc.getFullName().toLowerCase(),view);
     }
   }
  catch (  Exception e) {
     e.printStackTrace();
-    NakedObjectManager.getInstance().shutdown();
+    objectManager.shutdown();
     throw e;
   }
 }

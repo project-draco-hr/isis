@@ -1,10 +1,10 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   manager=MockObjectManager.setup();
-  manager.setupAddClass(NakedObject.class);
-  manager.setupAddClass(Team.class);
-  manager.setupAddClass(Person.class);
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  new TestClock();
   object=new Team();
-  NakedClass c=object.getNakedClass();
-  action=(Action)c.getObjectAction(Action.USER,DISOLVE_ACTION_NAME);
+  object.setContext(manager.getContext());
+  NakedObjectSpecification c=object.getSpecification();
+  action=(ActionSpecification)c.getObjectAction(ActionSpecification.USER,DISOLVE_ACTION_NAME);
 }

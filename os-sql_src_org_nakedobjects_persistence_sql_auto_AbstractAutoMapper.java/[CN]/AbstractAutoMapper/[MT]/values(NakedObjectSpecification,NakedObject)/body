@@ -1,0 +1,23 @@
+{
+  StringBuffer sb=new StringBuffer();
+  FieldSpecification[] fields=cls.getFields();
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i].isDerived() || fields[i] instanceof OneToManyAssociationSpecification) {
+      continue;
+    }
+    sb.append(", ");
+    Naked fieldValue=fields[i].get(object);
+    if (fieldValue == null) {
+      sb.append("NULL");
+    }
+ else     if (fields[i].isValue()) {
+      ValueMapper mapper=typeMapper.mapperFor(fields[i].getType());
+      sb.append(mapper.valueAsDBString((NakedValue)fieldValue));
+    }
+ else {
+      NakedObject ref=(NakedObject)fieldValue;
+      sb.append(primaryKey(ref.getOid()));
+    }
+  }
+  return sb.toString();
+}

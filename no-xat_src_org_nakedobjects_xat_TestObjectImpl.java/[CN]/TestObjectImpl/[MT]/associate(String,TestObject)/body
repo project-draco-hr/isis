@@ -1,5 +1,5 @@
 {
-  Field field=fieldFor(fieldName);
+  FieldSpecification field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
   TestNaked targetField=getField(fieldName);
@@ -9,10 +9,10 @@
   if ((targetField.getForObject() != null) && !(targetField.getForObject() instanceof InternalCollection)) {
     throw new IllegalActionError("Field already contains an object: " + targetField.getForObject());
   }
-  Association association=(Association)fieldFor(fieldName);
+  AssociationSpecification association=(AssociationSpecification)fieldFor(fieldName);
   NakedObject obj=(NakedObject)object.getForObject();
-  if (association.getType() != null && !association.getType().isAssignableFrom(obj.getClass())) {
-    throw new IllegalActionError("Can't drop a " + object.getForObject().getShortClassName() + " on to the "+ fieldName+ " field (which accepts "+ association.getType()+ ")");
+  if (association.getType() != null && !association.getType().isOfType(obj.getSpecification())) {
+    throw new IllegalActionError("Can't drop a " + object.getForObject().getSpecification().getShortName() + " on to the "+ fieldName+ " field (which accepts "+ association.getType()+ ")");
   }
   association.setAssociation((NakedObject)getForObject(),obj);
 }

@@ -1,11 +1,16 @@
 {
-  NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
-  if (source instanceof NakedClass) {
+  NakedObject dragSource=((ObjectContent)drag.getSourceContent()).getObject();
+  if (dragSource instanceof NakedClassSpec) {
     return true;
   }
  else {
-    NakedObject target=((ObjectContent)getParent().getContent()).getObject();
-    Permission perm=getEmptyField().getAbout(Session.getSession().getSecurityContext(),target,source).canUse();
+    NakedObjectSpecification targetType=((OneToOneField)getContent()).getField().getType();
+    NakedObject parent=((ObjectContent)getParent().getContent()).getObject();
+    NakedObjectSpecification sourceType=dragSource.getSpecification();
+    if (!sourceType.isOfType(targetType)) {
+      return false;
+    }
+    Permission perm=getEmptyField().getAbout(Session.getSession().getContext(),parent,dragSource).canUse();
     if (perm.getReason() != null) {
       getViewManager().setStatus(perm.getReason());
     }

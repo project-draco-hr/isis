@@ -1,11 +1,11 @@
 {
   try {
     NakedObject object=getObject(server.getLoadedObjects());
-    OneToOneAssociation association=(OneToOneAssociation)object.getNakedClass().getField(name);
+    OneToOneAssociationSpecification association=(OneToOneAssociationSpecification)object.getSpecification().getField(name);
     if (association == null) {
       throw new NakedObjectRuntimeException("ObjectAttributeMessage has invalid Field: " + name);
     }
-    response=new NakedObjectMemento((NakedObject)association.get(object));
+    response=new Memento((NakedObject)association.get(object));
   }
  catch (  ObjectStoreException e) {
     response=e;

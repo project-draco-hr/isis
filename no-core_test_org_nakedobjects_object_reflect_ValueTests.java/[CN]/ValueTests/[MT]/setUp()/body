@@ -1,10 +1,11 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   manager=MockObjectManager.setup();
-  manager.setupAddClass(NakedObject.class);
-  manager.setupAddClass(ValueTestObject.class);
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  new TestClock();
   object=new ValueTestObject();
-  NakedClass c=NakedClassManager.getInstance().getNakedClass(ValueTestObject.class.getName());
-  nameField=(Value)c.getField(NAME_FIELD_NAME);
-  salaryField=(Value)c.getField(SALARY_FIELD_NAME);
+  object.setContext(manager.getContext());
+  NakedObjectSpecification c=NakedObjectSpecification.getNakedClass(ValueTestObject.class.getName());
+  nameField=(ValueFieldSpecification)c.getField(NAME_FIELD_NAME);
+  salaryField=(ValueFieldSpecification)c.getField(SALARY_FIELD_NAME);
 }

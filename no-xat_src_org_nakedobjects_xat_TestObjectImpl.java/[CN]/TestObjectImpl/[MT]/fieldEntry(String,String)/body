@@ -1,5 +1,5 @@
 {
-  Field field=fieldFor(fieldName);
+  FieldSpecification field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
   TestValue testField;
@@ -12,7 +12,8 @@
     }
     testField.setForObject(valueObject);
     testField.fieldEntry(value);
-    ((NakedObject)getForObject()).objectChanged();
+    NakedObject object=((NakedObject)getForObject());
+    object.getContext().getObjectManager().objectChanged(object);
   }
  else {
     throw new IllegalActionError("Can only make an entry (eg by keyboard) into a value field");

@@ -1,0 +1,28 @@
+{
+  ObjectDataVector data=dataManager.getInstances(patternData);
+  NakedObject[] instances=new NakedObject[data.size()];
+  int count=0;
+  String titlePattern=title == null ? "" : title.toLowerCase();
+  for (int i=0; i < data.size(); i++) {
+    ObjectData instanceData=data.element(i);
+    LOG.debug("instance data " + instanceData);
+    SimpleOid oid=instanceData.getOid();
+    NakedObject instance;
+    if (loadedObjects.isLoaded(oid)) {
+      instance=loadedObjects.getLoadedObject(oid);
+    }
+ else {
+      instance=(NakedObject)createSkeletalObject(oid,instanceData.getClassName());
+      instance.setContext(NakedObjectContext.getDefaultContext());
+      loadedObjects.loaded(instance);
+      instance.setResolved();
+    }
+    initObject(instance,instanceData);
+    if (title == null || instance.titleString().toLowerCase().indexOf(titlePattern) >= 0) {
+      instances[count++]=instance;
+    }
+  }
+  NakedObject[] array=new NakedObject[count];
+  System.arraycopy(instances,0,array,0,count);
+  return instances;
+}

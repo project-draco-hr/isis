@@ -1,10 +1,6 @@
 {
-  try {
-    NakedObject object=((ObjectContent)view.getContent()).getObject();
-    object.destroy();
-    workspace.removeViewsFor(object);
-  }
- catch (  ObjectStoreException e) {
-    LOG.error("Object store problem",e);
-  }
+  NakedObject object=((ObjectContent)view.getContent()).getObject();
+  NakedObjectManager manager=object.getContext().getObjectManager();
+  manager.destroyObject(object);
+  workspace.removeViewsFor(object);
 }

@@ -1,5 +1,5 @@
 {
-  Field field=null;
+  FieldSpecification field=null;
   int x=0;
   Size size=view.getSize();
   size.contract(view.getPadding());
@@ -10,11 +10,11 @@
     View v=views[i];
     NakedObject object=((ObjectContent)v.getContent()).getObject();
     if (field == null) {
-      NakedClass nc=object.getNakedClass();
-      Field[] fields=nc.getFields();
+      NakedObjectSpecification nc=object.getSpecification();
+      FieldSpecification[] fields=nc.getFields();
       for (int j=0; j < fields.length; j++) {
         field=fields[j];
-        if (field.getType().isAssignableFrom(TimePeriod.class)) {
+        if (field.getType().isOfType(NakedObjectSpecification.getNakedClass(TimePeriod.class))) {
           break;
         }
       }

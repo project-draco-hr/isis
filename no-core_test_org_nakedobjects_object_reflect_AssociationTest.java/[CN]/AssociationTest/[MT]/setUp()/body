@@ -2,10 +2,10 @@
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   super.setUp();
   manager=MockObjectManager.setup();
-  manager.setupAddClass(NakedObject.class);
-  manager.setupAddClass(Role.class);
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
   object=new Role();
-  NakedClass c=object.getNakedClass();
-  personField=(OneToOneAssociation)c.getField(PERSON_FIELD_NAME);
+  object.setContext(manager.getContext());
+  NakedObjectSpecification c=object.getSpecification();
+  personField=(OneToOneAssociationSpecification)c.getField(PERSON_FIELD_NAME);
   associate=new Person();
 }

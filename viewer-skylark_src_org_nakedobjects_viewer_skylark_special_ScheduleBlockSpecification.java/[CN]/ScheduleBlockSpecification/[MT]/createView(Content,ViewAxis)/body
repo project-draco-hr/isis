@@ -1,15 +1,15 @@
 {
-  NakedClass nc=((ObjectContent)content).getObject().getNakedClass();
-  Field[] flds=nc.getFields();
-  Field timePeriodField=null;
-  Field colorField=null;
+  NakedObjectSpecification nc=((ObjectContent)content).getObject().getSpecification();
+  FieldSpecification[] flds=nc.getFields();
+  FieldSpecification timePeriodField=null;
+  FieldSpecification colorField=null;
   for (int i=0; i < flds.length; i++) {
-    Field field=flds[i];
-    if (field.getType().isAssignableFrom(TimePeriod.class)) {
+    FieldSpecification field=flds[i];
+    if (field.getType().isOfType(NakedObjectSpecification.getNakedClass(TimePeriod.class))) {
       LOG.debug("Found TimePeriod field " + field);
       timePeriodField=field;
     }
-    if (field.getType().isAssignableFrom(org.nakedobjects.object.value.Color.class)) {
+    if (field.getType().isOfType(NakedObjectSpecification.getNakedClass(org.nakedobjects.object.value.Color.class))) {
       LOG.debug("Found Color field " + field);
       colorField=field;
     }

@@ -1,0 +1,17 @@
+{
+  LOG.debug("getObject " + oid);
+  Data data=dataManager.loadData((SimpleOid)oid);
+  LOG.debug("Data read " + data);
+  NakedObject object;
+  if (data instanceof ObjectData) {
+    object=recreateObject((ObjectData)data);
+  }
+ else   if (data instanceof CollectionData) {
+    object=(NakedObject)classFor(data.getClassName()).acquireInstance();
+  }
+ else {
+    throw new ObjectNotFoundException();
+  }
+  object.setContext(NakedObjectContext.getDefaultContext());
+  return object;
+}

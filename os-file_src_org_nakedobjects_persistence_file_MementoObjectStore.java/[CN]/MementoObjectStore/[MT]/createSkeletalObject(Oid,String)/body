@@ -1,0 +1,12 @@
+{
+  if (loadedObjects.isLoaded(oid)) {
+    return loadedObjects.getLoadedObject(oid);
+  }
+ else {
+    LOG.debug("Creating skeletal object of " + type + " "+ oid);
+    NakedObjectSpecification cls=NakedObjectSpecification.getNakedClass(type);
+    NakedObject object=(NakedObject)cls.acquireInstance();
+    object.setOid(oid);
+    return object;
+  }
+}

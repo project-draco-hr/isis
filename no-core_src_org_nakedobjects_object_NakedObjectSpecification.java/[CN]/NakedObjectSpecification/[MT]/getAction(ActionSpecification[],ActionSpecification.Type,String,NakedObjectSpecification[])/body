@@ -1,0 +1,22 @@
+{
+  if (name == null) {
+    return null;
+  }
+  String searchName=searchName(name);
+  outer:   for (int i=0; i < availableActions.length; i++) {
+    ActionSpecification action=availableActions[i];
+    if (action.getActionType().equals(type)) {
+      if (action.getName().equals(searchName)) {
+        if (action.parameters().length == parameters.length) {
+          for (int j=0; j < parameters.length; j++) {
+            if (action.parameters()[j] != parameters[j]) {
+              continue outer;
+            }
+          }
+          return action;
+        }
+      }
+    }
+  }
+  return null;
+}

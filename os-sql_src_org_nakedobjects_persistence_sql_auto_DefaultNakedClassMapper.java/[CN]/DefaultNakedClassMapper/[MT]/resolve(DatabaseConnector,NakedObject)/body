@@ -1,15 +1,13 @@
 {
-  NakedClass cls=(NakedClass)object;
-  String columns=nameColumn + "," + reflectorColumn;
+  NakedClassSpec cls=(NakedClassSpec)object;
+  String columns=nameColumn;
   String id=primaryKey(object.getOid());
   LOG.debug("loading data from SQL " + table + " for "+ object);
   String statement="select " + columns + " from "+ table+ " where "+ idColumn+ "="+ id;
   Results rs=connector.select(statement);
   if (rs.next()) {
     String className=rs.getString(nameColumn);
-    String reflectorName=rs.getString(reflectorColumn);
     cls.getName().restoreString(className);
-    cls.getReflector().restoreString(reflectorName);
     rs.close();
   }
  else {

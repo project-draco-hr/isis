@@ -64,19 +64,19 @@
   while (objects.hasMoreElements()) {
     NakedObject newObject=(NakedObject)objects.nextElement();
     log("load " + newObject);
-    NakedClass cls=newObject.getNakedClass();
-    Field[] fields=cls.getFields();
+    NakedObjectSpecification cls=newObject.getSpecification();
+    FieldSpecification[] fields=cls.getFields();
     for (int i=0; i < fields.length; i++) {
-      Field field=fields[i];
-      if (field instanceof OneToOneAssociation) {
-        NakedObject proxyAssociate=(NakedObject)((OneToOneAssociation)field).get(newObject);
+      FieldSpecification field=fields[i];
+      if (field instanceof OneToOneAssociationSpecification) {
+        NakedObject proxyAssociate=(NakedObject)((OneToOneAssociationSpecification)field).get(newObject);
         if (proxyAssociate != null) {
           Object associateOid=proxyAssociate.getOid();
           NakedObject associate=store.getLoadedObjects().getLoadedObject(associateOid);
-          ((OneToOneAssociation)field).initData(newObject,associate);
+          ((OneToOneAssociationSpecification)field).initData(newObject,associate);
         }
       }
- else       if (field instanceof OneToManyAssociation) {
+ else       if (field instanceof OneToManyAssociationSpecification) {
       }
     }
     store.getLoadedObjects().loaded(newObject);

@@ -1,14 +1,10 @@
 {
-  NakedClass pattern=new NakedClass();
-  pattern.makeFinder();
-  pattern.getName().setValue(name);
-  pattern.getReflector().clear();
-  Vector instances=getInstances((NakedObject)pattern,false);
-  if (instances.size() == 1) {
-    Object oid=((NakedClass)instances.elementAt(0)).getOid();
-    return (NakedClass)getObject(oid,pattern.getNakedClass());
+  NakedObject[] instances=getInstances(NAKED_CLASS_CLASS,false);
+  for (int i=0, len=instances.length; i < len; i++) {
+    NakedClassSpec cls=(NakedClassSpec)instances[i];
+    if (cls.getName().isSameAs(name)) {
+      return cls;
+    }
   }
- else {
-    throw new ObjectNotFoundException();
-  }
+  throw new ObjectNotFoundException();
 }

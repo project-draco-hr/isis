@@ -1,13 +1,13 @@
 {
   super(wrappedView);
   replaceWithSpecification=replaceWith;
-  if (getContent() instanceof InternalCollectionContent) {
-    InternalCollection collection=((InternalCollection)((InternalCollectionContent)getContent()).getObject());
+  if (getContent() instanceof OneToManyField) {
+    InternalCollection collection=((InternalCollection)((OneToManyField)getContent()).getObject());
     String type=collection.getType().getName();
-    final NakedClass nc=NakedClassManager.getInstance().getNakedClass(type);
+    final NakedObjectSpecification nc=NakedObjectSpecification.getNakedClass(type);
     icon=new IconGraphic(this,LABEL_STYLE){
       protected String iconName(      NakedObject object){
-        return nc.getIconName();
+        return nc.getShortName();
       }
     }
 ;

@@ -1,9 +1,9 @@
 {
   NakedObject object=((ObjectContent)view.getContent()).getObject();
-  About about=action.getAbout(Session.getSession().getSecurityContext(),object,new NakedObject[action.getParameterCount()]);
+  About about=action.getAbout(Session.getSession().getContext(),object,new NakedObject[action.getParameterCount()]);
   String description=about.getDescription();
   if (action.hasReturn()) {
-    description+=" returns a " + action.returns();
+    description+=" returns a " + action.getReturnType();
   }
   return new Allow(description);
 }

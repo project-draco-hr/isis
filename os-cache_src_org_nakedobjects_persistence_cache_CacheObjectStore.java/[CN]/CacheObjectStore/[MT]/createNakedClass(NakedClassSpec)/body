@@ -1,0 +1,12 @@
+{
+  String className=cls.getName().stringValue();
+  if (objectSets.containsKey(className)) {
+    throw new NakedObjectRuntimeException("Class already created: " + cls);
+  }
+  BinaryTransferableWriter data=new BinaryTransferableWriter();
+  data.writeString(className);
+  data.writeObject((Transferable)cls.getOid());
+  writeJournal("class",data);
+  Instances index=new Instances(cls.forNakedClass(),loadedObjects);
+  objectSets.put(className,index);
+}

@@ -1,14 +1,14 @@
 {
-  Field assoc=fieldFor(fieldName);
+  FieldSpecification assoc=fieldFor(fieldName);
   assertFieldVisible(fieldName,assoc);
   assertFieldModifiable(fieldName,assoc);
   TestObject viewToRemove=getField(fieldName,title);
-  if (!(assoc instanceof OneToManyAssociation)) {
+  if (!(assoc instanceof OneToManyAssociationSpecification)) {
     throw new IllegalActionError("removeReference not allowed on target field " + fieldName);
   }
   Naked no=viewToRemove.getForObject();
   if (!(no instanceof NakedObject)) {
     throw new NakedAssertionFailedError("A NakedObject was to be removed from the InternalCollection, but found " + no);
   }
-  ((OneToManyAssociation)assoc).clearAssociation((NakedObject)getForObject(),(NakedObject)no);
+  ((OneToManyAssociationSpecification)assoc).clearAssociation((NakedObject)getForObject(),(NakedObject)no);
 }

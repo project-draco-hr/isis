@@ -5,7 +5,8 @@
     text.append("  Hash:       " + object.hashCode() + "\n");
     text.append("  ID:         " + object.getOid() + "\n");
     text.append("  Class:      " + object.getClass().getName() + "\n");
-    text.append("  NakedClass: " + object.getNakedClass() + "\n");
+    text.append("  NakedClass: " + object.getSpecification() + "\n");
+    text.append("  Context:    " + object.getClass().getName() + "\n");
     StringBuffer types=new StringBuffer();
     if (object instanceof NakedCollection) {
       types.append("Collection ");
@@ -13,15 +14,12 @@
  else {
       types.append("Object ");
     }
-    SecurityContext context=Session.getSession().getSecurityContext();
+    NakedObjectContext context=Session.getSession().getContext();
     text.append("  Type:       " + types + "\n");
     text.append("  Context:    " + context + "\n");
-    About about=object.about();
-    text.append("  Accessible: " + about.canAccess().isAllowed() + "\n");
-    text.append("  Editable:   " + about.canUse().isAllowed() + "\n");
-    text.append("  Persistent: " + object.isPersistent() + "\n");
+    text.append("  Persistent: " + object.getOid() != null + "\n");
     text.append("  Resolved:   " + object.isResolved() + "\n");
-    text.append("  Title:      '" + object.title() + "'\n");
+    text.append("  Title:      '" + object.titleString() + "'\n");
   }
   return text.toString();
 }

@@ -2,17 +2,17 @@
   if (!connection.hasTable(table)) {
     StringBuffer columns=new StringBuffer();
     for (int f=0; f < fields.length; f++) {
-      Field field=fields[f];
+      FieldSpecification field=fields[f];
       String type;
-      if (field instanceof Value) {
+      if (field instanceof ValueFieldSpecification) {
         ValueMapperLookup mappers=ValueMapperLookup.getInstance();
         ValueMapper mapper=mappers.mapperFor(fields[f].getType());
         if (mapper == null) {
-          throw new SqlObjectStoreException("No type specified for " + fields[f].getType().getName());
+          throw new SqlObjectStoreException("No type specified for " + fields[f].getType().getFullName());
         }
         type=mapper.columnType();
       }
- else       if (field instanceof OneToOneAssociation) {
+ else       if (field instanceof OneToOneAssociationSpecification) {
         type="INT";
       }
  else {

@@ -1,10 +1,12 @@
 {
-  Logger.getRootLogger().setLevel(Level.OFF);
+  BasicConfigurator.configure();
+  Logger.getRootLogger().setLevel(Level.ERROR);
   LOG.debug("test setup");
-  Date.setClock(new SystemClock());
-  TimeStamp.setClock(new SystemClock());
+  new TestClock();
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
   manager=MockObjectManager.setup();
-  manager.setupAddClass(TypedCollection.class);
+  context=new NakedObjectContext(manager);
+  new NakedObjectContext(manager);
   setupObjectStore();
   initialiseObjects();
   LOG.debug("test starting");

@@ -1,24 +1,24 @@
 {
   final Naked[] parameterObjects=nakedObjects(parameters);
   final int noParameters=parameters.length;
-  final NakedClass[] parameterClasses=new NakedClass[noParameters];
+  final NakedObjectSpecification[] parameterClasses=new NakedObjectSpecification[noParameters];
   for (int i=0; i < noParameters; i++) {
-    parameterClasses[i]=parameterObjects[i].getNakedClass();
+    parameterClasses[i]=parameterObjects[i].getSpecification();
   }
   try {
-    NakedClass nakedClass=((NakedObject)getForObject()).getNakedClass();
-    Action action=nakedClass.getObjectAction(Action.USER,simpleName(name),parameterClasses);
+    NakedObjectSpecification nakedClass=((NakedObject)getForObject()).getSpecification();
+    ActionSpecification action=nakedClass.getObjectAction(ActionSpecification.USER,simpleName(name),parameterClasses);
     if (action == null) {
       String parameterList="";
       for (int i=0; i < noParameters; i++) {
-        parameterList+=(i > 0 ? ", " : "") + parameterClasses[i].fullName();
+        parameterList+=(i > 0 ? ", " : "") + parameterClasses[i].getFullName();
       }
       throw new NakedAssertionFailedError("Method not found: " + name + "("+ parameterList+ ")");
     }
     return action;
   }
  catch (  NakedClassException e) {
-    String targetName=getForObject().getShortClassName();
+    String targetName=getForObject().getSpecification().getShortName();
     String parameterList="";
     for (int i=0; i < noParameters; i++) {
       parameterList+=(i > 0 ? ", " : "") + parameterClasses[i];

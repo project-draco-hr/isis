@@ -1,7 +1,7 @@
 {
-  Field[] fields=object.getNakedClass().getFields();
+  FieldSpecification[] fields=object.getSpecification().getFields();
   for (int i=0; i < fields.length; i++) {
-    Field field=fields[i];
+    FieldSpecification field=fields[i];
     if (field.isDerived()) {
       continue;
     }
@@ -30,30 +30,30 @@
       }
     }
  else {
-      Object reference=data.get(field.getName());
+      Oid reference=(Oid)data.get(field.getName());
       LOG.debug("setting field " + field + " with "+ reference);
       if (reference != null) {
         if (loadedObjects.isLoaded(reference)) {
           NakedObject loadedObject=loadedObjects.getLoadedObject(reference);
           LOG.debug("using loaded object " + loadedObject);
-          ((OneToOneAssociation)field).initData(object,loadedObject);
+          ((OneToOneAssociationSpecification)field).initData(object,loadedObject);
         }
  else {
-          Object oid=reference;
+          Oid oid=reference;
           NakedObject fieldObject;
           Data fieldData=(Data)dataManager.loadData((SimpleOid)oid);
           if (fieldData != null) {
             fieldObject=(NakedObject)classFor(fieldData.getClassName()).acquireInstance();
           }
  else {
-            fieldObject=(NakedObject)classFor(field.getType().getName()).acquireInstance();
+            fieldObject=(NakedObject)field.getType().acquireInstance();
           }
           fieldObject.setOid(oid);
           if (fieldObject instanceof InternalCollection) {
             fieldObject.setResolved();
           }
           loadedObjects.loaded(fieldObject);
-          ((OneToOneAssociation)field).initData(object,fieldObject);
+          ((OneToOneAssociationSpecification)field).initData(object,fieldObject);
         }
       }
     }

@@ -1,10 +1,11 @@
 {
-  Action action;
-  if (target instanceof NakedClass) {
-    action=((NakedClass)target).getClassAction(Action.USER,null,new NakedClass[]{source.getNakedClass()});
+  ActionSpecification action;
+  if (target instanceof NakedClassSpec) {
+    NakedObjectSpecification forNakedClass=((NakedClassSpec)target).forNakedClass();
+    action=forNakedClass.getClassAction(ActionSpecification.USER,null,new NakedObjectSpecification[]{source.getSpecification()});
   }
  else {
-    action=target.getNakedClass().getObjectAction(Action.USER,null,new NakedClass[]{source.getNakedClass()});
+    action=target.getSpecification().getObjectAction(ActionSpecification.USER,null,new NakedObjectSpecification[]{source.getSpecification()});
   }
   return action;
 }

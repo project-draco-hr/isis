@@ -3,8 +3,8 @@
   PropertyConfigurator.configure("log4j.testing.properties");
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   MockObjectManager manager=MockObjectManager.setup();
-  manager.setupAddClass(ValueObjectExample.class);
-  manager.setupAddClass(Role.class);
-  NakedClass type=NakedClassManager.getInstance().getNakedClass(ValueObjectExample.class.getName());
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecification type=NakedObjectSpecification.getNakedClass(ValueObjectExample.class.getName());
   data=new ObjectData(type,new SimpleOid(1));
+  new TestClock();
 }

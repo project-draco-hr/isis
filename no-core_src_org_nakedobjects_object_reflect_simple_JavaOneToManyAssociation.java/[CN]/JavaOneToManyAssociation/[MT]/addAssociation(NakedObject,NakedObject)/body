@@ -1,6 +1,6 @@
 {
   LOG.debug("local set association " + getName() + " in "+ inObject+ " with "+ associate);
-  NakedObjectManager objectManager=NakedObjectManager.getInstance();
+  NakedObjectManager objectManager=inObject.getContext().getObjectManager();
   objectManager.startTransaction();
   if (addMethod == null) {
     ((NakedCollection)get(inObject)).add((NakedObject)associate);
@@ -10,7 +10,7 @@
       addMethod.invoke(inObject,new Object[]{associate});
     }
  catch (    IllegalArgumentException e) {
-      throw new IllegalArgumentException("set method expects a " + getType().getName() + " object; not a "+ associate.getClass().getName()+ ", "+ e.getMessage());
+      throw new IllegalArgumentException("set method expects a " + getType().getFullName() + " object; not a "+ associate.getClass().getName()+ ", "+ e.getMessage());
     }
 catch (    InvocationTargetException e) {
       LOG.error("Exception executing " + addMethod,e.getTargetException());

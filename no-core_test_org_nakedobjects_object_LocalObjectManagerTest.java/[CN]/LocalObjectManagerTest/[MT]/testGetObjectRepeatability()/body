@@ -1,6 +1,6 @@
 {
-  NakedClass nc=new NakedClass();
-  Object oid=new Integer(1);
+  NakedObjectSpecification nc=NakedObjectSpecification.getNakedClass(AbstractNakedObject.class);
+  Oid oid=new MockOid(1);
   objectStore.setupIsLoaded(false);
   Person person=new Person();
   person.setOid(oid);
@@ -9,5 +9,5 @@
   objectStore.setupIsLoaded(true);
   objectStore.setupGetObject(null);
   objectStore.setupLoaded(new NakedObject[]{person});
-  objectStore.setupGetObject(person);
+  assertSame(person,objectManager.getObject(oid,nc));
 }

@@ -1,5 +1,6 @@
 {
-  if (ensurePersistent && fieldContent != null && !fieldContent.isPersistent()) {
+  boolean notAlreadyPersistent=fieldContent.getOid() == null;
+  if (ensurePersistent && fieldContent != null && notAlreadyPersistent) {
     throw new IllegalStateException("Cannot save an object that is not persistent");
   }
   set(fieldName,fieldContent == null ? null : fieldContent.getOid());

@@ -1,16 +1,7 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
-  manager=MockObjectManager.setup();
-  manager.setupAddClass(Role.class);
-  manager.setupAddClass(GenericTestObject.class);
-  manager.setupAddClass(ContactTestObject.class);
-  manager.setupAddClass(ProductTestObject.class);
-  manager.setupAddClass(ConcreteEmployee.class);
-  manager.setupAddClass(AssociationExample.class);
-  manager.setupAddClass(Employee.class);
-  manager.setupAddClass(NakedObject.class);
+  new TestClock();
+  NakedObjectSpecification.setReflectionFactory(new LocalReflectionFactory());
   reflector=new MockReflector();
-  nakedClass=new NakedClass();
-  Field[] fields=new Field[]{new MockField("One"),new MockField("Two"),new MockField("Three")};
-  nakedClass.init(reflector,NakedObject.class.getName(),fields,null,null);
+  nakedClass=NakedObjectSpecification.getNakedClass(NakedClassTestObject.class.getName());
 }

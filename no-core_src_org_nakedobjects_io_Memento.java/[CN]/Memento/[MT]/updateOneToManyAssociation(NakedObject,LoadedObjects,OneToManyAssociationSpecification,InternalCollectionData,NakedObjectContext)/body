@@ -1,0 +1,28 @@
+{
+  InternalCollection collection=(InternalCollection)field.get(object);
+  collection.setContext(context);
+  if (collection.getOid() == null) {
+    collection.setOid(collectionData.getOid());
+  }
+  Vector original=new Vector();
+  int size=collection.size();
+  for (int i=0; i < size; i++) {
+    original.addElement(collection.elementAt(i));
+  }
+  for (int j=0; j < collectionData.elements.length; j++) {
+    NakedObject element=recreateObject2(loadedObjects,(Data)collectionData.elements[j],context);
+    if (!collection.contains(element)) {
+      LOG.debug("  association " + field + " changed, added "+ element.getOid());
+      collection.added(element);
+    }
+ else {
+      original.removeElement(element);
+    }
+  }
+  size=original.size();
+  for (int i=0; i < size; i++) {
+    NakedObject element=(NakedObject)original.elementAt(i);
+    LOG.debug("  association " + field + " changed, removed "+ element.getOid());
+    collection.remove(element);
+  }
+}

@@ -1,0 +1,12 @@
+{
+  PrimaryKey key;
+  if (keyMapping.containsKey(column)) {
+    key=((PrimaryKeyMapper)keyMapping.get(column)).generateKey(rs,column);
+  }
+ else {
+    int id=rs.getInt(column);
+    key=new IntegerPrimaryKey(id);
+  }
+  Oid object=new SqlOid(cls.getFullName(),key);
+  return object;
+}

@@ -1,0 +1,41 @@
+{
+  if (order == null) {
+    return original;
+  }
+ else {
+    for (int i=0; i < order.length; i++) {
+      order[i]=NameConvertor.simpleName(order[i]);
+    }
+    MemberSpecification[] ordered=(MemberSpecification[])Array.newInstance(memberType,original.length);
+    int orderedIndex=0;
+    ordering:     for (int orderIndex=0; orderIndex < order.length; orderIndex++) {
+      for (int memberIndex=0; memberIndex < original.length; memberIndex++) {
+        MemberSpecification member=original[memberIndex];
+        if (member == null) {
+          continue;
+        }
+        if (member.getName().equalsIgnoreCase(order[orderIndex])) {
+          ordered[orderedIndex++]=original[memberIndex];
+          original[memberIndex]=null;
+          continue ordering;
+        }
+      }
+      LOG.error("Invalid ordering element '" + order[orderIndex] + "' in "+ nakedClassName);
+    }
+    MemberSpecification[] results=(MemberSpecification[])Array.newInstance(memberType,original.length);
+    int index=0;
+    for (int i=0; i < ordered.length; i++) {
+      MemberSpecification member=ordered[i];
+      if (member != null) {
+        results[index++]=member;
+      }
+    }
+    for (int i=0; i < original.length; i++) {
+      MemberSpecification member=original[i];
+      if (member != null) {
+        results[index++]=member;
+      }
+    }
+    return results;
+  }
+}
