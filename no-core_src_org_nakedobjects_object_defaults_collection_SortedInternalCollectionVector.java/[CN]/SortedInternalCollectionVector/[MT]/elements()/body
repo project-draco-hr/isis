@@ -1,0 +1,20 @@
+{
+  if (sorter == null) {
+    return super.elements();
+  }
+ else {
+    resolve();
+    return new Enumeration(){
+      Enumeration e=sort().elements();
+      public boolean hasMoreElements(){
+        return e.hasMoreElements();
+      }
+      public Object nextElement(){
+        Object next=e.nextElement();
+        getObjectManager().resolve((NakedObject)next);
+        return next;
+      }
+    }
+;
+  }
+}
