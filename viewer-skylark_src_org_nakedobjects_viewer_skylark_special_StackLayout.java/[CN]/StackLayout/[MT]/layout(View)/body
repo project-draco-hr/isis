@@ -1,18 +1,18 @@
 {
   int x=0, y=0;
-  View views[]=view.getSubviews();
+  View subviews[]=view.getSubviews();
   int maxWidth=0;
-  if (fixedWidth) {
-    for (int i=0; i < views.length; i++) {
-      View v=views[i];
-      Size s=v.getRequiredSize();
-      maxWidth=Math.max(maxWidth,s.getWidth());
-    }
-  }
-  for (int i=0; i < views.length; i++) {
-    View v=views[i];
+  for (int i=0; i < subviews.length; i++) {
+    View v=subviews[i];
     Size s=v.getRequiredSize();
-    s.ensureWidth(maxWidth);
+    maxWidth=Math.max(maxWidth,s.getWidth());
+  }
+  for (int i=0; i < subviews.length; i++) {
+    View v=subviews[i];
+    Size s=v.getRequiredSize();
+    if (fixedWidth || v.getSpecification() instanceof TextFieldSpecification) {
+      s.ensureWidth(maxWidth);
+    }
     v.setSize(s);
     v.setLocation(new Location(x,y));
     y+=s.getHeight();

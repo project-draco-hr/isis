@@ -1,6 +1,5 @@
 {
   TestObject creditCard=getTestClass(CreditCard.class.getName()).newInstance();
-  creditCard.fieldEntry("Number","12345678901234567");
   creditCard.assertFieldEntryInvalid("Number","1234");
   try {
     creditCard.assertFieldEntryInvalid("Number","1234567890123456");
@@ -9,4 +8,10 @@
  catch (  NakedAssertionFailedError expected) {
   }
   creditCard.assertFieldEntryCantParse("Color","RED");
+  try {
+    creditCard.fieldEntry("Number","12345678901234567");
+    fail();
+  }
+ catch (  NakedAssertionFailedError expected) {
+  }
 }

@@ -11,8 +11,8 @@
 switch (keyCode) {
 case KeyEvent.VK_PAGE_UP:
     if (ctrl) {
-      noDisplayLines++;
-      alignDisplay(cursor.line);
+      textContent.increaseDepth();
+      textContent.alignDisplay(cursor.getLine());
       invalidateLayout();
     }
  else {
@@ -21,9 +21,9 @@ case KeyEvent.VK_PAGE_UP:
   break;
 case KeyEvent.VK_PAGE_DOWN:
 if (ctrl) {
-  if ((noDisplayLines > 1)) {
-    noDisplayLines--;
-    alignDisplay(cursor.line);
+  if (textContent.decreaseDepth()) {
+    ;
+    textContent.alignDisplay(cursor.getLine());
     invalidateLayout();
   }
 }
@@ -115,6 +115,6 @@ default :
 break;
 }
 markDamaged();
-LOG.debug("Character at " + cursor.character + " line "+ cursor.line+ " ("+ displayFromLine+ "~"+ displayToLine+ ")");
+LOG.debug("Character at " + cursor.getCharacter() + " line "+ cursor.getLine());
 LOG.debug(selection);
 }

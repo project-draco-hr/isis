@@ -1,15 +1,16 @@
 {
   if (line < 0) {
-    throw new IllegalArgumentException("Line must be greater than zero - " + line);
+    throw new IllegalArgumentException("Line must be greater than, or equal to, zero: " + line);
   }
+  int l=line;
   for (int i=0; i < blocks.size(); i++) {
-    TextFieldBlock block=(TextFieldBlock)blocks.elementAt(i);
+    TextBlock block=(TextBlock)blocks.elementAt(i);
     int noLines=block.noLines();
-    if (line < noLines) {
-      LOG.debug("Block " + i + ", line "+ line);
-      return new BlockReference(i,(TextFieldBlock)blocks.elementAt(i),line);
+    if (l < noLines) {
+      LOG.debug("Block " + i + ", line "+ l);
+      return new TextBlockReference(i,(TextBlock)blocks.elementAt(i),line);
     }
-    line-=noLines;
+    l-=noLines;
   }
-  throw new IllegalArgumentException("line number not valid " + line);
+  return null;
 }

@@ -9,6 +9,10 @@
       value=(NakedValue)field.getSpecification().acquireInstance();
     }
     value.parseTextEntry(textEntry);
+    Hint hint=object.getHint(session,field,value);
+    if (hint.isValid().isVetoed()) {
+      throw new NakedAssertionFailedError("Value is not valid: " + textEntry);
+    }
     object.setValue((OneToOneAssociation)field,value.getObject());
   }
  catch (  TextEntryParseException e) {

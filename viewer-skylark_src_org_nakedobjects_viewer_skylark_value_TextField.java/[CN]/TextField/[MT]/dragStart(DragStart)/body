@@ -8,17 +8,10 @@
     size.contractWidth(width);
     anchor.add(width,0);
   }
-  if (isOnResize(at)) {
-    isResizing=true;
-    return new ResizeDrag(this,new Bounds(anchor,size),ResizeDrag.BOTTOM_RIGHT,new Size(80,lineHeight()),null);
-  }
- else {
-    if (canChangeValue()) {
-      isResizing=false;
-      cursor.cursorAt(at);
-      resetSelection();
-      return new SimpleInternalDrag(this,anchor);
-    }
+  if (canChangeValue()) {
+    cursor.cursorAt(at);
+    resetSelection();
+    return new SimpleInternalDrag(this,anchor);
   }
   markDamaged();
   return null;

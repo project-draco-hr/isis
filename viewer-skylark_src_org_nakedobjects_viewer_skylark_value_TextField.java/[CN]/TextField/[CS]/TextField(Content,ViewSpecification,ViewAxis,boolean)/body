@@ -1,22 +1,16 @@
 {
   super(content,specification,axis);
   this.showLines=showLines;
-  setMaxTextWidth(25);
+  setMaxTextWidth(8);
   NakedValue value=getValue();
   if (value != null) {
     maximumLength=value.getMaximumLength();
     minumumLength=value.getMinumumLength();
   }
-  cursor=new CursorPosition(0,0);
-  selection=new Selection();
-  textContent=new TextFieldContent(this);
-  multiline=false;
-  noDisplayLines=multiline ? MULTILINE_FIELD_SIZE : 1;
+  textContent=new TextFieldContent(this,false);
+  cursor=new CursorPosition(textContent,0,0);
+  selection=new TextSelection(cursor,cursor);
   textContent.setText(value == null ? "" : value.titleString());
   cursor.home();
-  displayFromLine=0;
-  displayToLine=noDisplayLines - 1;
-  alignDisplay(0);
   isSaved=true;
-  resizeMarkerSize=lineHeight() * 3 / 5;
 }

@@ -1,17 +1,30 @@
 {
-switch (onBorder(at)) {
+  int onBorder=onBorder(at);
+  if (this.onBorder != onBorder) {
+switch (onBorder) {
 case ResizeDrag.RIGHT:
-    getViewManager().showResizeRightCursor();
-  break;
+      getViewManager().showResizeRightCursor();
+    resizing=true;
+  markDamaged();
+break;
 case ResizeDrag.BOTTOM:
 getViewManager().showResizeDownCursor();
+resizing=true;
+markDamaged();
 break;
 case ResizeDrag.BOTTOM_RIGHT:
 getViewManager().showResizeDownRightCursor();
+resizing=true;
+markDamaged();
 break;
 default :
 getViewManager().showDefaultCursor();
+super.mouseMoved(at);
+resizing=false;
+markDamaged();
 break;
 }
-super.mouseMoved(at);
+LOG.debug("on resize border " + onBorder + " "+ resizing);
+}
+this.onBorder=onBorder;
 }

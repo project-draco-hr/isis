@@ -15,13 +15,17 @@
  else {
     textColor=Style.BLACK;
   }
-  for (int i=displayFromLine; i <= displayToLine; i++) {
-    String chars=textContent.getText(i);
+  String[] lines=textContent.getDisplayLines();
+  for (int i=0; i < lines.length; i++) {
+    String chars=lines[i];
+    if (chars == null) {
+      throw new NakedObjectRuntimeException();
+    }
     if (chars.endsWith("\n")) {
       throw new RuntimeException();
     }
-    if (hasFocus() && (cursor.line == i) && canChangeValue()) {
-      int at=Math.min(cursor.character,chars.length());
+    if (hasFocus() && (cursor.getLine() == i) && canChangeValue()) {
+      int at=Math.min(cursor.getCharacter(),chars.length());
       int pos=style.stringWidth(chars.substring(0,at));
       canvas.drawLine(pos + (HPADDING),(baseline + style.getDescent()),pos + (HPADDING),baseline - style.getAscent(),Style.PRIMARY1);
     }
