@@ -1,0 +1,16 @@
+{
+  Action action=getAction(simpleName(name),parameters);
+  assertActionUsable(name,action,parameters);
+  assertActionVisible(name,action,parameters);
+  Naked[] parameterObjects=nakedObjects(parameters);
+  Naked result=getForNaked().execute(action,parameterObjects);
+  if (result == null) {
+    return null;
+  }
+ else   if (result instanceof NakedCollection) {
+    return factory.createTestCollection(session,(NakedCollection)result);
+  }
+ else {
+    return factory.createTestObject(session,(NakedObject)result);
+  }
+}
