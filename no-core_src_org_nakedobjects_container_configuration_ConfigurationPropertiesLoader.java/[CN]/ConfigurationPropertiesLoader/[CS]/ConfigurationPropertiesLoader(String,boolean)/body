@@ -1,0 +1,16 @@
+{
+  properties=new Properties();
+  try {
+    FileInputStream in;
+    in=new FileInputStream(pathname);
+    properties.load(in);
+  }
+ catch (  FileNotFoundException e) {
+    if (ensureFileLoads) {
+      throw new NakedObjectRuntimeException("Could not find configuration file",e);
+    }
+  }
+catch (  IOException e) {
+    throw new NakedObjectRuntimeException("Could not load configuration file",e);
+  }
+}

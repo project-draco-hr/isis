@@ -38,6 +38,23 @@
 );
   options.add(MenuOptionSet.DEBUG,new MenuOption("Restart object manager"){
     public void execute(    Workspace workspace,    View view,    Location at){
+      try {
+        NakedObjectManager om=NakedObjects.getObjectManager();
+        om.shutdown();
+        om.init();
+      }
+ catch (      StartupException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+);
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug object manager"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      NakedObjectManager om=NakedObjects.getObjectManager();
+      InfoDebugFrame f=new InfoDebugFrame();
+      f.setInfo(om);
+      f.show(at.x + 50,workspace.getBounds().y + 6);
     }
   }
 );

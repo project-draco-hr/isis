@@ -1,0 +1,20 @@
+{
+  LOG.debug("commit transaction" + this);
+  if (complete) {
+    throw new TransactionException("Transaction already complete; cannot commit");
+  }
+  complete=true;
+  PersistenceCommand[] commands=new PersistenceCommand[transactionCommands.size()];
+  transactionCommands.copyInto(commands);
+  if (commands.length > 0) {
+    objectStore.startTransaction();
+    objectStore.runTransaction(commands);
+    objectStore.endTransaction();
+  }
+  NakedObject object;
+  for (Enumeration e=toNotify.elements(); e.hasMoreElements(); ) {
+    object=(NakedObject)e.nextElement();
+    LOG.debug("broadcastObjectUpdate " + object);
+    notifier.broadcastObjectChanged(object);
+  }
+}

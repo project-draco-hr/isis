@@ -1,19 +1,21 @@
 {
-  try {
-    Properties p=Configuration.loadProperties("log4j.properties",false);
-    PropertyConfigurator.configure(p);
-  }
- catch (  ConfigurationException e) {
+  ConfigurationPropertiesLoader loadedProperties=new ConfigurationPropertiesLoader("log4j.properties",false);
+  Properties p=loadedProperties.getProperties();
+  if (p.size() == 0) {
     BasicConfigurator.configure();
+  }
+ else {
+    PropertyConfigurator.configure(p);
   }
   Logger.getRootLogger().setLevel(Level.WARN);
   splash=null;
   try {
     String name=this.getClass().getName();
     name=name.substring(name.lastIndexOf('.') + 1);
-    ConfigurationFactory.setConfiguration(new Configuration(DEFAULT_CONFIG,false));
-    if (ConfigurationFactory.getConfiguration().getString(SHOW_EXPLORATION_OPTIONS) == null) {
-      ConfigurationFactory.getConfiguration().add(SHOW_EXPLORATION_OPTIONS,"yes");
+    Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
+    ConfigurationFactory.setConfiguration(configuration);
+    if (configuration.getString(SHOW_EXPLORATION_OPTIONS) == null) {
+      configuration.add(SHOW_EXPLORATION_OPTIONS,"yes");
     }
     PropertyConfigurator.configure(ConfigurationFactory.getConfiguration().getProperties("log4j"));
     Logger log=Logger.getLogger("Naked Objects");
@@ -50,10 +52,7 @@
     reflectorFactory.setObjectFactory(objectFactory);
     builder=new JavaFixtureBuilder();
   }
- catch (  ConfigurationException e) {
-    throw new NakedObjectRuntimeException(e);
-  }
- finally {
+  finally {
     if (splash != null) {
       splash.removeAfterDelay(4);
     }
