@@ -1,0 +1,17 @@
+{
+  org.apache.log4j.PropertyConfigurator.configure("log4j.testing.properties");
+  String config;
+  if (args.length == 1) {
+    config=args[0];
+  }
+ else {
+    config="." + File.separator + "nakedobjects.properties";
+  }
+  if (new java.io.File(config).exists()) {
+    Configuration.getInstance().load(config);
+  }
+ else {
+    System.out.println("No configuration file found or loaded.");
+  }
+  new NotifierSniffer();
+}

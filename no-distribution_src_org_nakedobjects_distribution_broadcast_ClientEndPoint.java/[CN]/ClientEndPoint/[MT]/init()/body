@@ -1,0 +1,29 @@
+{
+  params=new Parameters();
+  port=params.getRequestPort();
+  server=params.getHost();
+  LOG.info("Configuring for connection to " + server + ":"+ port);
+  try {
+    String addr=params.getUpdateAddress();
+    InetAddress inetAddress=InetAddress.getByName(addr);
+    int port=params.getUpdatePort();
+    packageSize=params.getUpdatePackageSize();
+    LOG.debug("Opening multicast port " + port);
+    mcs=new MulticastSocket(port);
+    mcs.setSoTimeout(1000);
+    LOG.debug("Joining multicast group on " + inetAddress);
+    mcs.joinGroup(inetAddress);
+    LOG.info("Listening for updates on " + mcs + "/"+ port);
+    acceptConnections=true;
+  }
+ catch (  SocketException e) {
+    LOG.error(e);
+    throw new RuntimeException(e.getMessage());
+  }
+catch (  IOException e) {
+    LOG.error(e);
+    throw new RuntimeException(e.getMessage());
+  }
+  byte[] buffer=new byte[packageSize];
+  packet=new DatagramPacket(buffer,buffer.length);
+}

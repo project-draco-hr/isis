@@ -1,0 +1,37 @@
+{
+  try {
+    Parameters params=new Parameters();
+    String addr=params.getUpdateAddress();
+    InetAddress inetAddress=InetAddress.getByName(addr);
+    int port=params.getUpdatePort();
+    int pacakageSize=params.getUpdatePackageSize();
+    System.out.println("Listening on " + inetAddress + "/"+ port);
+    MulticastSocket mcs=new MulticastSocket(port);
+    byte[] buffer=new byte[pacakageSize];
+    DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
+    mcs.joinGroup(inetAddress);
+    int i=1;
+    while (true) {
+      System.out.print(i++ + "... ");
+      packet.setLength(pacakageSize);
+      mcs.receive(packet);
+      System.out.print(new Date() + "/" + packet.getAddress().getHostName()+ "/"+ packet.getLength()+ " bytes - ");
+      try {
+        ByteArrayInputStream bais=new ByteArrayInputStream(packet.getData());
+        ObjectInputStream ois=new ObjectInputStream(bais);
+        ObjectUpdateMessage message=((ObjectUpdateMessage)ois.readObject());
+        System.out.print(message);
+      }
+ catch (      Exception e) {
+        System.out.print(" failed to extract message " + e);
+      }
+      System.out.println();
+    }
+  }
+ catch (  SocketException e) {
+    e.printStackTrace();
+  }
+catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

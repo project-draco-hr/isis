@@ -1,0 +1,14 @@
+{
+  try {
+    CounterOutputStream cos=new CounterOutputStream(os);
+    out=new ObjectOutputStream(cos);
+    out.writeObject(response);
+    LOG.debug(cos.getSize() + " bytes sent in response " + response);
+  }
+ catch (  IOException e) {
+    LOG.error("Failed to return response to caller",e);
+  }
+ finally {
+    close();
+  }
+}

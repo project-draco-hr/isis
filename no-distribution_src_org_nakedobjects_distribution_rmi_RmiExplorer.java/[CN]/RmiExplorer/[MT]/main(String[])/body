@@ -1,0 +1,13 @@
+{
+  Configuration.getInstance().load("explorer.properties");
+  RmiParameters rmiParam=new RmiParameters();
+  String url=rmiParam.server();
+  System.out.println("RMI Explorer - all objects found on " + url);
+  System.out.println("");
+  String[] list=Naming.list(url);
+  for (int i=0; i < list.length; i++) {
+    System.out.print("  " + list[i]);
+    Object remoteObject=Naming.lookup(list[i]);
+    System.out.println(" ~ " + remoteObject);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  try {
+    ByteArrayOutputStream baos=new ByteArrayOutputStream();
+    ObjectOutputStream oos=new ObjectOutputStream(baos);
+    oos.writeObject(updateMessage);
+    byte[] msg=baos.toByteArray();
+    oos.close();
+    DatagramPacket packet=new DatagramPacket(msg,msg.length,multicastAddress,port);
+    if (msg.length > packageSize) {
+      LOG.warn("UDP package is greater than expected package size");
+    }
+    LOG.debug("Sending update message: " + updateMessage + " "+ packet.getLength()+ " bytes");
+    mcs.send(packet);
+  }
+ catch (  IOException e) {
+    LOG.error(this,e);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  this.server=server;
+  params=new Parameters();
+  String host=params.getHost();
+  LOG.info("Request settings: host=" + ((host == null) ? "localhost" : host) + ", request-port: "+ params.getRequestPort()+ ", file-port="+ params.getFilePort());
+  LOG.info("Multicast settings: group=" + params.getUpdateAddress() + ", port="+ params.getUpdatePort()+ ", ttl="+ params.getUpdateTtl());
+  try {
+    requestListener=new RequestListener(host,params.getRequestPort(),server);
+    fileListener=new FileListener(host,params.getFilePort(),server);
+    notifier=new UpdateBroadcaster(params.getUpdateAddress(),params.getUpdatePort(),(byte)params.getUpdateTtl(),params.getUpdatePackageSize());
+    requestListener.start();
+    fileListener.start();
+  }
+ catch (  IOException e) {
+    LOG.error("Initialization error " + e);
+    throw new ComponentException("Failed to initialize all connections");
+  }
+}

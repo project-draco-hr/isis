@@ -1,0 +1,12 @@
+{
+  try {
+    output.writeObject(request);
+    output.flush();
+    Serializable response=receiver.awaitResponse();
+    LOG.debug("response for send: " + response);
+    return response;
+  }
+ catch (  IOException e) {
+    throw new NakedObjectRuntimeException(e.getMessage(),e);
+  }
+}

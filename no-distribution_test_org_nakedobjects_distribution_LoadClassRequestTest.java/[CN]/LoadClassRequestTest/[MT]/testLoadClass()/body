@@ -1,0 +1,22 @@
+{
+  SystemClock clock=new SystemClock();
+  TimeStamp.setClock(clock);
+  Date.setClock(clock);
+  MockClassManager manager=MockClassManager.setup();
+  manager.setupAddNakedClass(MockClass.class);
+  Request.init(new RequestFowarder(){
+    public Serializable executeRemotely(    Request clientRequest){
+      clientRequest.generateResponse(null);
+      return null;
+    }
+    public void init(){
+    }
+    public void shutdown(){
+    }
+  }
+);
+  LoadClassRequest request=new LoadClassRequest(MockClass.class.getName());
+  NakedObjectSpecification nc=request.getNakedClass();
+  assertEquals(MockClass.class.getName(),nc.getName().stringValue());
+  assertEquals("org.domain.Reflector",nc.getReflector().stringValue());
+}

@@ -1,0 +1,36 @@
+{
+  ObjectInputStream ois=null;
+  while (acceptConnections) {
+    try {
+      packet.setLength(packageSize);
+      mcs.receive(packet);
+      ByteArrayInputStream bais=new ByteArrayInputStream(packet.getData());
+      ois=new ObjectInputStream(bais);
+      return (ObjectUpdateMessage)ois.readObject();
+    }
+ catch (    InterruptedIOException ignore) {
+    }
+catch (    SocketException e) {
+      continue;
+    }
+catch (    IOException e) {
+      LOG.error("IO failure receiving update notification ",e);
+      continue;
+    }
+catch (    ClassNotFoundException e) {
+      LOG.error("Invalid class received during update notification ",e);
+      continue;
+    }
+ finally {
+      if (ois != null) {
+        try {
+          ois.close();
+        }
+ catch (        IOException ignore) {
+          LOG.error("Error while closing object input stream",ignore);
+        }
+      }
+    }
+  }
+  return null;
+}
