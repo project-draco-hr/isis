@@ -1,4 +1,7 @@
 {
+  if (!isOverThreshold(downAt,me.getPoint())) {
+    return;
+  }
   Location relative=new Location(downAt);
   View identified=identifiedView;
   LOG.debug("down at " + downAt);
@@ -13,7 +16,7 @@
   }
  else {
     saveCurrentFieldEntry();
-    LOG.debug("pickup " + type + ": "+ identified);
+    LOG.debug("pickup " + type + ": "+ identified+ " "+ downAt);
     if (type == ViewAreaType.VIEW) {
       drag=ViewDrag.create(identified,downAt,relative,me.getModifiers());
     }
