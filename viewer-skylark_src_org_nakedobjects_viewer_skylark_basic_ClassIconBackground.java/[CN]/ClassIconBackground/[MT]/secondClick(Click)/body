@@ -1,8 +1,7 @@
 {
   NakedObject object=((ObjectContent)getContent()).getObject();
-  NakedClass nc=((NakedClass)object);
-  ActionSpecification action=nc.getSpecification().getObjectAction(ActionSpecification.USER,"Instances");
-  InstanceCollectionVector instances=(InstanceCollectionVector)action.execute(object);
+  Action action=object.getSpecification().getObjectAction(Action.USER,"Instances");
+  NakedCollection instances=(NakedCollection)object.execute(action,null);
   View view=ViewFactory.getViewFactory().createOpenRootView(instances);
   view.setLocation(click.getLocation());
   getWorkspace().addView(view);

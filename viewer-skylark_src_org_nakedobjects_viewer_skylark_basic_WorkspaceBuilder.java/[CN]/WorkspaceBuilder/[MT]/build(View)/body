@@ -1,12 +1,12 @@
 {
   NakedObject object=((ObjectContent)view.getContent()).getObject();
   if (object != null && view.getSubviews().length == 0) {
-    FieldSpecification[] flds=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
+    NakedObjectField[] flds=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
     ViewFactory factory=ViewFactory.getViewFactory();
     for (int f=0; f < flds.length; f++) {
-      FieldSpecification field=flds[f];
-      Naked attribute=field.get(object);
-      if (field.getName().equals("classes") && attribute instanceof InternalCollection) {
+      NakedObjectField field=flds[f];
+      Naked attribute=object.getField(field);
+      if (field.getName().equals("classes") && field.isCollection()) {
         Enumeration elements=((InternalCollection)attribute).elements();
         while (elements.hasMoreElements()) {
           NakedObject cls=(NakedObject)elements.nextElement();
@@ -15,7 +15,7 @@
           view.addView(classIcon);
         }
       }
- else       if (field.getName().equals("objects") && attribute instanceof InternalCollection) {
+ else       if (field.getName().equals("objects") && field.isCollection()) {
         Enumeration elements=((InternalCollection)attribute).elements();
         while (elements.hasMoreElements()) {
           NakedObject obj=(NakedObject)elements.nextElement();

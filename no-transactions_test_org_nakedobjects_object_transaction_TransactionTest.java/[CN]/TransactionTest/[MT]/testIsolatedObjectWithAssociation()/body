@@ -4,10 +4,10 @@
   String roleName="Orator";
   person.getName().setValue(personName);
   role.getName().setValue(roleName);
-  role.setPerson(person);
+  role.setReferencedObject(person);
   Role transactionRole=(Role)t.getObject(roleOid,role);
   assertTrue(transactionRole.isResolved());
-  Person transactionPerson=transactionRole.getPerson();
+  Person transactionPerson=transactionRole.getReferencedObject();
   assertFalse(transactionPerson.isResolved());
   assertEquals(person,transactionPerson);
   assertEquals("same oid",person.getOid(),transactionPerson.getOid());

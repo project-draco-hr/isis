@@ -1,5 +1,5 @@
 {
-  ClassAbout classAbout=getNakedClass().forNakedClass().getClassAbout();
+  Hint classAbout=getNakedClass().forObjectType().getClassAbout();
   if (classAbout == null || classAbout.canAccess().isAllowed()) {
     View view=null;
     if (click.isCtrl()) {
@@ -7,9 +7,9 @@
       view=ViewFactory.getViewFactory().createOpenRootView(instances);
     }
  else {
-      if (getNakedClass() instanceof SimpleNakedClass) {
-        FastFinder finder=((SimpleNakedClass)getNakedClass()).actionFind();
-        view=ViewFactory.getViewFactory().createOpenRootView(finder);
+      if (getNakedClass() instanceof NakedClass) {
+        FastFinder finder=((NakedClass)getNakedClass()).actionFind();
+        view=ViewFactory.getViewFactory().createOpenRootView(PojoAdapter.createAdapter(finder));
       }
     }
     if (view != null) {

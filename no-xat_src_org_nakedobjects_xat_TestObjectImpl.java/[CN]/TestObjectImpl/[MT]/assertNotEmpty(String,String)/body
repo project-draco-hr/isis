@@ -1,16 +1,7 @@
 {
-  FieldSpecification field=fieldFor(fieldName);
+  NakedObjectField field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
-  TestNaked actual=getField(fieldName);
-  Object object=actual.getForObject();
-  if (object instanceof NakedValue) {
-    if (((NakedValue)object).isEmpty()) {
-      throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' to contain something but it was empty");
-    }
-  }
- else {
-    if (object == null) {
-      throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' to contain something but it was empty");
-    }
+  if (getForObject().isEmpty(field)) {
+    throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' to contain something but it was empty");
   }
 }

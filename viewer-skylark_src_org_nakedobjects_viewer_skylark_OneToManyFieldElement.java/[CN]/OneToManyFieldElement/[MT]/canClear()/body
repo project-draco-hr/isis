@@ -1,9 +1,9 @@
 {
   NakedObject parentObject=getParent();
-  OneToManyAssociationSpecification association=getOneToManyAssociation();
+  OneToManyAssociation association=getOneToManyAssociation();
   NakedObject associatedObject=getObject();
-  About about=association.getAbout(ClientSession.getSession(),parentObject,associatedObject,false);
-  Permission edit=about.canUse();
+  Hint about=association.getHint(ClientSession.getSession(),parentObject,associatedObject,false);
+  Consent edit=about.canUse();
   if (edit.isAllowed()) {
     String status="Clear the association to this object from '" + parentObject.titleString() + "'";
     return new Allow(status);

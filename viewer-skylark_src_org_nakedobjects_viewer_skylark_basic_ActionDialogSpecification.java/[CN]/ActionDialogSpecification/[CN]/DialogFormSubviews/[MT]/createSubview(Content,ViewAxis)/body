@@ -1,16 +1,19 @@
 {
-  if (content instanceof ObjectParameter) {
-    if (((ObjectParameter)content).getObject() == null) {
-      return (new EmptyField.Specification()).createView(content,axis);
-    }
- else {
-      return new SubviewIconSpecification().createView(content,axis);
-    }
-  }
- else   if (content instanceof ValueParameter) {
+  if (content instanceof ValueParameter) {
     ViewFactory factory=ViewFactory.getViewFactory();
     ViewSpecification specification=factory.getValueFieldSpecification((ValueContent)content);
     return specification.createView(content,axis);
+  }
+ else   if (content instanceof ObjectParameter) {
+    ObjectParameter parameterContent=(ObjectParameter)content;
+    if (parameterContent.getObject() == null) {
+      return (new EmptyField.Specification()).createView(content,axis);
+    }
+ else {
+      ViewFactory factory=ViewFactory.getViewFactory();
+      ViewSpecification specification=factory.getIconizedSubViewSpecification(parameterContent);
+      return specification.createView(content,axis);
+    }
   }
   return null;
 }

@@ -1,3 +1,21 @@
 {
-  return persistentObjectVector.toString();
+  StringBuffer data=new StringBuffer();
+  data.append("Objects\n");
+  data.append("----------\n");
+  Enumeration e=persistentObjectVector.elements();
+  while (e.hasMoreElements()) {
+    data.append(e.nextElement());
+    data.append('\n');
+  }
+  data.append("\n\nObjects\n");
+  data.append("----------\n");
+  Vector dump=new Vector();
+  e=persistentObjectVector.elements();
+  while (e.hasMoreElements()) {
+    NakedObject object=(NakedObject)e.nextElement();
+    data.append(object);
+    data.append(debugGraph(object,"name???",0,dump));
+    data.append('\n');
+  }
+  return data.toString();
 }

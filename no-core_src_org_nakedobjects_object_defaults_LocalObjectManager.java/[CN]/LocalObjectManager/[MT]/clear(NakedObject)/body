@@ -1,19 +1,18 @@
 {
-  FieldSpecification[] fields=object.getSpecification().getFields();
+  NakedObjectField[] fields=object.getSpecification().getFields();
   for (int i=0; i < fields.length; i++) {
-    FieldSpecification field=fields[i];
-    if (field instanceof OneToManyAssociationSpecification) {
-      InternalCollection coll=(InternalCollection)field.get(object);
-      coll.removeAll();
+    NakedObjectField field=fields[i];
+    if (field instanceof OneToManyAssociation) {
+      InternalCollection coll=(InternalCollection)object.getField(field);
+      coll.clear();
     }
- else     if (field instanceof OneToOneAssociationSpecification) {
-      NakedObject ref=(NakedObject)field.get(object);
+ else     if (field instanceof OneToOneAssociation) {
+      NakedObject ref=(NakedObject)object.getField(field);
       if (ref != null) {
-        ((OneToOneAssociationSpecification)field).clearAssociation(object,ref);
+        object.clear((OneToOneAssociation)field,ref);
       }
     }
  else {
-      ((NakedValue)field.get(object)).clear();
     }
   }
 }

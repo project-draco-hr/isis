@@ -1,12 +1,35 @@
 {
+  if (reflectorFactory == null) {
+    throw new NakedObjectRuntimeException("No reflector factory has be set up");
+  }
+  if (className == null) {
+    throw new NullPointerException("No class name specified");
+  }
   if (classes.containsKey(className)) {
     return (NakedObjectSpecification)classes.get(className);
   }
  else {
-    LOG.info("Initialising NakedClass for " + className);
-    NakedObjectSpecificationImpl spec=new NakedObjectSpecificationImpl();
-    classes.put(className,spec);
-    spec.reflect(className);
-    return spec;
+    Reflector reflector;
+    try {
+      Class cls=Class.forName(className);
+      if (InternalNakedObject.class.isAssignableFrom(cls) || cls.getName().startsWith("java.")) {
+        reflector=new InternalReflector(className);
+      }
+ else {
+        reflector=reflectorFactory.createReflector(className);
+      }
+      LOG.info("Initialising specification for " + className);
+      NakedObjectSpecificationImpl spec=new NakedObjectSpecificationImpl();
+      classes.put(className,spec);
+      spec.reflect(className,reflector);
+      return spec;
+    }
+ catch (    ClassNotFoundException e) {
+      LOG.debug("non class " + className);
+      NakedObjectSpecificationImpl spec=new NakedObjectSpecificationImpl();
+      spec.nonReflect(className);
+      classes.put(className,spec);
+      return spec;
+    }
   }
 }

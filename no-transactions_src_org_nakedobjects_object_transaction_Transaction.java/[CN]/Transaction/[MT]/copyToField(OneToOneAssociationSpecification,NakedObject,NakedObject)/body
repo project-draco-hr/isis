@@ -1,7 +1,7 @@
 {
-  NakedObject associatedObject=(NakedObject)association.get(source);
+  NakedObject associatedObject=(NakedObject)source.getField(association);
   if (associatedObject == null) {
-    association.clear(proxy);
+    proxy.clear(association);
     log("  copy: " + "null -> " + association.getName());
   }
  else {
@@ -9,7 +9,7 @@
     cls=associatedObject.getSpecification();
     NakedObject associateCopy=(NakedObject)cls.acquireInstance();
     associateCopy.setOid(associatedObject.getOid());
-    association.initData(proxy,associateCopy);
+    proxy.setValue(association,associateCopy);
     log("  copy: " + associateCopy + " -> "+ association.getName());
   }
 }

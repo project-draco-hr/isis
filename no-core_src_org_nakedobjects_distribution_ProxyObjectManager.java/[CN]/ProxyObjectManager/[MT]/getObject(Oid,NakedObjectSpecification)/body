@@ -1,0 +1,11 @@
+{
+  if (loadedObjects.isLoaded(oid)) {
+    LOG.debug("getObject (from already loaded objects) " + oid);
+    return loadedObjects.getLoadedObject(oid);
+  }
+ else {
+    LOG.debug("getObject (remotely from server)" + oid);
+    ObjectData data=connection.getObject(session,oid,hint.getFullName());
+    return data.recreate(loadedObjects);
+  }
+}

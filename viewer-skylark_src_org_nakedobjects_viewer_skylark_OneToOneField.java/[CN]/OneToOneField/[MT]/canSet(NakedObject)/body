@@ -1,9 +1,9 @@
 {
-  if (object instanceof NakedClass) {
+  if (object.getObject() instanceof NakedClass) {
     return new Allow();
   }
  else {
-    NakedObjectSpecification targetType=getOneToOneAssociation().getType();
+    NakedObjectSpecification targetType=getOneToOneAssociation().getSpecification();
     NakedObjectSpecification sourceType=object.getSpecification();
     if (!sourceType.isOfType(targetType)) {
       return new Veto("Can only drop objects of type " + targetType.getSingularName());
@@ -17,7 +17,7 @@
         return new Veto("Object is already associated with another object: " + aggregated.parent());
       }
     }
-    Permission perm=getOneToOneAssociation().getAbout(ClientSession.getSession(),getParent(),object).canUse();
+    Consent perm=getParent().getHint(ClientSession.getSession(),getOneToOneAssociation(),object).canUse();
     return perm;
   }
 }

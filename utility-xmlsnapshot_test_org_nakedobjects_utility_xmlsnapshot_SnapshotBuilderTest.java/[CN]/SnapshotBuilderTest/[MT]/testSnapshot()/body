@@ -1,9 +1,11 @@
 {
-  NakedObjectSpecificationLoaderImpl x=new NakedObjectSpecificationLoaderImpl();
-  NakedObject testObject=new TestObject();
-  XmlSnapshot builder=new XmlSnapshot(testObject);
+  ConfigurationFactory.setConfiguration(new Configuration());
+  MockNakedObjectSpecificationLoader loader=new MockNakedObjectSpecificationLoader();
+  DummyNakedObjectSpecification spec=new DummyNakedObjectSpecification();
+  loader.addSpec(spec);
+  spec.fullName="xxx";
+  spec.fields=new NakedObjectField[0];
+  TestObject testObject=new TestObject();
+  XmlSnapshot builder=new XmlSnapshot(PojoAdapter.createAdapter(testObject));
   Element e=builder.getXmlElement();
-  DomSerializer serializer=new DomSerializerCrimson();
-  String xml=serializer.serialize(e);
-  assertEquals("",xml);
 }

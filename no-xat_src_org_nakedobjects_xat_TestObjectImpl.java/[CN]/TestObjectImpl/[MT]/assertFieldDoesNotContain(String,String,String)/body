@@ -4,15 +4,15 @@
     InternalCollection collection=(InternalCollection)object;
     for (int i=0; i < collection.size(); i++) {
       NakedObject element=collection.elementAt(i);
-      if (element.titleString().toString().equals(expected)) {
-        throw new NakedAssertionFailedError(expected(message) + " object titled '" + expected+ "'  was found in the internal collection");
+      if (element.titleString().toString().equals(notExpected)) {
+        throw new NakedAssertionFailedError(unexpected(message) + " object titled '" + notExpected+ "'  was found in the collection in field "+ fieldName);
       }
     }
   }
  else {
-    String actualValue=object.titleString().toString();
-    if (actualValue.equals(expected)) {
-      throw new NakedAssertionFailedError(expected(message) + " value " + expected+ " is the same as "+ actualValue);
+    String actualValue=object == null ? "" : object.titleString();
+    if (actualValue.equals(notExpected)) {
+      throw new NakedAssertionFailedError(unexpected(message) + " value " + notExpected+ " in field "+ fieldName);
     }
   }
 }

@@ -1,19 +1,22 @@
 {
-  FieldSpecification field=fieldFor(fieldName);
+  NakedObjectField field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   assertFieldModifiable(fieldName,field);
-  Object view=fields.get(simpleName(fieldName));
-  if (!(view instanceof TestValue)) {
-    throw new IllegalActionError("Can only make an entry (eg by keyboard) into a value field");
+  TestObject view=(TestObject)fields.get(simpleName(fieldName));
+  if (!view.getForObject().isParsable()) {
+    throw new IllegalActionError("Can only make an entry (eg by keyboard) into a parsable field");
   }
-  NakedValue valueObject=(NakedValue)field.get((NakedObject)getForObject());
+  NakedObject valueObject=getForObject().getField(field);
   if (valueObject == null) {
     throw new NakedAssertionFailedError("Field '" + fieldName + "' contains null, but should contain an NakedValue object");
   }
   try {
-    valueObject.parse(value);
+    getForObject().parseTextEntry((OneToOneAssociation)field,value);
     throw new NakedAssertionFailedError("Value was unexpectedly parsed");
   }
- catch (  ValueParseException expected) {
+ catch (  TextEntryParseException expected) {
+  }
+catch (  InvalidEntryException e) {
+    throw new NakedAssertionFailedError("Value was unexpectedly parsed");
   }
 }

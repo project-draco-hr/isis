@@ -1,10 +1,10 @@
 {
   NakedObject returnedObject;
   try {
-    returnedObject=action.execute(object);
+    returnedObject=object.execute(action,null);
   }
  catch (  Exception e) {
-    returnedObject=object.getContext().getObjectManager().generatorError("System error",e);
+    returnedObject=PojoAdapter.createAdapter(object.getContext().getObjectManager().generatorError("System error",e));
   }
   if (returnedObject != null) {
     if (returnedObject instanceof NakedError) {
@@ -12,6 +12,9 @@
       workspace.addOpenViewFor(returnedObject,at);
     }
  else {
+      if (!(returnedObject instanceof NakedObject)) {
+        returnedObject=PojoAdapter.createAdapter(returnedObject);
+      }
       view.objectActionResult(returnedObject,at);
     }
   }

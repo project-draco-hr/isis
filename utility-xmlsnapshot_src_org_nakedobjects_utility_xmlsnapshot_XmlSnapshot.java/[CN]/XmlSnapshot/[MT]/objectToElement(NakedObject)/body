@@ -6,9 +6,9 @@
   topLevelElementWritten=true;
   Place place=new Place(object,element);
   nofMeta.setAttributesForClass(element,oidOrHashCode(object).toString());
-  FieldSpecification[] fields=nos.getFields();
+  NakedObjectField[] fields=nos.getFields();
   eachField:   for (int i=0; i < fields.length; i++) {
-    FieldSpecification field=fields[i];
+    NakedObjectField field=fields[i];
     String fieldName=field.getName();
     eachPreviousField:     for (int j=0; j < i; j++) {
       if (fieldName.equals(fields[i])) {
@@ -17,12 +17,12 @@
     }
     Element xmlFieldElement=getXmlDocument().createElementNS(schema.getUri(),schema.getPrefix() + ":" + fieldName);
     Element xsdFieldElement=null;
-    if (field instanceof ValueFieldSpecification) {
-      if (field.getType() != null && field.getType().getFullName() != null && field.getType().getFullName().endsWith("XmlValue")) {
+    if (field.isValue()) {
+      if (field.getSpecification() != null && field.getSpecification().getFullName() != null && field.getSpecification().getFullName().endsWith("XmlValue")) {
         continue eachField;
       }
-      ValueFieldSpecification valueFieldSpec=((ValueFieldSpecification)field);
-      Naked value=valueFieldSpec.get(object);
+      OneToOneAssociation valueFieldSpec=((OneToOneAssociation)field);
+      Naked value=object.getField(valueFieldSpec);
       Element xmlValueElement=xmlFieldElement;
       if (value == null) {
         continue;
@@ -38,10 +38,10 @@
       }
       xsdFieldElement=schema.createXsElementForNofValue(xsElement,xmlValueElement);
     }
- else     if (field instanceof OneToOneAssociationSpecification) {
-      OneToOneAssociationSpecification oneToOneAssocSpec=((OneToOneAssociationSpecification)field);
-      NakedObject referencedNakedObject=(NakedObject)oneToOneAssocSpec.get(object);
-      String fullyQualifiedClassName=oneToOneAssocSpec.getType().getFullName();
+ else     if (field instanceof OneToOneAssociation) {
+      OneToOneAssociation oneToOneAssocSpec=((OneToOneAssociation)field);
+      NakedObject referencedNakedObject=object.getField(oneToOneAssocSpec);
+      String fullyQualifiedClassName=oneToOneAssocSpec.getSpecification().getFullName();
       Element xmlReferenceElement=xmlFieldElement;
       nofMeta.setAttributesForReference(xmlReferenceElement,schema.getPrefix(),fullyQualifiedClassName);
       if (referencedNakedObject != null) {
@@ -52,8 +52,8 @@
       }
       xsdFieldElement=schema.createXsElementForNofReference(xsElement,xmlReferenceElement);
     }
- else     if (field instanceof OneToManyAssociationSpecification) {
-      OneToManyAssociationSpecification oneToManyAssociation=(OneToManyAssociationSpecification)field;
+ else     if (field instanceof OneToManyAssociation) {
+      OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
       InternalCollection collection=(InternalCollection)oneToManyAssociation.get(object);
       String fullyQualifiedClassName=collection.getElementSpecification().getFullName();
       Element xmlCollectionElement=xmlFieldElement;

@@ -69,11 +69,11 @@
     for (int i=0; i < fields.length; i++) {
       FieldSpecification field=fields[i];
       if (field instanceof OneToOneAssociationSpecification) {
-        NakedObject proxyAssociate=(NakedObject)((OneToOneAssociationSpecification)field).get(newObject);
+        NakedObject proxyAssociate=newObject.getField((OneToOneAssociationSpecification)field);
         if (proxyAssociate != null) {
           Object associateOid=proxyAssociate.getOid();
           NakedObject associate=store.getLoadedObjects().getLoadedObject(associateOid);
-          ((OneToOneAssociationSpecification)field).initData(newObject,associate);
+          newObject.setValue((OneToOneAssociationSpecification)field,associate);
         }
       }
  else       if (field instanceof OneToManyAssociationSpecification) {

@@ -1,0 +1,13 @@
+{
+  LOG.debug("Update captured for " + object);
+  Vector copy;
+synchronized (updates) {
+    copy=(Vector)updates.clone();
+  }
+  Enumeration e=copy.elements();
+  while (e.hasMoreElements()) {
+    UpdatePackager packager=(UpdatePackager)e.nextElement();
+    ObjectData objectData=factory.createObjectData(object,1);
+    packager.addUpdate(objectData);
+  }
+}

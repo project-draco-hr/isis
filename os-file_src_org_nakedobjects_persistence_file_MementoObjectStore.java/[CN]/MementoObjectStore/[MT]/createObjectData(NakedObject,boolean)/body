@@ -2,21 +2,22 @@
   LOG.debug("Compiling object data for " + object);
   ObjectData data;
   data=new ObjectData(object.getSpecification(),(SerialOid)object.getOid());
-  FieldSpecification[] fields=object.getSpecification().getFields();
+  NakedObjectField[] fields=object.getSpecification().getFields();
   for (int i=0; i < fields.length; i++) {
     if (fields[i].isDerived()) {
       continue;
     }
-    Naked fieldContent=(Naked)fields[i].get(object);
+    NakedObject field=object.getField(fields[i]);
+    NakedObject fieldContent=field;
     String fieldName=fields[i].getName();
     if (fieldContent instanceof InternalCollection) {
       data.addInternalCollection((InternalCollection)fieldContent,fieldName,ensurePersistent);
     }
- else     if (fieldContent instanceof NakedValue) {
-      data.addValue((NakedValue)fieldContent,fieldName);
+ else     if (fields[i].isValue()) {
+      data.saveValue(fieldName,object.isEmpty(fields[i]),field == null ? null : field.getObject().toString());
     }
  else {
-      data.addAssociation((NakedObject)fieldContent,fieldName,ensurePersistent);
+      data.addAssociation(fieldContent,fieldName,ensurePersistent);
     }
   }
   return data;

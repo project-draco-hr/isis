@@ -1,10 +1,6 @@
 {
-  String value=getClipboard();
-  try {
-    getValue(view).parse(value);
-    updateParent(view);
-  }
- catch (  ValueParseException e) {
-    LOG.error("Invalid paste value " + e);
-  }
+  String pasteValue=getClipboard();
+  OneToOneField objectContent=((OneToOneField)view.getContent());
+  objectContent.getParent().setValue((OneToOneAssociation)objectContent.getField(),pasteValue);
+  updateParent(view);
 }

@@ -1,8 +1,12 @@
 {
-  FieldSpecification field=fieldFor(fieldName);
+  NakedObjectField field=fieldFor(fieldName);
   assertFieldVisible(fieldName,field);
   TestNaked actual=getField(fieldName);
-  String actualType=((Naked)actual.getForObject()).getSpecification().getShortName();
+  NakedObject nakedObject=actual.getForObject();
+  if (nakedObject == null && !(expected == null || expected.equals(""))) {
+    throw new NakedAssertionFailedError(expected(message) + " type " + expected+ " but got nothing");
+  }
+  String actualType=nakedObject.getSpecification().getShortName();
   if (!actualType.equals(expected)) {
     throw new NakedAssertionFailedError(expected(message) + " type " + expected+ " but got "+ actualType);
   }

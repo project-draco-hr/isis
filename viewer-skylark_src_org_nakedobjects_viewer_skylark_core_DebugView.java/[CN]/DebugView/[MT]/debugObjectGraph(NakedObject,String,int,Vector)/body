@@ -1,25 +1,14 @@
 {
   StringBuffer s=new StringBuffer();
   recursiveElements.addElement(object);
-  FieldSpecification[] fields;
+  NakedObjectField[] fields;
   fields=object.getSpecification().getVisibleFields(object,ClientSession.getSession());
   for (int i=0; i < fields.length; i++) {
-    FieldSpecification field=fields[i];
-    Object obj=field.get(object);
+    NakedObjectField field=fields[i];
+    Object obj=object.getField(field);
     name=field.getName();
     indent(s,level);
-    if (obj instanceof NakedValue) {
-      s.append(name + ": ");
-      if (obj == null) {
-        s.append("unitialised - error");
-        s.append("\n");
-      }
- else {
-        s.append(((NakedValue)obj).titleString());
-        s.append("\n");
-      }
-    }
- else     if (obj instanceof NakedObject) {
+    if (obj instanceof NakedObject) {
       if (recursiveElements.contains(obj)) {
         s.append(name + ": " + obj+ "*\n");
       }

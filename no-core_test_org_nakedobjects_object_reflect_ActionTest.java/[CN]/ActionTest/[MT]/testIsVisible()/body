@@ -1,3 +1,11 @@
 {
-  action.canAccess(session,object);
+  NakedObject nakedObject=new DummyNakedObject();
+  actionDelegate.canAccess=new Veto();
+  actionDelegate.hasAbout=true;
+  assertFalse(action.canAccess(new Session(),nakedObject));
+  actionDelegate.canAccess=new Allow();
+  assertTrue(action.canAccess(new Session(),nakedObject));
+  actionDelegate.canAccess=new Veto();
+  actionDelegate.hasAbout=false;
+  assertTrue(action.canAccess(new Session(),nakedObject));
 }

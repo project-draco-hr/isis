@@ -1,15 +1,17 @@
 {
   NakedObject object;
+  NakedObjectContext context=NakedObjectContext.getDefaultContext();
   try {
-    object=(NakedObject)cls.forNakedClass().acquireInstance();
-    object.setContext(cls.getContext());
+    object=context.getObjectManager().createTransientInstance(cls.forObjectType());
+    object.setContext(context);
     object.getContext().makePersistent(object);
     object.created();
-    object.getContext().getObjectManager().objectChanged(object);
+    object.getContext().getObjectManager().saveChanges();
   }
  catch (  NotPersistableException e) {
-    object=cls.getContext().getObjectManager().generatorError("Failed to create instance of " + cls.forNakedClass().getFullName(),e);
-    System.out.println("Failed to create instance of " + cls.forNakedClass().getFullName());
+    NakedError error=context.getObjectManager().generatorError("Failed to create instance of " + cls.forObjectType().getFullName(),e);
+    object=PojoAdapter.createAdapter(error);
+    System.out.println("Failed to create instance of " + cls.forObjectType().getFullName());
     e.printStackTrace();
   }
   return object;

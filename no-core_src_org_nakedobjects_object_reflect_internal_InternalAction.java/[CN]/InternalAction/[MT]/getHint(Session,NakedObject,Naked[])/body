@@ -1,0 +1,36 @@
+{
+  if (parameters.length != paramCount) {
+    LOG.error(actionMethod + " requires " + paramCount+ " parameters, not "+ parameters.length);
+  }
+  Method aboutMethod=getAboutMethod();
+  if (aboutMethod == null) {
+    return new DefaultHint();
+  }
+  try {
+    InternalAbout about;
+    about=new InternalAbout();
+    if (aboutMethod.getName().equals("aboutActionDefault")) {
+      aboutMethod.invoke(object.getObject(),new Object[]{about});
+    }
+ else {
+      Object[] longParams=new Object[parameters.length + 1];
+      longParams[0]=about;
+      for (int i=1; i < longParams.length; i++) {
+        longParams[i]=parameters[i - 1] == null ? null : ((NakedObject)parameters[i - 1]).getObject();
+      }
+      aboutMethod.invoke(object.getObject(),longParams);
+    }
+    if (about == null) {
+      LOG.error("No about returned from " + aboutMethod + " allowing action by default.");
+      return new DefaultHint();
+    }
+    return about;
+  }
+ catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + aboutMethod,e.getTargetException());
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + aboutMethod,ignore);
+  }
+  return new DefaultHint();
+}

@@ -2,7 +2,7 @@
   LOG.info("Added class " + className + " to "+ this);
   NakedObjectSpecification nc=NakedObjectSpecificationLoader.getInstance().loadSpecification(className);
   NakedClass nakedClass=getObjectManager().getNakedClass(nc);
-  getObjectManager().makePersistent(nakedClass);
-  classes.add(nakedClass);
+  getObjectManager().makePersistent(PojoAdapter.createAdapter(nakedClass));
+  classes.addElement(nakedClass);
   return nakedClass;
 }

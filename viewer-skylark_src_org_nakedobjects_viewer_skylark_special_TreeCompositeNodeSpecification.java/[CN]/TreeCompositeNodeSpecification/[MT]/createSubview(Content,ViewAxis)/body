@@ -1,7 +1,13 @@
 {
+  if (content instanceof OneToManyField) {
+    return collectionNodeSpecification.createView(content,axis);
+  }
   if (content instanceof ObjectContent) {
     NakedObject object=((ObjectContent)content).getObject();
     if (!TreeDisplayRules.canDisplay(object)) {
+      return null;
+    }
+    if (((ObjectContent)content).getSpecification().isValue()) {
       return null;
     }
     if (object == null) {

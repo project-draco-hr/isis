@@ -1,0 +1,20 @@
+{
+  NakedObjectManager objectManager=getObjectManager();
+  if (createPersistentInstances) {
+    objectManager.startTransaction();
+  }
+  NakedObject object=objectManager.createTransientInstance(forObjectType());
+  object.setContext(NakedObjectContext.getDefaultContext());
+  object.setResolved();
+  if (createPersistentInstances) {
+    try {
+      getObjectManager().makePersistent(object);
+      objectManager.endTransaction();
+    }
+ catch (    NotPersistableException e) {
+      object=PojoAdapter.createAdapter(getObjectManager().generatorError("Failed to create instance of " + this,e));
+      LOG.error("Failed to create instance of " + this,e);
+    }
+  }
+  return object;
+}

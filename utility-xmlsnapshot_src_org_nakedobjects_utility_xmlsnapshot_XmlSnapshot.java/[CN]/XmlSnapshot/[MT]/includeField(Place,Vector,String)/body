@@ -12,7 +12,7 @@
   String fieldName=(String)fieldNames.elementAt(0);
   fieldNames.removeElementAt(0);
   NakedObjectSpecification nos=object.getSpecification();
-  FieldSpecification field=null;
+  NakedObjectField field=null;
   try {
     field=nos.getField(fieldName);
   }
@@ -28,20 +28,20 @@
     nofMeta.setAnnotationAttribute(xmlFieldElement,annotation);
   }
   Place fieldPlace=new Place(object,xmlFieldElement);
-  if (field instanceof ValueFieldSpecification) {
+  if (field.isValue()) {
     return false;
   }
- else   if (field instanceof OneToOneAssociationSpecification) {
-    OneToOneAssociationSpecification oneToOneAssociation=((OneToOneAssociationSpecification)field);
-    NakedObject referencedObject=(NakedObject)oneToOneAssociation.get(fieldPlace.getObject());
+ else   if (field instanceof OneToOneAssociation) {
+    OneToOneAssociation oneToOneAssociation=((OneToOneAssociation)field);
+    NakedObject referencedObject=fieldPlace.getObject().getField(oneToOneAssociation);
     if (referencedObject == null) {
       return true;
     }
     return appendXmlThenIncludeRemaining(fieldPlace,referencedObject,fieldNames,annotation);
   }
- else   if (field instanceof OneToManyAssociationSpecification) {
-    OneToManyAssociationSpecification oneToManyAssociation=(OneToManyAssociationSpecification)field;
-    InternalCollection collection=(InternalCollection)oneToManyAssociation.get(fieldPlace.getObject());
+ else   if (field instanceof OneToManyAssociation) {
+    OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
+    InternalCollection collection=(InternalCollection)fieldPlace.getObject().getField(oneToManyAssociation);
     boolean allFieldsNavigated=true;
     for (int i=0; i < collection.size(); i++) {
       NakedObject referencedObject=(NakedObject)collection.elementAt(i);

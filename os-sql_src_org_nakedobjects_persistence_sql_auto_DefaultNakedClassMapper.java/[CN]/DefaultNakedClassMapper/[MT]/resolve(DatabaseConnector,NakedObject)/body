@@ -1,5 +1,5 @@
 {
-  SimpleNakedClass cls=(SimpleNakedClass)object;
+  NakedClass cls=(NakedClass)object;
   String columns=nameColumn;
   String id=primaryKey(object.getOid());
   LOG.debug("loading data from SQL " + table + " for "+ object);
@@ -7,7 +7,7 @@
   Results rs=connector.select(statement);
   if (rs.next()) {
     String className=rs.getString(nameColumn);
-    cls.getClassName().restoreString(className);
+    cls.getClassName().restoreFromEncodedString(className);
     rs.close();
   }
  else {

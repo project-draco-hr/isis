@@ -1,0 +1,11 @@
+{
+  TestClass locationClass=getTestClass(Location.class.getName());
+  TestObject city=getTestClass(City.class.getName()).newInstance();
+  TestObject location1=locationClass.newInstance();
+  location1.associate("city",city);
+  TestObject location2=locationClass.newInstance();
+  location2.associate("city",city);
+  TestObject newObject=location1.invokeAction("new booking",location2);
+  newObject.assertFieldContains("pickup",location2);
+  newObject.assertFieldContains("dropoff",location1);
+}

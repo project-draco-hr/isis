@@ -1,7 +1,7 @@
 {
   Assert.assertEquals(view.getView(),view);
   Content content=view.getContent();
-  OneToManyAssociationSpecification field=(OneToManyAssociationSpecification)(content instanceof OneToManyField ? ((OneToManyField)content).getField() : null);
+  OneToManyAssociation field=(OneToManyAssociation)(content instanceof OneToManyField ? ((OneToManyField)content).getField() : null);
   LOG.debug("rebuild view " + view + " for "+ content);
   CollectionContent collectionContent=((CollectionContent)content);
   Enumeration elements;
@@ -9,8 +9,7 @@
     elements=collectionContent.allElements();
   }
  else {
-    CollectionDisplayIterator iterator=collectionContent.getIterator();
-    elements=iterator.displayElements();
+    elements=collectionContent.allElements();
   }
   View[] subviews=view.getSubviews();
   NakedObject[] existingElements=new NakedObject[subviews.length];

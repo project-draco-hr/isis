@@ -1,9 +1,9 @@
 {
   Role transactionalRole=(Role)t.getObject(roleOid,role);
   Person transactionalPerson=(Person)t.getObject(personOid,person);
-  transactionalRole.setPerson(transactionalPerson);
+  transactionalRole.setReferencedObject(transactionalPerson);
   t.prepareSave(transactionalRole);
-  loadedObjects.setupLoadedObjects(new NakedObject[]{role,person});
+  loadedObjects.setupLoadedObjects(new NakedObject[]{role,referencedObject});
   t.commit(objectStore);
-  assertEquals(transactionalRole.getPerson(),role.getPerson());
+  assertEquals(transactionalRole.getReferencedObject(),role.getReferencedObject());
 }

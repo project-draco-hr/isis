@@ -1,16 +1,16 @@
 {
   UserAction[] actions=new UserAction[2];
   actions[0]=new ButtonAction("Find"){
-    public Permission disabled(    View view){
+    public Consent disabled(    View view){
       NakedObject target=((ObjectContent)view.getContent()).getObject();
-      ActionSpecification action=target.getSpecification().getObjectAction(ActionSpecification.USER,"Find");
-      About about=action.getAbout(ClientSession.getSession(),target);
+      Action action=target.getSpecification().getObjectAction(Action.USER,"Find");
+      Hint about=target.getHint(ClientSession.getSession(),action,null);
       return about.canUse();
     }
     public void execute(    Workspace workspace,    View view,    Location at){
       NakedObject target=((ObjectContent)view.getContent()).getObject();
-      ActionSpecification action=target.getSpecification().getObjectAction(ActionSpecification.USER,"Find");
-      NakedObject result=action.execute(target);
+      Action action=target.getSpecification().getObjectAction(Action.USER,"Find");
+      NakedObject result=target.execute(action,null);
       at.move(30,60);
       workspace.addOpenViewFor(result,at);
     }

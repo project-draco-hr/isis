@@ -1,0 +1,20 @@
+{
+  LOG.debug("local set association " + getName() + " in "+ inObject+ " with "+ associate);
+  NakedObjectManager objectManager=inObject.getContext().getObjectManager();
+  objectManager.startTransaction();
+  try {
+    addMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("set method expects a " + getType().getFullName() + " object; not a "+ associate.getClass().getName()+ ", "+ e.getMessage());
+  }
+catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + addMethod,e.getTargetException());
+    throw (RuntimeException)e.getTargetException();
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + addMethod,ignore);
+    throw new RuntimeException(ignore.getMessage());
+  }
+  objectManager.endTransaction();
+}

@@ -1,9 +1,20 @@
 {
-  Booking copiedBooking=(Booking)createInstance(Booking.class);
-  copiedBooking.associateCustomer(getCustomer());
-  copiedBooking.setPickUp(getPickUp());
-  copiedBooking.setDropOff(getDropOff());
-  copiedBooking.setPaymentMethod(getPaymentMethod());
-  copiedBooking.setContactTelephone(getContactTelephone());
+  Booking copiedBooking=(Booking)container.createTransientInstance(Booking.class);
+  if (getCustomer() != null) {
+    copiedBooking.associateCustomer(getCustomer());
+  }
+  if (getPickUp() != null) {
+    copiedBooking.setPickUp(getPickUp());
+  }
+  if (getDropOff() != null) {
+    copiedBooking.setDropOff(getDropOff());
+  }
+  if (getPaymentMethod() != null) {
+    copiedBooking.setPaymentMethod(getPaymentMethod());
+  }
+  if (getContactTelephone() != null) {
+    copiedBooking.setContactTelephone(getContactTelephone());
+  }
+  container.makePersistent(copiedBooking);
   return copiedBooking;
 }

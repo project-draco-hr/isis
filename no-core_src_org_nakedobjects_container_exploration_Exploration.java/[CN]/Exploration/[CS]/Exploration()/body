@@ -8,78 +8,31 @@
   }
   Logger.getRootLogger().setLevel(Level.WARN);
   SplashWindow splash=null;
-  NakedObjectManager objectManager=null;
   try {
     String name=this.getClass().getName();
     name=name.substring(name.lastIndexOf('.') + 1);
-    loadConfiguration();
+    ConfigurationFactory.setConfiguration(new Configuration(DEFAULT_CONFIG));
+    if (ConfigurationFactory.getConfiguration().getString(SHOW_EXPLORATION_OPTIONS) == null) {
+      ConfigurationFactory.getConfiguration().add(SHOW_EXPLORATION_OPTIONS,"yes");
+    }
+    PropertyConfigurator.configure(ConfigurationFactory.getConfiguration().getProperties("log4j"));
     Logger log=Logger.getLogger("Naked Objects");
     log.info(AboutNakedObjects.getName());
     log.info(AboutNakedObjects.getVersion());
     log.info(AboutNakedObjects.getBuildId());
-    boolean noSplash=Configuration.getInstance().getBoolean("nosplash",false);
+    boolean noSplash=ConfigurationFactory.getConfiguration().getBoolean("nosplash",false);
     if (!noSplash) {
       splash=new SplashWindow();
     }
     setUpLocale();
-    installSpecificationLoader();
-    ObjectViewingMechanism viewer=installViewer();
-    NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
-    NakedObjectSpecificationImpl.setReflectorFactory(installReflectorFactory());
-    objectManager=installObjectManager(viewer.getUpdateNotifier());
-    context=new NakedObjectContext(objectManager);
-    explorationSetUp=new ExplorationSetUp(context);
+    explorationSetUp=explorationSetup();
     setUpFixtures();
-    ExplorationContext applicationContext;
-    User user;
-    NakedObjectSpecification userClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(User.class.getName());
-    if (objectManager.hasInstances(userClass)) {
-      NakedCollection users=objectManager.findInstances(userClass,name,true);
-      if (users.size() == 0) {
-        throw new NakedObjectRuntimeException("No users found: " + name);
-      }
-      user=(User)users.elements().nextElement();
-      applicationContext=(ExplorationContext)user.getRootObject();
-    }
- else {
-      user=new User(name);
-      user.setContext(context);
-      user.getRoles().add(new Role("explorer"));
-      applicationContext=new ExplorationContext();
-      applicationContext.setContext(context);
-      applicationContext.getName().setValue(name);
-      applicationContext.associateUser(user);
-      objectManager.makePersistent(applicationContext);
-    }
     explorationSetUp.installFixtures();
-    String[] classes=explorationSetUp.getClasses();
-    for (int i=0; i < classes.length; i++) {
-      applicationContext.addClass(classes[i]);
-    }
-    NakedCollection coll=objectManager.allInstances(userClass,false);
-    applicationContext.setUpUsers(coll);
-    ClientSession.getSession().setUser(user);
-    NakedObject rootObject=user.getRootObject();
-    if (rootObject == null) {
-      LOG.warn("User had no root context, a default one has been assigned");
-      rootObject=new DefaultUserContext();
-      rootObject.created();
-      objectManager.makePersistent(rootObject);
-      user.setRootObject(rootObject);
-      ((DefaultUserContext)rootObject).setUser(user);
-    }
-    viewer.setTitle(name);
-    viewer.init(rootObject,this);
+    ObjectViewingMechanism viewer=setupViewer();
     viewer.start();
     splash.toFront();
   }
  catch (  ConfigurationException e) {
-    throw new NakedObjectRuntimeException(e);
-  }
-catch (  StartupException e) {
-    if (splash != null) {
-      splash.removeAfterDelay(4);
-    }
     throw new NakedObjectRuntimeException(e);
   }
  finally {

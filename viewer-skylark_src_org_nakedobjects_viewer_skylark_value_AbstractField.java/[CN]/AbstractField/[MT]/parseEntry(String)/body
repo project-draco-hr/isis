@@ -1,3 +1,8 @@
 {
-  getValueContent().parseEntry(entryText);
+  ValueContent valueContent=getValueContent();
+  Hint about=valueContent.getValueHint(ClientSession.getSession(),entryText);
+  if (about.canUse().isVetoed()) {
+    throw new InvalidEntryException(about.canUse().getReason());
+  }
+  valueContent.parseEntry(entryText);
 }

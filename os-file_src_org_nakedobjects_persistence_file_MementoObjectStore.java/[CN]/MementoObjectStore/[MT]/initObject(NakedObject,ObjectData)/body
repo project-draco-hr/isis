@@ -1,32 +1,23 @@
 {
-  FieldSpecification[] fields=object.getSpecification().getFields();
+  NakedObjectField[] fields=object.getSpecification().getFields();
   for (int i=0; i < fields.length; i++) {
-    FieldSpecification field=fields[i];
+    NakedObjectField field=fields[i];
     if (field.isDerived()) {
       continue;
     }
     if (field.isValue()) {
-      data.restoreValue(field.getName(),(NakedValue)field.get(object));
+      object.setValue((OneToOneAssociation)field,data.get(field.getName()));
     }
- else     if (field instanceof OneToManyAssociationSpecification) {
+ else     if (field instanceof OneToManyAssociation) {
       ReferenceVector refs=(ReferenceVector)data.get(field.getName());
       if (refs != null) {
-        InternalCollection collection=(InternalCollection)field.get(object);
-        SerialOid oid=refs.getOid();
-        LOG.debug("setting collection " + field + "; assigning "+ oid+ " to "+ collection);
-        if (oid == null) {
-          throw new NakedObjectRuntimeException("Oid does not exist for " + collection);
-        }
-        if (collection.getOid() == null) {
-          collection.setOid(oid);
-        }
         for (int j=0; j < refs.size(); j++) {
           try {
             if (loadedObjects.isLoaded(refs.elementAt(j))) {
-              collection.added(loadedObjects.getLoadedObject(refs.elementAt(j)));
+              object.initAssociation((NakedObjectAssociation)field,loadedObjects.getLoadedObject(refs.elementAt(j)));
             }
  else {
-              collection.added(getObject(refs.elementAt(j),null));
+              object.initAssociation((NakedObjectAssociation)field,getObject(refs.elementAt(j),null));
             }
           }
  catch (          ObjectNotFoundException e) {
@@ -42,7 +33,7 @@
         if (loadedObjects.isLoaded(reference)) {
           NakedObject loadedObject=loadedObjects.getLoadedObject(reference);
           LOG.debug("using loaded object " + loadedObject);
-          ((OneToOneAssociationSpecification)field).initData(object,loadedObject);
+          object.initAssociation((OneToOneAssociation)field,loadedObject);
         }
  else {
           Oid oid=reference;
@@ -52,14 +43,14 @@
             fieldObject=(NakedObject)classFor(fieldData.getClassName()).acquireInstance();
           }
  else {
-            fieldObject=(NakedObject)field.getType().acquireInstance();
+            fieldObject=(NakedObject)field.getSpecification().acquireInstance();
           }
           fieldObject.setOid(oid);
           if (fieldObject instanceof InternalCollection) {
             fieldObject.setResolved();
           }
           loadedObjects.loaded(fieldObject);
-          ((OneToOneAssociationSpecification)field).initData(object,fieldObject);
+          object.initAssociation((OneToOneAssociation)field,fieldObject);
         }
       }
     }

@@ -1,0 +1,22 @@
+{
+  LOG.debug("local init association " + getName() + " in "+ inObject+ " with "+ associate);
+  try {
+    setMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException(setMethod + " method doesn't expect a " + associate.getClass().getName());
+  }
+catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + setMethod,e.getTargetException());
+    if (e.getTargetException() instanceof RuntimeException) {
+      throw (RuntimeException)e.getTargetException();
+    }
+ else {
+      throw new RuntimeException(e.getTargetException().getMessage());
+    }
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + setMethod,ignore);
+    throw new RuntimeException(ignore.getMessage());
+  }
+}

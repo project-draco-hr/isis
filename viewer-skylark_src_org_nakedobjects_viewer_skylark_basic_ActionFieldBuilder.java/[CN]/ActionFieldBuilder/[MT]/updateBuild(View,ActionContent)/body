@@ -1,0 +1,21 @@
+{
+  LOG.debug("rebuild view " + view + " for "+ actionContent);
+  View[] subviews=view.getSubviews();
+  for (int i=0; i < subviews.length - 1; i++) {
+    View subview=subviews[i + 1];
+    Content content=subview.getContent();
+    if (content instanceof ObjectParameter) {
+      Naked parameterValue=actionContent.getParameteValue(i);
+      boolean emptyField=subview.getSpecification().canDisplay(null);
+      boolean changeToNull=!emptyField && parameterValue == null;
+      boolean changedFromNull=emptyField && parameterValue != null;
+      if (changeToNull || changedFromNull) {
+        ObjectParameter parameter=(ObjectParameter)content;
+        String label=parameter.getName();
+        ObjectParameter pa=new ObjectParameter(label,parameterValue,parameter.getSpecification(),actionContent,i);
+        View fieldView=createFieldView(view,pa);
+        view.replaceView(subview,decorateSubview(new LabelBorder(label,fieldView)));
+      }
+    }
+  }
+}

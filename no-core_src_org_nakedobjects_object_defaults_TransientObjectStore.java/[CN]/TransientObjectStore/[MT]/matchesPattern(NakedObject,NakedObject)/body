@@ -1,16 +1,16 @@
 {
   NakedObject object=instance;
   NakedObjectSpecification nc=object.getSpecification();
-  FieldSpecification[] fields=nc.getFields();
+  NakedObjectField[] fields=nc.getFields();
   for (int f=0; f < fields.length; f++) {
-    FieldSpecification fld=fields[f];
+    NakedObjectField fld=fields[f];
     if (fld.isPart() || fld.isDerived()) {
       continue;
     }
     if (fld.isValue()) {
-      NakedValue reqd=(NakedValue)fld.get(pattern);
-      NakedValue search=(NakedValue)fld.get(object);
-      if (reqd.isEmpty()) {
+      NakedObject reqd=pattern.getField(fld);
+      NakedObject search=object.getField(fld);
+      if (reqd.isEmpty(fld)) {
         continue;
       }
       String r=reqd.titleString().toString().toLowerCase();
@@ -20,8 +20,8 @@
       }
     }
  else {
-      Naked reqd=fld.get(pattern);
-      Naked search=fld.get(object);
+      NakedObject reqd=pattern.getField(fld);
+      NakedObject search=object.getField(fld);
       if (reqd == null) {
         continue;
       }

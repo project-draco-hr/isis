@@ -1,0 +1,12 @@
+{
+  NakedObject object=target.getObject(objectManager);
+  Naked[] parameters=parameterSet.recreateParameters(object.getContext());
+  NakedObjectSpecification[] parameterClasses=new NakedObjectSpecification[parameters.length];
+  for (int i=0; i < parameterClasses.length; i++) {
+    parameterClasses[i]=parameters[i].getSpecification();
+  }
+  Type type=actionType.getType();
+  Action action=(Action)object.getSpecification().getObjectAction(type,actionName,parameterClasses);
+  Hint about=object.getHint(securityToken.getSession(),action,null);
+  return factory.createAboutData(about);
+}

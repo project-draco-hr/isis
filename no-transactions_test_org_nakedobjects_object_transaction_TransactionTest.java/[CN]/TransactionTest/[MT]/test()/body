@@ -3,9 +3,9 @@
   Oid roleOid=new MockOid(11);
   r.setOid(roleOid);
   Person transactionPerson=(Person)t.getObject(personOid,person);
-  r.setPerson(transactionPerson);
+  r.setReferencedObject(transactionPerson);
   t.prepareCreate(r);
   objectStore.setupLoaded(new NakedObject[]{person});
   t.commit(objectStore);
-  assertSame("reference should be to persistent object and not the proxy",person,r.getPerson());
+  assertSame("reference should be to persistent object and not the proxy",person,r.getReferencedObject());
 }

@@ -1,0 +1,22 @@
+{
+  try {
+    Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
+    if (obj == null) {
+      return null;
+    }
+ else     if (obj instanceof Vector) {
+      return new InternalCollectionVectorAdapter((Vector)obj,type);
+    }
+ else {
+      throw new NakedObjectRuntimeException();
+    }
+  }
+ catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + getMethod,e.getTargetException());
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + getMethod,ignore);
+    throw new NakedObjectRuntimeException(ignore);
+  }
+}

@@ -18,13 +18,13 @@
         connector.getConnectionPool().release(connection);
       }
  else       if (fields[i] instanceof ValueFieldSpecification) {
-        ValueMapper mapper=ValueMapperLookup.getInstance().mapperFor(fields[i].getType());
+        ValueMapper mapper=ValueMapperLookup.getInstance().mapperFor(fields[i].getSpecification());
         mapper.setFromDBColumn(columnName(fields[i]),fields[i],object,rs);
       }
  else       if (fields[i] instanceof OneToOneAssociationSpecification) {
-        NakedObjectSpecification associatedCls=fields[i].getType();
+        NakedObjectSpecification associatedCls=fields[i].getSpecification();
         NakedObject reference=setupReference(loadedObjects,associatedCls,rs.getInt(columnName(fields[i])));
-        ((OneToOneAssociationSpecification)fields[i]).setAssociation(object,reference);
+        object.setAssociation((AssociationSpecification)fields[i],reference);
       }
     }
     object.setResolved();

@@ -2,14 +2,16 @@
   Size size=new Size();
   size.extendHeight(Style.TITLE.getHeight());
   size.extendHeight(30);
-  Error error=(Error)((ObjectContent)getContent()).getObject();
-  size.ensureWidth(Style.NORMAL.stringWidth(error.getError().stringValue()));
+  Error error=(Error)((PojoAdapter)((ObjectContent)getContent()).getObject()).getObject();
+  size.ensureWidth(Style.NORMAL.stringWidth(error.getError()));
   size.extendHeight(Style.NORMAL.getHeight());
   size.extendHeight(30);
-  size.ensureWidth(Style.NORMAL.stringWidth(error.getException().stringValue()));
+  if (error.getException() != null) {
+    size.ensureWidth(Style.NORMAL.stringWidth(error.getException()));
+  }
   size.extendHeight(Style.NORMAL.getHeight());
   size.extendHeight(30);
-  String trace=error.getTrace().stringValue();
+  String trace=error.getTrace();
   StringTokenizer st=new StringTokenizer(trace,"\n\r");
   while (st.hasMoreTokens()) {
     String line=st.nextToken();

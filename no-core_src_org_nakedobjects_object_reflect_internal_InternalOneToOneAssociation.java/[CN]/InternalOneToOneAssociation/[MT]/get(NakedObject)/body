@@ -1,0 +1,19 @@
+{
+  try {
+    Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
+    if (obj == null) {
+      return null;
+    }
+ else {
+      return PojoAdapter.createAdapter(obj);
+    }
+  }
+ catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + getMethod,e.getTargetException());
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + getMethod,ignore);
+    throw new NakedObjectRuntimeException(ignore);
+  }
+}

@@ -1,6 +1,6 @@
 {
   Naked actualObject=retrieveNakedField(fieldName);
-  if (expected == null) {
+  if (notExpected == null) {
     if (actualObject instanceof InternalCollection) {
       int size=((InternalCollection)actualObject).size();
       if (size == 0) {
@@ -8,21 +8,23 @@
       }
     }
  else     if (actualObject == null) {
-      throw new NakedAssertionFailedError(expected(message) + " field to be " + actualObject+ " but it was empty");
+      throw new NakedAssertionFailedError(expected(message) + " field to contain an object but it was empty");
     }
   }
  else {
-    Naked expectedObject=expected.getForObject();
+    Naked notExpectedObject=notExpected.getForObject();
     if (actualObject == null) {
-      if (expectedObject == null)       throw new NakedAssertionFailedError(expected(message) + expectedObject + "  is an empty field");
-    }
- else     if (actualObject instanceof InternalCollection) {
-      if (((InternalCollection)actualObject).contains((NakedObject)expectedObject)) {
-        throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' collection does contain "+ expectedObject);
+      if (notExpectedObject == null) {
+        throw new NakedAssertionFailedError(expected(message) + " an object but the field " + fieldName+ "  is empty");
       }
     }
- else     if (actualObject.equals(expectedObject)) {
-      throw new NakedAssertionFailedError(expected(message) + " object of " + expectedObject+ " does contain "+ actualObject);
+ else     if (actualObject instanceof InternalCollection) {
+      if (((InternalCollection)actualObject).contains((NakedObject)notExpectedObject)) {
+        throw new NakedAssertionFailedError(unexpected(message) + " entry in '" + fieldName+ "' collection: "+ notExpectedObject);
+      }
+    }
+ else     if (actualObject.equals(notExpectedObject)) {
+      throw new NakedAssertionFailedError(unexpected(message) + " object " + notExpectedObject+ " in field "+ fieldName);
     }
   }
 }

@@ -1,0 +1,45 @@
+{
+  this.target=target;
+  this.action=action;
+  int numberParameters=action.parameters().length;
+  ActionParameterSet parameterHints=target.getParameters(ClientSession.getSession(),action,action.parameters());
+  String[] labels;
+  Object[] defaultValues;
+  if (parameterHints != null) {
+    labels=parameterHints.getParameterLabels();
+    defaultValues=parameterHints.getDefaultParameterValues();
+  }
+ else {
+    labels=new String[numberParameters];
+    defaultValues=new Naked[numberParameters];
+  }
+  Naked[] parameterValues;
+  NakedObjectSpecification[] types;
+  Naked[] values;
+  types=action.parameters();
+  values=new Naked[types.length];
+  for (int i=0; i < types.length; i++) {
+    if (types[i].isValue()) {
+      values[i]=types[i].acquireInstance();
+    }
+ else {
+      values[i]=null;
+    }
+  }
+  parameterValues=new Naked[types.length];
+  for (int i=0; i < parameterValues.length; i++) {
+    parameterValues[i]=values[i];
+  }
+  parameters=new ActionParameter[numberParameters];
+  for (int i=0; i < numberParameters; i++) {
+    NakedObjectSpecification type=types[i];
+    String label=labels[i] == null ? type.getShortName() : labels[i];
+    Object value=defaultValues[i] == null ? parameterValues[i] : PojoAdapter.createAdapter(defaultValues[i]);
+    if (type.isValue()) {
+      parameters[i]=new ValueParameter(label,(Naked)value,type,this,i);
+    }
+ else {
+      parameters[i]=new ObjectParameter(label,(Naked)value,type,this,i);
+    }
+  }
+}

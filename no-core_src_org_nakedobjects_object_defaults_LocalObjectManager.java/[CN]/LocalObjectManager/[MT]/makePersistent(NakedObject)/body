@@ -7,17 +7,17 @@
   if (!object.isResolved()) {
     object.setResolved();
   }
-  FieldSpecification[] fields=object.getSpecification().getFields();
+  NakedObjectField[] fields=object.getSpecification().getFields();
   for (int i=0; i < fields.length; i++) {
-    FieldSpecification field=fields[i];
+    NakedObjectField field=fields[i];
     if (field.isDerived()) {
       continue;
     }
  else     if (field.isValue()) {
       continue;
     }
- else     if (field instanceof OneToManyAssociationSpecification) {
-      InternalCollection collection=(InternalCollection)field.get(object);
+ else     if (field instanceof OneToManyAssociation) {
+      InternalCollection collection=(InternalCollection)object.getField(field);
       collection.setOid(createOid(collection));
       collection.setResolved();
       for (int j=0; j < collection.size(); j++) {
@@ -29,9 +29,12 @@
       }
     }
  else {
-      Object fieldValue=field.get(object);
+      Object fieldValue=object.getField(field);
       if (fieldValue == null) {
         continue;
+      }
+      if (!(fieldValue instanceof NakedObject)) {
+        throw new NakedObjectRuntimeException();
       }
       NakedObject association=(NakedObject)fieldValue;
       if (isPersistent(association)) {
@@ -41,7 +44,7 @@
     }
   }
   try {
-    if (object instanceof NakedClass) {
+    if (object.getObject() instanceof NakedClass) {
       createNakedClassSpec(object);
     }
  else {

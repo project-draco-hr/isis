@@ -5,9 +5,9 @@
   NakedObject target=getObject();
   Assert.assertNotNull(target);
   if (canDrop(source,target).isAllowed()) {
-    ActionSpecification action=dropAction(source,target);
-    if ((action != null) && action.getAbout(ClientSession.getSession(),target,source).canUse().isAllowed()) {
-      NakedObject result=action.execute(target,source);
+    Action action=dropAction(source,target);
+    if ((action != null) && target.getHint(ClientSession.getSession(),action,new NakedObject[]{source}).canUse().isAllowed()) {
+      NakedObject result=target.execute(action,new NakedObject[]{source});
       if (result != null) {
         View view=ViewFactory.getViewFactory().createOpenRootView(result);
         Location location=new Location();
@@ -18,10 +18,10 @@
       markDamaged();
     }
  else {
-      FieldSpecification[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
+      NakedObjectField[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
       for (int i=0; i < fields.length; i++) {
-        if (source.getSpecification().isOfType(fields[i].getType()) && ((AssociationSpecification)fields[i]).get(target) == null) {
-          ((AssociationSpecification)fields[i]).setAssociation(target,source);
+        if (source.getSpecification().isOfType(fields[i].getSpecification()) && target.getField(fields[i]) == null) {
+          target.setAssociation(((NakedObjectAssociation)fields[i]),source);
           invalidateContent();
           break;
         }

@@ -3,6 +3,8 @@
   NakedObjectSpecification spec=getSpecification();
   s.append(spec == null ? getClass().getName() : spec.getShortName());
   s.append(" [");
+  s.append(isViewDirty ? "U" : "-");
+  s.append(isPersistDirty ? "S" : "-");
   s.append(isPersistent() ? "P" : (isFinder() ? "F" : "T"));
   s.append(isResolved ? "R" : "-");
   if (oid != null) {
@@ -15,7 +17,7 @@
   if (isResolved()) {
     s.append(" '");
     try {
-      s.append(this.title());
+      s.append(this.titleString());
     }
  catch (    NullPointerException e) {
       s.append("no title");

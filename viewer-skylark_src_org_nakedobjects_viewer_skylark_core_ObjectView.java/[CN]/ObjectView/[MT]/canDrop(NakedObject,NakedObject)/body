@@ -1,7 +1,8 @@
 {
-  ActionSpecification action=dropAction(source,target);
+  Action action=dropAction(source,target);
+  Session session=ClientSession.getSession();
   if (action != null) {
-    About about=action.getAbout(ClientSession.getSession(),target,source);
+    Hint about=target.getHint(session,action,new NakedObject[]{source});
     return about.canUse();
   }
  else {
@@ -9,10 +10,12 @@
       return new Veto("Can't set field in persistent object with reference to non-persistent object");
     }
  else {
-      FieldSpecification[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
+      NakedObjectField[] fields=target.getSpecification().getVisibleFields(target,session);
       for (int i=0; i < fields.length; i++) {
-        if (source.getSpecification().isOfType(fields[i].getType()) && ((AssociationSpecification)fields[i]).get(target) == null) {
-          return new Allow("Set field " + fields[i].getLabel());
+        if (source.getSpecification().isOfType(fields[i].getSpecification())) {
+          if (target.getField(fields[i]) == null) {
+            return new Allow("Set field " + target.getLabel(session,fields[i]));
+          }
         }
       }
       return new Veto("No empty field accepting object of type " + source.getSpecification().getSingularName());

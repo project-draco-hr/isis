@@ -1,12 +1,15 @@
 {
   testBasicBooking();
   TestObject customer=getTestClass(Customer.class.getName()).findInstance("Pawson");
-  customer.assertNotEmpty("First Name");
-  customer.fieldEntry("First Name","");
-  customer.assertEmpty("First Name");
-  customer.assertFieldContains("Phone Numbers","Mobile");
   customer.assertFieldContainsType("First Name","TextString");
   customer.assertFieldContainsType("Preferred Payment Method","CreditCard");
   customer.assertFieldContainsType(null,"Phone Numbers","Mobile","Telephone");
+  customer.assertNotEmpty("First Name");
+  customer.fieldEntry("First Name","");
+  customer.assertEmpty("First Name");
+  customer.assertNotEmpty("Preferred payment method");
+  customer.clearAssociation("Preferred payment method");
+  customer.assertEmpty("Preferred payment method");
+  customer.assertFieldContains("Phone Numbers","Mobile");
   customer.invokeAction("New Booking");
 }

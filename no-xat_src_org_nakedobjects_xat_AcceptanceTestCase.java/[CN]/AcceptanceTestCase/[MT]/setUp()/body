@@ -1,37 +1,29 @@
 {
-  LogManager.getLoggerRepository().setThreshold(Level.ERROR);
-  loadReflector();
-  objectManager=createObjectManager();
+  BasicConfigurator.configure();
+  LogManager.getRootLogger().setLevel(Level.ERROR);
+  ConfigurationFactory.setConfiguration(new Configuration("xat.properties"));
+  PropertyConfigurator.configure(ConfigurationFactory.getConfiguration().getProperties("log4j"));
+  Logger.getLogger(AcceptanceTestCase.class).debug("XAT Logging enabled - new test: " + getName());
+  if (testObjectFactory == null) {
+    testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent(TEST_OBJECT_FACTORY,NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
+  }
+  documentor=testObjectFactory.getDocumentor();
+  documentor.start();
+  String className=getClass().getName();
+  String methodName=getName().substring(4);
+  testObjectFactory.testStarting(className,methodName);
+  explorationSetUp=explorationSetup();
+  ClientSession.setSession(new Session());
+  Session session=ClientSession.getSession();
+  setUpFixtures();
   try {
-    NakedObjectContext context=new NakedObjectContext(objectManager);
-    Session session=ClientSession.getSession();
-    explorationSetUp=new ExplorationSetUp(context);
-    setUpFixtures();
-    if (testObjectFactory == null) {
-      Configuration.installConfiguration("xat.properties");
-      testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent(TEST_OBJECT_FACTORY,NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
-    }
-    documentor=testObjectFactory.getDocumentor();
-    documentor.start();
-    String className=getClass().getName();
-    String methodName=getName().substring(4);
-    testObjectFactory.testStarting(className,methodName);
-    new NakedObjectSpecificationLoaderImpl();
     explorationSetUp.installFixtures();
     String[] cls=explorationSetUp.getClasses();
     for (int i=0; i < cls.length; i++) {
       NakedObjectSpecification nc=NakedObjectSpecificationLoader.getInstance().loadSpecification(cls[i]);
-      NakedClass spec=new SimpleNakedClass(cls[i]);
-      spec.setContext(context);
-      spec.setNakedClass(nc);
+      NakedClass spec=new NakedClass(cls[i]);
       TestClass view=testObjectFactory.createTestClass(session,spec);
       classes.put(nc.getFullName().toLowerCase(),view);
-    }
-    if (session.getUser() == null) {
-      User user=new User("exploration user");
-      user.setContext(context);
-      user.getRoles().add(new Role("explorer"));
-      session.setUser(user);
     }
   }
  catch (  Exception e) {

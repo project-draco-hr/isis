@@ -1,0 +1,20 @@
+{
+  return new Enumeration(){
+    Enumeration allObjects=loaded.elements();
+    private NakedObject dirtyObject;
+    public boolean hasMoreElements(){
+      while (allObjects.hasMoreElements()) {
+        NakedObject object=(NakedObject)allObjects.nextElement();
+        if (object.isPersistDirty()) {
+          dirtyObject=object;
+          return true;
+        }
+      }
+      return false;
+    }
+    public Object nextElement(){
+      return dirtyObject;
+    }
+  }
+;
+}

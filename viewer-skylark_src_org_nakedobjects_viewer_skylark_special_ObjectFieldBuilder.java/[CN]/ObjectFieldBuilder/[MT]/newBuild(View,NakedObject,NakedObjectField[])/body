@@ -1,0 +1,18 @@
+{
+  LOG.debug("build new view " + view + " for "+ object);
+  for (int f=0; f < flds.length; f++) {
+    NakedObjectField field=flds[f];
+    try {
+      Naked value=object.getField(field);
+      ObjectField content=createContent(object,value,field);
+      View fieldView=subviewDesign.createSubview(content,view.getViewAxis());
+      if (fieldView != null) {
+        view.addView(decorateSubview(fieldView));
+      }
+    }
+ catch (    NakedObjectDefinitionException e) {
+      LOG.error("Invalid field",e);
+      view.addView(new FieldErrorView(e.getMessage()));
+    }
+  }
+}

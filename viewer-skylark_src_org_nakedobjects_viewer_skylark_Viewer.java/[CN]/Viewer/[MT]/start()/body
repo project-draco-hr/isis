@@ -1,2 +1,20 @@
 {
+  popup=new DefaultPopupMenu();
+  explorationMode=ConfigurationFactory.getConfiguration().getBoolean(PROPERTY_BASE + "show-exploration");
+  InteractionHandler interactionHandler=new InteractionHandler(this,spy);
+  renderingArea.addMouseMotionListener(interactionHandler);
+  renderingArea.addMouseListener(interactionHandler);
+  renderingArea.addKeyListener(interactionHandler);
+  try {
+    setupViewFactory();
+  }
+ catch (  ConfigurationException e) {
+    e.printStackTrace();
+  }
+catch (  ComponentException e) {
+    e.printStackTrace();
+  }
+  if (ConfigurationFactory.getConfiguration().getBoolean(PROPERTY_BASE + "debugstatus",false)) {
+    spy.open();
+  }
 }

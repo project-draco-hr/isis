@@ -2,11 +2,11 @@
   Content content=getContent();
   if (content instanceof OneToOneField) {
     OneToOneField oneToOneField=((OneToOneField)content);
-    About about=((OneToOneAssociationSpecification)oneToOneField.getField()).getAbout(ClientSession.getSession(),oneToOneField.getParent(),null);
+    Hint about=oneToOneField.getParent().getHint(ClientSession.getSession(),oneToOneField.getField(),null);
     oneToOneField.getParent();
     return about.canUse().isAllowed();
   }
- else   if (content instanceof ObjectParameter) {
+ else   if (content instanceof ActionParameter) {
     return true;
   }
  else {

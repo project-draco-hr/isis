@@ -5,16 +5,18 @@
   LOG.debug("rebuild view " + view + " for "+ object);
   NakedObjectSpecification cls=null;
   if (useFieldType && content instanceof ObjectField) {
-    cls=((ObjectField)content).getType();
+    cls=object.getSpecification();
+    cls=((ObjectField)content).getSpecification();
   }
   if (cls == null) {
     cls=object.getSpecification();
   }
-  FieldSpecification[] flds=cls.getVisibleFields(object,ClientSession.getSession());
+  NakedObjectField[] flds=cls.getVisibleFields(object,ClientSession.getSession());
   if (view.getSubviews().length == 0) {
     newBuild(view,object,flds);
   }
  else {
     updateBuild(view,object,flds);
   }
+  object.clearViewDirty();
 }

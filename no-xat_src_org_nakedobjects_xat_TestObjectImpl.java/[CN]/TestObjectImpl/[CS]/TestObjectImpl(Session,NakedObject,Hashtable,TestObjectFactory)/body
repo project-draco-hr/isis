@@ -4,12 +4,13 @@
   fields=new Hashtable();
   if (object != null) {
     viewCache.put(object,this);
-    FieldSpecification[] a=object.getSpecification().getFields();
+    NakedObjectField[] a=object.getSpecification().getFields();
     for (int i=0; i < a.length; i++) {
-      FieldSpecification att=a[i];
-      if (att instanceof AssociationSpecification) {
+      NakedObjectField att=a[i];
+      if (att instanceof NakedObjectAssociation) {
         TestObject associatedView=null;
-        NakedObject associate=(NakedObject)a[i].get(object);
+        NakedObject associate;
+        associate=((PojoAdapter)object).getField(att);
         if (null != associate) {
           associatedView=(TestObject)viewCache.get(associate);
         }
@@ -17,9 +18,6 @@
           associatedView=factory.createTestObject(session,associate,viewCache);
         }
         fields.put(a[i].getName(),associatedView);
-      }
- else {
-        fields.put(att.getName(),factory.createTestValue(object,(ValueFieldSpecification)att));
       }
     }
   }
