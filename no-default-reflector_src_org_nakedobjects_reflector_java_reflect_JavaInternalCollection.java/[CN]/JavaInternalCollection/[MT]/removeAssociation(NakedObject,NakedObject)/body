@@ -1,0 +1,25 @@
+{
+  LOG.debug("local clear association " + associate + " from field "+ getName()+ " in "+ inObject);
+  try {
+    NakedObjectManager objectManager=inObject.getContext().getObjectManager();
+    objectManager.startTransaction();
+    if (removeMethod != null) {
+      removeMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+    }
+ else {
+      InternalCollection collection=(InternalCollection)getMethod.invoke(inObject.getObject(),new Object[0]);
+      collection.remove(associate.getObject());
+    }
+    objectManager.endTransaction();
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("remove method expects a " + getType().getFullName() + " object; not a "+ associate.getClass().getName());
+  }
+catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + addMethod,e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + addMethod,ignore);
+    throw new RuntimeException(ignore.getMessage());
+  }
+}

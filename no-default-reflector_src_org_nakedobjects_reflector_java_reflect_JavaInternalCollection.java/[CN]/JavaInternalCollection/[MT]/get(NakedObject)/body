@@ -1,0 +1,14 @@
+{
+  try {
+    InternalCollection collection=(InternalCollection)getMethod.invoke(fromObject.getObject(),new Object[0]);
+    return InternalCollectionAdapter.createAdapter(collection,type);
+  }
+ catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + getMethod,e);
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + getMethod,ignore);
+    throw new NakedObjectRuntimeException(ignore);
+  }
+}

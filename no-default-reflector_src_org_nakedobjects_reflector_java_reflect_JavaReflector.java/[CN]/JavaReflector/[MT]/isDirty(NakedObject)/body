@@ -1,0 +1,20 @@
+{
+  if (isDirtyMethod == null) {
+    return false;
+  }
+  try {
+    Boolean isDirty=(Boolean)isDirtyMethod.invoke(object.getObject(),new Object[0]);
+    return isDirty.booleanValue();
+  }
+ catch (  IllegalArgumentException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException e) {
+    LOG.error("Illegal access of " + isDirtyMethod,e);
+    return false;
+  }
+catch (  InvocationTargetException e) {
+    JavaMember.invocationException("Exception executing " + isDirtyMethod,e);
+    return false;
+  }
+}

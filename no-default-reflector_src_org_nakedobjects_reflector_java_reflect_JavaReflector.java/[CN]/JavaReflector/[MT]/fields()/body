@@ -1,10 +1,17 @@
 {
-  LOG.debug("looking for fields");
+  if (cls.getName().startsWith("java.") || BusinessValue.class.isAssignableFrom(cls)) {
+    return new FieldPeer[0];
+  }
+  LOG.debug("looking for fields for " + cls);
   Vector elements=new Vector();
   defaultAboutFieldMethod=findMethod(OBJECT,ABOUT_FIELD_DEFAULT,null,new Class[]{FieldAbout.class});
   valueFields(elements,BusinessValue.class);
+  valueFields(elements,String.class);
+  valueFields(elements,Date.class);
+  valueFields(elements,float.class);
   derivedFields(elements);
   oneToManyAssociationFields(elements);
+  oneToManyAssociationFieldsInternalCollection(elements);
   oneToOneAssociationFields(elements);
   FieldPeer[] results=new FieldPeer[elements.size()];
   elements.copyInto(results);

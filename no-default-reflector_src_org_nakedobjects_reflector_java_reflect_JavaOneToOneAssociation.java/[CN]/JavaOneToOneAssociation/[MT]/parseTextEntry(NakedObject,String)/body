@@ -4,6 +4,7 @@
       Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
       BusinessValue value=(BusinessValue)obj;
       value.parseUserEntry(text);
+      fromObject.markDirty();
     }
  catch (    InvocationTargetException e) {
       invocationException("Exception executing " + getMethod,e);
@@ -18,7 +19,7 @@ catch (    ValueParseException e) {
   }
  else {
     try {
-      setMethod.invoke(fromObject.getObject(),new Object[]{text});
+      setMethod.invoke(fromObject.getObject(),new Object[]{adaptValue(text)});
     }
  catch (    InvocationTargetException e) {
       invocationException("Exception executing " + setMethod,e);

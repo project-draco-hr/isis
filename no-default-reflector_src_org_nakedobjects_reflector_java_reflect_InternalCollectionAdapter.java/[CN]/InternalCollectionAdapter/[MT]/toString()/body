@@ -1,0 +1,28 @@
+{
+  StringBuffer s=new StringBuffer();
+  s.append("POJO (collection) ");
+  NakedObjectSpecification spec=getSpecification();
+  s.append(spec == null ? getClass().getName() : spec.getShortName());
+  s.append(" [");
+  if (oid != null) {
+    s.append(":");
+    s.append(oid.toString().toUpperCase());
+  }
+ else {
+    s.append(":-");
+  }
+  if (isResolved()) {
+    s.append(" '");
+    try {
+      s.append(this.titleString());
+    }
+ catch (    NullPointerException e) {
+      s.append("no title");
+    }
+    s.append("'");
+  }
+  s.append("]");
+  s.append("  " + Long.toHexString(super.hashCode()).toUpperCase());
+  s.append(collection);
+  return s.toString();
+}

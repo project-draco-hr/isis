@@ -1,0 +1,28 @@
+{
+  if (entry == null) {
+    return null;
+  }
+  String dateString=entry.trim();
+  if (dateString.equals("")) {
+    return null;
+  }
+ else {
+    if (entry.equals("today") || entry.equals("now")) {
+      return new Date();
+    }
+ else {
+      DateFormat[] formats=new DateFormat[]{LONG_FORMAT,MEDIUM_FORMAT,SHORT_FORMAT,ISO_LONG,ISO_SHORT};
+      for (int i=0; i < formats.length; i++) {
+        try {
+          return formats[i].parse(dateString);
+        }
+ catch (        ParseException e) {
+          if ((i + 1) == formats.length) {
+            throw new ValueParseException("Invalid date " + dateString,e);
+          }
+        }
+      }
+    }
+  }
+  throw new ValueParseException("Invalid date " + dateString);
+}

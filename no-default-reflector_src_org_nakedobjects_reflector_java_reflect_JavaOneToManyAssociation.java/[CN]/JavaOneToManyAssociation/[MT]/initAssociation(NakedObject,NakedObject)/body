@@ -1,7 +1,13 @@
 {
-  LOG.debug("local set association " + getName() + " in "+ inObject+ " with "+ associate);
+  LOG.debug("init association " + getName() + " in "+ inObject+ " with "+ associate);
   try {
-    addMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+    Object obj=getMethod.invoke(inObject.getObject(),new Object[0]);
+    if (obj instanceof Vector) {
+      ((Vector)obj).addElement(associate.getObject());
+    }
+ else {
+      throw new NakedObjectRuntimeException();
+    }
   }
  catch (  IllegalArgumentException e) {
     throw new IllegalArgumentException("set method expects a " + getType().getFullName() + " object; not a "+ associate.getClass().getName()+ ", "+ e.getMessage());
