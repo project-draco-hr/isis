@@ -1,0 +1,15 @@
+{
+  Payment newPayment=(Payment)createInstance(Payment.class);
+  newPayment.getPaymentAmount().setValue(deriveBalance());
+  getPayments().add(newPayment);
+  Enumeration claims=getClaims().elements();
+  while (claims.hasMoreElements()) {
+    Claim newClaim=(Claim)claims.nextElement();
+    Enumeration expenses=newClaim.getExpenses().elements();
+    while (expenses.hasMoreElements()) {
+      Expense newExpenseItem=(Expense)expenses.nextElement();
+      newExpenseItem.getStatus().setValue("Paid");
+      newExpenseItem.objectChanged();
+    }
+  }
+}

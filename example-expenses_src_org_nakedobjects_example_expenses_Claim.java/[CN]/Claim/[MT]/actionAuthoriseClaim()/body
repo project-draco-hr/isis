@@ -1,0 +1,28 @@
+{
+  Vector unauthorisedExpenses=new Vector();
+  Claim newClaim=null;
+  Enumeration expenses=getExpenses().elements();
+  while (expenses.hasMoreElements()) {
+    Expense expense=(Expense)expenses.nextElement();
+    if (expense.isAuthorised()) {
+      expense.getProject().getExpenses().getExpenseItems().add(expense);
+    }
+    if (expense.isValid()) {
+      if (newClaim == null) {
+        newClaim=(Claim)createInstance(Claim.class);
+      }
+      unauthorisedExpenses.addElement(expense);
+      newClaim.associateExpenses(expense);
+    }
+  }
+  for (int i=0; i < unauthorisedExpenses.size(); i++) {
+    expenseItems.remove((NakedObject)unauthorisedExpenses.elementAt(i));
+  }
+  getClaimant().getAccount().getOutStandingClaims().remove(this);
+  if (newClaim != null) {
+    newClaim.associateClaimant(getClaimant());
+  }
+  getStatus().setValue("Finalised");
+  getClaimant().getAccount().getClaims().add(this);
+  return newClaim;
+}

@@ -1,0 +1,11 @@
+{
+  if (getClaimant() == null) {
+    about.unusable("Claim requires a claimant");
+  }
+ else {
+    about.unusableOnCondition(getClaimant().getAccount() != null,"The claimant needs an account");
+    about.unusableOnCondition(getClaimant().getProjects() != null,"The claimant needs a project");
+  }
+  about.unusableOnCondition(!getExpenses().isEmpty(),"A claim needs to have some expense items");
+  about.unusableOnCondition(getStatus().isSameAs("Finalised"),"Already claimed");
+}
