@@ -1,9 +1,10 @@
 {
+  loadedObjects=new LoadedObjects();
+  transactionOrientedConnections=new Hashtable();
   DatabaseConnectorFactory connectorFactory=(DatabaseConnectorFactory)ComponentLoader.loadComponent(BASE_NAME + ".connector",DatabaseConnectorFactory.class);
-  connectorPool=new DatabaseConnectorPool(connectorFactory);
+  connectionPool=new DatabaseConnectorPool(connectorFactory);
   ObjectMapperFactory mapperFactory=(ObjectMapperFactory)ComponentLoader.loadComponent(BASE_NAME + ".automapper",ObjectMapperFactory.class);
-  Connection connection=new Connection(connectorPool);
-  mapperLookup=new ObjectMapperLookup(loaded,connection);
-  mapperLookup.setMapperFactory(mapperFactory,connectorPool);
+  mapperLookup=new ObjectMapperLookup(loadedObjects);
+  mapperLookup.setMapperFactory(mapperFactory,connectionPool);
   mapperLookup.init();
 }

@@ -1,7 +1,9 @@
 {
+  DatabaseConnector connection=getDatabaseConnector();
   if (object instanceof InternalCollection) {
     object=((InternalCollection)object).forParent();
     LOG.debug("change to internal collection being persisted through parent");
   }
-  mapperLookup.getMapper(object).save(object);
+  mapperLookup.getMapper(object).save(connection,object);
+  releaseConnectionIfNotInTransaction(connection);
 }

@@ -1,0 +1,16 @@
+{
+  InternalCollection collection=(InternalCollection)field.get(parent);
+  LOG.debug("Saving internal collection " + collection);
+  long parentId=primaryKey(parent.getOid());
+  connector.update("delete from " + table + " where "+ parentColumn+ " = "+ parentId);
+  String columns=parentColumn + ", " + elementIdColumn;
+  int size=collection.size();
+  for (int i=0; i < size; i++) {
+    NakedObject element=collection.elementAt(i);
+    long elementId=primaryKey(element.getOid());
+    String cls=element.getNakedClass().fullName();
+    String values=parentId + "," + elementId+ ", '"+ cls+ "'";
+    String statement="insert into " + table + " ("+ columns+ ") values ("+ values+ ")";
+    connector.update(statement);
+  }
+}

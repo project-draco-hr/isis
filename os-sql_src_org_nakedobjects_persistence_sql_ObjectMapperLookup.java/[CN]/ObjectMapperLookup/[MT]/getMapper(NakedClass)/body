@@ -2,11 +2,13 @@
   ObjectMapper mapper=(ObjectMapper)mappers.get(cls);
   if (mapper == null) {
     AutoMapper autoMapper=(AutoMapper)mapperFactory.createMapper(cls.fullName(),SqlObjectStore.BASE_NAME + ".automapper.default");
-    autoMapper.startup(this,loadedObjects,connection);
-    if (autoMapper.needsTables()) {
-      autoMapper.createTables();
+    DatabaseConnector connection=connectionPool.acquire();
+    autoMapper.startup(connection,this,loadedObjects);
+    if (autoMapper.needsTables(connection)) {
+      autoMapper.createTables(connection);
     }
     mapper=autoMapper;
+    connectionPool.release(connection);
   }
   LOG.debug("  mapper for " + cls.getSingularName() + " -> "+ mapper);
   if (mapper == null) {

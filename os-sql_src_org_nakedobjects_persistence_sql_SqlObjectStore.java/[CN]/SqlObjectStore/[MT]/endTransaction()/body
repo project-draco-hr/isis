@@ -1,2 +1,10 @@
 {
+  Thread thread=Thread.currentThread();
+  DatabaseConnector connector=(DatabaseConnector)transactionOrientedConnections.get(thread);
+  connector.endTransaction();
+  if (connector.isTransactionComplete()) {
+    connector.commit();
+    connectionPool.release(connector);
+    transactionOrientedConnections.remove(thread);
+  }
 }

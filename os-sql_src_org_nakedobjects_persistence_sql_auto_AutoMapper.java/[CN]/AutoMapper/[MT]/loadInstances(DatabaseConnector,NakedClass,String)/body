@@ -1,0 +1,24 @@
+{
+  LOG.debug("loading instances from SQL " + table);
+  Vector instances=new Vector();
+  Results rs=connector.select(selectStatment);
+  int count=0;
+  while (rs.next() && count < MAX_INSTANCES) {
+    int id=rs.getInt(idColumn);
+    NakedObject instance=loadObject(cls,new SqlOid(id,nakedClass.fullName()));
+    loadData(instance,rs);
+    DatabaseConnector secondConnector=connector.getConnectionPool().acquire();
+    for (int i=0; i < collectionMappers.length; i++) {
+      collectionMappers[i].loadInternalCollection(secondConnector,instance);
+    }
+    connector.getConnectionPool().release(secondConnector);
+    LOG.debug("  instance  " + instance);
+    instances.addElement(instance);
+    if (!instance.isResolved()) {
+      instance.setResolved();
+    }
+    count++;
+  }
+  rs.close();
+  return instances;
+}

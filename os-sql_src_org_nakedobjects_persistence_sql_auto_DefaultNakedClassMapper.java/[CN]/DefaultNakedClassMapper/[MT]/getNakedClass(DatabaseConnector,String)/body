@@ -1,0 +1,30 @@
+{
+  LOG.debug("loading naked class: " + name);
+  String statement="select " + idColumn + ", "+ nameColumn+ ", "+ reflectorColumn+ " from "+ table+ " where "+ nameColumn+ " = '"+ name+ "'";
+  Results rs=connector.select(statement);
+  if (rs.next()) {
+    int id=rs.getInt(idColumn);
+    SqlOid oid=new SqlOid(id,NakedClass.class.getName());
+    LOG.debug("  instance  " + oid);
+    if (loadedObjects.isLoaded(oid)) {
+      LOG.debug("  class already loaded   " + oid);
+      rs.close();
+      return (NakedClass)loadedObjects.getLoadedObject(oid);
+    }
+ else {
+      NakedClass instance;
+      instance=new NakedClass();
+      instance.setOid(oid);
+      instance.getName().setValue(rs.getString(nameColumn));
+      instance.getReflector().setValue(rs.getString(reflectorColumn));
+      instance.setResolved();
+      loadedObjects.loaded(instance);
+      rs.close();
+      return instance;
+    }
+  }
+ else {
+    rs.close();
+    throw new ObjectNotFoundException(name);
+  }
+}

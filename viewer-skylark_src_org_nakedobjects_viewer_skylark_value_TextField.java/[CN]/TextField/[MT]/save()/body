@@ -9,7 +9,13 @@
       markDamaged();
       getViewManager().setStatus("VALID ENTRY: " + entry);
     }
- catch (    InvalidEntryException e) {
+ catch (    NakedObjectRuntimeException e) {
+      invalidReason="UPDATE FAILURE: " + e.getMessage();
+      getViewManager().setStatus(invalidReason);
+      getState().setOutOfSynch();
+      markDamaged();
+    }
+catch (    InvalidEntryException e) {
       invalidReason="INVALID ENTRY: " + e.getMessage();
       getViewManager().setStatus(invalidReason);
       markDamaged();

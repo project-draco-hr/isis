@@ -1,0 +1,12 @@
+{
+  User user=(User)object;
+  long id=primaryKey(user.getOid());
+  NakedObject rootObject=user.getRootObject();
+  String rootObjectId="NULL";
+  String rootObjectClass="NULL";
+  if (rootObject != null) {
+    rootObjectId=String.valueOf(primaryKey(rootObject.getOid()));
+    rootObjectClass="'" + rootObject.getNakedClass().fullName() + "'";
+  }
+  connector.update("Insert into " + table + " ("+ columns+ ") values ('"+ user.getName().stringValue()+ "', "+ id+ ", "+ rootObjectId+ ", "+ rootObjectClass+ ")");
+}

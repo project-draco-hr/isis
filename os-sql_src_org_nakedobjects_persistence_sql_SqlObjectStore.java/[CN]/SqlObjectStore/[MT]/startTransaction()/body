@@ -1,2 +1,12 @@
 {
+  Thread thread=Thread.currentThread();
+  DatabaseConnector connector;
+  if (transactionOrientedConnections.containsKey(thread)) {
+    connector=(DatabaseConnector)transactionOrientedConnections.get(thread);
+    connector.startTransaction();
+  }
+ else {
+    connector=connectionPool.acquire();
+    transactionOrientedConnections.put(thread,connector);
+  }
 }

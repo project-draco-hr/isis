@@ -37,7 +37,13 @@
     }
   }
  catch (  ObjectStoreException ose) {
-    store.abortTransaction();
+    try {
+      store.abortTransaction();
+      return;
+    }
+ catch (    ObjectStoreException e1) {
+      e1.printStackTrace();
+    }
   }
   inUpdate=true;
   Enumeration objects;

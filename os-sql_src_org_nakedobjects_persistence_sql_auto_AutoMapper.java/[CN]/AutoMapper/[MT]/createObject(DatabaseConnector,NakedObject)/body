@@ -1,0 +1,16 @@
+{
+  NakedClass cls=object.getNakedClass();
+  String values=values(cls,object);
+  if (dbCreatesId) {
+    String statement="insert into " + table + " ("+ columnList()+ ") values ("+ values+ ")";
+    connector.insert(statement,object.getOid());
+  }
+ else {
+    long id=primaryKey(object.getOid());
+    String statement="insert into " + table + " ("+ idColumn+ ","+ columnList()+ ") values ("+ id+ values+ ")";
+    connector.insert(statement);
+  }
+  for (int i=0; i < collectionMappers.length; i++) {
+    collectionMappers[i].saveInternalCollection(connector,object);
+  }
+}

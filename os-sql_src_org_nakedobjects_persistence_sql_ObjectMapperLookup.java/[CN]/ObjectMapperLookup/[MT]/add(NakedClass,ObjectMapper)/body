@@ -1,5 +1,7 @@
 {
   LOG.debug("add mapper " + mapper + " for "+ cls);
-  mapper.startup(this,loadedObjects,connection);
+  DatabaseConnector connection=connectionPool.acquire();
+  mapper.startup(connection,this,loadedObjects);
+  connectionPool.release(connection);
   mappers.put(cls,mapper);
 }

@@ -1,3 +1,6 @@
 {
-  return mapperLookup.getNakedClassMapper().getNakedClass(name);
+  DatabaseConnector connection=getDatabaseConnector();
+  NakedClass cls=mapperLookup.getNakedClassMapper().getNakedClass(connection,name);
+  releaseConnectionIfNotInTransaction(connection);
+  return cls;
 }

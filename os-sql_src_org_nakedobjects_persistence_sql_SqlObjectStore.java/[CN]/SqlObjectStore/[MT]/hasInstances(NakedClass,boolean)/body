@@ -1,3 +1,6 @@
 {
-  return mapperLookup.getMapper(cls).hasInstances(cls);
+  DatabaseConnector connection=getDatabaseConnector();
+  boolean hasInstances=mapperLookup.getMapper(cls).hasInstances(connection,cls);
+  releaseConnectionIfNotInTransaction(connection);
+  return hasInstances;
 }

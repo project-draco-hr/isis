@@ -1,3 +1,6 @@
 {
-  return mapperLookup.getMapper(cls).getInstances(cls);
+  DatabaseConnector connection=getDatabaseConnector();
+  Vector instances=mapperLookup.getMapper(cls).getInstances(connection,cls);
+  releaseConnectionIfNotInTransaction(connection);
+  return instances;
 }
