@@ -1,2 +1,12 @@
 {
+  if (object.isResolved() || !isPersistent(object)) {
+    return;
+  }
+  LOG.info("resolve-eagerly" + object + "/"+ field);
+  try {
+    objectStore.resolveEagerly(object,field);
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
 }
