@@ -1,0 +1,17 @@
+{
+  boolean inUsableState=true;
+  String listOfValidStates=new String();
+  for (int i=0; i < states.length; ++i) {
+    if (states[i] == null) {
+      continue;
+    }
+    inUsableState=inUsableState && !stateIsSameAs(states[i]);
+    listOfValidStates=listOfValidStates + states[i].toString();
+    if (i < states.length) {
+      listOfValidStates=listOfValidStates + ", ";
+    }
+  }
+  if (!inUsableState) {
+    vetoUse("Unusable when object is in any of these states: " + listOfValidStates);
+  }
+}

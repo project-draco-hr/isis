@@ -1,0 +1,15 @@
+{
+  this.objectFactory=objectFactory;
+  Class cls;
+  try {
+    cls=Class.forName(name);
+  }
+ catch (  ClassNotFoundException e) {
+    throw new ReflectionException("Could not load class " + name,e);
+  }
+  if (!Modifier.isPublic(cls.getModifiers())) {
+    throw new NakedObjectSpecificationException("A NakedObject class must be marked as public.  Error in " + cls);
+  }
+  this.cls=cls;
+  methods=cls.getMethods();
+}

@@ -1,0 +1,10 @@
+{
+  XStream xstream=new XStream();
+  String requestData=xstream.toXML(request);
+  String responseData=connection.request(requestData);
+  Response response=(Response)xstream.fromXML(responseData);
+  if (request.getId() != response.getId()) {
+    throw new NakedObjectRuntimeException("Response out of sequence with respect to the request: " + request.getId() + " & "+ response.getId()+ " respectively");
+  }
+  request.setResponse(response.getObject());
+}

@@ -1,0 +1,24 @@
+{
+  LOG.debug("local setValue() " + inObject.getOid() + "/"+ setValue);
+  try {
+    NakedObjectManager objectManager=inObject.getContext().getObjectManager();
+    objectManager.startTransaction();
+    if (setMethod == null) {
+      BusinessValue value=(BusinessValue)getMethod.invoke(inObject.getObject(),new Object[]{});
+      value.parseUserEntry((String)setValue);
+    }
+ else {
+      setMethod.invoke(inObject.getObject(),new Object[]{setValue});
+    }
+    objectManager.endTransaction();
+  }
+ catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + setMethod,e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + setMethod,ignore);
+  }
+catch (  ValueParseException e) {
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,20 @@
+{
+  try {
+    Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
+    if (obj instanceof BusinessValue) {
+      BusinessValue value=(BusinessValue)obj;
+      return value.isEmpty();
+    }
+ else {
+      return obj == null;
+    }
+  }
+ catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + getMethod,e);
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + getMethod,ignore);
+    throw new NakedObjectRuntimeException(ignore);
+  }
+}

@@ -1,0 +1,22 @@
+{
+  try {
+    socket.setSoTimeout(1000);
+    while (acceptConnection) {
+      try {
+        ServerConnection connection=new ServerConnection(socket.accept(),server);
+        LOG.debug("Connection requested from " + connection.getClient());
+        clients.addElement(connection);
+        connection.start();
+      }
+ catch (      InterruptedIOException ignore) {
+        continue;
+      }
+catch (      IOException e) {
+        LOG.warn("Connection exception",e);
+      }
+    }
+  }
+ catch (  SocketException e) {
+    LOG.error("Listener failure",e);
+  }
+}

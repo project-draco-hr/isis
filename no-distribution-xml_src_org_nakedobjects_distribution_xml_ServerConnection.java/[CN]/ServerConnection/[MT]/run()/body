@@ -1,0 +1,30 @@
+{
+  while (true) {
+    try {
+      String requestData=(String)input.readObject();
+      LOG.debug("Request received \n" + requestData);
+      XStream xstream=new XStream();
+      Request request=(Request)xstream.fromXML(requestData);
+      LOG.debug("Request received " + request);
+      request.execute(server);
+      Response response=new Response(request);
+      LOG.debug("Sending " + response);
+      String responseData=xstream.toXML(response);
+      LOG.debug("Send response \n" + responseData);
+      output.writeObject(responseData);
+      output.flush();
+    }
+ catch (    SocketException e) {
+      LOG.info("Shutting down receiver (" + e + ")");
+      break;
+    }
+catch (    IOException e) {
+      LOG.info("Connection exception; closing connection",e);
+      break;
+    }
+catch (    ClassNotFoundException e) {
+      LOG.error("Unknown class received; closing connection: " + e.getMessage(),e);
+      break;
+    }
+  }
+}

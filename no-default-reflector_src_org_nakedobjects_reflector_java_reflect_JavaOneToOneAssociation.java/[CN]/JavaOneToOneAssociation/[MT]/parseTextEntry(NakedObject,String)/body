@@ -1,0 +1,31 @@
+{
+  if (setMethod == null) {
+    try {
+      Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
+      BusinessValue value=(BusinessValue)obj;
+      value.parseUserEntry(text);
+    }
+ catch (    InvocationTargetException e) {
+      invocationException("Exception executing " + getMethod,e);
+    }
+catch (    IllegalAccessException ignore) {
+      LOG.error("Illegal access of " + getMethod,ignore);
+      throw new NakedObjectRuntimeException("Illegal access of " + getMethod,ignore);
+    }
+catch (    ValueParseException e) {
+      throw new TextEntryParseException(e);
+    }
+  }
+ else {
+    try {
+      setMethod.invoke(fromObject.getObject(),new Object[]{text});
+    }
+ catch (    InvocationTargetException e) {
+      invocationException("Exception executing " + setMethod,e);
+    }
+catch (    IllegalAccessException ignore) {
+      LOG.error("Illegal access of " + setMethod,ignore);
+      throw new NakedObjectRuntimeException("Illegal access of " + setMethod,ignore);
+    }
+  }
+}

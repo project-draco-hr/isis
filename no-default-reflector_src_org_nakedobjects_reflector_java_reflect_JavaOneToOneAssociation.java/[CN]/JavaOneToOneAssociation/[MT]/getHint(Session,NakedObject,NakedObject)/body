@@ -1,0 +1,31 @@
+{
+  Method aboutMethod=getAboutMethod();
+  Class parameter=getMethod.getReturnType();
+  if (associate != null && !parameter.isAssignableFrom(associate.getObject().getClass())) {
+    SimpleFieldAbout about=new SimpleFieldAbout(session,object.getObject());
+    about.unmodifiable("Invalid type: field must be set with a " + NakedObjectSpecificationLoader.getInstance().loadSpecification(parameter.getName()));
+    return about;
+  }
+  if (aboutMethod == null) {
+    return new DefaultHint();
+  }
+  try {
+    SimpleFieldAbout about=new SimpleFieldAbout(session,object.getObject());
+    Object[] parameters;
+    if (aboutMethod.getParameterTypes().length == 2) {
+      parameters=new Object[]{about,associate == null ? null : associate.getObject()};
+    }
+ else {
+      parameters=new Object[]{about};
+    }
+    aboutMethod.invoke(object.getObject(),parameters);
+    return about;
+  }
+ catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + aboutMethod,e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + aboutMethod,ignore);
+  }
+  return new DefaultHint();
+}

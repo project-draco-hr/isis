@@ -1,0 +1,17 @@
+{
+  LOG.debug("serialNumber " + sequence);
+  Vector instances=allInstances(Sequence.class,false);
+  Sequence number;
+  for (Enumeration e=instances.elements(); e.hasMoreElements(); ) {
+    number=(Sequence)e.nextElement();
+    if (number.getName().isSameAs(sequence)) {
+      number.getSerialNumber().next();
+      save(number);
+      return number.getSerialNumber().longValue();
+    }
+  }
+  number=new Sequence();
+  number.getName().setValue(sequence);
+  makePersistent(number);
+  return number.getSerialNumber().longValue();
+}
