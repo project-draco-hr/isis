@@ -3,26 +3,35 @@
   NakedValue value=getValue();
   if (!entry.equals(value == null ? "" : value.titleString())) {
     LOG.debug("Field edited: \'" + entry + "\' to replace \'"+ (value == null ? "" : value.titleString())+ "\'");
-    try {
-      parseEntry(entry.toString());
-      invalidReason=null;
-      getViewManager().getSpy().addAction("VALID ENTRY: " + entry);
-      getState().setValid();
-      markDamaged();
-      getParent().invalidateContent();
-    }
- catch (    NakedObjectRuntimeException e) {
-      invalidReason="UPDATE FAILURE: " + e.getMessage();
-      LOG.error(invalidReason,e);
-      getViewManager().setStatus(invalidReason);
-      getState().setOutOfSynch();
-      markDamaged();
-    }
-catch (    InvalidEntryException e) {
-      invalidReason="INVALID ENTRY: " + e.getMessage();
+    if (entry.length() < minumumLength) {
+      invalidReason="Entry not long enough, must be at least " + minumumLength + " characters";
+      LOG.error(invalidReason);
       getViewManager().setStatus(invalidReason);
       getState().setInvalid();
       markDamaged();
+    }
+ else {
+      try {
+        parseEntry(entry.toString());
+        invalidReason=null;
+        getViewManager().getSpy().addAction("VALID ENTRY: " + entry);
+        getState().setValid();
+        markDamaged();
+        getParent().invalidateContent();
+      }
+ catch (      NakedObjectRuntimeException e) {
+        invalidReason="UPDATE FAILURE: " + e.getMessage();
+        LOG.error(invalidReason,e);
+        getViewManager().setStatus(invalidReason);
+        getState().setOutOfSynch();
+        markDamaged();
+      }
+catch (      InvalidEntryException e) {
+        invalidReason="INVALID ENTRY: " + e.getMessage();
+        getViewManager().setStatus(invalidReason);
+        getState().setInvalid();
+        markDamaged();
+      }
     }
   }
 }
