@@ -8,13 +8,16 @@
     if (field.isValue()) {
       data.restoreValue(field.getName(),(NakedValue)field.get(object));
     }
- else     if (field.isPart()) {
+ else     if (field instanceof OneToManyAssociationSpecification) {
       ReferenceVector refs=(ReferenceVector)data.get(field.getName());
       if (refs != null) {
         InternalCollection collection=(InternalCollection)field.get(object);
         SerialOid oid=refs.getOid();
         LOG.debug("setting collection " + field + "; assigning "+ oid+ " to "+ collection);
-        if (oid != null) {
+        if (oid == null) {
+          throw new NakedObjectRuntimeException("Oid does not exist for " + collection);
+        }
+        if (collection.getOid() == null) {
           collection.setOid(oid);
         }
         for (int j=0; j < refs.size(); j++) {
