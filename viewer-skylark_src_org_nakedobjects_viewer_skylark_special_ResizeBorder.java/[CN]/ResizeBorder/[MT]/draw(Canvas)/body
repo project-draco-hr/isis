@@ -1,0 +1,14 @@
+{
+  Size size=getSize();
+  int width=size.getWidth();
+  int height=size.getHeight();
+  Color color=isOnBorder() && getState().isViewIdentified() ? Style.INVALID : Style.PRIMARY3;
+  for (int i=0; i < BORDER_WIDTH; i++) {
+    int y=height - BORDER_WIDTH + i;
+    canvas.drawLine(0,y,width - 1,y,color);
+    int x=width - BORDER_WIDTH + i;
+    canvas.drawLine(x,0,x,height - 1,color);
+  }
+  canvas.setClip(0,0,width - BORDER_WIDTH,height - BORDER_WIDTH);
+  wrappedView.draw(canvas);
+}

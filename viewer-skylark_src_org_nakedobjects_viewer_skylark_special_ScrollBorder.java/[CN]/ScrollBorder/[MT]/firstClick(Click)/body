@@ -1,0 +1,35 @@
+{
+  Bounds contents=contentArea();
+  int x=click.getLocation().getX();
+  int y=click.getLocation().getY();
+  if (x >= contents.getWidth()) {
+    if (click.isButton2()) {
+      setVerticalPostion(y - verticalVisibleAmount / 2);
+    }
+ else {
+      if (y < verticalScrollPosition) {
+        setVerticalPostion(verticalScrollPosition - verticalVisibleAmount);
+      }
+ else       if (y > verticalScrollPosition + verticalVisibleAmount) {
+        setVerticalPostion(verticalScrollPosition + verticalVisibleAmount);
+      }
+    }
+  }
+ else   if (y >= contents.getHeight()) {
+    if (click.isButton2()) {
+      setHorizontalPostion(x - horizontalVisibleAmount / 2);
+    }
+ else {
+      if (x < horizontalScrollPosition) {
+        setHorizontalPostion(horizontalScrollPosition - horizontalVisibleAmount);
+      }
+ else       if (x > horizontalScrollPosition + horizontalVisibleAmount) {
+        setHorizontalPostion(horizontalScrollPosition + horizontalVisibleAmount);
+      }
+    }
+  }
+ else {
+    addOffset(click);
+    super.firstClick(click);
+  }
+}

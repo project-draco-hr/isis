@@ -1,5 +1,16 @@
 {
-  ViewResizeOutline outline=((ViewResizeOutline)drag.getDragOverlay());
-  outline.markDamaged();
-  outline.adjust(drag);
+  if (dragOffset == -1) {
+    drag.move(offset());
+    super.drag(drag);
+  }
+ else {
+    if (verticalDrag) {
+      int y=drag.getTargetLocation().getY();
+      setVerticalPostion(y - dragOffset);
+    }
+ else {
+      int x=drag.getTargetLocation().getX();
+      setHorizontalPostion(x - dragOffset);
+    }
+  }
 }

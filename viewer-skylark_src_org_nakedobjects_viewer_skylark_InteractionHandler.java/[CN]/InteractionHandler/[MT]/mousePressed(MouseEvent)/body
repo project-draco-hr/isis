@@ -2,11 +2,12 @@
   viewer.translate(me);
   drag=null;
   downAt=new Location(me.getPoint());
-  View identified=viewer.identifyView(downAt,true);
-  if (viewer.getOverlayView() != identified) {
+  View mouseOver=viewer.identifyView(downAt,true);
+  viewer.setLiveDebugPositionInformation("mouse pressed ",downAt,mouseOver);
+  if (viewer.getOverlayView() != mouseOver) {
     viewer.disposeOverlayView();
   }
-  viewer.makeFocus(identified);
-  canDrag=identified != null && me.getClickCount() == 1;
-  identifiedView=identified;
+  viewer.makeFocus(mouseOver);
+  canDrag=mouseOver != null && me.getClickCount() == 1;
+  identifiedView=mouseOver;
 }

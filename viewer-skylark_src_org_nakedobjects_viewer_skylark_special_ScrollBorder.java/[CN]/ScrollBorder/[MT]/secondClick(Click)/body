@@ -1,0 +1,17 @@
+{
+  Bounds contents=contentArea();
+  int x=click.getLocation().getX();
+  int y=click.getLocation().getY();
+  if (x >= contents.getWidth()) {
+    int position=(y < contents.getHeight() / 2) ? verticalMinimum : verticalMaximum;
+    setVerticalPostion(position);
+  }
+ else   if (y >= contents.getHeight()) {
+    int position=(x < contents.getWidth() / 2) ? horizontalMinimum : horizontalMaximum;
+    setHorizontalPostion(position);
+  }
+ else {
+    addOffset(click);
+    super.firstClick(click);
+  }
+}

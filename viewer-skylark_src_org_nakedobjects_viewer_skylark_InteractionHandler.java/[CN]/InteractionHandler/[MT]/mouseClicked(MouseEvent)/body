@@ -1,31 +1,32 @@
 {
   viewer.translate(me);
   Location mouseLocation=new Location(me.getPoint());
-  View over=viewer.identifyView(mouseLocation,true);
-  if (over != null) {
+  View mouseOver=viewer.identifyView(mouseLocation,true);
+  viewer.setLiveDebugPositionInformation("mouse clicked ",mouseLocation,mouseOver);
+  if (mouseOver != null) {
     Location pointer=new Location(mouseLocation);
     Location pointerInView=new Location(mouseLocation);
-    Location offset=Viewer.absoluteLocation(over);
+    Location offset=Viewer.absoluteLocation(mouseOver);
     pointerInView.move(-offset.x,-offset.y);
-    Click click=new Click(over,pointerInView,pointer,me.getModifiers());
+    Click click=new Click(mouseOver,pointerInView,pointer,me.getModifiers());
     LOG.debug(click);
     if (click.isButton3()) {
       saveCurrentFieldEntry();
-      if (over != null) {
-        LOG.debug(" popup " + mouseLocation + " over "+ over);
-        viewer.popupMenu(click,over);
-        identifiedView=over;
+      if (mouseOver != null) {
+        LOG.debug(" popup " + mouseLocation + " over "+ mouseOver);
+        viewer.popupMenu(click,mouseOver);
+        identifiedView=mouseOver;
       }
     }
- else     if (over != null) {
+ else     if (mouseOver != null) {
       if (me.getClickCount() == 1) {
-        over.firstClick(click);
+        mouseOver.firstClick(click);
       }
  else       if (me.getClickCount() == 2) {
-        over.secondClick(click);
+        mouseOver.secondClick(click);
       }
  else       if (me.getClickCount() == 3) {
-        over.thirdClick(click);
+        mouseOver.thirdClick(click);
       }
     }
     redraw();
