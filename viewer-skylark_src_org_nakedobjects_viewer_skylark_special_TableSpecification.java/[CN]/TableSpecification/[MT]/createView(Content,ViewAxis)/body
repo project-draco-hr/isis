@@ -1,5 +1,11 @@
 {
-  View table=super.createView(content,axis);
+  AbstractTypedNakedCollectionVector coll=(AbstractTypedNakedCollectionVector)((ObjectContent)content).getObject();
+  NakedObjectSpecification elementSpecification=NakedObjectSpecificationLoader.getInstance().loadSpecification(coll.getElementSpecification().getFullName());
+  NakedObject exampleObject=(NakedObject)elementSpecification.acquireInstance();
+  FieldSpecification[] viewFields=elementSpecification.getVisibleFields(exampleObject,ClientSession.getSession());
+  TableColumnAxis tableAxis=new TableColumnAxis(viewFields,120);
+  View table=super.createView(content,tableAxis);
+  tableAxis.setRoot(table);
   View view=new ScrollBorder(table);
   return view;
 }

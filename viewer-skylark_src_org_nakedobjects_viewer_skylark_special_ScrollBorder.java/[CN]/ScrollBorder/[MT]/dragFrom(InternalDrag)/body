@@ -1,7 +1,9 @@
 {
-  Bounds contents=contentArea();
+  Offset offset=offset();
+  drag.subtract(offset);
   int x=drag.getMouseLocationRelativeToView().getX();
   int y=drag.getMouseLocationRelativeToView().getY();
+  Bounds contents=contentArea();
   dragOffset=-1;
   if (x >= contents.getWidth()) {
     if (y > verticalScrollPosition && y < verticalScrollPosition + verticalVisibleAmount) {
@@ -18,7 +20,6 @@
     return null;
   }
  else {
-    drag.add(offset());
     return super.dragFrom(drag);
   }
 }

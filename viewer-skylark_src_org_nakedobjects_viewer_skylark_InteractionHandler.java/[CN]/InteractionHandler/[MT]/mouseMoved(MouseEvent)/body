@@ -30,9 +30,13 @@
           redraw();
         }
       }
+      spy.addTrace("--> mouse moved");
+      spy.addTrace(currentlyIdentifiedView," mouse location",mouseLocation);
       Location locationInView=new Location(mouseLocation);
       Location locationOfView=currentlyIdentifiedView.getAbsoluteLocation();
+      spy.addTrace(currentlyIdentifiedView," view location",locationOfView);
       locationInView.subtract(locationOfView);
+      spy.addTrace(currentlyIdentifiedView," mouse location within view",locationInView);
       spy.setType(currentlyIdentifiedView.viewAreaType(new Location(locationInView)));
       spy.addAction("mouseMoved " + locationInView);
       currentlyIdentifiedView.mouseMoved(locationInView);
