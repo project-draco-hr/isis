@@ -2,10 +2,12 @@
   int height=Style.TITLE.getAscent();
   height+=Style.LABEL.getHeight();
   height+=Style.LABEL.getHeight();
-  height=Math.max(height,image.getHeight());
   int width=Style.TITLE.stringWidth(AboutNakedObjects.getName());
   width=Math.max(width,Style.LABEL.stringWidth(AboutNakedObjects.getName()));
   width=Math.max(width,Style.LABEL.stringWidth(AboutNakedObjects.getCopyrightNotice()));
-  width=image.getWidth() + padding + width;
+  if (showingImage()) {
+    height=Math.max(height,image.getHeight());
+    width=image.getWidth() + padding + width;
+  }
   return new Size(padding + width + padding,padding + height + padding);
 }

@@ -1,7 +1,9 @@
 {
   Class superclass=cls.getSuperclass();
-  if (superclass == AbstractNakedObject.class || superclass == Object.class) {
-    return NakedObject.class.getName();
+  if (superclass == null) {
+    return null;
   }
-  return superclass == null ? null : superclass.getName();
+  String naked=Naked.class.getName();
+  boolean isInstanceOfNaked=Naked.class.isAssignableFrom(superclass);
+  return isInstanceOfNaked ? superclass.getName() : naked;
 }

@@ -1,7 +1,11 @@
 {
-  Naked value=field.get(object);
-  assertNull(value);
+  try {
+    field.get(object);
+    fail("Expection expected when null value");
+  }
+ catch (  NakedObjectDefinitionException expected) {
+  }
   object.mockValue=new MockValue();
-  value=field.get(object);
+  Naked value=field.get(object);
   assertEquals(object.mockValue,value);
 }

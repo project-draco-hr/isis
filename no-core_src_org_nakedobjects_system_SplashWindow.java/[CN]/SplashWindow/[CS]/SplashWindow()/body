@@ -2,17 +2,32 @@
   super(new Frame());
   parent=(Frame)getParent();
   logo=loadImage(LOGO_FILE);
-  font=new Font("SansSerif",Font.PLAIN,9);
-  FontMetrics fm=getFontMetrics(font);
-  lineHeight=(int)(fm.getHeight() * 1.05);
-  ascent=fm.getAscent();
-  int maxWidth=logo.getWidth(this);
-  maxWidth=Math.max(maxWidth,fm.stringWidth(AboutNakedObjects.getCopyrightNotice()));
-  maxWidth=Math.max(maxWidth,fm.stringWidth(AboutNakedObjects.getVersion()));
-  width=PADDING + maxWidth + PADDING;
-  height=PADDING + logo.getHeight(this) + PADDING+ lineHeight * 3 + PADDING;
-  Dimension screen=getToolkit().getScreenSize();
+  labelFont=new Font("SansSerif",Font.PLAIN,9);
+  titleFont=new Font("SansSerif",Font.BOLD,24);
+  FontMetrics labelMetrics=getFontMetrics(labelFont);
+  FontMetrics titleMetrics=getFontMetrics(titleFont);
+  labelLineHeight=(int)(labelMetrics.getHeight() * 1.05);
+  int width;
+  int height=PADDING;
+  if (logo == null) {
+    width=titleMetrics.stringWidth(AboutNakedObjects.getName());
+    height+=titleMetrics.getHeight();
+  }
+ else {
+    width=logo.getWidth(this);
+    height+=logo.getHeight(this);
+  }
+  height+=PADDING;
+  width=Math.max(width,labelMetrics.stringWidth(AboutNakedObjects.getCopyrightNotice()));
+  height+=labelLineHeight;
+  width=Math.max(width,labelMetrics.stringWidth(AboutNakedObjects.getVersion()));
+  height+=labelLineHeight;
+  height+=PADDING * 2;
+  width=PADDING + width + PADDING;
   setSize(width,height);
+  this.height=height;
+  this.width=width;
+  Dimension screen=getToolkit().getScreenSize();
   int x=(screen.width / 2) - (width / 2);
   if ((screen.width / screen.height) >= 2) {
     x=(screen.width / 4) - (width / 2);
