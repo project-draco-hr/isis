@@ -1,0 +1,17 @@
+{
+  Booking bk=new Booking();
+  Location a=new Location();
+  Location b=new Location();
+  bk.associatePickUp(a);
+  bk.associateDropOff(b);
+  assertEquals("pick up",a,bk.getPickUp());
+  assertEquals("city copied",a.getCity(),bk.getCity());
+  assertEquals("drop off",b,bk.getDropOff());
+  View booking=getClassView("Bookings").newInstance();
+  View locationA=getClassView("Locations").newInstance();
+  View locationB=getClassView("Locations").newInstance();
+  booking.drop("Pick Up",locationA.drag());
+  booking.drop("Drop Off",locationB.drag());
+  booking.assertFieldContains("Pick Up",locationA);
+  booking.assertFieldContains("Drop Off",locationB);
+}

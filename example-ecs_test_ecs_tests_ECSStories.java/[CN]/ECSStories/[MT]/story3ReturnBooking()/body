@@ -1,0 +1,23 @@
+{
+  story("A Return Booking");
+  step("Retrieve the booking object by its reference number.");
+  View booking=getClassView("Bookings").findInstance("2");
+  append("There are, of course, other ways of finding the original booking.  The simplest is when the customer requests the return journey when booking the original.");
+  step("Create the return booking which will copy the the details and transpose the pick up and drop off locations.");
+  View returnBooking=booking.rightClick("Return Booking");
+  checkFieldsIn(returnBooking);
+  checkField("Customer",booking.getField("Customer"));
+  checkField("Pick Up",booking.getField("Drop Off"));
+  checkField("Drop Off",booking.getField("Pick Up"));
+  checkField("Payment Method",booking.getField("Payment Method"));
+  checkField("Contact Telephone",booking.getField("Contact Telephone"));
+  step("Specify when.");
+  returnBooking.fieldEntry("Date","Dec 17, 2001");
+  returnBooking.fieldEntry("Time","6:30:00 PM");
+  step("Check it is available");
+  returnBooking.rightClick("Check Availability");
+  returnBooking.checkField("Status","Available");
+  step("And then confirm");
+  returnBooking.rightClick("Confirm");
+  returnBooking.checkField("Status","Confirmed");
+}

@@ -1,0 +1,30 @@
+{
+  story("A Booking based on two locations");
+  step("Retrieve the customer object called Richard Pawson");
+  View customer=getClassView("Customers").findInstance("Pawson");
+  step("Drop one of the customer's frequently-used locations onto another to create the booking");
+  View pickUp=customer.getField("Locations","234 E 42nd Street, New York");
+  View dropOff=customer.getField("Locations","JFK Airport, BA Terminal, New York");
+  View booking=dropOff.drop(pickUp.drag());
+  step("Check that the new booking contains the right details");
+  checkFieldsIn(booking);
+  checkField("Customer",customer);
+  checkField("Pick Up",pickUp);
+  checkField("Drop Off",dropOff);
+  checkField("Payment Method",customer.getField("Preferred Payment Method"));
+  checkField("City",pickUp.getField("City"));
+  step("Specify when to pickup");
+  booking.fieldEntry("Date","+4");
+  booking.checkField("Date",booking.getField("Date").getTitle());
+  booking.fieldEntry("Time","2:30:00 PM");
+  step("Specify other details");
+  View phone=getClassView("Telephones").newInstance();
+  booking.drop("Contact Telephone",phone.drag());
+  phone.fieldEntry("Number","6175551234");
+  step("Check it is available");
+  booking.rightClick("Check Availability");
+  booking.checkField("Status","Available");
+  step("And then confirm");
+  booking.rightClick("Confirm");
+  booking.checkField("Status","Confirmed");
+}
