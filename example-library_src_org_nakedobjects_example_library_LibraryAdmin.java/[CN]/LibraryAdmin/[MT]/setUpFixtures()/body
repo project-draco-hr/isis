@@ -1,0 +1,22 @@
+{
+  addFixture(new AbstractExplorationFixture(){
+    public void install(){
+      registerClass(User.class);
+      registerClass(Role.class);
+    }
+  }
+);
+  addFixture(new AbstractExplorationFixture(){
+    public void install(){
+      if (needsInstances(Role.class)) {
+        User user=(User)createInstance(User.class);
+        user.getName().setValue("admin");
+        user.getRoles().add(Roles.ADMIN);
+        user=(User)createInstance(User.class);
+        user.getName().setValue("guest");
+        user.getRoles().add(Roles.LENDER);
+      }
+    }
+  }
+);
+}
