@@ -1,0 +1,39 @@
+{
+  personClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(Person.class.getName());
+  roleClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(Role.class.getName());
+  personPattern=new Person();
+  personPattern.makeFinder();
+  rolePattern=new Role();
+  rolePattern.makeFinder();
+  String names[]={"Freddy","John","Sam","Zax"};
+  people=new Person[names.length];
+  for (int i=0; i < names.length; i++) {
+    people[i]=new Person();
+    people[i].setContext(context);
+    people[i].setOid(nextOid());
+    people[i].name.setValue(names[i]);
+    objectStore.createObject(people[i]);
+    assertNotNull(people[i].getOid());
+  }
+  String roleNames[]={"Leader","Specialist","Tester"};
+  roles=new Role[roleNames.length];
+  for (int i=0; i < roleNames.length; i++) {
+    roles[i]=new Role();
+    roles[i].setContext(context);
+    roles[i].setOid(nextOid());
+    roles[i].name.setValue(roleNames[i]);
+    roles[i].person=people[i];
+    objectStore.createObject(roles[i]);
+  }
+  team=new Team();
+  team.setContext(context);
+  team.setOid(teamOid=nextOid());
+  team.getMembers().setOid(membersOid=nextOid());
+  teamMembers=new Person[names.length - 1];
+  for (int i=0; i < names.length - 1; i++) {
+    teamMembers[i]=people[i];
+    team.getMembers().added(teamMembers[i]);
+  }
+  objectStore.createObject(team);
+  objectStore.createObject(team.getMembers());
+}

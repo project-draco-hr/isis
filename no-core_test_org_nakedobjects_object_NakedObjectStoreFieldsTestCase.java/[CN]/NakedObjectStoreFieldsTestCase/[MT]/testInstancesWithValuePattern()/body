@@ -1,0 +1,17 @@
+{
+  restartObjectStore();
+  try {
+    Person personPattern;
+    personPattern=new Person();
+    personPattern.makeFinder();
+    personPattern.name.setValue(people[3].name.title().toString());
+    NakedObject[] v=objectStore.getInstances(personPattern,false);
+    assertEquals(1,v.length);
+    assertEquals(people[3],v[0]);
+    personPattern.name.setValue("no match personPattern");
+    v=objectStore.getInstances(personPattern,false);
+    assertEquals(0,v.length);
+  }
+ catch (  UnsupportedFindException e) {
+  }
+}
