@@ -1,0 +1,40 @@
+{
+  loadedObjects=new LoadedObjects();
+  objectSets=new Hashtable();
+  File directory=new File(directoryPath);
+  String filepath=latestSnapshot(directory);
+  File file=new File(directory,filepath);
+  if (file.exists()) {
+    ObjectInputStream oos=null;
+    try {
+      LOG.info("Loading objects from " + file + "...");
+      oos=new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+      loadClasses(oos);
+      loadInstances(oos);
+      int size=loadData(oos);
+      LOG.info(size + " objects loaded from " + file);
+    }
+ catch (    FileNotFoundException e) {
+      throw new ObjectStoreException("Failed to find file " + filepath,e);
+    }
+catch (    IOException e) {
+      throw new ObjectStoreException("Failed to read file " + filepath,e);
+    }
+catch (    ClassNotFoundException e) {
+      throw new ObjectStoreException("Failed to read file " + filepath,e);
+    }
+ finally {
+      if (oos != null) {
+        try {
+          oos.close();
+        }
+ catch (        IOException e) {
+          LOG.error("Failed to close file " + filepath,e);
+        }
+      }
+    }
+  }
+ else {
+    LOG.info("No snapshot to load: " + filepath);
+  }
+}

@@ -1,0 +1,37 @@
+{
+  if (patternData == null || testData == null) {
+    throw new NullPointerException("Can't match on nulls " + patternData + " "+ testData);
+  }
+  if (!patternData.getClassName().equals(testData.getClassName())) {
+    return false;
+  }
+  Enumeration fields=patternData.fields();
+  while (fields.hasMoreElements()) {
+    String field=(String)fields.nextElement();
+    Object patternFieldValue=patternData.get(field);
+    Object testFieldValue=testData.get(field);
+    if (testFieldValue instanceof ReferenceVector) {
+      ReferenceVector patternElements=(ReferenceVector)patternFieldValue;
+      for (int i=0; i < patternElements.size(); i++) {
+        SimpleOid requiredElement=patternElements.elementAt(i);
+        boolean requiredFound=false;
+        ReferenceVector testElements=((ReferenceVector)testFieldValue);
+        for (int j=0; j < testElements.size(); j++) {
+          if (requiredElement.equals(testElements.elementAt(j))) {
+            requiredFound=true;
+            break;
+          }
+        }
+        if (!requiredFound) {
+          return false;
+        }
+      }
+    }
+ else {
+      if (!patternFieldValue.equals(testFieldValue)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

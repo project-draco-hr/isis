@@ -1,0 +1,14 @@
+{
+  SimpleOid oid=data.getOid();
+  if (loadedObjects.isLoaded(oid)) {
+    return loadedObjects.getLoadedObject(oid);
+  }
+  NakedClass nc=classFor(data.getClassName());
+  NakedObject object=nc.acquireInstance();
+  LOG.debug("Recreating object " + nc.fullName() + "/"+ oid);
+  object.setOid(oid);
+  loadedObjects.loaded(object);
+  initObject(object,data);
+  object.setResolved();
+  return object;
+}

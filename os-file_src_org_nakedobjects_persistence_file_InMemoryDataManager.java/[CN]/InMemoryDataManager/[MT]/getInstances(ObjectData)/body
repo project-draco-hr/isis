@@ -1,0 +1,15 @@
+{
+  Vector instances=(Vector)indexes.get(pattern.getClassName());
+  if (instances == null) {
+    return new ObjectDataVector();
+  }
+  ObjectDataVector matches=new ObjectDataVector();
+  for (int i=0; i < instances.size(); i++) {
+    SimpleOid oid=(SimpleOid)instances.elementAt(i);
+    ObjectData instanceData=(ObjectData)objects.get(oid);
+    if (matchesPattern(pattern,instanceData)) {
+      matches.addElement(instanceData);
+    }
+  }
+  return matches;
+}

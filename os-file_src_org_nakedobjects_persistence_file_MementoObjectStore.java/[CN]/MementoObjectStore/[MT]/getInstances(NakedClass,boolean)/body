@@ -1,0 +1,22 @@
+{
+  LOG.debug("getInstances of " + cls);
+  ObjectData patternData=new ObjectData(cls,null);
+  ObjectDataVector data=dataManager.getInstances(patternData);
+  Vector instances=new Vector(data.size());
+  for (int i=0; i < data.size(); i++) {
+    ObjectData instanceData=data.element(i);
+    LOG.debug("instance data " + instanceData);
+    SimpleOid oid=instanceData.getOid();
+    NakedObject instance;
+    if (loadedObjects.isLoaded(oid)) {
+      instance=loadedObjects.getLoadedObject(oid);
+    }
+ else {
+      instance=(NakedObject)createSkeletalObject(oid,instanceData.getClassName());
+      loadedObjects.loaded(instance);
+    }
+    instance.resolve();
+    instances.addElement(instance);
+  }
+  return instances;
+}

@@ -1,0 +1,30 @@
+{
+  File tempFile=file(snapshotFilename,version,true);
+  LOG.info("Saving objects in " + tempFile + "...");
+  ObjectOutputStream oos=null;
+  try {
+    oos=new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
+    saveClasses(oos);
+    saveInstances(oos);
+    saveData(oos);
+  }
+ catch (  FileNotFoundException e) {
+    throw new ObjectStoreException("Failed to find file " + tempFile,e);
+  }
+catch (  IOException e) {
+    throw new ObjectStoreException("Failed to write to file " + tempFile,e);
+  }
+ finally {
+    if (oos != null) {
+      try {
+        oos.close();
+      }
+ catch (      IOException e) {
+        LOG.error("Failed to close file " + tempFile,e);
+      }
+    }
+  }
+  File file=file(snapshotFilename,version,false);
+  tempFile.renameTo(file);
+  LOG.info("File renamed as " + file);
+}

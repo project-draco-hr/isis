@@ -1,0 +1,11 @@
+{
+  int noInstances=oos.readInt();
+  for (int i=0; i < noInstances; i++) {
+    Object oid=oos.readObject();
+    LOG.debug("read 1: " + i + " "+ cls.fullName()+ "/"+ oid);
+    NakedObject obj=cls.acquireInstance();
+    obj.setOid(oid);
+    preload(oid,obj);
+    loadedObjects.loaded(obj);
+  }
+}

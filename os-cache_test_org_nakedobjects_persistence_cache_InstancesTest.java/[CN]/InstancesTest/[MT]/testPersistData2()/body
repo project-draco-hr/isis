@@ -1,0 +1,32 @@
+{
+  LoadedObjects loaded=new MockLoadedObjects();
+  NakedClass nc=NakedClass.createNakedClass(Person.class.getName(),MockReflector.class.getName());
+  ins=new Instances(nc,loaded);
+  Role r=new Role();
+  r.setPerson(p1);
+  r.setOid(new SimpleOid(6));
+  ins.create(r);
+  MockClassManager classManager=MockClassManager.setup();
+  classManager.setupAddNakedClass(Role.class);
+  ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  ObjectOutputStream oos=new ObjectOutputStream(baos);
+  ins.saveData(oos);
+  oos.close();
+  byte[] buffer=baos.toByteArray();
+  ByteArrayInputStream bais=new ByteArrayInputStream(buffer);
+  ObjectInputStream ois=new ObjectInputStream(bais);
+  MockObjectManager manager=MockObjectManager.setup();
+  manager.setupAddClass(Person.class);
+  NakedClass roleClass=NakedClass.createNakedClass(Person.class.getName(),JavaReflector.class.getName());
+  MockLoadedObjects loadedWithOids=new MockLoadedObjects();
+  Person p1r=new Person();
+  p1r.setOid(p1.getOid());
+  Person p2r=new Person();
+  p2r.setOid(p2.getOid());
+  Role r1r=new Role();
+  r1r.setOid(r.getOid());
+  loadedWithOids.setupLoadedObjects(new NakedObject[]{r1r,p1r,p2r});
+  Instances ins2=new Instances(roleClass,loadedWithOids);
+  assertEquals(1,ins2.loadData(ois));
+  ois.close();
+}

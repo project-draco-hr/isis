@@ -1,0 +1,23 @@
+{
+  MockClassManager manager=MockClassManager.setup();
+  manager.setupAddNakedClass(NakedObject.class);
+  ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  ObjectOutputStream oos=new ObjectOutputStream(baos);
+  ins.saveIdentities(oos);
+  oos.close();
+  byte[] buffer=baos.toByteArray();
+  ByteArrayInputStream bais=new ByteArrayInputStream(buffer);
+  ObjectInputStream ois=new ObjectInputStream(bais);
+  NakedClass personClass=NakedClass.createNakedClass(Person.class.getName(),JavaReflector.class.getName());
+  Instances ins2=new Instances(personClass,new MockLoadedObjects());
+  ins2.loadIdentities(ois);
+  ois.close();
+  assertEquals(2,ins2.numberInstances());
+  Enumeration e=ins2.instances();
+  Object p1r=e.nextElement();
+  assertEquals(p1,p1r);
+  assertFalse(p1 == p1r);
+  Object p2r=e.nextElement();
+  assertEquals(p2,p2r);
+  assertFalse(p2 == p2r);
+}

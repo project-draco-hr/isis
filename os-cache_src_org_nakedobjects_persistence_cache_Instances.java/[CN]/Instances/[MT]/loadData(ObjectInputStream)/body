@@ -1,0 +1,13 @@
+{
+  int noInstances=oos.readInt();
+  int size=0;
+  for (int i=0; i < noInstances; i++) {
+    NakedObjectMemento memento=(NakedObjectMemento)oos.readObject();
+    LOG.debug("read 2: " + i + " "+ memento);
+    NakedObject object=loadedObjects.getLoadedObject(memento.getOid());
+    memento.updateNakedObject(object,loadedObjects);
+    LOG.debug("recreated " + object + " "+ object.title());
+    size++;
+  }
+  return size;
+}

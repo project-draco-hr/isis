@@ -1,0 +1,17 @@
+{
+  CollectionData data=new CollectionData(NakedClassManager.getInstance().getNakedClass(ArbitraryCollection.class.getName()),new SimpleOid(200));
+  SimpleOid oids[]=new SimpleOid[6];
+  for (int i=0; i < oids.length; i++) {
+    oids[i]=new SimpleOid(103 + i);
+    data.addElement(oids[i]);
+  }
+  manager.insert(data);
+  CollectionData read=manager.loadCollectionData(data.getOid());
+  assertEquals(data.getOid(),read.getOid());
+  assertEquals(data.getClassName(),read.getClassName());
+  ReferenceVector c=read.references();
+  assertEquals(oids.length,c.size());
+  for (int i=0; i < oids.length; i++) {
+    assertEquals(oids[i],c.elementAt(i));
+  }
+}

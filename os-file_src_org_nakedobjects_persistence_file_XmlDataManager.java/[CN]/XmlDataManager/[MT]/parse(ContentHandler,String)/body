@@ -1,0 +1,36 @@
+{
+  XMLReader parser;
+  try {
+    parser=XMLReaderFactory.createXMLReader();
+  }
+ catch (  SAXException e) {
+    try {
+      parser=XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+    }
+ catch (    SAXException e2) {
+      try {
+        parser=XMLReaderFactory.createXMLReader("org.apache.crimson.parser.XMLReaderImpl");
+      }
+ catch (      SAXException failed) {
+        throw new NakedObjectRuntimeException("Couldn't locate a SAX parser");
+      }
+    }
+  }
+  try {
+    parser.setContentHandler(handler);
+    parser.parse(new InputSource(new InputStreamReader(new FileInputStream(file(fileName)),charset)));
+    return true;
+  }
+ catch (  FileNotFoundException e) {
+    return false;
+  }
+catch (  IOException e) {
+    throw new NakedObjectRuntimeException("Error reading XML file",e);
+  }
+catch (  SAXParseException e) {
+    throw new NakedObjectRuntimeException("Parse error: " + e.getMessage() + " ("+ file(fileName)+ ")");
+  }
+catch (  SAXException e) {
+    throw new NakedObjectRuntimeException("?? Error parsing XML file " + file(fileName) + " "+ e.getClass(),e.getException());
+  }
+}
