@@ -1,6 +1,9 @@
 {
-  NakedCollection instances=getNakedClass().allInstances();
-  View view=ViewFactory.getViewFactory().createOpenRootView(instances);
-  view.setLocation(click.getLocationWithinViewer());
-  getWorkspace().addView(view);
+  ClassAbout classAbout=getNakedClass().forNakedClass().getClassAbout();
+  if (classAbout == null || classAbout.canAccess().isAllowed()) {
+    NakedCollection instances=getNakedClass().allInstances();
+    View view=ViewFactory.getViewFactory().createOpenRootView(instances);
+    view.setLocation(click.getLocationWithinViewer());
+    getWorkspace().addView(view);
+  }
 }

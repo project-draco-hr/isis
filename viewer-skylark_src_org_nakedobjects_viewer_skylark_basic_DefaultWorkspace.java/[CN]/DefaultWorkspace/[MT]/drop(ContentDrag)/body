@@ -4,8 +4,13 @@
   Location location=drag.getTargetLocation();
   View newView;
   if (source instanceof NakedClass) {
-    LOG.info("new " + getSpecification().getName() + " instance");
-    newView=newInstance(((NakedClass)source).forNakedClass(),!drag.isCtrl());
+    NakedObjectSpecification spec=((NakedClass)source).forNakedClass();
+    ClassAbout classAbout=spec.getClassAbout();
+    if (classAbout != null && classAbout.canUse().isVetoed()) {
+      return;
+    }
+    LOG.info("new " + spec.getShortName() + " instance");
+    newView=newInstance(spec,!drag.isCtrl());
   }
  else {
     if (drag.isShift()) {
