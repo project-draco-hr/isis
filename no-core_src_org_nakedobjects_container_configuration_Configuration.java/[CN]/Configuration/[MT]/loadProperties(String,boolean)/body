@@ -2,14 +2,19 @@
   try {
     URL url=ConfigurationFactory.class.getResource(resource);
     if (url == null) {
-      throw new ConfigurationException("Configuration resource not found: " + resource);
+      if (mustLoadFile) {
+        throw new ConfigurationException("Configuration resource not found: " + resource);
+      }
+ else {
+        return new Properties();
+      }
     }
-    return loadProperties(url);
+    return loadProperties(url,mustLoadFile);
   }
  catch (  ConfigurationException e) {
     try {
       URL url=new URL("file:///" + new File(resource).getAbsolutePath());
-      return loadProperties(url);
+      return loadProperties(url,mustLoadFile);
     }
  catch (    SecurityException ee) {
       throw new ConfigurationException("Access not granted to configuration resource: " + resource);

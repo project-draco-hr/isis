@@ -5,7 +5,12 @@
     in=connection.getInputStream();
   }
  catch (  FileNotFoundException e) {
-    throw new ConfigurationException("Could not find configuration resource: " + resource);
+    if (mustLoadFile) {
+      throw new ConfigurationException("Could not find configuration resource: " + resource);
+    }
+ else {
+      return new Properties();
+    }
   }
 catch (  IOException e) {
     throw new ConfigurationException("Error reading configuration resource: " + resource,e);
