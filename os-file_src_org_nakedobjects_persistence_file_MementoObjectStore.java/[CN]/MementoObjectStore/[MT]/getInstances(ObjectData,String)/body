@@ -15,9 +15,11 @@
       instance=(NakedObject)createSkeletalObject(oid,instanceData.getClassName());
       instance.setContext(NakedObjectContext.getDefaultContext());
       loadedObjects.loaded(instance);
-      instance.setResolved();
     }
     initObject(instance,instanceData);
+    if (!instance.isResolved()) {
+      instance.setResolved();
+    }
     if (title == null || instance.titleString().toLowerCase().indexOf(titlePattern) >= 0) {
       instances[count++]=instance;
     }

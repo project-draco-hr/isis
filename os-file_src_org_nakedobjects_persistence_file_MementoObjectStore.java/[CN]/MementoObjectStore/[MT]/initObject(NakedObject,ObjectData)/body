@@ -12,8 +12,11 @@
       ReferenceVector refs=(ReferenceVector)data.get(field.getName());
       if (refs != null) {
         InternalCollection collection=(InternalCollection)field.get(object);
-        LOG.debug("setting collection " + field + "; assigning "+ refs.getOid()+ " to "+ collection);
-        collection.setOid(refs.getOid());
+        SerialOid oid=refs.getOid();
+        LOG.debug("setting collection " + field + "; assigning "+ oid+ " to "+ collection);
+        if (oid == null) {
+          collection.setOid(oid);
+        }
         for (int j=0; j < refs.size(); j++) {
           try {
             if (loadedObjects.isLoaded(refs.elementAt(j))) {
