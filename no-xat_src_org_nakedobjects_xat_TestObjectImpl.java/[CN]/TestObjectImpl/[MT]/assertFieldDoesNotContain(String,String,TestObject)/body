@@ -1,0 +1,28 @@
+{
+  Naked actualObject=retrieveNakedField(fieldName);
+  if (testView == null) {
+    if (actualObject instanceof InternalCollection) {
+      int size=((InternalCollection)actualObject).size();
+      if (size == 0) {
+        throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' collection to contain one or more elements, but it was empty");
+      }
+    }
+ else     if (actualObject == null) {
+      throw new NakedAssertionFailedError(expected(message) + " field to be " + actualObject+ " but it was empty");
+    }
+  }
+ else {
+    Naked expectedObject=testView.getForObject();
+    if (actualObject == null) {
+      if (expectedObject == null)       throw new NakedAssertionFailedError(expected(message) + expectedObject + "  is an empty field");
+    }
+ else     if (actualObject instanceof InternalCollection) {
+      if (((InternalCollection)actualObject).contains((NakedObject)expectedObject)) {
+        throw new NakedAssertionFailedError(expected(message) + " '" + fieldName+ "' collection does contain "+ expectedObject);
+      }
+    }
+ else     if (actualObject.equals(expectedObject)) {
+      throw new NakedAssertionFailedError(expected(message) + " object of " + expectedObject+ " does contain "+ actualObject);
+    }
+  }
+}

@@ -7,9 +7,14 @@
     explorationSetUp=new ExplorationSetUp(context);
     setUpFixtures();
     if (testObjectFactory == null) {
-      testObjectFactory=new HtmlTestObjectFactory();
+      Configuration.installConfiguration("xat.properties");
+      testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent("test-object-factory",NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
     }
-    documentor=testObjectFactory.getDocumentor(getName().substring(4));
+    documentor=testObjectFactory.getDocumentor();
+    documentor.start();
+    String className=getClass().getName();
+    String methodName=getName().substring(4);
+    testObjectFactory.testStarting(className,methodName);
     new NakedObjectSpecificationLoaderImpl();
     explorationSetUp.installFixtures();
     String[] cls=explorationSetUp.getClasses();

@@ -1,8 +1,6 @@
 {
-  FieldSpecification field=fieldFor(fieldName);
-  assertFieldVisible(fieldName,field);
-  Naked actualObject=getField(fieldName).getForObject();
-  if (expected == null) {
+  Naked actualObject=retrieveNakedField(fieldName);
+  if (expectedView == null) {
     if (actualObject instanceof InternalCollection) {
       int size=((InternalCollection)actualObject).size();
       if (size > 0) {
@@ -14,7 +12,7 @@
     }
   }
  else {
-    Naked expectedObject=expected.getForObject();
+    Naked expectedObject=expectedView.getForObject();
     if (actualObject == null) {
       if (expectedObject != null)       throw new NakedAssertionFailedError(expected(message) + expectedObject + "  but found an empty field");
     }
