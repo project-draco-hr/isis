@@ -12,7 +12,6 @@
   b.append("\nAxis:      " + getViewAxis());
   b.append("\nState:     " + getState());
   b.append("\nLocation:  " + getLocation());
-  b.append("\nAbsolute:  " + getLocationWithinViewer());
   if (specification == null) {
     b.append("\nSpec:      none");
   }
@@ -24,8 +23,13 @@
   }
   b.append("\n           " + (canFocus() ? "focusable" : "non-focusable"));
   b.append("\nParent:    ");
-  String parent=getParent() == null ? "none" : "" + getParent();
+  View p=getParent();
+  String parent=p == null ? "none" : "" + p;
   b.append(parent);
+  while (p != null) {
+    p=p.getParent();
+    b.append("\n           " + p);
+  }
   b.append("\nWorkspace: " + getWorkspace());
   b.append("\n\n");
   return b.toString();

@@ -1,11 +1,10 @@
 {
   if (drag != null) {
-    viewer.translate(me);
-    View target=identifiedView;
-    Location location=new Location(me.getPoint());
-    viewer.setLiveDebugPositionInformation("mouse released ",location,drag.getSourceView());
-    drag.updateLocationWithinViewer(target,location);
-    LOG.debug("drag ended at " + location + " over "+ target);
+    mouseDragged(me);
+    View target=currentlyIdentifiedView;
+    viewer.setLiveDebugPositionInformation("Mouse released ",mouseLocation,mouseLocationWithinView,drag.getSourceView());
+    drag.updateLocationWithinViewer(mouseLocation,target,mouseLocationWithinView);
+    spy.setAction("drag ended at " + mouseLocationWithinView + " over "+ target);
     drag.end();
     viewer.disposeOverlayView();
     drag=null;

@@ -1,13 +1,14 @@
 {
-  viewer.translate(me);
+  mouseDetails(me,true);
   drag=null;
-  downAt=new Location(me.getPoint());
-  View mouseOver=viewer.identifyView(downAt,true);
-  viewer.setLiveDebugPositionInformation("mouse pressed ",downAt,mouseOver);
-  if (viewer.getOverlayView() != mouseOver) {
+  downAt=new Location(mouseLocationWithinView);
+  spy.setDownAt(downAt);
+  spy.setAction("Mouse pressed " + downAt);
+  viewer.setLiveDebugPositionInformation("mouse pressed ",downAt,mouseLocationWithinView,currentlyIdentifiedView);
+  if (currentlyIdentifiedView != viewer.getOverlayView()) {
     viewer.disposeOverlayView();
   }
-  viewer.makeFocus(mouseOver);
-  canDrag=mouseOver != null && me.getClickCount() == 1;
-  identifiedView=mouseOver;
+  viewer.makeFocus(currentlyIdentifiedView);
+  canDrag=currentlyIdentifiedView != null && me.getClickCount() == 1;
+  previouslyIdentifiedView=currentlyIdentifiedView;
 }

@@ -3,8 +3,15 @@
   Content content=view.getContent();
   OneToManyAssociationSpecification field=(OneToManyAssociationSpecification)(content instanceof OneToManyField ? ((OneToManyField)content).getField() : null);
   LOG.debug("rebuild view " + view + " for "+ content);
-  CollectionDisplayIterator iterator=((CollectionContent)content).getIterator();
-  Enumeration elements=iterator.displayElements();
+  CollectionContent collectionContent=((CollectionContent)content);
+  Enumeration elements;
+  if (showAll) {
+    elements=collectionContent.allElements();
+  }
+ else {
+    CollectionDisplayIterator iterator=collectionContent.getIterator();
+    elements=iterator.displayElements();
+  }
   View[] subviews=view.getSubviews();
   NakedObject[] existingElements=new NakedObject[subviews.length];
   for (int i=0; i < subviews.length; i++) {

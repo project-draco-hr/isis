@@ -2,27 +2,23 @@
   if (!isOverThreshold(downAt,me.getPoint())) {
     return;
   }
-  Location relative=new Location(downAt);
-  View identified=identifiedView;
-  viewer.setLiveDebugPositionInformation("mouse dragged ",mouseLocation,identified);
-  LOG.debug("down at " + downAt);
-  Location viewLocation=Viewer.absoluteLocation(identified);
-  LOG.debug("identified " + viewLocation);
-  relative.move(-viewLocation.x,-viewLocation.y);
-  LOG.debug("relative " + relative);
-  ViewAreaType type=identified.viewAreaType(relative);
+  mouseDetails(me,true);
+  Location locationInView=new Location(downAt);
+  viewer.setLiveDebugPositionInformation("mouse dragged ",mouseLocation,locationInView,previouslyIdentifiedView);
+  ViewAreaType type=previouslyIdentifiedView.viewAreaType(new Location(locationInView));
+  spy.setAction("drag start " + type);
   if (type == ViewAreaType.INTERNAL) {
-    drag=InternalDrag.create(identified,downAt,relative,me.getModifiers());
-    LOG.debug("drag from " + drag);
+    drag=InternalDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
+    spy.setAction("drag from " + drag);
   }
  else {
     saveCurrentFieldEntry();
-    LOG.debug("pickup " + type + ": "+ identified+ " "+ downAt);
+    spy.setAction("pickup " + type + ": "+ previouslyIdentifiedView+ " "+ locationInView);
     if (type == ViewAreaType.VIEW) {
-      drag=ViewDrag.create(identified,downAt,relative,me.getModifiers());
+      drag=ViewDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
     }
  else {
-      drag=ContentDrag.create(identified,downAt,relative,me.getModifiers());
+      drag=ContentDrag.create(previouslyIdentifiedView,mouseLocation,locationInView,me.getModifiers());
     }
   }
   if (drag == null) {

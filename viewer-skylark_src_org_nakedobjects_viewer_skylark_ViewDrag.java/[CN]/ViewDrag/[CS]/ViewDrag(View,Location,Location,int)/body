@@ -1,13 +1,14 @@
 {
-  super(source,absolute,relative,modifiers);
-  workspace=source.getWorkspace().getView();
-  dragging=source.pickup(this);
-  if (dragging != null) {
+  super(source,mouseLocationWithinViewer,relative,modifiers);
+  overlayView=source.pickup(this);
+  overlayOffset=new Offset(relative.getX(),relative.getY());
+  viewsWorkspace=source.getParent().getWorkspace().getView();
+  if (overlayView != null) {
     source.exited();
     LOG.debug("pickup " + this);
-    source.getViewManager().setOverlayView(dragging);
+    source.getViewManager().setOverlayView(overlayView);
     source.getViewManager().showMoveCursor();
-    updateLocationWithinViewer(dragging,absolute);
-    setDraggingLocation();
+    updateLocationWithinViewer(mouseLocationWithinViewer,overlayView,relative);
+    updateDraggingLocation();
   }
 }

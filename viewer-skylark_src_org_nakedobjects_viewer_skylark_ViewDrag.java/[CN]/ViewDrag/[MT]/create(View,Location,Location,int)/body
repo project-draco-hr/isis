@@ -1,4 +1,8 @@
 {
-  ViewDrag drag=new ViewDrag(source,absolute,relative,modifiers);
-  return drag.dragging == null ? null : drag;
+  View parent=source.getParent();
+  if (parent == null) {
+    return null;
+  }
+  ViewDrag drag=new ViewDrag(source,mouseLocationWithinViewer,locationWithinView,modifiers);
+  return drag.overlayView == null ? null : drag;
 }

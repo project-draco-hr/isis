@@ -1,19 +1,18 @@
 {
   getViewManager().showDefaultCursor();
-  Location newLocation=drag.getTargetLocation();
-  Location offset=drag.getSourceLocation();
-  newLocation.move(-offset.getX(),-offset.getY());
   View view=drag.getSourceView();
   if (view.getSpecification().isSubView()) {
     if (view.getSpecification().isOpen()) {
     }
  else {
       ObjectContent content=(ObjectContent)view.getContent();
+      Location newLocation=drag.getViewDropLocation();
       addOpenViewFor(content.getObject(),newLocation);
     }
   }
  else {
     view.markDamaged();
+    Location newLocation=drag.getViewDropLocation();
     view.setLocation(newLocation);
     limitBounds(view);
     view.markDamaged();

@@ -6,8 +6,12 @@
   canvas.drawLine(0,contents.getHeight(),width,contents.getHeight(),Style.SECONDARY2);
   canvas.drawLine(contents.getWidth(),0,contents.getWidth(),height,Style.SECONDARY2);
   Color color=isOnBorder() ? Style.SECONDARY1 : Style.SECONDARY2;
-  canvas.drawSolidRectangle(horizontalScrollPosition,contents.getHeight() + 2,horizontalVisibleAmount,SCROLLBAR_WIDTH - 3,color);
-  canvas.drawSolidRectangle(contents.getWidth() + 2,verticalScrollPosition,SCROLLBAR_WIDTH - 3,verticalVisibleAmount,color);
+  if (horizontalScrollPosition > 0 || horizontalVisibleAmount != contents.getWidth()) {
+    canvas.drawSolidRectangle(horizontalScrollPosition,contents.getHeight() + 2,horizontalVisibleAmount,SCROLLBAR_WIDTH - 3,color);
+  }
+  if (verticalScrollPosition > 0 || verticalVisibleAmount != contents.getHeight()) {
+    canvas.drawSolidRectangle(contents.getWidth() + 2,verticalScrollPosition,SCROLLBAR_WIDTH - 3,verticalVisibleAmount,color);
+  }
   Offset offset=offset();
   canvas.setClip(offset.getDeltaX(),offset.getDeltaY(),contents.getWidth(),contents.getHeight());
   super.draw(canvas);

@@ -1,11 +1,14 @@
 {
-  View target=viewer.identifyView(new Location(me.getPoint()),false);
-  viewer.setLiveDebugPositionInformation("mouse dragged ",mouseLocation,target);
-  drag.updateLocationWithinViewer(target,new Location(me.getPoint()));
+  mouseDetails(me,false);
+  View target=currentlyIdentifiedView;
+  viewer.setLiveDebugPositionInformation("mouse dragged ",mouseLocation,mouseLocationWithinView,target);
+  spy.setAction("Mouse dragged " + mouseLocation);
+  spy.setAction("  target " + target + " "+ mouseLocationWithinView);
+  drag.updateLocationWithinViewer(mouseLocation,target,mouseLocationWithinView);
   drag.drag();
-  identifiedView=target;
+  spy.setAction("drag " + drag);
   if (viewer.getOverlayView() == target) {
     LOG.error("drag identified over overlay!!!! " + target);
   }
-  LOG.debug("drag " + drag);
+  previouslyIdentifiedView=target;
 }

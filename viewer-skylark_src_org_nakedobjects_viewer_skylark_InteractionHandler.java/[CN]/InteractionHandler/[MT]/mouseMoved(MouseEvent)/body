@@ -1,41 +1,40 @@
 {
   if (drag == null) {
-    viewer.translate(me);
-    mouseLocation=new Location(me.getPoint());
-    View mouseOver=viewer.identifyView(mouseLocation,true);
+    mouseDetails(me,true);
+    final View mouseOver=currentlyIdentifiedView;
     if (mouseOver != null) {
-      viewer.setLiveDebugPositionInformation("mouse move ",mouseLocation,mouseOver);
-      if (identifiedView == null) {
-        identifiedView=mouseOver;
+      viewer.setLiveDebugPositionInformation("mouse moved ",mouseLocation,viewLocationWithinViewer,mouseOver);
+      if (previouslyIdentifiedView == null) {
+        previouslyIdentifiedView=mouseOver;
       }
  else {
-        if (mouseOver != identifiedView) {
-          if (mouseOver == identifiedView) {
-            LOG.debug("moved into subview from " + identifiedView);
-            identifiedView.enteredSubview();
+        if (mouseOver != previouslyIdentifiedView) {
+          if (mouseOver == previouslyIdentifiedView) {
+            spy.setAction("moved into subview from " + previouslyIdentifiedView);
+            previouslyIdentifiedView.enteredSubview();
           }
  else {
-            LOG.debug("exited " + identifiedView);
-            identifiedView.exited();
+            spy.setAction("exited " + previouslyIdentifiedView);
+            previouslyIdentifiedView.exited();
           }
-          View previouslyIdentified=identifiedView;
-          identifiedView=mouseOver;
+          View previouslyIdentified=previouslyIdentifiedView;
+          previouslyIdentifiedView=mouseOver;
           if (mouseOver != null) {
             if (mouseOver == previouslyIdentified) {
-              LOG.debug("moved back to from " + previouslyIdentified);
+              spy.setAction("moved back to from " + previouslyIdentified);
               mouseOver.exitedSubview();
             }
  else {
-              LOG.debug("entered " + mouseOver);
+              spy.setAction("entered " + mouseOver);
               mouseOver.entered();
             }
           }
           redraw();
         }
       }
-      Location pointer=mouseLocation;
-      Location offset=Viewer.absoluteLocation(mouseOver);
-      pointer.move(-offset.x,-offset.y);
+      Location pointer=mouseLocationWithinView;
+      spy.setType(mouseOver.viewAreaType(new Location(pointer)));
+      spy.setAction("mouseMoved " + pointer);
       mouseOver.mouseMoved(pointer);
       redraw();
     }

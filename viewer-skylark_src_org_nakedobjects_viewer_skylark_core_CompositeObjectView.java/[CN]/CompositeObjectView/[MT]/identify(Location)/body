@@ -1,5 +1,8 @@
 {
-  location.move(-getBounds().getX(),-getBounds().getY());
+  location.move(-getView().getBounds().getX(),-getView().getBounds().getY());
+  location.move(-getView().getPadding().getLeft(),-getView().getPadding().getTop());
+  getViewManager().getSpy().trace(this,"location within parent",getLocation());
+  getViewManager().getSpy().trace(this,"mouse location",location);
   View views[]=getSubviews();
   for (int i=views.length - 1; i >= 0; i--) {
     View subview=views[i];
@@ -7,5 +10,6 @@
       return subview.identify(location);
     }
   }
+  location.move(getView().getPadding().getLeft(),getView().getPadding().getTop());
   return getView();
 }

@@ -1,12 +1,16 @@
 {
   if (getParent() != null) {
     Location location=getParent().getLocationWithinViewer();
+    getViewManager().getSpy().trace(this,"parent location ",location);
+    Padding parentPadding=parent.getPadding();
+    getViewManager().getSpy().trace(this,"parent padding ",parentPadding);
+    location.move(parentPadding.getTop(),parentPadding.getLeft());
     location.move(x,y);
-    Padding padding=getParent().getPadding();
-    location.move(padding.getLeft(),padding.getTop());
+    getViewManager().getSpy().trace(this,"new location ",location);
     return location;
   }
  else {
+    getViewManager().getSpy().trace(this,"my location ",getLocation());
     return getLocation();
   }
 }

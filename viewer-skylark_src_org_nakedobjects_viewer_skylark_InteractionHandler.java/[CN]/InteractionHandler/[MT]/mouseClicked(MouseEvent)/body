@@ -1,32 +1,26 @@
 {
-  viewer.translate(me);
-  Location mouseLocation=new Location(me.getPoint());
-  View mouseOver=viewer.identifyView(mouseLocation,true);
-  viewer.setLiveDebugPositionInformation("mouse clicked ",mouseLocation,mouseOver);
-  if (mouseOver != null) {
-    Location pointer=new Location(mouseLocation);
-    Location pointerInView=new Location(mouseLocation);
-    Location offset=Viewer.absoluteLocation(mouseOver);
-    pointerInView.move(-offset.x,-offset.y);
-    Click click=new Click(mouseOver,pointerInView,pointer,me.getModifiers());
+  viewer.setLiveDebugPositionInformation("mouse clicked ",downAt,mouseLocationWithinView,currentlyIdentifiedView);
+  spy.setAction("Mouse clicked " + mouseLocationWithinView);
+  if (currentlyIdentifiedView != null) {
+    Click click=new Click(currentlyIdentifiedView,mouseLocationWithinView,mouseLocation,me.getModifiers());
     LOG.debug(click);
     if (click.isButton3()) {
       saveCurrentFieldEntry();
-      if (mouseOver != null) {
-        LOG.debug(" popup " + mouseLocation + " over "+ mouseOver);
-        viewer.popupMenu(click,mouseOver);
-        identifiedView=mouseOver;
+      if (currentlyIdentifiedView != null) {
+        spy.setAction(" popup " + mouseLocation + " over "+ currentlyIdentifiedView);
+        viewer.popupMenu(click,currentlyIdentifiedView);
+        previouslyIdentifiedView=currentlyIdentifiedView;
       }
     }
- else     if (mouseOver != null) {
+ else     if (currentlyIdentifiedView != null) {
       if (me.getClickCount() == 1) {
-        mouseOver.firstClick(click);
+        currentlyIdentifiedView.firstClick(click);
       }
  else       if (me.getClickCount() == 2) {
-        mouseOver.secondClick(click);
+        currentlyIdentifiedView.secondClick(click);
       }
  else       if (me.getClickCount() == 3) {
-        mouseOver.thirdClick(click);
+        currentlyIdentifiedView.thirdClick(click);
       }
     }
     redraw();
