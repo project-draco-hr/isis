@@ -3,8 +3,8 @@
   objectManager=createObjectManager();
   try {
     NakedObjectContext con=new NakedObjectContext(objectManager);
+    Session.getSession().setSecurityContext(con);
     explorationSetUp=new ExplorationSetUp(con);
-    setUpFixture();
     setUpFixtures();
     if (testObjectFactory == null) {
       testObjectFactory=new HtmlTestObjectFactory();
@@ -17,8 +17,14 @@
       NakedClass spec=new SimpleNakedClass(cls[i]);
       spec.setContext(con);
       spec.setNakedClass(nc);
-      TestClass view=testObjectFactory.createTestClass(context,spec);
+      TestClass view=testObjectFactory.createTestClass(con,spec);
       classes.put(nc.getFullName().toLowerCase(),view);
+    }
+    if (con.getUser() == null) {
+      User user=new User("exploration user");
+      user.setContext(con);
+      user.getRoles().add(new Role("explorer"));
+      con.setUser(user);
     }
   }
  catch (  Exception e) {
