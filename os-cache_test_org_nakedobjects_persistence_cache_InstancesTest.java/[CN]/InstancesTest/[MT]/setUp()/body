@@ -1,6 +1,10 @@
 {
-  Logger.getRoot().setLevel(Level.OFF);
-  NakedObjectSpecification nc=NakedObjectSpecification.createNakedClass(Person.class.getName(),MockReflector.class.getName());
+  Logger.getRootLogger().setLevel(Level.OFF);
+  new TestClock();
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
+  NakedObjectSpecification nc=NakedObjectSpecificationLoader.getInstance().loadSpecification(Person.class.getName());
   LoadedObjects loaded=new MockLoadedObjects();
   ins=new Instances(nc,loaded);
   assertEquals(0,ins.numberInstances());

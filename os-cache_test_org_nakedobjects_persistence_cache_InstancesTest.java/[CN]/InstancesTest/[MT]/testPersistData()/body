@@ -1,7 +1,4 @@
 {
-  MockClassManager classManager=MockClassManager.setup();
-  classManager.setupAddNakedClass(NakedObject.class);
-  classManager.setupAddNakedClass(Person.class);
   ByteArrayOutputStream baos=new ByteArrayOutputStream();
   ObjectOutputStream oos=new ObjectOutputStream(baos);
   ins.saveData(oos);
@@ -10,8 +7,7 @@
   ByteArrayInputStream bais=new ByteArrayInputStream(buffer);
   ObjectInputStream ois=new ObjectInputStream(bais);
   MockObjectManager manager=MockObjectManager.setup();
-  manager.setupAddClass(Person.class);
-  NakedObjectSpecification personClass=NakedObjectSpecification.createNakedClass(Person.class.getName(),JavaReflector.class.getName());
+  NakedObjectSpecification personClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(Person.class);
   MockLoadedObjects loadedWithOids=new MockLoadedObjects();
   Person p1r=new Person();
   p1r.setOid(p1.getOid());
@@ -19,7 +15,7 @@
   p2r.setOid(p2.getOid());
   loadedWithOids.setupLoadedObjects(new NakedObject[]{p1r,p2r});
   Instances ins2=new Instances(personClass,loadedWithOids);
-  assertEquals(2,ins2.loadData(ois));
+  assertEquals(2,ins2.loadData(ois,manager.getContext()));
   ois.close();
   assertEquals("this method does not load up the instances",0,ins2.numberInstances());
   assertEquals(p1,p1r);

@@ -1,19 +1,7 @@
 {
-  if (NakedObjectSpecification.class.getName().equals(hint.getFullName())) {
-    Enumeration e=objectSets.elements();
-    while (e.hasMoreElements()) {
-      Instances instances=(Instances)e.nextElement();
-      if (instances.getNakedClass().getOid().equals(oid)) {
-        return instances.getNakedClass();
-      }
-    }
+  NakedObject object=(NakedObject)instances(hint).read(oid);
+  if (object == null) {
     throw new ObjectNotFoundException(oid);
   }
- else {
-    NakedObject object=(NakedObject)instances(hint).read(oid);
-    if (object == null) {
-      throw new ObjectNotFoundException(oid);
-    }
-    return object;
-  }
+  return object;
 }

@@ -1,5 +1,5 @@
 {
-  loadedObjects=new LoadedObjects();
+  loadedObjects=new LoadedObjectsHashtable();
   objectSets=new Hashtable();
   File directory=new File(directoryPath);
   String filepath=latestSnapshot(directory);
@@ -9,7 +9,6 @@
     try {
       LOG.info("Loading objects from " + file + "...");
       oos=new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-      loadClasses(oos);
       loadInstances(oos);
       int size=loadData(oos,NakedObjectContext.getDefaultContext());
       LOG.info(size + " objects loaded from " + file);
