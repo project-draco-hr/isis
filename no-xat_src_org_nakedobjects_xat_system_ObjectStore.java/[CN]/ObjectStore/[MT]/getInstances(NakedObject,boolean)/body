@@ -1,0 +1,28 @@
+{
+  if (pattern == null) {
+    throw new NullPointerException();
+  }
+  Vector instances=new Vector();
+  if (pattern instanceof NakedClass) {
+    Enumeration objects=elements((NakedClass)pattern);
+    String name=((NakedClass)pattern).fullName();
+    while (objects.hasMoreElements()) {
+      NakedObject object=(NakedObject)objects.nextElement();
+      if (object instanceof NakedClass && ((NakedClass)object).getName().isSameAs(name)) {
+        instances.addElement(object);
+      }
+    }
+  }
+ else {
+    NakedClass requiredType=pattern.getNakedClass();
+    Enumeration objects=elements(requiredType);
+    while (objects.hasMoreElements()) {
+      NakedObject object=(NakedObject)objects.nextElement();
+      if (requiredType.equals(object.getNakedClass()) && matchesPattern(pattern,object)) {
+        instances.addElement(object);
+      }
+    }
+  }
+  LOG.debug("getInstances like " + pattern + " => "+ instances);
+  return instances;
+}

@@ -30,13 +30,16 @@
     }
   }
  catch (  InvocationTargetException e) {
+    e.fillInStackTrace();
     if (e.getTargetException() instanceof TransactionException) {
       LOG.info("TransactionException thrown while executing " + actionMethod + " "+ e.getTargetException().getMessage());
+      objectManager.abortTransaction();
     }
  else {
-      LOG.error("Exception executing " + actionMethod + "; aborted",e.getTargetException());
+      String error="Exception executing " + actionMethod + "; aborted";
+      LOG.error(error);
+      throw new NakedObjectRuntimeException(error,e.getTargetException());
     }
-    objectManager.abortTransaction();
   }
 catch (  IllegalAccessException e) {
     LOG.error("Illegal access of " + actionMethod,e);
