@@ -1,0 +1,24 @@
+{
+  Color color;
+  if (hasFocus()) {
+    color=Style.ACTIVE;
+  }
+ else   if (((ObjectView)getParent()).getState().isObjectIdentified()) {
+    color=Style.IDENTIFIED;
+  }
+ else   if (((ObjectView)getParent()).getState().isRootViewIdentified()) {
+    color=Style.IN_FOREGROUND;
+  }
+ else {
+    color=Style.IN_BACKGROUND;
+  }
+  String title=value.title().toString();
+  canvas.drawText(title,0,getBaseline(),color,Style.NORMAL);
+  int height=getSize().getHeight() * 3 / 5;
+  int width=getSize().getHeight() * 4 / 5;
+  Shape triangle=new Shape(0,height);
+  triangle.addLine(width,0);
+  triangle.addLine(-width / 2,-height);
+  triangle.addLine(width / 2,height);
+  canvas.drawSolidShape(triangle,Style.NORMAL.stringWidth(title),getBaseline(),color);
+}

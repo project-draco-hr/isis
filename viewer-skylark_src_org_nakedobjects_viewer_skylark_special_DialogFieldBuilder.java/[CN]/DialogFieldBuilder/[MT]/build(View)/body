@@ -1,0 +1,13 @@
+{
+  Assert.assertEquals(view.getView(),view);
+  Action action=((ActionContent)view.getContent()).getAction();
+  LOG.debug("rebuild view " + view + " for "+ action);
+  NakedClass[] flds=action.parameters();
+  for (int f=0; f < flds.length; f++) {
+    NakedClass field=flds[f];
+    View fieldView=subviewDesign.createSubview(new ParameterContent(),view.getViewAxis());
+    if (fieldView != null) {
+      view.addView(decorateSubview(fieldView));
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  NakedObject associatedObject=(NakedObject)association.get(source);
+  if (associatedObject == null) {
+    association.clear(proxy);
+    log("  copy: " + "null -> " + association.getName());
+  }
+ else {
+    NakedClass cls;
+    cls=associatedObject.getNakedClass();
+    NakedObject associateCopy=cls.acquireInstance();
+    associateCopy.setOid(associatedObject.getOid());
+    association.initData(proxy,associateCopy);
+    log("  copy: " + associateCopy + " -> "+ association.getName());
+  }
+}

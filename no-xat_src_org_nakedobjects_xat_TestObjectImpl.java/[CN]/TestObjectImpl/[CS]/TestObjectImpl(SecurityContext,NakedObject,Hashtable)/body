@@ -1,0 +1,25 @@
+{
+  this.context=context;
+  setForObject(object);
+  fields=new Hashtable();
+  if (object != null) {
+    Field[] a=object.getNakedClass().getFields();
+    for (int i=0; i < a.length; i++) {
+      Field att=a[i];
+      if (att instanceof Association) {
+        NakedObject attribute=(NakedObject)a[i].get(object);
+        TestObject associatedView=null;
+        if (null != attribute) {
+          associatedView=(TestObject)viewCache.get(attribute);
+        }
+        if (null == associatedView) {
+          associatedView=factory().createTestObject(context,attribute,viewCache);
+        }
+        fields.put(a[i].getName(),associatedView);
+      }
+ else {
+        fields.put(att.getName(),factory().createTestValue((NakedValue)att.get(object)));
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  if ((getDraggingView() != null) && (ke.getKeyCode() == KeyEvent.VK_ESCAPE)) {
+    drag.getDragging().dragCancel(drag);
+    if (drag instanceof ObjectDrag) {
+      DragTarget target=((ObjectDrag)drag).getTarget();
+      if (target != null) {
+        target.dragObjectOut((ObjectDrag)drag);
+      }
+    }
+    workspace.clearOverlayView();
+    canDrag=false;
+    drag=null;
+  }
+  if (keyboardFocus == null) {
+  }
+ else {
+    keyboardFocus.keyPressed(ke.getKeyCode(),ke.getModifiers());
+  }
+}

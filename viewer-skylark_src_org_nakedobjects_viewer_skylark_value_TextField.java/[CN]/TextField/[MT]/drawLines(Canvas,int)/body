@@ -1,0 +1,19 @@
+{
+  if (showLines=true && canChangeValue()) {
+    int lineHeight=lineHeight();
+    int baseline=0;
+    Color color=identified ? Style.IDENTIFIED : Style.SECONDARY2;
+    color=hasFocus() ? Style.PRIMARY1 : color;
+    for (int line=0; line < noDisplayLines; line++) {
+      baseline+=lineHeight();
+      canvas.drawLine(HPADDING,baseline,HPADDING + width,baseline,color);
+    }
+    if (identified) {
+      Shape shape=new Shape(0,0);
+      shape.addLine(resizeMarkerSize,0);
+      shape.addLine(0,resizeMarkerSize);
+      shape.addLine(-resizeMarkerSize,-resizeMarkerSize);
+      canvas.drawSolidShape(shape,HPADDING + width + 1,baseline,color);
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  NakedObject parentObject=((ObjectContent)view.getParent().getContent()).getObject();
+  OneToOneContent content=((OneToOneContent)view.getContent());
+  OneToOneAssociation association=content.getOneToOneAssociation();
+  NakedObject associatedObject=content.getObject();
+  About about=association.getAbout(Session.getSession().getSecurityContext(),parentObject,associatedObject);
+  Permission edit=about.canUse();
+  if (edit.isAllowed()) {
+    String status="Clear the association to this object from '" + parentObject.title() + "'";
+    return new Allow(status);
+  }
+ else {
+    return new Veto(edit.getReason());
+  }
+}

@@ -1,0 +1,24 @@
+{
+  LOG.debug("At " + atLocation);
+  int x=atLocation.getX() - 3;
+  int y=atLocation.getY() - (getBaseline() - style.getAscent());
+  int lineIndex=displayFromLine + y / lineHeight();
+  lineIndex=Math.max(lineIndex,0);
+  int at=0;
+  if ((displayFromLine + lineIndex) <= displayToLine) {
+    String text=content.getText(lineIndex);
+    int endAt=text.length();
+    int width=HPADDING;
+    while ((at < endAt) && (x > width)) {
+      width+=style.charWidth(text.charAt(at));
+      at++;
+    }
+  }
+ else {
+    lineIndex=displayToLine;
+    at=content.getText(lineIndex).length();
+  }
+  LOG.debug("Character at " + at + " line "+ lineIndex);
+  line=lineIndex;
+  character=at;
+}

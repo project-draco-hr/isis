@@ -1,0 +1,12 @@
+{
+  Object object=transactionalObjects.get(oid);
+  if (object == null) {
+    NakedObject proxy=original.getNakedClass().acquireInstance();
+    proxy.setOid(original.getOid());
+    loaded(proxy);
+    proxy.setResolved();
+    copyToProxy(original,proxy);
+    object=proxy;
+  }
+  return (NakedObject)object;
+}

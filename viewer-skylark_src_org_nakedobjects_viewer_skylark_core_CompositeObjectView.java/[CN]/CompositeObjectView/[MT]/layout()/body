@@ -1,0 +1,21 @@
+{
+  if (buildInvalid) {
+    buildInvalid=false;
+    builder.build(getView());
+    buildCount++;
+  }
+  if (layoutInvalid) {
+    markDamaged();
+    View views[]=getSubviews();
+    for (int i=0; i < views.length; i++) {
+      View subview=views[i];
+      subview.layout();
+    }
+    layoutInvalid=false;
+    Size size=builder.getRequiredSize(getView());
+    getView().setSize(size);
+    builder.layout(getView());
+    layoutCount++;
+    markDamaged();
+  }
+}

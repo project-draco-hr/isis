@@ -1,0 +1,22 @@
+{
+  super.draw(canvas);
+  Color color;
+  if (colorField == null) {
+    color=Style.PRIMARY3;
+  }
+ else {
+    NakedObject object=((ObjectContent)getContent()).getObject();
+    org.nakedobjects.object.value.Color fieldColor=(org.nakedobjects.object.value.Color)colorField.get(object);
+    color=new Color((fieldColor).intValue());
+  }
+  Size size=getSize();
+  int width=size.getWidth() - 1;
+  int height=size.getHeight() - 1;
+  canvas.drawSolidRectangle(0,0,width,height,color);
+  canvas.drawRectangle(0,0,width,height,Style.PRIMARY2);
+  int x=0;
+  int baseline=icon.getBaseline();
+  icon.draw(canvas,x,baseline);
+  x+=icon.getSize().getWidth();
+  text.draw(canvas,x,baseline);
+}

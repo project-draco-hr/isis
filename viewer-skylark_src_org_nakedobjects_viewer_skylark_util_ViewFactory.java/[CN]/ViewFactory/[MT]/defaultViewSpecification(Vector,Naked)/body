@@ -1,0 +1,11 @@
+{
+  Enumeration fields=availableViews.elements();
+  while (fields.hasMoreElements()) {
+    ViewSpecification spec=(ViewSpecification)fields.nextElement();
+    if (spec.canDisplay(forObject)) {
+      return spec;
+    }
+  }
+  LOG.warn("No suitable view for " + forObject + " using fallback view");
+  return new FallbackView.Specification();
+}

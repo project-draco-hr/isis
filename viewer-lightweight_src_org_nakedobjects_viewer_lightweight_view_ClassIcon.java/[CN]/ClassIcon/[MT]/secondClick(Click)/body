@@ -1,0 +1,22 @@
+{
+  if (click.isForView()) {
+    super.secondClick(click);
+  }
+ else {
+    try {
+      ActionAbout about=new ActionAbout(Session.getSession().getSecurityContext(),getObject());
+      cls.aboutActionInstances(about);
+      if (about.canUse().isAllowed()) {
+        InstanceCollection instances=cls.actionInstances();
+        RootView list=ViewFactory.getViewFactory().createRootView(instances);
+        Location loc=click.getAbsoluteLocation();
+        loc.translate(60,30);
+        list.setLocation(loc);
+        getWorkspace().addRootView(list);
+      }
+    }
+ catch (    ObjectStoreException e) {
+      LOG.error(e);
+    }
+  }
+}

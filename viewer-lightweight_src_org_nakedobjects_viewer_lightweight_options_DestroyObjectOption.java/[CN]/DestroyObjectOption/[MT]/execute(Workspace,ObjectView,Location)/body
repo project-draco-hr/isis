@@ -1,0 +1,18 @@
+{
+  try {
+    NakedObject object=view.getObject();
+    if (view instanceof InternalView && view.getParent() != null) {
+      InternalView internalView=(InternalView)view;
+      NakedObject parent=internalView.parentObjectView().getObject();
+      if (internalView.getFieldOf() != null) {
+        OneToOneAssociation association=(OneToOneAssociation)internalView.getFieldOf();
+        association.clearAssociation(parent,object);
+      }
+    }
+    object.destroy();
+    workspace.removeViewsFor(object);
+  }
+ catch (  ObjectStoreException e) {
+    LOG.error("Object store problem",e);
+  }
+}

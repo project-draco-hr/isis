@@ -1,0 +1,26 @@
+{
+  LOG.debug("painting ");
+  if (doubleBuffering) {
+    int w=getSize().width;
+    int h=getSize().height;
+    if ((doubleBuffer == null) || (bufferGraphic == null) || (doubleBuffer.getWidth(null) < w)|| (doubleBuffer.getHeight(null) < h)) {
+      doubleBuffer=window.createImage(w,h);
+    }
+    bufferGraphic=doubleBuffer.getGraphics().create();
+  }
+ else {
+    bufferGraphic=g;
+  }
+  Rectangle r=g.getClipBounds();
+  bufferGraphic.clearRect(r.x,r.y,r.width,r.height);
+  bufferGraphic.setClip(r.x,r.y,r.width,r.height);
+  workspace.draw(new Canvas(bufferGraphic,r.width,r.height));
+  paintStatus(bufferGraphic);
+  if (doubleBuffering) {
+    g.drawImage(doubleBuffer,0,0,null);
+    if (AbstractView.DEBUG) {
+      g.setColor(Color.black);
+      g.drawRect(r.x,r.y,r.width - 1,r.height - 1);
+    }
+  }
+}

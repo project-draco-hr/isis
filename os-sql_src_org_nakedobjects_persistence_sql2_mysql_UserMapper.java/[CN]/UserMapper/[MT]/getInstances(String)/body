@@ -1,0 +1,28 @@
+{
+  ResultSet rs=db.select(statement);
+  NakedObjectManager manager=NakedObjectManager.getInstance();
+  Vector instances=new Vector();
+  try {
+    while (rs.next()) {
+      int id=rs.getInt("id");
+      SimpleOid oid=new SimpleOid(id);
+      LOG.debug("  instance  " + oid);
+      User user;
+      if (loadedObjects.isLoaded(oid)) {
+        user=(User)loadedObjects.getLoadedObject(oid);
+      }
+ else {
+        user=(User)NakedClassManager.getInstance().getNakedClass(User.class.getName()).acquireInstance();
+        user.setOid(oid);
+        loadUser(rs,user);
+        loadedObjects.loaded(user);
+        user.setResolved();
+      }
+      instances.addElement(user);
+    }
+    return instances;
+  }
+ catch (  SQLException e) {
+    throw new ObjectStoreException(e);
+  }
+}

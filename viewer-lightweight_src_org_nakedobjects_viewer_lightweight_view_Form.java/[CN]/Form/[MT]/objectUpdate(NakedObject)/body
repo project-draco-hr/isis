@@ -1,0 +1,37 @@
+{
+  LOG.debug("Form update " + object);
+  NakedClass cls=getObject().getNakedClass();
+  Field[] flds=cls.getVisibleFields(object);
+  InternalView[] views=getComponents();
+  if (flds.length == views.length) {
+    for (int f=0; f < flds.length; f++) {
+      if (views[f] instanceof AbstractValueView) {
+        LOG.debug("  Value refresh " + flds[f]);
+        ((AbstractValueView)views[f]).refresh();
+        continue;
+      }
+ else       if (views[f] instanceof CollectionView) {
+        LOG.debug("  Association (one to many) refresh " + flds[f]);
+        ((CollectionView)views[f]).refresh();
+      }
+ else {
+        Naked currentReference=flds[f].get(getObject());
+        Naked existingReference=((AbstractObjectView)views[f]).getObject();
+        if (currentReference != existingReference) {
+          InternalView newView=createFieldElement(flds[f].get(getObject()),flds[f]);
+          LOG.debug("  Association changed " + flds[f]);
+          replaceView(views[f],newView);
+        }
+      }
+    }
+  }
+ else {
+    for (int f=0; f < flds.length; f++) {
+      Field field=flds[f];
+      addView(createFieldElement(field.get(getObject()),field));
+    }
+  }
+  invalidateLayout();
+  layout();
+  redraw();
+}

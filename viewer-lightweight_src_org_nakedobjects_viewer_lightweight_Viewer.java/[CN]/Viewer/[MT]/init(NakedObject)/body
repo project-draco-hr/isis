@@ -1,0 +1,21 @@
+{
+  this.rootObject=rootObject;
+  window=new ApplicationFrame(this,title);
+  workspace=new Workspace(this);
+  try {
+    Background background=(Background)ComponentLoader.loadComponentIfSpecified(PARAMETER_BASE + "background",Background.class);
+    if (background != null) {
+      workspace.setBackground(background);
+    }
+  }
+ catch (  ConfigurationException e) {
+    LOG.warn(e);
+  }
+  viewManager=new ViewManager(workspace,new PopupMenu());
+  window.addMouseMotionListener(viewManager);
+  window.addMouseListener(viewManager);
+  window.addKeyListener(viewManager);
+  doubleBuffering=ConfigurationParameters.getInstance().getBoolean(PARAMETER_BASE + "doublebuffering",true);
+  setupViewFactory();
+  workspace.validateLayout();
+}

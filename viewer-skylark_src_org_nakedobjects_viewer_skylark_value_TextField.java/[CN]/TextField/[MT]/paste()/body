@@ -1,0 +1,12 @@
+{
+  Clipboard cb=Toolkit.getDefaultToolkit().getSystemClipboard();
+  Transferable content=cb.getContents(this);
+  try {
+    String text=(String)content.getTransferData(DataFlavor.stringFlavor);
+    insert(text);
+    LOG.debug("pasted " + text);
+  }
+ catch (  Throwable e) {
+    LOG.error("Invalid paste operation " + e);
+  }
+}

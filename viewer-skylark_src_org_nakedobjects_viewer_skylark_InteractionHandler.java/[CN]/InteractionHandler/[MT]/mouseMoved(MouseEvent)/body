@@ -1,0 +1,42 @@
+{
+  if (drag == null) {
+    viewer.translate(me);
+    mouseLocation=new Location(me.getPoint());
+    View mouseOver=viewer.identifyView(mouseLocation,true);
+    if (mouseOver != null) {
+      if (identifiedView == null) {
+        identifiedView=mouseOver;
+      }
+ else {
+        if (mouseOver != identifiedView) {
+          if (mouseOver == identifiedView) {
+            LOG.debug("moved into subview from " + identifiedView);
+            identifiedView.enteredSubview();
+          }
+ else {
+            LOG.debug("exited " + identifiedView);
+            identifiedView.exited();
+          }
+          View previouslyIdentified=identifiedView;
+          identifiedView=mouseOver;
+          if (mouseOver != null) {
+            if (mouseOver == previouslyIdentified) {
+              LOG.debug("moved back to from " + previouslyIdentified);
+              mouseOver.exitedSubview();
+            }
+ else {
+              LOG.debug("entered " + mouseOver);
+              mouseOver.entered();
+            }
+          }
+          redraw();
+        }
+      }
+      Location pointer=mouseLocation;
+      Location offset=Viewer.absoluteLocation(mouseOver);
+      pointer.move(-offset.x,-offset.y);
+      mouseOver.mouseMoved(pointer);
+      redraw();
+    }
+  }
+}

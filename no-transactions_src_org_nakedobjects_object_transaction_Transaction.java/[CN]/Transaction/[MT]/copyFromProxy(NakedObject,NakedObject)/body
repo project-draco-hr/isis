@@ -1,0 +1,30 @@
+{
+  NakedClass cls=proxy.getNakedClass();
+  Field[] fields=cls.getFields();
+  log("copy " + proxy + " -> "+ original);
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    if (field instanceof Value) {
+      copyToField((Value)field,proxy,original);
+    }
+ else     if (field instanceof OneToOneAssociation) {
+      copyToField((OneToOneAssociation)field,proxy,original);
+    }
+ else     if (field instanceof OneToManyAssociation) {
+      OneToManyAssociation association=(OneToManyAssociation)field;
+      InternalCollection proxyCollection=(InternalCollection)association.get(proxy);
+      InternalCollection publicCollection=(InternalCollection)association.get(original);
+      publicCollection.removeAll();
+      int size=proxyCollection.size();
+      for (int j=0; j < size; j++) {
+        NakedObject originalElement=(NakedObject)proxyCollection.elementAt(j);
+        Object originalElementOid=originalElement.getOid();
+        NakedObject elementCopy=getObject(originalElementOid,originalElement);
+        if (elementCopy.isResolved()) {
+          publicCollection.added(elementCopy);
+          log("  copy: " + elementCopy + " -> "+ association.getName());
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  options.setColor(Style.VIEW_MENU);
+  Content content=getContent();
+  if (view.getSpecification().isSubView()) {
+    if (view.getSpecification().isReplaceable()) {
+      replaceOptions(ViewFactory.getViewFactory().openSubviews(content,this),options);
+      replaceOptions(ViewFactory.getViewFactory().closedSubviews(content,this),options);
+    }
+  }
+ else {
+    options.add(MenuOptionSet.WINDOW,CLOSE_OPTION);
+    options.add(MenuOptionSet.WINDOW,CLOSE_ALL_OPTION);
+    options.add(MenuOptionSet.VIEW,new PrintOption());
+    if (view.getSpecification().isReplaceable()) {
+      replaceOptions(ViewFactory.getViewFactory().openRootViews(content,this),options);
+    }
+  }
+  Enumeration possibleViews=ViewFactory.getViewFactory().openRootViews(content,null);
+  while (possibleViews.hasMoreElements()) {
+    ViewSpecification specification=(ViewSpecification)possibleViews.nextElement();
+    MenuOption viewAs=new OpenViewOption(specification);
+    options.add(MenuOptionSet.VIEW,viewAs);
+  }
+}

@@ -1,0 +1,19 @@
+{
+  for (int i=openViews.size() - 1; i >= 0; i--) {
+    ObjectView openView=(ObjectView)openViews.elementAt(i);
+    if ((openView != current) && openView.contains(framePosition)) {
+      Location pp=new Location(framePosition);
+      Location offset=openView.getLocation();
+      pp.translate(-offset.x,-offset.y);
+      return openView.identifyView(pp,(View)current);
+    }
+  }
+  for (int i=icons.size() - 1; i >= 0; i--) {
+    View icon=(View)icons.elementAt(i);
+    if ((icon != current) && icon.contains(framePosition)) {
+      View identifed=icon.identifyView(framePosition,(View)current);
+      return identifed;
+    }
+  }
+  return null;
+}

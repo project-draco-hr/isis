@@ -1,0 +1,18 @@
+{
+  View view;
+  if (object == null) {
+    view=emptyFieldProtoype;
+  }
+ else {
+    Vector prototypeList=prototypesFor(object,prototypes);
+    if (prototypeList.size() == 0) {
+      view=fallbackView;
+      LOG.error("No " + prototypes.getName() + " prototypes for "+ object+ ", using fallback");
+    }
+ else {
+      view=(View)prototypeList.firstElement();
+      LOG.info("Using " + view.getName() + " (default) for "+ object);
+    }
+  }
+  return view;
+}

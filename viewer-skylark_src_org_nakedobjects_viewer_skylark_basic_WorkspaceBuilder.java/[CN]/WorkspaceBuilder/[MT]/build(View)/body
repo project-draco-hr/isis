@@ -1,0 +1,59 @@
+{
+  NakedObject object=((ObjectContent)view.getContent()).getObject();
+  if (object != null && view.getSubviews().length == 0) {
+    Field[] flds=object.getNakedClass().getVisibleFields(object);
+    ViewFactory factory=ViewFactory.getViewFactory();
+    for (int f=0; f < flds.length; f++) {
+      Field field=flds[f];
+      Naked attribute=field.get(object);
+      if (field.getName().equals("Classes") && attribute instanceof InternalCollection) {
+        Enumeration elements=((InternalCollection)attribute).elements();
+        while (elements.hasMoreElements()) {
+          NakedObject cls=(NakedObject)elements.nextElement();
+          View classIcon=factory.createIconizedRootView(cls);
+          view.addView(classIcon);
+        }
+      }
+ else       if (field.getName().equals("Objects") && attribute instanceof InternalCollection) {
+        Enumeration elements=((InternalCollection)attribute).elements();
+        while (elements.hasMoreElements()) {
+          NakedObject obj=(NakedObject)elements.nextElement();
+          View objectIcon=factory.createIconizedRootView(obj);
+          view.addView(objectIcon);
+        }
+      }
+ else {
+        ViewSpecification specification;
+        View fieldView;
+        ViewAxis axis=view.getViewAxis();
+        if (attribute instanceof NakedCollection) {
+          InternalCollectionContent content;
+          content=new InternalCollectionContent((InternalCollection)attribute,(OneToManyAssociation)field);
+          specification=internalList;
+          fieldView=specification.createView(content,axis);
+        }
+ else         if (attribute instanceof NakedObject) {
+          OneToOneContent content;
+          content=new OneToOneContent((NakedObject)attribute,(OneToOneAssociation)field);
+          specification=factory.getIconizedSubViewSpecification(content);
+          fieldView=specification.createView(content,axis);
+        }
+ else         if (attribute instanceof NakedValue) {
+          ValueContent content;
+          content=new ValueContent((NakedValue)attribute,(Value)field);
+          specification=factory.getValueFieldSpecification(content);
+          fieldView=specification.createView(content,axis);
+        }
+ else {
+          OneToOneContent content=new OneToOneContent(null,(OneToOneAssociation)field);
+          specification=factory.getEmptyFieldSpecification();
+          fieldView=specification.createView(content,axis);
+        }
+        String label=field.getLabel(Session.getSession().getSecurityContext(),object);
+        fieldView=new LabelBorder(label,fieldView);
+        fieldView=new SimpleBorder(1,fieldView);
+        view.addView(fieldView);
+      }
+    }
+  }
+}

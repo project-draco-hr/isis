@@ -1,0 +1,37 @@
+{
+  super.draw(canvas);
+  Color color;
+  if (includeIcon()) {
+    if (getState().canDrop()) {
+      color=Style.VALID;
+    }
+ else     if (getState().cantDrop()) {
+      color=Style.INVALID;
+    }
+ else     if (getState().isObjectIdentified()) {
+      color=shaded() ? Style.IN_BACKGROUND : Style.ACTIVE;
+    }
+ else     if (getState().isRootViewIdentified()) {
+      color=shaded() ? Style.IN_BACKGROUND : Style.IN_FOREGROUND;
+    }
+ else {
+      color=Style.IN_BACKGROUND;
+    }
+    Border border=getBorder();
+    int x=(border == null) ? 0 : border.getPadding(this).left;
+    int y=(border == null) ? 0 : border.getPadding(this).top;
+    Text style=getTitleTextStyle();
+    int iconHeight=iconSize(style);
+    int centre=(iconHeight + (AbstractView.VPADDING * 2)) / 2;
+    int iconWidth=0;
+    if (includeIcon()) {
+      String name=iconName();
+      Icon icon=ImageFactory.getImageFactory().createIcon(name,iconHeight,shaded() ? color : null);
+      iconWidth=drawIcon(canvas,x,y,centre,iconHeight,icon);
+    }
+    if (includeTitle()) {
+      int maxWidth=getSize().width - getPadding().left - getPadding().right;
+      drawText(canvas,x,y,centre,maxWidth,iconWidth,color,style);
+    }
+  }
+}

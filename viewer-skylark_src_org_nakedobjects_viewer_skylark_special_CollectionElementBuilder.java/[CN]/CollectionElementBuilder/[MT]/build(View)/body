@@ -1,0 +1,35 @@
+{
+  Assert.assertEquals(view.getView(),view);
+  Content content=view.getContent();
+  NakedCollection collection=(NakedCollection)((ObjectContent)content).getObject();
+  OneToManyAssociation field=(OneToManyAssociation)(content instanceof InternalCollectionContent ? ((InternalCollectionContent)content).getField() : null);
+  LOG.debug("rebuild view " + view + " for "+ collection);
+  Enumeration elements=collection.displayElements();
+  View[] subviews=view.getSubviews();
+  NakedObject[] existingElements=new NakedObject[subviews.length];
+  for (int i=0; i < subviews.length; i++) {
+    view.removeView(subviews[i]);
+    existingElements[i]=((ObjectContent)subviews[i].getContent()).getObject();
+  }
+  while (elements.hasMoreElements()) {
+    NakedObject element=(NakedObject)elements.nextElement();
+    View elementView=null;
+    for (int i=0; i < subviews.length; i++) {
+      if (existingElements[i] == element) {
+        elementView=subviews[i];
+        break;
+      }
+    }
+    if (elementView == null) {
+      Content elementContent;
+      if (field == null) {
+        elementContent=new ObjectContent(element);
+      }
+ else {
+        elementContent=new OneToManyAssociationContent(element,field);
+      }
+      elementView=subviewDesign.createSubview(elementContent,view.getViewAxis());
+    }
+    view.addView(elementView);
+  }
+}

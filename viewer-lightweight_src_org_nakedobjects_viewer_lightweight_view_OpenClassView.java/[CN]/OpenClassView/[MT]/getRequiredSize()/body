@@ -1,0 +1,18 @@
+{
+  int iconWidth=icon.getWidth() + HPADDING * 2 + titleStyle.stringWidth(title);
+  int iconHeight=icon.getHeight() + VPADDING * 2;
+  int maxWidth1=0;
+  int height1=0;
+  for (int i=0; i < labels.size(); i++) {
+    maxWidth1=Math.max(maxWidth1,labelStyle.stringWidth(labels.elementAt(i) + ":"));
+    height1+=labelStyle.getHeight();
+  }
+  int maxWidth2=0;
+  int height2=0;
+  for (int i=0; i < values.size(); i++) {
+    maxWidth2=Math.max(maxWidth2,textStyle.stringWidth(values.elementAt(i).toString()));
+    height2+=textStyle.getHeight();
+  }
+  Padding padding=getPadding();
+  return new Size(Math.max(iconWidth,maxWidth1 + maxWidth2) + padding.getLeftRight() + 5,iconHeight + Math.max(height1,height2) + padding.getTopBottom());
+}

@@ -1,0 +1,127 @@
+{
+  if (!canChangeValue()) {
+    return;
+  }
+  if (keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_ALT) {
+    return;
+  }
+  final boolean alt=(modifiers & InputEvent.ALT_MASK) > 0;
+  final boolean shift=(modifiers & InputEvent.SHIFT_MASK) > 0;
+  final boolean ctrl=(modifiers & InputEvent.CTRL_MASK) > 0;
+switch (keyCode) {
+case KeyEvent.VK_PAGE_UP:
+    if (ctrl) {
+      noDisplayLines++;
+      alignDisplay(cursor.line);
+      invalidateLayout();
+      validateLayout();
+    }
+ else {
+      cursor.pageUp();
+    }
+  break;
+case KeyEvent.VK_PAGE_DOWN:
+if (ctrl) {
+  if ((noDisplayLines > 1)) {
+    noDisplayLines--;
+    alignDisplay(cursor.line);
+    invalidateLayout();
+    validateLayout();
+  }
+}
+ else {
+  cursor.pageDown();
+}
+break;
+case KeyEvent.VK_V:
+if (ctrl) {
+paste();
+highlight(false);
+}
+break;
+case KeyEvent.VK_C:
+if (ctrl) {
+copy();
+}
+break;
+case KeyEvent.VK_DOWN:
+cursor.lineDown();
+highlight(shift);
+break;
+case KeyEvent.VK_UP:
+cursor.lineUp();
+highlight(shift);
+break;
+case KeyEvent.VK_HOME:
+if (alt) {
+cursor.top();
+}
+ else {
+cursor.home();
+}
+highlight(shift);
+break;
+case KeyEvent.VK_END:
+if (alt) {
+cursor.bottom();
+}
+ else {
+cursor.end();
+}
+highlight(shift);
+break;
+case KeyEvent.VK_LEFT:
+if (alt) {
+cursor.wordLeft();
+}
+ else {
+cursor.left();
+}
+highlight(shift);
+break;
+case KeyEvent.VK_RIGHT:
+if (alt) {
+cursor.wordRight();
+}
+ else {
+cursor.right();
+}
+highlight(shift);
+break;
+case KeyEvent.VK_DELETE:
+deleteForward();
+break;
+case KeyEvent.VK_BACK_SPACE:
+delete();
+break;
+case KeyEvent.VK_TAB:
+if (!isSaved) {
+editComplete();
+}
+if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) {
+((AbstractCompositeView)getParent()).focusPrevious(this);
+}
+ else {
+((AbstractCompositeView)getParent()).focusNext(this);
+}
+break;
+case KeyEvent.VK_ENTER:
+if (multiline) {
+newline();
+}
+ else {
+if (!isSaved) {
+editComplete();
+}
+}
+break;
+case KeyEvent.VK_ESCAPE:
+refresh();
+break;
+default :
+break;
+}
+redraw();
+LOG.debug("Character at " + cursor.character + " line "+ cursor.line+ " ("+ displayFromLine+ "~"+ displayToLine+ ")");
+LOG.debug(selection);
+}

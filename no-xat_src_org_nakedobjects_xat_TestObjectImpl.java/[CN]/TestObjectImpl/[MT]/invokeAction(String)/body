@@ -1,0 +1,21 @@
+{
+  Action action;
+  try {
+    NakedClass nakedClass=((NakedObject)getForObject()).getNakedClass();
+    action=nakedClass.getObjectAction(Action.USER,name);
+    if (action == null) {
+      throw new IllegalActionError("No action '" + name + "' in "+ getForObject());
+    }
+  }
+ catch (  NakedClassException e) {
+    throw new IllegalActionError(e.getMessage());
+  }
+  org.nakedobjects.object.control.Permission canUse=action.getAbout(context,(NakedObject)getForObject()).canUse();
+  if (canUse.isVetoed()) {
+    throw new IllegalActionError("action " + name + " cannot be invoked on "+ getForObject()+ ": "+ canUse.getReason());
+  }
+ else {
+    NakedObject result=action.execute((NakedObject)getForObject());
+    return ((result == null) ? null : factory().createTestObject(context,result));
+  }
+}

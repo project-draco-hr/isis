@@ -1,0 +1,18 @@
+{
+  if (!isRoot() && isOpen() && this instanceof RootView) {
+    getWorkspace().showArrowCursor();
+    InternalView replacement=ViewFactory.getViewFactory().createInternalView(getObject(),getFieldOf(),true);
+    CompositeView parent=(CompositeView)getParent();
+    parent.replaceView((InternalView)this,replacement);
+    parent.redraw();
+    setBorder(new RootBorder());
+    setLocation(drag.getViewLocation());
+    setParent(null);
+    getWorkspace().addRootView((RootView)this);
+    invalidateLayout();
+    validateLayout();
+  }
+ else {
+    super.dropView(drag);
+  }
+}

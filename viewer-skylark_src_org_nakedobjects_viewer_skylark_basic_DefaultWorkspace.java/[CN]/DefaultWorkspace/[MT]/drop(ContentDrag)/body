@@ -1,0 +1,21 @@
+{
+  getViewManager().showArrowCursor();
+  NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
+  Location location=drag.getTargetLocation();
+  View newView;
+  if (source instanceof NakedClass) {
+    LOG.info("new " + getSpecification().getName() + " instance");
+    newView=newInstance((NakedClass)source,!drag.isCtrl());
+  }
+ else {
+    if (drag.isShift()) {
+      newView=ViewFactory.getViewFactory().createOpenRootView(source);
+    }
+ else {
+      newView=ViewFactory.getViewFactory().createIconizedRootView(source);
+    }
+  }
+  newView.setSize(newView.getRequiredSize());
+  newView.setLocation(location);
+  drag.getTargetView().addView(newView);
+}

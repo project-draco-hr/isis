@@ -1,0 +1,14 @@
+{
+  NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
+  if (source instanceof NakedClass) {
+    return true;
+  }
+ else {
+    NakedObject target=((ObjectContent)getParent().getContent()).getObject();
+    Permission perm=getEmptyField().getAbout(Session.getSession().getSecurityContext(),target,source).canUse();
+    if (perm.getReason() != null) {
+      getViewManager().setStatus(perm.getReason());
+    }
+    return perm.isAllowed();
+  }
+}

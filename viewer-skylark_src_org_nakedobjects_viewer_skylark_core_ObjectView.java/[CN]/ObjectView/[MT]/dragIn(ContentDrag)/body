@@ -1,0 +1,21 @@
+{
+  NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
+  NakedObject object=getObject();
+  Action target=object.getNakedClass().getObjectAction(Action.USER,null,new NakedClass[]{source.getNakedClass()});
+  if (target != null) {
+    About about=target.getAbout(Session.getSession().getSecurityContext(),object,source);
+    if (about.canUse().isAllowed()) {
+      getViewManager().setStatus(about.getDescription());
+      getState().setCanDrop();
+    }
+ else {
+      getViewManager().setStatus(about.getDescription() + ": " + about.canUse().getReason());
+      getState().setCantDrop();
+    }
+  }
+ else {
+    getViewManager().setStatus("");
+    getState().setCantDrop();
+  }
+  markDamaged();
+}

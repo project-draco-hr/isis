@@ -1,0 +1,11 @@
+{
+  NakedObject source=drag.getSourceObject();
+  Action target=((NakedClass)getObject()).getClassAction(Action.USER,new NakedClass[]{source.getNakedClass()});
+  if ((target != null) && target.getAbout(Session.getSession().getSecurityContext(),source,getObject()).canUse().isAllowed()) {
+    getState().setCanDrop();
+  }
+ else {
+    getState().setCantDrop();
+  }
+  redraw();
+}

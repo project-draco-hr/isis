@@ -1,0 +1,20 @@
+{
+  Assert.assertTrue(drag.getSourceContent() instanceof ObjectContent);
+  NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
+  Assert.assertNotNull(source);
+  NakedObject target=((ObjectContent)getContent()).getObject();
+  Assert.assertNotNull(target);
+  Action action=target.getNakedClass().getObjectAction(Action.USER,null,new NakedClass[]{source.getNakedClass()});
+  if ((action != null) && action.getAbout(Session.getSession().getSecurityContext(),target,source).canUse().isAllowed()) {
+    NakedObject result=action.execute(target,source);
+    if (result != null) {
+      View view=ViewFactory.getViewFactory().createOpenRootView(result);
+      Location location=drag.getPointerLocation();
+      Location offset=getWorkspace().getLocationWithinViewer();
+      location.move(-offset.getX(),-offset.getY());
+      view.setLocation(location);
+      getWorkspace().addView(view);
+    }
+    markDamaged();
+  }
+}

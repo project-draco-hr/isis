@@ -1,0 +1,15 @@
+{
+  NakedObject source=drag.getSourceObject();
+  NakedClass target=(NakedClass)getObject();
+  Action action=target.getClassAction(Action.USER,new NakedClass[]{source.getNakedClass()});
+  if ((action != null) && action.getAbout(org.nakedobjects.security.Session.getSession().getSecurityContext(),source).canUse().isAllowed()) {
+    NakedObject result=action.execute(target,source);
+    if (result != null) {
+      RootView view=ViewFactory.getViewFactory().createRootView(result);
+      Location at=drag.getViewLocation();
+      at.translate(50,20);
+      view.setLocation(at);
+      getWorkspace().addRootView(view);
+    }
+  }
+}

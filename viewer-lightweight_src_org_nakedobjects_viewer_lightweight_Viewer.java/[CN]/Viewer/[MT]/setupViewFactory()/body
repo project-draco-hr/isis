@@ -1,0 +1,75 @@
+{
+  ViewFactory viewFactory=ViewFactory.getViewFactory();
+  LOG.debug("Setting up default views (provided by the framework)");
+  Border topLevelBorder=new RootBorder();
+  RootView instanceList=new InstanceList();
+  instanceList.setBorder(topLevelBorder);
+  viewFactory.addRootViewPrototype(InstanceCollection.class,instanceList);
+  viewFactory.addClosedPrototype(InstanceCollection.class,new ObjectIcon());
+  RootView arbitraryList=new InstanceList();
+  arbitraryList.setBorder(topLevelBorder);
+  viewFactory.addRootViewPrototype(ArbitraryCollection.class,arbitraryList);
+  RootView classView=new OpenClassView();
+  classView.setBorder(topLevelBorder);
+  viewFactory.addRootViewPrototype(NakedClass.class,classView);
+  viewFactory.addClassPrototype(new ClassIcon());
+  RootView objectForm=new StandardForm();
+  objectForm.setBorder(topLevelBorder);
+  viewFactory.addRootViewPrototype(NakedObject.class,objectForm);
+  InternalView form=new StandardForm();
+  form.setBorder(new OpenFieldBorder());
+  viewFactory.addInternalViewPrototype(NakedObject.class,form);
+  viewFactory.addClosedPrototype(NakedObject.class,new ObjectIcon());
+  viewFactory.addInternalViewPrototype(InternalCollection.class,new InternalList());
+  Browser instancesBrowser=new Browser();
+  Border browserBorder=new BrowserBorder();
+  instancesBrowser.setBorder(browserBorder);
+  viewFactory.addRootViewPrototype(InstanceCollection.class,instancesBrowser);
+  Browser objectBrowser=new Browser();
+  objectBrowser.setBorder(browserBorder);
+  viewFactory.addRootViewPrototype(NakedObject.class,objectBrowser);
+  Table instanceTable=new Table();
+  Border instanceBorder=new RootBorder();
+  instanceTable.setBorder(instanceBorder);
+  viewFactory.addRootViewPrototype(InstanceCollection.class,instanceTable);
+  Table table=new Table();
+  viewFactory.addInternalViewPrototype(InternalCollection.class,table);
+  viewFactory.addClosedPrototype(NakedValue.class,new TextField());
+  viewFactory.addClosedPrototype(Logical.class,new CheckboxField());
+  viewFactory.addClosedPrototype(Option.class,new OptionField());
+  viewFactory.addDragPrototype(new ObjectIcon());
+  viewFactory.addDragOutlinePrototype(new DragOutline());
+  LOG.debug("Setting up externally requested views (specified in the configuration file)");
+  String viewParams=ConfigurationParameters.getInstance().getString(PARAMETER_BASE + "view");
+  if (viewParams != null) {
+    StringTokenizer st=new StringTokenizer(viewParams,",");
+    while (st.hasMoreTokens()) {
+      String views=(String)st.nextToken();
+      if (views != null) {
+        String clsName=views.substring(0,views.indexOf('=')).trim();
+        String viewName=views.substring(views.indexOf('=') + 1).trim();
+        LOG.debug("Adding " + viewName + " for "+ clsName+ " objects");
+        Class cls;
+        try {
+          cls=Class.forName(clsName);
+          View view=(View)Class.forName(viewName).newInstance();
+          if (view instanceof RootView) {
+            viewFactory.addRootViewPrototype(cls,(RootView)view);
+          }
+          if (view instanceof InternalView) {
+            viewFactory.addInternalViewPrototype(cls,(InternalView)view);
+          }
+        }
+ catch (        ClassNotFoundException e) {
+          e.printStackTrace();
+        }
+catch (        InstantiationException e1) {
+          e1.printStackTrace();
+        }
+catch (        IllegalAccessException e1) {
+          e1.printStackTrace();
+        }
+      }
+    }
+  }
+}

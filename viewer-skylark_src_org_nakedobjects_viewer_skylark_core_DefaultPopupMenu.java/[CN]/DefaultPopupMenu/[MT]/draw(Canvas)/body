@@ -1,0 +1,31 @@
+{
+  super.draw(canvas);
+  int width=getSize().getWidth();
+  int height=getSize().getHeight();
+  canvas.drawSolidRectangle(0,0,width - 1,height - 1,backgroundColor);
+  canvas.draw3DRectangle(0,0,width - 1,height - 1,true);
+  int baseLine=style().getAscent() + VPADDING;
+  int left=getPadding().getLeft();
+  for (int i=0; i < items.length; i++) {
+    if (items[i].isBlank) {
+      int y=baseLine - (style().getAscent() / 2);
+      canvas.drawLine(1,y,width - 2,y,backgroundColor.brighter());
+      canvas.drawLine(1,y - 1,width - 2,y - 1,backgroundColor.darker());
+    }
+ else {
+      Color color;
+      if (items[i].isDisabled || items[i].action == null) {
+        color=disabledColor();
+      }
+ else       if (getOption() == i) {
+        canvas.drawSolidRectangle(2,baseLine - style().getAscent(),width - 4,style().getHeight() + 2,backgroundColor.darker());
+        color=reversedColor();
+      }
+ else {
+        color=normalColor();
+      }
+      canvas.drawText(items[i].name,left,baseLine,color,style());
+    }
+    baseLine+=style().getHeight() + VPADDING;
+  }
+}

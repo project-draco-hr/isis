@@ -1,0 +1,24 @@
+{
+  StringBuffer b=new StringBuffer();
+  b.append(super.debugDetails());
+  b.append("\nState:     " + (isOpen() ? "OPEN" : "CLOSED"));
+  b.append("\nRepl'able: " + (isReplaceable() ? "yes" : "no"));
+  b.append("\nField:     ");
+  b.append(fieldOf);
+  MenuOptionSet options=new MenuOptionSet(true);
+  menuOptions(options);
+  b.append("\nView menu:     ");
+  Vector items=options.getMenuOptions(true,true);
+  for (int i=0; i < items.size(); i++) {
+    b.append("\n     " + items.elementAt(i));
+  }
+  options=new MenuOptionSet(false);
+  menuOptions(options);
+  b.append("\nObject menu:     ");
+  items=options.getMenuOptions(true,true);
+  for (int i=0; i < items.size(); i++) {
+    b.append("\n     " + items.elementAt(i));
+  }
+  b.append("\n");
+  return b.toString();
+}

@@ -1,0 +1,13 @@
+{
+  AbstractValueView valueView=(AbstractValueView)view;
+  NakedValue value=valueView.getValue();
+  if (!valueView.canChangeValue()) {
+    return new Veto("Field cannot be edited");
+  }
+ else   if (value.isEmpty() || value.title().toString().equals("")) {
+    return new Veto("Field is already empty");
+  }
+ else {
+    return new Allow("Clear value " + value.title());
+  }
+}

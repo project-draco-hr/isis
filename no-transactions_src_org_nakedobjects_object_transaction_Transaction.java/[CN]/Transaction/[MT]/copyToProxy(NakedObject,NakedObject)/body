@@ -1,0 +1,17 @@
+{
+  NakedClass cls=original.getNakedClass();
+  Field[] fields=cls.getFields();
+  log("copy " + original + " -> "+ proxy);
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    if (field instanceof Value) {
+      copyToField((Value)field,original,proxy);
+    }
+ else     if (field instanceof OneToOneAssociation) {
+      copyToField((OneToOneAssociation)field,original,proxy);
+    }
+ else     if (field instanceof OneToManyAssociation) {
+      copyToField((OneToManyAssociation)field,original,proxy);
+    }
+  }
+}

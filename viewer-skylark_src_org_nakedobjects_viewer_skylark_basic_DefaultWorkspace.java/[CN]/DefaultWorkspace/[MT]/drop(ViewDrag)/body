@@ -1,0 +1,20 @@
+{
+  getViewManager().showDefaultCursor();
+  Location newLocation=drag.getTargetLocation();
+  Location offset=drag.getSourceLocation();
+  newLocation.move(-offset.getX(),-offset.getY());
+  View view=drag.getSourceView();
+  if (view.getSpecification().isSubView()) {
+    if (view.getSpecification().isOpen()) {
+    }
+ else {
+      ObjectContent content=(ObjectContent)view.getContent();
+      addOpenViewFor(content.getObject(),newLocation);
+    }
+  }
+ else {
+    view.markDamaged();
+    view.setLocation(newLocation);
+    view.markDamaged();
+  }
+}

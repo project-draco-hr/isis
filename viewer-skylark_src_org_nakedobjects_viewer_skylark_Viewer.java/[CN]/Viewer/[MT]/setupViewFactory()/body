@@ -1,0 +1,47 @@
+{
+  ViewFactory viewFactory=ViewFactory.getViewFactory();
+  LOG.debug("Setting up default views (provided by the framework)");
+  viewFactory.addValueFieldSpecification(loadSpecification("field.color",ColorField.Specification.class));
+  viewFactory.addValueFieldSpecification(loadSpecification("field.checkbox",CheckboxField.Specification.class));
+  viewFactory.addValueFieldSpecification(loadSpecification("field.option",OptionSelectionField.Specification.class));
+  viewFactory.addValueFieldSpecification(loadSpecification("field.percentage",PercentageBarField.Specification.class));
+  viewFactory.addValueFieldSpecification(loadSpecification("field.timeperiod",TimePeriodBarField.Specification.class));
+  viewFactory.addValueFieldSpecification(loadSpecification("field.text",TextField.Specification.class));
+  if (ConfigurationParameters.getInstance().getBoolean(SPECIFICATION_BASE + "defaults",true)) {
+    viewFactory.addCompositeRootViewSpecification(new FormSpecification());
+    viewFactory.addCompositeRootViewSpecification(new DataFormSpecification());
+    viewFactory.addCompositeRootViewSpecification(new ListSpecification());
+    viewFactory.addCompositeRootViewSpecification(new TableSpecification());
+    viewFactory.addCompositeRootViewSpecification(new BarchartSpecification());
+    viewFactory.addCompositeRootViewSpecification(new GridSpecification());
+    viewFactory.addCompositeRootViewSpecification(new TreeBrowserSpecification());
+  }
+  viewFactory.addEmptyFieldSpecification(loadSpecification("field.empty",EmptyField.Specification.class));
+  viewFactory.addSubviewIconSpecification(loadSpecification("icon.object",IconSpecification.class));
+  viewFactory.addObjectIconSpecification(loadSpecification("icon.object",IconSpecification.class));
+  viewFactory.addClassIconView(loadSpecification("icon.class",ClassIconSpecification.class));
+  String viewParams=ConfigurationParameters.getInstance().getString(SPECIFICATION_BASE + "view");
+  if (viewParams != null) {
+    StringTokenizer st=new StringTokenizer(viewParams,",");
+    while (st.hasMoreTokens()) {
+      String specName=(String)st.nextToken();
+      if (specName != null) {
+        try {
+          ViewSpecification spec;
+          spec=(ViewSpecification)Class.forName(specName).newInstance();
+          LOG.info("Adding view specification: " + spec);
+          viewFactory.addCompositeRootViewSpecification(spec);
+        }
+ catch (        ClassNotFoundException e) {
+          LOG.error("Failed to find view specification class " + specName);
+        }
+catch (        InstantiationException e1) {
+          LOG.error("Failed to instantiate view specification " + specName);
+        }
+catch (        IllegalAccessException e1) {
+          e1.printStackTrace();
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  ViewFactory factory=ViewFactory.getViewFactory();
+  if (content instanceof InternalCollectionContent) {
+    return null;
+  }
+ else   if (content instanceof ValueContent) {
+    ViewSpecification specification=factory.getValueFieldSpecification((ValueContent)content);
+    return specification.createView(content,axis);
+  }
+ else   if (content instanceof ObjectContent) {
+    ViewSpecification spec=factory.getIconizedSubViewSpecification((ObjectContent)content);
+    return spec.createView(content,axis);
+  }
+  return null;
+}

@@ -1,0 +1,15 @@
+{
+  NakedObject object=((ObjectContent)content).getObject();
+  if (object instanceof NakedCollection) {
+    return ((NakedCollection)object).size() > 0;
+  }
+ else {
+    Field[] fields=object.getNakedClass().getVisibleFields(object);
+    for (int i=0; i < fields.length; i++) {
+      if (fields[i] instanceof Association && !(object instanceof Lookup)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  assertFieldExists(fieldName);
+  TestObject viewToRemove=getField(fieldName,title);
+  Field assoc=fieldFor(fieldName);
+  if (!(assoc instanceof OneToManyAssociation)) {
+    throw new IllegalActionError("removeReference not allowed on target field " + fieldName);
+  }
+  Naked no=viewToRemove.getForObject();
+  if (!(no instanceof NakedObject)) {
+    Assert.fail("A NakedObject was to be removed from the InternalCollection, but found " + no);
+  }
+  ((OneToManyAssociation)assoc).clearAssociation((NakedObject)getForObject(),(NakedObject)no);
+}

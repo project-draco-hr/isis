@@ -1,0 +1,12 @@
+{
+  Integer roleOid=new Integer(3);
+  String roleName="Orator";
+  Role role=new Role();
+  role.getName().setValue(roleName);
+  role.setOid(roleOid);
+  Role transactionRole=(Role)t.getObject(roleOid,role);
+  assertTrue(transactionRole.isResolved());
+  assertEquals("same oid",role.getOid(),transactionRole.getOid());
+  assertFalse("but different instance",role == transactionRole);
+  assertNull(transactionRole.getPerson());
+}

@@ -1,0 +1,27 @@
+{
+  NakedObject dropObject=(NakedObject)parameter.getForObject();
+  Action action;
+  try {
+    NakedClass nakedClass=((NakedObject)getForObject()).getNakedClass();
+    NakedClass[] parameters=new NakedClass[]{dropObject.getNakedClass()};
+    action=nakedClass.getObjectAction(Action.USER,name,parameters);
+  }
+ catch (  NakedClassException e) {
+    throw new IllegalActionError("Can't invoke " + name + " with "+ dropObject.getShortClassName()+ " on a "+ getForObject().getShortClassName());
+  }
+  if (action == null) {
+    throw new IllegalActionError("invoke  " + name + "("+ parameter+ ") not allowed on "+ getForObject());
+  }
+  if (action.getAbout(context,(NakedObject)getForObject(),dropObject).canUse().isVetoed()) {
+    throw new IllegalActionError("invoke " + name + " not allowed on "+ getForObject());
+  }
+ else {
+    NakedObject result=action.execute((NakedObject)getForObject(),dropObject);
+    if (result == null) {
+      return null;
+    }
+ else {
+      return factory().createTestObject(context,result);
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  Team transactionalTeam=(Team)t.getObject(teamOid,team);
+  Person transactionalPerson=(Person)t.getObject(personOid,person);
+  transactionalTeam.getMembers().added(transactionalPerson);
+  t.prepareSave(transactionalTeam);
+  loadedObjects.setupLoadedObjects(new NakedObject[]{team,person});
+  t.commit(objectStore);
+  assertEquals(transactionalTeam.getMembers().firstElement(),team.getMembers().firstElement());
+}

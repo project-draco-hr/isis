@@ -1,0 +1,14 @@
+{
+  int option=getOption();
+  if (option >= 0) {
+    Workspace workspace=getWorkspace();
+    Location location=new Location(mouseAt);
+    location.translate(30,12);
+    Item item=items[option];
+    workspace.setStatus("");
+    workspace.clearOverlayView();
+    if (!item.isBlank && item.action != null && item.action.disabled(workspace,forView,location).isAllowed()) {
+      item.action.execute(workspace,forView,location);
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  Thread thread=Thread.currentThread();
+  Transaction transaction;
+  if (transactions.containsKey(thread)) {
+    transaction=(Transaction)transactions.get(thread);
+    transaction.start();
+  }
+ else {
+    transaction=new Transaction(this);
+    transactions.put(thread,transaction);
+  }
+  log("start");
+}

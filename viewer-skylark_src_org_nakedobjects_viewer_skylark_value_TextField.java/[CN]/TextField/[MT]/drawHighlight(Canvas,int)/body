@@ -1,0 +1,25 @@
+{
+  if (hasFocus() && selection.hasSelection()) {
+    int baseline=getBaseline();
+    int top=baseline - style.getAscent();
+    CursorPosition from=selection.from();
+    CursorPosition to=selection.to();
+    for (int i=displayFromLine; i <= displayToLine; i++) {
+      if ((i >= from.line) && (i <= to.line)) {
+        String line=textContent.getText(i);
+        int start=0;
+        int end=style.stringWidth(line);
+        if (from.line == i) {
+          int at=Math.min(from.character,line.length());
+          start=style.stringWidth(line.substring(0,at));
+        }
+        if (to.line == i) {
+          int at=Math.min(to.character,line.length());
+          end=style.stringWidth(line.substring(0,at));
+        }
+        canvas.drawSolidRectangle(start + (HPADDING),top,end - start,lineHeight(),Style.PRIMARY3);
+      }
+      top+=lineHeight();
+    }
+  }
+}

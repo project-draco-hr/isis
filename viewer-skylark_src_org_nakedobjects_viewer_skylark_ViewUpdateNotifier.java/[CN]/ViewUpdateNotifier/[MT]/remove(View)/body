@@ -1,0 +1,19 @@
+{
+  Content content=view.getContent();
+  if (content instanceof ObjectContent) {
+    Naked object=((ObjectContent)content).getObject();
+    if (views.containsKey(object)) {
+      Vector viewsToNotify;
+      viewsToNotify=(Vector)views.get(object);
+      viewsToNotify.removeElement(view);
+      LOG.debug("Removed " + view + " from observers for "+ object);
+      if (viewsToNotify.size() == 0) {
+        views.remove(object);
+        LOG.debug("Removed observer list for " + object);
+      }
+    }
+ else {
+      throw new NakedObjectRuntimeException("Tried to remove a non-existant view " + view + " from observers for "+ object);
+    }
+  }
+}

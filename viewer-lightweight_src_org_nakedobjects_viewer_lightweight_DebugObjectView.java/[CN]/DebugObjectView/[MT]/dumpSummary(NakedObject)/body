@@ -1,0 +1,26 @@
+{
+  StringBuffer text=new StringBuffer();
+  if (object != null) {
+    text.append("Summary" + "\n");
+    text.append("  Hash:       " + object.hashCode() + "\n");
+    text.append("  ID:         " + object.getOid() + "\n");
+    text.append("  Class:      " + object.getClass().getName() + "\n");
+    text.append("  NakedClass: " + object.getNakedClass() + "\n");
+    StringBuffer types=new StringBuffer();
+    if (object instanceof NakedCollection) {
+      types.append("Collection ");
+    }
+ else {
+      types.append("Object ");
+    }
+    SecurityContext context=Session.getSession().getSecurityContext();
+    text.append("  Type:       " + types + "\n");
+    text.append("  Context:    " + context + "\n");
+    text.append("  Accessible: " + object.about().canAccess().isAllowed() + "\n");
+    text.append("  Editable:   " + object.about().canUse().isAllowed() + "\n");
+    text.append("  Persistent: " + object.isPersistent() + "\n");
+    text.append("  Resolved:   " + object.isResolved() + "\n");
+    text.append("  Title:      '" + object.title() + "'\n");
+  }
+  return text.toString();
+}

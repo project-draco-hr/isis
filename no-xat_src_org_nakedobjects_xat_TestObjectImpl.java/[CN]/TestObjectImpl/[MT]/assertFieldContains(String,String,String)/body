@@ -1,0 +1,20 @@
+{
+  assertFieldExists(fieldName);
+  Naked object=getField(fieldName).getForObject();
+  if (object instanceof InternalCollection) {
+    InternalCollection collection=(InternalCollection)object;
+    for (int i=0; i < collection.size(); i++) {
+      NakedObject element=collection.elementAt(i);
+      if (element.title().toString().equals(expectedValue)) {
+        return;
+      }
+    }
+    Assert.fail(expected(message) + " object " + expectedValue+ " but could not find it in the internal collection");
+  }
+ else {
+    String actualValue=object.title().toString();
+    if (!actualValue.equals(expectedValue)) {
+      Assert.fail(expected(message) + " value " + expectedValue+ " but got "+ actualValue);
+    }
+  }
+}

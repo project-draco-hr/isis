@@ -1,0 +1,18 @@
+{
+  Location location=drag.getSourceLocation();
+  int direction;
+  if (location.getY() <= 8) {
+    direction=ViewResizeOutline.TOP;
+  }
+ else   if (location.getY() >= getSize().getHeight() - 8) {
+    direction=ViewResizeOutline.BOTTOM;
+  }
+ else {
+    direction=ViewResizeOutline.CENTER;
+  }
+  ViewResizeOutline outlineView=new ViewResizeOutline(drag,this,direction);
+  getViewManager().setOverlayView(outlineView);
+  LOG.debug("drag view start " + location);
+  getViewManager().setStatus("Changing " + this);
+  return outlineView;
+}

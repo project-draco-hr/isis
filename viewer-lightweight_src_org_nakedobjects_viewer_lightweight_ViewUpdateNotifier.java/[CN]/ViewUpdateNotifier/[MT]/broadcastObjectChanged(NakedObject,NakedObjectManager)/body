@@ -1,0 +1,13 @@
+{
+  Vector viewsToNotify=(Vector)views.get(object);
+  if (viewsToNotify == null || viewsToNotify.size() == 0) {
+    LOG.warn("No views to update for " + object);
+  }
+ else {
+    for (int i=0; i < viewsToNotify.size(); i++) {
+      ObjectView view=(ObjectView)viewsToNotify.elementAt(i);
+      LOG.info("object change notifications to: " + view.getName() + view.getId()+ " for "+ object);
+      view.objectUpdate(object);
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  NakedObject source=drag.getSourceObject();
+  if (canAdd(source).isAllowed()) {
+    if (source instanceof NakedClass) {
+      source=((NakedClass)source).acquireInstance();
+      try {
+        NakedObjectManager.getInstance().makePersistent(source);
+      }
+ catch (      NotPersistableException e) {
+        source=new NakedError("Failed to create object",e);
+        RootView view=ViewFactory.getViewFactory().createRootView(source);
+        view.setLocation(drag.getRelativeLocation());
+        getWorkspace().addRootView(view);
+        return;
+      }
+      source.created();
+    }
+    if (canAdd(source).isAllowed()) {
+      ((ArbitraryCollection)getObject()).add(source);
+      invalidateLayout();
+      validateLayout();
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  Location at=drag.getTargetLocation();
+  if (isResizing) {
+    isResizing=false;
+    getViewManager().showTextCursor();
+    int lines=Math.max(1,at.getY() / lineHeight());
+    setNoLines(lines);
+    int width=Math.max(80,at.getX() - HPADDING - lineHeight() * 3 / 5);
+    setMaxWidth(width);
+    LOG.debug(lines + " x " + width);
+    invalidateLayout();
+  }
+ else {
+    if (canChangeValue()) {
+      selection.extendTo(at);
+      markDamaged();
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  TestValue field;
+  assertFieldExists(name);
+  Object view=fields.get(name);
+  if (view instanceof TestValue) {
+    field=(TestValue)view;
+    field.setForObject((Naked)fieldFor(name).get((NakedObject)getForObject()));
+    ((TestValue)field).fieldEntry(value);
+    ((NakedObject)getForObject()).objectChanged();
+  }
+ else {
+    throw new IllegalActionError("Can only make an entry (eg by keyboard) into a value field");
+  }
+}

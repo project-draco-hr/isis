@@ -1,0 +1,13 @@
+{
+  int paramCount=action.getParameterCount();
+  Assert.assertTrue("Only for actions taking one or more params",paramCount > 0);
+  About about=action.getAbout(Session.getSession().getSecurityContext(),object,new NakedObject[paramCount]);
+  if (about.canAccess().isVetoed()) {
+    return null;
+  }
+  String labelName=action.getLabel(Session.getSession().getSecurityContext(),object);
+  DialogedObjectOption option=new DialogedObjectOption(labelName);
+  option.action=action;
+  option.setName(labelName + "... (dialog)");
+  return option;
+}

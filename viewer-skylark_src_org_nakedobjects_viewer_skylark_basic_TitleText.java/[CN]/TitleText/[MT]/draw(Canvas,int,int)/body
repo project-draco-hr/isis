@@ -1,0 +1,43 @@
+{
+  Color color;
+  if (getState().canDrop()) {
+    color=Style.VALID;
+  }
+ else   if (getState().cantDrop()) {
+    color=Style.INVALID;
+  }
+ else   if (getState().isObjectIdentified()) {
+    color=Style.PRIMARY1;
+  }
+ else {
+    color=Style.BLACK;
+  }
+  int maxWidth=view.getSize().getWidth() - view.getPadding().getLeft() - view.getPadding().getRight();
+  String text=title();
+  int xt=x + AbstractView.HPADDING;
+  int yt=baseline;
+  if (style.stringWidth(text) > maxWidth) {
+    int elip=style.stringWidth("...");
+    do {
+      int last=text.lastIndexOf(' ');
+      if (last == -1) {
+        for (int i=text.length() - 1; i > 5; i--) {
+          if ((style.stringWidth(text.substring(0,i)) + elip) < maxWidth) {
+            text=text.substring(0,i);
+            break;
+          }
+        }
+        break;
+      }
+      text=text.substring(0,last);
+    }
+ while ((style.stringWidth(text) + elip) > maxWidth);
+    text+="...";
+  }
+  canvas.drawText(text,xt,yt,color,style);
+  if (AbstractView.DEBUG) {
+    int x2=style.stringWidth(text) - 1;
+    canvas.drawRectangle(xt,yt - style.getAscent(),x2,style.getHeight() - 1,Color.DEBUG3);
+    canvas.drawLine(xt,yt,style.stringWidth(text) - 1,yt,Color.DEBUG3);
+  }
+}

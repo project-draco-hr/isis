@@ -1,0 +1,32 @@
+{
+  super.draw(canvas);
+  Padding padding=getPadding();
+  int iconWidth=icon.getWidth();
+  int iconHeight=icon.getHeight();
+  int xi=padding.getLeft() + HPADDING;
+  int yi=padding.getTop() + VPADDING;
+  int xt=xi + iconWidth + HPADDING;
+  int yt=padding.getTop() + VPADDING + iconHeight / 2 + titleStyle.getAscent() / 2;
+  canvas.drawIcon(icon,xi,yi);
+  canvas.drawText(title,xt,yt,Style.IN_FOREGROUND,titleStyle);
+  int lineHeight=labelStyle.getHeight();
+  int baseline=padding.getTop() + VPADDING * 2 + iconHeight + labelStyle.getAscent();
+  int left=super.getPadding().getLeft();
+  int center=0;
+  int x=left;
+  int y=baseline;
+  for (int i=0; i < labels.size(); i++) {
+    String label=(String)labels.elementAt(i) + ": ";
+    if (label.length() > 2) {
+      canvas.drawText(label,x,y,Style.IN_BACKGROUND,labelStyle);
+      center=Math.max(center,labelStyle.stringWidth(label));
+    }
+    y+=lineHeight;
+  }
+  x+=center + 5;
+  y=baseline;
+  for (int i=0; i < values.size(); i++) {
+    canvas.drawText(values.elementAt(i).toString(),x,y,Style.IN_FOREGROUND,textStyle);
+    y+=lineHeight;
+  }
+}

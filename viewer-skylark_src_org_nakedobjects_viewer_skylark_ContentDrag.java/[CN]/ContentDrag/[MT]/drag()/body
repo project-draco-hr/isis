@@ -1,0 +1,17 @@
+{
+  if (dragging != null) {
+    dragging.markDamaged();
+    setDraggingLocation();
+    dragging.markDamaged();
+  }
+  if (target != previousTarget) {
+    if (previousTarget != null) {
+      LOG.debug("drag out " + previousTarget);
+      previousTarget.dragOut(this);
+      previousTarget=null;
+    }
+    LOG.debug("drag in " + target);
+    target.dragIn(this);
+    previousTarget=target;
+  }
+}

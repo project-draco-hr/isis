@@ -1,0 +1,30 @@
+{
+  Color color;
+  if (hasFocus()) {
+    color=Style.PRIMARY2;
+  }
+ else   if (getParent().getState().isObjectIdentified()) {
+    color=Style.IDENTIFIED;
+  }
+ else   if (getParent().getState().isRootViewIdentified()) {
+    color=Style.PRIMARY3;
+  }
+ else {
+    color=Style.SECONDARY1;
+  }
+  color=getState().isObjectIdentified() ? Style.PRIMARY2 : Style.SECONDARY1;
+  int top=VPADDING;
+  int left=HPADDING;
+  canvas.drawRectangle(left,top,size - 1,size - 1,color);
+  if (isSet()) {
+    left+=2;
+    top+=2;
+    int bottom=size - 1;
+    int right=size - 2;
+    color=Style.BLACK;
+    canvas.drawLine(left,top,right,bottom,color);
+    canvas.drawLine(left + 1,top,right + 1,bottom,color);
+    canvas.drawLine(right,top,left,bottom,color);
+    canvas.drawLine(right + 1,top,left + 1,bottom,color);
+  }
+}

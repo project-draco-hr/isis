@@ -1,0 +1,17 @@
+{
+  if (objectField.isDerived()) {
+    AbstractObjectView p=(AbstractObjectView)getParent();
+    value=(NakedValue)objectField.get(p.getObject());
+  }
+  String text=value.title().toString();
+  if (!text.equals(content.getText())) {
+    LOG.debug("Refreshing '" + content.getText() + "' with '"+ text+ "'");
+    content.setText(text);
+    cursor.home();
+    displayFromLine=0;
+    displayToLine=noDisplayLines - 1;
+    alignDisplay(0);
+  }
+  inError=false;
+  isSaved=true;
+}

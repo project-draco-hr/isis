@@ -1,0 +1,39 @@
+{
+  Color textColor;
+  int baseline=getBaseline();
+  if (inError) {
+    textColor=Style.INVALID;
+  }
+ else   if (isValid) {
+    textColor=new Color(0x999900);
+  }
+ else   if (hasFocus()) {
+    if (isSaved) {
+      textColor=Style.IN_FOREGROUND;
+    }
+ else {
+      textColor=Style.ACTIVE;
+    }
+  }
+ else   if (((AbstractObjectView)getParent()).getState().isRootViewIdentified()) {
+    textColor=Style.IN_FOREGROUND;
+  }
+ else {
+    textColor=Style.IN_BACKGROUND;
+  }
+  LOG.debug(displayFromLine + " -> " + displayToLine);
+  for (int i=displayFromLine; i <= displayToLine; i++) {
+    String chars=content.getText(i);
+    if (chars.endsWith("\n")) {
+      throw new RuntimeException();
+    }
+    if (hasFocus() && (cursor.line == i) && canChangeValue()) {
+      int at=Math.min(cursor.character,chars.length());
+      int pos=style.stringWidth(chars.substring(0,at));
+      canvas.drawLine(pos + (HPADDING),(baseline + style.getDescent()),pos + (HPADDING),baseline - style.getAscent(),Style.ACTIVE);
+    }
+    LOG.debug(i + " painting: " + chars);
+    canvas.drawText(chars,HPADDING,baseline,textColor,style);
+    baseline+=lineHeight();
+  }
+}

@@ -1,0 +1,16 @@
+{
+  assertFieldExists(fieldName);
+  TestNaked targetField=getField(fieldName);
+  if (targetField instanceof TestValue) {
+    throw new IllegalActionError("drop(..) not allowed on value target field; use fieldEntry(..) instead");
+  }
+  if ((targetField.getForObject() != null) && !(targetField.getForObject() instanceof InternalCollection)) {
+    throw new IllegalActionError("Field already contains an object: " + targetField.getForObject());
+  }
+  Association association=(Association)fieldFor(fieldName);
+  NakedObject obj=(NakedObject)object.getForObject();
+  if (association.getType() != null && !association.getType().isAssignableFrom(obj.getClass())) {
+    throw new IllegalActionError("Can't drop a " + object.getForObject().getShortClassName() + " on to the "+ fieldName+ " field (which accepts "+ association.getType()+ ")");
+  }
+  association.setAssociation((NakedObject)getForObject(),obj);
+}

@@ -1,0 +1,30 @@
+{
+  assertFieldExists(fieldName);
+  if (getField(fieldName) == null) {
+    Assert.fail("Field " + fieldName + " could not be found");
+  }
+  try {
+    NakedValue att=(NakedValue)getField(fieldName).getForObject();
+    String value="";
+    if (att instanceof WholeNumber) {
+      value="1";
+    }
+ else     if (att instanceof Date) {
+      value="1-Dec-00";
+    }
+ else     if (att instanceof FloatingPointNumber) {
+      value="1.0";
+    }
+ else     if (att instanceof Logical) {
+      value="True";
+    }
+ else     if (att instanceof Percentage) {
+      value="10%";
+    }
+    fieldEntry(fieldName,value);
+    Assert.fail("Field " + fieldName + " could be set");
+  }
+ catch (  IllegalActionError expected) {
+    ;
+  }
+}

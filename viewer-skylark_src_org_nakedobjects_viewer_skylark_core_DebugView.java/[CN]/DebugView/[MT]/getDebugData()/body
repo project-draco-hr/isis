@@ -1,0 +1,23 @@
+{
+  StringBuffer info=new StringBuffer();
+  info.append(view.getView());
+  info.append("\n\n");
+  info.append("VIEW\n");
+  info.append("----\n");
+  info.append(view.debugDetails());
+  info.append("\n");
+  Content content=view.getContent();
+  info.append("CONTENT\n");
+  info.append("------\n");
+  info.append("Content:      " + (content == null ? "none" : content.debugDetails()) + "\n");
+  if (content instanceof ObjectContent) {
+    NakedObject object=((ObjectContent)content).getObject();
+    info.append(dumpObject(object));
+    info.append("\n");
+    info.append(dumpGraph(object));
+  }
+  info.append("\n\nDRAWING\n");
+  info.append("------\n");
+  view.draw(new DebugCanvas(info,new Bounds(view.getLocationWithinViewer(),view.getSize())));
+  return info.toString();
+}

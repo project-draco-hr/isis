@@ -1,0 +1,22 @@
+{
+  try {
+    NakedObject object=view.getObject();
+    if (view instanceof RootView) {
+      workspace.removeView(view);
+      RootView replacement=(RootView)prototype.makeView(object,null);
+      replacement.setLocation(view.getAbsoluteLocation());
+      workspace.limitBounds(replacement);
+      workspace.addRootView(replacement);
+    }
+ else     if (view instanceof InternalView) {
+      Field field=((InternalView)view).getFieldOf();
+      View replacement=(View)prototype.makeView(object,field);
+      LOG.debug("replacement view " + replacement);
+      ((CompositeView)view.getParent()).replaceView((InternalView)view,(InternalView)replacement);
+      workspace.limitBounds(view);
+    }
+  }
+ catch (  CloneNotSupportedException e) {
+    LOG.error("failed to create view",e);
+  }
+}

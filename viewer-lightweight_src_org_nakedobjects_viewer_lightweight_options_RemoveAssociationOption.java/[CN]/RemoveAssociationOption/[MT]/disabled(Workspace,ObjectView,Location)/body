@@ -1,0 +1,20 @@
+{
+  InternalView internalView=(InternalView)view;
+  NakedObject parent=internalView.parentObjectView().getObject();
+  Field field=internalView.getFieldOf();
+  About about;
+  if (field instanceof OneToManyAssociation) {
+    about=((OneToManyAssociation)field).getAbout(Session.getSession().getSecurityContext(),parent,view.getObject(),false);
+  }
+ else {
+    about=((OneToOneAssociation)field).getAbout(Session.getSession().getSecurityContext(),parent,view.getObject());
+  }
+  Permission edit=about.canUse();
+  if (edit.isAllowed()) {
+    String status="Clear the association to this object from '" + parent.title() + "'";
+    return new Allow(status);
+  }
+ else {
+    return new Veto(edit.getReason());
+  }
+}

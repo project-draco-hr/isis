@@ -1,0 +1,16 @@
+{
+  ByteArrayOutputStream st=new ByteArrayOutputStream();
+  PrintWriter wrt=new PrintWriter(st);
+  new RuntimeException().printStackTrace(wrt);
+  wrt.flush();
+  StringTokenizer tk=new StringTokenizer(st.toString(),"\n");
+  tk.nextToken();
+  tk.nextToken();
+  LOG.debug("Requested repaint of view: " + this + " "+ tk.nextToken());
+  Bounds area=repaintArea;
+  calculateRepaintArea();
+  if (DEBUG && area != null && !area.equals(repaintArea)) {
+    LOG.debug("  Extended repaint area: " + repaintArea + " for "+ this);
+  }
+  getWorkspace().repaint(repaintArea.x,repaintArea.y,repaintArea.width,repaintArea.height);
+}

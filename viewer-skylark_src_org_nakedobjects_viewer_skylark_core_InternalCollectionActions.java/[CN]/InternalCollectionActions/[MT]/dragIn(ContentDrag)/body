@@ -1,0 +1,13 @@
+{
+  ObjectContent content=(ObjectContent)drag.getSourceContent();
+  NakedObject parent=((ObjectContent)getParent().getContent()).getObject();
+  About about=getAssociation().getAbout(Session.getSession().getSecurityContext(),parent,content.getObject(),true);
+  Permission perm=about.canUse();
+  if (perm.isVetoed()) {
+    getState().setCantDrop();
+    getViewManager().setStatus(perm.getReason());
+  }
+ else {
+    getState().setCanDrop();
+  }
+}

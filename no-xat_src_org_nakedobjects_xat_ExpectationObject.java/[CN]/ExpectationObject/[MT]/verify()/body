@@ -1,0 +1,15 @@
+{
+  Enumeration e=expectedValues.keys();
+  while (e.hasMoreElements()) {
+    String fieldName=(String)e.nextElement();
+    String fieldValue=actual.getField(fieldName).getTitle();
+    Assert.assertEquals("Wrong value for " + fieldName,expectedValues.get(fieldName).toString(),fieldValue);
+  }
+  e=expectedReferences.keys();
+  while (e.hasMoreElements()) {
+    String fieldName=(String)e.nextElement();
+    NakedObject fieldValue=(NakedObject)actual.getField(fieldName).getForObject();
+    NakedObject ref=((ExpectationValue)expectedReferences.get(fieldName)).getReference();
+    Assert.assertEquals("Wrong reference for " + fieldName,ref,fieldValue);
+  }
+}

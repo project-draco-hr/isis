@@ -1,0 +1,23 @@
+{
+  nakedClass=NakedClassManager.getInstance().getNakedClass(nakedClassName);
+  typeMapper=TypeMapper.getInstance();
+  ConfigurationParameters configParameters=ConfigurationParameters.getInstance();
+  table=configParameters.getString(parameterBase + "table");
+  if (table == null) {
+    table=nakedClassName.substring(nakedClassName.lastIndexOf('.') + 1).toLowerCase();
+    if (nakedClassName.toLowerCase().startsWith("org.nakedobjects")) {
+      table="no_" + table;
+    }
+  }
+  idColumn=configParameters.getString(parameterBase + "id");
+  if (idColumn == null) {
+    idColumn="PK" + table + "ID";
+  }
+  dbCreatesId=configParameters.getBoolean(parameterBase + "db-ids",false);
+  if (configParameters.getBoolean(parameterBase + "all-fields",true)) {
+    setupFullMapping(nakedClassName,configParameters,parameterBase);
+  }
+ else {
+    setupSpecifiedMapping(nakedClass,configParameters,parameterBase);
+  }
+}

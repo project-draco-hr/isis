@@ -1,0 +1,21 @@
+{
+  Content content=view.getContent();
+  if (content instanceof ObjectContent) {
+    Naked object=((ObjectContent)content).getObject();
+    if (object != null) {
+      Vector viewsToNotify;
+      if (views.containsKey(object)) {
+        viewsToNotify=(Vector)views.get(object);
+      }
+ else {
+        viewsToNotify=new Vector();
+        views.put(object,viewsToNotify);
+      }
+      if (viewsToNotify.contains(view)) {
+        throw new NakedObjectRuntimeException(view + " already being notified");
+      }
+      viewsToNotify.addElement(view);
+      LOG.debug("Added " + view + " to observers for "+ object);
+    }
+  }
+}

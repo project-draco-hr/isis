@@ -1,0 +1,20 @@
+{
+  NakedClass cls=(NakedClass)object;
+  title=cls.fullName();
+  title=title.substring(title.lastIndexOf('.') + 1);
+  icon=ImageFactory.getImageFactory().createIcon(title,ICON_SIZE,null);
+  labels=new Vector();
+  values=new Vector();
+  Field[] fields=cls.getVisibleFields(object);
+  for (int i=0; i < fields.length; i++) {
+    labels.addElement(i == 0 ? "Fields" : "");
+    values.addElement(fields[i].getName());
+  }
+  Action[] objectActions=cls.getObjectActions(Action.USER);
+  for (int i=0; i < objectActions.length; i++) {
+    labels.addElement(i == 0 ? "Actions" : "");
+    Action method=objectActions[i];
+    String param=method.parameters()[0].fullName();
+    values.addElement(method.getName() + "(" + param+ ")");
+  }
+}

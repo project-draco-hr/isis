@@ -1,0 +1,20 @@
+{
+  InternalView[] views=getComponents();
+  int i=0;
+  NakedCollection c=(NakedCollection)getObject();
+  Enumeration e=c.displayElements();
+  while (e.hasMoreElements()) {
+    NakedObject obj=(NakedObject)e.nextElement();
+    if (i < views.length) {
+      if (((ObjectView)views[i]).getObject() != obj) {
+        InternalView view=createListElement(obj);
+        replaceView(views[i],view);
+      }
+    }
+ else {
+      InternalView view=createListElement(obj);
+      addView(view);
+    }
+    i++;
+  }
+}

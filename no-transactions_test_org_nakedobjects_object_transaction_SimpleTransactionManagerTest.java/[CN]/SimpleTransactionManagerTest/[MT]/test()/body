@@ -1,0 +1,25 @@
+{
+  NakedClass accountClass=NakedClass.createNakedClass(Account.class.getName(),JavaReflector.class.getName());
+  objectstore.setupNakedClass(accountClass);
+  objectManager.startTransaction();
+  Account personal=(Account)objectManager.createInstance(Account.class.getName());
+  Account saving=(Account)objectManager.createInstance(Account.class.getName());
+  personal.getName().setValue("Personal");
+  personal.getBalance().setValue(1000);
+  saving.getName().setValue("Savings");
+  saving.getBalance().setValue(500);
+  objectManager.endTransaction();
+  Action action=accountClass.getObjectAction(Action.USER,new NakedClass[]{accountClass});
+  Transfer transfer1=(Transfer)action.execute(saving,new NakedObject[]{personal});
+  transfer1.getAmount().setValue(100);
+  objectManager.objectChanged(transfer1);
+  Action actionApplyFail=transfer1.getNakedClass().getObjectAction(Action.USER,"Apply But Fail");
+  actionApplyFail.execute(transfer1);
+  Action actionApply=transfer1.getNakedClass().getObjectAction(Action.USER,"Apply");
+  actionApply.execute(transfer1);
+  Transfer transfer2=(Transfer)action.execute(personal,new NakedObject[]{saving});
+  transfer2.getAmount().setValue(50);
+  objectManager.objectChanged(transfer2);
+  actionApply=transfer2.getNakedClass().getObjectAction(Action.USER,"Apply");
+  actionApply.execute(transfer2);
+}

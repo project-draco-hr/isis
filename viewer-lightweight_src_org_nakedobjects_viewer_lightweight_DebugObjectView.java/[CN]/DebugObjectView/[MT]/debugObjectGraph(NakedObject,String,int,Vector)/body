@@ -1,0 +1,37 @@
+{
+  StringBuffer s=new StringBuffer();
+  recursiveElements.addElement(object);
+  Field[] fields;
+  fields=object.getNakedClass().getVisibleFields(object);
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    Object obj=field.get(object);
+    name=field.getName();
+    indent(s,level);
+    if (obj instanceof NakedValue) {
+      s.append(name + ": ");
+      if (obj == null) {
+        s.append("unitialised - error");
+        s.append("\n");
+      }
+ else {
+        s.append(((NakedValue)obj).title().toString());
+        s.append("\n");
+      }
+    }
+ else     if (obj instanceof NakedObject) {
+      if (recursiveElements.contains(obj)) {
+        s.append(name + ": " + obj+ "*\n");
+      }
+ else {
+        s.append(name + ": " + obj);
+        s.append(debugGraph((NakedObject)obj,name,level + 1,recursiveElements));
+      }
+    }
+ else {
+      s.append(name + ": " + obj);
+      s.append("\n");
+    }
+  }
+  return s.toString();
+}

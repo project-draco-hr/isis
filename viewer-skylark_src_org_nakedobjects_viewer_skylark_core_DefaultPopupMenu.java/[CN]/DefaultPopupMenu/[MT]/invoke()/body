@@ -1,0 +1,13 @@
+{
+  int option=getOption();
+  Location location=new Location(mouseAt);
+  location.move(30,12);
+  Item item=items[option];
+  showStatus("Executing " + item);
+  dispose();
+  Workspace workspace=getWorkspace();
+  LOG.debug("execute " + item.name + " on "+ forView+ " in "+ workspace);
+  if (!item.isBlank && item.action != null && item.action.disabled(forView).isAllowed()) {
+    item.action.execute(workspace,forView,location);
+  }
+}

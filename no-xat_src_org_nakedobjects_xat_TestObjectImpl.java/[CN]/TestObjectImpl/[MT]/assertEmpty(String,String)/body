@@ -1,0 +1,16 @@
+{
+  assertFieldExists(fieldName);
+  TestNaked actual=getField(fieldName);
+  Object object=actual.getForObject();
+  if (object instanceof NakedValue) {
+    NakedValue value=((NakedValue)object);
+    if (!value.isEmpty()) {
+      Assert.fail(expected(message) + " " + fieldName+ " to be empty, but contained "+ value.title().toString());
+    }
+  }
+ else {
+    if (object != null) {
+      Assert.fail(expected(message) + " " + fieldName+ " to be empty, but contained "+ ((NakedObject)object).title().toString());
+    }
+  }
+}

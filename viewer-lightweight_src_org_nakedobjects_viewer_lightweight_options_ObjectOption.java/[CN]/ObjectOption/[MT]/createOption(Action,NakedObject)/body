@@ -1,0 +1,13 @@
+{
+  About about=action.getAbout(Session.getSession().getSecurityContext(),object);
+  if (about.canAccess().isVetoed()) {
+    return null;
+  }
+  String labelName=action.getLabel(Session.getSession().getSecurityContext(),object);
+  ObjectOption option=new ObjectOption(labelName);
+  option.action=action;
+  if (action.hasReturn()) {
+    option.setName(labelName + "...");
+  }
+  return option;
+}

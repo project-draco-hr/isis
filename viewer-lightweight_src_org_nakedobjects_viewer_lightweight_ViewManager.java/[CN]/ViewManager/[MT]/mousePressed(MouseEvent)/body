@@ -1,0 +1,14 @@
+{
+  drag=null;
+  downAt=new Location(me.getPoint());
+  if (isPopupShowing() && !popup.contains(downAt)) {
+    workspace.clearOverlayView();
+    identify(downAt);
+  }
+  View identified=workspace.identifyView(downAt,null);
+  if (identified instanceof AbstractValueView) {
+    makeFocus((AbstractValueView)identified);
+  }
+  canDrag=identified != null && me.getClickCount() == 1;
+  workspace.setIdentifiedView(identified);
+}

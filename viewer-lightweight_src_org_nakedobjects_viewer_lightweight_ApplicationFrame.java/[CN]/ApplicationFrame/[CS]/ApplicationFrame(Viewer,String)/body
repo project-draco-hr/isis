@@ -1,0 +1,31 @@
+{
+  super(title);
+  this.viewingMechanism=viewManager;
+  addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      ApplicationFrame.this.viewingMechanism.shutdown();
+    }
+  }
+);
+  setBackground(Style.APPLICATION_BACKGROUND.getAwtColor());
+  try {
+    Class c=getClass();
+    Method m=c.getMethod("setFocusTraversalKeysEnabled",new Class[]{Boolean.TYPE});
+    m.invoke(this,new Object[]{Boolean.FALSE});
+  }
+ catch (  SecurityException e1) {
+    e1.printStackTrace();
+  }
+catch (  NoSuchMethodException ignore) {
+    ;
+  }
+catch (  IllegalArgumentException e) {
+    e.printStackTrace();
+  }
+catch (  IllegalAccessException e) {
+    e.printStackTrace();
+  }
+catch (  InvocationTargetException e) {
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,20 @@
+{
+  try {
+    if (defaulMapper != null) {
+      defaulMapper.shutdown();
+    }
+  }
+ catch (  ObjectStoreException e) {
+    LOG.error("Shutdown default mapper",e);
+  }
+  Enumeration e=mappers.elements();
+  while (e.hasMoreElements()) {
+    ObjectMapper mapper=(ObjectMapper)e.nextElement();
+    try {
+      mapper.shutdown();
+    }
+ catch (    ObjectStoreException ex) {
+      LOG.error("Shutdown mapper " + mapper,ex);
+    }
+  }
+}

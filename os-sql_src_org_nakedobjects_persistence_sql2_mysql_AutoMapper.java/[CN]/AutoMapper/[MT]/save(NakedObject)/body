@@ -1,0 +1,34 @@
+{
+  NakedClass cls=object.getNakedClass();
+  StringBuffer assignments=new StringBuffer();
+  int fld=0;
+  for (int i=0; i < fields.length; i++) {
+    Naked fieldValue=fields[i].get(object);
+    if (i > 0) {
+      assignments.append(", ");
+    }
+    assignments.append(columnNames[fld++]);
+    assignments.append('=');
+    if (fieldValue instanceof NakedObject) {
+      if (fieldValue == null) {
+        assignments.append("NULL");
+      }
+ else {
+        Object oid=((NakedObject)fieldValue).getOid();
+        assignments.append(primaryKey(oid));
+      }
+    }
+ else     if (fieldValue instanceof NakedValue) {
+      assignments.append(typeMapper.valueAsDBString(fields[i],(NakedValue)fieldValue));
+    }
+ else {
+      assignments.append("NULL");
+    }
+  }
+  long id=primaryKey(object.getOid());
+  String statement="update " + table + " set "+ assignments+ " where "+ idColumn+ "="+ id;
+  db.update(statement);
+  for (int i=0; i < collectionMappers.length; i++) {
+    collectionMappers[i].saveInternalCollection(object);
+  }
+}

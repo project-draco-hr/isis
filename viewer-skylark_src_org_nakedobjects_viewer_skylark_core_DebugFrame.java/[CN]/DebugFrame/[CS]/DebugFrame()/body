@@ -1,0 +1,27 @@
+{
+  frames.addElement(this);
+  setLayout(new BorderLayout(7,7));
+  addWindowListener(new WindowAdapter(){
+    DebugFrame frame=DebugFrame.this;
+    public void windowClosing(    WindowEvent e){
+      frame.hide();
+      frame.dispose();
+    }
+  }
+);
+  TextArea area=new TextArea("",40,80,TextArea.SCROLLBARS_BOTH);
+  area.setForeground(Style.BLACK.getAwtColor());
+  Font font=Style.DEBUG.getAwtFont();
+  area.setFont(font);
+  add("Center",area);
+  field=area;
+  Button b=new java.awt.Button("Refresh");
+  b.setFont(font);
+  add(b,BorderLayout.SOUTH);
+  b.addActionListener(new java.awt.event.ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      refresh();
+    }
+  }
+);
+}

@@ -1,0 +1,33 @@
+{
+  Location location=view.getLocation();
+  Size size=view.getSize();
+  int viewLeft=location.getX();
+  int viewTop=location.getY();
+  int viewRight=viewLeft + size.getWidth();
+  int viewBottom=viewTop + size.getHeight();
+  Size wd=getSize();
+  Padding insets=getPadding();
+  int limitLeft=insets.getLeft();
+  int limitTop=insets.getTop();
+  int limitRight=wd.getWidth() - insets.getRight();
+  int limitBottom=wd.getHeight() - insets.getBottom();
+  if (viewRight > limitRight) {
+    viewLeft=limitRight - size.getWidth();
+    LOG.info("right side oustide limits, moving left to" + viewLeft + " on "+ view);
+  }
+  if (viewLeft < limitLeft) {
+    viewLeft=limitLeft;
+    LOG.info("left side outside limit, moving left to " + viewLeft + " on "+ view);
+  }
+  if (viewBottom > limitBottom) {
+    viewTop=limitBottom - size.getHeight();
+    LOG.info("bottom outside limit, moving top to " + viewTop + " on "+ view);
+  }
+  if (viewTop < limitTop) {
+    viewTop=limitTop;
+    LOG.info("top outside limit, moving top to " + viewTop + " on "+ view);
+  }
+  location.setX(viewLeft);
+  location.setY(viewTop);
+  view.setLocation(location);
+}

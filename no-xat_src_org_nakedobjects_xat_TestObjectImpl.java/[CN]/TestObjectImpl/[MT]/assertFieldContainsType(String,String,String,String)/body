@@ -1,0 +1,16 @@
+{
+  Naked object=getField(fieldName).getForObject();
+  if (object instanceof InternalCollection) {
+    InternalCollection collection=(InternalCollection)object;
+    for (int i=0; i < collection.size(); i++) {
+      NakedObject element=collection.elementAt(i);
+      if (element.title().toString().equals(title)) {
+        if (!element.getShortClassName().equals(expectedType)) {
+          Assert.fail(expected(message) + " object " + title+ " to be of type "+ expectedType+ " but was "+ element.getShortClassName());
+        }
+        return;
+      }
+    }
+    Assert.fail(expected(message) + " object " + title+ " but could not find it in the internal collection");
+  }
+}

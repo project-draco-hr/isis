@@ -1,0 +1,19 @@
+{
+  super(content,specification,axis);
+  this.showLines=showLines;
+  setMaxTextWidth(25);
+  NakedValue value=getValue();
+  cursor=new CursorPosition(0,0);
+  selection=new Selection();
+  textContent=new TextFieldContent(this);
+  multiline=value instanceof MultilineTextString;
+  noDisplayLines=multiline ? MULTILINE_FIELD_SIZE : 1;
+  textContent.setText(value.title().toString());
+  cursor.home();
+  displayFromLine=0;
+  displayToLine=noDisplayLines - 1;
+  alignDisplay(0);
+  inError=false;
+  isSaved=true;
+  resizeMarkerSize=lineHeight() * 3 / 5;
+}

@@ -1,0 +1,86 @@
+{
+  if (inCommit) {
+    throw new NakedObjectRuntimeException();
+  }
+  inCommit=true;
+  log("Objects in transaction");
+  Enumeration e=transactionalObjects.elements();
+  String indent="                ";
+  while (e.hasMoreElements()) {
+    Object element=e.nextElement();
+    manager.write(indent + element);
+  }
+  manager.write(indent + "-");
+  try {
+    if (toDestroy.size() > 0 || toCreate.size() > 0 || toSave.size() > 0) {
+      Enumeration objects;
+      store.startTransaction();
+      objects=toDestroy.elements();
+      while (objects.hasMoreElements()) {
+        NakedObject p=(NakedObject)objects.nextElement();
+        log("os-destroy " + p);
+        store.destroyObject(p);
+      }
+      objects=toCreate.elements();
+      while (objects.hasMoreElements()) {
+        NakedObject p=(NakedObject)objects.nextElement();
+        log("os-create " + p);
+        store.createObject(p);
+      }
+      objects=toSave.elements();
+      while (objects.hasMoreElements()) {
+        NakedObject p=(NakedObject)objects.nextElement();
+        log("os-save " + p);
+        store.save(p);
+      }
+      store.endTransaction();
+    }
+  }
+ catch (  ObjectStoreException ose) {
+    store.abortTransaction();
+  }
+  inUpdate=true;
+  Enumeration objects;
+  objects=toSave.elements();
+  while (objects.hasMoreElements()) {
+    NakedObject p=(NakedObject)objects.nextElement();
+    NakedObject publicObject=store.getLoadedObjects().getLoadedObject(p.getOid());
+    log("update " + publicObject + " with state from "+ p);
+    copyFromProxy(p,publicObject);
+  }
+  objects=toDestroy.elements();
+  while (objects.hasMoreElements()) {
+    NakedObject p=(NakedObject)objects.nextElement();
+    log("unload" + p);
+    store.getLoadedObjects().unloaded(p);
+  }
+  objects=toCreate.elements();
+  while (objects.hasMoreElements()) {
+    NakedObject newObject=(NakedObject)objects.nextElement();
+    log("load " + newObject);
+    NakedClass cls=newObject.getNakedClass();
+    Field[] fields=cls.getFields();
+    for (int i=0; i < fields.length; i++) {
+      Field field=fields[i];
+      if (field instanceof OneToOneAssociation) {
+        NakedObject proxyAssociate=(NakedObject)((OneToOneAssociation)field).get(newObject);
+        if (proxyAssociate != null) {
+          Object associateOid=proxyAssociate.getOid();
+          NakedObject associate=store.getLoadedObjects().getLoadedObject(associateOid);
+          ((OneToOneAssociation)field).initData(newObject,associate);
+        }
+      }
+ else       if (field instanceof OneToManyAssociation) {
+      }
+    }
+    store.getLoadedObjects().loaded(newObject);
+  }
+  toCreate.removeAllElements();
+  objects=toDestroy.elements();
+  while (objects.hasMoreElements()) {
+    NakedObject p=(NakedObject)objects.nextElement();
+  }
+  toDestroy.removeAllElements();
+  toSave.removeAllElements();
+  manager.write("-");
+}

@@ -1,0 +1,19 @@
+{
+  user.getName().setValue(rs.getString("name"));
+  long rootObjectId=rs.getLong("root_object");
+  if (rootObjectId != 0) {
+    String rootObjectClass=rs.getString("root_class");
+    SimpleOid rootObjectOid=new SimpleOid(rootObjectId);
+    NakedObject rootObject;
+    if (loadedObjects.isLoaded(rootObjectOid)) {
+      rootObject=loadedObjects.getLoadedObject(rootObjectOid);
+    }
+ else {
+      NakedClass nc=NakedClassManager.getInstance().getNakedClass(rootObjectClass);
+      rootObject=nc.acquireInstance();
+      rootObject.setOid(rootObjectOid);
+      loadedObjects.loaded(rootObject);
+    }
+    user.setRootObject(rootObject);
+  }
+}

@@ -1,0 +1,8 @@
+{
+  TypedCollection coll=(TypedCollection)((ObjectContent)content).getObject();
+  Field[] viewFields=NakedClassManager.getInstance().getNakedClass(coll.getType().getName()).getVisibleFields(null);
+  TableColumnAxis tableAxis=new TableColumnAxis(viewFields,100);
+  View view=wrappedBuilder.createCompositeView(content,specification,tableAxis);
+  tableAxis.setRoot(view);
+  return new TableHeader(view);
+}

@@ -1,0 +1,27 @@
+{
+  if (canChangeValue()) {
+    int lineHeight=lineHeight();
+    int baseline=0;
+    Color color=identified ? Style.IDENTIFIED : Style.FEINT;
+    color=hasFocus() ? Style.ACTIVE : color;
+    for (int line=0; line < noDisplayLines; line++) {
+      baseline+=lineHeight();
+      canvas.drawLine(HPADDING,baseline,HPADDING + width,baseline,color);
+    }
+    if (identified) {
+      int size=lineHeight * 3 / 5;
+      Shape shape=new Shape(0,0);
+      shape.addLine(size,0);
+      shape.addLine(0,size);
+      shape.addLine(-size,-size);
+      canvas.drawSolidShape(shape,HPADDING + width + 1,baseline,color);
+    }
+  }
+  if (isResizing) {
+    Color color=Style.IN_BACKGROUND;
+    canvas.drawLine(0,0,10,0,color);
+    canvas.drawLine(0,1,10,1,color);
+    canvas.drawLine(0,0,0,10,color);
+    canvas.drawLine(1,0,1,10,color);
+  }
+}

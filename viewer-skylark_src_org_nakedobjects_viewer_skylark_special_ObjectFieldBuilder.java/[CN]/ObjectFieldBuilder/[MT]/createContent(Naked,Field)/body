@@ -1,0 +1,19 @@
+{
+  if (field == null) {
+    throw new NullPointerException();
+  }
+  Content content;
+  if (object instanceof InternalCollection) {
+    content=new InternalCollectionContent((InternalCollection)object,(OneToManyAssociation)field);
+  }
+ else   if (object instanceof NakedObject) {
+    content=new OneToOneContent((NakedObject)object,(OneToOneAssociation)field);
+  }
+ else   if (object instanceof NakedValue) {
+    content=new ValueContent((NakedValue)object,(Value)field);
+  }
+ else {
+    content=new OneToOneContent(null,(OneToOneAssociation)field);
+  }
+  return content;
+}

@@ -1,0 +1,16 @@
+{
+  super.draw(canvas);
+  if (isSliderNeeded()) {
+    Color color=getState().isViewIdentified() ? Style.IN_FOREGROUND : Style.FEINT;
+    canvas.drawFullRectangle(sliderAt(),color);
+    int x=super.getPadding().getLeft();
+    int top=getPadding().getTop();
+    int width=SLIDER_WIDTH;
+    int height=getSize().getHeight() - getPadding().getTop() - getPadding().getBottom();
+    canvas.drawLine(x + (width / 2) + 0,top,x + (width / 2) + 0,top + height,color);
+    canvas.drawLine((x + (width / 2)) - 1,top,(x + (width / 2)) - 1,top + height,color);
+    if (AbstractView.DEBUG) {
+      canvas.drawRectangle(x,top,width,top + height,Color.DEBUG2);
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  Size targetSize=new Size(maxWidth,0);
+  View[] components=target.getComponents();
+  Size rowSize=new Size();
+  for (int i=0; i < components.length; i++) {
+    Size componentSize=components[i].getRequiredSize();
+    rowSize.extendWidth(componentSize.getWidth());
+    rowSize.ensureHeight(componentSize.getHeight());
+    if (rowSize.getWidth() > maxWidth) {
+      targetSize.extendHeight(rowSize.getHeight());
+      rowSize=new Size(componentSize.getWidth(),0);
+    }
+  }
+  targetSize.extendHeight(rowSize.getHeight());
+  targetSize.ensureHeight(minHeight);
+  Padding insets=target.getPadding();
+  targetSize.addPadding(insets);
+  return targetSize;
+}

@@ -1,0 +1,9 @@
+{
+  Person transactionalPerson=(Person)t.getObject(personOid,person);
+  transactionalPerson.getName().setValue("Fred");
+  t.prepareSave(transactionalPerson);
+  assertFalse(person.getName() == transactionalPerson.getName());
+  loadedObjects.setupLoadedObjects(new NakedObject[]{person});
+  t.commit(objectStore);
+  assertEquals(transactionalPerson.getName(),person.getName());
+}

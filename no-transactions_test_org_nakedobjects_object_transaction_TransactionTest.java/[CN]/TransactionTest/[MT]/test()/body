@@ -1,0 +1,11 @@
+{
+  Role r=new Role();
+  Integer roleOid=new Integer(11);
+  r.setOid(roleOid);
+  Person transactionPerson=(Person)t.getObject(personOid,person);
+  r.setPerson(transactionPerson);
+  t.prepareCreate(r);
+  objectStore.setupLoaded(new NakedObject[]{person});
+  t.commit(objectStore);
+  assertSame("reference should be to persistent object and not the proxy",person,r.getPerson());
+}

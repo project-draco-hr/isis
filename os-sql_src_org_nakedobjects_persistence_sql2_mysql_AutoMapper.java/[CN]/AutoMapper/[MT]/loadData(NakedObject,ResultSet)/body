@@ -1,0 +1,26 @@
+{
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i] instanceof Value) {
+      String val=rs.getString(columnNames[i]);
+      if (val != null && ((Value)fields[i]).getType() == TimeStamp.class) {
+        val=val.substring(0,4) + val.substring(5,7) + val.substring(8,10)+ val.substring(11,13)+ val.substring(14,16)+ val.substring(17,19);
+      }
+      if (val != null && ((Value)fields[i]).getType() == Date.class) {
+        val=val.substring(0,4) + val.substring(5,7) + val.substring(8,10);
+      }
+      val=val == null ? "NULL" : val;
+      ((Value)fields[i]).initData(object,val);
+    }
+ else     if (fields[i] instanceof OneToOneAssociation) {
+      NakedClass associatedCls=NakedClassManager.getInstance().getNakedClass(fields[i].getType().getName());
+      int associatedId=rs.getInt(columnNames[i]);
+      if (associatedId != 0) {
+        NakedObject reference=loadObject(associatedCls,new SqlOid(associatedId,associatedCls.fullName()));
+        ((OneToOneAssociation)fields[i]).initData(object,reference);
+      }
+    }
+ else {
+      throw new NakedObjectRuntimeException();
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  NakedObject obj=(NakedObject)getObject();
+  options.add(MenuOptionSet.DEBUG,INVALIDATE_OPTION);
+  options.add(MenuOptionSet.DEBUG,LAYOUT_OPTION);
+  if (isReplaceable()) {
+    if (isRoot()) {
+      replaceOptions(ViewFactory.getViewFactory().rootViews(obj),options);
+    }
+ else {
+      replaceOptions(ViewFactory.getViewFactory().closedViews(obj),options);
+      replaceOptions(ViewFactory.getViewFactory().internalViews(obj),options);
+    }
+  }
+  if (isRoot()) {
+    options.add(MenuOptionSet.WINDOW,CLOSE_OPTION);
+  }
+  Enumeration possibleViews=ViewFactory.getViewFactory().rootViews(obj);
+  while (possibleViews.hasMoreElements()) {
+    ObjectView view=(ObjectView)possibleViews.nextElement();
+    MenuOption viewAs=new OpenViewOption((RootView)view);
+    options.add(MenuOptionSet.VIEW,viewAs);
+  }
+}

@@ -1,0 +1,15 @@
+{
+  NakedObject transactionPerson=t.getObject(personOid,person);
+  NakedObject transactionalTeam=t.getObject(teamOid,team);
+  t.prepareSave(transactionPerson);
+  t.prepareSave(transactionalTeam);
+  t.prepareSave(transactionPerson);
+  t.prepareSave(transactionPerson);
+  t.prepareSave(transactionalTeam);
+  objectStore.setupLoaded(new NakedObject[]{person,team});
+  t.commit(objectStore);
+  Vector actions=objectStore.getActions();
+  assertEquals(4,actions.size());
+  assertEquals("saveObject " + transactionPerson,actions.elementAt(1));
+  assertEquals("saveObject " + transactionalTeam,actions.elementAt(2));
+}

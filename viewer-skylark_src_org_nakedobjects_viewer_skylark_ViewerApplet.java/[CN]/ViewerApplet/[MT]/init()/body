@@ -1,0 +1,34 @@
+{
+  viewer=new Viewer();
+  try {
+    new LocalObjectManager(new TransientObjectStore(),viewer.getUpdateNotifier());
+    Session.initSession();
+    NakedObject root=(NakedObject)new InstanceCollection(User.class.getName()).elements().nextElement();
+    viewer.init(this,root);
+    setBackground(Style.APPLICATION_BACKGROUND.getAwtColor());
+    Class c=getClass();
+    Method m=c.getMethod("setFocusTraversalKeysEnabled",new Class[]{Boolean.TYPE});
+    m.invoke(this,new Object[]{Boolean.FALSE});
+  }
+ catch (  SecurityException e1) {
+    e1.printStackTrace();
+  }
+catch (  NoSuchMethodException ignore) {
+    ;
+  }
+catch (  IllegalArgumentException e) {
+    e.printStackTrace();
+  }
+catch (  IllegalAccessException e) {
+    e.printStackTrace();
+  }
+catch (  InvocationTargetException e) {
+    e.printStackTrace();
+  }
+catch (  ConfigurationException e2) {
+    e2.printStackTrace();
+  }
+catch (  ComponentException e2) {
+    e2.printStackTrace();
+  }
+}

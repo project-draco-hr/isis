@@ -1,0 +1,16 @@
+{
+  Padding padding=target.getPadding();
+  int top=padding.getTop();
+  int left=padding.getLeft();
+  View[] components=target.getComponents();
+  for (int i=0; i < components.length; i++) {
+    Size size=components[i].getRequiredSize();
+    components[i].setSize(size);
+    if (left + size.getWidth() > maxWidth) {
+      left=padding.getLeft();
+      top+=size.getHeight();
+    }
+    components[i].setLocation(new Location(left,top));
+    left+=size.getWidth();
+  }
+}

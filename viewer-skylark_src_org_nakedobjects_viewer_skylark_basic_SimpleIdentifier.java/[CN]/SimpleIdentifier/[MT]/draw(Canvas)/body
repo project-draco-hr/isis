@@ -1,0 +1,18 @@
+{
+  Color color=null;
+  if (getState().canDrop()) {
+    color=Style.VALID;
+  }
+ else   if (getState().cantDrop()) {
+    color=Style.INVALID;
+  }
+ else   if (getState().isViewIdentified() || getState().isObjectIdentified()) {
+    color=Style.PRIMARY1;
+  }
+  wrappedView.draw(canvas.createSubcanvas());
+  if (color != null) {
+    Size s=getSize();
+    canvas.drawRectangle(0,0,s.getWidth() - 1,s.getHeight() - 1,color);
+    canvas.drawRectangle(1,1,s.getWidth() - 3,s.getHeight() - 3,color);
+  }
+}

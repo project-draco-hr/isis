@@ -1,0 +1,13 @@
+{
+  InternalCollection transfers=getFromAccount().getTransfers();
+  transfers.add(this);
+  transfers=getToAccount().getTransfers();
+  transfers.add(this);
+  getFromAccount().withdraw(this);
+  getToAccount().deposit(this);
+  date.today();
+  if (getFromAccount().getBalance().doubleValue() < 0) {
+    throw new TransactionException();
+  }
+  objectChanged();
+}

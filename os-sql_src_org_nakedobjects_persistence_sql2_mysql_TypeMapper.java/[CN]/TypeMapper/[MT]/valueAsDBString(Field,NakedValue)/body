@@ -1,0 +1,63 @@
+{
+  Class type=field.getType();
+  if (TextString.class.isAssignableFrom(type)) {
+    return "'" + ((TextString)value).stringValue() + "'";
+  }
+  if (WholeNumber.class.isAssignableFrom(type)) {
+    return String.valueOf(((WholeNumber)value).intValue());
+  }
+  if (Date.class.isAssignableFrom(type)) {
+    if (value == null) {
+      return "";
+    }
+ else {
+      String ts=value.saveString();
+      if (ts.equals("NULL")) {
+        return ts;
+      }
+      String dbts=ts.substring(0,4) + "-" + ts.substring(4,6)+ "-"+ ts.substring(6,8);
+      return "'" + dbts + "'";
+    }
+  }
+  if (Money.class.isAssignableFrom(type)) {
+    return String.valueOf(((Money)value).doubleValue());
+  }
+  if (Percentage.class.isAssignableFrom(type)) {
+    return String.valueOf(((Percentage)value).doubleValue());
+  }
+  if (FloatingPointNumber.class.isAssignableFrom(type)) {
+    return String.valueOf(((FloatingPointNumber)value).floatValue());
+  }
+  if (Time.class.isAssignableFrom(type)) {
+    String ts=value.saveString();
+    if (ts.equals("NULL")) {
+      return ts;
+    }
+    String dbts=ts.substring(8,10) + ":" + ts.substring(10,12);
+    return "'" + dbts + "'";
+  }
+  if (TimeStamp.class.isAssignableFrom(type)) {
+    String ts=value.saveString();
+    if (ts.equals("NULL")) {
+      return ts;
+    }
+    String dbts=ts.substring(0,4) + "-" + ts.substring(4,6)+ "-"+ ts.substring(6,8)+ " "+ ts.substring(8,10)+ ":"+ ts.substring(10,12);
+    return "'" + dbts + "'";
+  }
+  if (Option.class.isAssignableFrom(type)) {
+    return "'" + ((Option)value).stringValue() + "'";
+  }
+  if (Logical.class.isAssignableFrom(type)) {
+    return "" + (((Logical)value).booleanValue() ? "1" : "0") + "";
+  }
+  if (URLString.class.isAssignableFrom(type)) {
+    return "'" + ((URLString)value).stringValue() + "'";
+  }
+  if (Password.class.isAssignableFrom(type)) {
+    return "'" + ((Password)value).stringValue() + "'";
+  }
+  if (SerialNumber.class.isAssignableFrom(type)) {
+    return String.valueOf(((SerialNumber)value).longValue());
+  }
+  throw new ObjectStoreException("No suitable column type for" + type);
+}

@@ -1,0 +1,12 @@
+{
+  internalDisplaySize=new Size(renderingArea.getSize());
+  LOG.debug("size changed: frame " + internalDisplaySize);
+  insets=renderingArea.getInsets();
+  LOG.debug("  insets " + insets);
+  internalDisplaySize.contract(insets.left + insets.right,insets.top + insets.bottom);
+  LOG.debug("  internal " + internalDisplaySize);
+  Size rootViewSize=new Size(internalDisplaySize);
+  statusBarHeight=2 + Style.STATUS.getHeight() + 2;
+  rootViewSize.contractHeight(statusBarHeight);
+  ((WorkspaceSpecification)rootView.getSpecification()).setRequiredSize(rootViewSize);
+}

@@ -1,0 +1,8 @@
+{
+  objectManager.startTransaction();
+  Account personal=(Account)objectManager.createInstance(Account.class.getName());
+  assertNoInstances("instance not persisted until end tranaction",0,accountClass);
+  objectManager.endTransaction();
+  assertNoInstances(1,accountClass);
+  assertInstanceEquals("account is the object created",accountClass,personal);
+}

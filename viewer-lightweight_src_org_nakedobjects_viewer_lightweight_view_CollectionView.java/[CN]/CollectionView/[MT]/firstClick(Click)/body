@@ -1,0 +1,28 @@
+{
+  if (isSliderNeeded()) {
+    int y=click.getLocation().getY();
+    int x=click.getLocation().getX();
+    int left=0;
+    int top=getPadding().getTop();
+    int width=getPadding().getLeft();
+    if ((x >= left) && (x <= (left + width)) && (y >= top)) {
+      NakedCollection collection=(NakedCollection)getObject();
+      Bounds slider=sliderAt();
+      if (y < (top + 10)) {
+        collection.first();
+      }
+ else       if ((y < slider.getY())) {
+        collection.previous();
+      }
+ else       if (y > (getSize().getHeight() - getPadding().getTop() - getPadding().getBottom())) {
+        collection.last();
+      }
+ else       if (y > (slider.getY() + slider.getHeight())) {
+        collection.next();
+      }
+      refresh();
+      return;
+    }
+  }
+  super.firstClick(click);
+}

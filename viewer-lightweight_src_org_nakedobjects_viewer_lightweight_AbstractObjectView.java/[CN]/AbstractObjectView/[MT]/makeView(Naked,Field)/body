@@ -1,0 +1,20 @@
+{
+  AbstractObjectView clone;
+  try {
+    clone=(AbstractObjectView)clone();
+  }
+ catch (  CloneNotSupportedException e) {
+    clone=new FallbackView();
+    LOG.error("Failed to create view for " + object,e);
+  }
+  clone.assignId();
+  clone.object=(NakedObject)object;
+  clone.fieldOf=fieldOf;
+  clone.state=new ObjectViewState();
+  if (clone.object != null) {
+    getWorkspace().addNotificationView(clone);
+    clone.object.resolve();
+  }
+  clone.init(clone.object);
+  return clone;
+}

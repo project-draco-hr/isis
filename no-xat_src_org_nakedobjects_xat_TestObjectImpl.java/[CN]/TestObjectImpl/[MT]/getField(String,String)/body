@@ -1,0 +1,25 @@
+{
+  assertFieldExists(fieldName);
+  TestObject view=(TestObject)fields.get(fieldName);
+  view.setForObject((Naked)fieldFor(fieldName).get((NakedObject)getForObject()));
+  if (!(view.getForObject() instanceof InternalCollection)) {
+    throw new IllegalActionError("getField(String, String) only allows an object to be selected from an InternalCollection");
+  }
+  Enumeration e=((NakedCollection)view.getForObject()).elements();
+  NakedObject object=null;
+  int noElements=0;
+  while (e.hasMoreElements()) {
+    NakedObject element=(NakedObject)e.nextElement();
+    if (element.title().toString().equals(title)) {
+      object=element;
+      noElements++;
+    }
+  }
+  if (noElements == 0) {
+    throw new IllegalActionError("The field " + fieldName + " must contain an object titled "+ title+ " within it");
+  }
+  if (noElements > 1) {
+    throw new IllegalActionError("The field " + fieldName + " must only contain one object titled "+ title+ " within it");
+  }
+  return factory().createTestObject(context,object);
+}

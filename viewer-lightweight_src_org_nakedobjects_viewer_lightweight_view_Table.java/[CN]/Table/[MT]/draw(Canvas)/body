@@ -1,0 +1,22 @@
+{
+  super.draw(canvas);
+  int[] widths=rowLayout.getPositions();
+  int left=rowPrototype.getPadding().getLeft();
+  String name=((TypedCollection)getObject()).getType().getName();
+  Field[] fields=NakedObjectManager.getInstance().getNakedClass(name).getFields();
+  int x=left + gap;
+  int y=super.getPadding().getTop() + VPADDING + label.getAscent();
+  for (int i=0; i < fields.length; i++) {
+    canvas.drawText(fields[i].getName(),x,y,Style.IN_FOREGROUND,Style.LABEL);
+    x=left + widths[i] + gap;
+  }
+  Padding padding=getPadding();
+  Size size=getSize();
+  int top=padding.getTop() + gap;
+  int bottom=size.getHeight() - padding.getBottom() - gap;
+  x=left + gap;
+  for (int i=0; i < widths.length; i++) {
+    canvas.drawLine(x,top,x,bottom,Style.FEINT);
+    x=left + widths[i] + gap;
+  }
+}
