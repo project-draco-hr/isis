@@ -1,13 +1,3 @@
 {
-  NakedObject parameterObject=(NakedObject)parameter.getForObject();
-  Action action=null;
-  try {
-    NakedClass nakedClass=((NakedObject)getForObject()).getNakedClass();
-    NakedClass[] parameters=new NakedClass[]{parameterObject.getNakedClass()};
-    action=nakedClass.getClassAction(Action.USER,name,parameters);
-  }
- catch (  NakedClassException e) {
-    Assert.fail("Can't invoke action " + name + " "+ parameterObject.getShortClassName()+ " on a "+ getForObject().getShortClassName());
-  }
-  Assert.assertTrue("action not allowed on " + getForObject(),action.getAbout(context,(NakedObject)getForObject(),parameterObject).canUse().isVetoed());
+  assertActionUnusable(name,parameter);
 }

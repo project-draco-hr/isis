@@ -1,10 +1,15 @@
 {
+  Field field=fieldFor(fieldName);
+  assertFieldVisible(fieldName,field);
+  assertFieldModifiable(fieldName,field);
   TestObject targetField=(TestObject)fields.get(fieldName);
   if (targetField instanceof TestValue) {
     throw new IllegalActionError("set(..) not allowed on value target field; use fieldEntry(..) instead");
   }
  else {
     NakedObject ref=(NakedObject)fieldFor(fieldName).get((NakedObject)getForObject());
-    ((OneToOneAssociation)fieldFor(fieldName)).clearAssociation((NakedObject)getForObject(),ref);
+    if (ref != null) {
+      ((OneToOneAssociation)fieldFor(fieldName)).clearAssociation((NakedObject)getForObject(),ref);
+    }
   }
 }

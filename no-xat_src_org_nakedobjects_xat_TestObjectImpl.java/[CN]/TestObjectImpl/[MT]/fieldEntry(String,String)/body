@@ -1,11 +1,17 @@
 {
-  TestValue field;
-  assertFieldExists(name);
-  Object view=fields.get(name);
+  Field field=fieldFor(fieldName);
+  assertFieldVisible(fieldName,field);
+  assertFieldModifiable(fieldName,field);
+  TestValue testField;
+  Object view=fields.get(fieldName);
   if (view instanceof TestValue) {
-    field=(TestValue)view;
-    field.setForObject((Naked)fieldFor(name).get((NakedObject)getForObject()));
-    ((TestValue)field).fieldEntry(value);
+    testField=(TestValue)view;
+    Naked valueObject=(Naked)fieldFor(fieldName).get((NakedObject)getForObject());
+    if (valueObject == null) {
+      throw new NakedAssertionFailedError("Field " + fieldName + " contains null, but should contain an NakedValue object");
+    }
+    testField.setForObject(valueObject);
+    testField.fieldEntry(value);
     ((NakedObject)getForObject()).objectChanged();
   }
  else {

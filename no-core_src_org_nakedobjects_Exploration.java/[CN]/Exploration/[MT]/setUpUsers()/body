@@ -1,0 +1,23 @@
+{
+  NakedClass userClass=classManager().getNakedClass(User.class.getName());
+  String name=this.getClass().getName();
+  name=name.substring(name.lastIndexOf('.') + 1);
+  User user;
+  if (!objectManager.hasInstances(userClass)) {
+    user=new User(name);
+    user.getRoles().add(new Role("explorer"));
+    user.makePersistent();
+    context=new DefaultUserContext();
+    context.getName().setValue(name);
+    context.makePersistent();
+    context.associateUser(user);
+    NakedClassList set=new NakedClassList();
+    classSet(set);
+    set.setContext(context);
+  }
+ else {
+    InstanceCollection users=InstanceCollection.findInstances(new User(name));
+    user=(User)users.elements().nextElement();
+  }
+  return user;
+}

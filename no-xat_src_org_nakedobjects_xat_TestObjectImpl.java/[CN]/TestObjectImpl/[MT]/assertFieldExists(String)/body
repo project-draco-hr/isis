@@ -1,5 +1,8 @@
 {
-  if (!fields.containsKey(name)) {
-    throw new IllegalArgumentException("Field " + name + " is not in the object "+ getForObject());
+  try {
+    ((NakedObject)getForObject()).getNakedClass().getField(fieldName);
+  }
+ catch (  NakedClassException e) {
+    throw new NakedAssertionFailedError("No field called " + fieldName + " in "+ getForObject().getClass().getName());
   }
 }
