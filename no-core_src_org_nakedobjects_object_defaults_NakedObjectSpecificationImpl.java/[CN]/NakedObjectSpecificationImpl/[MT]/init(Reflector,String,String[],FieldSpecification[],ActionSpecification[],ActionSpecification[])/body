@@ -4,10 +4,15 @@
   }
   LOG.debug("NakedClass " + this);
   this.reflector=reflector;
+  NakedObjectSpecificationLoader loader=NakedObjectSpecificationLoader.getInstance();
   if (superclass != null) {
-    this.superclass=(NakedObjectSpecificationImpl)NakedObjectSpecificationLoader.getInstance().loadSpecification(superclass);
+    this.superclass=(NakedObjectSpecificationImpl)loader.loadSpecification(superclass);
     LOG.debug("  Superclass " + superclass);
     this.superclass.subclasses.addSubclass(this);
+  }
+  this.interfaces=new NakedObjectSpecification[interfaces.length];
+  for (int i=0; i < interfaces.length; i++) {
+    this.interfaces[i]=loader.loadSpecification(interfaces[i]);
   }
   if (isValue() && fields.length > 0) {
     LOG.warn("Naked values cannot have fields, they will be ignored");
