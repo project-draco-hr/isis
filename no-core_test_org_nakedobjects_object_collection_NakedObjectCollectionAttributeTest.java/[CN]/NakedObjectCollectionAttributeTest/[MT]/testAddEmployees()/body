@@ -1,0 +1,31 @@
+{
+  Association att=findAssocation("Employees",employer);
+  assertNull(e1.getEmployer());
+  att.setAssociation(employer,e1);
+  assertEquals(employer,e1.getEmployer());
+  assertTrue("has elements",!employer.getEmployees().isEmpty());
+  assertTrue("Collection should contain the 1st employer as an element",((InternalCollection)att.get(employer)).contains(e1));
+  assertNull(e2.getEmployer());
+  att.setAssociation(employer,e2);
+  assertEquals(employer,e2.getEmployer());
+  assertTrue("Collection should contain the 2nd employer as an element",((InternalCollection)att.get(employer)).contains(e2));
+  assertNull(e3.getEmployer());
+  att.setAssociation(employer,e3);
+  assertEquals(employer,e3.getEmployer());
+  ExpectationSet set=new ExpectationSet("employees has 3 elements.");
+  set.addExpected(e1);
+  set.addExpected(e2);
+  set.addExpected(e3);
+  Enumeration enum=employer.getEmployees().elements();
+  while (enum.hasMoreElements()) {
+    enum.nextElement();
+  }
+  set.addActualMany(employer.getEmployees().elements());
+  set.verify();
+  att.clearAssociation(employer,e2);
+  ExpectationSet set2=new ExpectationSet("employees now has 2 elements.");
+  set2.addExpected(e1);
+  set2.addExpected(e3);
+  set2.addActualMany(employer.getEmployees().elements());
+  set2.verify();
+}

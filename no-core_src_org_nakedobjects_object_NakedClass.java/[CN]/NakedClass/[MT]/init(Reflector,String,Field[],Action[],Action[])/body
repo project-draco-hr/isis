@@ -1,0 +1,13 @@
+{
+  createPresistent=ConfigurationParameters.getInstance().getBoolean("nakedclass.create-persistent",true);
+  LOG.debug("NakedClass " + this);
+  this.reflector=reflector;
+  if (superclass != null) {
+    this.superclass=NakedClassManager.getInstance().getNakedClass(superclass);
+    LOG.debug("  Superclass " + superclass);
+    this.superclass.subclasses.addSubclass(this);
+  }
+  this.fields=fields;
+  this.objectActions=objectActions;
+  this.classActions=classActions;
+}

@@ -1,0 +1,13 @@
+{
+  try {
+    NakedObject object=getObject(server.getLoadedObjects());
+    OneToOneAssociation att=(OneToOneAssociation)object.getNakedClass().getField(name);
+    if (att == null) {
+      throw new IllegalStateException("DeleteElementMessage has invalid Field: " + name);
+    }
+    ((OneToOneAssociation)att).clearAssociation(object,value.recreateObject(server.getLoadedObjects()));
+  }
+ catch (  ObjectStoreException e) {
+    response=e;
+  }
+}

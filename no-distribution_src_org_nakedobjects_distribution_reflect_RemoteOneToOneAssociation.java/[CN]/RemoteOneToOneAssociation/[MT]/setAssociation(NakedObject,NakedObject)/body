@@ -1,0 +1,15 @@
+{
+  LOG.debug("remote set association " + getName() + " in "+ inObject+ " with "+ associate);
+  if (inObject.isPersistent()) {
+    try {
+      new AssociateRequest(inObject,this,(NakedObject)associate).execute();
+    }
+ catch (    NakedObjectRuntimeException e) {
+      LOG.error("Distribution problem ",e.getCause());
+      throw (NakedObjectRuntimeException)e.getCause();
+    }
+  }
+ else {
+    local.setAssociation(inObject,associate);
+  }
+}

@@ -1,0 +1,24 @@
+{
+  LOG.debug("serialNumber " + sequence);
+  try {
+    Vector instances=objectStore.getInstances(getNakedClass(Sequence.class.getName()),false);
+    Sequence number;
+    for (int i=0; i < instances.size(); i++) {
+      number=(Sequence)instances.elementAt(i);
+      if (number.getName().isSameAs(sequence)) {
+        number=(Sequence)instances.elementAt(i);
+        number.getSerialNumber().next();
+        objectStore.save(number);
+        return number.getSerialNumber().longValue();
+      }
+    }
+    number=new Sequence();
+    number.created();
+    number.getName().setValue(sequence);
+    makePersistent(number);
+    return number.getSerialNumber().longValue();
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+}

@@ -1,0 +1,17 @@
+{
+  if (isDerived()) {
+    throw new IllegalStateException("Can't set an attribute that is derived: " + getName());
+  }
+  NakedValue value=(NakedValue)delegatedTo.get(inObject);
+  delegatedTo.parseValue(value,setValue);
+  Validity validity=new Validity(value,getLabel(null,inObject));
+  delegatedTo.isValid(inObject,validity);
+  if (validity.isValid()) {
+    delegatedTo.setValue(inObject,value);
+  }
+ else {
+    String originalValue=value.title().toString();
+    delegatedTo.parseValue(value,originalValue);
+    throw new InvalidEntryException(validity.getReason());
+  }
+}

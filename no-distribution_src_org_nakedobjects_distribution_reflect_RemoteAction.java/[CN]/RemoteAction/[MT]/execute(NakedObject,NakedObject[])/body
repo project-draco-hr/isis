@@ -1,0 +1,14 @@
+{
+  if (object.isPersistent()) {
+    try {
+      return new ActionRequest(object,this,parameters).executeAction();
+    }
+ catch (    ObjectStoreException e) {
+      LOG.error("Problem with distribution",e.getCause());
+      return null;
+    }
+  }
+ else {
+    return local.execute(object,parameters);
+  }
+}

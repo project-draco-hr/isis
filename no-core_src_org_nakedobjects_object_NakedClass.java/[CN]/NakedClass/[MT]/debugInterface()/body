@@ -1,0 +1,40 @@
+{
+  StringBuffer text=new StringBuffer();
+  Field[] fields=getFields();
+  text.append("  Fields" + "\n");
+  if (fields.length == 0) {
+    text.append("    none\n");
+  }
+  SecurityContext context=new SecurityContext();
+  NakedObject example=acquireInstance();
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i] instanceof Value) {
+      Value f=(Value)fields[i];
+      debugAboutDetail(text,f,f.getAbout(context,example));
+    }
+ else     if (fields[i] instanceof OneToManyAssociation) {
+      OneToManyAssociation f=(OneToManyAssociation)fields[i];
+      debugAboutDetail(text,f,f.getAbout(context,example));
+    }
+ else     if (fields[i] instanceof OneToOneAssociation) {
+      OneToOneAssociation f=(OneToOneAssociation)fields[i];
+      debugAboutDetail(text,f,f.getAbout(context,example,null));
+    }
+  }
+  text.append("\n  Object Actions" + "\n");
+  if (objectActions.length == 0) {
+    text.append("    none\n");
+  }
+  for (int i=0; i < objectActions.length; i++) {
+    debugAboutDetail(text,objectActions[i],objectActions[i].getAbout(context,example));
+  }
+  text.append("\n  Class Actions" + "\n");
+  if (classActions.length == 0) {
+    text.append("    none\n");
+  }
+  for (int i=0; i < classActions.length; i++) {
+    debugAboutDetail(text,classActions[i],classActions[i].getAbout(context,example));
+  }
+  text.append("\n");
+  return text.toString();
+}

@@ -1,0 +1,21 @@
+{
+  NakedObject object;
+  try {
+    NakedObjectManager objectManager=NakedObjectManager.getInstance();
+synchronized (objectManager) {
+      NakedClass cls=NakedClassManager.getInstance().getNakedClass(type);
+      if (loadedObjects.isLoaded(oid)) {
+        object=objectManager.getObject(oid,cls);
+      }
+ else {
+        object=cls.acquireInstance();
+        object.setOid(oid);
+        loadedObjects.loaded(object);
+      }
+    }
+  }
+ catch (  ResolveException e) {
+    throw new RuntimeException("Object already loaded when trying to load.");
+  }
+  return object;
+}

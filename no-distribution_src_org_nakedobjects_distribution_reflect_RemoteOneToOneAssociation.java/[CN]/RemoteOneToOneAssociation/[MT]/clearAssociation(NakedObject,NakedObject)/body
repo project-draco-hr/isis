@@ -1,0 +1,15 @@
+{
+  LOG.debug("remote clear association " + inObject + "/"+ associate);
+  if (inObject.isPersistent()) {
+    try {
+      new DissociateRequest(inObject,this,(NakedObject)getAssociation(inObject)).execute();
+    }
+ catch (    NakedObjectRuntimeException e) {
+      LOG.error("Distribution problem ",e.getCause());
+      throw (NakedObjectRuntimeException)e.getCause();
+    }
+  }
+ else {
+    local.clearAssociation(inObject,associate);
+  }
+}

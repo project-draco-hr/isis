@@ -1,0 +1,15 @@
+{
+  sendRequest();
+  Vector instances=new Vector(((Vector)response).size());
+  Enumeration e=((Vector)response).elements();
+  while (e.hasMoreElements()) {
+    ObjectProxy element=(ObjectProxy)e.nextElement();
+    try {
+      instances.addElement(element.recreateObject(loadedObjects));
+    }
+ catch (    ObjectNotFoundException ex) {
+      throw new NakedObjectRuntimeException(ex);
+    }
+  }
+  return instances;
+}

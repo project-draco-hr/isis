@@ -1,0 +1,50 @@
+{
+  LOG.debug("makePersistent " + object);
+  if (object.isPersistent()) {
+    throw new IllegalArgumentException();
+  }
+  object.setOid(createOid());
+  if (!object.isResolved()) {
+    object.setResolved();
+  }
+  Field[] fields=object.getNakedClass().getFields();
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    if (field.isDerived()) {
+      continue;
+    }
+ else     if (field.isValue()) {
+      continue;
+    }
+ else     if (field.isPart()) {
+      InternalCollection collection=(InternalCollection)field.get(object);
+      collection.setOid(createOid());
+      collection.setResolved();
+      for (int j=0; j < collection.size(); j++) {
+        NakedObject element=collection.elementAt(j);
+        if (element.isPersistent()) {
+          continue;
+        }
+        makePersistent(element);
+      }
+    }
+ else {
+      Object fieldValue=field.get(object);
+      if (fieldValue == null) {
+        continue;
+      }
+      NakedObject association=(NakedObject)fieldValue;
+      if (association.isPersistent()) {
+        continue;
+      }
+      makePersistent(association);
+    }
+  }
+  try {
+    createObject(object);
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+  objectStore.getLoadedObjects().loaded(object);
+}

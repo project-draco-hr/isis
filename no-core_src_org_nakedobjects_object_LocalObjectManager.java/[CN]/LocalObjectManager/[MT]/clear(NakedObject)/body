@@ -1,0 +1,19 @@
+{
+  Field[] fields=object.getNakedClass().getFields();
+  for (int i=0; i < fields.length; i++) {
+    Field field=fields[i];
+    if (field instanceof OneToManyAssociation) {
+      InternalCollection coll=(InternalCollection)field.get(object);
+      coll.removeAll();
+    }
+ else     if (field instanceof OneToOneAssociation) {
+      NakedObject ref=(NakedObject)field.get(object);
+      if (ref != null) {
+        ((OneToOneAssociation)field).clearAssociation(object,ref);
+      }
+    }
+ else {
+      ((NakedValue)field.get(object)).clear();
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  manager.setupAddClass(Person.class);
+  manager.setupAddClass(Role.class);
+  manager.setupAddClass(ValueObjectExample.class);
+  manager.setupAddClass(NakedObject.class);
+  personClass=NakedClassManager.getInstance().getNakedClass(Person.class.getName());
+  roleClass=NakedClassManager.getInstance().getNakedClass(Role.class.getName());
+  String names[]={"Freddy","John","Sam","Zax"};
+  people=new Person[names.length];
+  for (int i=0; i < names.length; i++) {
+    people[i]=new Person();
+    people[i].setOid(nextOid());
+    people[i].name.setValue(names[i]);
+    objectStore.createObject(people[i]);
+    assertNotNull(people[i].getOid());
+  }
+  String roleNames[]={"Leader","Specialist","Tester"};
+  roles=new Role[roleNames.length];
+  for (int i=0; i < roleNames.length; i++) {
+    roles[i]=new Role();
+    roles[i].setOid(nextOid());
+    roles[i].name.setValue(roleNames[i]);
+    roles[i].person=people[i];
+    objectStore.createObject(roles[i]);
+  }
+}

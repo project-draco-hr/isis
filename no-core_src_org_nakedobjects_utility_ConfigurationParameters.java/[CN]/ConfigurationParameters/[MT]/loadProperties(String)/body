@@ -1,0 +1,21 @@
+{
+  try {
+    URL url=ConfigurationParameters.class.getResource(resource);
+    if (url == null) {
+      throw new ConfigurationException("Configuration resource not found: " + resource);
+    }
+    return loadProperties(url);
+  }
+ catch (  ConfigurationException e) {
+    try {
+      URL url=new URL("file:///" + new File(resource).getAbsolutePath());
+      return loadProperties(url);
+    }
+ catch (    SecurityException ee) {
+      throw new ConfigurationException("Access not granted to configuration resource: " + resource);
+    }
+catch (    MalformedURLException ee) {
+      throw new ConfigurationException("Configuration resource not found: " + resource);
+    }
+  }
+}

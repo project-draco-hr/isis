@@ -1,0 +1,15 @@
+{
+  prefix=PREFIX + prefix + ".";
+  Properties p=getProperties(prefix);
+  Enumeration e=p.keys();
+  int prefixLength=prefix.length();
+  Properties modifiedProperties=new Properties();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    String value=(String)p.get(key);
+    String modifiedKey=key.substring(prefixLength);
+    LOG.debug(key + "=" + modifiedKey);
+    modifiedProperties.put(modifiedKey,value);
+  }
+  return modifiedProperties;
+}

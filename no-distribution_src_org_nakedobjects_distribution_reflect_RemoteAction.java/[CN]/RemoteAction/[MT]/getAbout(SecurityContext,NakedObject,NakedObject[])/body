@@ -1,0 +1,14 @@
+{
+  if (object.isPersistent() && fullProxy) {
+    try {
+      return new AboutActionRequest(object,this,context,parameters).about();
+    }
+ catch (    ObjectStoreException e) {
+      LOG.error("Problem with distribution",e.getCause());
+      return null;
+    }
+  }
+ else {
+    return local.getAbout(context,object,parameters);
+  }
+}

@@ -1,0 +1,39 @@
+{
+  dp1.parse("14-Apr-2003 ~ 16-Nov-2004");
+  assertEquals("14-Apr-2003 ~ 16-Nov-2004",dp1.title().toString());
+  dp1.parse("15-Jan-2002  ~   6-May-2005");
+  assertEquals("15-Jan-2002 ~ 06-May-2005",dp1.title().toString());
+  dp1.parse("5-jan-2002~06-may-2005");
+  assertEquals("05-Jan-2002 ~ 06-May-2005",dp1.title().toString());
+  try {
+    dp1.parse("hgjuiy");
+    fail();
+  }
+ catch (  ValueParseException e) {
+    assertTrue(e.getMessage().equals("No tilde found"));
+  }
+  try {
+    dp1.parse("05-Jan-2002 - 06-May-2005");
+    fail();
+  }
+ catch (  ValueParseException e) {
+    assertTrue(e.getMessage().equals("No tilde found"));
+  }
+  try {
+    dp1.parse("rtyu~ghjk");
+    fail();
+  }
+ catch (  ValueParseException e) {
+    assertTrue(e.getMessage().equals("Invalid date rtyu"));
+  }
+  try {
+    dp1.parse("14-Apr-2003 ~ 16-Nov-2002");
+    fail();
+  }
+ catch (  ValueParseException expected) {
+  }
+  dp1.parse("14-Apr-2003~");
+  assertTrue(dp1.title().toString().equals("14-Apr-2003 ~"));
+  dp1.parse("~16-Nov-2004");
+  assertTrue(dp1.title().toString().equals("~ 16-Nov-2004"));
+}

@@ -1,0 +1,12 @@
+{
+  if (loadedObjects.isLoaded(oid)) {
+    LOG.debug("getObject (from already loaded objects) " + oid);
+    return loadedObjects.getLoadedObject(oid);
+  }
+ else {
+    LOG.debug("getObject (remotely from server)" + oid);
+    NakedObject object=new GetObjectRequest(oid,hint).getObject();
+    loadedObjects.loaded(object);
+    return object;
+  }
+}

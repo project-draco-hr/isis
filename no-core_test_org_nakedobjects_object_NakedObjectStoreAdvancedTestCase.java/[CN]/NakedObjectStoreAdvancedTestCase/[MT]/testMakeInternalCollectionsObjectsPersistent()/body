@@ -1,0 +1,14 @@
+{
+  restartObjectStore();
+  assertNotNull(team.getOid());
+  InternalCollection collection=team.getMembers();
+  assertNotNull(collection.getOid());
+  assertEquals(teamMembers.length,collection.size());
+  for (int i=0; i < teamMembers.length; i++) {
+    assertNotNull(collection.elementAt(i).getOid());
+  }
+  for (int i=0; i < teamMembers.length; i++) {
+    NakedObject obj=objectStore.getObject(teamMembers[i].getOid(),personClass);
+    assertEquals(teamMembers[i],obj);
+  }
+}

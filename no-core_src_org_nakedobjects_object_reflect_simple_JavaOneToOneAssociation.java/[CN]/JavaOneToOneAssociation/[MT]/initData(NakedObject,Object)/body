@@ -1,0 +1,26 @@
+{
+  LOG.debug("local initData() " + inObject.getOid() + "/"+ setValue);
+  try {
+    if (inObject instanceof NakedCollection) {
+      throw new RuntimeException();
+    }
+ else {
+      if (setMethod == null) {
+        throw new IllegalStateException("can't intialise " + getName() + "  in "+ inObject.getClass()+ " as there is no set method");
+      }
+      setMethod.invoke(inObject,new Object[]{setValue});
+    }
+  }
+ catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + setMethod,e.getTargetException());
+    if (e.getTargetException() instanceof RuntimeException) {
+      throw (RuntimeException)e.getTargetException();
+    }
+ else {
+      throw new RuntimeException(e.getTargetException().getMessage());
+    }
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + setMethod,ignore);
+  }
+}

@@ -1,0 +1,39 @@
+{
+  Vector v=findPrefixedMethods(OBJECT,"get",InternalCollection.class,0);
+  Method defaultAboutMethod=findMethod(OBJECT,"aboutFieldDefault",null,new Class[]{FieldAbout.class});
+  Enumeration e=v.elements();
+  while (e.hasMoreElements()) {
+    Method getMethod=(Method)e.nextElement();
+    LOG.debug("identified 1-many association method " + getMethod);
+    String name=baseName(getMethod.getName());
+    Method aboutMethod=findMethod(OBJECT,"about" + name,null,new Class[]{FieldAbout.class,null,boolean.class});
+    Class aboutType=(aboutMethod == null) ? null : aboutMethod.getParameterTypes()[1];
+    if (aboutMethod == null) {
+      aboutMethod=defaultAboutMethod;
+    }
+    Method addMethod=findMethod(OBJECT,"addTo" + name,void.class,null);
+    if (addMethod == null) {
+      addMethod=findMethod(OBJECT,"add" + name,void.class,null);
+    }
+    if (addMethod == null) {
+      addMethod=findMethod(OBJECT,"associate" + name,void.class,null);
+    }
+    Method removeMethod=findMethod(OBJECT,"removeFrom" + name,void.class,null);
+    if (removeMethod == null) {
+      removeMethod=findMethod(OBJECT,"remove" + name,void.class,null);
+    }
+    if (removeMethod == null) {
+      removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,null);
+    }
+    Class removeType=(removeMethod == null) ? null : removeMethod.getParameterTypes()[0];
+    Class addType=(addMethod == null) ? null : addMethod.getParameterTypes()[0];
+    Class elementType=(aboutType == null) ? null : aboutType;
+    elementType=(addType == null) ? elementType : addType;
+    elementType=(removeType == null) ? elementType : removeType;
+    if (((aboutType != null) && (aboutType != elementType)) || ((addType != null) && (addType != elementType)) || ((removeType != null) && (removeType != elementType))) {
+      LOG.error("The add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
+    }
+    String nm=naturalName(name);
+    associations.addElement(new JavaOneToManyAssociation(nm,elementType,getMethod,addMethod,removeMethod,aboutMethod));
+  }
+}

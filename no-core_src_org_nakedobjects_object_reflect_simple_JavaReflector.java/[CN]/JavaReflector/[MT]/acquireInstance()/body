@@ -1,0 +1,19 @@
+{
+  if (Modifier.isAbstract(cls.getModifiers())) {
+    throw new IllegalStateException("Handling of abstract naked classes is not yet supported");
+  }
+ else {
+    try {
+      return (NakedObject)cls.newInstance();
+    }
+ catch (    NoSuchMethodError ex) {
+      throw new NakedObjectRuntimeException("No accessible default constructor in " + className());
+    }
+catch (    IllegalAccessException e) {
+      throw new NakedObjectRuntimeException("Can't access the default constructor when creating class " + cls + ". Ensure it is public");
+    }
+catch (    InstantiationException e) {
+      throw new NakedObjectRuntimeException("Failed to instantiate a " + className() + " object: "+ e);
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  ExpectationSet set=new ExpectationSet("employees empty");
+  set.addActualMany(employer.getEmployees().elements());
+  set.verify();
+  Association association=findAssocation("Employer",e1);
+  assertNull(e1.getEmployer());
+  association.setAssociation(e1,employer);
+  assertEquals(employer,e1.getEmployer());
+  ExpectationSet set2=new ExpectationSet("employees has back link");
+  set2.addExpected(e1);
+  set2.addActualMany(employer.getEmployees().elements());
+  set2.verify();
+  association.clearAssociation(e1,employer);
+  assertNull(e1.getEmployer());
+  set.addActualMany(employer.getEmployees().elements());
+  set.verify();
+}

@@ -1,0 +1,21 @@
+{
+  sendRequest();
+  if (response == null) {
+    return null;
+  }
+ else   if (response instanceof ObjectProxy[]) {
+    Object[] array=(Object[])response;
+    NakedClass cls=NakedClassManager.getInstance().getNakedClass((String)array[0]);
+    Vector elements=new Vector();
+    for (int i=1; i < array.length; i++) {
+      ObjectProxy proxy=(ObjectProxy)array[i];
+      NakedObject recreatedObject=proxy.recreateObject(getLoadedObjects());
+      elements.addElement(recreatedObject);
+    }
+    return new InstanceCollection(cls,elements);
+  }
+ else {
+    ObjectProxy proxy=(ObjectProxy)response;
+    return proxy.recreateObject(getLoadedObjects());
+  }
+}

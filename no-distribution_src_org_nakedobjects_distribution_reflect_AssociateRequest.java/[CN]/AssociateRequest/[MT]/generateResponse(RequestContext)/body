@@ -1,0 +1,18 @@
+{
+  try {
+    NakedObject object=getObject(server.getLoadedObjects());
+    Association field=(Association)object.getNakedClass().getField(name);
+    if (field == null) {
+      throw new NakedObjectRuntimeException("ObjectAttributeMessage has invalid Field: " + name);
+    }
+    if (value == null) {
+      field.setAssociation(object,null);
+    }
+ else {
+      field.setAssociation(object,value.recreateObject(server.getLoadedObjects()));
+    }
+  }
+ catch (  ObjectStoreException e) {
+    response=e;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  Vector v=findPrefixedMethods(OBJECT,"get",NakedObject.class,0);
+  Method defaultAboutMethod=findMethod(OBJECT,"aboutFieldDefault",null,new Class[]{FieldAbout.class});
+  Enumeration e=v.elements();
+  while (e.hasMoreElements()) {
+    Method getMethod=(Method)e.nextElement();
+    LOG.debug("identified 1-1 association method " + getMethod);
+    if (getMethod.getName().equals("getNakedClass")) {
+      continue;
+    }
+    String name=baseName(getMethod.getName());
+    Class[] params=new Class[]{getMethod.getReturnType()};
+    Method aboutMethod=findMethod(OBJECT,"about" + name,null,new Class[]{FieldAbout.class,getMethod.getReturnType()});
+    if (aboutMethod == null) {
+      aboutMethod=defaultAboutMethod;
+    }
+    Method addMethod=findMethod(OBJECT,"associate" + name,void.class,params);
+    if (addMethod == null) {
+      addMethod=findMethod(OBJECT,"add" + name,void.class,params);
+    }
+    Method removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,null);
+    if (removeMethod == null) {
+      removeMethod=findMethod(OBJECT,"remove" + name,void.class,null);
+    }
+    Method setMethod=findMethod(OBJECT,"set" + name,void.class,params);
+    if (setMethod == null) {
+      setMethod=findMethod(OBJECT,"set_" + name,void.class,params);
+    }
+    if (setMethod == null) {
+      throw new ReflectionException("A set" + name + " method is required in the class "+ className()+ " that corresponds to the "+ getMethod.getName()+ " method.");
+    }
+    String nm=naturalName(name);
+    JavaOneToOneAssociation association=new JavaOneToOneAssociation(nm,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod);
+    associations.addElement(association);
+  }
+}

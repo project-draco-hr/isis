@@ -1,0 +1,22 @@
+{
+  LOG.debug("local clear association " + inObject + "/"+ associate);
+  try {
+    if (removeMethod != null) {
+      removeMethod.invoke(inObject,new Object[]{associate});
+    }
+ else {
+      setMethod.invoke(inObject,new Object[]{null});
+    }
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("set method expects a " + getType().getName() + " object; not a "+ associate.getClass().getName());
+  }
+catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + setMethod,e.getTargetException());
+    throw (RuntimeException)e.getTargetException();
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + setMethod,ignore);
+    throw new RuntimeException(ignore.getMessage());
+  }
+}

@@ -1,0 +1,30 @@
+{
+  StringBuffer s=new StringBuffer();
+  s.append(getShortClassName());
+  s.append(" [");
+  s.append(isPersistent() ? "P" : (isFinder() ? "F" : "T"));
+  s.append(isResolved ? "R" : "-");
+  if (oid != null) {
+    s.append(":");
+    s.append(oid.toString().toUpperCase());
+  }
+ else {
+    s.append(":-");
+  }
+  if (isResolved()) {
+    s.append(" '");
+    try {
+      s.append(this.title());
+    }
+ catch (    NullPointerException e) {
+      s.append("no title");
+    }
+    s.append("'");
+  }
+ else {
+    s.append(" unresolved");
+  }
+  s.append("]");
+  s.append("  " + Long.toHexString(super.hashCode()).toUpperCase());
+  return s.toString();
+}

@@ -1,0 +1,13 @@
+{
+  LOG.debug("objectChanged " + object);
+  try {
+    objectStore.save(object);
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+  if (object.isPersistent()) {
+    LOG.debug("broadcastObjectUpdate " + object);
+    notifier.broadcastObjectChanged(object,this);
+  }
+}

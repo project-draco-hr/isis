@@ -1,0 +1,12 @@
+{
+  Object oid=memento.getOid();
+  LOG.debug("Update for " + oid + " ~ "+ memento);
+  if (loadedObjects.isLoaded(oid)) {
+    NakedObject object=loadedObjects.getLoadedObject(oid);
+    memento.updateNakedObject(object,loadedObjects);
+    notifier.broadcastObjectChanged(object,this);
+  }
+ else {
+    LOG.debug("Notify for (" + oid + ") ignored; OID not recognised");
+  }
+}

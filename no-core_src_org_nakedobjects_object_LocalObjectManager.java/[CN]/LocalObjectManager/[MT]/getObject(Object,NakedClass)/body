@@ -1,0 +1,12 @@
+{
+  LOG.debug("getObject " + oid);
+  try {
+    if (objectStore.getLoadedObjects().isLoaded(oid)) {
+      return objectStore.getLoadedObjects().getLoadedObject(oid);
+    }
+    return objectStore.getObject(oid,hint);
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  String name="org.company.Test";
+  try {
+    objectStore.getNakedClass(name);
+    fail();
+  }
+ catch (  ObjectNotFoundException expected) {
+  }
+  NakedClass nc=new NakedClass();
+  nc.setOid(nextOid());
+  nc.getName().setValue(name);
+  nc.getReflector().setValue("org.company.reflect.Reflector");
+  objectStore.createNakedClass(nc);
+  NakedClass nc2=objectStore.getNakedClass(name);
+  assertEquals(nc,nc2);
+  assertEquals(name,nc2.getName());
+  assertEquals(nc.getReflector(),nc2.getReflector());
+}

@@ -1,0 +1,16 @@
+{
+  NakedObjectManager objectManager=server.getObjectManager();
+  try {
+    Vector instances=objectManager.getInstances(pattern);
+    Vector oids=new Vector(instances.size());
+    Enumeration e=instances.elements();
+    while (e.hasMoreElements()) {
+      NakedObject element=(NakedObject)e.nextElement();
+      oids.addElement(new ObjectProxy(element));
+    }
+    response=oids;
+  }
+ catch (  UnsupportedFindException e) {
+    response=e;
+  }
+}

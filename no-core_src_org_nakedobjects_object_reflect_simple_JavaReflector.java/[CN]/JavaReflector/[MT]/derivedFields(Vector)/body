@@ -1,0 +1,16 @@
+{
+  Vector v=findPrefixedMethods(OBJECT,"derive",NakedValue.class,0);
+  Enumeration e=v.elements();
+  while (e.hasMoreElements()) {
+    Method method=(Method)e.nextElement();
+    LOG.debug("identified derived value method " + method);
+    String name=baseName(method.getName());
+    Method aboutMethod=findMethod(OBJECT,"about" + name,null,new Class[]{FieldAbout.class});
+    if (aboutMethod == null) {
+      aboutMethod=findMethod(OBJECT,"aboutFieldDefault",null,new Class[]{FieldAbout.class});
+    }
+    String nm=naturalName(name);
+    JavaValue attribute=new JavaValue(nm,method.getReturnType(),method,aboutMethod,null,true);
+    fields.addElement(attribute);
+  }
+}

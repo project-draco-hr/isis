@@ -1,0 +1,12 @@
+{
+  super(object);
+  this.actionName=action.getName();
+  this.actionType=action.getType();
+  this.parameters=new ObjectProxy[parameters.length];
+  for (int i=0; i < parameters.length; i++) {
+    if (parameters[i].getOid() == null) {
+      throw new IllegalArgumentException("All parameters must have an OID to used in a message");
+    }
+    this.parameters[i]=new ObjectProxy(parameters[i]);
+  }
+}

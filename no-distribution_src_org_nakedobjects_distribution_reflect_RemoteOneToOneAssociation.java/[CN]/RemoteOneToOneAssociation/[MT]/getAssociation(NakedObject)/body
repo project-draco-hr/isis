@@ -1,0 +1,15 @@
+{
+  if (inObject.isPersistent() && fullProxy) {
+    try {
+      LOG.debug("remote get association " + inObject);
+      return new GetAssociationRequest(inObject,this).getAssociate();
+    }
+ catch (    ObjectStoreException e) {
+      LOG.error("Problem with distribution",e.getCause());
+      return null;
+    }
+  }
+ else {
+    return local.getAssociation(inObject);
+  }
+}

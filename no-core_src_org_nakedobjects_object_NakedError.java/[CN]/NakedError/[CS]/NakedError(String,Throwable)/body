@@ -1,0 +1,14 @@
+{
+  error=new TextString(msg + " " + e.getMessage());
+  exception=new TextString(e.getMessage());
+  try {
+    ByteArrayOutputStream baos=new ByteArrayOutputStream();
+    e.printStackTrace(new PrintStream(baos));
+    trace=new MultilineTextString(baos.toString());
+    baos.close();
+  }
+ catch (  IOException ex) {
+    LOG.error(ex);
+  }
+  LOG.error(error,e);
+}

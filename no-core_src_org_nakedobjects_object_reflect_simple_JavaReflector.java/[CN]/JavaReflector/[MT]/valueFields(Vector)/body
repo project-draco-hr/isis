@@ -1,0 +1,29 @@
+{
+  Vector v=findPrefixedMethods(OBJECT,"get",NakedValue.class,0);
+  Method defaultAboutMethod=findMethod(OBJECT,"aboutFieldDefault",null,new Class[]{FieldAbout.class});
+  Enumeration e=v.elements();
+  while (e.hasMoreElements()) {
+    Method method=(Method)e.nextElement();
+    LOG.debug("identified value field method " + method);
+    String name=baseName(method.getName());
+    Method aboutMethod=findMethod(OBJECT,"about" + name,null,new Class[]{FieldAbout.class});
+    if (aboutMethod == null) {
+      aboutMethod=defaultAboutMethod;
+    }
+    Method validMethod=findMethod(OBJECT,"valid" + name,null,new Class[]{Validity.class});
+    Class[] params=new Class[]{method.getReturnType()};
+    if ((findMethod(OBJECT,"set" + name,void.class,params) != null) || (findMethod(OBJECT,"set_" + name,void.class,params) != null)) {
+      LOG.error("The method set" + name + " is not needed for the NakedValue class "+ className());
+    }
+    if (findMethod(OBJECT,"add" + name,void.class,params) != null) {
+      LOG.error("The method add" + name + " is not needed for the NakedValue class "+ className());
+    }
+    if (findMethod(OBJECT,"associate" + name,void.class,params) != null) {
+      LOG.error("The method associate" + name + " is not needed for the NakedValue class "+ className());
+    }
+    String nm=naturalName(name);
+    JavaValue attribute=new JavaValue(nm,method.getReturnType(),method,aboutMethod,validMethod,false);
+    fields.addElement(attribute);
+  }
+  return fields;
+}

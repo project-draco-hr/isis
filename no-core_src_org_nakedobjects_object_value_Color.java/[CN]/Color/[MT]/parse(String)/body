@@ -1,0 +1,21 @@
+{
+  if (text.trim().equals("")) {
+    clear();
+  }
+ else {
+    try {
+      if (text.startsWith("0x")) {
+        setValue(Integer.parseInt(text.substring(2),16));
+      }
+ else       if (text.startsWith("#")) {
+        setValue(Integer.parseInt(text.substring(1),16));
+      }
+ else {
+        setValue(Integer.parseInt(text));
+      }
+    }
+ catch (    NumberFormatException e) {
+      throw new ValueParseException(e,"Invalid number");
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  LogManager.getLoggerRepository().setThreshold(Level.OFF);
+  try {
+    objectManager=NakedObjectManager.getInstance();
+  }
+ catch (  IllegalStateException alreadySetUp) {
+    MockUpdateNotifier updateNotifier=new MockUpdateNotifier();
+    objectStore=new MockObjectStore();
+    objectManager=new LocalObjectManager(objectStore,updateNotifier);
+    objectManager.init();
+  }
+  super.setUp();
+}
