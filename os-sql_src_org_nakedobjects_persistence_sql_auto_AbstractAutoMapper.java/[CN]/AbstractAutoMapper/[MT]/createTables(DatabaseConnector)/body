@@ -1,18 +1,19 @@
 {
   if (!connection.hasTable(table)) {
     StringBuffer columns=new StringBuffer();
-    TypeMapper types=TypeMapper.getInstance();
     for (int f=0; f < fields.length; f++) {
       Field field=fields[f];
       String type;
       if (field instanceof Value) {
-        type=types.typeFor(fields[f].getType().getName());
-        if (type == null) {
+        ValueMapperLookup mappers=ValueMapperLookup.getInstance();
+        ValueMapper mapper=mappers.mapperFor(fields[f].getType());
+        if (mapper == null) {
           throw new SqlObjectStoreException("No type specified for " + fields[f].getType().getName());
         }
+        type=mapper.columnType();
       }
  else       if (field instanceof OneToOneAssociation) {
-        type=types.id();
+        type="INT";
       }
  else {
         throw new SqlObjectStoreException("Can't map field to column: " + field);

@@ -3,8 +3,7 @@
   String statement="select " + idColumn + ", "+ nameColumn+ ", "+ reflectorColumn+ " from "+ table+ " where "+ nameColumn+ " = '"+ name+ "'";
   Results rs=connector.select(statement);
   if (rs.next()) {
-    int id=rs.getInt(idColumn);
-    SqlOid oid=new SqlOid(id,NakedClass.class.getName());
+    Object oid=recreateOid(rs,NakedClass.SELF,idColumn);
     LOG.debug("  instance  " + oid);
     if (loadedObjects.isLoaded(oid)) {
       LOG.debug("  class already loaded   " + oid);

@@ -1,14 +1,14 @@
 {
   InternalCollection collection=(InternalCollection)field.get(parent);
   LOG.debug("Loading internal collection " + collection);
-  long parentId=mapper.primaryKey(parent.getOid());
+  String parentId=mapper.primaryKey(parent.getOid());
   String statement="select " + elementIdColumn + ","+ elementClassColumn+ " from "+ table+ " where "+ parentColumn+ " = "+ parentId;
   Results rs=connector.select(statement);
   while (rs.next()) {
-    int id=rs.getInt(elementIdColumn);
     String cls=rs.getString(elementClassColumn);
     NakedClass elementCls=NakedClassManager.getInstance().getNakedClass(cls);
-    NakedObject element=mapper.loadObject(elementCls,new SqlOid(id,cls));
+    Object oid=recreateOid(rs,elementCls,elementIdColumn);
+    NakedObject element=mapper.loadObject(elementCls,oid);
     LOG.debug("  element  " + element.getOid());
     collection.added(element);
   }

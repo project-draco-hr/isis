@@ -32,7 +32,7 @@
         String property=parameterBase + allFields[i].getName() + ".element-type";
         String elementType=configParameters.getString(property);
         if (elementType == null) {
-          throw new SqlObjectStoreException("Expected porperty " + property);
+          throw new SqlObjectStoreException("Expected property " + property);
         }
         collectionMappers[collectionFieldNo]=new ReversedAutoAssociationMapper(elementType,collectionFields[collectionFieldNo],parameterBase);
       }
@@ -52,10 +52,14 @@
       simpleFieldNo++;
     }
   }
+  lastActivityColumn="lastActivity";
   Properties columnMappings=configParameters.getPropertySubset(parameterBase + "column");
   for (Enumeration keys=columnMappings.keys(); keys.hasMoreElements(); ) {
     String columnName=(String)keys.nextElement();
     String fieldName=columnMappings.getProperty(columnName);
     columnNames[findMatchingField(fieldName)]=columnName;
+    if (fieldName.equalsIgnoreCase("lastActivity")) {
+      lastActivityColumn=columnName;
+    }
   }
 }

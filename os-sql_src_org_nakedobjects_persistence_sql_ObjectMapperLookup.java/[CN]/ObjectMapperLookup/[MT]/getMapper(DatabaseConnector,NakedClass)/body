@@ -1,0 +1,16 @@
+{
+  ObjectMapper mapper=(ObjectMapper)mappers.get(cls);
+  if (mapper == null) {
+    AutoMapper autoMapper=(AutoMapper)mapperFactory.createMapper(cls.fullName(),SqlObjectStore.BASE_NAME + ".automapper.default");
+    autoMapper.startup(connection,this,loadedObjects);
+    if (autoMapper.needsTables(connection)) {
+      autoMapper.createTables(connection);
+    }
+    mapper=autoMapper;
+  }
+  LOG.debug("  mapper for " + cls.getSingularName() + " -> "+ mapper);
+  if (mapper == null) {
+    throw new NakedObjectRuntimeException("No mapper for " + cls + " (no default mapper)");
+  }
+  return mapper;
+}

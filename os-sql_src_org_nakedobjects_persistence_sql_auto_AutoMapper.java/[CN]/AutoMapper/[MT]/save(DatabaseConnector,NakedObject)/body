@@ -1,5 +1,7 @@
 {
   NakedClass cls=object.getNakedClass();
+  String updateWhereClause=updateWhereClause(object,true);
+  ((AbstractNakedObject)object).getLastActivity().reset();
   StringBuffer assignments=new StringBuffer();
   int fld=0;
   for (int i=0; i < fields.length; i++) {
@@ -19,15 +21,19 @@
       }
     }
  else     if (fieldValue instanceof NakedValue) {
-      assignments.append(typeMapper.valueAsDBString(fields[i],(NakedValue)fieldValue));
+      ValueMapper mapper=typeMapper.mapperFor(fields[i].getType());
+      assignments.append(mapper.valueAsDBString((NakedValue)fieldValue));
     }
  else {
       assignments.append("NULL");
     }
   }
-  long id=primaryKey(object.getOid());
-  String statement="update " + table + " set "+ assignments+ " where "+ idColumn+ "="+ id+ updateWhereClause();
-  connector.update(statement);
+  String id=primaryKey(object.getOid());
+  String statement="update " + table + " set "+ assignments+ " where "+ idColumn+ "="+ id+ updateWhereClause;
+  int updateCount=connector.update(statement);
+  if (updateCount == 0) {
+    throw new NakedObjectRuntimeException(new NakedObjectRuntimeException());
+  }
   for (int i=0; i < collectionMappers.length; i++) {
     collectionMappers[i].saveInternalCollection(connector,object);
   }

@@ -12,8 +12,7 @@
  else {
       associatedObject=source;
     }
-    OneToOneContent content=new OneToOneContent(target,associatedObject,field);
-    field.setAssociation(target,associatedObject);
+    getViewManager().getUndoStack().add(new AssociateCommand(target,associatedObject,field));
     if (!target.isPersistent()) {
       getParent().invalidateContent();
     }

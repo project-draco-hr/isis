@@ -1,12 +1,12 @@
 {
   InternalCollection collection=(InternalCollection)field.get(parent);
   LOG.debug("Loading internal collection " + collection);
-  long parentId=primaryKey(parent.getOid());
+  String parentId=primaryKey(parent.getOid());
   String statement="select " + elementIdColumn + ","+ columnList()+ " from "+ table+ " where "+ parentColumn+ " = "+ parentId;
   Results rs=connector.select(statement);
   while (rs.next()) {
-    int id=rs.getInt(elementIdColumn);
-    NakedObject element=loadObject(nakedClass,new SqlOid(id,nakedClass.fullName()));
+    Object oid=recreateOid(rs,nakedClass,elementIdColumn);
+    NakedObject element=loadObject(nakedClass,oid);
     LOG.debug("  element  " + element);
     collection.added(element);
   }

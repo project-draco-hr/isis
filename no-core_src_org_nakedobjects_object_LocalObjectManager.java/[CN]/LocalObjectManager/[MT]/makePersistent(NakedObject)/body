@@ -3,7 +3,7 @@
   if (object.isPersistent()) {
     throw new IllegalArgumentException();
   }
-  object.setOid(createOid());
+  object.setOid(createOid(object));
   if (!object.isResolved()) {
     object.setResolved();
   }
@@ -18,7 +18,7 @@
     }
  else     if (field.isPart()) {
       InternalCollection collection=(InternalCollection)field.get(object);
-      collection.setOid(createOid());
+      collection.setOid(createOid(collection));
       collection.setResolved();
       for (int j=0; j < collection.size(); j++) {
         NakedObject element=collection.elementAt(j);
