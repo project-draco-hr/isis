@@ -1,6 +1,9 @@
 {
-  ObjectContent content=(ObjectContent)drag.getSourceContent();
+  NakedObject object=((ObjectContent)drag.getSourceContent()).getObject();
   NakedObject parent=((ObjectContent)getParent().getContent()).getObject();
-  getAssociation().setAssociation(parent,content.getObject());
-  layout();
+  Permission perm=canDrop(parent,object);
+  if (perm.isAllowed()) {
+    getAssociation().setAssociation(parent,object);
+    layout();
+  }
 }

@@ -1,0 +1,21 @@
+{
+  ActionSpecification action=dropAction(source,target);
+  if (action != null) {
+    About about=action.getAbout(ClientSession.getSession(),target,source);
+    return about.canUse();
+  }
+ else {
+    if (target.getOid() != null && source.getOid() == null) {
+      return new Veto("Can't set field in persistent object with reference to non-persistent object");
+    }
+ else {
+      FieldSpecification[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
+      for (int i=0; i < fields.length; i++) {
+        if (source.getSpecification().isOfType(fields[i].getType()) && ((AssociationSpecification)fields[i]).get(target) == null) {
+          return new Allow("Set field " + fields[i].getLabel());
+        }
+      }
+      return new Veto("No empty field accepting object of type " + source.getSpecification().getSingularName());
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  if (dragSource instanceof NakedClass) {
+    return new Allow();
+  }
+ else {
+    NakedObjectSpecification targetType=forSpecification();
+    NakedObjectSpecification sourceType=dragSource.getSpecification();
+    if (!sourceType.isOfType(targetType)) {
+      return new Veto("Can only drop objects of type " + targetType.getSingularName());
+    }
+    if (parent.getOid() != null && dragSource.getOid() == null) {
+      return new Veto("Can't drop a non-persistent into this persistent object");
+    }
+    Permission perm=getEmptyField().getAbout(ClientSession.getSession(),parent,dragSource).canUse();
+    return perm;
+  }
+}

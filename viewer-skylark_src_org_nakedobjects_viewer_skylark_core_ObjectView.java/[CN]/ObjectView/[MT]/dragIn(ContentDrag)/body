@@ -1,29 +1,14 @@
 {
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
   NakedObject target=getObject();
-  ActionSpecification action=dropAction(source,target);
-  if (action != null) {
-    About about=action.getAbout(ClientSession.getSession(),target,source);
-    if (about.canUse().isAllowed()) {
-      getViewManager().setStatus(about.getDescription());
-      getState().setCanDrop();
-    }
- else {
-      getViewManager().setStatus(about.getDescription() + ": " + about.canUse().getReason());
-      getState().setCantDrop();
-    }
+  Permission perm=canDrop(source,target);
+  if (perm.isAllowed()) {
+    getViewManager().setStatus(perm.getReason());
+    getState().setCanDrop();
   }
  else {
-    getViewManager().setStatus("");
+    getViewManager().setStatus(perm.getReason());
     getState().setCantDrop();
-    FieldSpecification[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
-    for (int i=0; i < fields.length; i++) {
-      if (source.getSpecification().isOfType(fields[i].getType()) && ((AssociationSpecification)fields[i]).get(target) == null) {
-        getState().setCanDrop();
-        getViewManager().setStatus("Set field " + fields[i].getLabel());
-        break;
-      }
-    }
   }
   markDamaged();
 }

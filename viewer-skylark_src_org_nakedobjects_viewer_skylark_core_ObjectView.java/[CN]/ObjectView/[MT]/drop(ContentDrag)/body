@@ -4,25 +4,27 @@
   Assert.assertNotNull(source);
   NakedObject target=getObject();
   Assert.assertNotNull(target);
-  ActionSpecification action=dropAction(source,target);
-  if ((action != null) && action.getAbout(ClientSession.getSession(),target,source).canUse().isAllowed()) {
-    NakedObject result=action.execute(target,source);
-    if (result != null) {
-      View view=ViewFactory.getViewFactory().createOpenRootView(result);
-      Location location=new Location();
-      location.move(10,10);
-      view.setLocation(location);
-      getWorkspace().addView(view);
+  if (canDrop(source,target).isAllowed()) {
+    ActionSpecification action=dropAction(source,target);
+    if ((action != null) && action.getAbout(ClientSession.getSession(),target,source).canUse().isAllowed()) {
+      NakedObject result=action.execute(target,source);
+      if (result != null) {
+        View view=ViewFactory.getViewFactory().createOpenRootView(result);
+        Location location=new Location();
+        location.move(10,10);
+        view.setLocation(location);
+        getWorkspace().addView(view);
+      }
+      markDamaged();
     }
-    markDamaged();
-  }
  else {
-    FieldSpecification[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
-    for (int i=0; i < fields.length; i++) {
-      if (source.getSpecification().isOfType(fields[i].getType()) && ((AssociationSpecification)fields[i]).get(target) == null) {
-        ((AssociationSpecification)fields[i]).setAssociation(target,source);
-        invalidateContent();
-        break;
+      FieldSpecification[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
+      for (int i=0; i < fields.length; i++) {
+        if (source.getSpecification().isOfType(fields[i].getType()) && ((AssociationSpecification)fields[i]).get(target) == null) {
+          ((AssociationSpecification)fields[i]).setAssociation(target,source);
+          invalidateContent();
+          break;
+        }
       }
     }
   }

@@ -10,12 +10,16 @@
  else   if (state.isObjectIdentified()) {
     color=Style.SECONDARY2;
   }
+  Size s=getSize();
+  int width=s.getWidth();
   if (color != null) {
-    Size s=getSize();
-    int width=s.getWidth();
     for (int i=0; i < left; i++) {
       canvas.drawRectangle(i,i,width - 2 * i - 1,s.getHeight() - 2 * i - 1,color);
     }
+  }
+  NakedObject object=((ObjectContent)getContent()).getObject();
+  if (object != null && object.getOid() == null) {
+    canvas.drawRectangle(1,1,width - 3,s.getHeight() - 3,Style.WHITE);
   }
   super.draw(canvas);
 }

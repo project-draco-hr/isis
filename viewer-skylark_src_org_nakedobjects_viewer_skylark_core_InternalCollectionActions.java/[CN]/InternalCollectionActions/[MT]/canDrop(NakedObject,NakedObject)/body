@@ -1,0 +1,11 @@
+{
+  InternalCollection collection=(InternalCollection)getAssociation().get(parent);
+  if (!object.getSpecification().isOfType(collection.getElementSpecification())) {
+    return new Veto("Only objects of type " + collection.getElementSpecification().getSingularName() + " are allowed in this collection");
+  }
+  if (parent.getOid() != null && object.getOid() == null) {
+    return new Veto("Can't set field in persistent object with reference to non-persistent object");
+  }
+  About about=getAssociation().getAbout(ClientSession.getSession(),parent,object,true);
+  return about.canUse();
+}

@@ -1,8 +1,7 @@
 {
-  ObjectContent content=(ObjectContent)drag.getSourceContent();
+  NakedObject object=((ObjectContent)drag.getSourceContent()).getObject();
   NakedObject parent=((ObjectContent)getParent().getContent()).getObject();
-  About about=getAssociation().getAbout(ClientSession.getSession(),parent,content.getObject(),true);
-  Permission perm=about.canUse();
+  Permission perm=canDrop(parent,object);
   if (perm.isVetoed()) {
     getState().setCantDrop();
     getViewManager().setStatus(perm.getReason());
