@@ -22,10 +22,21 @@
   icon.draw(canvas,x,baseline);
   x+=icon.getSize().getWidth();
   text.draw(canvas,x,baseline);
-  x=width - right - 3 * (BUTTON_WIDTH + padding) - 1;
+  x=width - right - 4 * (BUTTON_WIDTH + padding) - 1;
   y=LINE_THICKNESS + padding;
   int w=BUTTON_WIDTH - 1;
   int h=BUTTON_HEIGHT - 1;
+  NakedObject object=((ObjectContent)getContent()).getObject();
+  if (object != null && object.getOid() == null) {
+    Image icon=ImageFactory.getInstance().createIcon("transient",BUTTON_HEIGHT,null);
+    if (icon == null) {
+      canvas.drawText("*",x,y,Style.BLACK,Style.NORMAL);
+    }
+ else {
+      canvas.drawIcon(icon,x,y,BUTTON_HEIGHT,BUTTON_HEIGHT);
+    }
+  }
+  x+=BUTTON_WIDTH + padding;
   canvas.drawRectangle(x + 1,y + 1,w,h,Style.WHITE);
   canvas.drawRectangle(x,y,w,h,Style.BLACK);
   canvas.drawLine(x + 3,y + 9,x + 8,y + 9,Style.BLACK);

@@ -13,16 +13,24 @@
  else   if (getViewManager().hasFocus(getView())) {
     color=Style.IDENTIFIED;
   }
+  NakedObject object=((ObjectContent)getContent()).getObject();
+  if (object != null && object.getOid() == null) {
+    int x=getSize().getWidth() - 13;
+    int y=0;
+    Image icon=ImageFactory.getInstance().createIcon("transient",8,null);
+    if (icon == null) {
+      canvas.drawText("*",x,y,Style.BLACK,Style.NORMAL);
+    }
+ else {
+      canvas.drawIcon(icon,x,y,12,12);
+    }
+  }
   Size s=getSize();
   int width=s.getWidth();
   if (color != null) {
     for (int i=0; i < left; i++) {
       canvas.drawRectangle(i,i,width - 2 * i - 1,s.getHeight() - 2 * i - 1,color);
     }
-  }
-  NakedObject object=((ObjectContent)getContent()).getObject();
-  if (object != null && object.getOid() == null) {
-    canvas.drawRectangle(1,1,width - 3,s.getHeight() - 3,Style.WHITE);
   }
   super.draw(canvas);
 }
