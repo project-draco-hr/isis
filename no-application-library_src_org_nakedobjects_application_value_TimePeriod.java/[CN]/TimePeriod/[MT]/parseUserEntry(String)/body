@@ -1,0 +1,18 @@
+{
+  if (text.trim().equals("")) {
+    clear();
+  }
+ else {
+    int tilde=text.indexOf("~");
+    if (tilde >= 0) {
+      start.parseUserEntry(text.substring(0,tilde).trim());
+      end.parseUserEntry(text.substring(tilde + 1).trim());
+    }
+ else {
+      throw new ValueParseException("No tilde found",new Exception());
+    }
+    if (end.isLessThan(start)) {
+      throw new ValueParseException("End time before start time",new Exception());
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  dateString=dateString.trim();
+  if (dateString.equals("")) {
+    clear();
+  }
+ else {
+    String str=dateString.toLowerCase();
+    Calendar cal=Calendar.getInstance();
+    cal.setTime(date);
+    clearDate(cal);
+    if (str.equals("today") || str.equals("now")) {
+      today();
+      return;
+    }
+ else     if (str.startsWith("+")) {
+      int days;
+      int unit=Calendar.DATE;
+      int multiplier=1;
+      if (str.endsWith("w")) {
+        multiplier=7;
+        str=str.substring(0,str.length() - 1);
+      }
+ else       if (str.endsWith("m")) {
+        unit=Calendar.MONTH;
+        str=str.substring(0,str.length() - 1);
+      }
+      days=Integer.valueOf(str.substring(1)).intValue();
+      cal.setTime(date);
+      cal.add(unit,days * multiplier);
+    }
+ else     if (str.startsWith("-")) {
+      int days;
+      int unit=Calendar.DATE;
+      int multiplier=1;
+      if (str.endsWith("w")) {
+        multiplier=7;
+        str=str.substring(0,str.length() - 1);
+      }
+ else       if (str.endsWith("m")) {
+        unit=Calendar.MONTH;
+        str=str.substring(0,str.length() - 1);
+      }
+      days=Integer.valueOf(str.substring(1)).intValue();
+      cal.setTime(date);
+      cal.add(unit,-days * multiplier);
+    }
+ else {
+      DateFormat[] formats=new DateFormat[]{LONG_FORMAT,MEDIUM_FORMAT,SHORT_FORMAT,ISO_LONG,ISO_SHORT};
+      for (int i=0; i < formats.length; i++) {
+        try {
+          cal.setTime(formats[i].parse(dateString));
+          break;
+        }
+ catch (        ParseException e) {
+          if ((i + 1) == formats.length) {
+            throw new ValueParseException("Invalid date " + dateString,e);
+          }
+        }
+      }
+    }
+    set(cal);
+  }
+}

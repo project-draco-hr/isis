@@ -1,0 +1,38 @@
+{
+  tp1.parseUserEntry("09:00 ~ 17:00");
+  assertEquals(Time.HOUR * 9,tp1.getStart().longValue());
+  assertEquals(Time.HOUR * 17,tp1.getEnd().longValue());
+  tp1.parseUserEntry("11:00  ~  13:15");
+  assertEquals("11:00 ~ 13:15",tp1.title().toString());
+  tp1.parseUserEntry("7:00~19:12");
+  assertEquals("07:00 ~ 19:12",tp1.title().toString());
+  try {
+    tp1.parseUserEntry("hgjuiy");
+    fail();
+  }
+ catch (  ValueParseException expected) {
+  }
+  try {
+    tp1.parseUserEntry("8:16 09:00");
+    fail();
+  }
+ catch (  ValueParseException expected) {
+  }
+  try {
+    tp1.parseUserEntry("rtyu~ghjk");
+    fail();
+  }
+ catch (  ValueParseException expected) {
+  }
+  try {
+    tp1.parseUserEntry("13:05 ~ 13:01");
+    fail();
+  }
+ catch (  ValueParseException e) {
+    assertTrue(e.getMessage().equals("End time before start time"));
+  }
+  tp1.parseUserEntry("13:05~");
+  assertTrue(tp1.title().toString().equals("13:05 ~"));
+  tp1.parseUserEntry("~19:15 ");
+  assertTrue(tp1.title().toString().equals("~ 19:15"));
+}

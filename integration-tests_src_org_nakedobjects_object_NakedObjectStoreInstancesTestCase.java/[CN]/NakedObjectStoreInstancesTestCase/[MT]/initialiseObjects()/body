@@ -1,0 +1,27 @@
+{
+  personClassName=Person.class.getName();
+  personClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(Person.class);
+  roleClass=NakedObjectSpecificationLoader.getInstance().loadSpecification(Role.class);
+  personPattern=new Person();
+  personPattern.makeFinder();
+  String names[]={"Freddy","John","Sam","Zax","fdfdklj"};
+  nakedObjects=new NakedObject[names.length];
+  for (int i=0; i < names.length; i++) {
+    nakedObjects[i]=new Person();
+    nakedObjects[i].setContext(context);
+    nakedObjects[i].setOid(nextOid());
+    nakedObjects[i].name.setValue(names[i]);
+    objectStore.createObject(nakedObjects[i]);
+    assertNotNull(nakedObjects[i].getOid());
+  }
+  String roleNames[]={"Leader","Specialist","Tester"};
+  roles=new NakedObject[roleNames.length];
+  for (int i=0; i < roleNames.length; i++) {
+    roles[i]=new Role();
+    roles[i].setContext(context);
+    roles[i].setOid(nextOid());
+    roles[i].name.setValue(roleNames[i]);
+    roles[i].referencedObject=nakedObjects[i];
+    objectStore.createObject(roles[i]);
+  }
+}

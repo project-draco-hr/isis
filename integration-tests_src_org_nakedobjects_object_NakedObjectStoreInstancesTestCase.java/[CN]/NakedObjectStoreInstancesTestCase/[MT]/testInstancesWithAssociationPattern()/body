@@ -1,0 +1,19 @@
+{
+  restartObjectStore();
+  try {
+    Role rolePattern;
+    rolePattern=new Role();
+    rolePattern.setContext(context);
+    rolePattern.makeFinder();
+    rolePattern.referencedObject=nakedObjects[1];
+    assertTrue(objectStore.hasInstances(roleClass,false));
+    NakedObject[] v=objectStore.getInstances(rolePattern,false);
+    assertEquals(1,v.length);
+    assertEquals(roles[1],v[0]);
+    rolePattern.referencedObject=nakedObjects[3];
+    v=objectStore.getInstances(rolePattern,false);
+    assertEquals(0,v.length);
+  }
+ catch (  UnsupportedFindException e) {
+  }
+}

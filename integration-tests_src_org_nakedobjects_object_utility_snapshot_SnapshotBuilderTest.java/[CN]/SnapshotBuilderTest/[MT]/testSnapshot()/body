@@ -1,0 +1,12 @@
+{
+  ConfigurationFactory.setConfiguration(new Configuration());
+  new NakedObjectSpecificationLoaderImpl();
+  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
+  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  TestObject testObject=new TestObject();
+  XmlSnapshot builder=new XmlSnapshot(PojoAdapter.createAdapter(testObject));
+  Element e=builder.getXmlElement();
+  DomSerializer serializer=new DomSerializerCrimson();
+  String xml=serializer.serialize(e);
+  assertEquals("",xml);
+}

@@ -1,0 +1,16 @@
+{
+  if (text.trim().equals("")) {
+    clear();
+  }
+ else {
+    int dash=text.indexOf("~");
+    if (dash == -1) {
+      throw new ValueParseException("No tilde found");
+    }
+    getStart().parseUserEntry(text.substring(0,dash).trim());
+    getEnd().parseUserEntry(text.substring(dash + 1).trim());
+    if (getEnd().isLessThan(getStart())) {
+      throw new ValueParseException("End date must be before start date");
+    }
+  }
+}
