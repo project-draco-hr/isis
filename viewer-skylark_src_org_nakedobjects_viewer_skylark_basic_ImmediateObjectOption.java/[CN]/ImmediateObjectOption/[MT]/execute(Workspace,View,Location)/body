@@ -6,7 +6,7 @@
         returnedObject=object.execute(action,null);
       }
  catch (      Exception e) {
-        returnedObject=PojoAdapter.createAdapter(NakedObjects.getObjectManager().generatorError("System error",e));
+        returnedObject=NakedObjects.getPojoAdapterFactory().createAdapter(NakedObjects.getObjectManager().generatorError("System error",e));
       }
       if (returnedObject != null) {
         if (returnedObject instanceof NakedError) {
@@ -15,7 +15,7 @@
         }
  else {
           if (!(returnedObject instanceof Naked)) {
-            returnedObject=PojoAdapter.createAdapter(returnedObject);
+            returnedObject=NakedObjects.getPojoAdapterFactory().createAdapter(returnedObject);
           }
           view.objectActionResult(returnedObject,at);
         }

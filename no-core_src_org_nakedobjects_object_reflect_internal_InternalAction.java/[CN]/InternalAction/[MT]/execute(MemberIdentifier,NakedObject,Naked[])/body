@@ -14,11 +14,12 @@
       return (Naked)result;
     }
     if (result != null) {
-      return PojoAdapter.createAdapter(result);
+      return NakedObjects.getPojoAdapterFactory().createAdapter(result);
     }
   }
  catch (  InvocationTargetException e) {
     e.fillInStackTrace();
+    throw new ReflectionException(e);
   }
 catch (  IllegalAccessException e) {
     LOG.error("Illegal access of " + actionMethod,e);

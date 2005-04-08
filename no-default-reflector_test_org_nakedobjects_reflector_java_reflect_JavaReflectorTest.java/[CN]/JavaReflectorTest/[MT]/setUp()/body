@@ -3,8 +3,10 @@
   ConfigurationFactory.setConfiguration(new TestConfiguration());
   loader=new MockNakedObjectSpecificationLoader();
   loader.addSpec(new DummyNakedObjectSpecification());
-  PojoAdapter.setPojoAdapterHash(new PojoAdapterHashImpl());
-  PojoAdapter.setReflectorFactory(new NullReflectorFactory());
+  PojoAdapterFactory pojoAdapterFactory=new PojoAdapterFactory();
+  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
+  pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
+  NakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
   objectFactory=new MockObjectFactory();
   reflector=new MockJavaReflector(JavaObjectForReflector.class.getName(),objectFactory);
 }

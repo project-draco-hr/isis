@@ -1,7 +1,9 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
   new MockNakedObjectSpecificationLoader();
-  PojoAdapter.setPojoAdapterHash(new PojoAdapterHashImpl());
-  PojoAdapter.setReflectorFactory(new NullReflectorFactory());
+  PojoAdapterFactory pojoAdapterFactory=new PojoAdapterFactory();
+  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
+  pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
+  NakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
   reflector=new MockInternalReflector(InternalObjectForReflector.class.getName());
 }

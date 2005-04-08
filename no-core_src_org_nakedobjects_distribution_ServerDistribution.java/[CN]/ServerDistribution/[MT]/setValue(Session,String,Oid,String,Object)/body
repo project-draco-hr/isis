@@ -1,7 +1,7 @@
 {
   NakedObject inObject=getNakedObject(session,objectOid,objectType);
   OneToOneAssociation association=(OneToOneAssociation)inObject.getSpecification().getField(fieldIdentifier);
-  Hint about=inObject.getHint(session,association,PojoAdapter.createAdapter(value));
+  Hint about=inObject.getHint(session,association,NakedObjects.getPojoAdapterFactory().createNOAdapter(value));
   if (about.canAccess().isVetoed() || about.canUse().isVetoed()) {
     throw new NakedObjectRuntimeException();
   }
