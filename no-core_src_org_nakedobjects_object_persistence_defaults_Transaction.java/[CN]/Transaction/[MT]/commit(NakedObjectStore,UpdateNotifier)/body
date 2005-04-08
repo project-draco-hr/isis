@@ -1,14 +1,14 @@
 {
-  LOG.debug("commit transaction" + this);
+  LOG.info("commit transaction " + this);
   if (complete) {
     throw new TransactionException("Transaction already complete; cannot commit");
   }
   complete=true;
-  PersistenceCommand[] commands=new PersistenceCommand[transactionCommands.size()];
-  transactionCommands.copyInto(commands);
-  if (commands.length > 0) {
+  PersistenceCommand[] commandsArray=new PersistenceCommand[commands.size()];
+  commands.copyInto(commandsArray);
+  if (commandsArray.length > 0) {
     objectStore.startTransaction();
-    objectStore.runTransaction(commands);
+    objectStore.runTransaction(commandsArray);
     objectStore.endTransaction();
   }
   NakedObject object;
