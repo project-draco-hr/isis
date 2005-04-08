@@ -2,19 +2,5 @@
   if (associate == null) {
     throw new NullPointerException("Must specify the item to remove/dissociate");
   }
-  NakedObjectManager objectManager=NakedObjects.getObjectManager();
-  try {
-    if (inObject.isPersistent()) {
-      objectManager.startTransaction();
-    }
-    reflectiveAdapter.clearAssociation(inObject,associate);
-    objectManager.saveChanges();
-    if (inObject.isPersistent()) {
-      objectManager.endTransaction();
-    }
-  }
- catch (  RuntimeException e) {
-    objectManager.abortTransaction();
-    throw e;
-  }
+  reflectiveAdapter.clearAssociation(inObject,associate);
 }
