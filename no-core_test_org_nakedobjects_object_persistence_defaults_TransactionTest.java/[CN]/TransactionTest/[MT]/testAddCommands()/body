@@ -1,20 +1,6 @@
 {
-  t.addCommand(new PersistenceCommand(){
-    public void execute() throws ObjectStoreException {
-    }
-    public String toString(){
-      return "command 1";
-    }
-  }
-);
-  t.addCommand(new PersistenceCommand(){
-    public void execute() throws ObjectStoreException {
-    }
-    public String toString(){
-      return "command 2";
-    }
-  }
-);
+  t.addCommand(createSaveCommand(object1,"command 1"));
+  t.addCommand(createSaveCommand(object2,"command 2"));
   t.commit(os,updates);
   os.assertAction(0,"start");
   os.assertAction(1,"run command 1");
