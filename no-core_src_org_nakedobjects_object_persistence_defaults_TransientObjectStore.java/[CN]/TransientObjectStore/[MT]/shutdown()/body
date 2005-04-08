@@ -1,5 +1,10 @@
 {
+  loaded.shutdown();
   loaded=null;
+  for (Enumeration e=instances.elements(); e.hasMoreElements(); ) {
+    TransientObjectStoreInstances inst=(TransientObjectStoreInstances)e.nextElement();
+    inst.shutdown();
+  }
   instances.clear();
   LOG.info("shutdown");
 }
