@@ -1,19 +1,21 @@
 {
-  StringBuffer data=new StringBuffer();
-  data.append("Objects\n");
-  data.append("----------\n");
+  DebugString debug=new DebugString();
+  debug.appendTitle(loaded.getDebugTitle());
+  debug.appendln(loaded.getDebugData());
+  debug.appendTitle(NakedObjects.getPojoAdapterFactory().getDebugTitle());
+  debug.appendln(NakedObjects.getPojoAdapterFactory().getDebugData());
+  debug.appendTitle("Objects");
   Enumeration e=instances.keys();
   while (e.hasMoreElements()) {
     NakedObjectSpecification spec=(NakedObjectSpecification)e.nextElement();
     TransientObjectStoreInstances instances=instancesFor(spec);
     Enumeration f=instances.elements();
     while (f.hasMoreElements()) {
-      data.append(f.nextElement());
-      data.append('\n');
+      debug.appendln(f.nextElement().toString());
     }
   }
-  data.append("\n\nObjects\n");
-  data.append("----------\n");
+  debug.appendln();
+  debug.appendTitle("Object graphs");
   Vector dump=new Vector();
   e=instances.keys();
   while (e.hasMoreElements()) {
@@ -22,10 +24,9 @@
     Enumeration f=instances.elements();
     while (f.hasMoreElements()) {
       NakedObject object=(NakedObject)f.nextElement();
-      data.append(object);
-      data.append(debugGraph(object,"name???",0,dump));
-      data.append('\n');
+      debug.append(object);
+      debug.appendln(debugGraph(object,"name???",0,dump));
     }
   }
-  return data.toString();
+  return debug.toString();
 }

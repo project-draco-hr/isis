@@ -1,9 +1,15 @@
 {
-  NakedObject object=(NakedObject)objectInstances.get(oid);
-  if (object == null) {
-    throw new ObjectNotFoundException(oid);
+  if (loaded.isLoaded(oid)) {
+    return loaded.getLoadedObject(oid);
   }
  else {
+    Object pojo=objectInstances.get(oid);
+    NakedObject object=NakedObjects.getPojoAdapterFactory().createNOAdapter(pojo);
+    if (object.getOid() == null) {
+      object.setOid(oid);
+      loaded.loaded(object);
+      object.setResolved();
+    }
     return object;
   }
 }

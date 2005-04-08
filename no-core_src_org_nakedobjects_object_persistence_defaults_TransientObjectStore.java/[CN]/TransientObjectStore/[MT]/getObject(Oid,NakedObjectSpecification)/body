@@ -1,5 +1,11 @@
 {
   LOG.debug("getObject " + oid);
   TransientObjectStoreInstances ins=instancesFor(hint);
-  return ins.getObject(oid);
+  NakedObject object=ins.getObject(oid);
+  if (object == null) {
+    throw new ObjectNotFoundException(oid);
+  }
+ else {
+    return object;
+  }
 }
