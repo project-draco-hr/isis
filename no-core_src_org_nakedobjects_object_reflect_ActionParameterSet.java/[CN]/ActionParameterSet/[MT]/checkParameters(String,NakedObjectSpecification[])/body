@@ -1,0 +1,12 @@
+{
+  for (int i=0; i < requiredTypes.length; i++) {
+    NakedObjectSpecification specification=requiredTypes[i];
+    if (defaultValues[i] == null) {
+      continue;
+    }
+    NakedObjectSpecification parameterSpec=NakedObjects.getSpecificationLoader().loadSpecification(defaultValues[i].getClass());
+    if (!parameterSpec.isOfType(specification)) {
+      throw new ReflectionException("Parameter " + (i + 1) + " in "+ name+ " is not of required type; expected type "+ specification.getFullName()+ " but got "+ parameterSpec.getFullName()+ ".  Check the related about method");
+    }
+  }
+}
