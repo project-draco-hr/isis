@@ -1,17 +1,11 @@
 {
-  View subview=subviewFor(location);
-  if (subview == null) {
-    Size size=wrappedView.getSize();
-    Bounds bounds=new Bounds(getLeft(),getTop(),size.getWidth(),size.getHeight());
-    if (bounds.contains(location)) {
-      return ViewAreaType.CONTENT;
-    }
- else {
-      return ViewAreaType.VIEW;
-    }
+  int iconWidth=icon.getSize().getWidth();
+  int textWidth=text.getSize().getWidth();
+  Bounds bounds=new Bounds(0,0,iconWidth + textWidth,top);
+  if (bounds.contains(mouseLocation)) {
+    return ViewAreaType.CONTENT;
   }
  else {
-    location.subtract(subview.getLocation());
-    return subview.viewAreaType(location);
+    return super.viewAreaType(mouseLocation);
   }
 }
