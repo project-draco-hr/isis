@@ -1,0 +1,8 @@
+{
+  NakedObject object=createTestObject();
+  NakedObject objectToDelete=createTestObject();
+  PersistenceCommand[] commands=new PersistenceCommand[]{objectStore.createCreateObjectCommand(objectToDelete),objectStore.createCreateObjectCommand(object)};
+  objectStore.runTransaction(commands);
+  assertTrue(objectStore.hasInstances(objectSpec,false));
+  assertEquals(2,objectStore.numberOfInstances(objectSpec,false));
+}

@@ -1,4 +1,9 @@
 {
   LOG.debug("get instances" + (includeSubclasses ? " (included subclasses)" : "") + ": "+ spec.getFullName());
-  return instancesFor(spec).instances();
+  NakedObject[] ins=instancesFor(spec).instances();
+  for (int i=0; i < ins.length; i++) {
+    NakedObject object=ins[i];
+    setupReferencedObjects(object);
+  }
+  return ins;
 }

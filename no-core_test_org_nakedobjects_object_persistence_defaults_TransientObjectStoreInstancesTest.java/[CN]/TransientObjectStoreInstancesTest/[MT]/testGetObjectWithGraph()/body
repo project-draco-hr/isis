@@ -1,0 +1,24 @@
+{
+  NakedObject object=createTestObject();
+  NakedObject referenced=createReferencedObject();
+  ((TestObject)object.getObject()).setReferencedObject((ReferencedObject)referenced.getObject());
+  PersistenceCommand[] commands=new PersistenceCommand[]{objectStore.createCreateObjectCommand(object),objectStore.createCreateObjectCommand(referenced)};
+  objectStore.runTransaction(commands);
+  objectSpec.fields=new NakedObjectField[]{new MockField(objectSpec)};
+  NakedObjectField fields[]=object.getFields();
+  assertEquals(referenced,object.getField(fields[0]));
+  restartObjectStore();
+  NakedObject retrievedObject=objectStore.getObject(object.getOid(),objectSpec);
+  assertEquals(object,retrievedObject);
+  assertNotSame(object,retrievedObject);
+  assertTrue(retrievedObject.isResolved());
+  assertTrue(retrievedObject.isPersistent());
+  NakedObject retrievedReferenced=(NakedObject)retrievedObject.getField(fields[0]);
+  Assert.assertEquals(referenced,retrievedReferenced);
+  assertTrue(retrievedReferenced.isPersistent());
+  assertFalse(retrievedReferenced.isResolved());
+  assertEquals(referenced,retrievedReferenced);
+  assertNotSame(referenced,retrievedReferenced);
+  objectStore.resolveImmediately(object);
+  assertFalse(retrievedReferenced.isResolved());
+}
