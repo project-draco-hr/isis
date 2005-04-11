@@ -1,9 +1,13 @@
 {
   NakedObject inObject=getNakedObject(session,objectOid,objectType);
   OneToOneAssociation association=(OneToOneAssociation)inObject.getSpecification().getField(fieldIdentifier);
-  Hint about=inObject.getHint(session,association,NakedObjects.getPojoAdapterFactory().createNOAdapter(value));
+  Hint about=inObject.getHint(session,association,NakedObjects.getPojoAdapterFactory().createAdapter(value));
   if (about.canAccess().isVetoed() || about.canUse().isVetoed()) {
     throw new NakedObjectRuntimeException();
+  }
+  NakedValue fieldValue=(NakedValue)inObject.getValue(association);
+  if (fieldValue != null) {
+    fieldValue.restoreFromEncodedString(((NakedValue)NakedObjects.getPojoAdapterFactory().createAdapter(value)).asEncodedString());
   }
   inObject.setValue(association,value);
 }
