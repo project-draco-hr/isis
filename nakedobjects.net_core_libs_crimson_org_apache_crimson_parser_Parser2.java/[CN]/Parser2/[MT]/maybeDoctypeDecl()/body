@@ -1,0 +1,52 @@
+{
+  if (!peek("<!DOCTYPE"))   return false;
+  ExternalEntity externalSubset=null;
+  rootElementName=getMarkupDeclname("F-014",true);
+  if (maybeWhitespace() && (externalSubset=maybeExternalID()) != null) {
+    lexicalHandler.startDTD(rootElementName,externalSubset.publicId,externalSubset.verbatimSystemId);
+    maybeWhitespace();
+  }
+ else {
+    lexicalHandler.startDTD(rootElementName,null,null);
+  }
+  if (in.peekc('[')) {
+    for (; ; ) {
+      if (in.isEOF() && !in.isDocument()) {
+        in=in.pop();
+        continue;
+      }
+      if (maybeMarkupDecl() || maybePEReference() || maybeWhitespace())       continue;
+ else       if (peek("<!["))       fatal("P-028");
+ else       break;
+    }
+    nextChar(']',"F-024",null);
+    maybeWhitespace();
+  }
+  nextChar('>',"F-025",null);
+  if (externalSubset != null) {
+    externalSubset.name="[dtd]";
+    externalSubset.isPE=true;
+    externalParameterEntity(externalSubset);
+  }
+  params.clear();
+  lexicalHandler.endDTD();
+  Vector v=new Vector();
+  for (Enumeration e=notations.keys(); e.hasMoreElements(); ) {
+    String name=(String)e.nextElement();
+    Object value=notations.get(name);
+    if (value == Boolean.TRUE) {
+      if (supportValidation && isValidating)       error("V-003",new Object[]{name});
+      v.addElement(name);
+    }
+ else     if (value instanceof String) {
+      if (supportValidation && isValidating)       error("V-004",new Object[]{name});
+      v.addElement(name);
+    }
+  }
+  while (!v.isEmpty()) {
+    Object name=v.firstElement();
+    v.removeElement(name);
+    notations.remove(name);
+  }
+  return true;
+}

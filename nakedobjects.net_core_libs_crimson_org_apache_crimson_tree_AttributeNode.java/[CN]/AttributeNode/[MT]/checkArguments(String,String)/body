@@ -1,0 +1,27 @@
+{
+  if (qualifiedName == null) {
+    throw new DomEx(DomEx.NAMESPACE_ERR);
+  }
+  int first=qualifiedName.indexOf(':');
+  if (first <= 0) {
+    if (!XmlNames.isUnqualifiedName(qualifiedName)) {
+      throw new DomEx(DomEx.INVALID_CHARACTER_ERR);
+    }
+    if ("xmlns".equals(qualifiedName) && !XmlNames.SPEC_XMLNS_URI.equals(namespaceURI)) {
+      throw new DomEx(DomEx.NAMESPACE_ERR);
+    }
+    return;
+  }
+  int last=qualifiedName.lastIndexOf(':');
+  if (last != first) {
+    throw new DomEx(DomEx.NAMESPACE_ERR);
+  }
+  String prefix=qualifiedName.substring(0,first);
+  String localName=qualifiedName.substring(first + 1);
+  if (!XmlNames.isUnqualifiedName(prefix) || !XmlNames.isUnqualifiedName(localName)) {
+    throw new DomEx(DomEx.INVALID_CHARACTER_ERR);
+  }
+  if (namespaceURI == null || ("xml".equals(prefix) && !XmlNames.SPEC_XML_URI.equals(namespaceURI))) {
+    throw new DomEx(DomEx.NAMESPACE_ERR);
+  }
+}

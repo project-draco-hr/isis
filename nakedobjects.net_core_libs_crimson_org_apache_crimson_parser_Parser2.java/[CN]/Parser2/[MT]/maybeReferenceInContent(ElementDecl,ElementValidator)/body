@@ -1,0 +1,13 @@
+{
+  if (!in.peekc('&'))   return false;
+  if (!in.peekc('#')) {
+    String name=maybeGetName();
+    if (name == null)     fatal("P-009");
+    nextChar(';',"F-020",name);
+    expandEntityInContent(element,name,validator);
+    return true;
+  }
+  validator.text();
+  contentHandler.characters(charTmp,0,surrogatesToCharTmp(parseCharNumber()));
+  return true;
+}

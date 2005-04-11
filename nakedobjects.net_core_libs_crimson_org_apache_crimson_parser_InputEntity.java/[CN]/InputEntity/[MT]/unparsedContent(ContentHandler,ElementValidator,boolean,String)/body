@@ -1,0 +1,80 @@
+{
+  int last;
+  for (; ; ) {
+    boolean done=false;
+    char c;
+    boolean white=ignorableWhitespace;
+    for (last=start; last < finish; last++) {
+      c=buf[last];
+      if (!XmlChars.isChar(c)) {
+        white=false;
+        if (c >= 0xd800 && c <= 0xdfff) {
+          if (checkSurrogatePair(last)) {
+            last++;
+            continue;
+          }
+ else {
+            last--;
+            break;
+          }
+        }
+        fatal("P-071",new Object[]{Integer.toHexString(buf[last])});
+      }
+      if (c == '\n') {
+        if (!isInternal())         lineNumber++;
+        continue;
+      }
+      if (c == '\r') {
+        if (isInternal())         continue;
+        if (white) {
+          if (whitespaceInvalidMessage != null)           errHandler.error(new SAXParseException(Parser2.messages.getMessage(locale,whitespaceInvalidMessage),this));
+          contentHandler.ignorableWhitespace(buf,start,last - start);
+          contentHandler.ignorableWhitespace(newline,0,1);
+        }
+ else {
+          validator.text();
+          contentHandler.characters(buf,start,last - start);
+          contentHandler.characters(newline,0,1);
+        }
+        lineNumber++;
+        if (finish > (last + 1)) {
+          if (buf[last + 1] == '\n')           last++;
+        }
+ else {
+        }
+        start=last + 1;
+        continue;
+      }
+      if (c != ']') {
+        if (c != ' ' && c != '\t')         white=false;
+        continue;
+      }
+      if ((last + 2) < finish) {
+        if (buf[last + 1] == ']' && buf[last + 2] == '>') {
+          done=true;
+          break;
+        }
+        white=false;
+        continue;
+      }
+ else {
+        break;
+      }
+    }
+    if (white) {
+      if (whitespaceInvalidMessage != null)       errHandler.error(new SAXParseException(Parser2.messages.getMessage(locale,whitespaceInvalidMessage),this));
+      contentHandler.ignorableWhitespace(buf,start,last - start);
+    }
+ else {
+      validator.text();
+      contentHandler.characters(buf,start,last - start);
+    }
+    if (done) {
+      start=last + 3;
+      break;
+    }
+    start=last;
+    fillbuf();
+    if (isEOF())     fatal("P-073",null);
+  }
+}

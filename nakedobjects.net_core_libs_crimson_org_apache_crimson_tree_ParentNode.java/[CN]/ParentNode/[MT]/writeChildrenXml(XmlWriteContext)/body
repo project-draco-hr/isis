@@ -1,0 +1,26 @@
+{
+  if (children == null)   return;
+  int oldIndent=0;
+  boolean preserve=true;
+  boolean pureText=true;
+  if (getNodeType() == ELEMENT_NODE) {
+    preserve="preserve".equals(getInheritedAttribute("xml:space"));
+    oldIndent=context.getIndentLevel();
+  }
+  try {
+    if (!preserve)     context.setIndentLevel(oldIndent + 2);
+    for (int i=0; i < length; i++) {
+      if (!preserve && children[i].getNodeType() != TEXT_NODE) {
+        context.printIndent();
+        pureText=false;
+      }
+      children[i].writeXml(context);
+    }
+  }
+  finally {
+    if (!preserve) {
+      context.setIndentLevel(oldIndent);
+      if (!pureText)       context.printIndent();
+    }
+  }
+}

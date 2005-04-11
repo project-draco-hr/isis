@@ -1,0 +1,59 @@
+{
+  boolean savedLexicalPE=doLexicalPE;
+  char quote=getc();
+  char c;
+  InputEntity source=in;
+  if (quote != '\'' && quote != '"')   fatal("P-007");
+  isInAttribute=!isEntityValue;
+  strTmp=new StringBuffer();
+  for (; ; ) {
+    if (in != source && in.isEOF()) {
+      in=in.pop();
+      continue;
+    }
+    if ((c=getc()) == quote && in == source)     break;
+    if (c == '&') {
+      String entityName=maybeGetName();
+      if (entityName != null) {
+        nextChar(';',"F-020",entityName);
+        if (isEntityValue) {
+          strTmp.append('&');
+          strTmp.append(entityName);
+          strTmp.append(';');
+          continue;
+        }
+        expandEntityInLiteral(entityName,entities,isEntityValue);
+      }
+ else       if ((c=getc()) == '#') {
+        int tmp=parseCharNumber();
+        if (tmp > 0xffff) {
+          tmp=surrogatesToCharTmp(tmp);
+          strTmp.append(charTmp[0]);
+          if (tmp == 2)           strTmp.append(charTmp[1]);
+        }
+ else         strTmp.append((char)tmp);
+      }
+ else       fatal("P-009");
+      continue;
+    }
+    if (c == '%' && isEntityValue) {
+      String entityName=maybeGetName();
+      if (entityName != null) {
+        nextChar(';',"F-021",entityName);
+        if (inExternalPE)         expandEntityInLiteral(entityName,params,isEntityValue);
+ else         fatal("P-010",new Object[]{entityName});
+        continue;
+      }
+ else       fatal("P-011");
+    }
+    if (!isEntityValue) {
+      if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+        strTmp.append(' ');
+        continue;
+      }
+      if (c == '<')       fatal("P-012");
+    }
+    strTmp.append(c);
+  }
+  isInAttribute=false;
+}

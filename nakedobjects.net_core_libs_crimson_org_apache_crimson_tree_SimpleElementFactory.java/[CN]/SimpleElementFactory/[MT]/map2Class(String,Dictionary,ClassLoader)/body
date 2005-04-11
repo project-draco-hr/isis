@@ -1,0 +1,23 @@
+{
+  Object mapResult=node2class.get(key);
+  if (mapResult instanceof Class)   return (Class)mapResult;
+  if (mapResult == null)   return null;
+  if (mapResult instanceof String) {
+    String className=(String)mapResult;
+    Class retval;
+    try {
+      if (loader == null) {
+        loader=findClassLoader();
+      }
+      if (loader == null)       retval=Class.forName(className);
+ else       retval=loader.loadClass(className);
+      if (!ElementNode.class.isAssignableFrom(retval))       throw new IllegalArgumentException(getMessage("SEF-000",new Object[]{key,className}));
+      node2class.put(key,retval);
+      return retval;
+    }
+ catch (    ClassNotFoundException e) {
+      throw new IllegalArgumentException(getMessage("SEF-001",new Object[]{key,className,e.getMessage()}));
+    }
+  }
+  throw new IllegalArgumentException(getMessage("SEF-002",new Object[]{key}));
+}

@@ -1,0 +1,20 @@
+{
+  String match="<?xml";
+  int matchLen=match.length();
+  int prefixLen=matchLen + 1;
+  if (finish <= start || (finish - start) < prefixLen)   fillbuf();
+  if (finish <= start)   return false;
+  int i;
+  for (i=0; i < matchLen && (start + i) < finish; i++) {
+    if (buf[start + i] != match.charAt(i))     return false;
+  }
+  if (i < matchLen) {
+    if (reader == null || isClosed)     return false;
+    fillbuf();
+    return isXmlDeclOrTextDeclPrefix();
+  }
+  if (!XmlChars.isSpace(buf[i])) {
+    return false;
+  }
+  return true;
+}

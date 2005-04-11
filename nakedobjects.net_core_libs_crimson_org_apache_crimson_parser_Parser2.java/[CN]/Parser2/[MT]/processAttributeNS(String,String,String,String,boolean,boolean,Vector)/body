@@ -1,0 +1,39 @@
+{
+  nonNamespace:   if (attQName.startsWith("xmlns")) {
+    boolean defaultNSDecl=attQName.length() == 5;
+    if (!defaultNSDecl && attQName.charAt(5) != ':') {
+      break nonNamespace;
+    }
+    String prefix;
+    if (defaultNSDecl) {
+      prefix="";
+    }
+ else {
+      prefix=attQName.substring(6);
+    }
+    if (!nsSupport.declarePrefix(prefix,value)) {
+      error("P-083",new Object[]{prefix});
+    }
+    contentHandler.startPrefixMapping(prefix,value);
+    if (prefixes) {
+      attTmp.addAttribute("",prefix,attQName.intern(),type,value,defaultValue,isSpecified);
+    }
+ else     if (supportValidation && isValidating && !isDefaulting) {
+      nsAttTmp.addElement(attQName);
+    }
+    seenNSDecl=true;
+    return exceptions;
+  }
+  try {
+    String attName[]=processName(attQName,true,true);
+    attTmp.addAttribute(attName[0],attName[1],attName[2],type,value,defaultValue,isSpecified);
+  }
+ catch (  SAXException e) {
+    if (exceptions == null) {
+      exceptions=new Vector();
+    }
+    exceptions.addElement(e);
+    attTmp.addAttribute("",attQName,attQName,type,value,defaultValue,isSpecified);
+  }
+  return exceptions;
+}

@@ -1,0 +1,16 @@
+{
+  if (ucs4 <= 0xffff) {
+    if (XmlChars.isChar(ucs4)) {
+      charTmp[0]=(char)ucs4;
+      return 1;
+    }
+  }
+ else   if (ucs4 <= 0x0010ffff) {
+    ucs4-=0x10000;
+    charTmp[0]=(char)(0xd800 | ((ucs4 >> 10) & 0x03ff));
+    charTmp[1]=(char)(0xdc00 | (ucs4 & 0x03ff));
+    return 2;
+  }
+  fatal("P-051",new Object[]{Integer.toHexString(ucs4)});
+  return -1;
+}

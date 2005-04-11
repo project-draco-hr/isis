@@ -1,0 +1,13 @@
+{
+  AttributeNode.checkArguments(namespaceURI,qualifiedName);
+  Attr attr=getAttributeNodeNS(namespaceURI,XmlNames.getLocalPart(qualifiedName));
+  if (attr == null) {
+    AttributeNode newAttr=new AttributeNode(namespaceURI,qualifiedName,value,true,null);
+    newAttr.setOwnerDocument((XmlDocument)getOwnerDocument());
+    setAttributeNodeNS(newAttr);
+  }
+ else {
+    attr.setValue(value);
+    attr.setPrefix(XmlNames.getPrefix(qualifiedName));
+  }
+}

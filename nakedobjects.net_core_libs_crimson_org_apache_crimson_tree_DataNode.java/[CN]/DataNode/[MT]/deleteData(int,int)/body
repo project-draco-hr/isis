@@ -1,0 +1,10 @@
+{
+  char tmp[];
+  if (isReadonly())   throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+  if (offset < 0 || offset >= data.length || count < 0)   throw new DomEx(DOMException.INDEX_SIZE_ERR);
+  count=Math.min(count,data.length - offset);
+  tmp=new char[data.length - count];
+  System.arraycopy(data,0,tmp,0,offset);
+  System.arraycopy(data,offset + count,tmp,offset,tmp.length - offset);
+  data=tmp;
+}

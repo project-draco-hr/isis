@@ -1,0 +1,16 @@
+{
+  if (!pushReader(next)) {
+    if (!isInAttribute) {
+      lexicalHandler.endEntity(next.name);
+    }
+    return false;
+  }
+  maybeTextDecl();
+  content(element,true,validator);
+  if (!in.isEOF())   fatal("P-058",new Object[]{next.name});
+  in=in.pop();
+  if (!isInAttribute) {
+    lexicalHandler.endEntity(next.name);
+  }
+  return true;
+}

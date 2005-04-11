@@ -1,0 +1,15 @@
+{
+  Writer out=context.getWriter();
+  String encoding=null;
+  if (out instanceof OutputStreamWriter)   encoding=java2std(((OutputStreamWriter)out).getEncoding());
+  out.write("<?xml version=\"1.0\"");
+  if (encoding != null) {
+    out.write(" encoding=\"");
+    out.write(encoding);
+    out.write('\"');
+  }
+  out.write("?>");
+  out.write(eol);
+  out.write(eol);
+  writeChildrenXml(context);
+}

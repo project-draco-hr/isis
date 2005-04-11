@@ -1,0 +1,37 @@
+{
+  char c;
+  int retval=0;
+  if (getc() != 'x') {
+    ungetc();
+    for (; ; ) {
+      c=getc();
+      if (c >= '0' && c <= '9') {
+        retval*=10;
+        retval+=(c - '0');
+        continue;
+      }
+      if (c == ';')       return retval;
+      fatal("P-049");
+    }
+  }
+ else   for (; ; ) {
+    c=getc();
+    if (c >= '0' && c <= '9') {
+      retval<<=4;
+      retval+=(c - '0');
+      continue;
+    }
+    if (c >= 'a' && c <= 'f') {
+      retval<<=4;
+      retval+=10 + (c - 'a');
+      continue;
+    }
+    if (c >= 'A' && c <= 'F') {
+      retval<<=4;
+      retval+=10 + (c - 'A');
+      continue;
+    }
+    if (c == ';')     return retval;
+    fatal("P-050");
+  }
+}

@@ -1,0 +1,25 @@
+{
+  AttributeSet retval=new AttributeSet();
+  int len=source.getLength();
+  AttributesEx ex=null;
+  retval.list=new Vector(len);
+  if (source instanceof AttributesEx) {
+    ex=(AttributesEx)source;
+  }
+  for (int i=0; i < len; i++) {
+    String uri;
+    String qName=source.getQName(i);
+    if ("xmlns".equals(qName) || "xmlns".equals(XmlNames.getPrefix(qName))) {
+      uri=XmlNames.SPEC_XMLNS_URI;
+    }
+ else {
+      uri=source.getURI(i);
+      if ("".equals(uri)) {
+        uri=null;
+      }
+    }
+    AttributeNode attrNode=new AttributeNode(uri,qName,source.getValue(i),ex == null ? true : ex.isSpecified(i),ex == null ? null : ex.getDefault(i));
+    retval.list.addElement(attrNode);
+  }
+  return retval;
+}

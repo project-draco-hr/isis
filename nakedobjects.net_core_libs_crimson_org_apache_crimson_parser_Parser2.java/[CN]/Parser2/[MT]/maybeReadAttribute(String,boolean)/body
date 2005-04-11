@@ -1,0 +1,15 @@
+{
+  if (!maybeWhitespace()) {
+    if (!must)     return null;
+    fatal("P-024",new Object[]{name});
+  }
+  if (!peek(name))   if (must)   fatal("P-024",new Object[]{name});
+ else {
+    ungetc();
+    return null;
+  }
+  maybeWhitespace();
+  nextChar('=',"F-023",null);
+  maybeWhitespace();
+  return getQuotedString("F-035",name);
+}

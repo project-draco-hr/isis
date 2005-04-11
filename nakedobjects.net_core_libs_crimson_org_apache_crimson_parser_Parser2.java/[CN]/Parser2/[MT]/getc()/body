@@ -1,0 +1,29 @@
+{
+  if (!(inExternalPE && doLexicalPE)) {
+    char c=in.getc();
+    if (c == '%' && doLexicalPE)     fatal("P-080");
+    return c;
+  }
+  char c;
+  while (in.isEOF()) {
+    if (in.isInternal() || (doLexicalPE && !in.isDocument()))     in=in.pop();
+ else {
+      fatal("P-064",new Object[]{in.getName()});
+    }
+  }
+  if ((c=in.getc()) == '%' && doLexicalPE) {
+    String name=maybeGetName();
+    Object entity;
+    if (name == null)     fatal("P-011");
+    nextChar(';',"F-021",name);
+    entity=params.get(name);
+    pushReader(" ".toCharArray(),null,false);
+    if (entity instanceof InternalEntity)     pushReader(((InternalEntity)entity).buf,name,false);
+ else     if (entity instanceof ExternalEntity)     pushReader((ExternalEntity)entity);
+ else     if (entity == null)     fatal("V-022");
+ else     throw new InternalError();
+    pushReader(" ".toCharArray(),null,false);
+    return in.getc();
+  }
+  return c;
+}

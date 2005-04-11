@@ -1,0 +1,30 @@
+{
+  Writer out=context.getWriter();
+  out.write("<!ENTITY ");
+  out.write(entityName);
+  if (value == null) {
+    if (publicId != null) {
+      out.write(" PUBLIC '");
+      out.write(publicId);
+      out.write("' '");
+    }
+ else     out.write(" SYSTEM '");
+    out.write(systemId);
+    out.write("'");
+    if (notation != null) {
+      out.write(" NDATA ");
+      out.write(notation);
+    }
+  }
+ else {
+    out.write(" \"");
+    int length=value.length();
+    for (int i=0; i < length; i++) {
+      char c=value.charAt(i);
+      if (c == '"')       out.write("&quot;");
+ else       out.write(c);
+    }
+    out.write('"');
+  }
+  out.write(">");
+}

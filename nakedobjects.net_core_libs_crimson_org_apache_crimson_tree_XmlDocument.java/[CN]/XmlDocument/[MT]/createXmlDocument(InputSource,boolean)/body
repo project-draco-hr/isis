@@ -1,0 +1,35 @@
+{
+  String defaultReader="org.apache.crimson.parser.XMLReaderImpl";
+  String prop;
+  try {
+    prop=System.getProperty("org.xml.sax.driver",defaultReader);
+  }
+ catch (  SecurityException se) {
+    prop=defaultReader;
+  }
+  XMLReader xmlReader=XMLReaderFactory.createXMLReader(prop);
+  String namespaces="http://xml.org/sax/features/namespaces";
+  xmlReader.setFeature(namespaces,true);
+  String nsPrefixes="http://xml.org/sax/features/namespace-prefixes";
+  xmlReader.setFeature(nsPrefixes,true);
+  XmlDocumentBuilder builder=new XmlDocumentBuilder();
+  xmlReader.setContentHandler(builder);
+  String lexHandler="http://xml.org/sax/properties/lexical-handler";
+  xmlReader.setProperty(lexHandler,builder);
+  String declHandler="http://xml.org/sax/properties/declaration-handler";
+  xmlReader.setProperty(declHandler,builder);
+  xmlReader.setDTDHandler(builder);
+  String validation="http://xml.org/sax/features/validation";
+  xmlReader.setFeature(validation,doValidate);
+  if (doValidate) {
+    xmlReader.setErrorHandler(new DefaultHandler(){
+      public void error(      SAXParseException e) throws SAXException {
+        throw e;
+      }
+    }
+);
+  }
+  builder.setDisableNamespaces(true);
+  xmlReader.parse(in);
+  return builder.getDocument();
+}

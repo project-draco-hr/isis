@@ -1,0 +1,16 @@
+{
+  XmlDocument retval=new XmlDocument();
+  retval.systemId=systemId;
+  if (deep) {
+    Node node;
+    for (int i=0; (node=item(i)) != null; i++) {
+      if (node instanceof DocumentType) {
+        continue;
+      }
+      node=node.cloneNode(true);
+      retval.changeNodeOwner(node);
+      retval.appendChild(node);
+    }
+  }
+  return retval;
+}

@@ -1,0 +1,14 @@
+{
+  AttributeSet retval=new AttributeSet();
+  int len=source.getLength();
+  AttributesEx ex=null;
+  retval.list=new Vector(len);
+  if (source instanceof AttributesEx) {
+    ex=(AttributesEx)source;
+  }
+  for (int i=0; i < len; i++) {
+    AttributeNode1 attrNode1=new AttributeNode1(source.getQName(i),source.getValue(i),ex == null ? true : ex.isSpecified(i),ex == null ? null : ex.getDefault(i));
+    retval.list.addElement(attrNode1);
+  }
+  return retval;
+}

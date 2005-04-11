@@ -1,0 +1,11 @@
+{
+  InputSource retval;
+  String path;
+  retval=new InputSource(XmlReader.createReader(new FileInputStream(file)));
+  path=file.getAbsolutePath();
+  if (File.separatorChar != '/')   path=path.replace(File.separatorChar,'/');
+  if (!path.startsWith("/"))   path="/" + path;
+  if (!path.endsWith("/") && file.isDirectory())   path=path + "/";
+  retval.setSystemId("file:" + path);
+  return retval;
+}

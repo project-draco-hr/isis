@@ -1,0 +1,50 @@
+{
+  boolean preserve=false;
+  boolean knowPreserve=false;
+  if (readonly) {
+    throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+  }
+  for (int i=0; true; i++) {
+    Node node=item(i);
+    if (node == null) {
+      break;
+    }
+switch (node.getNodeType()) {
+case ELEMENT_NODE:
+      ((Element)node).normalize();
+    continue;
+case TEXT_NODE:
+{
+    Node node2=item(i + 1);
+    if (node2 == null || node2.getNodeType() != TEXT_NODE) {
+      if (false) {
+        if (!knowPreserve) {
+          preserve="preserve".equals(getInheritedAttribute("xml:space"));
+          knowPreserve=true;
+        }
+        if (!preserve) {
+          char[] buf=((TextNode)node).data;
+          if (buf == null || buf.length == 0) {
+            removeChild(node);
+            i--;
+            continue;
+          }
+          int current=removeWhiteSpaces(buf);
+          if (current != buf.length) {
+            char[] tmp=new char[current];
+            System.arraycopy(buf,0,tmp,0,current);
+            ((TextNode)node).data=tmp;
+          }
+        }
+      }
+      continue;
+    }
+    ((TextNode)node).joinNextText();
+    i--;
+    continue;
+  }
+default :
+continue;
+}
+}
+}

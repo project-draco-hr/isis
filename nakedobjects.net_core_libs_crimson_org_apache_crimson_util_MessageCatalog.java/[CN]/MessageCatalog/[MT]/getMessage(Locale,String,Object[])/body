@@ -1,0 +1,29 @@
+{
+  if (parameters == null)   return getMessage(locale,messageId);
+  for (int i=0; i < parameters.length; i++) {
+    if (!(parameters[i] instanceof String) && !(parameters[i] instanceof Number) && !(parameters[i] instanceof java.util.Date)) {
+      if (parameters[i] == null)       parameters[i]="(null)";
+ else       parameters[i]=parameters[i].toString();
+    }
+  }
+  if (locale == null)   locale=Locale.getDefault();
+  ResourceBundle bundle;
+  MessageFormat format;
+  try {
+    bundle=ResourceBundle.getBundle(bundleName,locale);
+    format=new MessageFormat(bundle.getString(messageId));
+  }
+ catch (  MissingResourceException e) {
+    String retval;
+    retval=packagePrefix(messageId);
+    for (int i=0; i < parameters.length; i++) {
+      retval+=' ';
+      retval+=parameters[i];
+    }
+    return retval;
+  }
+  format.setLocale(locale);
+  StringBuffer result=new StringBuffer();
+  result=format.format(parameters,result,new FieldPosition(0));
+  return result.toString();
+}
