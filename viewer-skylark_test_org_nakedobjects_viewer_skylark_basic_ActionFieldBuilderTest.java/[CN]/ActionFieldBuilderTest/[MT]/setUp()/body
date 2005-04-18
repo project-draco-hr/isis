@@ -1,0 +1,23 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  SubviewSpec subviewSpec=new SubviewSpec(){
+    public View createSubview(    Content content,    ViewAxis axis){
+      return new MockView();
+    }
+    public View decorateSubview(    View view){
+      return null;
+    }
+  }
+;
+  MockView.next=0;
+  ClientSession.setSession(new Session());
+  NakedObjects.setConfiguration(new Configuration());
+  builder=new ActionFieldBuilder(subviewSpec);
+  DummyNakedObject object=new DummyNakedObject();
+  MockActionPeer mockActionPeer=new MockActionPeer();
+  mockActionPeer.setUpParamterTypes(new NakedObjectSpecification[]{new DummyNakedObjectSpecification(),new DummyNakedObjectSpecification()});
+  Action action=new Action("cls name","method name",mockActionPeer);
+  actionContent=new ActionHelper(object,action);
+  view=new MockView();
+  view.setUpContent(new ActionContent(actionContent));
+}
