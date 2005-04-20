@@ -1,0 +1,11 @@
+{
+  specification.fields=new NakedObjectField[]{new MockField(),new MockField(),new MockField()};
+  MockNakedObject fieldObject=new MockNakedObject();
+  DummyNakedObjectSpecification fieldSpecification=new DummyNakedObjectSpecification();
+  fieldSpecification.fields=new NakedObjectField[0];
+  fieldObject.setupSpecification(fieldSpecification);
+  object.setupField(fieldObject);
+  ObjectData od=factory.createObjectData(object,0);
+  assertEquals(3,od.getFieldContent().length);
+  assertEquals(fieldSpecification.getFullName(),((ObjectData)od.getFieldContent()[1]).getType());
+}
