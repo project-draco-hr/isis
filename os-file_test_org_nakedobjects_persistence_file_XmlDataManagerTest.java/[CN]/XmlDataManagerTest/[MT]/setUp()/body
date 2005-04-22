@@ -3,25 +3,26 @@
   ConfigurationFactory.setConfiguration(new Configuration());
   XmlDataManager.clearTestDirectory();
   manager=new XmlDataManager("tmp/tests");
-  MockObjectManager.setup();
-  NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
-  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
-  specificationLoader.setReflectorFactory(new JavaReflectorFactory());
+  MockNakedObjectSpecificationLoader specificationLoader=new MockNakedObjectSpecificationLoader();
   NakedObjects.setSpecificationLoader(specificationLoader);
-  ConfigurationFactory.setConfiguration(new Configuration());
   oids=new SerialOid[SIZE];
   data=new ObjectData[SIZE];
-  NakedObjectSpecification type=NakedObjects.getSpecificationLoader().loadSpecification(Role.class.getName());
+  NakedObjectSpecification type=new DummyNakedObjectSpecification();
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
+  specificationLoader.addSpec(type);
   pattern=new ObjectData(type,null);
   for (int i=0; i < SIZE; i++) {
     oids[i]=new SerialOid(i);
     data[i]=new ObjectData(type,oids[i]);
     manager.insert(data[i]);
-  }
-  assertEquals(SIZE,manager.numberOfInstances(pattern));
-  for (int i=0; i < SIZE; i++) {
-    assertEquals(data[i],manager.loadData(oids[i]));
-    assertTrue(manager.getInstances(pattern).contains(data[i]));
   }
   super.setUp();
   LOG.debug("Test starting...");
