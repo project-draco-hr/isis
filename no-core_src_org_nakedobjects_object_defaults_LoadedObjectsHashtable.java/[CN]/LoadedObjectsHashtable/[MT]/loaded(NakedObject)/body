@@ -3,7 +3,12 @@
   if (oid == null) {
     throw new IllegalArgumentException("OID is null");
   }
-  Assert.assertFalse("cannot add as loaded object; oid already present",isLoaded(oid));
-  Assert.assertFalse("cannot add as loaded object; object already present, but with a different oid",loaded.contains(object));
+  if (isLoaded(oid)) {
+    throw new NakedObjectRuntimeException("cannot add as loaded object; oid " + oid + " already present: "+ getLoadedObject(oid));
+  }
+  if (loaded.contains(object)) {
+    throw new NakedObjectRuntimeException("cannot add as loaded object; object already present, but with a different oid: " + object);
+  }
+  LOG.debug("Added loaded object " + object + " as "+ oid);
   loaded.put(oid,object);
 }
