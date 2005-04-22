@@ -1,0 +1,10 @@
+{
+  Enumeration enumeration=loaded.dirtyObjects();
+  assertFalse(enumeration.hasMoreElements());
+  MockNakedObject dirtyObject=new MockNakedObject();
+  dirtyObject.setupDirty();
+  loaded.setup(new DummyOid(),dirtyObject);
+  enumeration=loaded.dirtyObjects();
+  assertTrue(enumeration.hasMoreElements());
+  assertEquals(dirtyObject,enumeration.nextElement());
+}
