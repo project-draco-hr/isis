@@ -1,10 +1,10 @@
 {
-  this.target=target;
-  this.action=action;
   int numberParameters=action.parameters().length;
+  Naked[] parameters;
   parameters=new Naked[numberParameters];
   ActionParameterSet parameterHints=target.getParameters(ClientSession.getSession(),action);
   Object[] defaultValues;
+  String[] labels;
   if (parameterHints != null) {
     labels=parameterHints.getParameterLabels();
     defaultValues=parameterHints.getDefaultParameterValues();
@@ -15,6 +15,7 @@
   }
   Naked[] parameterValues;
   Naked[] values;
+  NakedObjectSpecification[] parameterTypes;
   parameterTypes=action.parameters();
   values=new Naked[parameterTypes.length];
   for (int i=0; i < parameterTypes.length; i++) {
@@ -34,4 +35,5 @@
     labels[i]=labels[i] == null ? type.getShortName() : labels[i];
     parameters[i]=defaultValues[i] == null ? parameterValues[i] : NakedObjects.getPojoAdapterFactory().createAdapter(defaultValues[i]);
   }
+  return new ActionHelper(target,action,labels,parameters,parameterTypes);
 }
