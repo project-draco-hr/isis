@@ -1,9 +1,12 @@
 {
-  if (loaded.isLoaded(oid)) {
-    return loaded.getLoadedObject(oid);
+  if (loaded().isLoaded(oid)) {
+    return loaded().getLoadedObject(oid);
   }
  else {
     Object pojo=objectInstances.get(oid);
+    if (pojo == null) {
+      return null;
+    }
     NakedObject object=NakedObjects.getPojoAdapterFactory().createNOAdapter(pojo);
     if (object.getOid() == null) {
       object.setOid(oid);
@@ -12,7 +15,7 @@
  else     if (!object.getOid().equals(oid)) {
       throw new NakedObjectRuntimeException("Requested object with OID " + oid + ", but got object (with different oid): "+ object);
     }
-    loaded.loaded(object);
+    loaded().loaded(object);
     return object;
   }
 }

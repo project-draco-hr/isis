@@ -1,13 +1,13 @@
 {
   BasicConfigurator.configure();
   Logger.getRootLogger().setLevel(Level.OFF);
-  PojoAdapterFactory pojoAdapterFactory=new PojoAdapterFactory();
-  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
-  pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
-  NakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
-  MockNakedObjectSpecificationLoaderNew specificationLoader=new MockNakedObjectSpecificationLoaderNew();
-  specificationLoader.addSpec(ReferencedObject.class.getName());
-  objectSpec=specificationLoader.addSpec(TestObject.class.getName());
-  NakedObjects.setSpecificationLoader(specificationLoader);
-  setupObjectStore();
+  instances=new MockTransientObjectStoreInstances();
+  mockPojoAdapterFactory=new MockPojoAdapterFactory();
+  NakedObjects.setPojoAdapterFactory(mockPojoAdapterFactory);
+  instances.setLoaded(mockPojoAdapterFactory);
+  instances.addElement(new MockOid(1),new TestObject(),"one");
+  oid=new MockOid(2);
+  object=new TestObject();
+  instances.addElement(oid,object,"two");
+  instances.addElement(new MockOid(3),new TestObject(),"three");
 }

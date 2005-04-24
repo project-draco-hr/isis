@@ -13,8 +13,8 @@
       if (refs != null) {
         for (int j=0; j < refs.size(); j++) {
           try {
-            if (loadedObjects.isLoaded(refs.elementAt(j))) {
-              object.initAssociation((NakedObjectAssociation)field,loadedObjects.getLoadedObject(refs.elementAt(j)));
+            if (loadedObjects().isLoaded(refs.elementAt(j))) {
+              object.initAssociation((NakedObjectAssociation)field,loadedObjects().getLoadedObject(refs.elementAt(j)));
             }
  else {
               object.initAssociation((NakedObjectAssociation)field,getObject(refs.elementAt(j),null));
@@ -30,8 +30,8 @@
       Oid reference=(Oid)data.get(field.getName());
       LOG.debug("setting field " + field + " with "+ reference);
       if (reference != null) {
-        if (loadedObjects.isLoaded(reference)) {
-          NakedObject loadedObject=loadedObjects.getLoadedObject(reference);
+        if (loadedObjects().isLoaded(reference)) {
+          NakedObject loadedObject=loadedObjects().getLoadedObject(reference);
           LOG.debug("using loaded object " + loadedObject);
           object.initAssociation((OneToOneAssociation)field,loadedObject);
         }
@@ -49,7 +49,7 @@
           if (fieldObject instanceof InternalCollection) {
             fieldObject.setResolved();
           }
-          loadedObjects.loaded(fieldObject);
+          loadedObjects().loaded(fieldObject);
           object.initAssociation((OneToOneAssociation)field,fieldObject);
         }
       }

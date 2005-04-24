@@ -1,4 +1,9 @@
 {
+  MockPojoAdapterFactory pojoAdapterFactory=new MockPojoAdapterFactory();
+  DummyNakedObject pojoFromAdapterFactory=new DummyNakedObject();
+  pojoAdapterFactory.setupAdapter(pojoFromAdapterFactory);
+  NakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
   objectWithOneToOneAssoications.setReferencedObject(referencedObject);
-  assertEquals(associate,personField.getAssociation(nakedObject));
+  Naked association=personField.getAssociation(nakedObject);
+  assertEquals(pojoFromAdapterFactory,association);
 }
