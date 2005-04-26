@@ -1,9 +1,11 @@
 {
+  LOG.debug("collating changed objects");
   PojoAdapterFactory factory=loadedObjects();
   Enumeration e=factory.getLoadedObjects();
   while (e.hasMoreElements()) {
     NakedObject object=(NakedObject)e.nextElement();
     if (object.getSpecification().isDirty(object)) {
+      LOG.debug("  found dirty object " + object);
       objectChanged(object);
       object.getSpecification().clearDirty(object);
     }
