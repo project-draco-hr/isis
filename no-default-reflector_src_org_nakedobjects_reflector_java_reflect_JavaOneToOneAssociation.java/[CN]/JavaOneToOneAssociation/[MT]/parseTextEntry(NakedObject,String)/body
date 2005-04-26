@@ -1,10 +1,10 @@
 {
   if (setMethod == null) {
     try {
-      Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
+      Object obj=getMethod.invoke(inObject.getObject(),new Object[0]);
       BusinessValueHolder value=(BusinessValueHolder)obj;
       value.parseUserEntry(text);
-      fromObject.markDirty();
+      NakedObjects.getObjectManager().objectChanged(inObject);
     }
  catch (    InvocationTargetException e) {
       invocationException("Exception executing " + getMethod,e);
@@ -19,7 +19,7 @@ catch (    ValueParseException e) {
   }
  else {
     try {
-      setMethod.invoke(fromObject.getObject(),new Object[]{text});
+      setMethod.invoke(inObject.getObject(),new Object[]{text});
     }
  catch (    InvocationTargetException e) {
       invocationException("Exception executing " + setMethod,e);

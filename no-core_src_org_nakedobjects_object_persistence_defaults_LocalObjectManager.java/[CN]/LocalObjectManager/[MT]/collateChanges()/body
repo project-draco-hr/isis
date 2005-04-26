@@ -1,0 +1,11 @@
+{
+  PojoAdapterFactory factory=loadedObjects();
+  Enumeration e=factory.getLoadedObjects();
+  while (e.hasMoreElements()) {
+    NakedObject object=(NakedObject)e.nextElement();
+    if (object.getSpecification().isDirty(object)) {
+      objectChanged(object);
+      object.getSpecification().clearDirty(object);
+    }
+  }
+}
