@@ -1,15 +1,11 @@
 {
-  if (specification == null) {
-    return "";
+  NakedObjectSpecification specification=getSpecification();
+  String title=specification.getTitle().title(this);
+  if (title == null && !isResolved()) {
+    title=specification.unresolvedTitle(this);
   }
- else {
-    String title=specification.getTitle().title(this);
-    if (title == null && !isResolved()) {
-      title=specification.unresolvedTitle(this);
-    }
-    if (title == null) {
-      title="A " + specification.getSingularName().toLowerCase();
-    }
-    return title;
+  if (title == null) {
+    title="A " + specification.getSingularName().toLowerCase();
   }
+  return title;
 }
