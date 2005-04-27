@@ -1,0 +1,13 @@
+{
+  LOG.debug("   saving object " + object + " as instance of "+ specification.getShortName());
+  TransientObjectStoreInstances ins=instancesFor(specification);
+  ins.save(object);
+  NakedObjectSpecification superclass=specification.superclass();
+  if (superclass != null) {
+    save(object,superclass);
+  }
+  NakedObjectSpecification[] interfaces=specification.interfaces();
+  for (int i=0; i < interfaces.length; i++) {
+    save(object,interfaces[i]);
+  }
+}
