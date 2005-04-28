@@ -5,11 +5,11 @@
   Assert.assertNotNull(target);
   if (canDrop(sourceContent).isAllowed()) {
     Action action=dropAction(source,target);
-    if ((action != null) && target.getHint(ClientSession.getSession(),action,new NakedObject[]{source}).canUse().isAllowed()) {
+    if ((action != null) && target.getHint(action,new NakedObject[]{source}).canUse().isAllowed()) {
       return target.execute(action,new NakedObject[]{source});
     }
  else {
-      NakedObjectField[] fields=target.getSpecification().getVisibleFields(target,ClientSession.getSession());
+      NakedObjectField[] fields=target.getVisibleFields();
       for (int i=0; i < fields.length; i++) {
         if (source.getSpecification().isOfType(fields[i].getSpecification()) && target.getField(fields[i]) == null) {
           target.setAssociation(((NakedObjectAssociation)fields[i]),source);

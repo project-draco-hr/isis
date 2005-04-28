@@ -1,0 +1,20 @@
+{
+  NakedValue example=(NakedValue)getSpecification().acquireInstance();
+  if (example != null) {
+    try {
+      example.parseTextEntry(entryText);
+    }
+ catch (    final InvalidEntryException e) {
+      return new DefaultHint(){
+        public Consent isValid(){
+          return new Veto(e.getMessage());
+        }
+      }
+;
+    }
+    return getParent().getHint((NakedObjectField)getField(),example);
+  }
+ else {
+    return new DefaultHint();
+  }
+}

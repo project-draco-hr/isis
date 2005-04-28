@@ -1,0 +1,32 @@
+{
+  Session session=NakedObjects.getCurrentSession();
+  boolean isUsable=authorisationManager.isUsable(session,identifier);
+  boolean isVisible=authorisationManager.isVisible(session,identifier);
+  if (!isVisible) {
+    return new DefaultHint(){
+      public Consent canAccess(){
+        return new Veto("Cannot be seen for security reasons");
+      }
+    }
+;
+  }
+  final Hint hint=super.getHint(identifier,object,parameters);
+  if (!isUsable) {
+    return new DefaultHint(){
+      public Consent canAccess(){
+        return hint.canAccess();
+      }
+      public Consent canUse(){
+        return new Veto("Cannot invoke for security reasons");
+      }
+      public String getDescription(){
+        return hint.getDescription();
+      }
+      public String getName(){
+        return hint.getName();
+      }
+    }
+;
+  }
+  return hint;
+}
