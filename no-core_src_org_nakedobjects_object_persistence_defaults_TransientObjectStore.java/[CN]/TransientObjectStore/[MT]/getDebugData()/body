@@ -2,14 +2,18 @@
   DebugString debug=new DebugString();
   debug.appendTitle(NakedObjects.getPojoAdapterFactory().getDebugTitle());
   debug.appendln(NakedObjects.getPojoAdapterFactory().getDebugData());
-  debug.appendTitle("Objects");
+  debug.appendTitle("Business Objects");
   Enumeration e=instances.keys();
   while (e.hasMoreElements()) {
     NakedObjectSpecification spec=(NakedObjectSpecification)e.nextElement();
+    debug.appendln(0,spec.getFullName());
     TransientObjectStoreInstances instances=instancesFor(spec);
     Enumeration f=instances.elements();
+    if (!f.hasMoreElements()) {
+      debug.appendln(8,"no instances");
+    }
     while (f.hasMoreElements()) {
-      debug.appendln(f.nextElement().toString());
+      debug.appendln(8,f.nextElement().toString());
     }
   }
   debug.appendln();
@@ -22,6 +26,8 @@
     Enumeration f=instances.elements();
     while (f.hasMoreElements()) {
       NakedObject object=(NakedObject)f.nextElement();
+      debug.append(spec.getFullName());
+      debug.append(": ");
       debug.append(object);
       debug.appendln(debugGraph(object,"name???",0,dump));
     }
