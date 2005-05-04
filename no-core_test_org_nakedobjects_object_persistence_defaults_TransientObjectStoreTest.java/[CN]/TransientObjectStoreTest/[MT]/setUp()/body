@@ -1,13 +1,13 @@
 {
   BasicConfigurator.configure();
   Logger.getRootLogger().setLevel(Level.OFF);
-  objectSpec=new DummyNakedObjectSpecification();
-  transientObjectStoreInstances=new MockTransientObjectStoreInstances2();
-  objectStore=new TransientObjectStore(){
-    protected TransientObjectStoreInstances createInstances(){
-      return transientObjectStoreInstances;
-    }
-  }
-;
+  superClassObjectSpec=new MockNakedObjectSpecification();
+  objectSpec=new MockNakedObjectSpecification();
+  superClassObjectSpec.setupSubclasses(new NakedObjectSpecification[]{objectSpec});
+  transientObjectStoreInstancesForSuperClass=new MockTransientObjectStoreInstances2();
+  transientObjectStoreInstancesForClass=new MockTransientObjectStoreInstances2();
+  objectStore=new TransientObjectStore();
+  objectStore.instances.put(superClassObjectSpec,transientObjectStoreInstancesForSuperClass);
+  objectStore.instances.put(objectSpec,transientObjectStoreInstancesForClass);
   objectStore.init();
 }
