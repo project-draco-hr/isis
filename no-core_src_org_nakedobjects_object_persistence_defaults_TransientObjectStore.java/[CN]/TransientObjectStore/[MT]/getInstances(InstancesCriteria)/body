@@ -1,21 +1,5 @@
 {
-  if (criteria instanceof TitleCriteria) {
-    TitleCriteria titleCriteria=(TitleCriteria)criteria;
-    String title=titleCriteria.getRequiredTitle();
-    NakedObject match=instancesFor(criteria.getSpecification()).instanceMatching(title);
-    if (match != null) {
-      LOG.debug("getInstances for " + criteria + " => "+ match);
-      return new NakedObject[]{match};
-    }
-  }
   Vector instances=new Vector();
-  Enumeration objects=elements(criteria.getSpecification());
-  while (objects.hasMoreElements()) {
-    NakedObject object=(NakedObject)objects.nextElement();
-    if (criteria.matches(object)) {
-      instances.addElement(object);
-    }
-  }
-  LOG.debug("getInstances for " + criteria + " => "+ instances);
+  getInstances(criteria,instances);
   return toInstancesArray(instances);
 }

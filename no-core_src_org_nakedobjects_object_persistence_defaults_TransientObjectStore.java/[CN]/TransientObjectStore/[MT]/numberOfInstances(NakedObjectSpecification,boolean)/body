@@ -1,3 +1,10 @@
 {
-  return instancesFor(spec).numberOfInstances();
+  int numberOfInstances=instancesFor(spec).numberOfInstances();
+  if (includeSubclasses) {
+    NakedObjectSpecification[] subclasses=spec.subclasses();
+    for (int i=0; i < subclasses.length; i++) {
+      numberOfInstances+=numberOfInstances(subclasses[i],true);
+    }
+  }
+  return numberOfInstances;
 }

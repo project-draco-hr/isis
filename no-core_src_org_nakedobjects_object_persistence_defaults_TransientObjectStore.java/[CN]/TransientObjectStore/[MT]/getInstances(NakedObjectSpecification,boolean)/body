@@ -1,9 +1,7 @@
 {
   LOG.debug("get instances" + (includeSubclasses ? " (included subclasses)" : "") + ": "+ spec.getFullName());
-  NakedObject[] ins=instancesFor(spec).instances();
-  for (int i=0; i < ins.length; i++) {
-    NakedObject object=ins[i];
-    setupReferencedObjects(object);
-  }
+  Vector instances=new Vector();
+  getInstances(spec,instances,includeSubclasses);
+  NakedObject[] ins=toInstancesArray(instances);
   return ins;
 }
