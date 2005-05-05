@@ -4,13 +4,14 @@
   loader.addSpec(spec=new DummyNakedObjectSpecification());
   loader.addSpec(new DummyNakedObjectSpecification());
   loader.addSpec(new DummyNakedObjectSpecification());
-  NakedObjects.setSpecificationLoader(loader);
+  NakedObjectsClient nakedObjectsClient=new NakedObjectsClient();
+  nakedObjectsClient.setSpecificationLoader(loader);
   ConfigurationFactory.setConfiguration(new TestConfiguration());
   javaObjectWithOneToOneAssociations=new JavaObjectWithOneToOneAssociations();
   PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
   pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
   pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
-  NakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+  nakedObjectsClient.setPojoAdapterFactory(pojoAdapterFactory);
   nakedObjectHoldingObjectWithAssociations=pojoAdapterFactory.createNOAdapter(javaObjectWithOneToOneAssociations);
   Class cls=JavaObjectWithOneToOneAssociations.class;
   Method get=cls.getDeclaredMethod("getReferencedObject",new Class[0]);
