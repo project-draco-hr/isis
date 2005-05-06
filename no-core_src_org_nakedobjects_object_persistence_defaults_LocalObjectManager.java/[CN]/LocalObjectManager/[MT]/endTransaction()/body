@@ -1,9 +1,12 @@
 {
-  try {
-    getTransaction().commit(objectStore);
-    transaction=null;
-  }
- catch (  ObjectStoreException e) {
-    throw new NakedObjectRuntimeException(e);
+  transactionLevel--;
+  if (transactionLevel == 0) {
+    try {
+      getTransaction().commit(objectStore);
+      transaction=null;
+    }
+ catch (    ObjectStoreException e) {
+      throw new NakedObjectRuntimeException(e);
+    }
   }
 }
