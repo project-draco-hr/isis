@@ -2,9 +2,11 @@
   if (object.isResolved() || !isPersistent(object)) {
     return;
   }
-  LOG.info("resolve-immediately" + object);
+  LOG.info("resolve-immediately " + object);
   try {
     objectStore.resolveImmediately(object);
+    collateChanges();
+    objectsToBeSaved.remove(object);
   }
  catch (  ObjectStoreException e) {
     throw new NakedObjectRuntimeException(e);

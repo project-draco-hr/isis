@@ -4,8 +4,12 @@
     if (NakedObjects.getPojoAdapterFactory().isLoaded(oid)) {
       return NakedObjects.getPojoAdapterFactory().getLoadedObject(oid);
     }
-    NakedObject object=objectStore.getObject(oid,hint);
-    return object;
+ else {
+      NakedObject object=objectStore.getObject(oid,hint);
+      collateChanges();
+      objectsToBeSaved.remove(object);
+      return object;
+    }
   }
  catch (  ObjectStoreException e) {
     throw new NakedObjectRuntimeException(e);
