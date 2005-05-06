@@ -1,12 +1,12 @@
 {
-  NakedObjectField[] fields=object.getSpecification().getFields();
+  NakedObjectField[] fields=object.getFields();
   for (int i=0; i < fields.length; i++) {
     NakedObjectField field=fields[i];
     if (field.isDerived()) {
       continue;
     }
     if (field.isValue()) {
-      object.setValue((OneToOneAssociation)field,data.get(field.getName()));
+      object.initValue((OneToOneAssociation)field,data.get(field.getName()));
     }
  else     if (field instanceof OneToManyAssociation) {
       ReferenceVector refs=(ReferenceVector)data.get(field.getName());

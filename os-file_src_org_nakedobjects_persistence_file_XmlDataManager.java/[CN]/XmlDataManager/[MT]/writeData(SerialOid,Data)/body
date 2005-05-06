@@ -18,14 +18,17 @@
       }
  else       if (entry instanceof ReferenceVector) {
         ReferenceVector references=(ReferenceVector)entry;
-        xml.append("  <multiple-association field=\"" + field + "\" ");
-        xml.append(">\n");
-        for (int i=0; i < references.size(); i++) {
-          Object oid=references.elementAt(i);
-          xml.append("    <element ");
-          xml.append("ref=\"" + encodedOid((SerialOid)oid) + "\"/>\n");
+        int size=references.size();
+        if (size > 0) {
+          xml.append("  <multiple-association field=\"" + field + "\" ");
+          xml.append(">\n");
+          for (int i=0; i < size; i++) {
+            Object oid=references.elementAt(i);
+            xml.append("    <element ");
+            xml.append("ref=\"" + encodedOid((SerialOid)oid) + "\"/>\n");
+          }
+          xml.append("  </multiple-association>\n");
         }
-        xml.append("  </multiple-association>\n");
       }
  else {
         xml.append("  <value field=\"" + field + "\">");
