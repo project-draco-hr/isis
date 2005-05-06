@@ -13,6 +13,7 @@
     String name=this.getClass().getName();
     name=name.substring(name.lastIndexOf('.') + 1);
     Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
+    new NakedObjectsClient();
     NakedObjects.setConfiguration(configuration);
     ConfigurationFactory.setConfiguration(configuration);
     if (configuration.getString(SHOW_EXPLORATION_OPTIONS) == null) {
@@ -50,7 +51,7 @@
     NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
     specificationLoader.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
-    NakedObjects.setSessionLookup(new ClientSessionLookup(new SimpleSession()));
+    NakedObjects.setSession(new SimpleSession());
     try {
       objectManager.init();
     }
