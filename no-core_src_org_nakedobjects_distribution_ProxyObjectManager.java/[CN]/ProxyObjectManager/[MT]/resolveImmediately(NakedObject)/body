@@ -3,5 +3,15 @@
   if (object.isResolved() || !object.isPersistent()) {
     return;
   }
-  LOG.warn("Not yet resolving");
+  Oid oid=object.getOid();
+  NakedObjectSpecification hint=object.getSpecification();
+  LOG.debug("resolve object (remotely from server)" + oid);
+  ObjectData data=connection.getObject(session,oid,hint.getFullName());
+  DataHelper.update(data);
+  if (object.isResolved()) {
+    LOG.error("Object already resolved, no need to set resolve flag");
+  }
+ else {
+    object.setResolved();
+  }
 }
