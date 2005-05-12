@@ -1,4 +1,10 @@
 {
-  NakedObject object=objectManager.getObject(oid,getSpecification(fullName));
+  NakedObject object;
+  try {
+    object=objectManager().getObject(oid,getSpecification(fullName));
+  }
+ catch (  ObjectNotFoundException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
   return object;
 }

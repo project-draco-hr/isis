@@ -1,5 +1,6 @@
 {
   NakedObject object=getNakedObject(session,objectOid,objectType);
+  ((LocalObjectManager)objectManager()).tempResetDirty();
   NakedObjectSpecification[] parameterSpecifiactions=new NakedObjectSpecification[parameterTypes.length];
   for (int i=0; i < parameterSpecifiactions.length; i++) {
     parameterSpecifiactions[i]=getSpecification(parameterTypes[i]);
@@ -12,8 +13,25 @@
   }
   Naked[] parameters=new Naked[parameterData.length];
   for (int i=0; i < parameters.length; i++) {
-    if (parameterData[i] != null) {
-      parameters[i]=DataHelper.recreate(parameterData[i]);
+    Data data=parameterData[i];
+    if (data == null) {
+      continue;
+    }
+    if (data instanceof ObjectData) {
+      ObjectData objectData=(ObjectData)data;
+      if (objectData.getOid() != null) {
+        parameters[i]=getNakedObject(session,objectData.getOid(),objectData.getType());
+      }
+ else {
+        parameters[i]=DataHelper.recreate(data);
+      }
+    }
+ else     if (data instanceof ValueData) {
+      ValueData valueData=(ValueData)data;
+      NakedObjects.getPojoAdapterFactory().createAdapter(valueData.getValue());
+    }
+ else {
+      throw new NakedObjectRuntimeException();
     }
   }
   try {
