@@ -1,0 +1,17 @@
+{
+  DebugString debug=new DebugString();
+  debug.appendln(0,"configuration",configuration());
+  debug.appendln(0,"session",currentSession());
+  debug.appendTitle("specification loader");
+  NakedObjectSpecificationLoader loader=specificationLoader();
+  debug.appendln(0,"instance",loader);
+  NakedObjectSpecification[] specs=loader.getAllSpecifications();
+  for (int i=0; i < specs.length; i++) {
+    debug.appendln(4,i + ")",specs[i].toString());
+  }
+  debug.appendTitle(objectManager().getDebugTitle());
+  debug.append(objectManager().getDebugData());
+  debug.appendTitle(pojoAdapterFactory().getDebugTitle());
+  debug.append(pojoAdapterFactory().getDebugData());
+  return debug.toString();
+}
