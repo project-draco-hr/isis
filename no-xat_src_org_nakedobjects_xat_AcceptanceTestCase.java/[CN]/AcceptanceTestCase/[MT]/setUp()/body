@@ -30,7 +30,7 @@
   PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
   pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
   nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
-  setupFramework();
+  setupFramework(nakedObjects);
   nakedObjects.setSession(new Session());
   setUpFixtures();
   try {
@@ -39,6 +39,7 @@
     for (int i=0; i < cls.length; i++) {
       NakedObjectSpecification nc=NakedObjects.getSpecificationLoader().loadSpecification(cls[i]);
       NakedClass spec=new NakedClass(cls[i]);
+      NakedObjects.getPojoAdapterFactory().createNOAdapter(spec).setResolved();
       TestClass view=testObjectFactory.createTestClass(spec);
       classes.put(nc.getFullName().toLowerCase(),view);
     }
