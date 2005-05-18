@@ -21,6 +21,7 @@
       ObjectData objectData=(ObjectData)data;
       if (objectData.getOid() != null) {
         parameters[i]=getNakedObject(session,objectData.getOid(),objectData.getType());
+        Assert.assertEquals(parameters[i],NakedObjects.getPojoAdapterFactory().createAdapter(parameters[i].getObject()));
       }
  else {
         parameters[i]=DataHelper.recreate(data);
@@ -28,7 +29,7 @@
     }
  else     if (data instanceof ValueData) {
       ValueData valueData=(ValueData)data;
-      NakedObjects.getPojoAdapterFactory().createAdapter(valueData.getValue());
+      parameters[i]=NakedObjects.getPojoAdapterFactory().createAdapter(valueData.getValue());
     }
  else {
       throw new NakedObjectRuntimeException();
@@ -39,7 +40,7 @@
     return objectDataFactory.createObjectData(result,OBJECT_DATA_DEPTH);
   }
  catch (  Exception e) {
-    LOG.error(e);
+    LOG.error(e.getMessage(),e);
     return objectDataFactory.createObjectData(null,OBJECT_DATA_DEPTH);
   }
 }
