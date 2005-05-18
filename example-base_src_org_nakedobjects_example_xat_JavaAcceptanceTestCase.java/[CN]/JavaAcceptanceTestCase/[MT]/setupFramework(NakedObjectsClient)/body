@@ -1,6 +1,5 @@
 {
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
-  NakedObjectsClient nakedObjects=new NakedObjectsClient();
   JavaObjectFactory objectFactory=new JavaObjectFactory();
   objectFactory.setContainer(container);
   container.setObjectFactory(objectFactory);
@@ -11,7 +10,7 @@
   objectManager.setObjectFactory(objectFactory);
   objectManager.setOidGenerator(oidGenerator);
   nakedObjects.setObjectManager(objectManager);
-  NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
+  StaticNakedObjectSpecificationLoader specificationLoader=new StaticNakedObjectSpecificationLoader();
   nakedObjects.setSpecificationLoader(specificationLoader);
   LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
   JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
@@ -28,5 +27,4 @@
  catch (  StartupException e) {
     throw new NakedObjectRuntimeException(e);
   }
-  Runtime.getRuntime().gc();
 }
