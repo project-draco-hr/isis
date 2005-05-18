@@ -1,0 +1,36 @@
+{
+  BasicConfigurator.configure();
+  NakedObjectsClient nakedObjects=new NakedObjectsClient();
+  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader("nakedobjects.properties",false));
+  nakedObjects.setConfiguration(configuration);
+  MockNakedObjectSpecificationLoaderNew loader=new MockNakedObjectSpecificationLoaderNew();
+  setupSpecificationLoader(loader);
+  nakedObjects.setSpecificationLoader(loader);
+  Viewer viewer=new Viewer();
+  ViewerFrame frame=new ViewerFrame();
+  frame.setViewer(viewer);
+  viewer.setRenderingArea(frame);
+  InteractionSpy spyWindow=new InteractionSpy();
+  viewer.setSpy(spyWindow);
+  spyWindow.open();
+  ViewUpdateNotifier notifier=new ViewUpdateNotifier();
+  viewer.setUpdateNotifier(notifier);
+  new ViewerAssistant();
+  ViewerAssistant.getInstance().setViewer(viewer);
+  ViewerAssistant.getInstance().setUpdateNotifier(notifier);
+  ViewerAssistant.getInstance().setDebugFrame(spyWindow);
+  AbstractView.debug=false;
+  Workspace workspace=workspace();
+  viewer.setRootView(workspace);
+  views(workspace);
+  InfoDebugFrame debug=new InfoDebugFrame();
+  debug.setInfo(new DebugView(workspace));
+  debug.setSize(800,600);
+  debug.setLocation(400,300);
+  debug.show();
+  viewer.start();
+  frame.setBounds(200,100,800,600);
+  frame.show();
+  viewer.sizeChange();
+  debug.refresh();
+}
