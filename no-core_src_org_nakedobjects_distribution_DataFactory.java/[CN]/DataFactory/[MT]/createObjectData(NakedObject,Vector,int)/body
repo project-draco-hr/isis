@@ -12,17 +12,18 @@
   NakedObjectField[] fields=specification.getFields();
   Object[] fieldContent=new Object[fields.length];
   for (int i=0; i < fields.length; i++) {
-    if (fields[i].isEmpty(object)) {
+    Naked field=object.getField(fields[i]);
+    if (field == null) {
       continue;
     }
     if (fields[i].isValue()) {
-      fieldContent[i]=object.getField(fields[i]).getObject();
+      fieldContent[i]=field.getObject();
     }
  else     if (fields[i].isCollection()) {
-      fieldContent[i]=createCollectionData((NakedCollection)object.getField(fields[i]),savedObjects,depth - 1);
+      fieldContent[i]=createCollectionData((NakedCollection)field,savedObjects,depth - 1);
     }
  else {
-      fieldContent[i]=createObjectData((NakedObject)object.getField(fields[i]),savedObjects,depth - 1);
+      fieldContent[i]=createObjectData((NakedObject)field,savedObjects,depth - 1);
     }
   }
   return createObjectData(oid,type,fieldContent,object.isResolved(),object.getVersion());
