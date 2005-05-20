@@ -1,7 +1,9 @@
 {
   assertEquals(ACTION_NAME,action.getLabel(nakedObject));
-  actionDelegate.label=ACTION_LABEL;
-  assertEquals(ACTION_NAME,action.getLabel(nakedObject));
-  actionDelegate.hasAbout=true;
+  actionPeer.expect("getHint #reduceheadcount() null");
+  MockHint hint=new MockHint();
+  hint.setupName(ACTION_LABEL);
+  actionPeer.setupHint(hint);
   assertEquals(ACTION_LABEL,action.getLabel(nakedObject));
+  actionPeer.verify();
 }

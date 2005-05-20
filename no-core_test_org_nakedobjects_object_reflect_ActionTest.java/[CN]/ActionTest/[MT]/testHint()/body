@@ -1,0 +1,13 @@
+{
+  actionPeer.setupHint(null);
+  assertFalse(action.hasHint());
+  Hint hint=action.getHint(nakedObject,null);
+  assertTrue(hint instanceof DefaultHint);
+  MockHint expectedHint=new MockHint();
+  actionPeer.setupHint(expectedHint);
+  assertTrue(action.hasHint());
+  actionPeer.expect("getHint #reduceheadcount() null");
+  hint=action.getHint(nakedObject,null);
+  assertEquals(expectedHint,hint);
+  actionPeer.verify();
+}
