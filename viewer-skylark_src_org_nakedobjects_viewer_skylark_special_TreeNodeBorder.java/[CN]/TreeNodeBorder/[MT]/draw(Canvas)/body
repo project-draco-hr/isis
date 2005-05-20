@@ -1,6 +1,6 @@
 {
   boolean isOpen=getSpecification().isOpen();
-  boolean canOpen=isOpen || ((TreeNodeSpecification)getSpecification()).canOpen(getContent());
+  boolean canOpen=isOpen || canClick();
   if (((TreeBrowserFrame)getViewAxis()).getSelectedNode() == getView()) {
     canvas.drawSolidRectangle(left,0,getSize().getWidth() - left - 1,top - 1,Style.PRIMARY2);
   }
@@ -13,11 +13,11 @@
   if (canOpen) {
     x+=BOX_X_OFFSET;
     canvas.drawLine(x,y,x + BOX_SIZE,y,Style.SECONDARY3);
-    canvas.drawRectangle(x,y - BOX_SIZE / 2,BOX_SIZE,BOX_SIZE,Style.SECONDARY2);
-    canvas.drawLine(x + BOX_PADDING,y,x + BOX_SIZE - BOX_PADDING,y,Style.SECONDARY2);
+    canvas.drawRectangle(x,y - BOX_SIZE / 2,BOX_SIZE,BOX_SIZE,Style.SECONDARY1);
+    canvas.drawLine(x + BOX_PADDING,y,x + BOX_SIZE - BOX_PADDING,y,Style.BLACK);
     if (!isOpen) {
       x+=BOX_SIZE / 2;
-      canvas.drawLine(x,y - BOX_SIZE / 2 + BOX_PADDING,x,y + BOX_SIZE / 2 - BOX_PADDING,Style.SECONDARY2);
+      canvas.drawLine(x,y - BOX_SIZE / 2 + BOX_PADDING,x,y + BOX_SIZE / 2 - BOX_PADDING,Style.BLACK);
     }
   }
   View[] nodes=getSubviews();
@@ -32,7 +32,7 @@
   x+=icon.getSize().getWidth();
   text.draw(canvas,x,baseline);
   if (AbstractView.debug) {
-    canvas.drawRectangle(getSize(),Color.DEBUG_BASELINE);
+    canvas.drawRectangleAround(this,Color.DEBUG_BASELINE);
   }
   super.draw(canvas);
 }

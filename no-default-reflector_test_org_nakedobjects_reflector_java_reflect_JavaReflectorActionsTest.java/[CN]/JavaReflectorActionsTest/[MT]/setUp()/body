@@ -1,0 +1,14 @@
+{
+  LogManager.getLoggerRepository().setThreshold(Level.OFF);
+  ConfigurationFactory.setConfiguration(new TestConfiguration());
+  NakedObjectsClient nakedObjects=new NakedObjectsClient();
+  loader=new MockNakedObjectSpecificationLoader();
+  loader.addSpec(new DummyNakedObjectSpecification());
+  PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
+  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
+  pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
+  nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+  objectFactory=new JavaObjectFactory();
+  reflector=new JavaReflector(BusinessObjectWithActions.class.getName(),objectFactory);
+  actions=reflector.actionPeers(false);
+}
