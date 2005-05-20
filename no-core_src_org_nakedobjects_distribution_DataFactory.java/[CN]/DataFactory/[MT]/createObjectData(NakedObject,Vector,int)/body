@@ -6,7 +6,7 @@
   NakedObjectSpecification specification=object.getSpecification();
   String type=specification.getFullName();
   if (savedObjects.contains(object) || (depth <= 0 && object.isPersistent())) {
-    return createObjectData(oid,type,null);
+    return createObjectData(oid,type,null,object.isResolved(),object.getVersion());
   }
   savedObjects.addElement(object);
   NakedObjectField[] fields=specification.getFields();
@@ -25,5 +25,5 @@
       fieldContent[i]=createObjectData((NakedObject)object.getField(fields[i]),savedObjects,depth - 1);
     }
   }
-  return createObjectData(oid,type,fieldContent);
+  return createObjectData(oid,type,fieldContent,object.isResolved(),object.getVersion());
 }
