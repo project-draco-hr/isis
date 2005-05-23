@@ -1,0 +1,16 @@
+{
+  if (line < 0) {
+    throw new IllegalArgumentException("Line must be greater than, or equal to, zero: " + line);
+  }
+  int lineWithinBlock=line;
+  for (int i=0; i < blocks.size(); i++) {
+    TextBlock block=(TextBlock)blocks.elementAt(i);
+    int noLines=block.noLines();
+    if (lineWithinBlock < noLines) {
+      LOG.debug("Block " + i + ", line "+ lineWithinBlock);
+      return new TextBlockReference(i,block,lineWithinBlock);
+    }
+    lineWithinBlock-=noLines;
+  }
+  return null;
+}
