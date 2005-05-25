@@ -1,4 +1,6 @@
 {
-  boolean vetoed=getForNaked().getHint(action,nakedObjects(parameters)).canAccess().isVetoed();
-  Assert.assertTrue("action '" + name + "' is visible",vetoed);
+  Hint hint=getForNaked().getHint(action,nakedObjects(parameters));
+  if (hint.canAccess().isAllowed()) {
+    throw new NakedAssertionFailedError("Action '" + name + "' is visible");
+  }
 }

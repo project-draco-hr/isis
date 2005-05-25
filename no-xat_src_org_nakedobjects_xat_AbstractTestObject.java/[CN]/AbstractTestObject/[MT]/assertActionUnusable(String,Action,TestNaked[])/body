@@ -1,5 +1,8 @@
 {
   Naked[] parameterObjects=nakedObjects(parameters);
-  boolean vetoed=getForNaked().getHint(action,parameterObjects).canUse().isVetoed();
-  Assert.assertTrue("action '" + name + "' is usable",vetoed);
+  Consent canUse=getForNaked().getHint(action,parameterObjects).canUse();
+  boolean allowed=canUse.isAllowed();
+  if (allowed) {
+    throw new NakedAssertionFailedError("Action '" + name + "' is usable: "+ canUse.getReason());
+  }
 }
