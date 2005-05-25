@@ -1,6 +1,6 @@
 {
-  NakedObjectField field=fieldFor(fieldName);
-  assertFieldVisible(fieldName,field);
+  NakedObjectField fieldAccessor=fieldAccessorFor(fieldName);
+  assertFieldVisible(fieldAccessor);
   Naked object=getField(fieldName).getForNaked();
   if (!(object instanceof InternalCollection)) {
     throw new IllegalActionError("getField(String, String) only allows an object to be selected from an InternalCollection");
@@ -21,5 +21,6 @@
  else   if (noElements > 1) {
     throw new IllegalActionError("The field '" + fieldName + "' must only contain one object titled '"+ title+ "' within it");
   }
+  NakedObjects.getObjectManager().resolveImmediately(selectedObject);
   return factory.createTestObject(selectedObject);
 }

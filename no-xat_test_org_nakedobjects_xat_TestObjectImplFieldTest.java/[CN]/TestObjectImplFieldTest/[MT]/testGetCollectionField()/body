@@ -1,0 +1,28 @@
+{
+  MockNakedObjectSpecification fieldSpec=new MockNakedObjectSpecification();
+  MockNakedObjectSpecification objectSpec=new MockNakedObjectSpecification();
+  OneToOneAssociation field1=new OneToOneAssociation("cls","one",fieldSpec,new MockOneToOnePeer());
+  OneToManyAssociation field2=new OneToManyAssociation("cls","two",fieldSpec,new MockOneToManyPeer());
+  objectSpec.setupFields(new NakedObjectField[]{field1,field2});
+  object.setupSpecification(objectSpec);
+  DummyNakedObject fieldObject=new DummyNakedObject();
+  object.setupField("one",fieldObject);
+  DummyNakedCollection fieldCollection=new DummyNakedCollection();
+  object.setupField("two",fieldCollection);
+  target.expected.addExpectedMethod("fieldAccessorFor");
+  target.expected.addExpectedParameter("two");
+  target.setupField(field1);
+  factory.calls.addExpectedMethod("createTestObject");
+  factory.calls.addExpectedParameter(fieldObject);
+  factory.calls.addExpectedParameter("cache");
+  factory.calls.addExpectedMethod("createTestCollection");
+  factory.calls.addExpectedParameter(fieldCollection);
+  MockTestObject fieldTestObject=new MockTestObject();
+  factory.setupObject(fieldTestObject);
+  MockTestCollection fieldTestCollection=new MockTestCollection();
+  factory.setupCollection(fieldTestCollection);
+  TestNaked field=target.getField("two");
+  assertEquals(fieldTestCollection,field);
+  target.verify();
+  factory.verify();
+}

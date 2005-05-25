@@ -1,15 +1,15 @@
 {
-  NakedObjectField field=fieldFor(fieldName);
-  assertFieldVisible(fieldName,field);
+  NakedObjectField field=fieldAccessorFor(fieldName);
+  assertFieldVisible(field);
   assertFieldModifiable(fieldName,field);
-  TestObject targetField=(TestObject)field(fieldName);
+  TestObject targetField=(TestObject)fieldReference(fieldName);
   if (targetField instanceof TestValue) {
     throw new IllegalActionError("set(..) not allowed on value target field; use fieldEntry(..) instead");
   }
  else {
     NakedObject ref=(NakedObject)forObject.getField(field);
     if (ref != null) {
-      getForNaked().clearAssociation((OneToOneAssociation)fieldFor(fieldName),ref);
+      getForNaked().clearAssociation((OneToOneAssociation)fieldAccessorFor(fieldName),ref);
     }
   }
 }
