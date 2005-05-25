@@ -1,5 +1,16 @@
 {
   ToString str=new ToString(this);
+  str.append(isPersistent() ? "P" : (isFinder() ? "F" : "T"));
+  str.append(isResolved() ? "R" : "-");
+  Oid oid=getOid();
+  if (oid != null) {
+    str.append(":");
+    str.append(oid.toString().toUpperCase());
+  }
+ else {
+    str.append(":-");
+  }
+  str.setAddComma();
   str.append("specification",specification == null ? "undetermined" : specification.getShortName());
   str.append("title",titleString());
   return str.toString();
