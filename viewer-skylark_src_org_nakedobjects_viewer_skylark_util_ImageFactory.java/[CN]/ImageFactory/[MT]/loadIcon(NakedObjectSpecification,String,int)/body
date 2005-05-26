@@ -1,16 +1,8 @@
 {
-  String className=specification.getFullName().replace('.','_') + type;
+  String className=specification.getFullName().replace('.','_') + extension;
   Image loadIcon=loadIcon(className,iconHeight);
   if (loadIcon == null) {
-    className=specification.getShortName();
-    loadIcon=loadIcon(className,iconHeight);
-    if (loadIcon == null) {
-      NakedObjectSpecification superclass=specification.superclass();
-      if (superclass == null) {
-        return loadUnknownIcon(iconHeight);
-      }
-      return loadIcon(superclass,type,iconHeight);
-    }
+    loadIcon=loadIconWIthShortName(specification,extension,iconHeight);
   }
   return loadIcon;
 }
