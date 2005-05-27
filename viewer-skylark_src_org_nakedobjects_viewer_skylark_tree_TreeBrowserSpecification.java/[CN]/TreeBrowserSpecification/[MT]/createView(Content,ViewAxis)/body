@@ -1,0 +1,19 @@
+{
+  TreeBrowserFrame frame=new TreeBrowserFrame(content,this);
+  View view=addBorder(frame);
+  View rootNode;
+  axis=frame;
+  if (content.getNaked() instanceof NakedCollection) {
+    rootNode=factory.createRootCollectionNode(content,axis);
+  }
+ else {
+    rootNode=factory.createRootObjectNode(content,axis);
+    frame.setSelectedNode(rootNode);
+  }
+  View leftPane=rootNode;
+  frame.initLeftPane(leftPane);
+  Size size=leftPane.getRequiredSize();
+  size.setWidth(220);
+  leftPane.setRequiredSize(size);
+  return view;
+}

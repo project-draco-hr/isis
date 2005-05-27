@@ -1,0 +1,16 @@
+{
+  Naked parent=getParent().getContent().getNaked();
+  if (!(parent instanceof NakedObject)) {
+    parent=getParent().getParent().getContent().getNaked();
+  }
+  if (getContent() instanceof FieldContent) {
+    NakedObjectField field=((FieldContent)getContent()).getFieldReflector();
+    NakedObjects.getObjectManager().resolveLazily((NakedObject)parent,field);
+  }
+ else   if (getContent() instanceof CollectionContent) {
+    NakedObjects.getObjectManager().resolveImmediately((NakedObject)parent);
+  }
+ else   if (getContent() instanceof CollectionElement) {
+    NakedObjects.getObjectManager().resolveImmediately((NakedObject)getContent().getNaked());
+  }
+}
