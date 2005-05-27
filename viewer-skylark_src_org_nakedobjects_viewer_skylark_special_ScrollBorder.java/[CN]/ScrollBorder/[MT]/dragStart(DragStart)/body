@@ -8,19 +8,20 @@
     if (y > verticalScrollPosition && y < verticalScrollPosition + verticalVisibleAmount) {
       dragOffset=y - verticalScrollPosition;
       verticalDrag=true;
+      return new SimpleInternalDrag(this,location);
     }
-    return new SimpleInternalDrag(this,location);
   }
  else   if (y >= contents.getHeight()) {
     if (x > horizontalScrollPosition && x < horizontalScrollPosition + horizontalVisibleAmount) {
       dragOffset=x - horizontalScrollPosition;
       verticalDrag=false;
+      return new SimpleInternalDrag(this,location);
     }
-    return new SimpleInternalDrag(this,location);
   }
  else {
     Offset offset=offset();
     drag.add(offset);
     return super.dragStart(drag);
   }
+  return null;
 }
