@@ -1,16 +1,18 @@
 {
   Bounds bounds=left.getBounds();
-  int y1=getPadding().getTop();
-  int y2=getSize().getHeight() - 1;
-  for (int i=0; i < ResizeBorder.BORDER_WIDTH; i++) {
-    int x=bounds.getWidth() - i - 1;
-    canvas.drawLine(x,y1,x,y2,Style.SECONDARY1);
-  }
   Canvas subCanvas=canvas.createSubcanvas(bounds);
+  Color leftBackground=Style.background(getSpecification(),"left");
+  if (leftBackground != Style.WINDOW_BACKGROUND) {
+    subCanvas.clearBackground(left,leftBackground);
+  }
   left.draw(subCanvas);
   if (right != null) {
     bounds=right.getBounds();
     subCanvas=canvas.createSubcanvas(bounds);
+    Color rightBackground=Style.background(getSpecification(),"right");
+    if (rightBackground != Style.WINDOW_BACKGROUND) {
+      subCanvas.clearBackground(right,rightBackground);
+    }
     right.draw(subCanvas);
   }
 }
