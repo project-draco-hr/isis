@@ -2,17 +2,7 @@
   Size size=getSize();
   int width=size.getWidth();
   int height=size.getHeight();
-  LOG.debug("redrawing resize border " + resizing);
-  if (resizing) {
-    Shape shape=new Shape(0,0);
-    int resizeMarkerSize=10;
-    shape.addLine(resizeMarkerSize,0);
-    shape.addLine(0,resizeMarkerSize);
-    shape.addLine(-resizeMarkerSize,-resizeMarkerSize);
-    Color color=new Color(0xffff00);
-    canvas.drawSolidShape(shape,size.getWidth() - resizeMarkerSize,size.getHeight(),color);
-    canvas.drawRectangle(0,0,size.getWidth() - 1,size.getHeight() - 1,color);
-  }
-  Canvas subCanvas=canvas.createSubcanvas(0,0,width - BORDER_WIDTH,height - BORDER_WIDTH);
+  drawResizeBorder(canvas,size);
+  Canvas subCanvas=canvas.createSubcanvas(0,0,width - left - right,height - top - bottom);
   wrappedView.draw(subCanvas);
 }
