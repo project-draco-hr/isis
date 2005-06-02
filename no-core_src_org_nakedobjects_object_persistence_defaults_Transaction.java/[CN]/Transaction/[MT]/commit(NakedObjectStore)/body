@@ -8,7 +8,13 @@
   commands.copyInto(commandsArray);
   if (commandsArray.length > 0) {
     objectStore.startTransaction();
-    objectStore.runTransaction(commandsArray);
-    objectStore.endTransaction();
+    try {
+      objectStore.runTransaction(commandsArray);
+      objectStore.endTransaction();
+    }
+ catch (    ObjectStoreException e) {
+      objectStore.abortTransaction();
+      throw e;
+    }
   }
 }
