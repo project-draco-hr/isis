@@ -1,14 +1,15 @@
 {
-  ObjectLeafNodeSpecification objectLeafNode=new ObjectLeafNodeSpecification();
-  CollectionLeafNodeSpecification collectionLeafNode=new CollectionLeafNodeSpecification();
-  objectCompositeNode=new ObjectCompositeNodeSpecification();
-  objectCompositeNode.setCollectionLeafNodeSpecification(collectionLeafNode);
-  objectCompositeNode.setObjectLeafNodeSpecification(objectLeafNode);
-  objectCompositeNode.setReplacementNodeSpecification(objectLeafNode);
-  objectLeafNode.setReplacementNodeSpecification(objectCompositeNode);
-  collectionCompositeNode=new CollectionCompositeNodeSpecification();
-  collectionCompositeNode.setCollectionLeafNodeSpecification(collectionLeafNode);
-  collectionCompositeNode.setObjectLeafNodeSpecification(objectLeafNode);
-  collectionCompositeNode.setReplacementNodeSpecification(objectLeafNode);
-  collectionLeafNode.setReplacementNodeSpecification(collectionCompositeNode);
+  EmptyNodeSpecification emptyNode=new EmptyNodeSpecification();
+  NodeSpecification elementNode=new ElementNodeSpecification();
+  NodeSpecification fieldNode=new FieldNodeSpecification();
+  openCollectionNode=new OpenCollectionNodeSpecification();
+  openCollectionNode.setCollectionSubNodeSpecification(emptyNode);
+  openCollectionNode.setObjectSubNodeSpecification(elementNode);
+  openCollectionNode.setReplacementNodeSpecification(emptyNode);
+  openObjectNode=new OpenObjectNodeSpecification();
+  openObjectNode.setCollectionSubNodeSpecification(fieldNode);
+  openObjectNode.setObjectSubNodeSpecification(emptyNode);
+  openObjectNode.setReplacementNodeSpecification(emptyNode);
+  elementNode.setReplacementNodeSpecification(openObjectNode);
+  fieldNode.setReplacementNodeSpecification(openCollectionNode);
 }
