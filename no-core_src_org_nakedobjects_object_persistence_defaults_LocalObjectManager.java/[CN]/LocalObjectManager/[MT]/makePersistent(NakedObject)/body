@@ -1,53 +1,9 @@
 {
-  LOG.info("makePersistent " + object);
   if (isPersistent(object)) {
     throw new NotPersistableException("Object already persistent");
   }
-  object.setOid(createOid(object));
-  if (!object.isResolved()) {
-    object.setResolved();
+  if (object.getSpecification().persistable() == Persistable.TRANSIENT) {
+    throw new NotPersistableException("Object must be transient");
   }
-  NakedObjectField[] fields=object.getFields();
-  for (int i=0; i < fields.length; i++) {
-    NakedObjectField field=fields[i];
-    if (field.isDerived()) {
-      continue;
-    }
- else     if (field.isValue()) {
-      continue;
-    }
- else     if (field instanceof OneToManyAssociation) {
-      InternalCollection collection=(InternalCollection)object.getField(field);
-      collection.setOid(createOid(collection));
-      collection.setResolved();
-      for (int j=0; j < collection.size(); j++) {
-        NakedObject element=collection.elementAt(j);
-        if (isPersistent(element)) {
-          continue;
-        }
-        makePersistent(element);
-      }
-    }
- else {
-      Object fieldValue=object.getField(field);
-      if (fieldValue == null) {
-        continue;
-      }
-      if (!(fieldValue instanceof NakedObject)) {
-        throw new NakedObjectRuntimeException();
-      }
-      NakedObject association=(NakedObject)fieldValue;
-      if (isPersistent(association)) {
-        continue;
-      }
-      makePersistent(association);
-    }
-  }
-  try {
-    createObject(object);
-  }
- catch (  ObjectStoreException e) {
-    throw new NakedObjectRuntimeException(e);
-  }
-  loadedObjects().loaded(object);
+  persist(object);
 }

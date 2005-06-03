@@ -1,0 +1,45 @@
+{
+  if (object.isPersistent() || object.getSpecification().persistable() == Persistable.TRANSIENT) {
+    return;
+  }
+  LOG.info("persist " + object);
+  object.setOid(createOid(object));
+  if (!object.isResolved()) {
+    object.setResolved();
+  }
+  NakedObjectField[] fields=object.getFields();
+  for (int i=0; i < fields.length; i++) {
+    NakedObjectField field=fields[i];
+    if (field.isDerived()) {
+      continue;
+    }
+ else     if (field.isValue()) {
+      continue;
+    }
+ else     if (field instanceof OneToManyAssociation) {
+      InternalCollection collection=(InternalCollection)object.getField(field);
+      collection.setOid(createOid(collection));
+      collection.setResolved();
+      for (int j=0; j < collection.size(); j++) {
+        persist(collection.elementAt(j));
+      }
+    }
+ else {
+      Object fieldValue=object.getField(field);
+      if (fieldValue == null) {
+        continue;
+      }
+      if (!(fieldValue instanceof NakedObject)) {
+        throw new NakedObjectRuntimeException();
+      }
+      persist((NakedObject)fieldValue);
+    }
+  }
+  try {
+    createObject(object);
+  }
+ catch (  ObjectStoreException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+  loadedObjects().loaded(object);
+}
