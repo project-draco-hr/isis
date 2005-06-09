@@ -1,14 +1,13 @@
 {
   updateNotifier.invalidateViewsForChangedObjects();
   rootView.layout();
-  if (redrawArea != null) {
-    LOG.debug("Repaint viewer");
-    Bounds area;
-synchronized (this) {
-      area=redrawArea;
-      redrawArea=null;
+synchronized (redrawArea) {
+    if (!redrawArea.equals(NO_REDRAW)) {
+      LOG.debug("Repaint viewer " + redrawArea);
+      Bounds area=new Bounds(redrawArea);
       area.translate(insets.left,insets.top);
+      renderingArea.repaint(area.x,area.y,area.width,area.height);
+      redrawArea.setBounds(NO_REDRAW);
     }
-    renderingArea.repaint(area.x,area.y,area.width,area.height);
   }
 }

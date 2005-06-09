@@ -1,6 +1,13 @@
 {
   spy.addDamagedArea(bounds);
-synchronized (this) {
-    redrawArea=redrawArea == null ? bounds : redrawArea.union(bounds);
+synchronized (redrawArea) {
+    if (redrawArea.equals(NO_REDRAW)) {
+      redrawArea.setBounds(bounds);
+      LOG.debug("damage - new area " + redrawArea);
+    }
+ else {
+      redrawArea.union(bounds);
+      LOG.debug("damage - extend area " + redrawArea + " - to include "+ bounds);
+    }
   }
 }
