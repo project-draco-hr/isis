@@ -1,0 +1,15 @@
+{
+  String line=textContent.getText(0);
+  int maxWidth=getMaxWidth();
+  int leftLimit=offset + LIMIT;
+  int rightLimit=offset + maxWidth - LIMIT;
+  int cursorPosition=style.stringWidth(line.substring(0,cursor.getCharacter()));
+  if (cursorPosition > rightLimit) {
+    offset=offset + (cursorPosition - rightLimit);
+    offset=Math.min(style.stringWidth(line),offset);
+  }
+ else   if (cursorPosition < leftLimit) {
+    offset=offset - (leftLimit - cursorPosition);
+    offset=Math.max(0,offset);
+  }
+}

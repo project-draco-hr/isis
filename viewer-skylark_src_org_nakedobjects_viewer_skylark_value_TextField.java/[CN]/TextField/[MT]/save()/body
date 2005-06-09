@@ -19,7 +19,13 @@
         markDamaged();
         getParent().invalidateContent();
       }
- catch (      NakedObjectRuntimeException e) {
+ catch (      TextEntryParseException e) {
+        invalidReason="INVALID ENTRY: " + e.getMessage();
+        getViewManager().setStatus(invalidReason);
+        getState().setInvalid();
+        markDamaged();
+      }
+catch (      NakedObjectRuntimeException e) {
         invalidReason="UPDATE FAILURE: " + e.getMessage();
         LOG.error(invalidReason,e);
         getViewManager().setStatus(invalidReason);

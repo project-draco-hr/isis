@@ -1,7 +1,29 @@
 {
   super.draw(canvas);
   int width=getMaxWidth();
-  drawHighlight(canvas,width);
-  drawLines(canvas,width);
-  drawText(canvas,width);
+  align();
+  if (hasFocus() && selection.hasSelection()) {
+    drawHighlight(canvas,width);
+  }
+  if (showLines == true && canChangeValue()) {
+    Color color=identified ? Style.IDENTIFIED : Style.SECONDARY2;
+    color=hasFocus() ? Style.PRIMARY1 : color;
+    drawLines(canvas,color,width);
+  }
+  Color textColor;
+  if (getState().isInvalid()) {
+    textColor=Style.BLACK;
+  }
+ else   if (hasFocus()) {
+    if (isSaved) {
+      textColor=Style.PRIMARY1;
+    }
+ else {
+      textColor=Style.TEXT_EDIT;
+    }
+  }
+ else {
+    textColor=Style.BLACK;
+  }
+  drawText(canvas,textColor,width);
 }

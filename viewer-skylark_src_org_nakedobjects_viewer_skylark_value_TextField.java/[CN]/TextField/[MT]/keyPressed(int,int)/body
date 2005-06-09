@@ -10,25 +10,10 @@
   final boolean ctrl=(modifiers & InputEvent.CTRL_MASK) > 0;
 switch (keyCode) {
 case KeyEvent.VK_PAGE_UP:
-    if (ctrl) {
-      textContent.increaseDepth();
-      textContent.alignDisplay(cursor.getLine());
-      invalidateLayout();
-    }
- else {
-      cursor.pageUp();
-    }
+    pageUp(ctrl);
   break;
 case KeyEvent.VK_PAGE_DOWN:
-if (ctrl) {
-  if (textContent.decreaseDepth()) {
-    textContent.alignDisplay(cursor.getLine());
-    invalidateLayout();
-  }
-}
- else {
-  cursor.pageDown();
-}
+pageDown(ctrl);
 break;
 case KeyEvent.VK_V:
 if (ctrl) {
@@ -42,48 +27,22 @@ copy();
 }
 break;
 case KeyEvent.VK_DOWN:
-cursor.lineDown();
-highlight(shift);
+down(shift);
 break;
 case KeyEvent.VK_UP:
-cursor.lineUp();
-highlight(shift);
+up(shift);
 break;
 case KeyEvent.VK_HOME:
-if (alt) {
-cursor.top();
-}
- else {
-cursor.home();
-}
-highlight(shift);
+home(alt,shift);
 break;
 case KeyEvent.VK_END:
-if (alt) {
-cursor.bottom();
-}
- else {
-cursor.end();
-}
-highlight(shift);
+end(alt,shift);
 break;
 case KeyEvent.VK_LEFT:
-if (alt) {
-cursor.wordLeft();
-}
- else {
-cursor.left();
-}
-highlight(shift);
+left(alt,shift);
 break;
 case KeyEvent.VK_RIGHT:
-if (alt) {
-cursor.wordRight();
-}
- else {
-cursor.right();
-}
-highlight(shift);
+right(alt,shift);
 break;
 case KeyEvent.VK_DELETE:
 deleteForward();
@@ -92,23 +51,13 @@ case KeyEvent.VK_BACK_SPACE:
 delete();
 break;
 case KeyEvent.VK_TAB:
-if (!isSaved) {
-editComplete();
-}
+tab();
 break;
 case KeyEvent.VK_ENTER:
-if (multiline) {
-newline();
-}
- else {
-if (!isSaved) {
-editComplete();
-}
-}
+enter();
 break;
 case KeyEvent.VK_ESCAPE:
-invalidReason=null;
-refresh();
+escape();
 break;
 default :
 break;
