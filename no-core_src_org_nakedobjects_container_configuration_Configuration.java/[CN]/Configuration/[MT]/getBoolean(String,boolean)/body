@@ -3,5 +3,12 @@
   if (value == null) {
     return defaultValue;
   }
-  return value.equals("on") || value.equals("yes") || value.equals("true")|| value.equals("");
+  value=value.toLowerCase();
+  if (value.equals("on") || value.equals("yes") || value.equals("true")|| value.equals("")) {
+    return true;
+  }
+  if (value.equals("off") || value.equals("no") || value.equals("false")) {
+    return false;
+  }
+  throw new ConfigurationException("Illegal flag for " + "name; must be one of on, off, yes, no, true or false");
 }
