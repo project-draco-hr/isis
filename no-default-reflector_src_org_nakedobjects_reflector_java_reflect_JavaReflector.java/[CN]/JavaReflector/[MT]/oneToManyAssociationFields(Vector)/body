@@ -10,22 +10,24 @@
     if (aboutMethod == null) {
       aboutMethod=defaultAboutFieldMethod;
     }
-    Method addMethod=findMethod(OBJECT,"addTo" + name,void.class,null);
+    Class[] params=new Class[]{null};
+    Method addMethod=findMethod(OBJECT,"addTo" + name,void.class,params);
     if (addMethod == null) {
-      addMethod=findMethod(OBJECT,"add" + name,void.class,null);
+      addMethod=findMethod(OBJECT,"add" + name,void.class,params);
     }
     if (addMethod == null) {
-      addMethod=findMethod(OBJECT,"associate" + name,void.class,null);
+      addMethod=findMethod(OBJECT,"associate" + name,void.class,params);
     }
-    Method removeMethod=findMethod(OBJECT,"removeFrom" + name,void.class,null);
+    Method removeMethod=findMethod(OBJECT,"removeFrom" + name,void.class,params);
     if (removeMethod == null) {
-      removeMethod=findMethod(OBJECT,"remove" + name,void.class,null);
+      removeMethod=findMethod(OBJECT,"remove" + name,void.class,params);
     }
     if (removeMethod == null) {
-      removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,null);
+      removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,params);
     }
     if (addMethod == null || removeMethod == null) {
       LOG.error("There must be both add and remove methods for " + name + " in "+ className());
+      return;
     }
     Class removeType=(removeMethod == null) ? null : removeMethod.getParameterTypes()[0];
     Class addType=(addMethod == null) ? null : addMethod.getParameterTypes()[0];
