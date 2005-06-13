@@ -4,12 +4,17 @@
     return;
   }
   if (!isPersistent(object)) {
-    LOG.debug("resolve requested, but not persistent: " + object);
+    LOG.debug("ignored resolve request as not persistent " + object);
     return;
   }
   LOG.info("resolve-immediately: " + object);
   try {
-    object.setResolved();
+    if (object.isResolved()) {
+      return;
+    }
+ else {
+      object.setResolved();
+    }
     objectStore.resolveImmediately(object);
     objectsToBeSaved.remove(object);
   }
