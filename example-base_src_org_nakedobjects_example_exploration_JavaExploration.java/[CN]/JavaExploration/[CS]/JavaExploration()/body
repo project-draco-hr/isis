@@ -15,13 +15,12 @@
     Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
     NakedObjects nakedObjects=new NakedObjectsClient();
     nakedObjects.setConfiguration(configuration);
-    ConfigurationFactory.setConfiguration(configuration);
-    PropertyConfigurator.configure(ConfigurationFactory.getConfiguration().getProperties("log4j"));
+    PropertyConfigurator.configure(configuration.getProperties("log4j"));
     Logger log=Logger.getLogger("Naked Objects");
     log.info(AboutNakedObjects.getName());
     log.info(AboutNakedObjects.getVersion());
     log.info(AboutNakedObjects.getBuildId());
-    boolean noSplash=ConfigurationFactory.getConfiguration().getBoolean("nosplash",false);
+    boolean noSplash=configuration.getBoolean("nosplash",false);
     if (!noSplash) {
       splash=new SplashWindow();
     }
