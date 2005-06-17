@@ -1,7 +1,10 @@
 {
   return new SaveObjectCommand(){
     public void execute() throws ObjectStoreException {
-      save(object);
+      NakedObjectSpecification specification=object.getSpecification();
+      LOG.debug("   saving object " + object + " as instance of "+ specification.getFullName());
+      TransientObjectStoreInstances ins=instancesFor(specification);
+      ins.save(object);
     }
     public NakedObject onObject(){
       return object;

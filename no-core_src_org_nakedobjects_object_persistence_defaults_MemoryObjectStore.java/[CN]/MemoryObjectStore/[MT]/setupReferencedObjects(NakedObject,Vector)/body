@@ -1,0 +1,26 @@
+{
+  if (object == null || all.contains(object)) {
+    return;
+  }
+  all.addElement(object);
+  if (object != null && object.getOid() == null) {
+    Oid fieldOid=instancesFor(object.getSpecification()).getOidFor(object.getObject());
+    object.setOid(fieldOid);
+    NakedObjects.getPojoAdapterFactory().loaded(object);
+  }
+  NakedObjectField[] fields=object.getFields();
+  for (int i=0; i < fields.length; i++) {
+    NakedObjectField field=fields[i];
+    if (field.isCollection()) {
+      NakedCollection col=(NakedCollection)object.getField(field);
+      for (Enumeration e=col.elements(); e.hasMoreElements(); ) {
+        NakedObject element=(NakedObject)e.nextElement();
+        setupReferencedObjects(element,all);
+      }
+    }
+ else     if (field.isObject()) {
+      NakedObject fieldContent=(NakedObject)object.getField(field);
+      setupReferencedObjects(fieldContent,all);
+    }
+  }
+}

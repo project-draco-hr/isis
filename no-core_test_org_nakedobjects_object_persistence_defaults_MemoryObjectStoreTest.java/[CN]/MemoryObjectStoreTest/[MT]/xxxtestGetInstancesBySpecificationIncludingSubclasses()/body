@@ -1,0 +1,12 @@
+{
+  DummyNakedObject object1=new DummyNakedObject();
+  transientObjectStoreInstancesForClass.setupInstances(new NakedObject[]{object1});
+  DummyNakedObject object2=new DummyNakedObject();
+  transientObjectStoreInstancesForSuperClass.setupInstances(new NakedObject[]{object2});
+  NakedObject[] instances=objectStore.getInstances(superClassObjectSpec,true);
+  transientObjectStoreInstancesForClass.assertAction(0,"get instances");
+  transientObjectStoreInstancesForSuperClass.assertAction(0,"get instances");
+  assertEquals(2,instances.length);
+  assertEquals(object1,instances[0]);
+  assertEquals(object2,instances[1]);
+}

@@ -1,8 +1,11 @@
 {
   NakedObject object1=createTestObject();
+  object1.setOid(new MockOid(1));
   NakedObject object2=createTestObject();
+  object2.setOid(new MockOid(2));
   PersistenceCommand[] commands=new PersistenceCommand[]{objectStore.createCreateObjectCommand(object1),objectStore.createCreateObjectCommand(object2)};
   objectStore.runTransaction(commands);
-  transientObjectStoreInstancesForClass.assertAction(0,"save " + object1);
-  transientObjectStoreInstancesForClass.assertAction(1,"save " + object2);
+  assertEquals(2,objectStore.objects.size());
+  assertEquals(object1,objectStore.objects.get(object1.getOid()));
+  assertEquals(object2,objectStore.objects.get(object2.getOid()));
 }

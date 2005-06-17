@@ -2,7 +2,12 @@
   return new DestroyObjectCommand(){
     public void execute() throws ObjectStoreException {
       LOG.info("  delete object '" + object + "'");
-      destroy(object);
+      objects.remove(object.getOid());
+      NakedObjectSpecification specification=object.getSpecification();
+      LOG.debug("   destroy object " + object + " as instance of "+ specification.getFullName());
+      TransientObjectStoreInstances ins=instancesFor(specification);
+      ins.remove(object.getOid());
+      NakedObjects.getPojoAdapterFactory().unloaded(object);
     }
     public NakedObject onObject(){
       return object;

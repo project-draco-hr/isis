@@ -1,12 +1,8 @@
 {
   LOG.debug("getObject " + oid);
-  TransientObjectStoreInstances ins=instancesFor(hint);
-  NakedObject object=ins.getObject(oid);
-  if (object == null) {
+  NakedObject nakedObject=(NakedObject)objects.get(oid);
+  if (nakedObject == null) {
     throw new ObjectNotFoundException(oid);
   }
- else {
-    setupReferencedObjects(object);
-    return object;
-  }
+  return nakedObject;
 }

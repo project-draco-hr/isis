@@ -2,6 +2,10 @@
   LOG.debug("get instances" + (includeSubclasses ? " (included subclasses)" : ""));
   Vector instances=new Vector();
   getInstances(spec,instances,includeSubclasses);
-  NakedObject[] ins=toInstancesArray(instances);
+  NakedObject[] ins=new NakedObject[instances.size()];
+  for (int i=0; i < ins.length; i++) {
+    Oid oid=(Oid)instances.elementAt(i);
+    ins[i]=(NakedObject)objects.get(oid);
+  }
   return ins;
 }

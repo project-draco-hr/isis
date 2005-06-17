@@ -1,5 +1,16 @@
 {
-  Vector instances=new Vector();
-  getInstances(criteria,instances);
-  return toInstancesArray(instances);
+  Vector allInstances=new Vector();
+  getInstances(criteria,allInstances);
+  NakedObject[] matchedInstances=new NakedObject[allInstances.size()];
+  int matches=0;
+  for (int i=0; i < allInstances.size(); i++) {
+    Oid oid=(Oid)allInstances.elementAt(i);
+    NakedObject object=(NakedObject)objects.get(oid);
+    if (criteria.matches(object)) {
+      matchedInstances[matches++]=object;
+    }
+  }
+  NakedObject[] ins=new NakedObject[matches];
+  System.arraycopy(matchedInstances,0,ins,0,matches);
+  return ins;
 }

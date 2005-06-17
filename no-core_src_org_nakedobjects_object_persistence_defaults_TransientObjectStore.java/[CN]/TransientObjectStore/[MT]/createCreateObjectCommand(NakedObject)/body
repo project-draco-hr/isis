@@ -2,7 +2,11 @@
   return new CreateObjectCommand(){
     public void execute() throws ObjectStoreException {
       LOG.debug("  create object " + object);
-      save(object);
+      NakedObjectSpecification specification=object.getSpecification();
+      LOG.debug("   saving object " + object + " as instance of "+ specification.getFullName());
+      TransientObjectStoreInstances ins=instancesFor(specification);
+      ins.add(object);
+      objects.put(object.getOid(),object);
     }
     public NakedObject onObject(){
       return object;

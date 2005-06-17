@@ -4,10 +4,11 @@
   superClassObjectSpec=new MockNakedObjectSpecification();
   objectSpec=new MockNakedObjectSpecification();
   superClassObjectSpec.setupSubclasses(new NakedObjectSpecification[]{objectSpec});
-  transientObjectStoreInstancesForSuperClass=new MockTransientObjectStoreInstances2();
-  transientObjectStoreInstancesForClass=new MockTransientObjectStoreInstances2();
+  transientObjectStoreInstancesForSuperClass=new TransientObjectStoreInstances();
+  transientObjectStoreInstancesForClass=new TransientObjectStoreInstances();
   objectStore=new TransientObjectStore();
   objectStore.instances.put(superClassObjectSpec,transientObjectStoreInstancesForSuperClass);
   objectStore.instances.put(objectSpec,transientObjectStoreInstancesForClass);
+  new NakedObjectsClient().setPojoAdapterFactory(new MockPojoAdapterFactory());
   objectStore.init();
 }
