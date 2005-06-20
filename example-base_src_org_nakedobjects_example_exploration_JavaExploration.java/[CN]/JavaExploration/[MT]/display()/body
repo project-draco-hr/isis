@@ -3,13 +3,20 @@
   SkylarkViewer viewer=new SkylarkViewer();
   viewer.setUpdateNotifier(new ViewUpdateNotifier());
   viewer.setExploration(true);
+  viewer.setShutdownListener(new ObjectViewingMechanismListener(){
+    public void viewerClosing(){
+      System.out.println("EXITED");
+      System.exit(0);
+    }
+  }
+);
   String[] classes=builder.getClasses();
   JavaExplorationContext context=new JavaExplorationContext();
   for (int i=0; i < classes.length; i++) {
     context.addClass(classes[i]);
   }
   viewer.setApplication(context);
-  viewer.show();
+  viewer.init();
   if (splash != null) {
     splash.toFront();
     splash.removeAfterDelay(4);

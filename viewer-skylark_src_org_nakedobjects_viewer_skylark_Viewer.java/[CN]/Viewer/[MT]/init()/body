@@ -1,0 +1,15 @@
+{
+  if (updateNotifier == null) {
+    throw new StartupException("No update notifier set for " + this);
+  }
+  spy=new InteractionSpy();
+  popup=new DefaultPopupMenu();
+  InteractionHandler interactionHandler=new InteractionHandler(this,spy);
+  renderingArea.addMouseMotionListener(interactionHandler);
+  renderingArea.addMouseListener(interactionHandler);
+  renderingArea.addKeyListener(interactionHandler);
+  setupViewFactory();
+  if (NakedObjects.getConfiguration().getBoolean(PROPERTY_BASE + "show-mouse-spy",false)) {
+    spy.open();
+  }
+}
