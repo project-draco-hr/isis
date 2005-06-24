@@ -1,13 +1,13 @@
 {
   getViewManager().getSpy().addTrace(this,"mouse location within border",location);
   getViewManager().getSpy().addTrace(this,"non border area",contentArea());
-  if (overBorder(location)) {
-    getViewManager().getSpy().addTrace(this,"over border area",contentArea());
-    return getView();
-  }
- else {
+  if (overContent(location)) {
     location.add(-left,-top);
     location.add(offset().getDeltaX(),offset().getDeltaY());
     return wrappedView.identify(location);
+  }
+ else {
+    getViewManager().getSpy().addTrace(this,"over border area",contentArea());
+    return getView();
   }
 }
