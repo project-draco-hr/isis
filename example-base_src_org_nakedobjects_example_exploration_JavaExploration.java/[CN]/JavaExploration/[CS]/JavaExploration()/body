@@ -13,7 +13,7 @@
     String name=this.getClass().getName();
     name=name.substring(name.lastIndexOf('.') + 1);
     Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
-    NakedObjects nakedObjects=new NakedObjectsClient();
+    NakedObjectsClient nakedObjects=new NakedObjectsClient();
     nakedObjects.setConfiguration(configuration);
     PropertyConfigurator.configure(configuration.getProperties("log4j"));
     Logger log=Logger.getLogger("Naked Objects");
@@ -47,8 +47,8 @@
     pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
     pojoAdapterFactory.setReflectorFactory(reflectorFactory);
     nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
-    NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
-    specificationLoader.setReflectorFactory(reflectorFactory);
+    nakedObjects.setReflectionFactory(reflectionFactory);
+    nakedObjects.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
     nakedObjects.setSession(new SimpleSession());
     try {
