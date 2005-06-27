@@ -12,7 +12,13 @@
       objectManager.endTransaction();
     }
  catch (    RuntimeException e) {
-      objectManager.abortTransaction();
+      LOG.info("Exception saving " + transientObject + ", aborting transaction");
+      try {
+        objectManager.abortTransaction();
+      }
+ catch (      Exception e2) {
+        ExceptionHelper.log(ActionTransaction.class,"Failure during abort",e2);
+      }
       throw e;
     }
   }

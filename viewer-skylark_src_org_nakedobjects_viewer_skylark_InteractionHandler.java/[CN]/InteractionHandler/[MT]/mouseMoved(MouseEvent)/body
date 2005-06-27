@@ -1,44 +1,49 @@
 {
-  if (drag == null) {
-    spy.reset();
-    viewer.translate(me);
-    Location location=new Location(me.getPoint());
-    spy.setLocationInViewer(location);
-    View overView=viewer.identifyView(new Location(location),true);
-    spy.setOver(overView);
-    if (overView != null) {
-      if (previouslyIdentifiedView == null) {
-        previouslyIdentifiedView=overView;
-      }
- else {
-        if (overView != previouslyIdentifiedView) {
-          if (overView == previouslyIdentifiedView) {
-            spy.addAction("moved into subview from " + previouslyIdentifiedView);
-            previouslyIdentifiedView.enteredSubview();
-          }
- else {
-            spy.addAction("exited " + previouslyIdentifiedView);
-            previouslyIdentifiedView.exited();
-          }
-          View previouslyIdentified=previouslyIdentifiedView;
+  try {
+    if (drag == null) {
+      spy.reset();
+      viewer.translate(me);
+      Location location=new Location(me.getPoint());
+      spy.setLocationInViewer(location);
+      View overView=viewer.identifyView(new Location(location),true);
+      spy.setOver(overView);
+      if (overView != null) {
+        if (previouslyIdentifiedView == null) {
           previouslyIdentifiedView=overView;
-          if (overView != null) {
-            if (overView == previouslyIdentified) {
-              spy.addAction("moved back to from " + previouslyIdentified);
-              overView.exitedSubview();
+        }
+ else {
+          if (overView != previouslyIdentifiedView) {
+            if (overView == previouslyIdentifiedView) {
+              spy.addAction("moved into subview from " + previouslyIdentifiedView);
+              previouslyIdentifiedView.enteredSubview();
             }
  else {
-              spy.addAction("entered " + overView);
-              overView.entered();
+              spy.addAction("exited " + previouslyIdentifiedView);
+              previouslyIdentifiedView.exited();
             }
+            View previouslyIdentified=previouslyIdentifiedView;
+            previouslyIdentifiedView=overView;
+            if (overView != null) {
+              if (overView == previouslyIdentified) {
+                spy.addAction("moved back to from " + previouslyIdentified);
+                overView.exitedSubview();
+              }
+ else {
+                spy.addAction("entered " + overView);
+                overView.entered();
+              }
+            }
+            redraw();
           }
-          redraw();
         }
+        spy.addTrace("--> mouse moved");
+        viewer.mouseMoved(location);
+        spy.addTrace(overView," mouse location",location);
+        redraw();
       }
-      spy.addTrace("--> mouse moved");
-      viewer.mouseMoved(location);
-      spy.addTrace(overView," mouse location",location);
-      redraw();
     }
+  }
+ catch (  Exception e) {
+    log(e);
   }
 }

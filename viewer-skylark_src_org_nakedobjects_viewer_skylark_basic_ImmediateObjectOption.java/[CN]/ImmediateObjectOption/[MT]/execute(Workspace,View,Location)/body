@@ -1,20 +1,13 @@
 {
   BackgroundThread.run(view,new BackgroundTask(){
     protected void execute(){
-      try {
-        Naked returnedObject;
-        returnedObject=object.execute(action,null);
-        if (returnedObject != null) {
-          if (!(returnedObject instanceof Naked)) {
-            returnedObject=NakedObjects.getPojoAdapterFactory().createAdapter(returnedObject);
-          }
-          view.objectActionResult(returnedObject,at);
+      Naked returnedObject;
+      returnedObject=object.execute(action,null);
+      if (returnedObject != null) {
+        if (!(returnedObject instanceof Naked)) {
+          returnedObject=NakedObjects.getPojoAdapterFactory().createAdapter(returnedObject);
         }
-      }
- catch (      Exception e) {
-        LOG.error("Error while executing action: ",e);
-        Naked error=NakedObjects.getPojoAdapterFactory().createAdapter(new Error("Error while executing action:",e));
-        workspace.addOpenViewFor(error,at);
+        view.objectActionResult(returnedObject,at);
       }
     }
   }

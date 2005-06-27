@@ -1,11 +1,16 @@
 {
-  if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-    if (drag != null) {
-      drag.cancel(viewer);
-      drag=null;
+  try {
+    if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+      if (drag != null) {
+        drag.cancel(viewer);
+        drag=null;
+      }
+      viewer.clearOverlayView();
     }
-    viewer.clearOverlayView();
+    keyboardManager.pressed(ke.getKeyCode(),ke.getModifiers());
+    redraw();
   }
-  keyboardManager.pressed(ke.getKeyCode(),ke.getModifiers());
-  redraw();
+ catch (  Exception e) {
+    log(e);
+  }
 }

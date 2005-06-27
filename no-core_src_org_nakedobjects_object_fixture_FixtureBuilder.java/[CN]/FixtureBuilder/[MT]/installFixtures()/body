@@ -9,8 +9,13 @@
       installFixture(objectManager,fixture);
     }
  catch (    RuntimeException e) {
-      LOG.error("Fixture aborted",e);
-      objectManager.abortTransaction();
+      LOG.error("Installing fixtures failed; aborting ",e);
+      try {
+        objectManager.abortTransaction();
+      }
+ catch (      Exception e2) {
+        ExceptionHelper.log(ActionTransaction.class,"Failure during abort",e2);
+      }
       throw e;
     }
   }

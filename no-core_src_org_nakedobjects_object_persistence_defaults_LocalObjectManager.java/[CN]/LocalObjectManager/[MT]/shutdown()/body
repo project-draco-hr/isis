@@ -2,7 +2,12 @@
   try {
     LOG.info("shutting down " + this);
     if (transaction != null) {
-      abortTransaction();
+      try {
+        abortTransaction();
+      }
+ catch (      Exception e2) {
+        ExceptionHelper.log(ActionTransaction.class,"Failure during abort",e2);
+      }
     }
     objectsToBeSaved.shutdown();
     if (objectsToRefreshViewsFor != null) {

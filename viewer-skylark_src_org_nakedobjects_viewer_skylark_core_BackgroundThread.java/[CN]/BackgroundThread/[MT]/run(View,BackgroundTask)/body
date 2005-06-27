@@ -3,7 +3,14 @@
     public void run(){
       view.getState().setActive();
       repaint(view);
-      task.execute();
+      try {
+        task.execute();
+      }
+ catch (      Exception e) {
+        ExceptionHelper.log(BackgroundThread.class,"Error while executing action",e);
+        Naked error=NakedObjects.getPojoAdapterFactory().createAdapter(new Error("Error while executing action:",e));
+        view.getWorkspace().addOpenViewFor(error,new Location(20,20));
+      }
       view.getState().setInactive();
       view.markDamaged();
       repaint(view);

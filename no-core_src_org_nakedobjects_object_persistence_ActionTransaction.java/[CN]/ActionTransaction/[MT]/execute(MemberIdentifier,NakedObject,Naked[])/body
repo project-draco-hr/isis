@@ -13,7 +13,12 @@
   }
  catch (  RuntimeException e) {
     LOG.info("Exception executing " + getName() + ", aborting transaction");
-    objectManager.abortTransaction();
+    try {
+      objectManager.abortTransaction();
+    }
+ catch (    Exception e2) {
+      ExceptionHelper.log(ActionTransaction.class,"Failure during abort",e2);
+    }
     throw e;
   }
 }

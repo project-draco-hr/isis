@@ -51,15 +51,13 @@
     nakedObjects.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
     nakedObjects.setSession(new SimpleSession());
-    try {
-      objectManager.init();
-    }
- catch (    StartupException e) {
-      throw new NakedObjectRuntimeException(e);
-    }
+    objectManager.init();
     builder=new JavaFixtureBuilder();
   }
-  finally {
+ catch (  Exception e) {
+    ExceptionHelper.log(JavaExploration.class,"Exploration startup problem",e);
+  }
+ finally {
     if (splash != null) {
       splash.removeAfterDelay(4);
     }

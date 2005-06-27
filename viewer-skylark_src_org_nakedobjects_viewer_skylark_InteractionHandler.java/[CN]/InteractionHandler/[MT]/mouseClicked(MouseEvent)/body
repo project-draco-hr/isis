@@ -1,20 +1,21 @@
 {
-  Click click=new Click(previouslyIdentifiedView,downAt,me.getModifiers());
-  spy.addAction("Mouse clicked " + click.getLocation());
-  if (click.button3() && viewer.getOverlayView() == null) {
-    if (previouslyIdentifiedView != null) {
-      spy.addAction(" popup " + downAt + " over "+ previouslyIdentifiedView);
-      viewer.popupMenu(previouslyIdentifiedView,click);
+  try {
+    Click click=new Click(previouslyIdentifiedView,downAt,me.getModifiers());
+    spy.addAction("Mouse clicked " + click.getLocation());
+    if (click.button3() && viewer.getOverlayView() == null) {
+      if (previouslyIdentifiedView != null) {
+        spy.addAction(" popup " + downAt + " over "+ previouslyIdentifiedView);
+        viewer.popupMenu(previouslyIdentifiedView,click);
+      }
     }
-  }
  else {
 switch (me.getClickCount()) {
 case 1:
-      viewer.firstClick(click);
-    break;
+        viewer.firstClick(click);
+      break;
 case 2:
-  viewer.secondClick(click);
-break;
+    viewer.secondClick(click);
+  break;
 case 3:
 viewer.thirdClick(click);
 break;
@@ -23,4 +24,8 @@ break;
 }
 }
 redraw();
+}
+ catch (Exception e) {
+log(e);
+}
 }

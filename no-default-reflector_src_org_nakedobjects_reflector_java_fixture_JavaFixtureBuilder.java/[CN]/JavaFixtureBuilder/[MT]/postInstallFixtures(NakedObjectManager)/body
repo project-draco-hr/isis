@@ -13,7 +13,13 @@
     objectManager.endTransaction();
   }
  catch (  RuntimeException e) {
-    objectManager.abortTransaction();
+    LOG.error("Exception during fixture installation; aborting transaction",e);
+    try {
+      objectManager.abortTransaction();
+    }
+ catch (    Exception e2) {
+      ExceptionHelper.log(ActionTransaction.class,"Failure during abort",e2);
+    }
     throw e;
   }
   newInstances.removeAllElements();

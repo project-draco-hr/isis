@@ -1,17 +1,18 @@
 {
   NakedObjectManager objectManager=NakedObjects.getObjectManager();
-  try {
-    if (inObject.isPersistent()) {
+  if (inObject.isPersistent()) {
+    try {
       objectManager.startTransaction();
-    }
-    super.clearAssociation(identifier,inObject,associate);
-    objectManager.saveChanges();
-    if (inObject.isPersistent()) {
+      super.clearAssociation(identifier,inObject,associate);
+      objectManager.saveChanges();
       objectManager.endTransaction();
     }
+ catch (    RuntimeException e) {
+      abort(objectManager);
+      throw e;
+    }
   }
- catch (  RuntimeException e) {
-    objectManager.abortTransaction();
-    throw e;
+ else {
+    super.clearAssociation(identifier,inObject,associate);
   }
 }
