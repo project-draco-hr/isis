@@ -6,11 +6,13 @@
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
   View newView;
   if (source.getObject() instanceof NakedClass && drag.isCtrl()) {
-    NakedObjectSpecification spec=((NakedClass)source).forObjectType();
-    Hint classAbout=spec.getClassHint();
-    if (classAbout != null && classAbout.canUse().isVetoed()) {
+    InternalAbout about=new InternalAbout();
+    NakedClass nakedClass=((NakedClass)source.getObject());
+    nakedClass.aboutExplorationActionNewInstance(about);
+    if (about.canUse().isVetoed() || !getViewManager().isRunningAsExploration()) {
       return;
     }
+    NakedObjectSpecification spec=nakedClass.forObjectType();
     LOG.info("new " + spec.getShortName() + " instance");
     newView=newInstance(spec,!drag.isCtrl());
   }

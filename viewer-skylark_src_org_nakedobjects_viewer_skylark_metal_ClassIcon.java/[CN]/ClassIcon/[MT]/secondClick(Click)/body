@@ -1,22 +1,25 @@
 {
-  Hint classAbout=getNakedClass().forObjectType().getClassHint();
-  if (classAbout == null || classAbout.canAccess().isAllowed()) {
-    Naked object=null;
-    if (click.isCtrl()) {
-      NakedCollection instances=getNakedClass().allInstances();
+  NakedClass nakedClass=getNakedClass();
+  Naked object=null;
+  InternalAbout about=new InternalAbout();
+  if (click.isCtrl()) {
+    nakedClass.aboutExplorationActionInstances(about);
+    if (about.canUse().isAllowed() && getViewManager().isRunningAsExploration()) {
+      NakedCollection instances=nakedClass.allInstances();
       object=instances;
     }
+  }
  else {
-      if (getNakedClass() instanceof NakedClass) {
-        FastFinder finder=getNakedClass().explorationActionFind();
-        object=NakedObjects.getPojoAdapterFactory().createAdapter(finder);
-      }
+    nakedClass.aboutExplorationActionFind(about);
+    if (about.canUse().isAllowed() && getViewManager().isRunningAsExploration()) {
+      FastFinder finder=nakedClass.explorationActionFind();
+      object=NakedObjects.getPojoAdapterFactory().createAdapter(finder);
     }
-    if (object != null) {
-      Location location=getView().getAbsoluteLocation();
-      location.subtract(getWorkspace().getAbsoluteLocation());
-      location.add(getSize().getWidth() + 10,0);
-      getWorkspace().addOpenViewFor(object,location);
-    }
+  }
+  if (object != null) {
+    Location location=getView().getAbsoluteLocation();
+    location.subtract(getWorkspace().getAbsoluteLocation());
+    location.add(getSize().getWidth() + 10,0);
+    getWorkspace().addOpenViewFor(object,location);
   }
 }
