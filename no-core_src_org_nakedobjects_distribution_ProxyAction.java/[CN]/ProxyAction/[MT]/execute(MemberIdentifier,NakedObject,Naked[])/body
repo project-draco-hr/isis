@@ -2,6 +2,7 @@
   if (executeRemotely(target)) {
     String[] parameterTypes=pararmeterTypes();
     Data[] parameterObjectData=parameterValues(parameters);
+    LOG.debug(debug("execute remotely",identifier,target,parameters));
     Data result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getName(),parameterTypes,target.getOid(),target.getSpecification().getFullName(),parameterObjectData);
     if (result instanceof ExceptionData) {
       DataHelper.throwRemoteException((ExceptionData)result);
@@ -14,6 +15,7 @@
     }
   }
  else {
+    LOG.debug(debug("execute locally",identifier,target,parameters));
     return super.execute(identifier,target,parameters);
   }
 }

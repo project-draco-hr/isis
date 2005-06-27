@@ -2,9 +2,11 @@
   if (executeRemotely(target) && fullProxy) {
     String[] parameterTypes=pararmeterTypes();
     Data[] parameterObjectData=parameterValues(parameters);
+    LOG.debug(debug("get hint remotely",identifier,target,parameters));
     return connection.getActionHint(NakedObjects.getCurrentSession(),getType().getName(),getName(),parameterTypes,target.getOid(),target.getSpecification().getFullName(),parameterObjectData);
   }
  else {
+    LOG.debug(debug("get hint locally",identifier,target,parameters));
     return super.getHint(identifier,target,parameters);
   }
 }

@@ -1,8 +1,10 @@
 {
   if (isPersistent(inObject)) {
-    connection.setValue(NakedObjects.getCurrentSession(),getName(),inObject.getOid(),inObject.getSpecification().getFullName(),associate);
+    LOG.debug("set value remotely " + getName() + " in "+ inObject+ " with "+ value);
+    connection.setValue(NakedObjects.getCurrentSession(),getName(),inObject.getOid(),inObject.getSpecification().getFullName(),value);
   }
  else {
-    super.setValue(identifier,inObject,associate);
+    LOG.debug("set value locally " + getName() + " in "+ inObject+ " with "+ value);
+    super.setValue(identifier,inObject,value);
   }
 }
