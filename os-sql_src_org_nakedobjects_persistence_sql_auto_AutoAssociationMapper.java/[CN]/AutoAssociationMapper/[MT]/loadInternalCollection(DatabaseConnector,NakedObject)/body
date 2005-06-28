@@ -1,6 +1,5 @@
 {
-  InternalCollection collection=(InternalCollection)field.getPojo(parent);
-  LOG.debug("Loading internal collection " + collection);
+  LOG.debug("Loading internal collection " + field);
   String parentId=mapper.primaryKey(parent.getOid());
   String statement="select " + elementIdColumn + ","+ elementClassColumn+ " from "+ table+ " where "+ parentColumn+ " = "+ parentId;
   Results rs=connector.select(statement);
@@ -10,7 +9,7 @@
     Oid oid=recreateOid(rs,elementCls,elementIdColumn);
     NakedObject element=mapper.loadObject(elementCls,oid);
     LOG.debug("  element  " + element.getOid());
-    collection.added(element);
+    parent.setAssociation((NakedObjectAssociation)field,element);
   }
   rs.close();
 }

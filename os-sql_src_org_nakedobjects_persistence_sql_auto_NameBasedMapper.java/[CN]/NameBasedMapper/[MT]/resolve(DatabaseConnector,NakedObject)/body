@@ -7,24 +7,24 @@
   String statement="select " + columns + " from "+ table+ " where id = "+ id;
   Results rs=connector.select(statement);
   if (rs.next()) {
-    FieldSpecification[] fields=cls.getFields();
+    NakedObjectField[] fields=cls.getFields();
     for (int i=0; i < fields.length; i++) {
       if (fields[i].isDerived()) {
         continue;
       }
- else       if (fields[i] instanceof OneToManyAssociationSpecification) {
+ else       if (fields[i].isCollection()) {
         DatabaseConnector connection=connector.getConnectionPool().acquire();
-        loadInternalCollection(connection,id,fields[i],(InternalCollection)fields[i].getPojo(object));
+        loadInternalCollection(connection,id,fields[i],(InternalCollection)object.getField(fields[i]));
         connector.getConnectionPool().release(connection);
       }
- else       if (fields[i] instanceof ValueFieldSpecification) {
+ else       if (fields[i].isValue()) {
         ValueMapper mapper=ValueMapperLookup.getInstance().mapperFor(fields[i].getSpecification());
         mapper.setFromDBColumn(columnName(fields[i]),fields[i],object,rs);
       }
- else       if (fields[i] instanceof OneToOneAssociationSpecification) {
+ else       if (fields[i].isObject()) {
         NakedObjectSpecification associatedCls=fields[i].getSpecification();
-        NakedObject reference=setupReference(loadedObjects,associatedCls,rs.getInt(columnName(fields[i])));
-        object.setAssociation((AssociationSpecification)fields[i],reference);
+        NakedObject reference=setupReference(associatedCls,rs.getInt(columnName(fields[i])));
+        object.setAssociation((NakedObjectAssociation)fields[i],reference);
       }
     }
     object.setResolved();

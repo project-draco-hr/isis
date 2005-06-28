@@ -1,0 +1,18 @@
+{
+  NakedObjectSpecification cls=collection.parent().getSpecification();
+  NakedObjectSpecification elementCls=NakedObjects.getSpecificationLoader().loadSpecification(collection.getElementSpecification().getFullName());
+  String table=table(cls) + "_" + field.getName().toLowerCase();
+  LOG.debug("loading internal collection data from SQL " + table);
+  String a=field.getName().toLowerCase() + "_id";
+  String b=table(cls) + "_id";
+  String statement="select " + a + " from "+ table+ " where "+ b+ " = "+ id;
+  Results rs=connector.select(statement);
+  while (rs.next()) {
+    int ref=rs.getInt(a);
+    NakedObject element=setupReference(elementCls,ref);
+    LOG.debug("  element  " + element);
+    collection.add(element);
+  }
+  rs.close();
+  collection.setResolved();
+}

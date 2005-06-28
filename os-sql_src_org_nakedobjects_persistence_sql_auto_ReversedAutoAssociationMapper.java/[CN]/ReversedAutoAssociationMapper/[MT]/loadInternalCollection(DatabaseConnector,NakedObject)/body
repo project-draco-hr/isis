@@ -1,6 +1,5 @@
 {
-  InternalCollection collection=(InternalCollection)field.getPojo(parent);
-  LOG.debug("Loading internal collection " + collection);
+  LOG.debug("Loading internal collection " + field);
   String parentId=primaryKey(parent.getOid());
   String statement="select " + elementIdColumn + ","+ columnList()+ " from "+ table+ " where "+ parentColumn+ " = "+ parentId;
   Results rs=connector.select(statement);
@@ -8,8 +7,8 @@
     Oid oid=recreateOid(rs,nakedClass,elementIdColumn);
     NakedObject element=loadObject(nakedClass,oid);
     LOG.debug("  element  " + element);
-    collection.added(element);
+    parent.setAssociation((NakedObjectAssociation)field,element);
   }
   rs.close();
-  collection.setResolved();
+  ((NakedObject)parent.getField(field)).setResolved();
 }

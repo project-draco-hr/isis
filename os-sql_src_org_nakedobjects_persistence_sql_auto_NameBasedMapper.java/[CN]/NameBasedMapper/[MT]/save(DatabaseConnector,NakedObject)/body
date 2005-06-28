@@ -2,13 +2,13 @@
   NakedObjectSpecification cls=object.getSpecification();
   String table=table(cls);
   StringBuffer sb=new StringBuffer();
-  FieldSpecification[] fields=cls.getFields();
+  NakedObjectField[] fields=cls.getFields();
   for (int i=0; i < fields.length; i++) {
     if (fields[i].isDerived()) {
       continue;
     }
-    Naked fieldValue=fields[i].getPojo(object);
-    if (fields[i] instanceof OneToManyAssociationSpecification) {
+    Naked fieldValue=object.getField(fields[i]);
+    if (fields[i].isCollection()) {
       saveInternalCollection(connector,fields[i],(InternalCollection)fieldValue);
     }
  else {

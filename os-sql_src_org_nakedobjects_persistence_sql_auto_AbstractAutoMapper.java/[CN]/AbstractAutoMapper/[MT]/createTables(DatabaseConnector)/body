@@ -2,9 +2,9 @@
   if (!connection.hasTable(table)) {
     StringBuffer columns=new StringBuffer();
     for (int f=0; f < fields.length; f++) {
-      FieldSpecification field=fields[f];
+      NakedObjectField field=fields[f];
       String type;
-      if (field instanceof ValueFieldSpecification) {
+      if (field.isValue()) {
         ValueMapperLookup mappers=ValueMapperLookup.getInstance();
         ValueMapper mapper=mappers.mapperFor(fields[f].getSpecification());
         if (mapper == null) {
@@ -12,7 +12,7 @@
         }
         type=mapper.columnType();
       }
- else       if (field instanceof OneToOneAssociationSpecification) {
+ else       if (field.isObject()) {
         type="INT";
       }
  else {
