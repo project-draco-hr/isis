@@ -1,0 +1,16 @@
+{
+  this.syslogHost=syslogHost;
+  try {
+    this.address=InetAddress.getByName(syslogHost);
+  }
+ catch (  UnknownHostException e) {
+    LogLog.error("Could not find " + syslogHost + ". All logging will FAIL.",e);
+  }
+  try {
+    this.ds=new DatagramSocket();
+  }
+ catch (  SocketException e) {
+    e.printStackTrace();
+    LogLog.error("Could not instantiate DatagramSocket to " + syslogHost + ". All logging will FAIL.",e);
+  }
+}

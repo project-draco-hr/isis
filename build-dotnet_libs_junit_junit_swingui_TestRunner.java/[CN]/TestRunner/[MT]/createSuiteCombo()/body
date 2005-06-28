@@ -1,0 +1,26 @@
+{
+  JComboBox combo=new JComboBox();
+  combo.setEditable(true);
+  combo.setLightWeightPopupEnabled(false);
+  combo.getEditor().getEditorComponent().addKeyListener(new KeyAdapter(){
+    public void keyTyped(    KeyEvent e){
+      textChanged();
+      if (e.getKeyChar() == KeyEvent.VK_ENTER)       runSuite();
+    }
+  }
+);
+  try {
+    loadHistory(combo);
+  }
+ catch (  IOException e) {
+  }
+  combo.addItemListener(new ItemListener(){
+    public void itemStateChanged(    ItemEvent event){
+      if (event.getStateChange() == ItemEvent.SELECTED) {
+        textChanged();
+      }
+    }
+  }
+);
+  return combo;
+}

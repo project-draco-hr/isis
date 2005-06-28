@@ -1,0 +1,18 @@
+{
+  LogLog.debug("setFile called: " + fileName + ", "+ append);
+  if (bufferedIO) {
+    setImmediateFlush(false);
+  }
+  reset();
+  Writer fw=createWriter(new FileOutputStream(fileName,append));
+  if (bufferedIO) {
+    fw=new BufferedWriter(fw,bufferSize);
+  }
+  this.setQWForFiles(fw);
+  this.fileName=fileName;
+  this.fileAppend=append;
+  this.bufferedIO=bufferedIO;
+  this.bufferSize=bufferSize;
+  writeHeader();
+  LogLog.debug("setFile ended");
+}

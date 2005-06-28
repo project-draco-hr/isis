@@ -1,0 +1,27 @@
+{
+  String catName=subst(loggerElement.getAttribute(NAME_ATTR));
+  Logger cat;
+  String className=subst(loggerElement.getAttribute(CLASS_ATTR));
+  if (EMPTY_STR.equals(className)) {
+    LogLog.debug("Retreiving an instance of org.apache.log4j.Logger.");
+    cat=repository.getLogger(catName);
+  }
+ else {
+    LogLog.debug("Desired logger sub-class: [" + className + ']');
+    try {
+      Class clazz=Loader.loadClass(className);
+      Method getInstanceMethod=clazz.getMethod("getLogger",ONE_STRING_PARAM);
+      cat=(Logger)getInstanceMethod.invoke(null,new Object[]{catName});
+    }
+ catch (    Exception oops) {
+      LogLog.error("Could not retrieve category [" + catName + "]. Reported error follows.",oops);
+      return;
+    }
+  }
+synchronized (cat) {
+    boolean additivity=OptionConverter.toBoolean(subst(loggerElement.getAttribute(ADDITIVITY_ATTR)),true);
+    LogLog.debug("Setting [" + cat.getName() + "] additivity to ["+ additivity+ "].");
+    cat.setAdditivity(additivity);
+    parseChildrenOfLoggerElement(loggerElement,cat,false);
+  }
+}

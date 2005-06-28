@@ -1,0 +1,21 @@
+{
+  NodeBase child;
+  if (readonly)   throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+  child=checkDocument(newChild);
+  if (newChild.getNodeType() == DOCUMENT_FRAGMENT_NODE) {
+    consumeFragment(newChild,null);
+    return newChild;
+  }
+  checkNotAncestor(newChild);
+  checkChildType(child.getNodeType());
+  if (children == null)   children=new NodeBase[3];
+ else   if (children.length == length) {
+    NodeBase temp[]=new NodeBase[length * 2];
+    System.arraycopy(children,0,temp,0,length);
+    children=temp;
+  }
+  child.setParentNode(this,length);
+  children[length++]=child;
+  mutated();
+  return child;
+}

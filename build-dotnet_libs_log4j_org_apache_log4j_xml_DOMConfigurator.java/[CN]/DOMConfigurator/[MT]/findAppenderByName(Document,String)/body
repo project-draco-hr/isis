@@ -1,0 +1,28 @@
+{
+  Appender appender=(Appender)appenderBag.get(appenderName);
+  if (appender != null) {
+    return appender;
+  }
+ else {
+    Element element=null;
+    NodeList list=doc.getElementsByTagName("appender");
+    for (int t=0; t < list.getLength(); t++) {
+      Node node=list.item(t);
+      NamedNodeMap map=node.getAttributes();
+      Node attrNode=map.getNamedItem("name");
+      if (appenderName.equals(attrNode.getNodeValue())) {
+        element=(Element)node;
+        break;
+      }
+    }
+    if (element == null) {
+      LogLog.error("No appender named [" + appenderName + "] could be found.");
+      return null;
+    }
+ else {
+      appender=parseAppender(element);
+      appenderBag.put(appenderName,appender);
+      return appender;
+    }
+  }
+}

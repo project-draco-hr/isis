@@ -1,0 +1,30 @@
+{
+  if (attribute == null) {
+    throw new RuntimeOperationsException(new IllegalArgumentException("Attribute cannot be null"),"Cannot invoke a setter of " + dClassName + " with null attribute");
+  }
+  String name=attribute.getName();
+  Object value=attribute.getValue();
+  if (name == null) {
+    throw new RuntimeOperationsException(new IllegalArgumentException("Attribute name cannot be null"),"Cannot invoke the setter of " + dClassName + " with null attribute name");
+  }
+  MethodUnion mu=(MethodUnion)dynamicProps.get(name);
+  if (mu != null && mu.writeMethod != null) {
+    Object[] o=new Object[1];
+    Class[] params=mu.writeMethod.getParameterTypes();
+    if (params[0] == org.apache.log4j.Priority.class) {
+      value=OptionConverter.toLevel((String)value,(Level)getAttribute(name));
+    }
+    o[0]=value;
+    try {
+      mu.writeMethod.invoke(appender,o);
+    }
+ catch (    Exception e) {
+      cat.error("FIXME",e);
+    }
+  }
+ else   if (name.endsWith(".layout")) {
+  }
+ else {
+    throw (new AttributeNotFoundException("Attribute " + name + " not found in "+ this.getClass().getName()));
+  }
+}

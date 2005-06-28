@@ -1,0 +1,28 @@
+{
+  Writer out=context.getWriter();
+  int start=0, last=0;
+  if (data == null) {
+    System.err.println("Null text data??");
+    return;
+  }
+  while (last < data.length) {
+    char c=data[last];
+    if (c == '<') {
+      out.write(data,start,last - start);
+      start=last + 1;
+      out.write("&lt;");
+    }
+ else     if (c == '>') {
+      out.write(data,start,last - start);
+      start=last + 1;
+      out.write("&gt;");
+    }
+ else     if (c == '&') {
+      out.write(data,start,last - start);
+      start=last + 1;
+      out.write("&amp;");
+    }
+    last++;
+  }
+  out.write(data,start,last - start);
+}

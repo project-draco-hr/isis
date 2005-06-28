@@ -1,0 +1,14 @@
+{
+  if (attribute == null) {
+    throw new RuntimeOperationsException(new IllegalArgumentException("Attribute cannot be null"),"Cannot invoke a setter of " + dClassName + " with null attribute");
+  }
+  String name=attribute.getName();
+  Object value=attribute.getValue();
+  if (name == null) {
+    throw new RuntimeOperationsException(new IllegalArgumentException("Attribute name cannot be null"),"Cannot invoke the setter of " + dClassName + " with null attribute name");
+  }
+  if (name.equals(THRESHOLD)) {
+    Level l=OptionConverter.toLevel((String)value,hierarchy.getThreshold());
+    hierarchy.setThreshold(l);
+  }
+}

@@ -1,0 +1,24 @@
+{
+  if (attributeName == null) {
+    throw new RuntimeOperationsException(new IllegalArgumentException("Attribute name cannot be null"),"Cannot invoke a getter of " + dClassName + " with null attribute name");
+  }
+  cat.debug("getAttribute called with [" + attributeName + "].");
+  if (attributeName.startsWith("appender=" + appender.getName() + ",layout")) {
+    try {
+      return new ObjectName("log4j:" + attributeName);
+    }
+ catch (    Exception e) {
+      cat.error("attributeName",e);
+    }
+  }
+  MethodUnion mu=(MethodUnion)dynamicProps.get(attributeName);
+  if (mu != null && mu.readMethod != null) {
+    try {
+      return mu.readMethod.invoke(appender,null);
+    }
+ catch (    Exception e) {
+      return null;
+    }
+  }
+  throw (new AttributeNotFoundException("Cannot find " + attributeName + " attribute in "+ dClassName));
+}

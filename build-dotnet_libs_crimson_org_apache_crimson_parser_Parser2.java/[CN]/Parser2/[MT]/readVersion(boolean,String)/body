@@ -1,0 +1,12 @@
+{
+  String value=maybeReadAttribute("version",must);
+  if (must && value == null)   fatal("P-025",new Object[]{versionNum});
+  if (value != null) {
+    int length=value.length();
+    for (int i=0; i < length; i++) {
+      char c=value.charAt(i);
+      if (!((c >= '0' && c <= '9') || c == '_' || c == '.' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ':' || c == '-'))       fatal("P-026",new Object[]{value});
+    }
+  }
+  if (value != null && !value.equals(versionNum))   error("P-027",new Object[]{versionNum,value});
+}

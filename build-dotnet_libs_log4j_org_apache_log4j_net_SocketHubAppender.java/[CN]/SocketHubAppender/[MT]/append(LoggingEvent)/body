@@ -1,0 +1,25 @@
+{
+  if (event == null || oosList.size() == 0)   return;
+  if (locationInfo) {
+    event.getLocationInformation();
+  }
+  for (int streamCount=0; streamCount < oosList.size(); streamCount++) {
+    ObjectOutputStream oos=null;
+    try {
+      oos=(ObjectOutputStream)oosList.elementAt(streamCount);
+    }
+ catch (    ArrayIndexOutOfBoundsException e) {
+    }
+    if (oos == null)     break;
+    try {
+      oos.writeObject(event);
+      oos.flush();
+      oos.reset();
+    }
+ catch (    IOException e) {
+      oosList.removeElementAt(streamCount);
+      LogLog.debug("dropped connection");
+      streamCount--;
+    }
+  }
+}

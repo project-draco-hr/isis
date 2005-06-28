@@ -1,0 +1,16 @@
+{
+  int writes=0;
+  for (Category c=this; c != null; c=c.parent) {
+synchronized (c) {
+      if (c.aai != null) {
+        writes+=c.aai.appendLoopOnAppenders(event);
+      }
+      if (!c.additive) {
+        break;
+      }
+    }
+  }
+  if (writes == 0) {
+    repository.emitNoAppenderWarning(this);
+  }
+}

@@ -1,0 +1,16 @@
+{
+  Class theClass;
+  ElementNode retval;
+  theClass=map2Class(tagName,node2class,loader);
+  if (theClass == null)   theClass=map2Class("*Element",node2class,loader);
+  if (theClass == null)   retval=new ElementNode(tagName);
+ else {
+    try {
+      retval=(ElementNode)theClass.newInstance();
+    }
+ catch (    Exception e) {
+      throw new IllegalArgumentException(getMessage("SEF-003",new Object[]{tagName,theClass.getName(),e.getMessage()}));
+    }
+  }
+  return retval;
+}

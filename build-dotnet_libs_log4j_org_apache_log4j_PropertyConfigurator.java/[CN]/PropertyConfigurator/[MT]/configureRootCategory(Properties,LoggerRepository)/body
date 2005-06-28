@@ -1,0 +1,15 @@
+{
+  String effectiveFrefix=ROOT_LOGGER_PREFIX;
+  String value=OptionConverter.findAndSubst(ROOT_LOGGER_PREFIX,props);
+  if (value == null) {
+    value=OptionConverter.findAndSubst(ROOT_CATEGORY_PREFIX,props);
+    effectiveFrefix=ROOT_CATEGORY_PREFIX;
+  }
+  if (value == null)   LogLog.debug("Could not find root logger information. Is this OK?");
+ else {
+    Logger root=hierarchy.getRootLogger();
+synchronized (root) {
+      parseCategory(props,root,effectiveFrefix,INTERNAL_ROOT_NAME,value);
+    }
+  }
+}

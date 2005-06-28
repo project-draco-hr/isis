@@ -1,0 +1,26 @@
+{
+  Socket socket;
+  while (!interrupted) {
+    try {
+      sleep(reconnectionDelay);
+      LogLog.debug("Attempting connection to " + address.getHostName());
+      socket=new Socket(address,port);
+synchronized (this) {
+        oos=new ObjectOutputStream(socket.getOutputStream());
+        connector=null;
+        LogLog.debug("Connection established. Exiting connector thread.");
+        break;
+      }
+    }
+ catch (    InterruptedException e) {
+      LogLog.debug("Connector interrupted. Leaving loop.");
+      return;
+    }
+catch (    java.net.ConnectException e) {
+      LogLog.debug("Remote host " + address.getHostName() + " refused connection.");
+    }
+catch (    IOException e) {
+      LogLog.debug("Could not connect to " + address.getHostName() + ". Exception is "+ e);
+    }
+  }
+}

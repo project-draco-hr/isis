@@ -1,0 +1,59 @@
+{
+  boolean decided=false;
+  char type=0;
+  ContentModel retval, current, temp;
+  retval=current=temp=null;
+  do {
+    String tag;
+    tag=maybeGetName();
+    if (tag != null) {
+      strTmp.append(tag);
+      temp=getFrequency(newContentModel(tag));
+    }
+ else     if (peek("(")) {
+      InputEntity next=in;
+      strTmp.append('(');
+      maybeWhitespace();
+      temp=getFrequency(getcps(element,next));
+    }
+ else     fatal((type == 0) ? "P-039" : ((type == ',') ? "P-037" : "P-038"),new Object[]{new Character(getc())});
+    maybeWhitespace();
+    if (decided) {
+      char c=getc();
+      if (current != null) {
+        current.next=newContentModel(type,temp);
+        current=current.next;
+      }
+      if (c == type) {
+        strTmp.append(type);
+        maybeWhitespace();
+        continue;
+      }
+ else       if (c == '\u0029') {
+        ungetc();
+        continue;
+      }
+ else {
+        fatal((type == 0) ? "P-041" : "P-040",new Object[]{new Character(c),new Character(type)});
+      }
+    }
+ else {
+      type=getc();
+      if (type == '|' || type == ',') {
+        decided=true;
+        retval=current=newContentModel(type,temp);
+      }
+ else {
+        retval=current=temp;
+        ungetc();
+        continue;
+      }
+      strTmp.append(type);
+    }
+    maybeWhitespace();
+  }
+ while (!peek(")"));
+  if (supportValidation && isValidating && in != start)   error("V-014",new Object[]{element});
+  strTmp.append(')');
+  return getFrequency(retval);
+}

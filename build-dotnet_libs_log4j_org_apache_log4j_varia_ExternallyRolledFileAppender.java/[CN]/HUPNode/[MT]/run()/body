@@ -1,0 +1,19 @@
+{
+  try {
+    String line=dis.readUTF();
+    LogLog.debug("Got external roll over signal.");
+    if (ExternallyRolledFileAppender.ROLL_OVER.equals(line)) {
+synchronized (er) {
+        er.rollOver();
+      }
+      dos.writeUTF(ExternallyRolledFileAppender.OK);
+    }
+ else {
+      dos.writeUTF("Expecting [RollOver] string.");
+    }
+    dos.close();
+  }
+ catch (  Exception e) {
+    LogLog.error("Unexpected exception. Exiting HUPNode.",e);
+  }
+}

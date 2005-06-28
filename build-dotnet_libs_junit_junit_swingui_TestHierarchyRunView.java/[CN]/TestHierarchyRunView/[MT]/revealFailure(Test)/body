@@ -1,0 +1,15 @@
+{
+  JTree tree=fTreeBrowser.getTree();
+  TestTreeModel model=(TestTreeModel)tree.getModel();
+  Vector vpath=new Vector();
+  int index=model.findTest(failure,(Test)model.getRoot(),vpath);
+  if (index >= 0) {
+    Object[] path=new Object[vpath.size() + 1];
+    vpath.copyInto(path);
+    Object last=path[vpath.size() - 1];
+    path[vpath.size()]=model.getChild(last,index);
+    TreePath selectionPath=new TreePath(path);
+    tree.setSelectionPath(selectionPath);
+    tree.makeVisible(selectionPath);
+  }
+}

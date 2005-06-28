@@ -1,0 +1,8 @@
+{
+  String factoryClassName=OptionConverter.findAndSubst(LOGGER_FACTORY_KEY,props);
+  if (factoryClassName != null) {
+    LogLog.debug("Setting category factory to [" + factoryClassName + "].");
+    loggerFactory=(LoggerFactory)OptionConverter.instantiateByClassName(factoryClassName,LoggerFactory.class,loggerFactory);
+    PropertySetter.setProperties(loggerFactory,props,FACTORY_PREFIX + ".");
+  }
+}

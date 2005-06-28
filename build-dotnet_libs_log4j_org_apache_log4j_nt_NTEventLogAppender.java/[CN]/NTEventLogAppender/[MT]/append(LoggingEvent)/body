@@ -1,0 +1,15 @@
+{
+  StringBuffer sbuf=new StringBuffer();
+  sbuf.append(layout.format(event));
+  if (layout.ignoresThrowable()) {
+    String[] s=event.getThrowableStrRep();
+    if (s != null) {
+      int len=s.length;
+      for (int i=0; i < len; i++) {
+        sbuf.append(s[i]);
+      }
+    }
+  }
+  int nt_category=event.getLevel().toInt();
+  reportEvent(_handle,sbuf.toString(),nt_category);
+}

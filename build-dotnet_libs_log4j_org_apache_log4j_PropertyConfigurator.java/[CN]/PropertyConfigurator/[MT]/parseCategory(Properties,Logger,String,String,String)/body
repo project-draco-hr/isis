@@ -1,0 +1,33 @@
+{
+  LogLog.debug("Parsing for [" + loggerName + "] with value=["+ value+ "].");
+  StringTokenizer st=new StringTokenizer(value,",");
+  if (!(value.startsWith(",") || value.equals(""))) {
+    if (!st.hasMoreTokens())     return;
+    String levelStr=st.nextToken();
+    LogLog.debug("Level token is [" + levelStr + "].");
+    if (INHERITED.equalsIgnoreCase(levelStr) || NULL.equalsIgnoreCase(levelStr)) {
+      if (loggerName.equals(INTERNAL_ROOT_NAME)) {
+        LogLog.warn("The root logger cannot be set to null.");
+      }
+ else {
+        logger.setLevel(null);
+      }
+    }
+ else {
+      logger.setLevel(OptionConverter.toLevel(levelStr,(Level)Level.DEBUG));
+    }
+    LogLog.debug("Category " + loggerName + " set to "+ logger.getLevel());
+  }
+  logger.removeAllAppenders();
+  Appender appender;
+  String appenderName;
+  while (st.hasMoreTokens()) {
+    appenderName=st.nextToken().trim();
+    if (appenderName == null || appenderName.equals(","))     continue;
+    LogLog.debug("Parsing appender named \"" + appenderName + "\".");
+    appender=parseAppender(props,appenderName);
+    if (appender != null) {
+      logger.addAppender(appender);
+    }
+  }
+}

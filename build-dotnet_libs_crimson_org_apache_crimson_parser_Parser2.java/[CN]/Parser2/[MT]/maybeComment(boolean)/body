@@ -1,0 +1,45 @@
+{
+  if (!in.peek(skipStart ? "!--" : "<!--",null))   return false;
+  boolean savedLexicalPE=doLexicalPE;
+  doLexicalPE=false;
+  boolean saveCommentText=lexicalHandler != nullHandler;
+  if (saveCommentText) {
+    strTmp=new StringBuffer();
+  }
+  oneComment:   for (; ; ) {
+    try {
+      for (; ; ) {
+        int c=getc();
+        if (c == '-') {
+          c=getc();
+          if (c != '-') {
+            if (saveCommentText)             strTmp.append('-');
+            ungetc();
+            continue;
+          }
+          nextChar('>',"F-022",null);
+          break oneComment;
+        }
+        if (saveCommentText)         strTmp.append((char)c);
+      }
+    }
+ catch (    EndOfInputException e) {
+      if (inExternalPE || (!donePrologue && in.isInternal())) {
+        if (supportValidation && isValidating)         error("V-021",null);
+        in=in.pop();
+        continue;
+      }
+      fatal("P-017");
+    }
+  }
+  doLexicalPE=savedLexicalPE;
+  if (saveCommentText) {
+    int length=strTmp.length();
+    char[] charArray=new char[length];
+    if (length != 0) {
+      strTmp.getChars(0,length,charArray,0);
+    }
+    lexicalHandler.comment(charArray,0,length);
+  }
+  return true;
+}

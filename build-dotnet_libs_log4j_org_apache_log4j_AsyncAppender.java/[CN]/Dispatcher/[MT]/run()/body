@@ -1,0 +1,29 @@
+{
+  LoggingEvent event;
+  while (true) {
+synchronized (bf) {
+      if (bf.length() == 0) {
+        if (interrupted) {
+          break;
+        }
+        try {
+          bf.wait();
+        }
+ catch (        InterruptedException e) {
+          LogLog.error("The dispathcer should not be interrupted.");
+          break;
+        }
+      }
+      event=bf.get();
+      if (bf.wasFull()) {
+        bf.notify();
+      }
+    }
+synchronized (container.aai) {
+      if (aai != null && event != null) {
+        aai.appendLoopOnAppenders(event);
+      }
+    }
+  }
+  aai.removeAllAppenders();
+}

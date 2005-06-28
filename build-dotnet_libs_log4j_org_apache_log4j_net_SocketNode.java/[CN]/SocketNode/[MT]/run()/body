@@ -1,0 +1,32 @@
+{
+  LoggingEvent event;
+  Logger remoteLogger;
+  try {
+    while (true) {
+      event=(LoggingEvent)ois.readObject();
+      remoteLogger=hierarchy.getLogger(event.getLoggerName());
+      if (event.getLevel().isGreaterOrEqual(remoteLogger.getEffectiveLevel())) {
+        remoteLogger.callAppenders(event);
+      }
+    }
+  }
+ catch (  java.io.EOFException e) {
+    logger.info("Caught java.io.EOFException closing conneciton.");
+  }
+catch (  java.net.SocketException e) {
+    logger.info("Caught java.net.SocketException closing conneciton.");
+  }
+catch (  IOException e) {
+    logger.info("Caught java.io.IOException: " + e);
+    logger.info("Closing connection.");
+  }
+catch (  Exception e) {
+    logger.error("Unexpected exception. Closing conneciton.",e);
+  }
+  try {
+    ois.close();
+  }
+ catch (  Exception e) {
+    logger.info("Could not close connection.",e);
+  }
+}

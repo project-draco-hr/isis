@@ -1,0 +1,24 @@
+{
+  createConfigurationDirectory();
+  File file=new File(getFilename());
+  if (file.exists()) {
+    try {
+      ObjectInputStream ois=new ObjectInputStream(new FileInputStream(file));
+      _mruFileList=(LinkedList)ois.readObject();
+      ois.close();
+      Iterator it=_mruFileList.iterator();
+      while (it.hasNext()) {
+        Object o=it.next();
+        if (!(o instanceof File) && !(o instanceof URL)) {
+          it.remove();
+        }
+      }
+    }
+ catch (    Exception e) {
+      _mruFileList=new LinkedList();
+    }
+  }
+ else {
+    _mruFileList=new LinkedList();
+  }
+}

@@ -1,0 +1,30 @@
+{
+  boolean didDefault=false;
+  for (Enumeration e=element.attributes.keys(); e.hasMoreElements(); ) {
+    String declAttName=(String)e.nextElement();
+    if (attTmp.getValue(declAttName) != null) {
+      continue;
+    }
+    AttributeDecl info=(AttributeDecl)element.attributes.get(declAttName);
+    if (supportValidation && isValidating && info.isRequired) {
+      if (namespaces && !prefixes) {
+        if (nsAttTmp.contains(declAttName)) {
+          continue;
+        }
+      }
+      error("V-009",new Object[]{declAttName});
+    }
+    String defaultValue=info.defaultValue;
+    if (defaultValue != null) {
+      if (supportValidation && isValidating && isStandalone&& !info.isFromInternalSubset)       error("V-010",new Object[]{declAttName});
+      if (namespaces) {
+        processAttributeNS(declAttName,info.type,defaultValue,defaultValue,false,true,null);
+      }
+ else {
+        attTmp.addAttribute("","",declAttName,info.type,defaultValue,defaultValue,false);
+      }
+      didDefault=true;
+    }
+  }
+  return didDefault;
+}

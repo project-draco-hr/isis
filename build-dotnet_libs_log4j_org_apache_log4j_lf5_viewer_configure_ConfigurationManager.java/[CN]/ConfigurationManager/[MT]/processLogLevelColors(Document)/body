@@ -1,0 +1,24 @@
+{
+  NodeList nodeList=doc.getElementsByTagName(COLORLEVEL);
+  Map logLevelColors=LogLevel.getLogLevelColorMap();
+  for (int i=0; i < nodeList.getLength(); i++) {
+    Node n=nodeList.item(i);
+    if (n == null) {
+      return;
+    }
+    NamedNodeMap map=n.getAttributes();
+    String name=getValue(map,NAME);
+    try {
+      LogLevel level=LogLevel.valueOf(name);
+      int red=Integer.parseInt(getValue(map,RED));
+      int green=Integer.parseInt(getValue(map,GREEN));
+      int blue=Integer.parseInt(getValue(map,BLUE));
+      Color c=new Color(red,green,blue);
+      if (level != null) {
+        level.setLogLevelColorMap(level,c);
+      }
+    }
+ catch (    LogLevelFormatException e) {
+    }
+  }
+}

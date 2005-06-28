@@ -1,0 +1,15 @@
+{
+  removes.ensureCapacity(buffer.size());
+  for (Iterator i=buffer.iterator(); i.hasNext(); ) {
+    try {
+      LoggingEvent logEvent=(LoggingEvent)i.next();
+      String sql=getLogStatement(logEvent);
+      execute(sql);
+      removes.add(logEvent);
+    }
+ catch (    SQLException e) {
+      errorHandler.error("Failed to excute sql",e,ErrorCode.FLUSH_FAILURE);
+    }
+  }
+  buffer.removeAll(removes);
+}

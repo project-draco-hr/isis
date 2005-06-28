@@ -1,0 +1,26 @@
+{
+  String s=strTmp.toString();
+  String s2=s.trim();
+  boolean didStrip=false;
+  if (s != s2) {
+    s=s2;
+    s2=null;
+    didStrip=true;
+  }
+  strTmp=new StringBuffer();
+  for (int i=0; i < s.length(); i++) {
+    char c=s.charAt(i);
+    if (!XmlChars.isSpace(c)) {
+      strTmp.append(c);
+      continue;
+    }
+    strTmp.append(' ');
+    while (++i < s.length() && XmlChars.isSpace(s.charAt(i)))     didStrip=true;
+    i--;
+  }
+  if (supportValidation && isValidating && isStandalone) {
+    if (invalidIfNeeded && (s2 == null || didStrip))     error("V-019",null);
+  }
+  if (didStrip)   return strTmp.toString();
+ else   return s;
+}

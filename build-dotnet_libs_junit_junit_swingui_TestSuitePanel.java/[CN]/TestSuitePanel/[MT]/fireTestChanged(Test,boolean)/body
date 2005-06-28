@@ -1,0 +1,23 @@
+{
+  SwingUtilities.invokeLater(new Runnable(){
+    public void run(){
+      Vector vpath=new Vector();
+      int index=fModel.findTest(test,(Test)fModel.getRoot(),vpath);
+      if (index >= 0) {
+        Object[] path=new Object[vpath.size()];
+        vpath.copyInto(path);
+        TreePath treePath=new TreePath(path);
+        fModel.fireNodeChanged(treePath,index);
+        if (expand) {
+          Object[] fullPath=new Object[vpath.size() + 1];
+          vpath.copyInto(fullPath);
+          fullPath[vpath.size()]=fModel.getChild(treePath.getLastPathComponent(),index);
+          ;
+          TreePath fullTreePath=new TreePath(fullPath);
+          fTree.scrollPathToVisible(fullTreePath);
+        }
+      }
+    }
+  }
+);
+}

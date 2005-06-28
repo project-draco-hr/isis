@@ -1,0 +1,22 @@
+{
+  String clazz=subst(element.getAttribute(CLASS_ATTR));
+  Filter filter=(Filter)OptionConverter.instantiateByClassName(clazz,Filter.class,null);
+  if (filter != null) {
+    PropertySetter propSetter=new PropertySetter(filter);
+    NodeList children=element.getChildNodes();
+    final int length=children.getLength();
+    for (int loop=0; loop < length; loop++) {
+      Node currentNode=children.item(loop);
+      if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element currentElement=(Element)currentNode;
+        String tagName=currentElement.getTagName();
+        if (tagName.equals(PARAM_TAG)) {
+          setParameter(currentElement,propSetter);
+        }
+      }
+    }
+    propSetter.activate();
+    LogLog.debug("Adding filter of type [" + filter.getClass() + "] to appender named ["+ appender.getName()+ "].");
+    appender.addFilter(filter);
+  }
+}

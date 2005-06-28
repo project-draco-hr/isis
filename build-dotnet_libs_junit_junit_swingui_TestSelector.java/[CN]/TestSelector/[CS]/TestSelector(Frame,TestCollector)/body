@@ -1,0 +1,31 @@
+{
+  super(parent,true);
+  setSize(350,300);
+  setResizable(false);
+  try {
+    setLocationRelativeTo(parent);
+  }
+ catch (  NoSuchMethodError e) {
+    centerWindow(this);
+  }
+  setTitle("Test Selector");
+  Vector list=null;
+  try {
+    parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    list=createTestList(testCollector);
+  }
+  finally {
+    parent.setCursor(Cursor.getDefaultCursor());
+  }
+  fList=new JList(list);
+  fList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+  fList.setCellRenderer(new TestCellRenderer());
+  fScrolledList=new JScrollPane(fList);
+  fCancel=new JButton("Cancel");
+  fDescription=new JLabel("Select the Test class:");
+  fOk=new JButton("OK");
+  fOk.setEnabled(false);
+  getRootPane().setDefaultButton(fOk);
+  defineLayout();
+  addListeners();
+}

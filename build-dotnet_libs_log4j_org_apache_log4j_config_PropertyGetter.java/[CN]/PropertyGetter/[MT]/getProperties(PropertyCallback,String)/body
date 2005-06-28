@@ -1,0 +1,19 @@
+{
+  for (int i=0; i < props.length; i++) {
+    Method getter=props[i].getReadMethod();
+    if (getter == null)     continue;
+    if (!isHandledType(getter.getReturnType())) {
+      continue;
+    }
+    String name=props[i].getName();
+    try {
+      Object result=getter.invoke(obj,NULL_ARG);
+      if (result != null) {
+        callback.foundProperty(obj,prefix,name,result);
+      }
+    }
+ catch (    Exception ex) {
+      LogLog.warn("Failed to get value of property " + name);
+    }
+  }
+}

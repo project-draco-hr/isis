@@ -1,0 +1,30 @@
+{
+  if (readonly) {
+    throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+  }
+  if (localName == null) {
+    throw new DomEx(DomEx.NOT_FOUND_ERR);
+  }
+  for (int i=0; i < list.size(); i++) {
+    Node value=(Node)list.elementAt(i);
+    String iLocalName=value.getLocalName();
+    if (localName.equals(iLocalName)) {
+      String iNamespaceURI=value.getNamespaceURI();
+      if (namespaceURI == iNamespaceURI || (namespaceURI != null && namespaceURI.equals(iNamespaceURI))) {
+        list.removeElementAt(i);
+        AttributeNode attr=(AttributeNode)value;
+        String defaultValue=attr.getDefaultValue();
+        if (defaultValue != null) {
+          AttributeNode newAttr=attr.cloneAttributeNode(true);
+          newAttr.setOwnerElement(attr.getOwnerElement());
+          newAttr.setValue(defaultValue);
+          newAttr.setSpecified(false);
+          list.addElement(newAttr);
+        }
+        attr.setOwnerElement(null);
+        return attr;
+      }
+    }
+  }
+  throw new DomEx(DomEx.NOT_FOUND_ERR);
+}

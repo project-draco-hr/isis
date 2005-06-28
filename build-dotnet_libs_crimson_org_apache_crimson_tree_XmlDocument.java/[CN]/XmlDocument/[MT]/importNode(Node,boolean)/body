@@ -1,0 +1,47 @@
+{
+  Node node=null;
+switch (importedNode.getNodeType()) {
+case ATTRIBUTE_NODE:
+    node=importedNode.cloneNode(true);
+  break;
+case DOCUMENT_FRAGMENT_NODE:
+if (deep) {
+  node=importedNode.cloneNode(true);
+}
+ else {
+  node=new DocFragNode();
+}
+break;
+case DOCUMENT_NODE:
+case DOCUMENT_TYPE_NODE:
+throw new DomEx(DomEx.NOT_SUPPORTED_ERR);
+case ELEMENT_NODE:
+node=((ElementNode2)importedNode).createCopyForImportNode(deep);
+break;
+case ENTITY_NODE:
+node=importedNode.cloneNode(deep);
+break;
+case ENTITY_REFERENCE_NODE:
+node=importedNode.cloneNode(false);
+break;
+case NOTATION_NODE:
+case PROCESSING_INSTRUCTION_NODE:
+case TEXT_NODE:
+case CDATA_SECTION_NODE:
+case COMMENT_NODE:
+default :
+node=importedNode.cloneNode(false);
+break;
+}
+TreeWalker walker;
+NodeBase n;
+for (walker=new TreeWalker(node), n=(NodeBase)walker.getCurrent(); n != null; n=(NodeBase)walker.getNext()) {
+n.setOwnerDocument(this);
+if (n instanceof Element) {
+NamedNodeMap list=n.getAttributes();
+int length=list.getLength();
+for (int i=0; i < length; i++) changeNodeOwner(list.item(i));
+}
+}
+return node;
+}

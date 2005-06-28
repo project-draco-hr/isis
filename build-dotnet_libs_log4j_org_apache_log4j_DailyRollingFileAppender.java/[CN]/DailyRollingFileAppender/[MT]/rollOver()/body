@@ -1,0 +1,30 @@
+{
+  if (datePattern == null) {
+    errorHandler.error("Missing DatePattern option in rollOver().");
+    return;
+  }
+  String datedFilename=fileName + sdf.format(now);
+  if (scheduledFilename.equals(datedFilename)) {
+    return;
+  }
+  this.closeFile();
+  File target=new File(scheduledFilename);
+  if (target.exists()) {
+    target.delete();
+  }
+  File file=new File(fileName);
+  boolean result=file.renameTo(target);
+  if (result) {
+    LogLog.debug(fileName + " -> " + scheduledFilename);
+  }
+ else {
+    LogLog.error("Failed to rename [" + fileName + "] to ["+ scheduledFilename+ "].");
+  }
+  try {
+    this.setFile(fileName,false,this.bufferedIO,this.bufferSize);
+  }
+ catch (  IOException e) {
+    errorHandler.error("setFile(" + fileName + ", false) call failed.");
+  }
+  scheduledFilename=datedFilename;
+}

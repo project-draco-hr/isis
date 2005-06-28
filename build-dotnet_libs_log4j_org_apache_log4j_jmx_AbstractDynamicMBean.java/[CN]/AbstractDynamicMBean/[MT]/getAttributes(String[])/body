@@ -1,0 +1,17 @@
+{
+  if (attributeNames == null) {
+    throw new RuntimeOperationsException(new IllegalArgumentException("attributeNames[] cannot be null"),"Cannot invoke a getter of " + dClassName);
+  }
+  AttributeList resultList=new AttributeList();
+  if (attributeNames.length == 0)   return resultList;
+  for (int i=0; i < attributeNames.length; i++) {
+    try {
+      Object value=getAttribute((String)attributeNames[i]);
+      resultList.add(new Attribute(attributeNames[i],value));
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+  return (resultList);
+}

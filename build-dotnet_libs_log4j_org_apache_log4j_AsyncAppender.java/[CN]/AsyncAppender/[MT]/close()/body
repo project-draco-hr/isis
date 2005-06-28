@@ -1,0 +1,17 @@
+{
+synchronized (this) {
+    if (closed) {
+      return;
+    }
+    closed=true;
+  }
+  dispatcher.close();
+  try {
+    dispatcher.join();
+  }
+ catch (  InterruptedException e) {
+    LogLog.error("Got an InterruptedException while waiting for the " + "dispatcher to finish.",e);
+  }
+  dispatcher=null;
+  bf=null;
+}

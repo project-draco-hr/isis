@@ -1,0 +1,14 @@
+{
+  if (target.equals(node))   return 0;
+  TestSuite suite=isTestSuite(node);
+  for (int i=0; i < getChildCount(node); i++) {
+    Test t=suite.testAt(i);
+    int index=findTest(target,t,path);
+    if (index >= 0) {
+      path.insertElementAt(node,0);
+      if (path.size() == 1)       return i;
+      return index;
+    }
+  }
+  return -1;
+}

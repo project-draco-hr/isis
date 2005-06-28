@@ -1,0 +1,26 @@
+{
+  int nextSuffix;
+  char c;
+  if (value.length() < 2)   return false;
+  c=value.charAt(1);
+  if (c == '-') {
+    c=value.charAt(0);
+    if (!(c == 'i' || c == 'I' || c == 'x' || c == 'X'))     return false;
+    nextSuffix=1;
+  }
+ else   if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+    c=value.charAt(0);
+    if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))     return false;
+    nextSuffix=2;
+  }
+ else   return false;
+  while (nextSuffix < value.length()) {
+    c=value.charAt(nextSuffix);
+    if (c != '-')     break;
+    while (++nextSuffix < value.length()) {
+      c=value.charAt(nextSuffix);
+      if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))       break;
+    }
+  }
+  return value.length() == nextSuffix && c != '-';
+}

@@ -1,0 +1,45 @@
+{
+  super("CHAINSAW - Log4J Log Viewer");
+  final MyTableModel model=new MyTableModel();
+  final JMenuBar menuBar=new JMenuBar();
+  setJMenuBar(menuBar);
+  final JMenu menu=new JMenu("File");
+  menuBar.add(menu);
+  try {
+    final LoadXMLAction lxa=new LoadXMLAction(this,model);
+    final JMenuItem loadMenuItem=new JMenuItem("Load file...");
+    menu.add(loadMenuItem);
+    loadMenuItem.addActionListener(lxa);
+  }
+ catch (  NoClassDefFoundError e) {
+    LOG.info("Missing classes for XML parser",e);
+    JOptionPane.showMessageDialog(this,"XML parser not in classpath - unable to load XML events.","CHAINSAW",JOptionPane.ERROR_MESSAGE);
+  }
+catch (  Exception e) {
+    LOG.info("Unable to create the action to load XML files",e);
+    JOptionPane.showMessageDialog(this,"Unable to create a XML parser - unable to load XML events.","CHAINSAW",JOptionPane.ERROR_MESSAGE);
+  }
+  final JMenuItem exitMenuItem=new JMenuItem("Exit");
+  menu.add(exitMenuItem);
+  exitMenuItem.addActionListener(ExitAction.INSTANCE);
+  final ControlPanel cp=new ControlPanel(model);
+  getContentPane().add(cp,BorderLayout.NORTH);
+  final JTable table=new JTable(model);
+  table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+  final JScrollPane scrollPane=new JScrollPane(table);
+  scrollPane.setBorder(BorderFactory.createTitledBorder("Events: "));
+  scrollPane.setPreferredSize(new Dimension(900,300));
+  final JPanel details=new DetailPanel(table,model);
+  details.setPreferredSize(new Dimension(900,300));
+  final JSplitPane jsp=new JSplitPane(JSplitPane.VERTICAL_SPLIT,scrollPane,details);
+  getContentPane().add(jsp,BorderLayout.CENTER);
+  addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent aEvent){
+      ExitAction.INSTANCE.actionPerformed(null);
+    }
+  }
+);
+  pack();
+  setVisible(true);
+  setupReceiver(model);
+}

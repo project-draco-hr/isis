@@ -1,0 +1,12 @@
+{
+  if (inDTD) {
+    return;
+  }
+  ParentNode entity=elementStack[topOfStack];
+  if (!(entity instanceof EntityReference))   return;
+  entity.setReadonly(true);
+  elementStack[topOfStack--]=null;
+  if (!name.equals(entity.getNodeName())) {
+    throw new SAXParseException(getMessage("XDB-011",new Object[]{name,entity.getNodeName()}),locator);
+  }
+}

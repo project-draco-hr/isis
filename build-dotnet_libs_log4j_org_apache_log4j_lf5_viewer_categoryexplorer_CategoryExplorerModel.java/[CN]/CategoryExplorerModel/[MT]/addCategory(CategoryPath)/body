@@ -1,0 +1,26 @@
+{
+  CategoryNode root=(CategoryNode)getRoot();
+  CategoryNode parent=root;
+  for (int i=0; i < path.size(); i++) {
+    CategoryElement element=path.categoryElementAt(i);
+    Enumeration children=parent.children();
+    boolean categoryAlreadyExists=false;
+    while (children.hasMoreElements()) {
+      CategoryNode node=(CategoryNode)children.nextElement();
+      String title=node.getTitle().toLowerCase();
+      String pathLC=element.getTitle().toLowerCase();
+      if (title.equals(pathLC)) {
+        categoryAlreadyExists=true;
+        parent=node;
+        break;
+      }
+    }
+    if (categoryAlreadyExists == false) {
+      CategoryNode newNode=new CategoryNode(element.getTitle());
+      insertNodeInto(newNode,parent,parent.getChildCount());
+      refresh(newNode);
+      parent=newNode;
+    }
+  }
+  return parent;
+}

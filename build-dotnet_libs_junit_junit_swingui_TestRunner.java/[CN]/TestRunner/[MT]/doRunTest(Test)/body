@@ -1,0 +1,28 @@
+{
+  setButtonLabel(fRun,"Stop");
+  fRunner=new Thread("TestRunner-Thread"){
+    public void run(){
+      TestRunner.this.start(testSuite);
+      postInfo("Running...");
+      long startTime=System.currentTimeMillis();
+      testSuite.run(fTestResult);
+      if (fTestResult.shouldStop()) {
+        postStatus("Stopped");
+      }
+ else {
+        long endTime=System.currentTimeMillis();
+        long runTime=endTime - startTime;
+        postInfo("Finished: " + elapsedTimeAsString(runTime) + " seconds");
+      }
+      runFinished(testSuite);
+      setButtonLabel(fRun,"Run");
+      fRunner=null;
+      System.gc();
+    }
+  }
+;
+  fTestResult=createTestResult();
+  fTestResult.addListener(TestRunner.this);
+  aboutToStart(testSuite);
+  fRunner.start();
+}

@@ -1,0 +1,9 @@
+{
+  if (publicId == null || id2resource == null)   return null;
+  String resourceName=(String)id2resource.get(publicId);
+  ClassLoader loader=null;
+  if (resourceName == null)   return null;
+  if (id2loader != null)   loader=(ClassLoader)id2loader.get(publicId);
+  if (loader == null)   return ClassLoader.getSystemResourceAsStream(resourceName);
+  return loader.getResourceAsStream(resourceName);
+}

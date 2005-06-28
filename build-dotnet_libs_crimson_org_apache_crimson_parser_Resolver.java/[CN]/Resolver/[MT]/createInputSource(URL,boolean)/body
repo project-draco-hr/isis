@@ -1,0 +1,19 @@
+{
+  URLConnection conn=uri.openConnection();
+  if (conn instanceof HttpURLConnection) {
+    int status=((HttpURLConnection)conn).getResponseCode();
+    if ((status >= 400 && status <= 417) || (status >= 500 && status <= 505)) {
+      throw new IOException("Error in opening uri " + uri + "status code="+ status);
+    }
+  }
+  InputSource retval;
+  if (checkType) {
+    String contentType=conn.getContentType();
+    retval=createInputSource(contentType,conn.getInputStream(),false,uri.getProtocol());
+  }
+ else {
+    retval=new InputSource(XmlReader.createReader(conn.getInputStream()));
+  }
+  retval.setSystemId(conn.getURL().toString());
+  return retval;
+}

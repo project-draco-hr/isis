@@ -1,0 +1,21 @@
+{
+  if (closed) {
+    LogLog.error("Attempted to append to closed appender named [" + name + "].");
+    return;
+  }
+  if (!isAsSevereAsThreshold(event.getLevel())) {
+    return;
+  }
+  Filter f=this.headFilter;
+  FILTER_LOOP:   while (f != null) {
+switch (f.decide(event)) {
+case Filter.DENY:
+      return;
+case Filter.ACCEPT:
+    break FILTER_LOOP;
+case Filter.NEUTRAL:
+  f=f.next;
+}
+}
+this.append(event);
+}

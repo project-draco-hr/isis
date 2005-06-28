@@ -1,0 +1,54 @@
+{
+  ServerSocket serverSocket=null;
+  try {
+    serverSocket=new ServerSocket(port);
+    serverSocket.setSoTimeout(1000);
+  }
+ catch (  Exception e) {
+    LogLog.error("exception setting timeout, shutting down server socket.",e);
+    keepRunning=false;
+    return;
+  }
+  try {
+    try {
+      serverSocket.setSoTimeout(1000);
+    }
+ catch (    SocketException e) {
+      LogLog.error("exception setting timeout, shutting down server socket.",e);
+      return;
+    }
+    while (keepRunning) {
+      Socket socket=null;
+      try {
+        socket=serverSocket.accept();
+      }
+ catch (      InterruptedIOException e) {
+      }
+catch (      SocketException e) {
+        LogLog.error("exception accepting socket, shutting down server socket.",e);
+        keepRunning=false;
+      }
+catch (      IOException e) {
+        LogLog.error("exception accepting socket.",e);
+      }
+      if (socket != null) {
+        try {
+          InetAddress remoteAddress=socket.getInetAddress();
+          LogLog.debug("accepting connection from " + remoteAddress.getHostName() + " ("+ remoteAddress.getHostAddress()+ ")");
+          ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
+          oosList.addElement(oos);
+        }
+ catch (        IOException e) {
+          LogLog.error("exception creating output stream on socket.",e);
+        }
+      }
+    }
+  }
+  finally {
+    try {
+      serverSocket.close();
+    }
+ catch (    IOException e) {
+    }
+  }
+}

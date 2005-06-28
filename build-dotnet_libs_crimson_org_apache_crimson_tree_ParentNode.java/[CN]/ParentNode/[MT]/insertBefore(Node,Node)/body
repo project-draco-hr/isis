@@ -1,0 +1,34 @@
+{
+  NodeBase child;
+  if (readonly)   throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+  if (refChild == null)   return appendChild(newChild);
+  if (length == 0)   throw new DomEx(DomEx.NOT_FOUND_ERR);
+  child=checkDocument(newChild);
+  if (newChild.getNodeType() == DOCUMENT_FRAGMENT_NODE) {
+    consumeFragment(newChild,refChild);
+    return newChild;
+  }
+  checkNotAncestor(newChild);
+  checkChildType(newChild.getNodeType());
+  for (int i=0; i < length; i++) {
+    if (children[i] == newChild) {
+      removeChild(newChild);
+      break;
+    }
+  }
+  if (children.length == length) {
+    NodeBase temp[]=new NodeBase[length * 2];
+    System.arraycopy(children,0,temp,0,length);
+    children=temp;
+  }
+  for (int i=0; i < length; i++) {
+    if (children[i] != refChild)     continue;
+    child.setParentNode(this,i);
+    System.arraycopy(children,i,children,i + 1,length - i);
+    children[i]=child;
+    length++;
+    mutated();
+    return newChild;
+  }
+  throw new DomEx(DomEx.NOT_FOUND_ERR);
+}

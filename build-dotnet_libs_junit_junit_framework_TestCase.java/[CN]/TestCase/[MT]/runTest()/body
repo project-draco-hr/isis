@@ -1,0 +1,16 @@
+{
+  assertNotNull(fName);
+  try {
+    System.Type type=GetType();
+    type.InvokeMember(fName,System.Reflection.BindingFlags.InvokeMethod,null,this,new Object[0]);
+  }
+ catch (  System.Reflection.TargetInvocationException ex) {
+    System.Exception inner=ex.get_InnerException();
+    if (inner instanceof Throwable) {
+      Throwable e=(Throwable)inner;
+      e.printStackTrace();
+      throw e;
+    }
+    throw new Throwable("\n" + inner.get_Message() + "\n"+ inner.get_StackTrace().toString());
+  }
+}

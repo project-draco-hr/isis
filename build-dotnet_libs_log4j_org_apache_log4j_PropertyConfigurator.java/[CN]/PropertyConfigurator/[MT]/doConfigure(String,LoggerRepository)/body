@@ -1,0 +1,14 @@
+{
+  Properties props=new Properties();
+  try {
+    FileInputStream istream=new FileInputStream(configFileName);
+    props.load(istream);
+    istream.close();
+  }
+ catch (  IOException e) {
+    LogLog.error("Could not read configuration file [" + configFileName + "].",e);
+    LogLog.error("Ignoring configuration file [" + configFileName + "].");
+    return;
+  }
+  doConfigure(props,hierarchy);
+}

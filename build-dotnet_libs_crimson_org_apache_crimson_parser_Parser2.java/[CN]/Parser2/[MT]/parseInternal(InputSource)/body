@@ -1,0 +1,51 @@
+{
+  if (input == null)   fatal("P-000");
+  try {
+    in=InputEntity.getInputEntity(errHandler,locale);
+    in.init(input,null,null,false);
+    contentHandler.setDocumentLocator(locator);
+    contentHandler.startDocument();
+    maybeXmlDecl();
+    maybeMisc(false);
+    if (!maybeDoctypeDecl()) {
+      if (supportValidation && isValidating)       warning("V-001",null);
+    }
+    maybeMisc(false);
+    donePrologue=true;
+    if (!in.peekc('<') || !maybeElement(null))     fatal("P-067");
+    afterRoot();
+    maybeMisc(true);
+    if (!in.isEOF())     fatal("P-001",new Object[]{Integer.toHexString(((int)getc()))});
+    contentHandler.endDocument();
+  }
+ catch (  EndOfInputException e) {
+    if (!in.isDocument()) {
+      String name=in.getName();
+      do {
+        in=in.pop();
+      }
+ while (in.isInternal());
+      fatal("P-002",new Object[]{name},e);
+    }
+ else     fatal("P-003",null,e);
+  }
+catch (  RuntimeException e) {
+    throw new SAXParseException(e.getMessage() != null ? e.getMessage() : e.getClass().getName(),locator.getPublicId(),locator.getSystemId(),locator.getLineNumber(),locator.getColumnNumber(),e);
+  }
+ finally {
+    strTmp=null;
+    attTmp=null;
+    nameTmp=null;
+    nameCache=null;
+    nsAttTmp=null;
+    if (in != null) {
+      in.close();
+      in=null;
+    }
+    params.clear();
+    entities.clear();
+    notations.clear();
+    elements.clear();
+    afterDocument();
+  }
+}

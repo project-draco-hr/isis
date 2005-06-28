@@ -1,0 +1,26 @@
+{
+  int len;
+  int i;
+  if (chars != null)   len=chars.length;
+ else   len=next.length();
+  if (finish <= start || (finish - start) < len)   fillbuf();
+  if (finish <= start)   return false;
+  if (chars != null) {
+    for (i=0; i < len && (start + i) < finish; i++) {
+      if (buf[start + i] != chars[i])       return false;
+    }
+  }
+ else {
+    for (i=0; i < len && (start + i) < finish; i++) {
+      if (buf[start + i] != next.charAt(i))       return false;
+    }
+  }
+  if (i < len) {
+    if (reader == null || isClosed)     return false;
+    if (len > buf.length)     fatal("P-077",new Object[]{new Integer(buf.length)});
+    fillbuf();
+    return peek(next,chars);
+  }
+  start+=len;
+  return true;
+}

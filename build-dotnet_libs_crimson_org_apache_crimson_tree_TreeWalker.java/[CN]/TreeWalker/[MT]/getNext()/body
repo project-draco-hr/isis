@@ -1,0 +1,33 @@
+{
+  Node next;
+  if (current == null)   return null;
+switch (current.getNodeType()) {
+case Node.DOCUMENT_FRAGMENT_NODE:
+case Node.DOCUMENT_NODE:
+case Node.ELEMENT_NODE:
+case Node.ENTITY_REFERENCE_NODE:
+    next=current.getFirstChild();
+  if (next != null) {
+    current=next;
+    return next;
+  }
+case Node.ATTRIBUTE_NODE:
+case Node.CDATA_SECTION_NODE:
+case Node.COMMENT_NODE:
+case Node.DOCUMENT_TYPE_NODE:
+case Node.ENTITY_NODE:
+case Node.NOTATION_NODE:
+case Node.PROCESSING_INSTRUCTION_NODE:
+case Node.TEXT_NODE:
+for (Node here=current; here != null && here != startPoint; here=here.getParentNode()) {
+  next=here.getNextSibling();
+  if (next != null) {
+    current=next;
+    return next;
+  }
+}
+current=null;
+return null;
+}
+throw new InternalError(((NodeBase)startPoint).getMessage("TW-000",new Object[]{Short.toString(current.getNodeType())}));
+}

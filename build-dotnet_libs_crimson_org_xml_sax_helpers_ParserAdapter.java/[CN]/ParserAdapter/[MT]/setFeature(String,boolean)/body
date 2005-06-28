@@ -1,0 +1,22 @@
+{
+  if (name.equals(NAMESPACES)) {
+    checkNotParsing("feature",name);
+    namespaces=state;
+    if (!namespaces && !prefixes) {
+      prefixes=true;
+    }
+  }
+ else   if (name.equals(NAMESPACE_PREFIXES)) {
+    checkNotParsing("feature",name);
+    prefixes=state;
+    if (!prefixes && !namespaces) {
+      namespaces=true;
+    }
+  }
+ else   if (name.equals(VALIDATION) || name.equals(EXTERNAL_GENERAL) || name.equals(EXTERNAL_PARAMETER)) {
+    throw new SAXNotSupportedException("Feature: " + name);
+  }
+ else {
+    throw new SAXNotRecognizedException("Feature: " + name);
+  }
+}

@@ -1,0 +1,16 @@
+{
+  if (renderedMessage == null && message != null) {
+    if (message instanceof String)     renderedMessage=(String)message;
+ else {
+      LoggerRepository repository=logger.getHierarchy();
+      if (repository instanceof RendererSupport) {
+        RendererSupport rs=(RendererSupport)repository;
+        renderedMessage=rs.getRendererMap().findAndRender(message);
+      }
+ else {
+        renderedMessage=message.toString();
+      }
+    }
+  }
+  return renderedMessage;
+}

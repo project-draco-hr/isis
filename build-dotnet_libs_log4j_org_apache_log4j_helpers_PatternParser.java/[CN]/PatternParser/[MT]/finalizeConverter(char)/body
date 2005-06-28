@@ -1,0 +1,79 @@
+{
+  PatternConverter pc=null;
+switch (c) {
+case 'c':
+    pc=new CategoryPatternConverter(formattingInfo,extractPrecisionOption());
+  currentLiteral.setLength(0);
+break;
+case 'C':
+pc=new ClassNamePatternConverter(formattingInfo,extractPrecisionOption());
+currentLiteral.setLength(0);
+break;
+case 'd':
+String dateFormatStr=AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT;
+DateFormat df;
+String dOpt=extractOption();
+if (dOpt != null) dateFormatStr=dOpt;
+if (dateFormatStr.equalsIgnoreCase(AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT)) df=new ISO8601DateFormat();
+ else if (dateFormatStr.equalsIgnoreCase(AbsoluteTimeDateFormat.ABS_TIME_DATE_FORMAT)) df=new AbsoluteTimeDateFormat();
+ else if (dateFormatStr.equalsIgnoreCase(AbsoluteTimeDateFormat.DATE_AND_TIME_DATE_FORMAT)) df=new DateTimeDateFormat();
+ else {
+try {
+df=new SimpleDateFormat(dateFormatStr);
+}
+ catch (IllegalArgumentException e) {
+LogLog.error("Could not instantiate SimpleDateFormat with " + dateFormatStr,e);
+df=(DateFormat)OptionConverter.instantiateByClassName("org.apache.log4j.helpers.ISO8601DateFormat",DateFormat.class,null);
+}
+}
+pc=new DatePatternConverter(formattingInfo,df);
+currentLiteral.setLength(0);
+break;
+case 'F':
+pc=new LocationPatternConverter(formattingInfo,FILE_LOCATION_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'l':
+pc=new LocationPatternConverter(formattingInfo,FULL_LOCATION_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'L':
+pc=new LocationPatternConverter(formattingInfo,LINE_LOCATION_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'm':
+pc=new BasicPatternConverter(formattingInfo,MESSAGE_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'M':
+pc=new LocationPatternConverter(formattingInfo,METHOD_LOCATION_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'p':
+pc=new BasicPatternConverter(formattingInfo,LEVEL_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'r':
+pc=new BasicPatternConverter(formattingInfo,RELATIVE_TIME_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 't':
+pc=new BasicPatternConverter(formattingInfo,THREAD_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'x':
+pc=new BasicPatternConverter(formattingInfo,NDC_CONVERTER);
+currentLiteral.setLength(0);
+break;
+case 'X':
+String xOpt=extractOption();
+pc=new MDCPatternConverter(formattingInfo,xOpt);
+currentLiteral.setLength(0);
+break;
+default :
+LogLog.error("Unexpected char [" + c + "] at position "+ i+ " in conversion patterrn.");
+pc=new LiteralPatternConverter(currentLiteral.toString());
+currentLiteral.setLength(0);
+}
+addConverter(pc);
+}

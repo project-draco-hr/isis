@@ -1,0 +1,35 @@
+{
+  if (isStandalone && fastStandalone)   return;
+  InputEntity pe;
+  inExternalPE=true;
+  try {
+    pushReader(next);
+  }
+ catch (  IOException e) {
+    fatal("P-082",new Object[]{next.systemId},e);
+  }
+  pe=in;
+  try {
+    maybeTextDecl();
+  }
+ catch (  IOException e) {
+    in=in.pop();
+    fatal("P-082",new Object[]{next.systemId},e);
+  }
+  while (!pe.isEOF()) {
+    if (in.isEOF()) {
+      in=in.pop();
+      continue;
+    }
+    doLexicalPE=false;
+    if (maybeWhitespace())     continue;
+    if (maybePEReference())     continue;
+    doLexicalPE=true;
+    if (maybeMarkupDecl() || maybeConditionalSect())     continue;
+    break;
+  }
+  if (!pe.isEOF())   fatal("P-059",new Object[]{in.getName()});
+  in=in.pop();
+  inExternalPE=!in.isDocument();
+  doLexicalPE=false;
+}

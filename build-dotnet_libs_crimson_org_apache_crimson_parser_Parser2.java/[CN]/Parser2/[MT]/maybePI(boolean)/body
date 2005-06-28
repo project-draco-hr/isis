@@ -1,0 +1,29 @@
+{
+  boolean savedLexicalPE=doLexicalPE;
+  if (!in.peek(skipStart ? "?" : "<?",null))   return false;
+  doLexicalPE=false;
+  String target=maybeGetName();
+  if (target == null)   fatal("P-018");
+  if ("xml".equals(target))   fatal("P-019");
+  if ("xml".equalsIgnoreCase(target))   fatal("P-020",new Object[]{target});
+  if (maybeWhitespace()) {
+    strTmp=new StringBuffer();
+    try {
+      for (; ; ) {
+        char c=in.getc();
+        if (c == '?' && in.peekc('>'))         break;
+        strTmp.append(c);
+      }
+    }
+ catch (    EndOfInputException e) {
+      fatal("P-021");
+    }
+    contentHandler.processingInstruction(target,strTmp.toString());
+  }
+ else {
+    if (!in.peek("?>",null))     fatal("P-022");
+    contentHandler.processingInstruction(target,"");
+  }
+  doLexicalPE=savedLexicalPE;
+  return true;
+}

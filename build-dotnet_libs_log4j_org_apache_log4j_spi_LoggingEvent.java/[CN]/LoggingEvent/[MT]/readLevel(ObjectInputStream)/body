@@ -1,0 +1,23 @@
+{
+  int p=ois.readInt();
+  try {
+    String className=(String)ois.readObject();
+    if (className == null) {
+      level=Level.toLevel(p);
+    }
+ else {
+      Method m=(Method)methodCache.get(className);
+      if (m == null) {
+        Class clazz=Loader.loadClass(className);
+        m=clazz.getDeclaredMethod(TO_LEVEL,TO_LEVEL_PARAMS);
+        methodCache.put(className,m);
+      }
+      PARAM_ARRAY[0]=new Integer(p);
+      level=(Level)m.invoke(null,PARAM_ARRAY);
+    }
+  }
+ catch (  Exception e) {
+    LogLog.warn("Level deserialization failed, reverting to default.",e);
+    level=Level.toLevel(p);
+  }
+}

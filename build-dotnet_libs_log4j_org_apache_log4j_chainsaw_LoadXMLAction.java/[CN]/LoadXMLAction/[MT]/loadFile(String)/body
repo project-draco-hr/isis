@@ -1,0 +1,16 @@
+{
+synchronized (mParser) {
+    final StringBuffer buf=new StringBuffer();
+    buf.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
+    buf.append("<!DOCTYPE log4j:eventSet ");
+    buf.append("[<!ENTITY data SYSTEM \"file:///");
+    buf.append(aFile);
+    buf.append("\">]>\n");
+    buf.append("<log4j:eventSet xmlns:log4j=\"Claira\">\n");
+    buf.append("&data;\n");
+    buf.append("</log4j:eventSet>\n");
+    final InputSource is=new InputSource(new StringReader(buf.toString()));
+    mParser.parse(is);
+    return mHandler.getNumEvents();
+  }
+}

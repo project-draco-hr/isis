@@ -1,0 +1,28 @@
+{
+  TreeWalker walker;
+  NodeBase n;
+  if (node.getOwnerDocument() == this)   return;
+  if (!(node instanceof NodeBase))   throw new DomEx(DomEx.WRONG_DOCUMENT_ERR);
+switch (node.getNodeType()) {
+case Node.DOCUMENT_NODE:
+case Node.ENTITY_NODE:
+case Node.NOTATION_NODE:
+case Node.DOCUMENT_TYPE_NODE:
+    throw new DomEx(DomEx.HIERARCHY_REQUEST_ERR);
+}
+if (node instanceof AttributeNode) {
+  AttributeNode attr=(AttributeNode)node;
+  Element scope=attr.getOwnerElement();
+  if (scope != null && scope.getOwnerDocument() != this)   throw new DomEx(DomEx.HIERARCHY_REQUEST_ERR);
+}
+n=(NodeBase)node.getParentNode();
+if (n != null) n.removeChild(node);
+for (walker=new TreeWalker(node), n=(NodeBase)walker.getCurrent(); n != null; n=(NodeBase)walker.getNext()) {
+  n.setOwnerDocument(this);
+  if (n instanceof Element) {
+    NamedNodeMap list=n.getAttributes();
+    int length=list.getLength();
+    for (int i=0; i < length; i++)     changeNodeOwner(list.item(i));
+  }
+}
+}

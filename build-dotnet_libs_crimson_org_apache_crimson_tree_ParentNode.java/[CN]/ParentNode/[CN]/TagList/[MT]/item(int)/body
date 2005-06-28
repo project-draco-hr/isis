@@ -1,0 +1,21 @@
+{
+  if (i < 0)   return null;
+  int temp=getLastMutationCount();
+  if (lastWalker != null) {
+    if (i < lastIndex || temp != lastMutationCount)     lastWalker=null;
+  }
+  if (lastWalker == null) {
+    lastWalker=new TreeWalker(ParentNode.this);
+    lastIndex=-1;
+    lastMutationCount=temp;
+  }
+  if (i == lastIndex)   return lastWalker.getCurrent();
+  Node node=null;
+  while (i > lastIndex && (node=lastWalker.getNextElement(tag)) != null) {
+    lastIndex++;
+  }
+  if (node == null) {
+    lastWalker=null;
+  }
+  return node;
+}

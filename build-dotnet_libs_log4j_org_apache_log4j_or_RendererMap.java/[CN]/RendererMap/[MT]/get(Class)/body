@@ -1,0 +1,12 @@
+{
+  ObjectRenderer r=null;
+  for (Class c=clazz; c != null; c=c.getSuperclass()) {
+    r=(ObjectRenderer)map.get(c);
+    if (r != null) {
+      return r;
+    }
+    r=searchInterfaces(c);
+    if (r != null)     return r;
+  }
+  return defaultRenderer;
+}

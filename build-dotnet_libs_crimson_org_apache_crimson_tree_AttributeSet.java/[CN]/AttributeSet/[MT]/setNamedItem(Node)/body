@@ -1,0 +1,29 @@
+{
+  if (readonly) {
+    throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+  }
+  if (!(value instanceof AttributeNode) || value.getOwnerDocument() != ownerElement.getOwnerDocument()) {
+    throw new DomEx(DomEx.WRONG_DOCUMENT_ERR);
+  }
+  AttributeNode att=(AttributeNode)value;
+  if (att.getOwnerElement() != null) {
+    throw new DomEx(DomEx.INUSE_ATTRIBUTE_ERR);
+  }
+  int length=list.size();
+  AttributeNode oldAtt;
+  for (int i=0; i < length; i++) {
+    oldAtt=(AttributeNode)item(i);
+    if (oldAtt.getNodeName().equals(value.getNodeName())) {
+      if (oldAtt.isReadonly()) {
+        throw new DomEx(DomEx.NO_MODIFICATION_ALLOWED_ERR);
+      }
+      att.setOwnerElement(ownerElement);
+      list.setElementAt(att,i);
+      oldAtt.setOwnerElement(null);
+      return oldAtt;
+    }
+  }
+  att.setOwnerElement(ownerElement);
+  list.addElement(value);
+  return null;
+}

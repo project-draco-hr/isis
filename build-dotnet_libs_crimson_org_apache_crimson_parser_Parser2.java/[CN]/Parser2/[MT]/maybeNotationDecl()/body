@@ -1,0 +1,31 @@
+{
+  InputEntity start=peekDeclaration("!NOTATION");
+  if (start == null)   return false;
+  String name=getMarkupDeclname("F-019",false);
+  ExternalEntity entity=new ExternalEntity(in);
+  whitespace("F-011");
+  if (peek("PUBLIC")) {
+    whitespace("F-009");
+    entity.publicId=parsePublicId();
+    if (maybeWhitespace()) {
+      if (!peek(">"))       entity.systemId=parseSystemId();
+ else       ungetc();
+    }
+  }
+ else   if (peek("SYSTEM")) {
+    whitespace("F-008");
+    entity.systemId=parseSystemId();
+  }
+ else   fatal("P-062");
+  maybeWhitespace();
+  nextChar('>',"F-032",name);
+  if (supportValidation && isValidating && start != in)   error("V-013",null);
+  if (entity.systemId != null && entity.systemId.indexOf('#') != -1)   error("P-056",new Object[]{entity.systemId});
+  Object value=notations.get(name);
+  if (value != null && value instanceof ExternalEntity)   warning("P-063",new Object[]{name});
+ else   if (!ignoreDeclarations) {
+    notations.put(name,entity);
+    dtdHandler.notationDecl(name,entity.publicId,entity.systemId);
+  }
+  return true;
+}

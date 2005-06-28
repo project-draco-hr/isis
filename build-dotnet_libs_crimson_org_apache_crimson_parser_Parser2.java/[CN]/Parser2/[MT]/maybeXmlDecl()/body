@@ -1,0 +1,14 @@
+{
+  if (!in.isXmlDeclOrTextDeclPrefix()) {
+    return;
+  }
+  peek("<?xml");
+  readVersion(true,"1.0");
+  readEncoding(false);
+  readStandalone();
+  maybeWhitespace();
+  if (!peek("?>")) {
+    char c=getc();
+    fatal("P-023",new Object[]{Integer.toHexString(c),new Character(c)});
+  }
+}

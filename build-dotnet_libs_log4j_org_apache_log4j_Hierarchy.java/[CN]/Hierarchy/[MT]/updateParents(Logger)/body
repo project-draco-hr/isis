@@ -1,0 +1,27 @@
+{
+  String name=cat.name;
+  int length=name.length();
+  boolean parentFound=false;
+  for (int i=name.lastIndexOf('.',length - 1); i >= 0; i=name.lastIndexOf('.',i - 1)) {
+    String substr=name.substring(0,i);
+    CategoryKey key=new CategoryKey(substr);
+    Object o=ht.get(key);
+    if (o == null) {
+      ProvisionNode pn=new ProvisionNode(cat);
+      ht.put(key,pn);
+    }
+ else     if (o instanceof Category) {
+      parentFound=true;
+      cat.parent=(Category)o;
+      break;
+    }
+ else     if (o instanceof ProvisionNode) {
+      ((ProvisionNode)o).addElement(cat);
+    }
+ else {
+      Exception e=new IllegalStateException("unexpected object type " + o.getClass() + " in ht.");
+      e.printStackTrace();
+    }
+  }
+  if (!parentFound)   cat.parent=root;
+}

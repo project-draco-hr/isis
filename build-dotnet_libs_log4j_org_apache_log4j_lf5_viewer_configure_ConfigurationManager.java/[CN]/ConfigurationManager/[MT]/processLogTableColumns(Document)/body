@@ -1,0 +1,29 @@
+{
+  NodeList nodeList=doc.getElementsByTagName(COLUMN);
+  Map menuItems=_monitor.getLogTableColumnMenuItems();
+  List selectedColumns=new ArrayList();
+  for (int i=0; i < nodeList.getLength(); i++) {
+    Node n=nodeList.item(i);
+    if (n == null) {
+      return;
+    }
+    NamedNodeMap map=n.getAttributes();
+    String name=getValue(map,NAME);
+    try {
+      LogTableColumn column=LogTableColumn.valueOf(name);
+      JCheckBoxMenuItem item=(JCheckBoxMenuItem)menuItems.get(column);
+      item.setSelected(getValue(map,SELECTED).equalsIgnoreCase("true"));
+      if (item.isSelected()) {
+        selectedColumns.add(column);
+      }
+    }
+ catch (    LogTableColumnFormatException e) {
+    }
+    if (selectedColumns.isEmpty()) {
+      _table.setDetailedView();
+    }
+ else {
+      _table.setView(selectedColumns);
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  PropertySetter propSetter=new PropertySetter(cat);
+  cat.removeAllAppenders();
+  NodeList children=catElement.getChildNodes();
+  final int length=children.getLength();
+  for (int loop=0; loop < length; loop++) {
+    Node currentNode=children.item(loop);
+    if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+      Element currentElement=(Element)currentNode;
+      String tagName=currentElement.getTagName();
+      if (tagName.equals(APPENDER_REF_TAG)) {
+        Element appenderRef=(Element)currentNode;
+        Appender appender=findAppenderByReference(appenderRef);
+        String refName=subst(appenderRef.getAttribute(REF_ATTR));
+        if (appender != null)         LogLog.debug("Adding appender named [" + refName + "] to category ["+ cat.getName()+ "].");
+ else         LogLog.debug("Appender named [" + refName + "] not found.");
+        cat.addAppender(appender);
+      }
+ else       if (tagName.equals(LEVEL_TAG)) {
+        parseLevel(currentElement,cat,isRoot);
+      }
+ else       if (tagName.equals(PRIORITY_TAG)) {
+        parseLevel(currentElement,cat,isRoot);
+      }
+ else       if (tagName.equals(PARAM_TAG)) {
+        setParameter(currentElement,propSetter);
+      }
+    }
+  }
+  propSetter.activate();
+}

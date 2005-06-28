@@ -1,0 +1,28 @@
+{
+  LOG.debug("Starting to get data");
+  try {
+    final ObjectInputStream ois=new ObjectInputStream(mClient.getInputStream());
+    while (true) {
+      final LoggingEvent event=(LoggingEvent)ois.readObject();
+      mModel.addEvent(new EventDetails(event));
+    }
+  }
+ catch (  EOFException e) {
+    LOG.info("Reached EOF, closing connection");
+  }
+catch (  SocketException e) {
+    LOG.info("Caught SocketException, closing connection");
+  }
+catch (  IOException e) {
+    LOG.warn("Got IOException, closing connection",e);
+  }
+catch (  ClassNotFoundException e) {
+    LOG.warn("Got ClassNotFoundException, closing connection",e);
+  }
+  try {
+    mClient.close();
+  }
+ catch (  IOException e) {
+    LOG.warn("Error closing connection",e);
+  }
+}

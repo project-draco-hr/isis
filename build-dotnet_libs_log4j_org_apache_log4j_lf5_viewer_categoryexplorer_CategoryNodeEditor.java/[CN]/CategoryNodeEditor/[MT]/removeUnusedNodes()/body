@@ -1,0 +1,13 @@
+{
+  int count=0;
+  CategoryNode root=_categoryModel.getRootCategoryNode();
+  Enumeration enum=root.depthFirstEnumeration();
+  while (enum.hasMoreElements()) {
+    CategoryNode node=(CategoryNode)enum.nextElement();
+    if (node.isLeaf() && node.getNumberOfContainedRecords() == 0 && node.getParent() != null) {
+      _categoryModel.removeNodeFromParent(node);
+      count++;
+    }
+  }
+  return count;
+}

@@ -1,0 +1,15 @@
+{
+  CategoryExplorerTree tree=_monitor.getCategoryExplorerTree();
+  CategoryExplorerModel model=tree.getExplorerModel();
+  NodeList nodeList=doc.getElementsByTagName(CATEGORY);
+  NamedNodeMap map=nodeList.item(0).getAttributes();
+  int j=(getValue(map,NAME).equalsIgnoreCase(FIRST_CATEGORY_NAME)) ? 1 : 0;
+  for (int i=nodeList.getLength() - 1; i >= j; i--) {
+    Node n=nodeList.item(i);
+    map=n.getAttributes();
+    CategoryNode chnode=model.addCategory(new CategoryPath(getValue(map,PATH)));
+    chnode.setSelected((getValue(map,SELECTED).equalsIgnoreCase("true")) ? true : false);
+    if (getValue(map,EXPANDED).equalsIgnoreCase("true"))     ;
+    tree.expandPath(model.getTreePathToRoot(chnode));
+  }
+}

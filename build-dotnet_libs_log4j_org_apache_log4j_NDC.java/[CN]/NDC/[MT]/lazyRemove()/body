@@ -1,0 +1,30 @@
+{
+  Vector v;
+synchronized (ht) {
+    if (++pushCounter <= REAP_THRESHOLD) {
+      return;
+    }
+ else {
+      pushCounter=0;
+    }
+    int misses=0;
+    v=new Vector();
+    Enumeration enum=ht.keys();
+    while (enum.hasMoreElements() && (misses <= 4)) {
+      Thread t=(Thread)enum.nextElement();
+      if (t.isAlive()) {
+        misses++;
+      }
+ else {
+        misses=0;
+        v.addElement(t);
+      }
+    }
+  }
+  int size=v.size();
+  for (int i=0; i < size; i++) {
+    Thread t=(Thread)v.elementAt(i);
+    LogLog.debug("Lazy NDC removal for thread [" + t.getName() + "] ("+ ht.size()+ ").");
+    ht.remove(t);
+  }
+}

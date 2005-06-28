@@ -1,0 +1,14 @@
+{
+  String className=BaseTestRunner.getPreference(FAILUREDETAILVIEW_KEY);
+  if (className != null) {
+    Class viewClass=null;
+    try {
+      viewClass=Class.forName(className);
+      return (FailureDetailView)viewClass.newInstance();
+    }
+ catch (    Exception e) {
+      JOptionPane.showMessageDialog(fFrame,"Could not create Failure DetailView - using default view");
+    }
+  }
+  return new DefaultFailureDetailView();
+}

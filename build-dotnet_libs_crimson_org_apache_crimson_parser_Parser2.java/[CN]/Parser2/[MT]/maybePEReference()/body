@@ -1,0 +1,21 @@
+{
+  if (!in.peekc('%'))   return false;
+  String name=maybeGetName();
+  Object entity;
+  if (name == null)   fatal("P-011");
+  nextChar(';',"F-021",name);
+  entity=params.get(name);
+  if (entity instanceof InternalEntity) {
+    InternalEntity value=(InternalEntity)entity;
+    pushReader(value.buf,name,false);
+  }
+ else   if (entity instanceof ExternalEntity) {
+    externalParameterEntity((ExternalEntity)entity);
+  }
+ else   if (entity == null) {
+    ignoreDeclarations=true;
+    if (supportValidation && isValidating)     error("V-022",new Object[]{name});
+ else     warning("V-022",new Object[]{name});
+  }
+  return true;
+}

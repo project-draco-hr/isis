@@ -1,0 +1,27 @@
+{
+  String className=subst(layout_element.getAttribute(CLASS_ATTR));
+  LogLog.debug("Parsing layout of class: \"" + className + "\"");
+  try {
+    Object instance=Loader.loadClass(className).newInstance();
+    Layout layout=(Layout)instance;
+    PropertySetter propSetter=new PropertySetter(layout);
+    NodeList params=layout_element.getChildNodes();
+    final int length=params.getLength();
+    for (int loop=0; loop < length; loop++) {
+      Node currentNode=(Node)params.item(loop);
+      if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element currentElement=(Element)currentNode;
+        String tagName=currentElement.getTagName();
+        if (tagName.equals(PARAM_TAG)) {
+          setParameter(currentElement,propSetter);
+        }
+      }
+    }
+    propSetter.activate();
+    return layout;
+  }
+ catch (  Exception oops) {
+    LogLog.error("Could not create the Layout. Reported error follows.",oops);
+    return null;
+  }
+}

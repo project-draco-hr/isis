@@ -1,0 +1,20 @@
+{
+  CategoryNode node=(CategoryNode)value;
+  super.getTreeCellRendererComponent(tree,value,selected,expanded,leaf,row,hasFocus);
+  if (row == 0) {
+    _checkBox.setVisible(false);
+  }
+ else {
+    _checkBox.setVisible(true);
+    _checkBox.setSelected(node.isSelected());
+  }
+  String toolTip=buildToolTip(node);
+  _panel.setToolTipText(toolTip);
+  if (node.hasFatalChildren()) {
+    this.setForeground(FATAL_CHILDREN);
+  }
+  if (node.hasFatalRecords()) {
+    this.setForeground(Color.red);
+  }
+  return _panel;
+}

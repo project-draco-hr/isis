@@ -1,0 +1,49 @@
+{
+switch (model.type) {
+case '+':
+case '*':
+    if (model.first(token)) {
+      sawOne=true;
+      if (model.content instanceof String)       return this;
+      return new ContentModelState(model.content,this).advance(token);
+    }
+  if ((model.type == '*' || sawOne) && next != null)   return next.advance(token);
+break;
+case '?':
+if (model.first(token)) {
+if (model.content instanceof String) return next;
+return new ContentModelState(model.content,next).advance(token);
+}
+if (next != null) return next.advance(token);
+break;
+case '|':
+for (ContentModel m=model; m != null; m=m.next) {
+if (m.content instanceof String) {
+if (token == m.content) return next;
+continue;
+}
+if (((ContentModel)m.content).first(token)) return new ContentModelState(m.content,next).advance(token);
+}
+if (model.empty() && next != null) return next.advance(token);
+break;
+case ',':
+if (model.first(token)) {
+ContentModelState nextState;
+if (model.type == 0) return next;
+if (model.next == null) nextState=new ContentModelState(model.content,next);
+ else {
+nextState=new ContentModelState(model.content,this);
+model=model.next;
+}
+return nextState.advance(token);
+}
+ else if (model.empty() && next != null) {
+return next.advance(token);
+}
+break;
+case 0:
+if (model.content == token) return next;
+default :
+}
+throw new EndOfInputException();
+}

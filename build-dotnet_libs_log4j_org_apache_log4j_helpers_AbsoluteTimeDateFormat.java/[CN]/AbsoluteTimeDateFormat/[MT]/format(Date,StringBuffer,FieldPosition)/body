@@ -1,0 +1,35 @@
+{
+  long now=date.getTime();
+  int millis=(int)(now % 1000);
+  if ((now - millis) != previousTime) {
+    calendar.setTime(date);
+    int start=sbuf.length();
+    int hour=calendar.get(Calendar.HOUR_OF_DAY);
+    if (hour < 10) {
+      sbuf.append('0');
+    }
+    sbuf.append(hour);
+    sbuf.append(':');
+    int mins=calendar.get(Calendar.MINUTE);
+    if (mins < 10) {
+      sbuf.append('0');
+    }
+    sbuf.append(mins);
+    sbuf.append(':');
+    int secs=calendar.get(Calendar.SECOND);
+    if (secs < 10) {
+      sbuf.append('0');
+    }
+    sbuf.append(secs);
+    sbuf.append(',');
+    sbuf.getChars(start,sbuf.length(),previousTimeWithoutMillis,0);
+    previousTime=now - millis;
+  }
+ else {
+    sbuf.append(previousTimeWithoutMillis);
+  }
+  if (millis < 100)   sbuf.append('0');
+  if (millis < 10)   sbuf.append('0');
+  sbuf.append(millis);
+  return sbuf;
+}
