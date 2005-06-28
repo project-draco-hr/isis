@@ -1,0 +1,45 @@
+{
+  out.println("<h2>" + image(object,0) + object.titleString()+ "</h2>");
+  out.println("<form  action=\"object\">");
+  out.println("<table width=80% cellpadding=3>");
+  NakedObjectField[] fields;
+  fields=object.getVisibleFields();
+  for (int i=0; i < fields.length; i++) {
+    NakedObjectField field=fields[i];
+    NakedObjectSpecification type=field.getSpecification();
+    Naked element=object.getField(field);
+    out.println("<tr><th valign=top align=right>" + field.getName() + ":</th><td valign=top>");
+    getServletContext().log("requesting " + type + " for "+ field.getName());
+    if (element instanceof InternalCollection) {
+      out.print("collection of objecrts");
+      listContents(out,(NakedCollection)element,object);
+    }
+ else     if (Logical.class.isAssignableFrom(type)) {
+      out.println(element.title().toString());
+    }
+ else     if (NakedValue.class.isAssignableFrom(type)) {
+      if (false && (field.getType() == TextString.class)) {
+        out.print(element.title().toString());
+      }
+ else {
+        out.print("<input type=\"text\" name=\"" + field.getName() + "\" value=\"");
+        out.print(element.title().toString());
+        out.print("\">");
+      }
+    }
+ else {
+      if (element == null) {
+        out.println("<i>no entry</i>");
+        out.println("<input type=\"submit\" value=\"add\">");
+        out.println("&nbsp;<button name=add-field value=" + URLEncoder.encode(field.getName(),ENCODING) + " type=submit>remove</button>");
+      }
+ else {
+        out.print(objectLink((NakedObject)element));
+        out.println("&nbsp;<button name=remove-field value=" + URLEncoder.encode(field.getName(),ENCODING) + " type=submit>remove</button>");
+      }
+    }
+    out.println("</td></tr>");
+  }
+  out.println("</table>");
+  out.println("</form>");
+}

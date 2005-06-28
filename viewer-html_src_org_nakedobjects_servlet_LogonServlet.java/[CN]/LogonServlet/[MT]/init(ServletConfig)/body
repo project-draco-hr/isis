@@ -1,0 +1,51 @@
+{
+  super.init(config);
+  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader("nakedobjects.properties",false));
+  NakedObjects nakedObjects=new NakedObjectsClient();
+  nakedObjects.setConfiguration(configuration);
+  JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
+  JavaObjectFactory objectFactory=new JavaObjectFactory();
+  objectFactory.setContainer(container);
+  container.setObjectFactory(objectFactory);
+  TransientObjectStore objectStore=new TransientObjectStore();
+  OidGenerator oidGenerator=new SimpleOidGenerator();
+  LocalObjectManager objectManager=new LocalObjectManager();
+  objectManager.setObjectStore(objectStore);
+  objectManager.setObjectFactory(objectFactory);
+  objectManager.setOidGenerator(oidGenerator);
+  nakedObjects.setObjectManager(objectManager);
+  NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
+  nakedObjects.setSpecificationLoader(specificationLoader);
+  LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
+  HelpManagerAssist helpManager=new HelpManagerAssist();
+  helpManager.setDecorated(new SimpleHelpManager());
+  reflectionFactory.setHelpManager(helpManager);
+  JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
+  PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
+  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
+  pojoAdapterFactory.setReflectorFactory(reflectorFactory);
+  nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+  NakedObjectSpecificationImpl.setReflectionFactory(reflectionFactory);
+  specificationLoader.setReflectorFactory(reflectorFactory);
+  reflectorFactory.setObjectFactory(objectFactory);
+  nakedObjects.setSession(new SimpleSession());
+  try {
+    objectManager.init();
+  }
+ catch (  StartupException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+  JavaFixtureBuilder builder=new JavaFixtureBuilder();
+  CitiesFixture cities;
+  builder.addFixture(cities=new CitiesFixture());
+  builder.addFixture(new BookingsFixture(cities));
+  builder.addFixture(new ClassesFixture());
+  builder.installFixtures();
+  String[] classes=builder.getClasses();
+  context=new WebApplicationContext();
+  context.setName("ECS Example");
+  for (int i=0; i < classes.length; i++) {
+    context.addClass(classes[i]);
+  }
+  config.getServletContext().log("Initializing the logon servlet");
+}

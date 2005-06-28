@@ -1,0 +1,35 @@
+{
+  ServletOutputStream out=response.getOutputStream();
+  DataInputStream fileInputStream=null;
+  response.setStatus(HttpServletResponse.SC_OK);
+  response.setContentType("text/html");
+  out.println("<p>[ClassViewerServlet]");
+  try {
+    HttpSession session=request.getSession(false);
+    if (session == null) {
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Out of session");
+    }
+    WebApplicationContext context=(WebApplicationContext)session.getAttribute("context");
+    out.println("<h1>" + context.name() + "</h1>");
+    Vector classes=context.getClasses();
+    Enumeration e=classes.elements();
+    while (e.hasMoreElements()) {
+      NakedClass element=(NakedClass)e.nextElement();
+      out.println("<p>" + image(element.getShortName(),32) + element.title()+ " <a href=\"/instances?class="+ element.getFullName()+ "\">list</a>  <a href=\"/newinstance?class="+ element.getFullName()+ "\">new</a>");
+    }
+    out.flush();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    return;
+  }
+ finally {
+    if (fileInputStream != null) {
+      try {
+        fileInputStream.close();
+      }
+ catch (      IOException ignore) {
+      }
+    }
+  }
+}

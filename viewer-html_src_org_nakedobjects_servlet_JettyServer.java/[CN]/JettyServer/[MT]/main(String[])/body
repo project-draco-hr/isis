@@ -1,0 +1,19 @@
+{
+  BasicConfigurator.configure();
+  Logger.getRootLogger().setLevel(Level.ALL);
+  Server server=new Server();
+  SocketListener listener=new SocketListener();
+  listener.setPort(2080);
+  server.addListener(listener);
+  HttpContext context=new HttpContext();
+  context.setContextPath("/");
+  ServletHandler servlets=new ServletHandler();
+  context.addHandler(servlets);
+  servlets.addServlet("logon","/logon/*","org.nakedobjects.servlet.LogonServlet");
+  servlets.addServlet("classes","/classes/*","org.nakedobjects.servlet.ClassViewerServlet");
+  servlets.addServlet("instances","/instances/*","org.nakedobjects.servlet.InstancesServlet");
+  context.setResourceBase("D:\\no-development\\nakedobjects\\viewer-html\\src\\web");
+  context.addHandler(new ResourceHandler());
+  server.addContext(context);
+  server.start();
+}

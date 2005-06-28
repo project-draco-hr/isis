@@ -1,0 +1,44 @@
+{
+  ServletOutputStream out=response.getOutputStream();
+  DataInputStream fileInputStream=null;
+  try {
+    response.setStatus(HttpServletResponse.SC_OK);
+    response.setContentType("text/html");
+    String cls=request.getParameter("class");
+    String returnId=request.getParameter("return");
+    NakedObjectSpecification spec=NakedObjects.getSpecificationLoader().loadSpecification(cls);
+    out.println("<h2>" + spec.getPluralName() + "</h2>");
+    NakedCollection c=NakedObjects.getObjectManager().allInstances(spec,false);
+    Enumeration e=c.elements();
+    while (e.hasMoreElements()) {
+      NakedObject instance=(NakedObject)e.nextElement();
+      out.println("<p> <a href=\"object?id=" + serialNumber(instance) + "\">"+ image(instance,16)+ instance.titleString().toString()+ "</a> ");
+    }
+    out.println("<hr>");
+    out.println("<p><small>To <a href=\"/classes\">classes</a> list</small><p>");
+    out.println("<p><small>Log <a href=\"/logout\">out</a></small><p>");
+    if (returnId != null) {
+      NakedObject returnObject=NakedObjects.getObjectManager().getObject(new SerialOid(Long.valueOf(returnId).longValue()),null);
+      String param="id=" + returnId;
+      out.println("<p><small>Return to <a href=\"object?" + param + "\">"+ image(returnObject,16)+ returnObject.titleString().toString()+ "<small></a> ");
+    }
+    out.flush();
+  }
+ catch (  ObjectStoreException e) {
+    out.println("<p>Exception in object store " + e);
+  }
+catch (  IOException e) {
+    System.err.println("IO Error " + e);
+    e.printStackTrace();
+    return;
+  }
+ finally {
+    if (fileInputStream != null) {
+      try {
+        fileInputStream.close();
+      }
+ catch (      IOException ignoree) {
+      }
+    }
+  }
+}

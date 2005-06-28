@@ -1,0 +1,35 @@
+{
+  String tag="h" + (level + 2);
+  String element=level == 0 ? image(object,0) + object.titleString() : objectLink(object);
+  if (level < 2) {
+    out.println("<table cellpadding=3>");
+    out.println("<tr><th valign=top align=left colspan=\"2\"><" + tag + ">"+ element+ "</"+ tag+ "></th></tr>");
+    NakedObjectField[] fields;
+    fields=object.getVisibleFields();
+    for (int i=0; i < fields.length; i++) {
+      NakedObjectField field=fields[i];
+      NakedObjectSpecification type=field.getSpecification();
+      Naked content=object.getField(field);
+      out.println("<tr><th valign=top align=left>" + field.getName() + ":</th><td valign=top>");
+      if (content instanceof InternalCollection) {
+        viewContents(out,(NakedCollection)content,object,level);
+      }
+ else       if (Logical.class.isAssignableFrom(type)) {
+        out.println(content.title().toString());
+      }
+ else       if (NakedValue.class.isAssignableFrom(type)) {
+        out.print(content.title().toString());
+      }
+ else {
+        if (content != null) {
+          view(out,(NakedObject)content,level + 1);
+        }
+      }
+      out.println("</td></tr>");
+    }
+    out.println("</table>");
+  }
+ else {
+    out.println("<" + tag + ">"+ element+ "</"+ tag+ ">");
+  }
+}
