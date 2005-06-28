@@ -1,0 +1,37 @@
+{
+  addFixture(new JavaFixture(){
+    public void install(){
+      Locale.setDefault(Locale.FRANCE);
+      ExplorationClock clock=new ExplorationClock();
+      registerClass(Booking.class);
+      registerClass(City.class);
+      registerClass(Customer.class);
+      registerClass(Location.class);
+      registerClass(CreditCard.class);
+      registerClass(Telephone.class);
+      createCity("Boston");
+      createCity("New York");
+      City city=createCity("Chicago");
+      createCity("Washington");
+      createCity("Philadelphia");
+      clock.setDate(2001,12,14);
+      createInstance(Location.class);
+      createInstance(Location.class);
+      createInstance(Location.class);
+      Location l=(Location)createInstance(Location.class);
+      l.getKnownAs().setValue("home");
+      l.setCity(city);
+      Booking b=(Booking)createInstance(Booking.class);
+      b.setPickUp(l);
+      Customer c=(Customer)createInstance(Customer.class);
+      c.getFirstName().setValue("Harry");
+      b.associateCustomer(c);
+    }
+    private City createCity(    String name){
+      City city=(City)createInstance(City.class);
+      city.setName(name);
+      return city;
+    }
+  }
+);
+}

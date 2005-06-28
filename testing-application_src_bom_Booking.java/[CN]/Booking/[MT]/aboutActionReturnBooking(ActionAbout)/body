@@ -1,0 +1,9 @@
+{
+  about.setDescription("Creates a new Booking based on the current booking.  The new booking has the pick up amd drop off locations reversed.");
+  about.unusableOnCondition(!getStatus().isSameAs("Confirmed"),"Can only create a return based on a confirmed booking");
+  about.unusableOnCondition(getPickUp() == null,"Pick Up location required");
+  about.unusableOnCondition(getDropOff() == null,"Drop Off location required");
+  if (getPickUp() != null) {
+    about.changeNameIfUsable("Return booking to " + getPickUp().title());
+  }
+}

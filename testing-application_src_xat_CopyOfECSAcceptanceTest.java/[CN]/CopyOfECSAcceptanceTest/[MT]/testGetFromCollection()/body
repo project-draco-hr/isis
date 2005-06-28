@@ -1,0 +1,25 @@
+{
+  TestObject customer=getTestClass(Customer.class.getName()).newInstance();
+  TestObject location1=getTestClass(Location.class.getName()).newInstance();
+  location1.fieldEntry("knownas","one");
+  TestObject location2=getTestClass(Location.class.getName()).newInstance();
+  location2.fieldEntry("knownas","two");
+  TestObject location3=getTestClass(Location.class.getName()).newInstance();
+  location3.fieldEntry("knownas","one");
+  customer.associate("locations",location1);
+  customer.assertFieldContains("locations",location1);
+  customer.associate("locations",location2);
+  customer.assertFieldContains("locations",location2);
+  customer.associate("locations",location3);
+  customer.assertFieldContains("locations",location3);
+  customer.assertNoOfElements("locations",3);
+  customer.assertFieldContains("locations","one");
+  customer.assertFieldContains("locations","two");
+  TestObject pick=customer.getField("locations","two");
+  assertEquals(location2,pick);
+  try {
+    customer.getField("locations","one");
+  }
+ catch (  IllegalActionError expected) {
+  }
+}

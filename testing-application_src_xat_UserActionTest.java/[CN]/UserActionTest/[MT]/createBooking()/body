@@ -1,0 +1,35 @@
+{
+  TestObject booking=getTestClass(Booking.class.getName()).newInstance();
+  TestObject city=getTestClass(City.class.getName()).findInstance("New York");
+  booking.associate("City",city);
+  TestObject customer=getTestClass(Customer.class.getName()).newInstance();
+  booking.associate("Customer",customer);
+  customer.fieldEntry("First Name","Richard");
+  customer.fieldEntry("Last Name","Pawson");
+  TestObject pickup=city.invokeActionReturnObject("New Location",NO_PARAMETERS);
+  pickup.fieldEntry("Street Address","234 E 42nd Street");
+  booking.associate("Pick Up",pickup);
+  TestObject dropoff=city.invokeActionReturnObject("New Location",NO_PARAMETERS);
+  dropoff.fieldEntry("Street Address","JFK Airport, BA Terminal");
+  booking.associate("Drop Off",dropoff);
+  booking.fieldEntry("Date","+2");
+  booking.fieldEntry("Time","14:30:00 PM");
+  booking.assertFieldContains("Time",new Time(14,30));
+  booking.assertFieldContains("Date",new Date(2001,12,16));
+  TestObject payment=getTestClass(CreditCard.class.getName()).newInstance();
+  booking.associate("Payment Method",payment);
+  payment.fieldEntry("Name On Card","Richard W Pawson");
+  payment.fieldEntry("Number","4927834512344535");
+  payment.fieldEntry("Expires","01/04");
+  TestObject phone=getTestClass(Telephone.class.getName()).newInstance();
+  booking.associate("Contact Telephone",phone);
+  phone.fieldEntry("Number","6175551234");
+  phone.fieldEntry("Known As","Mobile");
+  customer.associate("Phone Numbers",phone);
+  booking.invokeAction("Check Availability",NO_PARAMETERS);
+  booking.assertFieldContains("Status","Available");
+  booking.invokeAction("Confirm",NO_PARAMETERS);
+  booking.assertFieldContains("Status","Confirmed");
+  customer.assertFieldContains("Locations",pickup);
+  customer.assertFieldContains("Locations",dropoff);
+}

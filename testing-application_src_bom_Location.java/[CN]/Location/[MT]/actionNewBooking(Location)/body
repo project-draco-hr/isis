@@ -1,0 +1,13 @@
+{
+  Booking booking=(Booking)container.createTransientInstance(Booking.class);
+  Customer customer=location.getCustomer();
+  booking.setPickUp(location);
+  booking.setDropOff(this);
+  booking.setCity(location.getCity());
+  container.makePersistent(booking);
+  if (customer != null) {
+    booking.associateCustomer(customer);
+    booking.setPaymentMethod(customer.getPreferredPaymentMethod());
+  }
+  return booking;
+}

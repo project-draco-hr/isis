@@ -1,0 +1,69 @@
+{
+  BasicConfigurator.configure();
+  NakedObjectsClient nakedObjects=new NakedObjectsClient();
+  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
+  nakedObjects.setConfiguration(configuration);
+  if (NakedObjects.getConfiguration().getString(SHOW_EXPLORATION_OPTIONS) == null) {
+    NakedObjects.getConfiguration().add(SHOW_EXPLORATION_OPTIONS,"yes");
+  }
+  PropertyConfigurator.configure(NakedObjects.getConfiguration().getProperties("log4j"));
+  Logger log=Logger.getLogger("Naked Objects");
+  log.info(AboutNakedObjects.getName());
+  log.info(AboutNakedObjects.getVersion());
+  log.info(AboutNakedObjects.getBuildId());
+  setUpLocale();
+  SplashWindow splash=null;
+  boolean noSplash=configuration.getBoolean("nosplash",false);
+  if (!noSplash) {
+    splash=new SplashWindow();
+  }
+  try {
+    JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
+    JavaObjectFactory objectFactory=new JavaObjectFactory();
+    objectFactory.setContainer(container);
+    container.setObjectFactory(objectFactory);
+    TransientObjectStore tos=new TransientObjectStore();
+    NakedObjectStore objectStore=new ObjectStoreLogger(tos,"store.log");
+    OidGenerator oidGenerator=new SimpleOidGenerator();
+    LocalObjectManager lom=new LocalObjectManager();
+    lom.setObjectStore(objectStore);
+    lom.setObjectFactory(objectFactory);
+    lom.setOidGenerator(oidGenerator);
+    lom.setCheckObjectsForDirtyFlag(true);
+    NakedObjectManager objectManager=new ObjectManagerLogger(lom,"manager.log");
+    nakedObjects.setObjectManager(objectManager);
+    NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
+    nakedObjects.setSpecificationLoader(specificationLoader);
+    LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
+    JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
+    PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
+    pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
+    pojoAdapterFactory.setReflectorFactory(reflectorFactory);
+    nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+    nakedObjects.setReflectionFactory(reflectionFactory);
+    nakedObjects.setReflectorFactory(reflectorFactory);
+    reflectorFactory.setObjectFactory(objectFactory);
+    JavaFixtureBuilder fixtureBuilder=new JavaFixtureBuilder();
+    fixtureBuilder.addFixture(new EcsFixture());
+    fixtureBuilder.installFixtures();
+    nakedObjects.setSession(new SimpleSession());
+    SkylarkViewer viewer=new SkylarkViewer();
+    viewer.setUpdateNotifier(new ViewUpdateNotifier());
+    Context ecs=new Context();
+    viewer.setApplication(ecs);
+    viewer.setShutdownListener(new ObjectViewingMechanismListener(){
+      public void viewerClosing(){
+        System.out.println("EXITED");
+        System.exit(0);
+      }
+    }
+);
+    viewer.init();
+  }
+  finally {
+    if (splash != null) {
+      splash.toFront();
+      splash.removeAfterDelay(3);
+    }
+  }
+}
