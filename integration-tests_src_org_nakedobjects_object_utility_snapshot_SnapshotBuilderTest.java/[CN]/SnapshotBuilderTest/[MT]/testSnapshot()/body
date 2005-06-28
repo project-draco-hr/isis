@@ -1,10 +1,11 @@
 {
-  ConfigurationFactory.setConfiguration(new Configuration());
+  NakedObjectsClient nakedObjects=new NakedObjectsClient();
+  nakedObjects.setConfiguration(new Configuration());
   new NakedObjectSpecificationLoaderImpl();
-  NakedObjectSpecificationImpl.setReflectorFactory(new JavaReflectorFactory());
-  NakedObjectSpecificationImpl.setReflectionFactory(new LocalReflectionFactory());
+  nakedObjects.setReflectorFactory(new JavaReflectorFactory());
+  nakedObjects.setReflectionFactory(new LocalReflectionFactory());
   TestObject testObject=new TestObject();
-  XmlSnapshot builder=new XmlSnapshot(PojoAdapter.createAdapter(testObject));
+  XmlSnapshot builder=new XmlSnapshot((NakedObject)nakedObjects.getPojoAdapterFactory().createAdapter(testObject));
   Element e=builder.getXmlElement();
   DomSerializer serializer=new DomSerializerCrimson();
   String xml=serializer.serialize(e);
