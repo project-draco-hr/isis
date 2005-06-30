@@ -1,14 +1,14 @@
 {
-  MockNakedObjectSpecification fieldSpec=new MockNakedObjectSpecification();
-  MockNakedObjectSpecification objectSpec=new MockNakedObjectSpecification();
+  DummyNakedObjectSpecification fieldSpec=new DummyNakedObjectSpecification();
+  DummyNakedObjectSpecification objectSpec=new DummyNakedObjectSpecification();
   OneToOneAssociation field1=new OneToOneAssociation("cls","one",fieldSpec,new MockOneToOnePeer());
   OneToManyAssociation field2=new OneToManyAssociation("cls","two",fieldSpec,new MockOneToManyPeer());
   objectSpec.setupFields(new NakedObjectField[]{field1,field2});
   object.setupSpecification(objectSpec);
   DummyNakedObject fieldObject=new DummyNakedObject();
-  object.setupField("one",fieldObject);
+  object.setupFieldValue("one",fieldObject);
   DummyNakedCollection fieldCollection=new DummyNakedCollection();
-  object.setupField("two",fieldCollection);
+  object.setupFieldValue("two",fieldCollection);
   target.expected.addExpectedMethod("fieldAccessorFor");
   target.expected.addExpectedParameter("two");
   target.setupField(field1);
