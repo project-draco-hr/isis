@@ -1,6 +1,13 @@
 {
   MockNakedObjectSpecificationLoader specLoader=new MockNakedObjectSpecificationLoader();
-  specLoader.addSpec(new NakedObjectSpecificationProvidingTitle());
+  DummyNakedObjectSpecification spec=new DummyNakedObjectSpecification();
+  spec.setupTitleObject(new ObjectTitle(){
+    public String title(    NakedObject object){
+      return "object title from specification";
+    }
+  }
+);
+  specLoader.addSpec(spec);
   nakedObjects.setSpecificationLoader(specLoader);
   NakedObject pa=pojoAdapterFactory.createNOAdapter(new TestPojo());
   pa.getSpecification();
