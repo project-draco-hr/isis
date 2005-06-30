@@ -1,0 +1,23 @@
+{
+  BasicConfigurator.configure();
+  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(COMMON_CONFIG,true));
+  PropertyConfigurator.configure(configuration.getProperties("log4j"));
+  AboutNakedObjects.logVersion();
+  SplashWindow splash=null;
+  boolean noSplash=configuration.getBoolean("nosplash",false);
+  if (!noSplash) {
+    splash=new SplashWindow();
+  }
+  try {
+    PipedConnection connection=new PipedConnection();
+    NakedObjectsPipe nakedObjects=new NakedObjectsPipe();
+    server(nakedObjects,connection);
+    client(nakedObjects,connection);
+  }
+  finally {
+    if (splash != null) {
+      splash.toFront();
+      splash.removeAfterDelay(3);
+    }
+  }
+}

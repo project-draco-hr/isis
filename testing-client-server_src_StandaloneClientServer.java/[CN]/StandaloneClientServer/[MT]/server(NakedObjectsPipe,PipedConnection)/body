@@ -1,0 +1,64 @@
+{
+  Runnable runnable=new Runnable(){
+    public void run(){
+      final PipedServer server=new PipedServer();
+      server.setConnection(connection);
+      nakedObjects.setConfiguration(new Configuration());
+      JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
+      new SystemClock();
+      TransientObjectStore objectStore=new TransientObjectStore();
+      DataFactory objectDataFactory=new JavaObjectDataFactory();
+      SingleResponseUpdateNotifier updateNotifier=new SingleResponseUpdateNotifier();
+      updateNotifier.setFactory(objectDataFactory);
+      JavaObjectFactory objectFactory=new JavaObjectFactory();
+      objectFactory.setContainer(container);
+      container.setObjectFactory(objectFactory);
+      OidGenerator oidGenerator=new SimpleOidGenerator();
+      LocalObjectManager objectManager=new LocalObjectManager();
+      objectManager.setObjectStore(objectStore);
+      objectManager.setObjectFactory(objectFactory);
+      objectManager.setOidGenerator(oidGenerator);
+      objectManager.setCheckObjectsForDirtyFlag(true);
+      nakedObjects.setObjectManager(objectManager);
+      LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
+      JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
+      reflectorFactory.setObjectFactory(objectFactory);
+      PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
+      pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
+      pojoAdapterFactory.setReflectorFactory(reflectorFactory);
+      nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+      nakedObjects.setReflectionFactory(reflectionFactory);
+      NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
+      nakedObjects.setReflectorFactory(reflectorFactory);
+      nakedObjects.setSpecificationLoader(specificationLoader);
+      ServerDistribution sd=new ServerDistribution();
+      sd.setObjectFactory(objectFactory);
+      sd.setObjectDataFactory(objectDataFactory);
+      server.setFacade(sd);
+      server.setUpdateNotifier(updateNotifier);
+      objectManager.addObjectChangedListener(updateNotifier);
+      JavaFixtureBuilder fb=new JavaFixtureBuilder();
+      CitiesFixture cities;
+      fb.addFixture(cities=new CitiesFixture());
+      fb.addFixture(new BookingsFixture(cities));
+      fb.addFixture(new ClassesFixture());
+      fb.installFixtures();
+      InfoDebugFrame debugFrame=new InfoDebugFrame(){
+        public void dialogClosing(){
+          System.exit(0);
+        }
+      }
+;
+      DebugInfo debugInfo=objectManager;
+      debugFrame.setInfo(debugInfo);
+      debugFrame.setBounds(500,300,1000,700);
+      debugFrame.refresh();
+      debugFrame.show();
+      server.run();
+    }
+  }
+;
+  Thread serverThread=new Thread(runnable,"server");
+  nakedObjects.setServer(serverThread);
+  serverThread.start();
+}
