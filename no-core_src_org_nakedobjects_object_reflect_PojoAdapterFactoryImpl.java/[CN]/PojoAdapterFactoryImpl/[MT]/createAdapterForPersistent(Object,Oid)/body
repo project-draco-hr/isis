@@ -1,0 +1,10 @@
+{
+  Assert.assertNotNull(oid);
+  Assert.assertFalse("Identity Map already contains object for OID " + oid,identityMap.containsKey(oid));
+  NakedObject adapter=createObjectAdapter(object);
+  LOG.debug("adding adapter for " + oid + " - "+ adapter);
+  identityMap.put(oid,adapter);
+  Assert.assertTrue(pojoMap.getPojo(object) == adapter);
+  Assert.assertTrue(identityMap.get(oid) == adapter);
+  return adapter;
+}

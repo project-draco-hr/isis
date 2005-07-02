@@ -1,0 +1,10 @@
+{
+  if (isIdentityKnown(oid)) {
+    return getAdapterFor(oid);
+  }
+  LOG.debug("recreating object " + specification.getFullName() + "/"+ oid);
+  Object object=objectFactory.recreateObject(specification);
+  PojoAdapter adapter=(PojoAdapter)createAdapterForPersistent(object,oid);
+  adapter.recreate(oid);
+  return adapter;
+}

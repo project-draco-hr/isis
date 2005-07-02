@@ -1,24 +1,6 @@
 {
-  if (object.isResolved()) {
-    LOG.debug("resolve requested, but already resolved: " + object);
-    return;
-  }
-  if (!isPersistent(object)) {
-    LOG.warn("ignoring resolve request as not a persistent object: " + object);
-    return;
-  }
+  Assert.assertFalse("only resolve object that are not yet resolved",object,object.isResolved());
+  Assert.assertTrue("only resolve object that are persistent",object,object.isPersistent());
   LOG.info("resolve-immediately: " + object);
-  try {
-    if (object.isResolved()) {
-      return;
-    }
- else {
-      object.setResolved();
-    }
-    objectStore.resolveImmediately(object);
-    objectsToBeSaved.remove(object);
-  }
- catch (  ObjectStoreException e) {
-    throw new NakedObjectRuntimeException(e);
-  }
+  objectStore.resolveImmediately(object);
 }

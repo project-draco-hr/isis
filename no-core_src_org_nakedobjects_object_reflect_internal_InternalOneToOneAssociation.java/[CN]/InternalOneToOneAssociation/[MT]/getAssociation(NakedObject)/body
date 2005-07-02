@@ -1,0 +1,22 @@
+{
+  try {
+    Object obj=getMethod.invoke(fromObject.getObject(),new Object[0]);
+    if (obj == null) {
+      if (getType().isOfType(NakedObjects.getSpecificationLoader().loadSpecification(String.class))) {
+        return new StringAdapter("");
+      }
+      throw new NakedObjectRuntimeException(getType().getFullName());
+    }
+ else {
+      return NakedObjects.getObjectManager().getAdapterFor(obj);
+    }
+  }
+ catch (  InvocationTargetException e) {
+    LOG.error("Exception executing " + getMethod,e.getTargetException());
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("Illegal access of " + getMethod,ignore);
+    throw new NakedObjectRuntimeException(ignore);
+  }
+}

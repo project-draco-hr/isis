@@ -1,17 +1,9 @@
 {
   LOG.info("getObject " + oid);
-  try {
-    if (NakedObjects.getPojoAdapterFactory().isLoaded(oid)) {
-      return NakedObjects.getPojoAdapterFactory().getLoadedObject(oid);
-    }
- else {
-      NakedObject object=objectStore.getObject(oid,hint);
-      collateChanges();
-      objectsToBeSaved.remove(object);
-      return object;
-    }
+  if (isIdentityKnown(oid)) {
+    return getAdapterFor(oid);
   }
- catch (  ObjectStoreException e) {
-    throw new NakedObjectRuntimeException(e);
+ else {
+    return objectStore.getObject(oid,hint);
   }
 }

@@ -1,14 +1,19 @@
 {
   DebugString debug=new DebugString();
-  Enumeration e=loaded.keys();
+  debug.append(pojoMap);
+  debug.appendln();
+  debug.appendTitle("Loaded objects");
+  Enumeration e=identityMap.keys();
+  int count=0;
   while (e.hasMoreElements()) {
     Oid oid=(Oid)e.nextElement();
-    NakedObject object=(NakedObject)loaded.get(oid);
-    debug.append(oid.toString());
+    NakedObject object=(NakedObject)identityMap.get(oid);
+    debug.append(count++,5);
+    debug.append(" ");
+    debug.append(oid.toString(),8);
     debug.append("    ");
     debug.appendln(object.toString());
   }
   debug.appendln();
-  debug.append(pojos.getDebugData());
   return debug.toString();
 }
