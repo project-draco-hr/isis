@@ -1,4 +1,5 @@
 {
+  objectLoader.loading(object,true);
   NakedObjectField[] fields=object.getFields();
   for (int i=0; i < fields.length; i++) {
     NakedObjectField field=fields[i];
@@ -9,50 +10,11 @@
       object.initValue((OneToOneAssociation)field,data.get(field.getName()));
     }
  else     if (field instanceof OneToManyAssociation) {
-      ReferenceVector refs=(ReferenceVector)data.get(field.getName());
-      if (refs != null) {
-        for (int j=0; j < refs.size(); j++) {
-          try {
-            if (loadedObjects().isLoaded(refs.elementAt(j))) {
-              object.initAssociation((NakedObjectAssociation)field,loadedObjects().getLoadedObject(refs.elementAt(j)));
-            }
- else {
-              object.initAssociation((NakedObjectAssociation)field,getObject(refs.elementAt(j),null));
-            }
-          }
- catch (          ObjectNotFoundException e) {
-            e.printStackTrace();
-          }
-        }
-      }
+      initObjectSetupCollection(object,data,field);
     }
  else {
-      Oid reference=(Oid)data.get(field.getName());
-      LOG.debug("setting field " + field + " with "+ reference);
-      if (reference != null) {
-        if (loadedObjects().isLoaded(reference)) {
-          NakedObject loadedObject=loadedObjects().getLoadedObject(reference);
-          LOG.debug("using loaded object " + loadedObject);
-          object.initAssociation((OneToOneAssociation)field,loadedObject);
-        }
- else {
-          Oid oid=reference;
-          NakedObject fieldObject;
-          Data fieldData=(Data)dataManager.loadData((SerialOid)oid);
-          if (fieldData != null) {
-            fieldObject=(NakedObject)classFor(fieldData.getClassName()).acquireInstance();
-          }
- else {
-            fieldObject=(NakedObject)field.getSpecification().acquireInstance();
-          }
-          fieldObject.setOid(oid);
-          if (fieldObject instanceof InternalCollection) {
-            fieldObject.setResolved();
-          }
-          loadedObjects().loaded(fieldObject);
-          object.initAssociation((OneToOneAssociation)field,fieldObject);
-        }
-      }
+      initObjectSetupReference(object,data,field);
     }
   }
+  objectLoader.loaded(object,true);
 }

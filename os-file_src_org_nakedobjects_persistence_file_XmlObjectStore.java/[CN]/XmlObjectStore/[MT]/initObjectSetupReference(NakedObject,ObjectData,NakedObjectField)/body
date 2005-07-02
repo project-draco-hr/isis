@@ -1,0 +1,10 @@
+{
+  SerialOid referenceOid=(SerialOid)data.get(field.getName());
+  LOG.debug("setting up field " + field + " with "+ referenceOid);
+  if (referenceOid == null) {
+    return;
+  }
+  Data fieldData=(Data)dataManager.loadData(referenceOid);
+  NakedObject reference=objectLoader.recreateAdapter(referenceOid,specFor(fieldData));
+  object.initAssociation((OneToOneAssociation)field,reference);
+}

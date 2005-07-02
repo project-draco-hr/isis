@@ -6,15 +6,8 @@
     ObjectData instanceData=data.element(i);
     LOG.debug("instance data " + instanceData);
     SerialOid oid=instanceData.getOid();
-    NakedObject instance;
-    if (loadedObjects().isLoaded(oid)) {
-      instance=loadedObjects().getLoadedObject(oid);
-    }
- else {
-      instance=(NakedObject)createSkeletalObject(oid,instanceData.getClassName());
-      loadedObjects().loaded(instance);
-    }
-    resolveImmediately(instance);
+    NakedObjectSpecification spec=specFor(instanceData);
+    NakedObject instance=objectLoader.recreateAdapter(oid,spec);
     initObject(instance,instanceData);
     if (criteria == null || criteria.matches(instance)) {
       instances[count++]=instance;

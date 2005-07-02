@@ -1,14 +1,7 @@
 {
   SerialOid oid=data.getOid();
-  if (loadedObjects().isLoaded(oid)) {
-    return loadedObjects().getLoadedObject(oid);
-  }
-  NakedObjectSpecification nc=classFor(data.getClassName());
-  NakedObject object=(NakedObject)nc.acquireInstance();
-  LOG.debug("Recreating object " + nc.getFullName() + "/"+ oid);
-  object.setOid(oid);
-  loadedObjects().loaded(object);
+  NakedObjectSpecification spec=specFor(data);
+  NakedObject object=objectLoader.recreateAdapter(oid,spec);
   initObject(object,data);
-  object.setResolved();
   return object;
 }
