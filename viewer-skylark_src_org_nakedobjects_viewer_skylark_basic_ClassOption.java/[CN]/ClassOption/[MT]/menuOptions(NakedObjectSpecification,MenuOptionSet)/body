@@ -1,24 +1,25 @@
 {
-  PojoAdapter nakedClass=(PojoAdapter)NakedObjects.getPojoAdapterFactory().createAdapter(NakedObjects.getObjectManager().getNakedClass(specificaton));
+  NakedClass nakedClass=NakedObjects.getObjectManager().getNakedClass(specificaton);
+  PojoAdapter classAdapter=(PojoAdapter)NakedObjects.getObjectManager().getAdapterFor(nakedClass);
   Action[] actions;
   actions=specificaton.getClassActions(Action.USER);
   for (int i=0; i < actions.length; i++) {
-    addOption(nakedClass,menuOptionSet,actions[i],MenuOptionSet.OBJECT);
+    addOption(classAdapter,menuOptionSet,actions[i],MenuOptionSet.OBJECT);
   }
-  actions=nakedClass.getSpecification().getObjectActions(Action.USER);
+  actions=classAdapter.getSpecification().getObjectActions(Action.USER);
   for (int i=0; i < actions.length; i++) {
-    addOption(nakedClass,menuOptionSet,actions[i],MenuOptionSet.OBJECT);
+    addOption(classAdapter,menuOptionSet,actions[i],MenuOptionSet.OBJECT);
   }
   actions=specificaton.getClassActions(Action.EXPLORATION);
   if (actions.length > 0) {
     for (int i=0; i < actions.length; i++) {
-      addOption(nakedClass,menuOptionSet,actions[i],MenuOptionSet.EXPLORATION);
+      addOption(classAdapter,menuOptionSet,actions[i],MenuOptionSet.EXPLORATION);
     }
   }
-  actions=nakedClass.getSpecification().getObjectActions(Action.EXPLORATION);
+  actions=classAdapter.getSpecification().getObjectActions(Action.EXPLORATION);
   if (actions.length > 0) {
     for (int i=0; i < actions.length; i++) {
-      addOption(nakedClass,menuOptionSet,actions[i],MenuOptionSet.EXPLORATION);
+      addOption(classAdapter,menuOptionSet,actions[i],MenuOptionSet.EXPLORATION);
     }
   }
 }
