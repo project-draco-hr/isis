@@ -5,7 +5,11 @@
       return null;
     }
  else {
-      return NakedObjects.getPojoAdapterFactory().createAdapter(obj);
+      Naked adapter=NakedObjects.getObjectManager().createAdapterForValue(obj);
+      if (adapter == null) {
+        adapter=NakedObjects.getObjectManager().getAdapterFor(obj);
+      }
+      return adapter;
     }
   }
  catch (  InvocationTargetException e) {
