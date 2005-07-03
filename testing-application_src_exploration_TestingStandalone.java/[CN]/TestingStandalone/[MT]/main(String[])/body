@@ -21,7 +21,6 @@
     JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
     JavaObjectFactory objectFactory=new JavaObjectFactory();
     objectFactory.setContainer(container);
-    container.setObjectFactory(objectFactory);
     TransientObjectStore tos=new TransientObjectStore();
     NakedObjectStore objectStore=new ObjectStoreLogger(tos,"store.log");
     OidGenerator oidGenerator=new SimpleOidGenerator();
@@ -36,10 +35,7 @@
     nakedObjects.setSpecificationLoader(specificationLoader);
     LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
     JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
-    PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
-    pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
-    pojoAdapterFactory.setReflectorFactory(reflectorFactory);
-    nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+    nakedObjects.setPojoAdapterFactory(objectManager);
     nakedObjects.setReflectionFactory(reflectionFactory);
     nakedObjects.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
