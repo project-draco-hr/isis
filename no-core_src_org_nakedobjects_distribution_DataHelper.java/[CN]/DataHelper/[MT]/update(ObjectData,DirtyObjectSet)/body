@@ -1,22 +1,13 @@
 {
   Oid oid=data.getOid();
   Object[] fieldContent=data.getFieldContent();
-  String type=data.getType();
+  PojoAdapterFactory objectLoader=NakedObjects.getPojoAdapterFactory();
+  if (!objectLoader.isIdentityKnown(oid)) {
+    return;
+  }
   NakedObject object;
-  if (oid != null && loadedObjects().isLoaded(oid)) {
-    object=loadedObjects().getLoadedObject(oid);
-  }
- else {
-    NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(type);
-    object=(NakedObject)specification.acquireInstance();
-    if (oid != null) {
-      object.setOid(oid);
-      loadedObjects().loaded(object);
-    }
-  }
-  if (!object.isResolved() && data.isResolved()) {
-    object.setResolved();
-  }
+  object=objectLoader.getAdapterFor(oid);
+  objectLoader.loading(object,data.isResolved());
   NakedObjectField[] fields=object.getSpecification().getFields();
   if (fields.length > 0) {
     for (int i=0; i < fields.length; i++) {
@@ -43,5 +34,6 @@
       }
     }
   }
+  objectLoader.loaded(object,data.isResolved());
   updateNotifier.addDirty(object);
 }

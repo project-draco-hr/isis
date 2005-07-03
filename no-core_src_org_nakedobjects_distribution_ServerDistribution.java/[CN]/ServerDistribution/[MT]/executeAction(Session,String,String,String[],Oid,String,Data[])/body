@@ -21,7 +21,6 @@
       ObjectData objectData=(ObjectData)data;
       if (objectData.getOid() != null) {
         parameters[i]=getNakedObject(session,objectData.getOid(),objectData.getType());
-        Assert.assertEquals(parameters[i],NakedObjects.getPojoAdapterFactory().createAdapter(parameters[i].getObject()));
       }
  else {
         parameters[i]=DataHelper.recreate(data);
@@ -29,7 +28,7 @@
     }
  else     if (data instanceof ValueData) {
       ValueData valueData=(ValueData)data;
-      parameters[i]=NakedObjects.getPojoAdapterFactory().createAdapter(valueData.getValue());
+      parameters[i]=NakedObjects.getPojoAdapterFactory().createAdapterForValue(valueData.getValue());
     }
  else {
       throw new NakedObjectRuntimeException();

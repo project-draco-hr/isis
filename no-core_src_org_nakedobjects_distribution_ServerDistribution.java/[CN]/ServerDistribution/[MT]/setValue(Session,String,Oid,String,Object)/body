@@ -2,13 +2,13 @@
   LOG.debug("request setValue " + fieldIdentifier + " on "+ objectType+ "/"+ objectOid+ " with "+ value+ " for "+ session);
   NakedObject inObject=getNakedObject(session,objectOid,objectType);
   OneToOneAssociation association=(OneToOneAssociation)inObject.getSpecification().getField(fieldIdentifier);
-  Hint about=inObject.getHint(association,NakedObjects.getPojoAdapterFactory().createAdapter(value));
+  Hint about=inObject.getHint(association,NakedObjects.getPojoAdapterFactory().createAdapterForValue(value));
   if (about.canAccess().isVetoed() || about.canUse().isVetoed()) {
     throw new NakedObjectRuntimeException();
   }
   NakedValue fieldValue=(NakedValue)inObject.getValue(association);
   if (fieldValue != null) {
-    fieldValue.restoreFromEncodedString(((NakedValue)NakedObjects.getPojoAdapterFactory().createAdapter(value)).asEncodedString());
+    fieldValue.restoreFromEncodedString(((NakedValue)NakedObjects.getPojoAdapterFactory().createAdapterForValue(value)).asEncodedString());
   }
   inObject.setValue(association,value);
 }

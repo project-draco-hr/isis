@@ -1,21 +1,18 @@
 {
   Oid oid=data.getOid();
   String type=data.getType();
+  NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(type);
+  PojoAdapterFactory objectLoader=NakedObjects.getPojoAdapterFactory();
   NakedObject object;
-  if (oid != null && loadedObjects().isLoaded(oid)) {
-    object=loadedObjects().getLoadedObject(oid);
+  if (oid == null) {
+    object=objectLoader.createTransientInstance(specification);
+    recreateObjectsInFields(data,object);
   }
  else {
-    NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(type);
-    object=(NakedObject)specification.acquireInstance();
-    if (oid != null) {
-      object.setOid(oid);
-      loadedObjects().loaded(object);
-    }
+    object=objectLoader.recreateAdapter(oid,specification);
+    objectLoader.loading(object,data.isResolved());
+    recreateObjectsInFields(data,object);
+    objectLoader.loaded(object,data.isResolved());
   }
-  if (data.isResolved() && !object.isResolved()) {
-    object.setResolved();
-  }
-  recreateObjectsInFields(data,object);
   return object;
 }
