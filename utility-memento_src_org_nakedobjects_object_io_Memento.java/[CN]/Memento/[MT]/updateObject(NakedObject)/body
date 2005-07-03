@@ -8,6 +8,8 @@
       throw new NakedObjectRuntimeException("Expected an ObjectData but got " + state.getClass());
     }
  else {
+      PojoAdapterFactory objectLoader=NakedObjects.getPojoAdapterFactory();
+      objectLoader.loading(object,true);
       ObjectData od=(ObjectData)state;
       NakedObjectField[] fields=object.getSpecification().getFields();
       for (int i=0; i < fields.length; i++) {
@@ -22,6 +24,7 @@
           }
         }
       }
+      objectLoader.loaded(object,true);
     }
     LOG.debug("object updated " + object.getOid());
   }

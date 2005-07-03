@@ -1,0 +1,15 @@
+{
+  PojoAdapterFactory objectLoader=NakedObjects.getPojoAdapterFactory();
+synchronized (objectLoader) {
+    Oid oid=data.oid;
+    NakedObject ref;
+    if (oid == null) {
+      ref=null;
+    }
+ else {
+      NakedObjectSpecification spec=NakedObjects.getSpecificationLoader().loadSpecification(data.className);
+      ref=objectLoader.recreateAdapter(oid,spec);
+    }
+    return ref;
+  }
+}

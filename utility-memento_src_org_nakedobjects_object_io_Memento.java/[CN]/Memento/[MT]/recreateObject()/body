@@ -3,9 +3,15 @@
     return null;
   }
  else {
-    NakedObjectSpecification nc=NakedObjects.getSpecificationLoader().loadSpecification(state.className);
-    NakedObject object=(NakedObject)nc.acquireInstance();
-    object.setOid(state.oid);
+    NakedObjectSpecification spec=NakedObjects.getSpecificationLoader().loadSpecification(state.className);
+    PojoAdapterFactory objectLoader=NakedObjects.getPojoAdapterFactory();
+    NakedObject object;
+    if (getOid() == null) {
+      object=objectLoader.createTransientInstance(spec);
+    }
+ else {
+      object=objectLoader.recreateAdapter(getOid(),spec);
+    }
     LOG.debug("Recreated object " + object.getOid());
     updateObject(object);
     return object;
