@@ -5,7 +5,8 @@
   nakedObjects.setReflectorFactory(new JavaReflectorFactory());
   nakedObjects.setReflectionFactory(new LocalReflectionFactory());
   TestObject testObject=new TestObject();
-  XmlSnapshot builder=new XmlSnapshot((NakedObject)nakedObjects.getPojoAdapterFactory().createAdapter(testObject));
+  ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+  XmlSnapshot builder=new XmlSnapshot(objectLoader.createAdapterForTransient(testObject));
   Element e=builder.getXmlElement();
   DomSerializer serializer=new DomSerializerCrimson();
   String xml=serializer.serialize(e);
