@@ -32,7 +32,6 @@
     OidGenerator oidGenerator=new SimpleOidGenerator();
     LocalObjectManager objectManager=new LocalObjectManager();
     objectManager.setObjectStore(objectStore);
-    objectManager.setObjectFactory(objectFactory);
     objectManager.setOidGenerator(oidGenerator);
     nakedObjects.setObjectManager(objectManager);
     NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
@@ -42,13 +41,17 @@
     helpManager.setDecorated(new SimpleHelpManager());
     reflectionFactory.setHelpManager(helpManager);
     JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
-    nakedObjects.setPojoAdapterFactory(objectManager);
+    ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+    objectLoader.setObjectFactory(objectFactory);
+    objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+    objectLoader.setReflectorFactory(reflectorFactory);
+    nakedObjects.setObjectLoader(objectLoader);
     nakedObjects.setReflectionFactory(reflectionFactory);
     nakedObjects.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
     nakedObjects.setSession(new SimpleSession());
-    objectManager.init();
     builder=new JavaFixtureBuilder();
+    nakedObjects.init();
   }
  catch (  Exception e) {
     ExceptionHelper.log(JavaExploration.class,"Exploration startup problem",e);
