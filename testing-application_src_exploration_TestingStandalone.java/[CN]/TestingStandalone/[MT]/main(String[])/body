@@ -26,7 +26,6 @@
     OidGenerator oidGenerator=new SimpleOidGenerator();
     LocalObjectManager lom=new LocalObjectManager();
     lom.setObjectStore(objectStore);
-    lom.setObjectFactory(objectFactory);
     lom.setOidGenerator(oidGenerator);
     lom.setCheckObjectsForDirtyFlag(true);
     NakedObjectManager objectManager=new ObjectManagerLogger(lom,"manager.log");
@@ -35,7 +34,11 @@
     nakedObjects.setSpecificationLoader(specificationLoader);
     LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
     JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
-    nakedObjects.setPojoAdapterFactory(objectManager);
+    ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+    objectLoader.setObjectFactory(objectFactory);
+    objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+    objectLoader.setReflectorFactory(reflectorFactory);
+    nakedObjects.setObjectLoader(objectLoader);
     nakedObjects.setReflectionFactory(reflectionFactory);
     nakedObjects.setReflectorFactory(reflectorFactory);
     reflectorFactory.setObjectFactory(objectFactory);
