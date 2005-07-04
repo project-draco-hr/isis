@@ -1,7 +1,9 @@
 {
   TestClass view=(TestClass)classes.get(name.toLowerCase());
   NakedObject object=(NakedObject)view.getForNaked();
-  NakedObjects.getObjectManager().resolveImmediately(object);
+  if (object.isPersistent()) {
+    NakedObjects.getObjectManager().resolveImmediately(object);
+  }
   if (view == null) {
     throw new IllegalArgumentException("Invalid class name " + name);
   }

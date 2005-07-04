@@ -2,7 +2,10 @@
   TestNaked fieldObject=fieldReference(fieldName);
   Naked field=forObject.getField(fieldAccessor);
   if (field instanceof NakedObject) {
-    NakedObjects.getObjectManager().resolveImmediately((NakedObject)field);
+    NakedObject nakedObject=(NakedObject)field;
+    if (nakedObject.isPersistent() && !nakedObject.isResolved()) {
+      NakedObjects.getObjectManager().resolveImmediately(nakedObject);
+    }
   }
   fieldObject.setForNaked(field);
   return fieldObject;

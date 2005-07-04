@@ -21,6 +21,8 @@
  else   if (noElements > 1) {
     throw new IllegalActionError("The field '" + fieldName + "' must only contain one object titled '"+ title+ "' within it");
   }
-  NakedObjects.getObjectManager().resolveImmediately(selectedObject);
+  if (selectedObject.isPersistent() && !selectedObject.isResolved()) {
+    NakedObjects.getObjectManager().resolveImmediately(selectedObject);
+  }
   return factory.createTestObject(selectedObject);
 }
