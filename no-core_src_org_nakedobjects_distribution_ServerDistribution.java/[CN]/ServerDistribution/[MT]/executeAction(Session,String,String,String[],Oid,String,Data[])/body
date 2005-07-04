@@ -1,6 +1,6 @@
 {
   LOG.debug("request executeAction " + actionIdentifier + " on "+ objectType+ "/"+ objectOid+ " for "+ session);
-  NakedObject object=getNakedObject(session,objectOid,objectType);
+  NakedObject object=forNakedObject(session,objectOid,objectType);
   NakedObjectSpecification[] parameterSpecifiactions=new NakedObjectSpecification[parameterTypes.length];
   for (int i=0; i < parameterSpecifiactions.length; i++) {
     parameterSpecifiactions[i]=getSpecification(parameterTypes[i]);
@@ -20,7 +20,7 @@
     if (data instanceof ObjectData) {
       ObjectData objectData=(ObjectData)data;
       if (objectData.getOid() != null) {
-        parameters[i]=getNakedObject(session,objectData.getOid(),objectData.getType());
+        parameters[i]=forNakedObject(session,objectData.getOid(),objectData.getType());
       }
  else {
         parameters[i]=DataHelper.recreate(data);
@@ -28,7 +28,7 @@
     }
  else     if (data instanceof ValueData) {
       ValueData valueData=(ValueData)data;
-      parameters[i]=NakedObjects.getPojoAdapterFactory().createAdapterForValue(valueData.getValue());
+      parameters[i]=NakedObjects.getObjectLoader().createAdapterForValue(valueData.getValue());
     }
  else {
       throw new NakedObjectRuntimeException();

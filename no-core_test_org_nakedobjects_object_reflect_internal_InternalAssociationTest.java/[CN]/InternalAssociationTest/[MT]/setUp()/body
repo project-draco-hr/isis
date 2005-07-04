@@ -7,14 +7,14 @@
   NakedObjectsClient nakedObjects=new NakedObjectsClient();
   nakedObjects.setSpecificationLoader(loader);
   objectWithOneToOneAssoications=new InternalObjectWithOneToOneAssociations();
-  PojoAdapterFactory pojoAdapterFactory=new DummyPojoAdapterFactory();
-  nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
-  object=pojoAdapterFactory.createNOAdapter(objectWithOneToOneAssoications);
+  PojoAdapterFactory objectLoader=new DummyPojoAdapterFactory();
+  nakedObjects.setObjectLoader(objectLoader);
+  object=objectLoader.createNOAdapter(objectWithOneToOneAssoications);
   Class cls=InternalObjectWithOneToOneAssociations.class;
   Method get=cls.getDeclaredMethod("getReferencedObject",new Class[0]);
   Method set=cls.getDeclaredMethod("setReferencedObject",new Class[]{InternalObjectForReferencing.class});
   Method about=cls.getDeclaredMethod("aboutReferencedObject",new Class[]{InternalAbout.class,InternalObjectForReferencing.class});
   personField=new InternalOneToOneAssociation(PERSON_FIELD_NAME,InternalObjectForReferencing.class,get,set,null,null,about);
   referencedObject=new InternalObjectForReferencing();
-  associate=pojoAdapterFactory.createNOAdapter(referencedObject);
+  associate=objectLoader.createNOAdapter(referencedObject);
 }

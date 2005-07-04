@@ -2,7 +2,7 @@
   Oid oid=data.getOid();
   String type=data.getType();
   NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(type);
-  PojoAdapterFactory objectLoader=NakedObjects.getPojoAdapterFactory();
+  NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
   NakedObject object;
   if (oid == null) {
     object=objectLoader.createTransientInstance(specification);
@@ -10,9 +10,11 @@
   }
  else {
     object=objectLoader.recreateAdapter(oid,specification);
-    objectLoader.loading(object,data.isResolved());
-    recreateObjectsInFields(data,object);
-    objectLoader.loaded(object,data.isResolved());
+    if (objectLoader.needsLoading(object)) {
+      objectLoader.loading(object,data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART);
+      recreateObjectsInFields(data,object);
+      objectLoader.loaded(object,data.isResolved() ? ResolveState.RESOLVED : ResolveState.PART_RESOLVED);
+    }
   }
   return object;
 }

@@ -1,9 +1,13 @@
 {
-  LOG.info("getObject " + oid);
-  if (isIdentityKnown(oid)) {
-    return getAdapterFor(oid);
+  NakedObject object;
+  if (oid == null) {
+    object=NakedObjects.getObjectLoader().createTransientInstance(objectType);
+  }
+ else   if (NakedObjects.getObjectLoader().isIdentityKnown(oid)) {
+    object=NakedObjects.getObjectLoader().getAdapterFor(oid);
   }
  else {
-    return objectStore.getObject(oid,hint);
+    object=objectStore.getObject(oid,objectType);
   }
+  return object;
 }
