@@ -1,20 +1,22 @@
 {
-  objectLoader.loading(object,true);
-  NakedObjectField[] fields=object.getFields();
-  for (int i=0; i < fields.length; i++) {
-    NakedObjectField field=fields[i];
-    if (field.isDerived()) {
-      continue;
-    }
-    if (field.isValue()) {
-      object.initValue((OneToOneAssociation)field,data.get(field.getName()));
-    }
- else     if (field instanceof OneToManyAssociation) {
-      initObjectSetupCollection(object,data,field);
-    }
+  if (objectLoader.needsLoading(object)) {
+    objectLoader.loading(object,ResolveState.RESOLVING);
+    NakedObjectField[] fields=object.getFields();
+    for (int i=0; i < fields.length; i++) {
+      NakedObjectField field=fields[i];
+      if (field.isDerived()) {
+        continue;
+      }
+      if (field.isValue()) {
+        object.initValue((OneToOneAssociation)field,data.get(field.getName()));
+      }
+ else       if (field instanceof OneToManyAssociation) {
+        initObjectSetupCollection(object,data,field);
+      }
  else {
-      initObjectSetupReference(object,data,field);
+        initObjectSetupReference(object,data,field);
+      }
     }
+    objectLoader.loaded(object,ResolveState.RESOLVED);
   }
-  objectLoader.loaded(object,true);
 }
