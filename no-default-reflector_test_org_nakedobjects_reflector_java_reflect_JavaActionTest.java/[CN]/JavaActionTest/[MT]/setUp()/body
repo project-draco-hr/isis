@@ -4,10 +4,10 @@
   Logger.getRootLogger().setLevel(Level.OFF);
   loader=new MockNakedObjectSpecificationLoader();
   javaObject=new JavaActionTestObject();
-  PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
-  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
-  pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
-  nakedObject=pojoAdapterFactory.createNOAdapter(javaObject);
+  ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+  objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+  objectLoader.setReflectorFactory(new NullReflectorFactory());
+  nakedObject=objectLoader.createAdapterForTransient(javaObject);
   Class cls=Class.forName(getClass().getName() + "Object");
   Method action=cls.getDeclaredMethod("actionMethod",new Class[0]);
   Method about=cls.getDeclaredMethod("aboutMethod",new Class[]{ActionAbout.class});

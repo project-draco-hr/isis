@@ -9,16 +9,16 @@
   nakedObjects.setSpecificationLoader(loader);
   nakedObjects.setConfiguration(new TestConfiguration());
   objectWithOneToOneAssoications=new JavaObjectWithOneToOneAssociations();
-  PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
-  pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
-  pojoAdapterFactory.setReflectorFactory(new NullReflectorFactory());
-  nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
-  nakedObject=pojoAdapterFactory.createNOAdapter(objectWithOneToOneAssoications);
+  ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+  objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+  objectLoader.setReflectorFactory(new NullReflectorFactory());
+  nakedObjects.setObjectLoader(objectLoader);
+  nakedObject=objectLoader.createAdapterForTransient(objectWithOneToOneAssoications);
   Class cls=JavaObjectWithOneToOneAssociations.class;
   Method get=cls.getDeclaredMethod("getReferencedObject",new Class[0]);
   Method set=cls.getDeclaredMethod("setReferencedObject",new Class[]{JavaReferencedObject.class});
   Method about=cls.getDeclaredMethod("aboutReferencedObject",new Class[]{FieldAbout.class,JavaReferencedObject.class});
   personField=new JavaOneToOneAssociation(PERSON_FIELD_NAME,JavaReferencedObject.class,get,set,null,null,about);
   referencedObject=new JavaReferencedObject();
-  associatedNakedObject=pojoAdapterFactory.createNOAdapter(referencedObject);
+  associatedNakedObject=objectLoader.createAdapterForTransient(referencedObject);
 }
