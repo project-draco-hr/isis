@@ -35,7 +35,6 @@
     OidGenerator oidGenerator=new SimpleOidGenerator();
     LocalObjectManager objectManager=new LocalObjectManager();
     objectManager.setObjectStore(objectStore);
-    objectManager.setObjectFactory(objectFactory);
     objectManager.setOidGenerator(oidGenerator);
     objectManager.setCheckObjectsForDirtyFlag(true);
     nakedObjects.setObjectManager(objectManager);
@@ -48,15 +47,20 @@
     reflectorFactory.setObjectFactory(objectFactory);
     new SystemClock();
     nakedObjects.setSession(new SimpleSession());
-    objectManager.setReflectorFactory(reflectorFactory);
-    objectManager.init();
-    nakedObjects.setPojoAdapterFactory(objectManager);
+    ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+    objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+    objectLoader.setReflectorFactory(reflectorFactory);
+    objectLoader.setObjectFactory(objectFactory);
+    nakedObjects.setObjectLoader(objectLoader);
+    nakedObjects.init();
     JavaFixtureBuilder fb=new JavaFixtureBuilder();
     CitiesFixture cities;
     fb.addFixture(cities=new CitiesFixture());
     fb.addFixture(new BookingsFixture(cities));
     fb.addFixture(new ClassesFixture());
     fb.installFixtures();
+    System.out.println("\n\nLoaded objects");
+    System.out.println(objectLoader.getDebugData());
     System.out.println("\n\nState of ObjectManager");
     System.out.println(objectManager.getDebugData());
   }
