@@ -1,4 +1,5 @@
 {
+  final TransientObjectStore objectStore=objectStore();
   Runnable runnable=new Runnable(){
     public void run(){
       final PipedServer server=new PipedServer();
@@ -6,27 +7,24 @@
       nakedObjects.setConfiguration(new Configuration());
       JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
       new SystemClock();
-      TransientObjectStore objectStore=new TransientObjectStore();
       DataFactory objectDataFactory=new JavaObjectDataFactory();
       SingleResponseUpdateNotifier updateNotifier=new SingleResponseUpdateNotifier();
       updateNotifier.setFactory(objectDataFactory);
       JavaObjectFactory objectFactory=new JavaObjectFactory();
       objectFactory.setContainer(container);
-      container.setObjectFactory(objectFactory);
       OidGenerator oidGenerator=new SimpleOidGenerator();
       LocalObjectManager objectManager=new LocalObjectManager();
       objectManager.setObjectStore(objectStore);
-      objectManager.setObjectFactory(objectFactory);
       objectManager.setOidGenerator(oidGenerator);
       objectManager.setCheckObjectsForDirtyFlag(true);
       nakedObjects.setObjectManager(objectManager);
       LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
       JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
       reflectorFactory.setObjectFactory(objectFactory);
-      PojoAdapterFactoryImpl pojoAdapterFactory=new PojoAdapterFactoryImpl();
-      pojoAdapterFactory.setPojoAdapterHash(new PojoAdapterHashImpl());
-      pojoAdapterFactory.setReflectorFactory(reflectorFactory);
-      nakedObjects.setPojoAdapterFactory(pojoAdapterFactory);
+      ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
+      objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+      objectLoader.setObjectFactory(objectFactory);
+      nakedObjects.setObjectLoader(objectLoader);
       nakedObjects.setReflectionFactory(reflectionFactory);
       NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
       nakedObjects.setReflectorFactory(reflectorFactory);
@@ -37,6 +35,7 @@
       server.setFacade(sd);
       server.setUpdateNotifier(updateNotifier);
       objectManager.addObjectChangedListener(updateNotifier);
+      nakedObjects.init();
       JavaFixtureBuilder fb=new JavaFixtureBuilder();
       CitiesFixture cities;
       fb.addFixture(cities=new CitiesFixture());
