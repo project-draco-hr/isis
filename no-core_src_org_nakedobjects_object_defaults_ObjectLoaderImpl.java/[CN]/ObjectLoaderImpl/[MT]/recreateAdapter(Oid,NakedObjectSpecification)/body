@@ -1,0 +1,16 @@
+{
+  if (isIdentityKnown(oid)) {
+    return getAdapterFor(oid);
+  }
+  LOG.debug("recreating object " + specification.getFullName() + "/"+ oid);
+  Object object=objectFactory.recreateObject(specification);
+  Assert.assertNotNull(oid);
+  Assert.assertFalse("Identity Map already contains object for OID " + oid,identityMap.containsKey(oid));
+  PojoAdapter adapter=(PojoAdapter)createObjectAdapter(object);
+  LOG.debug("adding adapter for " + oid + " - "+ adapter);
+  identityMap.put(oid,adapter);
+  Assert.assertTrue(pojoMap.getPojo(object) == adapter);
+  Assert.assertTrue(identityMap.get(oid) == adapter);
+  adapter.recreate(oid);
+  return adapter;
+}
