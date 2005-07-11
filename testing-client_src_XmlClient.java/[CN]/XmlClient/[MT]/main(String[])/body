@@ -26,7 +26,7 @@
     ProxyObjectManager proxyObjectManager=new ProxyObjectManager();
     proxyObjectManager.setConnection(connection);
     proxyObjectManager.setObjectDataFactory(objectDataFactory);
-    NakedObjectManager objectManager=new ObjectManagerLogger(proxyObjectManager,"manager");
+    NakedObjectManager objectManager=new ObjectManagerLogger(proxyObjectManager,"manager.log");
     nakedObjects.setObjectManager(objectManager);
     new NakedObjectSpecificationLoaderImpl();
     ProxyReflectionFactory reflectionFactory=new ProxyReflectionFactory();
@@ -34,15 +34,14 @@
     reflectionFactory.setObjectDataFactory(objectDataFactory);
     JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
     ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
-    objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
+    objectLoader.setPojoAdapterMap(new PojoAdapterHashImpl());
     objectLoader.setObjectFactory(objectFactory);
-    objectLoader.setReflectorFactory(reflectorFactory);
+    objectLoader.setIdentityAdapterMap(new IdentityAdapterMapImpl());
     nakedObjects.setObjectLoader(objectLoader);
     nakedObjects.setReflectionFactory(reflectionFactory);
     NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
     nakedObjects.setReflectorFactory(reflectorFactory);
     nakedObjects.setSpecificationLoader(specificationLoader);
-    reflectorFactory.setObjectFactory(objectFactory);
     ViewUpdateNotifier updateNotifier=new ViewUpdateNotifier();
     proxyObjectManager.setUpdateNotifier(updateNotifier);
     connection.setUpdateNotifier(updateNotifier);
