@@ -1,12 +1,10 @@
 {
   LogManager.getLoggerRepository().setThreshold(Level.OFF);
-  MockNakedObjectSpecificationLoader specificationLoader=new MockNakedObjectSpecificationLoader();
-  NakedObjectsClient nakedObjects=new NakedObjectsClient();
-  nakedObjects.setSpecificationLoader(specificationLoader);
-  nakedObjects.setReflectionFactory(new MockReflectionFactory());
-  nakedObjectSpecification=new NakedObjectSpecificationImpl();
+  system=new TestSystem();
+  system.init();
   mockReflector=new MockReflector();
   mockReflector.superClass=new NakedObjectSpecificationImpl();
-  specificationLoader.addSpec(mockReflector.superClass);
+  nakedObjectSpecification=new NakedObjectSpecificationImpl();
+  system.addSpecification(mockReflector.superClass);
   nakedObjectSpecification.reflect("class-x",mockReflector);
 }

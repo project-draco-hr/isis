@@ -1,13 +1,12 @@
 {
+  Assert.assertNotNull("needs an OID",oid);
+  Assert.assertNotNull("needs a specification",specification);
   NakedObject object;
-  if (oid == null) {
-    object=NakedObjects.getObjectLoader().createTransientInstance(objectType);
-  }
- else   if (NakedObjects.getObjectLoader().isIdentityKnown(oid)) {
+  if (NakedObjects.getObjectLoader().isIdentityKnown(oid)) {
     object=NakedObjects.getObjectLoader().getAdapterFor(oid);
   }
  else {
-    object=objectStore.getObject(oid,objectType);
+    object=objectStore.getObject(oid,specification);
   }
   return object;
 }

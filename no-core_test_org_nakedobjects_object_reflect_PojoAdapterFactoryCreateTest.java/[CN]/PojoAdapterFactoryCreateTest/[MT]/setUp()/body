@@ -1,6 +1,10 @@
 {
+  system=new TestSystem();
+  objectLoader=new ObjectLoaderImpl();
   cache=new Cache();
-  factory=new ObjectLoaderImpl();
-  factory.setPojoAdapterHash(cache);
-  factory.setReflectorFactory(new DummyReflectorFactory());
+  objectLoader.setPojoAdapterMap(cache);
+  objectLoader.setIdentityAdapterMap(new IdentityAdapterMapImpl());
+  objectLoader.setObjectFactory(new DummyObjectFactory());
+  system.setObjectLoader(objectLoader);
+  system.init();
 }

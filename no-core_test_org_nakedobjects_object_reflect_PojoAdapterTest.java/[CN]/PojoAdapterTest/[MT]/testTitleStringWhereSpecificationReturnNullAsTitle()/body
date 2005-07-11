@@ -1,17 +1,8 @@
 {
-  MockNakedObjectSpecificationLoader specLoader=new MockNakedObjectSpecificationLoader();
-  DummyNakedObjectSpecification spec=new DummyNakedObjectSpecification();
-  spec.setupTitleObject(new ObjectTitle(){
-    public String title(    NakedObject object){
-      return null;
-    }
-  }
-);
+  DummyNakedObjectSpecification spec=setupSpec(null);
   spec.setupUnresolvedTitle("unresolved object");
-  specLoader.addSpec(spec);
-  nakedObjects.setSpecificationLoader(specLoader);
-  NakedObject pa=objectLoader.createNOAdapter(new TestPojo());
+  NakedObject pa=system.createAdapterForTransient(new TestPojo());
   pa.getSpecification();
-  pa.setResolved();
+  objectLoader.madePersistent(pa,new MockOid(1));
   assertEquals("A singular name",pa.titleString());
 }

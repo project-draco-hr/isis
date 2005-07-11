@@ -1,5 +1,5 @@
 {
-  NakedObject loadedObject=loaded().getAdapterFor(oid);
+  NakedObject loadedObject=objectLoader.getAdapterFor(oid);
   if (loadedObject != null) {
     return loadedObject;
   }
@@ -8,17 +8,9 @@
     if (pojo == null) {
       return null;
     }
-    NakedObject object=NakedObjects.getObjectLoader().getAdapterFor(pojo);
-    if (object.getOid() == null) {
-      object.setOid(oid);
-      if (!object.isResolved()) {
-        object.setResolved();
-      }
-    }
- else     if (!object.getOid().equals(oid)) {
-      throw new NakedObjectRuntimeException("Requested object with OID " + oid + ", but got object (with different oid): "+ object);
-    }
-    loaded().loaded(object,true);
-    return object;
+    NakedObject adapter;
+    adapter=objectLoader.getAdapterForElseCreateAdapterForTransient(pojo);
+    objectLoader.madePersistent(adapter,oid);
+    return objectLoader.recreateAdapterForPersistent(oid,null);
   }
 }

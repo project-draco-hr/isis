@@ -9,7 +9,7 @@
  else {
     str.append("T");
   }
-  str.append(resolvedState.code());
+  str.append(resolveState.code());
   Oid oid=getOid();
   if (oid != null) {
     str.append(":");
@@ -20,7 +20,9 @@
   }
   str.setAddComma();
   str.append("specification",specification == null ? "undetermined" : specification.getShortName());
-  str.append("title",titleString());
+  if (isResolved()) {
+    str.append("title",titleString());
+  }
   str.appendAsHex("pojo-hash",pojo.hashCode());
   return str.toString();
 }

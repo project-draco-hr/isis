@@ -1,5 +1,7 @@
 {
+  LOG.debug("creating adapter (transient) for " + object);
   NakedObject adapter=createObjectAdapter(object);
-  Assert.assertTrue(pojoMap.getPojo(object) == adapter);
+  Assert.assertEquals(adapter,pojoAdapterMap.getPojo(object));
+  ((PojoAdapter)adapter).changeState(ResolveState.TRANSIENT);
   return adapter;
 }

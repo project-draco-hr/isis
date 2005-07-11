@@ -1,10 +1,10 @@
 {
   BasicConfigurator.configure();
   Logger.getRootLogger().setLevel(Level.OFF);
-  instances=new MockMemoryObjectStoreInstances();
-  mockPojoAdapterFactory=new MockPojoAdapterFactory();
-  new NakedObjectsClient().setObjectLoader(mockPojoAdapterFactory);
-  instances.setLoaded(mockPojoAdapterFactory);
+  system=new TestSystem();
+  system.init();
+  system.addSpecification(new DummyNakedObjectSpecification());
+  instances=new MockMemoryObjectStoreInstances(NakedObjects.getObjectLoader());
   instances.addElement(new MockOid(1),new TestObject(),"one");
   oid=new MockOid(2);
   object=new TestObject();

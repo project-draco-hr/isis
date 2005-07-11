@@ -1,0 +1,30 @@
+{
+  LogManager.getLoggerRepository().setThreshold(Level.OFF);
+  objectLoader=new ObjectLoaderImpl();
+  pojoAdapterMap=new PojoAdapterHashImpl();
+  objectLoader.setPojoAdapterMap(pojoAdapterMap);
+  identityAdapterMap=new IdentityAdapterMapImpl();
+  objectLoader.setIdentityAdapterMap(identityAdapterMap);
+  objectFactory=new DummyObjectFactory();
+  objectLoader.setObjectFactory(objectFactory);
+  specification=new DummyNakedObjectSpecification();
+  pojo1=new Date();
+  oid1=new DummyOid();
+  adapter1=new PojoAdapter(pojo1){
+    public NakedObjectSpecification getSpecification(){
+      return specification;
+    }
+  }
+;
+  pojo2=new Date();
+  oid2=new DummyOid();
+  adapter2=new PojoAdapter(pojo2){
+    public Oid getOid(){
+      return oid2;
+    }
+    public NakedObjectSpecification getSpecification(){
+      return specification;
+    }
+  }
+;
+}

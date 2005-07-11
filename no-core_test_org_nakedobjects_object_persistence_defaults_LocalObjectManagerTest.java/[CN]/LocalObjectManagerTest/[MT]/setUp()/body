@@ -1,11 +1,14 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  objectStore=new MockObjectStore();
+  system=new TestSystem();
   objectManager=new LocalObjectManager();
+  objectStore=new MockObjectStore();
   objectManager.setObjectStore(objectStore);
   objectManager.setOidGenerator(new MockOidGenerator());
-  objectLoader=new DummyPojoAdapterFactory();
-  new NakedObjectsClient().setObjectLoader(objectLoader);
+  system.setObjectManager(objectManager);
+  objectLoader=new MockObjectLoader();
+  system.setObjectLoader(objectLoader);
+  system.init();
   testNakedObject=new MockNakedObject();
   objectSpecification=new DummyNakedObjectSpecification();
   testNakedObject.setupSpecification(objectSpecification);

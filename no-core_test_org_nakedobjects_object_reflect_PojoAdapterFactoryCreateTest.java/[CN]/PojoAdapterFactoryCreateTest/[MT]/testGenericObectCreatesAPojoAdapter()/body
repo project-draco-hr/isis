@@ -1,6 +1,8 @@
 {
   ExampleBusinessObject businessObject=new ExampleBusinessObject();
-  Naked adapter=factory.createAdapter(businessObject);
+  cache.setupPojo(businessObject);
+  cache.adapter=new PojoAdapter(businessObject);
+  Naked adapter=objectLoader.createAdapterForTransient(businessObject);
   assertTrue(adapter instanceof PojoAdapter);
   assertEquals(businessObject,adapter.getObject());
 }
