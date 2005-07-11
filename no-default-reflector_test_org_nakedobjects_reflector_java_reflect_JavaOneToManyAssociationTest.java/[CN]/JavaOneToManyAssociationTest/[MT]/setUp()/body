@@ -1,14 +1,9 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  loader=new MockNakedObjectSpecificationLoader();
-  NakedObjectsClient nakedObjects=new NakedObjectsClient();
-  nakedObjects.setSpecificationLoader(loader);
-  nakedObjects.setConfiguration(new TestConfiguration());
+  system=new TestSystem();
+  system.init();
   objectWithVector=new JavaObjectWithVector();
-  objectLoader=new ObjectLoaderImpl();
-  objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
-  objectLoader.setReflectorFactory(new NullReflectorFactory());
-  nakedObject=objectLoader.createAdapterForTransient(objectWithVector);
+  nakedObject=system.createAdapterForTransient(objectWithVector);
   elements=new JavaReferencedObject[3];
   for (int i=0; i < elements.length; i++) {
     elements[i]=new JavaReferencedObject();

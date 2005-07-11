@@ -1,24 +1,18 @@
 {
   super.setUp();
   Logger.getRootLogger().setLevel(Level.OFF);
-  loader=new MockNakedObjectSpecificationLoader();
-  loader.addSpec(spec=new DummyNakedObjectSpecification());
-  loader.addSpec(new DummyNakedObjectSpecification());
-  loader.addSpec(new DummyNakedObjectSpecification());
-  NakedObjectsClient nakedObjects=new NakedObjectsClient();
-  nakedObjects.setSpecificationLoader(loader);
-  nakedObjects.setConfiguration(new TestConfiguration());
+  system=new TestSystem();
+  system.init();
+  system.addSpecification(spec=new DummyNakedObjectSpecification());
+  system.addSpecification(new DummyNakedObjectSpecification());
+  system.addSpecification(new DummyNakedObjectSpecification());
   objectWithOneToOneAssoications=new JavaObjectWithOneToOneAssociations();
-  ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
-  objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
-  objectLoader.setReflectorFactory(new NullReflectorFactory());
-  nakedObjects.setObjectLoader(objectLoader);
-  nakedObject=objectLoader.createAdapterForTransient(objectWithOneToOneAssoications);
+  nakedObject=system.createAdapterForTransient(objectWithOneToOneAssoications);
   Class cls=JavaObjectWithOneToOneAssociations.class;
   Method get=cls.getDeclaredMethod("getReferencedObject",new Class[0]);
   Method set=cls.getDeclaredMethod("setReferencedObject",new Class[]{JavaReferencedObject.class});
   Method about=cls.getDeclaredMethod("aboutReferencedObject",new Class[]{FieldAbout.class,JavaReferencedObject.class});
   personField=new JavaOneToOneAssociation(PERSON_FIELD_NAME,JavaReferencedObject.class,get,set,null,null,about);
   referencedObject=new JavaReferencedObject();
-  associatedNakedObject=objectLoader.createAdapterForTransient(referencedObject);
+  associatedNakedObject=system.createAdapterForTransient(referencedObject);
 }

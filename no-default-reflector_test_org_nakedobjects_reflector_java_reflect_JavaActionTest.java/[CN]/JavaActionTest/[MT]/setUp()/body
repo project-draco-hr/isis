@@ -1,13 +1,11 @@
 {
   super.setUp();
-  new NakedObjectsClient().setConfiguration(new TestConfiguration());
   Logger.getRootLogger().setLevel(Level.OFF);
-  loader=new MockNakedObjectSpecificationLoader();
+  system=new TestSystem();
+  system.init();
+  system.addSpecification(new DummyNakedObjectSpecification());
   javaObject=new JavaActionTestObject();
-  ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
-  objectLoader.setPojoAdapterHash(new PojoAdapterHashImpl());
-  objectLoader.setReflectorFactory(new NullReflectorFactory());
-  nakedObject=objectLoader.createAdapterForTransient(javaObject);
+  nakedObject=NakedObjects.getObjectLoader().createAdapterForTransient(javaObject);
   Class cls=Class.forName(getClass().getName() + "Object");
   Method action=cls.getDeclaredMethod("actionMethod",new Class[0]);
   Method about=cls.getDeclaredMethod("aboutMethod",new Class[]{ActionAbout.class});
