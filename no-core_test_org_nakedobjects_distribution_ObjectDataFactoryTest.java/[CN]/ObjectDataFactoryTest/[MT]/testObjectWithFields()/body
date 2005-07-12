@@ -1,6 +1,7 @@
 {
   specification.fields=new NakedObjectField[]{new MockField(),new MockField(),new MockField()};
   MockNakedObject fieldObject=new MockNakedObject();
+  fieldObject.setupResolveState(ResolveState.NEW);
   DummyNakedObjectSpecification fieldSpecification=new DummyNakedObjectSpecification();
   fieldSpecification.fields=new NakedObjectField[0];
   fieldObject.setupSpecification(fieldSpecification);
@@ -9,4 +10,5 @@
   assertEquals(3,od.getFieldContent().length);
   ObjectData objectData=((ObjectData)od.getFieldContent()[1]);
   assertEquals(fieldSpecification.getFullName(),objectData.getType());
+  assertEquals(ResolveState.SERIALIZING,object.getResolveState());
 }

@@ -1,12 +1,13 @@
 {
+  Assert.assertNotNull("new state must be specified",nextState);
   if (this == NEW) {
     return nextState == TRANSIENT || nextState == GHOST;
   }
  else   if (this == TRANSIENT) {
-    return nextState == RESOLVED;
+    return nextState == RESOLVED || nextState == SERIALIZING;
   }
  else   if (this == GHOST) {
-    return nextState == RESOLVING_PART || nextState == RESOLVING || nextState == UPDATING;
+    return nextState == RESOLVING_PART || nextState == RESOLVING || nextState == UPDATING || nextState == SERIALIZING;
   }
  else   if (this == RESOLVING_PART) {
     return nextState == PART_RESOLVED || nextState == RESOLVED;
@@ -15,10 +16,10 @@
     return nextState == RESOLVED;
   }
  else   if (this == PART_RESOLVED) {
-    return nextState == RESOLVING;
+    return nextState == RESOLVING || nextState == SERIALIZING;
   }
  else   if (this == RESOLVED) {
-    return nextState == UPDATING;
+    return nextState == UPDATING || nextState == SERIALIZING;
   }
  else   if (this == UPDATING) {
     return nextState == RESOLVED;
