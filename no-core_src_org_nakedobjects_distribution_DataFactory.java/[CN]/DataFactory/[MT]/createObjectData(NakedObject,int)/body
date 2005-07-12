@@ -9,6 +9,7 @@
   if (!resolveState.isSerializable()) {
     return createObjectData(oid,type,null,resolveState.isResolved(),object.getVersion());
   }
+  ResolveState state=object.getResolveState();
   NakedObjects.getObjectLoader().serializing(object);
   NakedObjectField[] fields=specification.getFields();
   Object[] fieldContent=new Object[fields.length];
@@ -27,5 +28,6 @@
       fieldContent[i]=createObjectData((NakedObject)field,depth - 1);
     }
   }
+  ((PojoAdapter)object).changeState(state);
   return createObjectData(oid,type,fieldContent,resolveState.isResolved(),object.getVersion());
 }
