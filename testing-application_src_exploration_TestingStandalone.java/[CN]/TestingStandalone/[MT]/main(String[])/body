@@ -24,10 +24,12 @@
     TransientObjectStore tos=new TransientObjectStore();
     NakedObjectStore objectStore=new ObjectStoreLogger(tos,"store.log");
     OidGenerator oidGenerator=new SimpleOidGenerator();
+    DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
+    persistAlgorithm.setOidGenerator(oidGenerator);
     LocalObjectManager lom=new LocalObjectManager();
     lom.setObjectStore(objectStore);
-    lom.setOidGenerator(oidGenerator);
     lom.setCheckObjectsForDirtyFlag(true);
+    lom.setPersistAlgorithm(persistAlgorithm);
     NakedObjectManager objectManager=new ObjectManagerLogger(lom,"manager.log");
     nakedObjects.setObjectManager(objectManager);
     NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
