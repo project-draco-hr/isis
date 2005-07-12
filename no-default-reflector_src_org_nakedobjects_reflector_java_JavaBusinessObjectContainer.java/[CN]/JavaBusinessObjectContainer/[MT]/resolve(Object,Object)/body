@@ -1,7 +1,8 @@
 {
   if (field == null) {
     NakedObject adapter=adapterFor(parent);
-    if (adapter.isPersistent() && !adapter.isResolved()) {
+    ResolveState resolveState=adapter.getResolveState();
+    if (resolveState.isResolvable(ResolveState.RESOLVING)) {
       objectManager().resolveImmediately(adapter);
     }
   }
