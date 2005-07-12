@@ -4,9 +4,11 @@
   objectFactory.setContainer(container);
   TransientObjectStore objectStore=new TransientObjectStore();
   OidGenerator oidGenerator=new TimeBasedOidGenerator();
+  DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
+  persistAlgorithm.setOidGenerator(oidGenerator);
   LocalObjectManager objectManager=new LocalObjectManager();
   objectManager.setObjectStore(objectStore);
-  objectManager.setOidGenerator(oidGenerator);
+  objectManager.setPersistAlgorithm(persistAlgorithm);
   nakedObjects.setObjectManager(objectManager);
   StaticNakedObjectSpecificationLoader specificationLoader=new StaticNakedObjectSpecificationLoader();
   nakedObjects.setSpecificationLoader(specificationLoader);
