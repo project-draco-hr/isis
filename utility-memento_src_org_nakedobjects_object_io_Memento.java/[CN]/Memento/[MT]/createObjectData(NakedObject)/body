@@ -1,18 +1,22 @@
 {
   NakedObjectSpecification cls=object.getSpecification();
-  ObjectData d=new ObjectData(object.getOid(),cls.getFullName());
+  ObjectData d=new ObjectData(object.getOid(),object.getResolveState().name(),cls.getFullName());
   NakedObjectField[] fields=cls.getFields();
   for (int i=0; i < fields.length; i++) {
     NakedObjectField field=fields[i];
     if (!field.isDerived()) {
-      if (field instanceof OneToManyAssociation) {
+      if (field.isCollection()) {
         InternalCollection coll=(InternalCollection)object.getField(field);
         d.addField(field.getName(),createData(coll));
       }
- else       if (field instanceof OneToOneAssociation) {
+ else       if (field.isObject()) {
         NakedObject ref=object.getAssociation((OneToOneAssociation)field);
-        Object refOid=ref == null ? null : new Data(ref.getOid(),ref.getSpecification().getFullName());
+        Object refOid=ref == null ? null : new Data(ref.getOid(),ref.getResolveState().name(),ref.getSpecification().getFullName());
         d.addField(field.getName(),refOid);
+      }
+ else       if (field.isValue()) {
+        NakedValue value=object.getValue((OneToOneAssociation)field);
+        d.addField(field.getName(),value.asEncodedString());
       }
     }
   }
