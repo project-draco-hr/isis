@@ -1,13 +1,9 @@
 {
   Memento mem=mementoTransfer(team);
   Person expected=new Person();
-  expected.setOid(new SerialOid(17));
-  loadedObjects.loaded(expected);
-  Team t2=(Team)mem.recreateObject(loadedObjects,context);
+  Team t2=(Team)mem.recreateObject();
   Person recreated=(Person)t2.getMembers().elementAt(0);
-  assertEquals(person.getOid(),recreated.getOid());
   assertFalse(person == recreated);
   recreated=(Person)t2.getMembers().elementAt(1);
-  assertEquals(person2.getOid(),recreated.getOid());
   assertSame(expected,recreated);
 }
