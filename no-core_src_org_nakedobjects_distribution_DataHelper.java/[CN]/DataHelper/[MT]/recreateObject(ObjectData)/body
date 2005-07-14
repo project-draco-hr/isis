@@ -10,10 +10,11 @@
   }
  else {
     object=objectLoader.recreateAdapterForPersistent(oid,specification);
-    if (object.getResolveState().isResolvable(data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART)) {
-      objectLoader.loading(object,data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART);
+    ResolveState state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+    if (object.getResolveState().isResolvable(state)) {
+      objectLoader.start(object,state);
       recreateObjectsInFields(data,object);
-      objectLoader.loaded(object,data.isResolved() ? ResolveState.RESOLVED : ResolveState.PART_RESOLVED);
+      objectLoader.end(object);
     }
   }
   return object;
