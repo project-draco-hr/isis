@@ -6,9 +6,10 @@
       try {
         task.execute();
       }
- catch (      Exception e) {
-        ExceptionHelper.log(BackgroundThread.class,"Error while executing action",e);
-        Naked error=NakedObjects.getObjectLoader().createAdapterForTransient(new Error("Error while executing action:",e));
+ catch (      Throwable e) {
+        String message="Error while running background task: " + task.getName();
+        LOG.error(message,e);
+        Naked error=NakedObjects.getObjectLoader().createAdapterForTransient(new Error(message,e));
         view.getWorkspace().addOpenViewFor(error,new Location(20,20));
       }
       view.getState().setInactive();
