@@ -1,14 +1,12 @@
 {
-  LOG.error(error);
+  LOG.error(error,e.getTargetException());
   if (STRICT) {
     new ReflectionErrorDialog(error,e);
-  }
- else {
   }
   if (e.getTargetException() instanceof RuntimeException) {
     throw (RuntimeException)e.getTargetException();
   }
  else {
-    throw new RuntimeException(e.getTargetException().getMessage());
+    throw new ReflectiveActionException(e.getTargetException().getMessage(),e.getTargetException());
   }
 }
