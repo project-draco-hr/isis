@@ -3,6 +3,10 @@
   if (!drag.getSourceContent().isObject()) {
     return;
   }
+  if (drag.getSourceContent().getNaked() == getContent().getNaked()) {
+    getViewManager().setStatus("can' drop self on workspace");
+    return;
+  }
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
   View newView;
   if (source.getObject() instanceof NakedClass && drag.isCtrl()) {
