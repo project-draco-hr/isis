@@ -1,11 +1,10 @@
 {
   ResolveState resolveState=object.getResolveState();
-  if (resolveState.isResolved() || resolveState.isTransient()) {
-    return;
+  if (resolveState.isResolvable(ResolveState.RESOLVING)) {
+    Oid oid=object.getOid();
+    NakedObjectSpecification hint=object.getSpecification();
+    LOG.debug("resolve object (remotely from server)" + oid);
+    ObjectData data=connection.resolveImmediately(session,oid,hint.getFullName());
+    DataHelper.resolve(data,updateNotifier);
   }
-  Oid oid=object.getOid();
-  NakedObjectSpecification hint=object.getSpecification();
-  LOG.debug("resolve object (remotely from server)" + oid);
-  ObjectData data=connection.resolveImmediately(session,oid,hint.getFullName());
-  DataHelper.resolve(data,updateNotifier);
 }
