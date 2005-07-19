@@ -1,11 +1,16 @@
 {
   Consent perm=getContent().canDrop(drag.getSourceContent());
+  Hint hint=getContent().getHint();
+  String description="";
+  if (hint != null) {
+    description=hint.getDescription();
+  }
   if (perm.isAllowed()) {
-    getViewManager().setStatus(perm.getReason());
+    getViewManager().setStatus(perm.getReason() + " " + description);
     getState().setCanDrop();
   }
  else {
-    getViewManager().setStatus(perm.getReason());
+    getViewManager().setStatus(perm.getReason() + " " + description);
     getState().setCantDrop();
   }
   markDamaged();
