@@ -1,12 +1,30 @@
 {
-  int len=name.length();
-  StringBuffer labelBuffer=new StringBuffer(len);
-  for (int c=0; c < len; c++) {
-    char ch=name.charAt(c);
-    if (c != 0 && Character.isUpperCase(ch)) {
-      labelBuffer.append(' ');
-    }
-    labelBuffer.append(ch);
+  int length=name.length();
+  if (length <= 1) {
+    return name;
   }
-  return labelBuffer.toString();
+  StringBuffer naturalName=new StringBuffer(length);
+  char previousCharacter;
+  char character=name.charAt(0);
+  naturalName.append(character);
+  char nextCharacter=name.charAt(1);
+  for (int pos=2; pos < length; pos++) {
+    previousCharacter=character;
+    character=nextCharacter;
+    nextCharacter=name.charAt(pos);
+    if (previousCharacter != SPACE) {
+      if (Character.isUpperCase(character) && !Character.isUpperCase(previousCharacter)) {
+        naturalName.append(SPACE);
+      }
+      if (Character.isUpperCase(character) && Character.isLowerCase(nextCharacter) && Character.isUpperCase(previousCharacter)) {
+        naturalName.append(SPACE);
+      }
+      if (Character.isDigit(character) && !Character.isDigit(previousCharacter)) {
+        naturalName.append(SPACE);
+      }
+    }
+    naturalName.append(character);
+  }
+  naturalName.append(nextCharacter);
+  return naturalName.toString();
 }
