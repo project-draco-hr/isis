@@ -1,10 +1,6 @@
 {
   LOG.debug("execute action " + object + "."+ getName());
-  try {
-    Naked result=reflectiveAdapter.execute(getIdentifier(),object,parameters == null ? new Naked[0] : parameters);
-    return result;
-  }
- catch (  ReflectiveActionException e) {
-    throw new NakedObjectRuntimeException(e);
-  }
+  Naked[] params=parameters == null ? new Naked[0] : parameters;
+  Naked result=reflectiveAdapter.execute(getIdentifier(),object,params);
+  return result;
 }
