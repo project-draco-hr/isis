@@ -1,0 +1,28 @@
+{
+  StringBuffer details=new StringBuffer();
+  String header=layout.getHeader();
+  if (header != null) {
+    details.append(header);
+  }
+  int len=buffer.length();
+  String message="";
+  for (int i=0; i < len; i++) {
+    LoggingEvent event=buffer.get();
+    message=event.getLoggerName() + ": " + event.getMessage();
+    details.append(layout.format(event));
+    if (layout.ignoresThrowable()) {
+      String[] s=event.getThrowableStrRep();
+      if (s != null) {
+        for (int j=0; j < s.length; j++) {
+          details.append(s[j]);
+          details.append('\n');
+        }
+      }
+    }
+  }
+  String footer=layout.getFooter();
+  if (footer != null) {
+    details.append(footer);
+  }
+  writeSnapshot(message,details.toString());
+}
