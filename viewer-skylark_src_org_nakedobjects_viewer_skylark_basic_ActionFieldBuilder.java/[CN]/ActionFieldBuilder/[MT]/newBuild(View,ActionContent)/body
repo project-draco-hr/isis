@@ -1,11 +1,19 @@
 {
   LOG.debug("build new view " + view + " for "+ actionContent);
-  view.addView(new TextView("ACTION: " + actionContent.getActionName()));
+  view.addView(new SubviewIconSpecification().createView(actionContent,null));
   int noParameters=actionContent.getNoParameters();
+  View focusOn=null;
   for (int f=0; f < noParameters; f++) {
     ParameterContent parameter=actionContent.getParameterContent(f);
     View fieldView=createFieldView(view,parameter);
     String label=parameter.getParameterName();
-    view.addView(decorateSubview(new LabelBorder(label,fieldView)));
+    View decoratedSubview=decorateSubview(new LabelBorder(label,fieldView));
+    view.addView(decoratedSubview);
+    if (focusOn == null && parameter instanceof ValueParameter && fieldView.canFocus()) {
+      focusOn=decoratedSubview;
+    }
+  }
+  if (focusOn != null) {
+    view.getViewManager().makeFocus(focusOn);
   }
 }
