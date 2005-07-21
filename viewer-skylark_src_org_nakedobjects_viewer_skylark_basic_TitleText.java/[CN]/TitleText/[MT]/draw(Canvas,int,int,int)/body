@@ -1,0 +1,49 @@
+{
+  Color color;
+  ViewState state=view.getState();
+  if (state.canDrop()) {
+    color=Style.VALID;
+  }
+ else   if (state.cantDrop()) {
+    color=Style.INVALID;
+  }
+ else   if (state.isObjectIdentified()) {
+    color=Style.PRIMARY1;
+  }
+ else {
+    color=Style.BLACK;
+  }
+  final int xt=x + View.HPADDING;
+  final int yt=baseline;
+  String text=title();
+  if (maxWidth > 0 && style.stringWidth(text) > maxWidth) {
+    int lastCharacterWithinAllowedWidth=0;
+    for (int textWidth=ellipsisWidth; textWidth <= maxWidth; ) {
+      char character=text.charAt(lastCharacterWithinAllowedWidth);
+      textWidth+=style.charWidth(character);
+      lastCharacterWithinAllowedWidth++;
+    }
+    int space=text.lastIndexOf(' ',lastCharacterWithinAllowedWidth - 1);
+    if (space > 0) {
+      while (space >= 0) {
+        char character=text.charAt(space - 1);
+        if (Character.isLetterOrDigit(character)) {
+          break;
+        }
+        space--;
+      }
+      text=text.substring(0,space);
+    }
+ else {
+      text=text.substring(0,lastCharacterWithinAllowedWidth - 1);
+    }
+    text+="...";
+  }
+  canvas.drawText(text,xt,yt,color,style);
+  if (AbstractView.debug) {
+    int x2=style.stringWidth(text) - 1;
+    canvas.drawRectangle(xt,yt - style.getAscent(),x2,style.getTextHeight() - 1,Color.DEBUG_DRAW_BOUNDS);
+    canvas.drawLine(xt,yt - style.getAscent() - style.getTextHeight() / 2,xt + x2,yt - style.getAscent() - style.getTextHeight() / 2,Color.DEBUG_DRAW_BOUNDS);
+    canvas.drawLine(xt,baseline,xt + x2,baseline,Color.DEBUG_BASELINE);
+  }
+}
