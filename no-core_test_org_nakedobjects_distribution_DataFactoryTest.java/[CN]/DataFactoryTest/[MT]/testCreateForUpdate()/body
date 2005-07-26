@@ -1,0 +1,17 @@
+{
+  ObjectData rootData=(ObjectData)factory.createForUpdate(rootObject);
+  assertEquals(ResolveState.SERIALIZING_RESOLVED,rootObject.getResolveState());
+  assertEquals(null,rootData.getOid());
+  assertEquals(rootSpecification.getFullName(),rootData.getType());
+  assertEquals(11,rootData.getVersion());
+  assertEquals(3,rootData.getFieldContent().length);
+  ObjectData referencedFieldData=(ObjectData)rootData.getFieldContent()[0];
+  assertEquals(null,referencedFieldData.getFieldContent());
+  assertEquals(12,referencedFieldData.getVersion());
+  assertEquals(referencedSpecification.getFullName(),referencedFieldData.getType());
+  ValueData valueData=(ValueData)rootData.getFieldContent()[1];
+  assertEquals(valueSpecification.getFullName(),valueData.getType());
+  assertEquals(value,valueData.getValue());
+  ObjectData emptyFieldData=(ObjectData)rootData.getFieldContent()[2];
+  assertNull(emptyFieldData);
+}
