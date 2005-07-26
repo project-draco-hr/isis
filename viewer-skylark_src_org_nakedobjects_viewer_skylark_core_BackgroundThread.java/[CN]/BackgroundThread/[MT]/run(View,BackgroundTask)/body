@@ -7,9 +7,11 @@
         task.execute();
       }
  catch (      Throwable e) {
-        String message="Error while running background task: " + task.getName();
-        LOG.error(message,e);
-        Naked error=NakedObjects.getObjectLoader().createAdapterForTransient(new Error(message,e));
+        if (!(e instanceof NakedObjectApplicationException)) {
+          String message="Error while running background task " + task.getName();
+          LOG.error(message,e);
+        }
+        Naked error=NakedObjects.getObjectLoader().createAdapterForTransient(e);
         view.getWorkspace().addOpenViewFor(error,new Location(20,20));
       }
       view.getState().setInactive();
