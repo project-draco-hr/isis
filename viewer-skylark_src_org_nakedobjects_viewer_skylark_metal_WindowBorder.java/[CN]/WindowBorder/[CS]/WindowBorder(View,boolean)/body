@@ -1,9 +1,9 @@
 {
   super(addTransientBorderIfNeccessary(scrollable ? new ScrollBorder(wrappedView) : wrappedView));
-  titlebarHeight=Math.max(BUTTON_HEIGHT + 2 * VPADDING + TITLE_STYLE.getDescent(),TITLE_STYLE.getTextHeight());
-  baseline=LINE_THICKNESS + padding + BUTTON_HEIGHT;
-  left=LINE_THICKNESS;
-  right=LINE_THICKNESS;
-  top=LINE_THICKNESS + titlebarHeight;
-  bottom=LINE_THICKNESS;
+  if (isTransient()) {
+    setControls(new WindowControl[]{new CloseWindowControl(this)});
+  }
+ else {
+    setControls(new WindowControl[]{new IconizeWindowControl(this),new ResizeWindowControl(this),new CloseWindowControl(this)});
+  }
 }
