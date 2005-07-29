@@ -2,5 +2,14 @@
   XStream xstream=new XStream();
   String requestData=xstream.toXML(request);
   String responseData=connection.request(requestData);
-  return (Response)xstream.fromXML(responseData);
+  Object fromXML=xstream.fromXML(responseData);
+  if (fromXML instanceof NakedObjectRuntimeException) {
+    throw (NakedObjectRuntimeException)fromXML;
+  }
+ else   if (fromXML instanceof Exception) {
+    throw new NakedObjectsRemoteException("Exception occured on server",(Throwable)fromXML);
+  }
+ else {
+    return (Response)fromXML;
+  }
 }
