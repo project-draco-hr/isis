@@ -8,22 +8,7 @@
     help(keyboardFocus);
   }
  else   if (keyCode == KeyEvent.VK_TAB) {
-    if ((modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
-      if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) {
-        action=KeyboardAction.PREVIOUS_WINDOW;
-      }
- else {
-        action=KeyboardAction.NEXT_WINDOW;
-      }
-    }
- else {
-      if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) {
-        action=KeyboardAction.PREVIOUS_VIEW;
-      }
- else {
-        action=KeyboardAction.NEXT_VIEW;
-      }
-    }
+    action=tab(modifiers);
   }
 switch (action) {
 case KeyboardAction.NEXT_VIEW:
@@ -33,9 +18,9 @@ case KeyboardAction.PREVIOUS_VIEW:
 focusPreviousSubview(keyboardFocus);
 break;
 case KeyboardAction.NEXT_WINDOW:
+focusNextRootView(keyboardFocus);
 break;
 case KeyboardAction.PREVIOUS_WINDOW:
-focusNextRootView(keyboardFocus);
 break;
 }
 }
