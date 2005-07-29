@@ -31,9 +31,16 @@ catch (      InvalidEntryException e) {
         getState().setInvalid();
         markDamaged();
       }
+catch (      ConcurrencyException e) {
+        invalidReason="UPDATE FAILURE: " + e.getMessage();
+        LOG.warn(invalidReason,e);
+        getState().setOutOfSynch();
+        markDamaged();
+        throw e;
+      }
 catch (      NakedObjectRuntimeException e) {
         invalidReason="UPDATE FAILURE: " + e.getMessage();
-        LOG.error(invalidReason,e);
+        LOG.warn(invalidReason,e);
         getViewManager().setStatus(invalidReason);
         getState().setOutOfSynch();
         markDamaged();
