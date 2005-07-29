@@ -6,16 +6,25 @@
   NakedObject object;
   if (oid == null) {
     object=objectLoader.createTransientInstance(specification);
+    object.setOptimisticLock(data.getVersion(),"",null);
     recreateObjectsInFields(data,object);
+    return object;
   }
  else {
     object=objectLoader.recreateAdapterForPersistent(oid,specification);
-    ResolveState state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
-    if (object.getResolveState().isResolvable(state)) {
-      objectLoader.start(object,state);
-      recreateObjectsInFields(data,object);
-      objectLoader.end(object);
+    object.setOptimisticLock(data.getVersion(),"",null);
+    ResolveState state;
+    if (data.getFieldContent() == null) {
+      return object;
+    }
+ else {
+      state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+      if (object.getResolveState().isResolvable(state)) {
+        objectLoader.start(object,state);
+        recreateObjectsInFields(data,object);
+        objectLoader.end(object);
+      }
+      return object;
     }
   }
-  return object;
 }

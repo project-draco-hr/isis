@@ -2,7 +2,9 @@
   if (isPersistent(inObject) && fullProxy) {
     LOG.debug("clear association remotely " + inObject + "/"+ associate);
     try {
-      connection.clearAssociation(NakedObjects.getCurrentSession(),getName(),inObject.getOid(),inObject.getSpecification().getFullName(),associate.getOid(),associate.getSpecification().getFullName());
+      ReferenceData targetReference=objectDataFactory.createReference(inObject);
+      ReferenceData associateReference=objectDataFactory.createReference(associate);
+      connection.clearAssociation(NakedObjects.getCurrentSession(),getName(),targetReference,associateReference);
     }
  catch (    NakedObjectRuntimeException e) {
       throw (NakedObjectRuntimeException)e.getCause();

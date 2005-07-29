@@ -1,7 +1,8 @@
 {
   if (isPersistent(inObject)) {
     LOG.debug("set value remotely " + getName() + " in "+ inObject+ " with "+ value);
-    connection.setValue(NakedObjects.getCurrentSession(),getName(),inObject.getOid(),inObject.getSpecification().getFullName(),value);
+    ReferenceData targetReference=objectDataFactory.createReference(inObject);
+    connection.setValue(NakedObjects.getCurrentSession(),getName(),targetReference,value);
   }
  else {
     LOG.debug("set value locally " + getName() + " in "+ inObject+ " with "+ value);

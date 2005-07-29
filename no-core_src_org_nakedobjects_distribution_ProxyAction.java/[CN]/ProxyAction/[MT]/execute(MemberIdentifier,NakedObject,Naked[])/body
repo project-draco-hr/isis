@@ -1,18 +1,12 @@
 {
   if (executeRemotely(target)) {
-    String[] parameterTypes=pararmeterTypes();
     Data[] parameterObjectData=parameterValues(parameters);
     LOG.debug(debug("execute remotely",identifier,target,parameters));
-    Data result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getName(),parameterTypes,target.getOid(),target.getSpecification().getFullName(),parameterObjectData);
-    if (result instanceof ExceptionData) {
-      DataHelper.throwRemoteException((ExceptionData)result);
-      throw new NakedObjectRuntimeException("the above should have thrown an exception");
-    }
- else {
-      NakedObject returnedObject;
-      returnedObject=result == null ? null : DataHelper.recreateObject((ObjectData)result);
-      return returnedObject;
-    }
+    ObjectData targetReference=dataFactory.createDataForActionTarget(target);
+    Data result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getName(),targetReference,parameterObjectData);
+    NakedObject returnedObject;
+    returnedObject=result == null ? null : DataHelper.recreateObject((ObjectData)result);
+    return returnedObject;
   }
  else {
     LOG.debug(debug("execute locally",identifier,target,parameters));
