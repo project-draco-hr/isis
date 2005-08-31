@@ -1,14 +1,18 @@
 {
   Object[] fieldContent=data.getFieldContent();
+  boolean partResolving=object.getResolveState() == ResolveState.RESOLVING_PART;
   if (fieldContent != null && fieldContent.length > 0) {
     NakedObjectField[] fields=object.getSpecification().getFields();
     for (int i=0; i < fields.length; i++) {
+      if (fieldContent[i] instanceof NullData && partResolving) {
+        continue;
+      }
       if (fields[i].isCollection()) {
         if (fieldContent[i] != null) {
           ObjectData collection=(ObjectData)fieldContent[i];
           NakedObject[] instances=new NakedObject[collection.getFieldContent().length];
           for (int j=0; j < instances.length; j++) {
-            instances[j]=recreateObject(((ObjectData)collection.getFieldContent()[j]));
+            instances[j]=(NakedObject)recreateNaked(((ObjectData)collection.getFieldContent()[j]));
           }
           object.initOneToManyAssociation((OneToManyAssociation)fields[i],instances);
         }
@@ -21,8 +25,8 @@
  else {
         if (fieldContent[i] != null) {
           NakedObjectAssociation field=(NakedObjectAssociation)fields[i];
-          NakedObject value=recreateObject(((ObjectData)fieldContent[i]));
-          object.initAssociation(field,value);
+          NakedObject associate=(NakedObject)recreate((Data)fieldContent[i]);
+          object.initAssociation(field,associate);
         }
       }
     }

@@ -6,16 +6,12 @@
   NakedObjectField[] fields=object.getSpecification().getFields();
   if (fields.length > 0) {
     for (int i=0; i < fields.length; i++) {
-      if (fieldContent[i] == null) {
-        continue;
-      }
       if (fields[i].isCollection()) {
         ObjectData collection=(ObjectData)fieldContent[i];
         Object[] elements=collection.getFieldContent();
         NakedObject[] instances=new NakedObject[elements.length];
         for (int j=0; j < instances.length; j++) {
-          NakedObject instance=recreateObject((ObjectData)elements[j]);
-          instances[j]=instance;
+          instances[j]=(NakedObject)recreateNaked((ObjectData)elements[j]);
         }
         object.initOneToManyAssociation((OneToManyAssociation)fields[i],instances);
       }
@@ -23,7 +19,13 @@
         object.initValue((OneToOneAssociation)fields[i],((ValueData)fieldContent[i]).getValue());
       }
  else {
-        NakedObject field=recreateObject((ObjectData)fieldContent[i]);
+        NakedObject field;
+        if (fieldContent[i] instanceof NullData) {
+          field=null;
+        }
+ else {
+          field=(NakedObject)recreateNaked((ObjectData)fieldContent[i]);
+        }
         object.initAssociation((NakedObjectAssociation)fields[i],field);
       }
     }

@@ -1,0 +1,26 @@
+{
+  NakedObject object;
+  if (oid == null) {
+    object=objectLoader.recreateTransientInstance(specification);
+    object.setOptimisticLock(data.getVersion(),"",null);
+    recreateObjectsInFields(data,object);
+    return object;
+  }
+ else {
+    object=objectLoader.recreateAdapterForPersistent(oid,specification);
+    object.setOptimisticLock(data.getVersion(),"",null);
+    ResolveState state;
+    if (data.getFieldContent() == null) {
+      return object;
+    }
+ else {
+      state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+      if (object.getResolveState().isResolvable(state)) {
+        objectLoader.start(object,state);
+        recreateObjectsInFields(data,object);
+        objectLoader.end(object);
+      }
+      return object;
+    }
+  }
+}
