@@ -32,10 +32,12 @@
     objectFactory.setContainer(container);
     XmlObjectStore objectStore=new XmlObjectStore();
     objectStore.setDataManager(new XmlDataManager());
-    OidGenerator oidGenerator=new SimpleOidGenerator();
+    OidGenerator oidGenerator=new SimpleOidGenerator(1000);
+    DefaultPersistAlgorithm algo=new DefaultPersistAlgorithm();
+    algo.setOidGenerator(oidGenerator);
     LocalObjectManager objectManager=new LocalObjectManager();
     objectManager.setObjectStore(objectStore);
-    objectManager.setOidGenerator(oidGenerator);
+    objectManager.setPersistAlgorithm(algo);
     objectManager.setCheckObjectsForDirtyFlag(true);
     nakedObjects.setObjectManager(objectManager);
     NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
