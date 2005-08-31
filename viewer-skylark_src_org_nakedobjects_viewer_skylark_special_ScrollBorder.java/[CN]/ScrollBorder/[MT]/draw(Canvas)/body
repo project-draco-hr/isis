@@ -3,10 +3,15 @@
   int contentWidth=contents.getWidth();
   int contentHeight=contents.getHeight();
   drawScrollBars(canvas,contentWidth,contentHeight);
+  Offset offset=offset();
+  int x=offset.getDeltaX();
+  int y=offset.getDeltaY();
+  Canvas subCanvas=canvas.createSubcanvas(left,top,contentWidth,contentHeight);
+  subCanvas.offset(-x,-y);
   if (AbstractView.debug) {
     canvas.drawRectangle(contents.getX(),contents.getY(),contents.getWidth(),contents.getHeight(),Color.DEBUG_DRAW_BOUNDS);
   }
-  drawContent(canvas,contentWidth,contentHeight);
+  wrappedView.draw(subCanvas);
   if (AbstractView.debug) {
     Size size=getSize();
     canvas.drawRectangle(0,0,size.getWidth() - 1,size.getHeight() - 1,Color.DEBUG_VIEW_BOUNDS);

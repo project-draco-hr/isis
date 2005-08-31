@@ -2,7 +2,10 @@
   Offset offset=offset();
   int x=offset.getDeltaX();
   int y=offset.getDeltaY();
-  Canvas subCanvas=canvas.createSubcanvas(-x,-y,contentWidth + x,contentHeight + y);
-  subCanvas.offset(left,top);
+  Canvas subCanvas=canvas.createSubcanvas(left,top,contentWidth,contentHeight);
+  subCanvas.offset(-x,-y);
   wrappedView.draw(subCanvas);
+  if (AbstractView.debug) {
+    subCanvas.drawRectangle(0,0,contentWidth,contentHeight,Color.DEBUG_DRAW_BOUNDS);
+  }
 }
