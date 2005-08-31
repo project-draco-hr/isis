@@ -1,0 +1,12 @@
+{
+  if (oid.hasPrevious()) {
+    NakedObject object=(NakedObject)identityAdapterMap.get(oid.getPrevious());
+    if (object != null) {
+      LOG.debug("updating oid " + oid.getPrevious() + " to "+ oid);
+      identityAdapterMap.remove(oid.getPrevious());
+      Oid oidFromObject=object.getOid();
+      oidFromObject.copyFrom(oid);
+      identityAdapterMap.put(oidFromObject,object);
+    }
+  }
+}
