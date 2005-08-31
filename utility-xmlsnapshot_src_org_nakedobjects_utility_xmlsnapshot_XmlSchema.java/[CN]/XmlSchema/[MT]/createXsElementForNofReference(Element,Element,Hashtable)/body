@@ -1,0 +1,21 @@
+{
+  String fieldName=xmlReferenceElement.getLocalName();
+  Element parentXsComplexTypeElement=xsMeta.complexTypeFor(parentXsElementElement);
+  Element parentXsSequenceElement=xsMeta.sequenceFor(parentXsComplexTypeElement);
+  Element xsFieldElementElement=xsMeta.createXsElementElement(helper.docFor(parentXsSequenceElement),fieldName);
+  parentXsSequenceElement.appendChild(xsFieldElementElement);
+  Element xsFieldComplexTypeElement=xsMeta.complexTypeFor(xsFieldElementElement);
+  Element xsFieldSequenceElement=xsMeta.sequenceFor(xsFieldComplexTypeElement);
+  Element xsFieldTitleElement=xsMeta.createXsElement(helper.docFor(xsFieldSequenceElement),"element");
+  xsFieldTitleElement.setAttribute("ref",NofMetaModel.NOF_METAMODEL_NS_PREFIX + ":" + "title");
+  xsFieldSequenceElement.appendChild(xsFieldTitleElement);
+  xsMeta.setXsCardinality(xsFieldTitleElement,0,1);
+  addXsElementForAppExtensions(xsFieldSequenceElement,extensions);
+  Element xsReferencedElementSequenceElement=xsMeta.sequenceFor(xsFieldSequenceElement);
+  xsMeta.setXsCardinality(xsReferencedElementSequenceElement,0,1);
+  xsMeta.addXsNofFeatureAttributeElements(xsFieldComplexTypeElement,"reference");
+  xsMeta.addXsNofAttribute(xsFieldComplexTypeElement,"type");
+  xsMeta.addXsNofAttribute(xsFieldComplexTypeElement,"isEmpty");
+  xsMeta.addXsNofAttribute(xsFieldComplexTypeElement,"annotation");
+  return xsFieldElementElement;
+}
