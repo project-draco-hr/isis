@@ -1,0 +1,19 @@
+{
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  system=new TestSystem();
+  object=new TestPojo();
+  system.addCreatedObject(object);
+  system.addSpecification(new DummyNakedObjectSpecification("type.1"));
+  DummyNakedObjectSpecification spec=new DummyNakedObjectSpecification(TestPojo.class.getName());
+  DummyNakedObjectSpecification valueFieldSpec=new DummyNakedObjectSpecification();
+  valueFieldSpec.setupIsValue(true);
+  OneToOneAssociation field1=new OneToOneAssociation("cls","one",valueFieldSpec,new TestPojoValuePeer());
+  DummyNakedObjectSpecification referenceFieldSpec=new DummyNakedObjectSpecification();
+  referencedObject=new TestPojo();
+  system.addCreatedObject(referencedObject);
+  OneToOneAssociation field2=new OneToOneAssociation("cls","two",referenceFieldSpec,new TestPojoReferencePeer());
+  NakedObjectField[] fields=new NakedObjectField[]{field1,field2};
+  spec.setupFields(fields);
+  system.addSpecification(spec);
+  system.init();
+}
