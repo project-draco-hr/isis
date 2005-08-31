@@ -1,6 +1,12 @@
 {
-  if (object instanceof TextString) {
+  if (object instanceof MultilineTextString) {
+    return new MultilineTextStringAdapter((MultilineTextString)object);
+  }
+ else   if (object instanceof TextString) {
     return new TextStringAdapter((TextString)object);
+  }
+ else   if (object instanceof Password) {
+    return new PasswordAdapter((Password)object);
   }
  else   if (object instanceof Logical) {
     return new LogicalValueObjectAdapter((Logical)object);
@@ -13,9 +19,6 @@
   }
  else   if (object instanceof Date) {
     return new DateValueAdapter((Date)object);
-  }
- else   if (object instanceof org.nakedobjects.application.value.TextString) {
-    return new TextStringValueAdapter((org.nakedobjects.application.value.TextString)object);
   }
  else   if (object instanceof BusinessValueHolder) {
     return new BusinessValueAdapter((BusinessValueHolder)object);
