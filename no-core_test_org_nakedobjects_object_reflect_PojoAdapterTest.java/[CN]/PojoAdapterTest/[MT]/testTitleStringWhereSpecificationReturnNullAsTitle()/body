@@ -1,8 +1,8 @@
 {
-  DummyNakedObjectSpecification spec=setupSpec(null);
-  spec.setupUnresolvedTitle("unresolved object");
+  setupSpec(null);
   NakedObject pa=system.createAdapterForTransient(new TestPojo());
   pa.getSpecification();
   objectLoader.madePersistent(pa,new MockOid(1));
+  assertEquals(ResolveState.RESOLVED,pa.getResolveState());
   assertEquals("A singular name",pa.titleString());
 }
