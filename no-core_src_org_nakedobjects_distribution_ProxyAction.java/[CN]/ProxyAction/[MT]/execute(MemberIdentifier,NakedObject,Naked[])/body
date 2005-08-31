@@ -4,8 +4,8 @@
     LOG.debug(debug("execute remotely",identifier,target,parameters));
     ObjectData targetReference=dataFactory.createDataForActionTarget(target);
     Data result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getName(),targetReference,parameterObjectData);
-    NakedObject returnedObject;
-    returnedObject=result == null ? null : DataHelper.recreateObject((ObjectData)result);
+    Naked returnedObject;
+    returnedObject=result instanceof NullData ? null : DataHelper.recreateNaked((ObjectData)result);
     return returnedObject;
   }
  else {
