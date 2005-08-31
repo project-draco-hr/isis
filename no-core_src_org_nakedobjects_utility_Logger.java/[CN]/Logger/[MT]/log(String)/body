@@ -1,0 +1,22 @@
+{
+  if (logAlso) {
+    logger().info(message);
+  }
+  if (fileName != null) {
+    if (stream == null) {
+      try {
+        if (fileName == null) {
+          return;
+        }
+        stream=new PrintStream(new FileOutputStream(fileName));
+      }
+ catch (      IOException e) {
+        e.printStackTrace();
+      }
+    }
+    stream.print(time() - start);
+    stream.print("  ");
+    stream.println(message);
+    stream.flush();
+  }
+}
