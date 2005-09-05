@@ -3,7 +3,14 @@
     Data[] parameterObjectData=parameterValues(parameters);
     LOG.debug(debug("execute remotely",identifier,target,parameters));
     ObjectData targetReference=dataFactory.createDataForActionTarget(target);
-    Data result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getName(),targetReference,parameterObjectData);
+    Data result;
+    try {
+      result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getName(),targetReference,parameterObjectData);
+    }
+ catch (    NakedObjectRuntimeException e) {
+      LOG.error("remote exception " + e.getMessage(),e);
+      throw e;
+    }
     Naked returnedObject;
     returnedObject=result instanceof NullData ? null : DataHelper.recreateNaked((ObjectData)result);
     return returnedObject;
