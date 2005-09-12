@@ -1,0 +1,11 @@
+{
+  Enumeration e=properties.propertyNames();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    if (key.startsWith(prefix)) {
+      String className=properties.getProperty(key);
+      Object field=load(className,prefix + "." + key,properties);
+      setProperty(object,key,field);
+    }
+  }
+}

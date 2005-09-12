@@ -1,0 +1,27 @@
+{
+  String field=fieldName.substring(fieldName.lastIndexOf(".") + 1);
+  field=Character.toUpperCase(field.charAt(0)) + field.substring(1);
+  LOG.debug("setting " + field + " on "+ object);
+  Class c=object.getClass();
+  LOG.debug("  getting set method for " + field + "/"+ value.getClass());
+  Method setter;
+  try {
+    setter=c.getMethod("set" + field,new Class[]{value.getClass()});
+    setter.invoke(object,new Object[]{value});
+  }
+ catch (  SecurityException e1) {
+    e1.printStackTrace();
+  }
+catch (  NoSuchMethodException e1) {
+    e1.printStackTrace();
+  }
+catch (  IllegalArgumentException e1) {
+    e1.printStackTrace();
+  }
+catch (  IllegalAccessException e1) {
+    e1.printStackTrace();
+  }
+catch (  InvocationTargetException e1) {
+    e1.printStackTrace();
+  }
+}
