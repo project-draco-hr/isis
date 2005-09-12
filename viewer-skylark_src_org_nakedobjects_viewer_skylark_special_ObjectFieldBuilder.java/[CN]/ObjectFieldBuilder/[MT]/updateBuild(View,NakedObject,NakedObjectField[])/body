@@ -1,38 +1,63 @@
 {
   LOG.debug("rebuild view " + view + " for "+ object);
   View[] subviews=view.getSubviews();
-  int fld=0;
+  outer:   for (int i=0; i < subviews.length; i++) {
+    FieldContent fieldContent=((FieldContent)subviews[i].getContent());
+    for (int j=0; j < flds.length; j++) {
+      NakedObjectField field=flds[j];
+      if (fieldContent.getFieldReflector() == field) {
+        continue outer;
+      }
+    }
+    view.removeView(subviews[i]);
+  }
+  subviews=view.getSubviews();
   for (int i=0; i < subviews.length; i++) {
     View subview=subviews[i];
     NakedObjectField fieldReflector=((FieldContent)subview.getContent()).getFieldReflector();
-    while (fieldReflector != flds[fld]) {
-      fld++;
+    Naked value=object.getField(fieldReflector);
+    if (fieldReflector.isValue()) {
+      subview.refresh();
     }
-    Assert.assertTrue(fld < flds.length);
-    NakedObjectField field=flds[fld];
-    try {
-      Naked value=object.getField(field);
-      if (field.isValue()) {
-        subview.refresh();
-      }
- else       if (value instanceof NakedCollection) {
-        subview.update(value);
-      }
+ else     if (value instanceof NakedCollection) {
+      subview.update(value);
+    }
  else {
-        NakedObject existing=((ObjectContent)subviews[i].getContent()).getObject();
-        boolean changedValue=value != existing;
-        if (changedValue) {
-          View fieldView=subviewDesign.createSubview(createContent(object,value,field),view.getViewAxis());
-          if (fieldView != null) {
-            view.replaceView(subview,decorateSubview(fieldView));
-          }
+      NakedObject existing=((ObjectContent)subviews[i].getContent()).getObject();
+      boolean changedValue=value != existing;
+      if (changedValue) {
+        View fieldView;
+        try {
+          fieldView=subviewDesign.createSubview(createContent(object,value,fieldReflector),view.getViewAxis());
+        }
+ catch (        NakedObjectDefinitionException e) {
+          LOG.error("invalid field",e);
+          fieldView=new FieldErrorView(e.getMessage());
+        }
+        if (fieldView != null) {
+          view.replaceView(subview,decorateSubview(fieldView));
         }
       }
     }
- catch (    NakedObjectDefinitionException e) {
-      LOG.error("Invalid field",e);
-      view.addView(new FieldErrorView(e.getMessage()));
+  }
+  outer2:   for (int j=0; j < flds.length; j++) {
+    NakedObjectField field=flds[j];
+    for (int i=0; i < subviews.length; i++) {
+      FieldContent fieldContent=((FieldContent)subviews[i].getContent());
+      if (fieldContent.getFieldReflector() == field) {
+        continue outer2;
+      }
     }
-    fld++;
+    addField(view,object,field);
+  }
+{
+    View[] dsubviews=view.getSubviews();
+    for (int i=0; i < flds.length; i++) {
+      LOG.debug(i + " " + flds[i].getName()+ " "+ flds[i].hashCode());
+    }
+    for (int i=0; i < dsubviews.length; i++) {
+      FieldContent fieldContent=((FieldContent)dsubviews[i].getContent());
+      LOG.debug(i + " " + fieldContent.getFieldName()+ " "+ fieldContent.getFieldReflector().hashCode());
+    }
   }
 }
