@@ -1,4 +1,7 @@
 {
+  Oid oid=data.getOid();
+  Object[] fieldContent=data.getFieldContent();
+  long version=data.getVersion();
   NakedObject object;
   object=objectLoader.getAdapterFor(oid);
   object.setOptimisticLock(version,"",null);
@@ -7,11 +10,12 @@
   if (fields.length > 0) {
     for (int i=0; i < fields.length; i++) {
       if (fields[i].isCollection()) {
-        ObjectData collection=(ObjectData)fieldContent[i];
-        Object[] elements=collection.getFieldContent();
+        CollectionData collection=(CollectionData)fieldContent[i];
+        Object[] elements=collection.getElements();
         NakedObject[] instances=new NakedObject[elements.length];
         for (int j=0; j < instances.length; j++) {
-          instances[j]=(NakedObject)recreateNaked((ObjectData)elements[j]);
+          ObjectData objectData=(ObjectData)elements[j];
+          instances[j]=recreateObject(objectData);
         }
         object.initOneToManyAssociation((OneToManyAssociation)fields[i],instances);
       }
@@ -24,12 +28,12 @@
           field=null;
         }
  else {
-          field=(NakedObject)recreateNaked((ObjectData)fieldContent[i]);
+          field=recreateObject((ObjectData)fieldContent[i]);
         }
         object.initAssociation((NakedObjectAssociation)fields[i],field);
       }
     }
   }
   objectLoader.end(object);
-  return object;
+  updateNotifier.addDirty(object);
 }

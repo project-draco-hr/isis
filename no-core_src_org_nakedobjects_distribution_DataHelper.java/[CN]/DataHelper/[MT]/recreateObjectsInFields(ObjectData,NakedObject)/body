@@ -9,10 +9,10 @@
       }
       if (fields[i].isCollection()) {
         if (fieldContent[i] != null) {
-          ObjectData collection=(ObjectData)fieldContent[i];
-          NakedObject[] instances=new NakedObject[collection.getFieldContent().length];
+          CollectionData collection=(CollectionData)fieldContent[i];
+          NakedObject[] instances=new NakedObject[collection.getElements().length];
           for (int j=0; j < instances.length; j++) {
-            instances[j]=(NakedObject)recreateNaked(((ObjectData)collection.getFieldContent()[j]));
+            instances[j]=recreateObject(((ObjectData)collection.getElements()[j]));
           }
           object.initOneToManyAssociation((OneToManyAssociation)fields[i],instances);
         }

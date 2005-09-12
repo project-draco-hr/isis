@@ -1,13 +1,12 @@
 {
   Oid oid=collection.getOid();
   String type=collection.getSpecification().getFullName();
-  ;
   Enumeration e=collection.elements();
-  Object[] fieldContent=new Object[collection.size()];
+  ObjectData[] elements=new ObjectData[collection.size()];
   int i=0;
   while (e.hasMoreElements()) {
     NakedObject element=(NakedObject)e.nextElement();
-    fieldContent[i++]=createObjectData(element,recursePersistentObjects,depth);
+    elements[i++]=createObjectData(element,recursePersistentObjects,depth);
   }
-  return createObjectData(oid,type,fieldContent,true,collection.getVersion());
+  return createCollectionData(oid,type,elements,collection.getVersion());
 }
