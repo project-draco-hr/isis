@@ -1,36 +1,22 @@
 {
-  int x=click.getLocation().getX();
-  int y=click.getLocation().getY();
-  Bounds contents=contentArea();
-  if (x >= contents.getWidth()) {
-    if (click.button3()) {
-      setVerticalPostion(y - verticalVisibleAmount / 2);
-    }
- else     if (click.button1()) {
-      if (y < verticalScrollPosition) {
-        setVerticalPostion(verticalScrollPosition - verticalVisibleAmount);
-      }
- else       if (y > verticalScrollPosition + verticalVisibleAmount) {
-        setVerticalPostion(verticalScrollPosition + verticalVisibleAmount);
-      }
-    }
-  }
- else   if (y >= contents.getHeight()) {
-    if (click.button3()) {
-      setHorizontalPostion(x - horizontalVisibleAmount / 2);
-    }
- else     if (click.button1()) {
-      if (x < horizontalScrollPosition) {
-        setHorizontalPostion(horizontalScrollPosition - horizontalVisibleAmount);
-      }
- else       if (x > horizontalScrollPosition + horizontalVisibleAmount) {
-        setHorizontalPostion(horizontalScrollPosition + horizontalVisibleAmount);
-      }
-    }
-  }
- else {
-    click.add(offset());
-    click.subtract(left,top);
-    wrappedView.firstClick(click);
-  }
+  int area=adjust(click);
+switch (area) {
+case NORTH:
+    topHeader.firstClick(click);
+  break;
+case WEST:
+leftHeader.firstClick(click);
+break;
+case CENTER:
+wrappedView.firstClick(click);
+break;
+case SOUTH:
+firstClickSouth(click);
+break;
+case EAST:
+firstClickEast(click);
+break;
+default :
+break;
+}
 }

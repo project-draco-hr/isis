@@ -1,27 +1,18 @@
 {
-  Location location=drag.getLocation();
-  int x=location.getX();
-  int y=location.getY();
-  Bounds contents=contentArea();
-  dragOffset=-1;
-  if (x >= contents.getWidth()) {
-    if (y > verticalScrollPosition && y < verticalScrollPosition + verticalVisibleAmount) {
-      dragOffset=y - verticalScrollPosition;
-      verticalDrag=true;
-      return new SimpleInternalDrag(this,location);
-    }
-  }
- else   if (y >= contents.getHeight()) {
-    if (x > horizontalScrollPosition && x < horizontalScrollPosition + horizontalVisibleAmount) {
-      dragOffset=x - horizontalScrollPosition;
-      verticalDrag=false;
-      return new SimpleInternalDrag(this,location);
-    }
-  }
- else {
-    drag.add(offset());
-    drag.subtract(left,top);
-    return wrappedView.dragStart(drag);
-  }
-  return null;
+  int area=adjust(drag);
+  dragArea=area;
+switch (area) {
+case NORTH:
+    throw new NotImplementedException();
+case WEST:
+  throw new NotImplementedException();
+case CENTER:
+throw new NotImplementedException();
+case SOUTH:
+return dragStartSouth(drag);
+case EAST:
+return dragStartEast(drag);
+default :
+return null;
+}
 }

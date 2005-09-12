@@ -1,0 +1,35 @@
+{
+  Bounds contents=contentArea();
+  if (contents.contains(location)) {
+    location.add(offset());
+    location.move(-left,-top);
+    return CENTER;
+  }
+ else {
+    int x=location.getX();
+    int y=location.getY();
+    if (x > contents.getX2() && y >= contents.getY() && y <= contents.getY2()) {
+      location.subtract(0,contents.getY());
+      return EAST;
+    }
+ else     if (y > contents.getY2() && x >= contents.getX() && x <= contents.getX2()) {
+      location.subtract(contents.getX(),0);
+      return SOUTH;
+    }
+ else     if (y < contents.getY() && x >= contents.getX() && x <= contents.getX2()) {
+      location.subtract(left,0);
+      location.add(offset().getDeltaX(),0);
+      return NORTH;
+    }
+ else     if (x < contents.getX() && y >= contents.getY() && y <= contents.getY2()) {
+      location.subtract(0,top);
+      location.add(0,offset().getDeltaY());
+      return WEST;
+    }
+ else {
+      location.setX(-1);
+      location.setY(-1);
+      return CORNER;
+    }
+  }
+}

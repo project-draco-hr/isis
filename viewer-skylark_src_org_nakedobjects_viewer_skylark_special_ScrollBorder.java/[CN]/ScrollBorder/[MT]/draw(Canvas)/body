@@ -1,17 +1,23 @@
 {
   Bounds contents=contentArea();
-  int contentWidth=contents.getWidth();
-  int contentHeight=contents.getHeight();
-  drawScrollBars(canvas,contentWidth,contentHeight);
   Offset offset=offset();
   int x=offset.getDeltaX();
   int y=offset.getDeltaY();
-  Canvas subCanvas=canvas.createSubcanvas(left,top,contentWidth,contentHeight);
-  subCanvas.offset(-x,-y);
+  int contentWidth=contents.getWidth();
+  int contentHeight=contents.getHeight();
+  Canvas headerCanvasLeft=canvas.createSubcanvas(0,top,left,contentHeight);
+  headerCanvasLeft.offset(0,-y);
+  leftHeader.draw(headerCanvasLeft);
+  Canvas headerCanvasRight=canvas.createSubcanvas(left,0,contentWidth,top);
+  headerCanvasRight.offset(-x,0);
+  topHeader.draw(headerCanvasRight);
+  drawScrollBars(canvas,contentWidth,contentHeight);
+  Canvas contentCanvas=canvas.createSubcanvas(left,top,contentWidth,contentHeight);
+  contentCanvas.offset(-x,-y);
   if (AbstractView.debug) {
     canvas.drawRectangle(contents.getX(),contents.getY(),contents.getWidth(),contents.getHeight(),Color.DEBUG_DRAW_BOUNDS);
   }
-  wrappedView.draw(subCanvas);
+  wrappedView.draw(contentCanvas);
   if (AbstractView.debug) {
     Size size=getSize();
     canvas.drawRectangle(0,0,size.getWidth() - 1,size.getHeight() - 1,Color.DEBUG_VIEW_BOUNDS);

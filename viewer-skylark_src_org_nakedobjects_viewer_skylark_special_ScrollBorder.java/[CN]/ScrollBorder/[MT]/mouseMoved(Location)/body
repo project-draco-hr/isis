@@ -1,24 +1,29 @@
 {
   Bounds contents=contentArea();
-  if (contents.contains(location)) {
-    location.add(offset());
-    location.move(-left,-top);
-    System.out.println("content " + location);
-  }
+  if (true) {
+    Location l=new Location(location);
+    int pos=adjust(l);
+    System.out.println(pos + ": " + l);
+    if (contents.contains(location)) {
+      location.add(offset());
+      location.move(-left,-top);
+      System.out.println("content " + location);
+    }
  else {
-    int x=location.getX();
-    int y=location.getY();
-    if (x > contents.getX2() && y >= contents.getY() && y <= contents.getY2()) {
-      System.out.println("vertical scroll " + (y - contents.getY()));
-    }
- else     if (y > contents.getY2() && x >= contents.getX() && x <= contents.getX2()) {
-      System.out.println("horizontal scroll " + (x - contents.getX()));
-    }
- else     if (y < contents.getY() && x >= contents.getX() && x <= contents.getX2()) {
-      System.out.println("top header " + (x - left + offset().getDeltaX()) + ","+ y);
-    }
- else     if (x < contents.getX() && y >= contents.getY() && y <= contents.getY2()) {
-      System.out.println("left header " + x + ","+ (y - top + offset().getDeltaY()));
+      int x=location.getX();
+      int y=location.getY();
+      if (x > contents.getX2() && y >= contents.getY() && y <= contents.getY2()) {
+        System.out.println("vertical scroll " + (y - contents.getY()));
+      }
+ else       if (y > contents.getY2() && x >= contents.getX() && x <= contents.getX2()) {
+        System.out.println("horizontal scroll " + (x - contents.getX()));
+      }
+ else       if (y < contents.getY() && x >= contents.getX() && x <= contents.getX2()) {
+        System.out.println("top header " + (x - left + offset().getDeltaX()) + ","+ y);
+      }
+ else       if (x < contents.getX() && y >= contents.getY() && y <= contents.getY2()) {
+        System.out.println("left header " + x + ","+ (y - top + offset().getDeltaY()));
+      }
     }
   }
   if (contentArea().contains(location)) {

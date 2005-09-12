@@ -1,18 +1,22 @@
 {
-  int x=click.getLocation().getX();
-  int y=click.getLocation().getY();
-  Bounds contents=contentArea();
-  if (x >= contents.getWidth()) {
-    int position=(y < contents.getHeight() / 2) ? verticalMinimum : verticalMaximum;
-    setVerticalPostion(position);
-  }
- else   if (y >= contents.getHeight()) {
-    int position=(x < contents.getWidth() / 2) ? horizontalMinimum : horizontalMaximum;
-    setHorizontalPostion(position);
-  }
- else {
-    click.add(offset());
-    click.subtract(left,top);
-    wrappedView.secondClick(click);
-  }
+  int area=adjust(click);
+switch (area) {
+case NORTH:
+    topHeader.secondClick(click);
+  break;
+case WEST:
+leftHeader.secondClick(click);
+break;
+case CENTER:
+wrappedView.secondClick(click);
+break;
+case SOUTH:
+secondClickSouth(click);
+break;
+case EAST:
+secondClickEast(click);
+break;
+default :
+break;
+}
 }

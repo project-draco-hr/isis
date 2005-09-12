@@ -1,15 +1,26 @@
 {
-  if (dragOffset == -1) {
-    super.drag(drag);
-  }
- else {
-    if (verticalDrag) {
-      int y=drag.getLocation().getY();
-      setVerticalPostion(y - dragOffset);
-    }
- else {
-      int x=drag.getLocation().getX();
-      setHorizontalPostion(x - dragOffset);
-    }
-  }
+switch (dragArea) {
+case NORTH:
+    drag.getLocation().subtract(offset().getDeltaX(),top);
+  topHeader.drag(drag);
+break;
+case WEST:
+drag.getLocation().subtract(left,offset().getDeltaY());
+leftHeader.drag(drag);
+break;
+case CENTER:
+drag.getLocation().subtract(offset());
+wrappedView.drag(drag);
+break;
+case SOUTH:
+int x=drag.getLocation().getX() - left;
+setHorizontalPostion(x - offsetToThumbEdge);
+break;
+case EAST:
+int y=drag.getLocation().getY() - top;
+setVerticalPostion(y - offsetToThumbEdge);
+break;
+default :
+return;
+}
 }

@@ -1,10 +1,15 @@
 {
-  if (overContent(location)) {
-    location.add(offset());
-    location.subtract(left,top);
-    return wrappedView.viewAreaType(location);
-  }
- else {
-    return ViewAreaType.INTERNAL;
-  }
+  int area=adjust(location);
+switch (area) {
+case NORTH:
+    return topHeader.viewAreaType(location);
+case WEST:
+  return leftHeader.viewAreaType(location);
+case CENTER:
+return wrappedView.viewAreaType(location);
+case SOUTH:
+case EAST:
+default :
+return ViewAreaType.INTERNAL;
+}
 }

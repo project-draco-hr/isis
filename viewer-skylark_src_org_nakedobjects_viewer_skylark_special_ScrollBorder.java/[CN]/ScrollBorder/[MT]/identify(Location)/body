@@ -1,13 +1,21 @@
 {
   getViewManager().getSpy().addTrace(this,"mouse location within border",location);
   getViewManager().getSpy().addTrace(this,"non border area",contentArea());
-  if (overContent(location)) {
-    location.add(-left,-top);
-    location.add(offset().getDeltaX(),offset().getDeltaY());
-    return wrappedView.identify(location);
-  }
- else {
-    getViewManager().getSpy().addTrace(this,"over border area",contentArea());
-    return getView();
-  }
+  int area=adjust(location);
+switch (area) {
+case NORTH:
+    return topHeader.identify(location);
+case WEST:
+  return leftHeader.identify(location);
+case CENTER:
+return wrappedView.identify(location);
+case SOUTH:
+getViewManager().getSpy().addTrace(this,"over scroll bar area",contentArea());
+return getView();
+case EAST:
+getViewManager().getSpy().addTrace(this,"over scroll bar area",contentArea());
+return getView();
+default :
+return null;
+}
 }
