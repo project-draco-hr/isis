@@ -3,7 +3,7 @@
   try {
     for (int i=0; i < newInstances.size(); i++) {
       NakedObject object=(NakedObject)newInstances.elementAt(i);
-      LOG.debug("Persisting " + object);
+      LOG.debug("persisting " + object);
       boolean notPersistent=object.getOid() == null;
       if (notPersistent) {
         objectManager.makePersistent(object);
@@ -13,12 +13,12 @@
     objectManager.endTransaction();
   }
  catch (  RuntimeException e) {
-    LOG.error("Exception during fixture installation; aborting transaction",e);
+    LOG.error("exception during fixture installation; aborting transaction",e);
     try {
       objectManager.abortTransaction();
     }
  catch (    Exception e2) {
-      LOG.error("Failure during abort",e2);
+      LOG.error("failure during abort",e2);
     }
     throw e;
   }

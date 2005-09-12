@@ -26,7 +26,7 @@
       removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,params);
     }
     if (addMethod == null || removeMethod == null) {
-      LOG.error("There must be both add and remove methods for " + name + " in "+ className());
+      LOG.error("there must be both add and remove methods for " + name + " in "+ className());
       return;
     }
     Class removeType=(removeMethod == null) ? null : removeMethod.getParameterTypes()[0];
@@ -35,11 +35,11 @@
     elementType=(addType == null) ? elementType : addType;
     elementType=(removeType == null) ? elementType : removeType;
     if (elementType == null) {
-      LOG.warn("Cannot determine a type for the collection " + name + "; not added as a field");
+      LOG.warn("cannot determine a type for the collection " + name + "; not added as a field");
       return;
     }
     if (((aboutType != null) && (aboutType != elementType)) || ((addType != null) && (addType != elementType)) || ((removeType != null) && (removeType != elementType))) {
-      LOG.error("The add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
+      LOG.error("the add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
     }
     associations.addElement(new JavaOneToManyAssociation(name,elementType,getMethod,addMethod,removeMethod,aboutMethod));
   }
