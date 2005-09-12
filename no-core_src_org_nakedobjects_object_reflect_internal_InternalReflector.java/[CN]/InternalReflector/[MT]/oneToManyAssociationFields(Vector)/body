@@ -25,7 +25,7 @@
       removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,null);
     }
     if (addMethod == null || removeMethod == null) {
-      LOG.error("There must be both add and remove methods for " + name + " in "+ className());
+      LOG.error("there must be both add and remove methods for " + name + " in "+ className());
     }
     Class removeType=(removeMethod == null) ? null : removeMethod.getParameterTypes()[0];
     Class addType=(addMethod == null) ? null : addMethod.getParameterTypes()[0];
@@ -33,7 +33,7 @@
     elementType=(addType == null) ? elementType : addType;
     elementType=(removeType == null) ? elementType : removeType;
     if (((aboutType != null) && (aboutType != elementType)) || ((addType != null) && (addType != elementType)) || ((removeType != null) && (removeType != elementType))) {
-      LOG.error("The add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
+      LOG.error("the add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
     }
     associations.addElement(new InternalOneToManyAssociation(name,elementType,getMethod,addMethod,removeMethod,aboutMethod));
   }
