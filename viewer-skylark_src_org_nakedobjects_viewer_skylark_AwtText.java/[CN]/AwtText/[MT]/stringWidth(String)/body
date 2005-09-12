@@ -1,10 +1,15 @@
 {
   int stringWidth=metrics.stringWidth(text);
   if (stringWidth > text.length() * maxCharWidth) {
-    LOG.debug("spurious length of string; calculating manually: " + stringWidth + " for "+ this);
+    LOG.debug("spurious width of string; calculating manually: " + stringWidth + " for "+ this+ ": "+ text);
     stringWidth=0;
     for (int i=0; i < text.length(); i++) {
-      stringWidth+=charWidth(text.charAt(i));
+      int charWidth=charWidth(text.charAt(i));
+      if (charWidth > maxCharWidth) {
+        LOG.debug("spurious width of character; using max width: " + charWidth + " for "+ text.charAt(i));
+        charWidth=maxCharWidth;
+      }
+      stringWidth+=charWidth;
       LOG.debug(i + " " + stringWidth);
     }
   }
