@@ -1,0 +1,41 @@
+{
+  Oid oid=data.getOid();
+  String type=data.getType();
+  NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(type);
+  NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
+  if (oid == null) {
+    NakedObject object;
+    object=objectLoader.recreateTransientInstance(specification);
+    object.setOptimisticLock(data.getVersion(),"",null);
+    setUpFields(data,object,true);
+    return object;
+  }
+ else   if (objectLoader.isIdentityKnown(oid)) {
+    NakedObject object;
+    object=objectLoader.getAdapterFor(oid);
+    object.setOptimisticLock(data.getVersion(),"",null);
+    ResolveState state=ResolveState.UPDATING;
+    if (object.getResolveState().isResolvable(state)) {
+      objectLoader.start(object,state);
+      setUpFields(data,object,data.isResolved());
+      objectLoader.end(object);
+    }
+    updateNotifier.addDirty(object);
+    return object;
+  }
+ else {
+    NakedObject object;
+    object=objectLoader.recreateAdapterForPersistent(oid,specification);
+    object.setOptimisticLock(data.getVersion(),"",null);
+    if (data.getFieldContent() != null) {
+      ResolveState state;
+      state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+      if (object.getResolveState().isResolvable(state)) {
+        objectLoader.start(object,state);
+        setUpFields(data,object,data.isResolved());
+        objectLoader.end(object);
+      }
+    }
+    return object;
+  }
+}
