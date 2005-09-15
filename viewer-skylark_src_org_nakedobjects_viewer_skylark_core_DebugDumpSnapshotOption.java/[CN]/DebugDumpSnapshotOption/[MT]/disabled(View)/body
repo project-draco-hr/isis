@@ -1,0 +1,10 @@
+{
+  Enumeration enumeration=Logger.getRootLogger().getAllAppenders();
+  while (enumeration.hasMoreElements()) {
+    Appender appender=(Appender)enumeration.nextElement();
+    if (appender instanceof SnapshotAppender) {
+      return Allow.DEFAULT;
+    }
+  }
+  return new Veto("No available snapshot appender");
+}
