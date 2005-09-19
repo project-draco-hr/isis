@@ -4,10 +4,15 @@
   }
  else {
     try {
-      value=FORMAT.parse(text).floatValue();
+      value=PERCENTAGE_FORMAT.parse(text).floatValue();
     }
  catch (    ParseException e) {
-      throw new ValueParseException("Invalid number",e);
+      try {
+        value=DECIMAL_FORMAT.parse(text).floatValue();
+      }
+ catch (      ParseException ee) {
+        throw new ValueParseException("Invalid number; can;t parse '" + text + "'",ee);
+      }
     }
   }
 }
