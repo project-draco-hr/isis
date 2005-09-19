@@ -1,0 +1,25 @@
+{
+  File directory=new File(directoryPath);
+  String filepath=latestSnapshot(directory);
+  File file=new File(directory,filepath);
+  if (file.exists()) {
+    oos=null;
+    try {
+      LOG.info("Loading objects from " + file + "...");
+      oos=new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+    }
+ catch (    FileNotFoundException e) {
+      throw new ObjectStoreException("Failed to find file " + filepath,e);
+    }
+catch (    IOException e) {
+      throw new ObjectStoreException("Failed to read file " + filepath,e);
+    }
+ finally {
+      close(filepath,oos);
+    }
+    return true;
+  }
+ else {
+    return false;
+  }
+}
