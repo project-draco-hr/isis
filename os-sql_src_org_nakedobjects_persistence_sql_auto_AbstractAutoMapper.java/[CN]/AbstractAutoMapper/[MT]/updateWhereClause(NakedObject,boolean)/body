@@ -1,9 +1,4 @@
 {
-  Date lastActivity=new Date(object.getVersion());
-  ValueMapper mapper=typeMapper.mapperFor(NakedObjects.getSpecificationLoader().loadSpecification(TimeStamp.class));
-  String dateString=mapper.valueAsDBString(lastActivity);
-  if (dateString.equals("NULL")) {
-    return (and ? " and " + lastActivityColumn + " is NULL" : "");
-  }
-  return (and ? " and " : "") + lastActivityColumn + " = "+ dateString;
+  long version=object.getVersion();
+  return (and ? " and " + version + " = \"version\"" : "");
 }

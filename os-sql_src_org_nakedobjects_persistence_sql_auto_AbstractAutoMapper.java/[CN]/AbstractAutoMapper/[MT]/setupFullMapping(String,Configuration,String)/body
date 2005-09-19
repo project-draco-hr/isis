@@ -14,8 +14,8 @@
     }
   }
   columnNames=new String[simpleFieldCount];
-  fields=new NakedObjectField[simpleFieldCount];
-  collectionFields=new NakedObjectField[collectionFieldCount];
+  oneToOnefields=new NakedObjectField[simpleFieldCount];
+  oneToManyFields=new NakedObjectField[collectionFieldCount];
   collectionMappers=new CollectionMapper[collectionFieldCount];
   Properties collectionMappings=configParameters.getPropertiesStrippingPrefix(parameterBase + "collection");
   for (int i=0, simpleFieldNo=0, collectionFieldNo=0; i < allFields.length; i++) {
@@ -23,10 +23,10 @@
       continue;
     }
  else     if (allFields[i].isCollection()) {
-      collectionFields[collectionFieldNo]=allFields[i];
+      oneToManyFields[collectionFieldNo]=allFields[i];
       String type=collectionMappings.getProperty(allFields[i].getName());
       if (type == null || type.equals("association-table")) {
-        collectionMappers[collectionFieldNo]=new AutoAssociationMapper(this,nakedClass,collectionFields[collectionFieldNo]);
+        collectionMappers[collectionFieldNo]=new AutoAssociationMapper(this,nakedClass,oneToManyFields[collectionFieldNo]);
       }
  else       if (type.equals("fk-table")) {
         String property=parameterBase + allFields[i].getName() + ".element-type";
@@ -34,7 +34,7 @@
         if (elementType == null) {
           throw new SqlObjectStoreException("Expected property " + property);
         }
-        collectionMappers[collectionFieldNo]=new ReversedAutoAssociationMapper(elementType,collectionFields[collectionFieldNo],parameterBase);
+        collectionMappers[collectionFieldNo]=new ReversedAutoAssociationMapper(elementType,oneToManyFields[collectionFieldNo],parameterBase);
       }
  else {
         throw new NotImplementedException("for " + type);
@@ -43,23 +43,13 @@
     }
  else     if (allFields[i].isObject()) {
       columnNames[simpleFieldNo]="FK" + fieldName(allFields[i]);
-      fields[simpleFieldNo]=allFields[i];
+      oneToOnefields[simpleFieldNo]=allFields[i];
       simpleFieldNo++;
     }
  else {
       columnNames[simpleFieldNo]=fieldName(allFields[i]);
-      fields[simpleFieldNo]=allFields[i];
+      oneToOnefields[simpleFieldNo]=allFields[i];
       simpleFieldNo++;
-    }
-  }
-  lastActivityColumn="lastActivity";
-  Properties columnMappings=configParameters.getPropertiesStrippingPrefix(parameterBase + "column");
-  for (Enumeration keys=columnMappings.keys(); keys.hasMoreElements(); ) {
-    String columnName=(String)keys.nextElement();
-    String fieldName=columnMappings.getProperty(columnName);
-    columnNames[findMatchingField(fieldName)]=columnName;
-    if (fieldName.equalsIgnoreCase("lastActivity")) {
-      lastActivityColumn=columnName;
     }
   }
 }

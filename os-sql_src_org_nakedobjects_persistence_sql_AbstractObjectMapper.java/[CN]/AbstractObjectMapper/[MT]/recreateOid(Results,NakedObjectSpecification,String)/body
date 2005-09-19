@@ -4,9 +4,15 @@
     key=((PrimaryKeyMapper)keyMapping.get(column)).generateKey(rs,column);
   }
  else {
-    int id=rs.getInt(column);
-    key=new IntegerPrimaryKey(id);
+    Object object=rs.getObject(column);
+    if (object == null) {
+      return null;
+    }
+ else {
+      int id=((Integer)object).intValue();
+      key=new IntegerPrimaryKey(id);
+    }
   }
-  Oid object=new SqlOid(cls.getFullName(),key);
-  return object;
+  Oid oid=new SqlOid(cls.getFullName(),key);
+  return oid;
 }

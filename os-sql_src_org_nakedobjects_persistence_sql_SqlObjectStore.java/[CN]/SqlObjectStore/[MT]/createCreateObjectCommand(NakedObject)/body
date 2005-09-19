@@ -1,0 +1,17 @@
+{
+  return new CreateObjectCommand(){
+    public void execute(){
+      LOG.debug("  create object " + object);
+      DatabaseConnector connection=getDatabaseConnector();
+      mapperLookup.getMapper(connection,object).createObject(connection,object);
+      releaseConnectionIfNotInTransaction(connection);
+    }
+    public NakedObject onObject(){
+      return object;
+    }
+    public String toString(){
+      return "CreateObjectCommand [object=" + object + "]";
+    }
+  }
+;
+}

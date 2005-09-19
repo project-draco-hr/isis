@@ -1,6 +1,9 @@
 {
   String BASE_NAME=SqlObjectStore.BASE_NAME;
-  Properties properties=NakedObjects.getConfiguration().getPropertiesStrippingPrefix(BASE_NAME + ".mapper");
+  Properties properties=NakedObjects.getConfiguration().getPropertiesStrippingPrefix(BASE_NAME + ".mapper.");
+  if (properties.size() == 0) {
+    throw new ConfigurationException("No mappers defined");
+  }
   Enumeration e=properties.keys();
   while (e.hasMoreElements()) {
     String className=(String)e.nextElement();

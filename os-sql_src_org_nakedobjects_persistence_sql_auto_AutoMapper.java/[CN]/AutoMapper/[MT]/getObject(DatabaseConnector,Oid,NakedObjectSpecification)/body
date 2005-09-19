@@ -1,3 +1,6 @@
 {
-  return loadObject(nakedClass,oid);
+  String id=((SqlOid)oid).stringValue();
+  String selectStatment="select * from " + quote(table) + " where "+ quote(idColumn)+ " = "+ id;
+  Results rs=connector.select(selectStatment);
+  return loadObject(connector,hint,rs);
 }

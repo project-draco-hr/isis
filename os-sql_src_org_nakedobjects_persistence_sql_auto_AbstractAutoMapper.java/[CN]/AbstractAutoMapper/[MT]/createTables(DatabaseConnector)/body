@@ -1,14 +1,17 @@
 {
   if (!connection.hasTable(table)) {
-    StringBuffer columns=new StringBuffer();
-    for (int f=0; f < fields.length; f++) {
-      NakedObjectField field=fields[f];
+    StringBuffer sql=new StringBuffer();
+    sql.append("create table ");
+    sql.append(quote(table));
+    sql.append(" (");
+    for (int f=0; f < oneToOnefields.length; f++) {
+      NakedObjectField field=oneToOnefields[f];
       String type;
       if (field.isValue()) {
         ValueMapperLookup mappers=ValueMapperLookup.getInstance();
-        ValueMapper mapper=mappers.mapperFor(fields[f].getSpecification());
+        ValueMapper mapper=mappers.mapperFor(oneToOnefields[f].getSpecification());
         if (mapper == null) {
-          throw new SqlObjectStoreException("No type specified for " + fields[f].getSpecification().getFullName());
+          throw new SqlObjectStoreException("No type specified for " + oneToOnefields[f].getSpecification().getFullName());
         }
         type=mapper.columnType();
       }
@@ -18,13 +21,23 @@
  else {
         throw new SqlObjectStoreException("Can't map field to column: " + field);
       }
-      columns.append(columnNames[f]);
-      columns.append(" ");
-      columns.append(type);
-      columns.append(",");
+      sql.append(quote(columnNames[f]));
+      sql.append(" ");
+      sql.append(type);
+      sql.append(",");
     }
-    columns.append(idColumn + " int");
-    connection.update("create table " + table + " ("+ columns+ ")");
+    sql.append(quote(idColumn));
+    sql.append(" int");
+    sql.append(",");
+    sql.append(quote(versionColumn));
+    sql.append(" bigint");
+    sql.append(",");
+    sql.append(quote(lastActivityUserColumn));
+    sql.append(" varchar(32)");
+    sql.append(",");
+    sql.append(quote(lastActivityDateColumn));
+    sql.append(" timestamp)");
+    connection.update(sql.toString());
   }
   for (int i=0; collectionMappers != null && i < collectionMappers.length; i++) {
     if (collectionMappers[i].needsTables(connection)) {

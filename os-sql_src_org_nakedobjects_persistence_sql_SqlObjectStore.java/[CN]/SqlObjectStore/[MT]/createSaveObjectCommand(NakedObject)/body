@@ -1,0 +1,25 @@
+{
+  return new SaveObjectCommand(){
+    public void execute(){
+      LOG.debug("  save object " + object);
+      DatabaseConnector connection=getDatabaseConnector();
+      if (object instanceof InternalCollection) {
+        NakedObject parent=((InternalCollection)object).parent();
+        LOG.debug("change to internal collection being persisted through parent");
+        mapperLookup.getMapper(connection,parent).save(connection,parent);
+        releaseConnectionIfNotInTransaction(connection);
+      }
+ else {
+        mapperLookup.getMapper(connection,object).save(connection,object);
+        releaseConnectionIfNotInTransaction(connection);
+      }
+    }
+    public NakedObject onObject(){
+      return object;
+    }
+    public String toString(){
+      return "SaveObjectCommand [object=" + object + "]";
+    }
+  }
+;
+}

@@ -1,0 +1,17 @@
+{
+  return new DestroyObjectCommand(){
+    public void execute(){
+      LOG.debug("  destroy object " + object);
+      DatabaseConnector connection=getDatabaseConnector();
+      mapperLookup.getMapper(connection,object).destroyObject(connection,object);
+      releaseConnectionIfNotInTransaction(connection);
+    }
+    public NakedObject onObject(){
+      return object;
+    }
+    public String toString(){
+      return "DestroyObjectCommand [object=" + object + "]";
+    }
+  }
+;
+}

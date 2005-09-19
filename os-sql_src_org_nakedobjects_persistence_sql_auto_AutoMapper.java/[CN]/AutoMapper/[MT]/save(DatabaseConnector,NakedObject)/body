@@ -1,15 +1,14 @@
 {
-  NakedObjectSpecification cls=object.getSpecification();
   String updateWhereClause=updateWhereClause(object,true);
-  ((AbstractNakedObject)object).setVersion(new Date().getTime());
+  object.setOptimisticLock(0,"",new Date());
   StringBuffer assignments=new StringBuffer();
   int fld=0;
-  for (int i=0; i < fields.length; i++) {
-    Naked fieldValue=object.getField(fields[i]);
+  for (int i=0; i < oneToOnefields.length; i++) {
+    Naked fieldValue=object.getField(oneToOnefields[i]);
     if (i > 0) {
       assignments.append(", ");
     }
-    assignments.append(columnNames[fld++]);
+    assignments.append(quote(columnNames[fld++]));
     assignments.append('=');
     if (fieldValue instanceof NakedObject) {
       if (fieldValue == null) {
@@ -21,7 +20,7 @@
       }
     }
  else     if (fieldValue instanceof NakedValue) {
-      ValueMapper mapper=typeMapper.mapperFor(fields[i].getSpecification());
+      ValueMapper mapper=typeMapper.mapperFor(oneToOnefields[i].getSpecification());
       assignments.append(mapper.valueAsDBString((NakedValue)fieldValue));
     }
  else {
@@ -29,7 +28,7 @@
     }
   }
   String id=primaryKey(object.getOid());
-  String statement="update " + table + " set "+ assignments+ " where "+ idColumn+ "="+ id+ updateWhereClause;
+  String statement="update " + quote(table) + " set "+ assignments+ " where "+ quote(idColumn)+ "="+ id+ " and \"version\" = "+ object.getVersion()+ updateWhereClause;
   int updateCount=connector.update(statement);
   if (updateCount == 0) {
     throw new NakedObjectRuntimeException(new NakedObjectRuntimeException("No update: " + statement));

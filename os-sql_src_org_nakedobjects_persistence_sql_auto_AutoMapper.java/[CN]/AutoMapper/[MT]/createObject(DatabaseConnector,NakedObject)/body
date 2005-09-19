@@ -2,12 +2,12 @@
   NakedObjectSpecification cls=object.getSpecification();
   String values=values(cls,object);
   if (dbCreatesId) {
-    String statement="insert into " + table + " ("+ columnList()+ ") values ("+ values+ ")";
+    String statement="insert into " + quote(table) + " ("+ columnList()+ ") values ("+ values+ ", 0, 'user', now)";
     connector.insert(statement,object.getOid());
   }
  else {
     String id=primaryKey(object.getOid());
-    String statement="insert into " + table + " ("+ idColumn+ ","+ columnList()+ ") values ("+ id+ values+ ")";
+    String statement="insert into " + quote(table) + " ("+ quote(idColumn)+ ","+ columnList()+ ") values ("+ id+ values+ ", 0, 'user', now)";
     connector.insert(statement);
   }
   for (int i=0; i < collectionMappers.length; i++) {

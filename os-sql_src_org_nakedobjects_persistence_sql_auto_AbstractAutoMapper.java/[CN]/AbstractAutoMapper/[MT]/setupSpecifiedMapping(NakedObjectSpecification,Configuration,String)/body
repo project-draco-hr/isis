@@ -2,28 +2,25 @@
   Properties columnMappings=configParameters.getProperties(parameterBase + "column");
   int columnsSize=columnMappings.size();
   columnNames=new String[columnsSize];
-  fields=new NakedObjectField[columnsSize];
+  oneToOnefields=new NakedObjectField[columnsSize];
   int i=0;
   for (Enumeration names=columnMappings.propertyNames(); names.hasMoreElements(); i++) {
     String columnName=(String)names.nextElement();
     columnNames[i]=columnName;
     String fieldName=columnMappings.getProperty(columnName);
-    fields[i]=nakedClass.getField(fieldName);
-    if (fieldName.equalsIgnoreCase("lastActivity")) {
-      lastActivityColumn=fieldName;
-    }
+    oneToOnefields[i]=nakedClass.getField(fieldName);
   }
   Properties collectionMappings=configParameters.getProperties(parameterBase + "collection");
   int collectionsSize=collectionMappings.size();
   collectionMappers=new AutoAssociationMapper[collectionsSize];
-  collectionFields=new NakedObjectField[collectionsSize];
+  oneToManyFields=new NakedObjectField[collectionsSize];
   int j=0;
   for (Enumeration names=collectionMappings.propertyNames(); names.hasMoreElements(); j++) {
     String collectionName=(String)names.nextElement();
     String type=collectionMappings.getProperty(collectionName);
-    collectionFields[j]=nakedClass.getField(collectionName);
+    oneToManyFields[j]=nakedClass.getField(collectionName);
     if (type.equals("auto")) {
-      collectionMappers[j]=new AutoAssociationMapper(this,nakedClass,collectionFields[j]);
+      collectionMappers[j]=new AutoAssociationMapper(this,nakedClass,oneToManyFields[j]);
     }
  else {
       throw new NotImplementedException();

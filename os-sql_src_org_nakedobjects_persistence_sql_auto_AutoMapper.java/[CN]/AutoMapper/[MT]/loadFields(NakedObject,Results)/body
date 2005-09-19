@@ -1,0 +1,34 @@
+{
+  NakedObjects.getObjectLoader().start(object,ResolveState.RESOLVING);
+  for (int i=0; i < oneToOnefields.length; i++) {
+    if (oneToOnefields[i].isValue()) {
+      ValueMapper mapper=ValueMapperLookup.getInstance().mapperFor(oneToOnefields[i].getSpecification());
+      mapper.setFromDBColumn(columnNames[i],oneToOnefields[i],object,rs);
+    }
+ else     if (oneToOnefields[i].isObject()) {
+      NakedObjectSpecification associatedCls=oneToOnefields[i].getSpecification();
+      Oid oid=recreateOid(rs,associatedCls,columnNames[i]);
+      if (oid != null) {
+        if (associatedCls.isAbstract()) {
+          LOG.warn("NOT DEALING WITH POLYMORPHIC ASSOCIATIONS");
+        }
+ else {
+          NakedObject reference=getAdapter(associatedCls,oid);
+          object.initAssociation((OneToOneAssociation)oneToOnefields[i],reference);
+        }
+      }
+    }
+ else {
+      throw new NakedObjectRuntimeException();
+    }
+  }
+  for (int i=0; i < oneToManyFields.length; i++) {
+    NakedCollection collection=(NakedCollection)object.getField(oneToManyFields[i]);
+    NakedObjects.getObjectLoader();
+  }
+  long version=rs.getLong(versionColumn);
+  String user=rs.getString(lastActivityUserColumn);
+  Date time=rs.getDate(lastActivityDateColumn);
+  object.setOptimisticLock(version,user,time);
+  NakedObjects.getObjectLoader().end(object);
+}
