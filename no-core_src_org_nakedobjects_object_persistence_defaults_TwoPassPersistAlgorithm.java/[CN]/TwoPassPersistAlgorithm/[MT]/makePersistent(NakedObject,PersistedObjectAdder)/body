@@ -1,5 +1,5 @@
 {
-  if (object.getResolveState().isPersistent() || object.getSpecification().persistable() == Persistable.TRANSIENT) {
+  if (object.getResolveState().isPersistent() || object.persistable() == Persistable.TRANSIENT) {
     return;
   }
   LOG.info("persist " + object);
@@ -37,8 +37,8 @@
     }
  else     if (field instanceof OneToManyAssociation) {
       InternalCollection collection=(InternalCollection)object.getField(field);
-      collection.setOid(createOid(collection));
-      collection.setResolved();
+      makePersistent(collection,manager);
+      NakedObjects.getObjectLoader().madePersistent(collection,createOid(object));
       for (int j=0; j < collection.size(); j++) {
         makePersistent(collection.elementAt(j),manager);
       }

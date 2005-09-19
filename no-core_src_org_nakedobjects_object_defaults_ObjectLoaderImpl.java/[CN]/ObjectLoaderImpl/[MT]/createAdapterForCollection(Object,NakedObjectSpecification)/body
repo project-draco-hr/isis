@@ -1,0 +1,11 @@
+{
+  Assert.assertFalse("Can't create an adapter for a NOF adapter",collection instanceof Naked);
+  LOG.debug("creating adapter (collection) for " + collection);
+  NakedCollection adapter;
+  adapter=adapterFactory.createCollectionAdapter(collection,specification);
+  pojoAdapterMap.add(collection,adapter);
+  LOG.debug("created " + adapter + " for "+ collection);
+  ((AbstractNakedReference)adapter).changeState(ResolveState.TRANSIENT);
+  Assert.assertNotNull(adapter);
+  return adapter;
+}

@@ -1,17 +1,17 @@
 {
-  if (nakedClasses.contains(nakedClass)) {
-    return (NakedClass)nakedClasses.get(nakedClass);
+  if (nakedClasses.contains(specification)) {
+    return (NakedClass)nakedClasses.get(specification);
   }
   NakedClass spec;
   try {
-    spec=objectStore.getNakedClass(nakedClass.getFullName());
+    spec=objectStore.getNakedClass(specification.getFullName());
   }
  catch (  ObjectNotFoundException e) {
-    spec=new NakedClass(nakedClass.getFullName());
+    spec=new NakedClass(specification.getFullName());
   }
 catch (  ObjectManagerException e) {
     throw new NakedObjectRuntimeException(e);
   }
-  nakedClasses.put(nakedClass,spec);
+  nakedClasses.put(specification,spec);
   return spec;
 }

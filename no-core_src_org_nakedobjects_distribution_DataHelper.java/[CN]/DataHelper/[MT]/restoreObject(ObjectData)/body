@@ -7,6 +7,7 @@
     NakedObject object;
     object=objectLoader.recreateTransientInstance(specification);
     object.setOptimisticLock(data.getVersion(),"",null);
+    LOG.debug("restore transient object " + object);
     setUpFields(data,object,true);
     return object;
   }
@@ -20,10 +21,11 @@
       if (initialState == ResolveState.RESOLVED) {
         state=ResolveState.UPDATING;
       }
- else       if (initialState == ResolveState.PART_RESOLVED) {
+ else       if (initialState == ResolveState.GHOST || initialState == ResolveState.PART_RESOLVED) {
         state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
       }
       if (state != null) {
+        LOG.debug("updating existing object (" + state.name() + ") "+ object);
         if (object.getResolveState().isResolvable(state)) {
           objectLoader.start(object,state);
           setUpFields(data,object,data.isResolved());
@@ -41,6 +43,7 @@
     if (data.getFieldContent() != null) {
       ResolveState state;
       state=data.isResolved() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+      LOG.debug("restoring existing object (" + state.name() + ") "+ object);
       if (object.getResolveState().isResolvable(state)) {
         objectLoader.start(object,state);
         setUpFields(data,object,data.isResolved());

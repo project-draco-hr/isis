@@ -1,7 +1,8 @@
 {
   LogManager.getRootLogger().setLevel(Level.OFF);
   system=new TestSystem();
-  system.addCreatedObject(new Vector());
+  Vector collection=new Vector();
+  system.addCreatedObject(collection);
   system.addSpecification(new DummyNakedObjectSpecification("type.1"));
   DummyNakedObjectSpecification collectionType=new DummyNakedObjectSpecification("type.2");
   collectionType.setupIsCollection();
@@ -9,4 +10,6 @@
   system.addCreatedObject(testObject1=new TestObject());
   system.addCreatedObject(testObject2=new TestObject());
   system.init();
+  system.addSpecification(new DummyNakedObjectSpecification(Object.class.getName()));
+  system.addNakedCollectionAdapter(new InternalCollectionVectorAdapter(collection,Object.class));
 }

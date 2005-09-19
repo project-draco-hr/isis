@@ -1,0 +1,10 @@
+{
+  if (collection.getResolveState().isPersistent() || collection.persistable() == Persistable.TRANSIENT) {
+    return;
+  }
+  LOG.info("persist " + collection);
+  NakedObjects.getObjectLoader().madePersistent(collection,createOid(collection));
+  for (int j=0; j < collection.size(); j++) {
+    makePersistent(collection.elementAt(j),manager);
+  }
+}

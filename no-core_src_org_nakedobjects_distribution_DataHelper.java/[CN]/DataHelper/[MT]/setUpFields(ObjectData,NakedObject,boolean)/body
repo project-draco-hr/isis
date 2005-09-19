@@ -4,6 +4,7 @@
     NakedObjectField[] fields=object.getSpecification().getFields();
     for (int i=0; i < fields.length; i++) {
       if (fieldContent[i] instanceof NullData && !completeData) {
+        LOG.debug("no data for field " + fields[i].getName());
         continue;
       }
       if (fields[i].isCollection()) {
@@ -11,16 +12,18 @@
           CollectionData collection=(CollectionData)fieldContent[i];
           int size=collection.getElements().length;
           if (completeData || size > 0) {
-            NakedObject[] instances=new NakedObject[size];
-            for (int j=0; j < instances.length; j++) {
-              instances[j]=restoreObject(((ObjectData)collection.getElements()[j]));
+            NakedObject[] elements=new NakedObject[size];
+            for (int j=0; j < elements.length; j++) {
+              elements[j]=restoreObject(((ObjectData)collection.getElements()[j]));
+              LOG.debug("adding element to " + fields[i].getName() + ": "+ elements[j]);
             }
-            object.initAssociation((OneToManyAssociation)fields[i],instances);
+            object.initAssociation((OneToManyAssociation)fields[i],elements);
           }
         }
       }
  else       if (fields[i].isValue()) {
         if (fieldContent[i] != null) {
+          LOG.debug("setting value for field " + fields[i].getName() + ": "+ fieldContent[i]);
           object.initValue((OneToOneAssociation)fields[i],fieldContent[i] instanceof NullData ? null : ((ValueData)fieldContent[i]).getValue());
         }
       }
@@ -34,6 +37,7 @@
  else {
             associate=restoreObject((ObjectData)fieldContent[i]);
           }
+          LOG.debug("setting association for field " + fields[i].getName() + ": "+ associate);
           object.initAssociation(field,associate);
         }
       }

@@ -5,15 +5,17 @@
   NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
   NakedCollection collection;
   collection=objectLoader.recreateCollection(specification);
-  collection.setOid(oid);
   if (data.getElements() == null) {
+    LOG.debug("restoring empty collection");
     return collection;
   }
  else {
     ObjectData[] elements=data.getElements();
+    LOG.debug("restoring collection " + elements.length + " elements");
     Object[] initData=new Object[elements.length];
     for (int i=0; i < elements.length; i++) {
       NakedObject element=restoreObject(elements[i]);
+      LOG.debug("restoring collection element :" + element);
       initData[i]=element.getObject();
     }
     collection.init(initData);

@@ -1,12 +1,14 @@
 {
-  if (object.getResolveState().isResolved() || !isPersistent(object)) {
+  if (field.isValue()) {
+    return;
+  }
+  NakedReference reference=(NakedReference)object.getField(field);
+  if (reference.getResolveState().isResolved()) {
+    return;
+  }
+  if (!reference.getResolveState().isPersistent()) {
     return;
   }
   LOG.info("resolve-eagerly" + object + "/"+ field.getName());
-  try {
-    objectStore.resolveEagerly(object,field);
-  }
- catch (  ObjectManagerException e) {
-    throw new NakedObjectRuntimeException(e);
-  }
+  objectStore.resolveEagerly(object,field);
 }

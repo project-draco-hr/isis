@@ -1,0 +1,9 @@
+{
+  LOG.debug("request resolveEagerly " + target + "/"+ fieldName+ " for "+ session);
+  NakedObjectSpecification spec=getSpecification(target.getType());
+  NakedObjectField field=spec.getField(fieldName);
+  NakedObject object=NakedObjects.getObjectManager().getObject(target.getOid(),spec);
+  NakedObjects.getObjectManager().resolveLazily(object,field);
+  Naked resolvedFieldContent=object.getField(field);
+  return objectDataFactory.createForResolveField(resolvedFieldContent);
+}

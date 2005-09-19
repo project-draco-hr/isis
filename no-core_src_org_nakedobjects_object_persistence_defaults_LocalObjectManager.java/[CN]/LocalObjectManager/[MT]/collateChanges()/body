@@ -3,11 +3,14 @@
     LOG.debug("collating changed objects");
     Enumeration e=loader().getIdentifiedObjects();
     while (e.hasMoreElements()) {
-      NakedObject object=(NakedObject)e.nextElement();
-      if (object.getSpecification().isDirty(object)) {
-        LOG.debug("  found dirty object " + object);
-        objectChanged(object);
-        object.getSpecification().clearDirty(object);
+      Object o=e.nextElement();
+      if (o instanceof NakedObject) {
+        NakedObject object=(NakedObject)o;
+        if (object.getSpecification().isDirty(object)) {
+          LOG.debug("  found dirty object " + object);
+          objectChanged(object);
+          object.getSpecification().clearDirty(object);
+        }
       }
     }
   }
