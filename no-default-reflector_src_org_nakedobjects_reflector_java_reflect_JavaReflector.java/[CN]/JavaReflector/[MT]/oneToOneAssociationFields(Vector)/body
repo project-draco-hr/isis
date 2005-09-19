@@ -22,11 +22,8 @@
       removeMethod=findMethod(OBJECT,"remove" + name,void.class,null);
     }
     Method setMethod=findMethod(OBJECT,SET_PREFIX + name,void.class,params);
-    if (setMethod == null) {
-      continue;
-    }
     LOG.info("one-to-one association " + name + " ->"+ addMethod);
-    JavaOneToOneAssociation association=new JavaOneToOneAssociation(name,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod);
+    JavaOneToOneAssociation association=new JavaOneToOneAssociation(name,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod,setMethod == null);
     associations.addElement(association);
   }
 }

@@ -1,7 +1,14 @@
 {
   try {
     InternalCollection collection=(InternalCollection)getMethod.invoke(fromObject.getObject(),new Object[0]);
-    return InternalCollectionAdapter.createAdapter(collection,type);
+    NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
+    NakedCollection adapter=objectLoader.getAdapterForElseCreateAdapterForCollection(fromObject,getName(),getType(),collection);
+    if (adapter == null) {
+      throw new ReflectionException();
+    }
+ else {
+      return adapter;
+    }
   }
  catch (  InvocationTargetException e) {
     invocationException("Exception executing " + getMethod,e);
