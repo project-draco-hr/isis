@@ -1,6 +1,4 @@
 {
-  boolean isOpen=getSpecification().isOpen();
-  boolean canOpen=isOpen || canClick();
   if (((TreeBrowserFrame)getViewAxis()).getSelectedNode() == getView()) {
     canvas.drawSolidRectangle(left,0,getSize().getWidth() - left - 1,top - 1,Style.PRIMARY2);
   }
@@ -10,14 +8,21 @@
   int x=0;
   int y=top / 2;
   canvas.drawLine(x,y,x + left,y,Style.SECONDARY2);
-  if (canOpen) {
+  boolean isOpen=getSpecification().isOpen();
+  boolean addBox=isOpen || canOpen() != NodeSpecification.CANT_OPEN;
+  if (addBox) {
     x+=BOX_X_OFFSET;
     canvas.drawLine(x,y,x + BOX_SIZE,y,Style.SECONDARY3);
+    canvas.drawSolidRectangle(x,y - BOX_SIZE / 2,BOX_SIZE,BOX_SIZE,Style.WHITE);
     canvas.drawRectangle(x,y - BOX_SIZE / 2,BOX_SIZE,BOX_SIZE,Style.SECONDARY1);
-    canvas.drawLine(x + BOX_PADDING,y,x + BOX_SIZE - BOX_PADDING,y,Style.BLACK);
-    if (!isOpen) {
-      x+=BOX_SIZE / 2;
-      canvas.drawLine(x,y - BOX_SIZE / 2 + BOX_PADDING,x,y + BOX_SIZE / 2 - BOX_PADDING,Style.BLACK);
+    if (canOpen() == NodeSpecification.UNKNOWN) {
+    }
+ else {
+      canvas.drawLine(x + BOX_PADDING,y,x + BOX_SIZE - BOX_PADDING,y,Style.BLACK);
+      if (!isOpen) {
+        x+=BOX_SIZE / 2;
+        canvas.drawLine(x,y - BOX_SIZE / 2 + BOX_PADDING,x,y + BOX_SIZE / 2 - BOX_PADDING,Style.BLACK);
+      }
     }
   }
   View[] nodes=getSubviews();

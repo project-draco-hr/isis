@@ -3,13 +3,13 @@
     throw new NullPointerException();
   }
   Content content;
-  if (field instanceof OneToManyAssociation) {
+  if (field.isCollection()) {
     content=new OneToManyField(parent,(InternalCollection)object,(OneToManyAssociation)field);
   }
  else   if (field.isValue()) {
     content=new ValueField(parent,(NakedValue)object,(OneToOneAssociation)field);
   }
- else   if (field instanceof OneToOneAssociation) {
+ else   if (field.isObject()) {
     content=new OneToOneField(parent,(NakedObject)object,(OneToOneAssociation)field);
   }
  else {

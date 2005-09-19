@@ -1,11 +1,16 @@
 {
   int x=click.getLocation().getX();
   int y=click.getLocation().getY();
-  if (withinBox(x,y) && canClick()) {
+  if (withinBox(x,y)) {
+    if (canOpen() == NodeSpecification.UNKNOWN) {
+      resolveContent();
+      markDamaged();
+    }
     LOG.debug((getSpecification().isOpen() ? "close" : "open") + " node " + getContent().getNaked());
-    resolveContent();
-    View newView=replaceWithSpecification.createView(getContent(),getViewAxis());
-    getParent().replaceView(getView(),newView);
+    if (canOpen() == NodeSpecification.CAN_OPEN) {
+      View newView=replaceWithSpecification.createView(getContent(),getViewAxis());
+      getParent().replaceView(getView(),newView);
+    }
   }
  else   if (y < top && x > left) {
     LOG.debug("node selected " + getContent().getNaked());

@@ -1,15 +1,15 @@
 {
-  EmptyNodeSpecification emptyNode=new EmptyNodeSpecification();
-  NodeSpecification elementNode=new ElementNodeSpecification();
-  NodeSpecification fieldNode=new FieldNodeSpecification();
-  openCollectionNode=new OpenCollectionNodeSpecification();
-  openCollectionNode.setCollectionSubNodeSpecification(emptyNode);
-  openCollectionNode.setObjectSubNodeSpecification(elementNode);
-  openCollectionNode.setReplacementNodeSpecification(fieldNode);
-  openObjectNode=new OpenObjectNodeSpecification();
-  openObjectNode.setCollectionSubNodeSpecification(fieldNode);
-  openObjectNode.setObjectSubNodeSpecification(emptyNode);
-  openObjectNode.setReplacementNodeSpecification(elementNode);
-  elementNode.setReplacementNodeSpecification(openObjectNode);
-  fieldNode.setReplacementNodeSpecification(openCollectionNode);
+  ClosedObjectNodeSpecification closedObject=new ClosedObjectNodeSpecification(false);
+  NodeSpecification closedCollection=new ClosedCollectionNodeSpecification();
+  EmptyNodeSpecification noNode=new EmptyNodeSpecification();
+  openCollection=new OpenCollectionNodeSpecification();
+  openCollection.setCollectionSubNodeSpecification(noNode);
+  openCollection.setObjectSubNodeSpecification(closedObject);
+  openCollection.setReplacementNodeSpecification(closedCollection);
+  openObject=new OpenObjectNodeSpecification();
+  openObject.setCollectionSubNodeSpecification(closedCollection);
+  openObject.setObjectSubNodeSpecification(noNode);
+  openObject.setReplacementNodeSpecification(closedObject);
+  closedObject.setReplacementNodeSpecification(openObject);
+  closedCollection.setReplacementNodeSpecification(openCollection);
 }
