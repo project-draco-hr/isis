@@ -1,9 +1,17 @@
 {
   Memento mem=mementoTransfer(team);
-  Person expected=new Person();
-  Team t2=(Team)mem.recreateObject();
-  Person recreated=(Person)t2.getMembers().elementAt(0);
-  assertFalse(person == recreated);
-  recreated=(Person)t2.getMembers().elementAt(1);
-  assertSame(expected,recreated);
+  objectLoader.unloaded(objectLoader.getAdapterFor(team));
+  objectLoader.unloaded(objectLoader.getAdapterFor(person));
+  objectLoader.unloaded(objectLoader.getAdapterFor(person2));
+  NakedObject teamAdapter=mem.recreateObject();
+  assertEquals(new SerialOid(11),teamAdapter.getOid());
+  assertEquals(ResolveState.RESOLVED,teamAdapter.getResolveState());
+  Team rt=(Team)teamAdapter.getObject();
+  assertNotSame(team,rt);
+  Person rp1=(Person)rt.getMembers().elementAt(0);
+  assertNotSame(person,rp1);
+  assertEquals("Fred",rp1.getName().stringValue());
+  Person rp2=(Person)rt.getMembers().elementAt(1);
+  assertNotSame(person2,rp1);
+  assertEquals("John",rp2.getName().stringValue());
 }
