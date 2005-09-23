@@ -35,7 +35,8 @@
       ServerDistribution sd=new ServerDistribution();
       sd.setObjectFactory(objectFactory);
       sd.setObjectDataFactory(objectDataFactory);
-      server.setFacade(sd);
+      Distribution serverLogger=new DistributionLogger(sd,"server-connection.log");
+      server.setFacade(serverLogger);
       server.setUpdateNotifier(updateNotifier);
       objectManager.addObjectChangedListener(updateNotifier);
       nakedObjects.init();
@@ -46,6 +47,7 @@
       fb.addFixture(new ClassesFixture());
       fb.installFixtures();
       InfoDebugFrame debugFrame=new InfoDebugFrame(){
+        private static final long serialVersionUID=1L;
         public void dialogClosing(){
           System.exit(0);
         }
