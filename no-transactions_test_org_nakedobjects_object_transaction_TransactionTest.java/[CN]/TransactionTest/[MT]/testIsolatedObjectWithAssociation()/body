@@ -6,14 +6,14 @@
   role.getName().setValue(roleName);
   role.setReferencedObject(person);
   Role transactionRole=(Role)t.getObject(roleOid,role);
-  assertTrue(transactionRole.isResolved());
+  assertTrue(transactionRole.hasAllElements());
   Person transactionPerson=transactionRole.getReferencedObject();
-  assertFalse(transactionPerson.isResolved());
+  assertFalse(transactionPerson.hasAllElements());
   assertEquals(person,transactionPerson);
   assertEquals("same oid",person.getOid(),transactionPerson.getOid());
   assertFalse("but different instance",person == transactionPerson);
   assertTrue("value in associated object is empty as it not resolved yet",transactionPerson.getName().isEmpty());
   t.resolve(transactionPerson,person);
   assertEquals("Fred",transactionPerson.getName().stringValue());
-  assertTrue(transactionPerson.isResolved());
+  assertTrue(transactionPerson.hasAllElements());
 }
