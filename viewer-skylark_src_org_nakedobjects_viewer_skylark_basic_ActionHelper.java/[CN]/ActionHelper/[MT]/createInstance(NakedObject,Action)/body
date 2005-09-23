@@ -5,13 +5,16 @@
   ActionParameterSet parameterHints=target.getParameters(action);
   Object[] defaultValues;
   String[] labels;
+  boolean[] required;
   if (parameterHints != null) {
     labels=parameterHints.getParameterLabels();
     defaultValues=parameterHints.getDefaultParameterValues();
+    required=parameterHints.getRequiredParameters();
   }
  else {
     labels=new String[numberParameters];
     defaultValues=new Naked[numberParameters];
+    required=new boolean[numberParameters];
   }
   Naked[] parameterValues;
   Naked[] values;
@@ -43,5 +46,5 @@
       }
     }
   }
-  return new ActionHelper(target,action,labels,parameters,parameterTypes);
+  return new ActionHelper(target,action,labels,parameters,parameterTypes,required);
 }
