@@ -1,6 +1,10 @@
 {
   try {
-    LOG.debug("released " + KeyEvent.getKeyText(ke.getKeyCode()));
+    if (lastTyped == null && ke.getKeyCode() != KeyEvent.VK_SHIFT && ke.getKeyCode() != KeyEvent.VK_ALT && ke.getKeyCode() != KeyEvent.VK_CONTROL) {
+      if (ke.getKeyCode() >= KeyEvent.VK_SPACE && ke.getKeyCode() <= KeyEvent.VK_DIVIDE) {
+        LOG.error("no type event for " + KeyEvent.getKeyText(ke.getKeyCode()));
+      }
+    }
     keyboardManager.released(ke.getKeyCode(),ke.getModifiers());
     redraw();
   }
