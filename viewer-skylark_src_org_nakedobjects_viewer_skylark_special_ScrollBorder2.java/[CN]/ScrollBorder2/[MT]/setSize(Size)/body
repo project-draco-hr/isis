@@ -1,0 +1,21 @@
+{
+  this.size=new Size(size);
+  Bounds displayArea=contentArea();
+  Size contentSize=wrappedView.getRequiredSize();
+  contentSize.extend(left + right,top + bottom);
+  int displayHeight=displayArea.getHeight();
+  int contentHeight=Math.max(displayHeight,contentSize.getHeight());
+  verticalVisibleAmount=displayHeight * displayHeight / (contentHeight - SCROLLBAR_WIDTH);
+  verticalMaximum=displayHeight - verticalVisibleAmount;
+  int displayWidth=displayArea.getWidth();
+  int contentWidth=Math.max(displayWidth,contentSize.getWidth());
+  horizontalVisibleAmount=displayWidth * displayWidth / (contentWidth - SCROLLBAR_WIDTH);
+  horizontalMaximum=displayWidth - horizontalVisibleAmount;
+  if (leftHeader != null) {
+    leftHeader.setSize(new Size(left,contentHeight));
+  }
+  if (topHeader != null) {
+    topHeader.setSize(new Size(contentWidth,top));
+  }
+  wrappedView.setSize(wrappedView.getRequiredSize());
+}
