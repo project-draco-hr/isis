@@ -8,5 +8,6 @@
     NakedObject element=(NakedObject)e.nextElement();
     elements[i++]=createObjectData(element,recursePersistentObjects,depth);
   }
-  return createCollectionData(oid,type,elements,collection.getVersion());
+  boolean hasAllElements=collection.getResolveState() == ResolveState.TRANSIENT || collection.getResolveState() == ResolveState.RESOLVED;
+  return createCollectionData(oid,type,elements,hasAllElements,collection.getVersion());
 }

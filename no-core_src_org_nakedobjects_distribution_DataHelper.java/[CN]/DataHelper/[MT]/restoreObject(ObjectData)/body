@@ -8,7 +8,7 @@
     object=objectLoader.recreateTransientInstance(specification);
     object.setOptimisticLock(data.getVersion(),"",null);
     LOG.debug("restore transient object " + object);
-    setUpFields(data,object,true);
+    setUpFields(data,object);
     return object;
   }
  else   if (objectLoader.isIdentityKnown(oid)) {
@@ -28,7 +28,7 @@
         LOG.debug("updating existing object (" + state.name() + ") "+ object);
         if (object.getResolveState().isResolvable(state)) {
           objectLoader.start(object,state);
-          setUpFields(data,object,data.isResolved());
+          setUpFields(data,object);
           objectLoader.end(object);
         }
         updateNotifier.addDirty(object);
@@ -46,7 +46,7 @@
       LOG.debug("restoring existing object (" + state.name() + ") "+ object);
       if (object.getResolveState().isResolvable(state)) {
         objectLoader.start(object,state);
-        setUpFields(data,object,data.isResolved());
+        setUpFields(data,object);
         objectLoader.end(object);
       }
     }
