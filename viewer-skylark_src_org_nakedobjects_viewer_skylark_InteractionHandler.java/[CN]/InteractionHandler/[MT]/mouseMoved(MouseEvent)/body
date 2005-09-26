@@ -1,4 +1,7 @@
 {
+  if (isBusy(null)) {
+    return;
+  }
   try {
     if (drag == null) {
       spy.reset();
@@ -19,6 +22,8 @@
             }
  else {
               spy.addAction("exited " + previouslyIdentifiedView);
+              if (!isBusy(previouslyIdentifiedView)) {
+              }
               previouslyIdentifiedView.exited();
             }
             View previouslyIdentified=previouslyIdentifiedView;
@@ -30,6 +35,8 @@
               }
  else {
                 spy.addAction("entered " + overView);
+                if (isBusy(overView)) {
+                }
                 overView.entered();
               }
             }
@@ -39,7 +46,7 @@
         spy.addTrace("--> mouse moved");
         viewer.mouseMoved(location);
         spy.addTrace(overView," mouse location",location);
-        if ((me.getModifiers() & InputEvent.ALT_MASK) > 0) {
+        if ((me.getModifiers() & InputEvent.ALT_MASK) > 0 && overView.getContent() != null) {
           Naked object=overView.getContent().getNaked();
           viewer.setStatus("Mouse over " + object);
         }

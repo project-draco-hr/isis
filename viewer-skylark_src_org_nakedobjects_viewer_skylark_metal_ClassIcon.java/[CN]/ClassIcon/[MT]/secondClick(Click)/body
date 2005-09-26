@@ -1,27 +1,38 @@
 {
-  NakedClass nakedClass=getNakedClass();
-  Naked object=null;
-  InternalAbout about=new InternalAbout();
-  if (click.isCtrl()) {
-    if (getViewManager().isRunningAsExploration()) {
-      nakedClass.aboutExplorationActionInstances(about);
-      if (about.canUse().isAllowed()) {
-        NakedCollection instances=nakedClass.allInstances();
-        object=instances;
+  BackgroundThread.run(this,new BackgroundTask(){
+    public void execute(){
+      NakedClass nakedClass=getNakedClass();
+      Naked object=null;
+      InternalAbout about=new InternalAbout();
+      if (click.isCtrl()) {
+        if (getViewManager().isRunningAsExploration()) {
+          nakedClass.aboutExplorationActionInstances(about);
+          if (about.canUse().isAllowed()) {
+            NakedCollection instances=nakedClass.allInstances();
+            object=instances;
+          }
+        }
+      }
+ else {
+        nakedClass.aboutExplorationActionFind(about);
+        if (about.canUse().isAllowed() && getViewManager().isRunningAsExploration()) {
+          FastFinder finder=nakedClass.explorationActionFind();
+          object=NakedObjects.getObjectLoader().createAdapterForTransient(finder);
+        }
+      }
+      if (object != null) {
+        Location location=getView().getAbsoluteLocation();
+        location.subtract(getWorkspace().getAbsoluteLocation());
+        location.add(getSize().getWidth() + 10,0);
+        getWorkspace().addOpenViewFor(object,location);
       }
     }
-  }
- else {
-    nakedClass.aboutExplorationActionFind(about);
-    if (about.canUse().isAllowed() && getViewManager().isRunningAsExploration()) {
-      FastFinder finder=nakedClass.explorationActionFind();
-      object=NakedObjects.getObjectLoader().createAdapterForTransient(finder);
+    public String getName(){
+      return "Open all instances";
+    }
+    public String getDescription(){
+      return "";
     }
   }
-  if (object != null) {
-    Location location=getView().getAbsoluteLocation();
-    location.subtract(getWorkspace().getAbsoluteLocation());
-    location.add(getSize().getWidth() + 10,0);
-    getWorkspace().addOpenViewFor(object,location);
-  }
+);
 }

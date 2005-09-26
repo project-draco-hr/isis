@@ -2,6 +2,7 @@
   Thread t=new Thread("background task"){
     public void run(){
       view.getState().setActive();
+      view.getViewManager().setBusy(view);
       repaint(view);
       try {
         task.execute();
@@ -15,6 +16,7 @@
         view.getWorkspace().addOpenViewFor(error,new Location(20,20));
       }
       view.getState().setInactive();
+      view.getViewManager().clearBusy(view);
       repaint(view);
     }
   }
