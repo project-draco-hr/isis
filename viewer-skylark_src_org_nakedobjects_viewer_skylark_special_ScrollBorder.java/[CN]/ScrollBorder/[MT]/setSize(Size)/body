@@ -1,16 +1,15 @@
 {
   this.size=new Size(size);
-  Bounds displayArea=contentArea();
+  Bounds boundsOfVisibleArea=contentArea();
   Size contentSize=wrappedView.getRequiredSize();
-  contentSize.extend(left + right,top + bottom);
-  int displayHeight=displayArea.getHeight();
-  int contentHeight=Math.max(displayHeight,contentSize.getHeight());
-  verticalVisibleAmount=displayHeight * displayHeight / (contentHeight - SCROLLBAR_WIDTH);
-  verticalMaximum=displayHeight - verticalVisibleAmount;
-  int displayWidth=displayArea.getWidth();
-  int contentWidth=Math.max(displayWidth,contentSize.getWidth());
-  horizontalVisibleAmount=displayWidth * displayWidth / (contentWidth - SCROLLBAR_WIDTH);
-  horizontalMaximum=displayWidth - horizontalVisibleAmount;
+  int availableHeight=boundsOfVisibleArea.getHeight();
+  int contentHeight=Math.max(availableHeight,contentSize.getHeight());
+  verticalVisibleAmount=availableHeight * availableHeight / contentHeight;
+  verticalMaximum=availableHeight - verticalVisibleAmount;
+  int availableWidth=boundsOfVisibleArea.getWidth();
+  int contentWidth=Math.max(availableWidth,contentSize.getWidth());
+  horizontalVisibleAmount=availableWidth * availableWidth / contentWidth;
+  horizontalMaximum=availableWidth - horizontalVisibleAmount;
   if (leftHeader != null) {
     leftHeader.setSize(new Size(left,contentHeight));
   }
