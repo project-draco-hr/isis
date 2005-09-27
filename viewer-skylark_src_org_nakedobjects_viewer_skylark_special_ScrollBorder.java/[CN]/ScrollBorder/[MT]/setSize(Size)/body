@@ -1,7 +1,14 @@
 {
+  Size requiredSize=wrappedView.getRequiredSize();
+  int availableHeight2=size.getHeight() - top;
+  int contentHeight2=requiredSize.getHeight();
+  right=availableHeight2 >= contentHeight2 ? 0 : SCROLLBAR_WIDTH;
+  int availableWidth2=size.getWidth() - left;
+  int contentWidth2=requiredSize.getWidth();
+  bottom=availableWidth2 >= contentWidth2 ? 0 : SCROLLBAR_WIDTH;
   this.size=new Size(size);
   Bounds boundsOfVisibleArea=contentArea();
-  Size contentSize=wrappedView.getRequiredSize();
+  Size contentSize=requiredSize;
   int availableHeight=boundsOfVisibleArea.getHeight();
   int contentHeight=Math.max(availableHeight,contentSize.getHeight());
   verticalVisibleAmount=availableHeight * availableHeight / contentHeight;
@@ -16,5 +23,5 @@
   if (topHeader != null) {
     topHeader.setSize(new Size(contentWidth,top));
   }
-  wrappedView.setSize(wrappedView.getRequiredSize());
+  wrappedView.setSize(requiredSize);
 }
