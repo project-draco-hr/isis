@@ -6,13 +6,11 @@
   LOG.debug("  getting set method for " + field + "/"+ value.getClass());
   Method setter;
   try {
-    setter=c.getMethod("set" + field,new Class[]{value.getClass()});
+    PropertyDescriptor property=new PropertyDescriptor(field,c,null,"set" + field);
+    setter=property.getWriteMethod();
     setter.invoke(object,new Object[]{value});
   }
  catch (  SecurityException e1) {
-    e1.printStackTrace();
-  }
-catch (  NoSuchMethodException e1) {
     e1.printStackTrace();
   }
 catch (  IllegalArgumentException e1) {
@@ -23,5 +21,8 @@ catch (  IllegalAccessException e1) {
   }
 catch (  InvocationTargetException e1) {
     e1.printStackTrace();
+  }
+catch (  IntrospectionException e) {
+    e.printStackTrace();
   }
 }
