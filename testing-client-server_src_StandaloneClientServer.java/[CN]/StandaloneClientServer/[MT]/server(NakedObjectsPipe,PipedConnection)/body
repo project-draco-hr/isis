@@ -19,7 +19,7 @@
       localObjectManager.setObjectStore(objectStore);
       localObjectManager.setPersistAlgorithm(persistAlgorithm);
       localObjectManager.setCheckObjectsForDirtyFlag(true);
-      NakedObjectManager objectManager=new ObjectManagerLogger(localObjectManager,"server-manager.log");
+      NakedObjectManager objectManager=localObjectManager;
       nakedObjects.setObjectManager(objectManager);
       LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
       JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
@@ -35,7 +35,7 @@
       ServerDistribution sd=new ServerDistribution();
       sd.setObjectFactory(objectFactory);
       sd.setObjectDataFactory(objectDataFactory);
-      Distribution serverLogger=new DistributionLogger(sd,"server-connection.log");
+      Distribution serverLogger=sd;
       server.setFacade(serverLogger);
       server.setUpdateNotifier(updateNotifier);
       objectManager.addObjectChangedListener(updateNotifier);
@@ -58,6 +58,7 @@
       debugFrame.setBounds(500,300,1000,700);
       debugFrame.refresh();
       debugFrame.show();
+      updateNotifier.getUpdates();
       server.run();
     }
   }

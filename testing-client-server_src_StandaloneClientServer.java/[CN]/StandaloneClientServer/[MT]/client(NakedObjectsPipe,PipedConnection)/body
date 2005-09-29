@@ -3,7 +3,7 @@
   nakedObjects.setConfiguration(configuration);
   PipedClient client=new PipedClient();
   client.setConnection(connection);
-  DistributionLogger clientLogger=new DistributionLogger(client,"client-connection.log");
+  Distribution clientLogger=client;
   Date.setClock(new SystemClock());
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
   JavaObjectFactory objectFactory=new JavaObjectFactory();
@@ -12,7 +12,7 @@
   ProxyObjectManager proxyObjectManager=new ProxyObjectManager();
   proxyObjectManager.setConnection(clientLogger);
   proxyObjectManager.setObjectDataFactory(objectDataFactory);
-  NakedObjectManager objectManager=new ObjectManagerLogger(proxyObjectManager,"client-manager.log");
+  NakedObjectManager objectManager=proxyObjectManager;
   nakedObjects.setObjectManager(objectManager);
   new NakedObjectSpecificationLoaderImpl();
   ProxyReflectionFactory reflectionFactory=new ProxyReflectionFactory();
