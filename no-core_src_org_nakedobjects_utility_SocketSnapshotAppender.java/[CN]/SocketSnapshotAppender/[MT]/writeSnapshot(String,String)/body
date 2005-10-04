@@ -1,0 +1,17 @@
+{
+  try {
+    Assert.assertNotNull("server",server);
+    Socket s=new Socket(server,port);
+    BufferedWriter out=new BufferedWriter(new OutputStreamWriter(s.getOutputStream(),"8859_1"));
+    out.write(message + "\n");
+    out.write(details + "\n");
+    out.flush();
+    s.close();
+  }
+ catch (  ConnectException e) {
+    LOG.info("failed to connect to server " + server);
+  }
+catch (  Exception e) {
+    LOG.info("failed to send email with log",e);
+  }
+}

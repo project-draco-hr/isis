@@ -1,35 +1,14 @@
 {
-  File dir=new File(directoryPath == null || directoryPath.length() == 0 ? "." : directoryPath);
-  if (!dir.exists()) {
-    dir.mkdirs();
-  }
-  File indexFile=new File(dir,"index.txt");
-  Date date=new Date();
-  extension=extension == null || extension.length() == 0 ? "log" : extension;
-  File logFile=new File(dir,fileName + FORMAT.format(date) + "."+ extension);
+  SnapshotWriter s;
   try {
-    RandomAccessFile index=new RandomAccessFile(indexFile,"rw");
-    index.seek(index.length());
-    index.writeBytes(logFile.getName() + ": " + message+ "\n");
-    index.close();
+    s=new SnapshotWriter(directoryPath,fileName,extension,message);
+    s.appendLog(details);
+    s.close();
   }
  catch (  FileNotFoundException e) {
-    LOG.info("failed to open index file",e);
+    LOG.info("failed to open log file",e);
   }
 catch (  IOException e) {
-    LOG.info("failed to write to index file",e);
-  }
-  PrintStream os=null;
-  try {
-    os=new PrintStream(new FileOutputStream(logFile));
-    os.println(details);
-  }
- catch (  IOException e) {
     LOG.info("failed to write log file",e);
-  }
- finally {
-    if (os != null) {
-      os.close();
-    }
   }
 }
