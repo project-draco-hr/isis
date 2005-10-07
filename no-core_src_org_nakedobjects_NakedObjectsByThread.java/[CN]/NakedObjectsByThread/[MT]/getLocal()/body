@@ -1,10 +1,15 @@
 {
   Thread thread=Thread.currentThread();
-  NakedObjectsData local=(NakedObjectsData)threads.get(thread);
-  if (local == null) {
-    local=new NakedObjectsData();
-    threads.put(thread,local);
-    LOG.info("  creating local " + local + "; now have "+ threads.size()+ " locals");
+  NakedObjectsData local;
+synchronized (threads) {
+    local=(NakedObjectsData)threads.get(thread);
+    if (local == null) {
+      local=new NakedObjectsData();
+synchronized (threads) {
+        threads.put(thread,local);
+      }
+      LOG.info("  creating local " + local + "; now have "+ threads.size()+ " locals");
+    }
   }
   return local;
 }
