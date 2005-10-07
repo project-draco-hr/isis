@@ -1,13 +1,14 @@
 {
-  Assert.assertTrue(drag.getSourceContent() instanceof ObjectContent);
-  Naked result=getContent().drop(drag.getSourceContent());
-  getParent().invalidateContent();
-  if (result != null) {
-    View view=getWorkspace().createSubviewFor(result,false);
-    Location location=new Location();
-    location.move(10,10);
-    view.setLocation(location);
-    getWorkspace().addView(view);
+  if (drag.getSourceContent() instanceof ObjectContent) {
+    Naked result=getContent().drop(drag.getSourceContent());
+    getParent().invalidateContent();
+    if (result != null) {
+      View view=getWorkspace().createSubviewFor(result,false);
+      Location location=new Location();
+      location.move(10,10);
+      view.setLocation(location);
+      getWorkspace().addView(view);
+    }
+    markDamaged();
   }
-  markDamaged();
 }
