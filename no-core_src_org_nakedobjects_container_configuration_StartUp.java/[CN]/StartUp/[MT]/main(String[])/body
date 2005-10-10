@@ -6,10 +6,15 @@
   Properties properties=configuration.getProperties("nakedobjects.container");
   AboutNakedObjects.logVersion();
   LOG.debug("Configuring system using " + name);
-  String containerName=configuration.getString(CONTAINER);
-  LOG.debug("loading core component " + containerName);
-  NakedObjects container=(NakedObjects)loadComponent(containerName,NakedObjects.class);
-  setProperty(container,"configuration",configuration);
-  setProperties(container,"nakedobjects." + CONTAINER,properties);
-  container.init();
+  try {
+    String containerName=configuration.getString(CONTAINER);
+    LOG.debug("loading core component " + containerName);
+    NakedObjects container=(NakedObjects)loadComponent(containerName,NakedObjects.class);
+    setProperty(container,"configuration",configuration);
+    setProperties(container,"nakedobjects." + CONTAINER,properties);
+    container.init();
+  }
+ catch (  StartupException e) {
+    LOG.error("Failed to start NOF: " + e.getMessage(),e);
+  }
 }
