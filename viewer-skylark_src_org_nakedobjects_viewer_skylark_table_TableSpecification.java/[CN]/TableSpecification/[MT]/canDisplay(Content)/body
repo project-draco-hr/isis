@@ -1,3 +1,10 @@
 {
-  return content.isCollection();
+  if (content.isCollection()) {
+    TypedNakedCollection coll=(TypedNakedCollection)((CollectionContent)content).getCollection();
+    NakedObjectSpecification elementSpecification=NakedObjects.getSpecificationLoader().loadSpecification(coll.getElementSpecification().getFullName());
+    return !elementSpecification.isAbstract();
+  }
+ else {
+    return false;
+  }
 }
