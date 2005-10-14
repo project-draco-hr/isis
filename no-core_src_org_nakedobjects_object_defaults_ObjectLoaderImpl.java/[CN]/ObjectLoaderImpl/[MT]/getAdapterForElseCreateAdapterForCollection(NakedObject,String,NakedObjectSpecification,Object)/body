@@ -1,17 +1,16 @@
 {
   Assert.assertNotNull("can't get an adapter for null",this,collection);
-  LOG.debug("get adapter for " + collection);
   InternalCollectionKey key=new InternalCollectionKey(parent,fieldName);
   NakedCollection adapter=(NakedCollection)pojoAdapterMap.getPojo(key);
   if (adapter == null) {
     adapter=adapterFactory.createCollectionAdapter(collection,specification);
     pojoAdapterMap.add(key,adapter);
     if (parent.getResolveState().isPersistent()) {
-      LOG.debug("no existing adapter found; creating adapter for persistent collection: " + collection);
+      LOG.debug("creating adapter for persistent collection: " + collection);
       ((AbstractNakedReference)adapter).changeState(ResolveState.GHOST);
     }
  else {
-      LOG.debug("no existing adapter found; creating adapter for transient collection: " + collection);
+      LOG.debug("creating adapter for transient collection: " + collection);
       ((AbstractNakedReference)adapter).changeState(ResolveState.TRANSIENT);
     }
   }

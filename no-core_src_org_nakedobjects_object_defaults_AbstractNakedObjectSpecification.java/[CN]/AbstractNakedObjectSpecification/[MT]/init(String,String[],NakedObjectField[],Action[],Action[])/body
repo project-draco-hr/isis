@@ -1,0 +1,24 @@
+{
+  LOG.debug("init specification " + this);
+  NakedObjectSpecificationLoader loader=NakedObjects.getSpecificationLoader();
+  if (superclass != null) {
+    this.superclass=(AbstractNakedObjectSpecification)loader.loadSpecification(superclass);
+    if (this.superclass != null) {
+      LOG.debug("  Superclass " + superclass);
+      this.superclass.subclasses.addSubclass(this);
+    }
+  }
+  this.interfaces=new AbstractNakedObjectSpecification[interfaces.length];
+  for (int i=0; i < interfaces.length; i++) {
+    this.interfaces[i]=(AbstractNakedObjectSpecification)loader.loadSpecification(interfaces[i]);
+    this.interfaces[i].subclasses.addSubclass(this);
+  }
+  if (isValue() && fields.length > 0) {
+    LOG.warn("naked values cannot have fields, they will be ignored");
+  }
+ else {
+    this.fields=fields;
+  }
+  this.objectActions=objectActions;
+  this.classActions=classActions;
+}

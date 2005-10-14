@@ -1,0 +1,17 @@
+{
+  if (!(reflector instanceof PrimitiveReflector)) {
+    ActionPeer delegates[]=reflector.actionPeers(Reflector.OBJECT);
+    String[] order=reflector.actionSortOrder();
+    Action[] objectActions=createActions(delegates,order);
+    delegates=reflector.actionPeers(Reflector.CLASS);
+    order=reflector.classActionSortOrder();
+    Action[] classActions=createActions(delegates,order);
+    FieldPeer fieldDelegates[]=reflector.fields();
+    NakedObjectField[] fieldVector=createFields(fieldDelegates);
+    NakedObjectField[] fields=(NakedObjectField[])orderArray(NakedObjectField.class,fieldVector,reflector.fieldSortOrder());
+    String superclass=reflector.getSuperclass();
+    String[] interfaces=reflector.getInterfaces();
+    init(superclass,interfaces,fields,objectActions,classActions);
+  }
+  init(reflector.title());
+}

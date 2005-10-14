@@ -1,16 +1,4 @@
 {
-  LOG.debug("creating reflector for " + className + " using "+ reflector);
+  LOG.debug("creating reflector for " + className + " using "+ reflector.getClass());
   this.reflector=reflector;
-  ActionPeer delegates[]=reflector.actionPeers(Reflector.OBJECT);
-  String[] order=reflector.actionSortOrder();
-  Action[] objectActions=createActions(reflector,className,delegates,order);
-  delegates=reflector.actionPeers(Reflector.CLASS);
-  order=reflector.classActionSortOrder();
-  Action[] classActions=createActions(reflector,className,delegates,order);
-  FieldPeer fieldDelegates[]=reflector.fields();
-  NakedObjectField[] fieldVector=createFields(fieldDelegates);
-  NakedObjectField[] fields=(NakedObjectField[])orderArray(NakedObjectField.class,fieldVector,reflector.fieldSortOrder(),className);
-  String superclass=reflector.getSuperclass();
-  String[] interfaces=reflector.getInterfaces();
-  init(reflector,superclass,interfaces,fields,objectActions,classActions,reflector.title());
 }
