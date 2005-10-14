@@ -22,15 +22,13 @@
   nakedObjects.setObjectManager(objectManager);
   LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
   nakedObjects.setReflectionFactory(reflectionFactory);
-  JavaReflectorFactory reflectorFactory=new JavaReflectorFactory();
-  nakedObjects.setReflectorFactory(reflectorFactory);
   ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
-  objectLoader.setPojoAdapterMap(new PojoAdapterHashImpl());
+  objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
+  objectLoader.setAdapterFactory(new JavaAdapterFactory());
   objectLoader.setObjectFactory(objectFactory);
-  objectLoader.setIdentityAdapterMap(new IdentityAdapterMapImpl());
+  objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
   nakedObjects.setObjectLoader(objectLoader);
-  NakedObjectSpecificationLoaderImpl specificationLoader=new NakedObjectSpecificationLoaderImpl();
-  nakedObjects.setSpecificationLoader(specificationLoader);
+  nakedObjects.setSpecificationLoader(new JavaSpecificationLoader());
   ServerDistribution sd=new ServerDistribution();
   sd.setObjectFactory(objectFactory);
   sd.setObjectDataFactory(objectDataFactory);
@@ -47,6 +45,7 @@
   fb.addFixture(new ClassesFixture());
   fb.installFixtures();
   InfoDebugFrame debugFrame=new InfoDebugFrame(){
+    private static final long serialVersionUID=1L;
     public void dialogClosing(){
       System.exit(0);
     }
