@@ -3,16 +3,27 @@
   String name=args.length > 0 ? args[0] : "nakedobjects.properties";
   Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(name,true));
   PropertyConfigurator.configure(configuration.getProperties("log4j"));
-  Properties properties=configuration.getProperties("nakedobjects.container");
   AboutNakedObjects.logVersion();
   LOG.debug("Configuring system using " + name);
+  Properties properties=configuration.getProperties("nakedobjects.install");
+  Vector components=new Vector();
+  Enumeration keys=properties.keys();
+  while (keys.hasMoreElements()) {
+    String key=(String)keys.nextElement();
+    String component=key.substring("nakedobjects.install".length(),key.indexOf('.',"nakedobjects.install".length() + 1));
+    if (!components.contains(component)) {
+      components.addElement(component);
+    }
+  }
   try {
-    String containerName=configuration.getString(CONTAINER);
-    LOG.debug("loading core component " + containerName);
-    NakedObjects container=(NakedObjects)loadComponent(containerName,NakedObjects.class);
-    setProperty(container,"configuration",configuration);
-    setProperties(container,"nakedobjects." + CONTAINER,properties);
-    container.init();
+    Enumeration e=components.elements();
+    while (e.hasMoreElements()) {
+      String component=(String)e.nextElement();
+      String containerName=configuration.getString("install." + component);
+      LOG.debug("loading core component " + containerName);
+      NakedObjects container=(NakedObjects)loadComponent(containerName,NakedObjects.class);
+      setProperties(container,"nakedobjects." + "install." + component,properties);
+    }
   }
  catch (  StartupException e) {
     LOG.error("Failed to start NOF: " + e.getMessage(),e);
