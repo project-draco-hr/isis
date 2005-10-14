@@ -2,35 +2,38 @@
   if (className == null) {
     throw new NullPointerException("No class name specified");
   }
-  if (classes.containsKey(className)) {
-    return (NakedObjectSpecification)classes.get(className);
+  Object object=classes.get(className);
+  NakedObjectSpecification nos=(NakedObjectSpecification)object;
+  if (nos != null) {
+    return nos;
   }
  else {
-    Reflector reflector;
+    NakedObjectSpecification specification;
     try {
       Class cls=Class.forName(className);
-      if (InternalNakedObject.class.isAssignableFrom(cls) || cls.getName().startsWith("java.")) {
-        reflector=new InternalReflector(className);
+      if (InternalNakedObject.class.isAssignableFrom(cls) || Exception.class.isAssignableFrom(cls)) {
+        LOG.info("initialising specification for " + className + " using internal reflector");
+        InternalReflector reflector=new InternalReflector(className);
+        specification=new NakedObjectSpecificationImpl();
+        ((NakedObjectSpecificationImpl)specification).reflect(className,reflector);
       }
  else {
-        ReflectorFactory reflectorFactory=NakedObjects.getReflectorFactory();
-        if (reflectorFactory == null) {
-          throw new NakedObjectRuntimeException("No reflector factory has be set up");
-        }
-        reflector=reflectorFactory.createReflector(className);
+        specification=load(className);
       }
-      LOG.info("initialising specification for " + className);
-      NakedObjectSpecificationImpl spec=new NakedObjectSpecificationImpl();
-      classes.put(className,spec);
-      spec.reflect(className,reflector);
-      return spec;
+      if (specification == null) {
+        LOG.info("unrecognised class " + className + "; 'null' specification created");
+        NakedObjectSpecificationImpl spec=new NakedObjectSpecificationImpl();
+        spec.nonReflect(className);
+        return spec;
+      }
     }
  catch (    ClassNotFoundException e) {
-      LOG.debug("non class " + className);
-      NakedObjectSpecificationImpl spec=new NakedObjectSpecificationImpl();
-      spec.nonReflect(className);
-      classes.put(className,spec);
-      return spec;
+      LOG.warn("not a class " + className + "; 'null' specification created");
+      specification=new NakedObjectSpecificationImpl();
+      ((NakedObjectSpecificationImpl)specification).nonReflect(className);
     }
+    classes.put(className,specification);
+    specification.introspect();
+    return specification;
   }
 }

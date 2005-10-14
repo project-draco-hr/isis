@@ -1,4 +1,11 @@
 {
   super(name);
-  LOG.info("creating acceptance test " + name);
+  File f=new File("xat.properties");
+  if (f.exists()) {
+    PropertyConfigurator.configure("xat.properties");
+    Logger.getLogger(AcceptanceTestCase.class).debug("XAT Logging enabled - first test: " + getName());
+  }
+ else {
+    BasicConfigurator.configure();
+  }
 }
