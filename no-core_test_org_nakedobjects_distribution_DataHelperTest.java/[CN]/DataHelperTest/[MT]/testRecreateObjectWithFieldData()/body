@@ -2,11 +2,11 @@
   Object fields[]=new Object[3];
   fields[0]=new DummyValueData(new Integer(13),"");
   MockOid fieldOid=new MockOid(345);
-  fields[1]=new DummyObjectData(fieldOid,"type.1",null,false,true,2);
+  fields[1]=new DummyObjectData(fieldOid,"type.1",null,false,new TestVersion());
   MockOid rootOid=new MockOid(123);
-  Data data=new DummyObjectData(rootOid,"type.1",fields,false,true,4);
+  Data data=new DummyObjectData(rootOid,"type.1",fields,false,new TestVersion(4));
   NakedObject naked=(NakedObject)DataHelper.restore(data);
-  assertEquals(4,naked.getVersion());
+  assertEquals(new TestVersion(4),naked.getVersion());
   assertEquals(rootOid,naked.getOid());
   TestPojo pojo=(TestPojo)naked.getObject();
   assertEquals(object,pojo);
