@@ -1,0 +1,15 @@
+{
+  Version a1=new LongNumberVersion(1023L,"Tom",new Date(0L));
+  Version a2=new LongNumberVersion(1023L,"Tom",new Date(0L));
+  Version b=new LongNumberVersion(932L,"Dick",new Date(200000L));
+  DummyNakedReference dummy=new DummyNakedReference();
+  dummy.setupSpecification(new DummyNakedObjectSpecification());
+  dummy.setOptimisticLock(a1);
+  dummy.checkLock(a2);
+  try {
+    dummy.checkLock(b);
+    fail();
+  }
+ catch (  ConcurrencyException e) {
+  }
+}
