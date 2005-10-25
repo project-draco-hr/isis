@@ -1,12 +1,13 @@
 {
   BasicConfigurator.configure();
   Logger.getRootLogger().setLevel(Level.OFF);
-  object=new MockNakedObject();
+  system=new TestSystem();
   factory=new MockObjectFactory();
+  object=new MockNakedObject();
   target=new TestObjectImplExt(object,factory);
   MockHint hint=new MockHint();
   hint.setupCanAccess(new NoOpAllow());
   hint.setupCanUse(new NoOpAllow());
   object.setupHint(hint);
-  new NakedObjectsClient().setObjectManager(new MockObjectManager());
+  system.init();
 }
