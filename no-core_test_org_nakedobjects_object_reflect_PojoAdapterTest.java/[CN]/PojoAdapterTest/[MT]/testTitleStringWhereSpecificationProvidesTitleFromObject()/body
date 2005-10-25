@@ -1,8 +1,7 @@
 {
   setupSpecificationTitleString("object title from specification");
-  NakedObject pa=system.createAdapterForTransient(new TestPojo());
-  pa.getSpecification();
-  objectLoader.madePersistent(pa,new MockOid(1));
-  assertEquals(ResolveState.RESOLVED,pa.getResolveState());
+  PojoAdapter pa=new PojoAdapter(new TestPojo());
+  pa.changeState(ResolveState.TRANSIENT);
+  pa.persistedAs(new DummyOid(1));
   assertEquals("object title from specification",pa.titleString());
 }

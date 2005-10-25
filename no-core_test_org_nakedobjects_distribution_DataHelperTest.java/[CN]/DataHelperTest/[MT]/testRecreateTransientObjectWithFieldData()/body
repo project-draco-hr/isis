@@ -1,7 +1,10 @@
 {
-  Data data=new DummyObjectData(null,"type.1",new Object[0],false,new TestVersion());
+  Data data=new DummyObjectData(null,TestPojo.class.getName(),new Data[0],false,new DummyVersion());
+  DummyNakedObject adapter=new DummyNakedObject();
+  adapter.setupObject(rootObject);
+  system.addRecreatedTransient(adapter);
   NakedObject naked=(NakedObject)DataHelper.restore(data);
-  assertEquals(object,naked.getObject());
+  assertEquals(rootObject,naked.getObject());
   assertEquals("transient objects have no version number",null,naked.getVersion());
   assertNull(naked.getOid());
 }

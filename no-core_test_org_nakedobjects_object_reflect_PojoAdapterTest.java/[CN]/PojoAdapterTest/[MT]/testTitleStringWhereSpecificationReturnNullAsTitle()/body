@@ -1,8 +1,7 @@
 {
   setupSpecificationTitleString(null);
-  NakedObject pa=system.createAdapterForTransient(new TestPojo());
-  pa.getSpecification();
-  objectLoader.madePersistent(pa,new MockOid(1));
-  assertEquals(ResolveState.RESOLVED,pa.getResolveState());
+  PojoAdapter pa=new PojoAdapter(new TestPojo());
+  pa.changeState(ResolveState.TRANSIENT);
+  pa.persistedAs(new DummyOid(2));
   assertEquals("A singular name",pa.titleString());
 }
