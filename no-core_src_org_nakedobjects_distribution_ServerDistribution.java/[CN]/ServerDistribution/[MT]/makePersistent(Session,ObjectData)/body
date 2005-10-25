@@ -1,9 +1,8 @@
 {
   LOG.debug("request makePersistent " + data + " for "+ session);
   NakedObject object=(NakedObject)DataHelper.restore(data);
-  objectFactory.initRecreatedObject(object.getObject());
   objectManager().startTransaction();
   objectManager().makePersistent(object);
   objectManager().endTransaction();
-  return new Oid[]{object.getOid()};
+  return objectDataFactory.createMadePersistentGraph(data,object);
 }

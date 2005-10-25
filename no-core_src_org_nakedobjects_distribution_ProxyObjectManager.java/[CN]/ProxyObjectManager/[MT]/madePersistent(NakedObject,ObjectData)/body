@@ -1,0 +1,25 @@
+{
+  if (object.getOid() == null) {
+    NakedObjects.getObjectLoader().madePersistent(object,updates.getOid());
+  }
+  Data[] fieldData=updates.getFieldContent();
+  NakedObjectField[] fields=object.getSpecification().getFields();
+  for (int i=0; i < fieldData.length; i++) {
+    if (fieldData[i] == null) {
+      continue;
+    }
+    if (fieldData[i] instanceof ObjectData) {
+      NakedObject field=object.getAssociation((OneToOneAssociation)fields[i]);
+      if (field != null) {
+        madePersistent(field,(ObjectData)updates.getFieldContent()[i]);
+      }
+    }
+ else     if (fieldData[i] instanceof CollectionData) {
+      CollectionData collectionData=(CollectionData)updates.getFieldContent()[i];
+      for (int j=0; j < collectionData.getElements().length; j++) {
+        NakedObject element=((NakedCollection)object.getField(fields[i])).elementAt(j);
+        madePersistent(element,collectionData.getElements()[j]);
+      }
+    }
+  }
+}
