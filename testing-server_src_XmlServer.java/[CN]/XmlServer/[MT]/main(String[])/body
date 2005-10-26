@@ -7,9 +7,8 @@
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
   new SystemClock();
   TransientObjectStore objectStore=new TransientObjectStore();
-  DataFactory objectDataFactory=new JavaObjectDataFactory();
+  DataFactory objectDataFactory=new JavaDataFactory();
   SingleResponseUpdateNotifier updateNotifier=new SingleResponseUpdateNotifier();
-  updateNotifier.setFactory(objectDataFactory);
   JavaObjectFactory objectFactory=new JavaObjectFactory();
   objectFactory.setContainer(container);
   OidGenerator oidGenerator=new SimpleOidGenerator();
@@ -30,10 +29,8 @@
   nakedObjects.setObjectLoader(objectLoader);
   nakedObjects.setSpecificationLoader(new JavaSpecificationLoader());
   ServerDistribution sd=new ServerDistribution();
-  sd.setObjectFactory(objectFactory);
   sd.setObjectDataFactory(objectDataFactory);
   ServerListener serverListener=new ServerListener();
-  serverListener.setUpdateNotifier(updateNotifier);
   serverListener.setServerDistribution(sd);
   objectManager.addObjectChangedListener(updateNotifier);
   nakedObjects.init();
