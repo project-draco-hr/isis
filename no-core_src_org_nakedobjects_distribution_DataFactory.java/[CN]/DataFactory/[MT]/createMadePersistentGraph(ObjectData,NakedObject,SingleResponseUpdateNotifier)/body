@@ -3,6 +3,7 @@
   String type=data.getType();
   ReferenceData[] fieldContent=data.getFieldContent() == null ? null : new ReferenceData[data.getFieldContent().length];
   Version version=object.getVersion();
+  updateNotifier.removeUpdateFor(object);
   NakedObjectField[] fields=object.getFields();
   NakedObjects.getObjectLoader().start(object,object.getResolveState().serializeFrom());
   for (int i=0; i < fields.length; i++) {
@@ -17,7 +18,7 @@
         ObjectData element=f.getElements()[j];
         if (element != null && element.getOid() == null) {
           NakedObject el=coll.elementAt(j);
-          elements[j]=createMadePersistentGraph(element,el);
+          elements[j]=createMadePersistentGraph(element,el,updateNotifier);
         }
       }
       fieldContent[i]=createCollectionData(coll.getOid(),f.getType(),elements,f.hasAllElements(),coll.getVersion());
@@ -26,7 +27,7 @@
       Data f=data.getFieldContent()[i];
       if (f != null && !(f instanceof NullData) && ((ObjectData)f).getOid() == null) {
         NakedObject o=(NakedObject)object.getField(fields[i]);
-        fieldContent[i]=createMadePersistentGraph(((ObjectData)f),o);
+        fieldContent[i]=createMadePersistentGraph(((ObjectData)f),o,updateNotifier);
       }
     }
   }
