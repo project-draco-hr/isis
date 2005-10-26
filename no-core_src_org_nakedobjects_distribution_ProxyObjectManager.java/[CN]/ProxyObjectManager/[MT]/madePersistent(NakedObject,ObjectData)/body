@@ -1,6 +1,10 @@
 {
-  if (object.getOid() == null) {
+  if (updates == null) {
+    return;
+  }
+  if (object.getOid() == null && object.persistable() != Persistable.TRANSIENT) {
     NakedObjects.getObjectLoader().madePersistent(object,updates.getOid());
+    object.setOptimisticLock(updates.getVersion());
   }
   Data[] fieldData=updates.getFieldContent();
   NakedObjectField[] fields=object.getSpecification().getFields();
@@ -8,17 +12,19 @@
     if (fieldData[i] == null) {
       continue;
     }
-    if (fieldData[i] instanceof ObjectData) {
+    if (fields[i].isObject()) {
       NakedObject field=object.getAssociation((OneToOneAssociation)fields[i]);
+      ObjectData fieldContent=(ObjectData)updates.getFieldContent()[i];
       if (field != null) {
-        madePersistent(field,(ObjectData)updates.getFieldContent()[i]);
+        madePersistent(field,fieldContent);
       }
     }
- else     if (fieldData[i] instanceof CollectionData) {
+ else     if (fields[i].isCollection()) {
       CollectionData collectionData=(CollectionData)updates.getFieldContent()[i];
       for (int j=0; j < collectionData.getElements().length; j++) {
         NakedObject element=((NakedCollection)object.getField(fields[i])).elementAt(j);
-        madePersistent(element,collectionData.getElements()[j]);
+        ObjectData elementData=collectionData.getElements()[j];
+        madePersistent(element,elementData);
       }
     }
   }
