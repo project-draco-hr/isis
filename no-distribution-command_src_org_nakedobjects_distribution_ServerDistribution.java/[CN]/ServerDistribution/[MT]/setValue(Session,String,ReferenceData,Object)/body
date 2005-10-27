@@ -1,0 +1,14 @@
+{
+  LOG.debug("request setValue " + fieldIdentifier + " on "+ target+ " with "+ value+ " for "+ session);
+  NakedObject inObject=getPersistentNakedObject(session,target);
+  OneToOneAssociation association=(OneToOneAssociation)inObject.getSpecification().getField(fieldIdentifier);
+  Hint about=inObject.getHint(association,NakedObjects.getObjectLoader().createAdapterForValue(value));
+  if (about.canAccess().isVetoed() || about.canUse().isVetoed()) {
+    throw new NakedObjectRuntimeException();
+  }
+  NakedValue fieldValue=(NakedValue)inObject.getValue(association);
+  if (fieldValue != null) {
+    fieldValue.restoreFromEncodedString(((NakedValue)NakedObjects.getObjectLoader().createAdapterForValue(value)).asEncodedString());
+  }
+  inObject.setValue(association,value);
+}

@@ -1,0 +1,18 @@
+{
+  TestObjectBuilder referencedObject;
+  referencedObject=new TestObjectBuilder(new TestPojo());
+  referencedObject.setResolveState(ResolveState.TRANSIENT);
+  TestValue value=new TestValue(new TestPojoValuePeer());
+  TestObjectBuilder obj;
+  obj=new TestObjectBuilder(new TestPojo());
+  obj.setResolveState(ResolveState.TRANSIENT);
+  obj.setValueField("value",value);
+  obj.setReferenceField("reference",referencedObject);
+  obj.init(system);
+  Data field2=new DummyObjectData(new DummyOid(345),"type",new Data[]{},true,new DummyVersion(456));
+  distribution.setupMakePersistentResults(new DummyObjectData(new DummyOid(123),"type",new Data[]{null,field2},true,new DummyVersion(456)));
+  NakedObject transientObject=obj.getAdapter();
+  NakedObjects.getObjectManager().makePersistent(transientObject);
+  assertEquals(new DummyOid(123),transientObject.getOid());
+  assertEquals(new DummyOid(345),referencedObject.getAdapter().getOid());
+}

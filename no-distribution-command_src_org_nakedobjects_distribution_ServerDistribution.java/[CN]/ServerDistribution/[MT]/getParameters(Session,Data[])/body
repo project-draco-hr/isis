@@ -1,0 +1,23 @@
+{
+  Naked[] parameters=new Naked[parameterData.length];
+  for (int i=0; i < parameters.length; i++) {
+    Data data=parameterData[i];
+    if (data instanceof NullData) {
+      continue;
+    }
+    if (data instanceof ReferenceData && ((ReferenceData)data).getOid() != null) {
+      parameters[i]=getPersistentNakedObject(session,(ReferenceData)data);
+    }
+ else     if (data instanceof ObjectData) {
+      parameters[i]=DataHelper.restore((ObjectData)data);
+    }
+ else     if (data instanceof ValueData) {
+      ValueData valueData=(ValueData)data;
+      parameters[i]=NakedObjects.getObjectLoader().createAdapterForValue(valueData.getValue());
+    }
+ else {
+      throw new NakedObjectRuntimeException();
+    }
+  }
+  return parameters;
+}

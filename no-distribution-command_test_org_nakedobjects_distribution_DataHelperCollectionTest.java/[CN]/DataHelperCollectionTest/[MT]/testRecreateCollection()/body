@@ -1,0 +1,14 @@
+{
+  ObjectData elements[]=new ObjectData[2];
+  DummyOid fieldOid=new DummyOid(345);
+  elements[0]=new DummyObjectData(fieldOid,"type.1",null,false,new DummyVersion());
+  fieldOid=new DummyOid(678);
+  elements[1]=new DummyObjectData(fieldOid,"type.1",null,false,new DummyVersion());
+  DummyOid collectionOid=new DummyOid(123);
+  CollectionData data=new DummyCollectionData(collectionOid,"type.2",elements,new DummyVersion());
+  NakedCollection naked=(NakedCollection)DataHelper.restore(data);
+  Vector restoredCollection=(Vector)naked.getObject();
+  assertEquals(2,restoredCollection.size());
+  assertEquals(testObject1,restoredCollection.elementAt(0));
+  assertEquals(testObject2,restoredCollection.elementAt(1));
+}

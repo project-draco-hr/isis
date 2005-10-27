@@ -1,0 +1,8 @@
+{
+  LOG.debug("request resolveEagerly " + target + "/"+ fieldName+ " for "+ session);
+  NakedObjectSpecification spec=getSpecification(target.getType());
+  NakedObjectField field=spec.getField(fieldName);
+  NakedObject object=NakedObjects.getObjectLoader().recreateAdapterForPersistent(target.getOid(),spec);
+  NakedObjects.getObjectManager().resolveField(object,field);
+  return objectDataFactory.createForResolveField(object,fieldName);
+}

@@ -1,0 +1,18 @@
+{
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  system=new TestSystem();
+  system.addSpecification(new DummyNakedObjectSpecification("type.1"));
+  DummyNakedObjectSpecification collectionType=new DummyNakedObjectSpecification("type.2");
+  collectionType.setupIsCollection();
+  system.addSpecification(collectionType);
+  testObject1=new TestObject();
+  DummyNakedObject element1=new DummyNakedObject();
+  element1.setupObject(testObject1);
+  system.addRecreated(new DummyOid(345),element1);
+  DummyNakedObject element2=new DummyNakedObject();
+  element2.setupObject(testObject2);
+  system.addRecreated(new DummyOid(678),element2);
+  system.init();
+  system.addSpecification(new DummyNakedObjectSpecification(Object.class.getName()));
+  DataHelper.setUpdateNotifer(new NullDirtyObjectSet());
+}

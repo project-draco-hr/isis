@@ -1,0 +1,15 @@
+{
+  if (field.isValue()) {
+    return;
+  }
+  NakedReference reference=(NakedReference)object.getField(field);
+  if (reference.getResolveState().isResolved()) {
+    return;
+  }
+  if (!reference.getResolveState().isPersistent()) {
+    return;
+  }
+  LOG.info("resolve-eagerly on server " + object + "/"+ field.getName());
+  Data data=connection.resolveField(session,objectDataFactory.createReference(object),field.getName());
+  DataHelper.restore(data);
+}

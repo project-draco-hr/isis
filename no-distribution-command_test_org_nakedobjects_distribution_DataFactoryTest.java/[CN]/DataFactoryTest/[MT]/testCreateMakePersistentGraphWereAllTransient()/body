@@ -1,0 +1,24 @@
+{
+  rootObject.setupResolveState(ResolveState.TRANSIENT);
+  field1.setupResolveState(ResolveState.TRANSIENT);
+  field1_1.setupResolveState(ResolveState.TRANSIENT);
+  ObjectData rootData=(ObjectData)factory.createMakePersistentGraph(rootObject);
+  assertEquals(ResolveState.TRANSIENT,rootObject.getResolveState());
+  assertEquals(null,rootData.getOid());
+  assertEquals(rootSpecification.getFullName(),rootData.getType());
+  assertEquals(new DummyVersion(11),rootData.getVersion());
+  assertEquals(4,rootData.getFieldContent().length);
+  ObjectData referencedFieldData=(ObjectData)rootData.getFieldContent()[0];
+  assertEquals(1,referencedFieldData.getFieldContent().length);
+  assertEquals(new DummyVersion(12),referencedFieldData.getVersion());
+  assertEquals(field1Specification.getFullName(),referencedFieldData.getType());
+  ObjectData referencedFieldData2=(ObjectData)referencedFieldData.getFieldContent()[0];
+  assertEquals(0,referencedFieldData2.getFieldContent().length);
+  assertEquals(new DummyVersion(13),referencedFieldData2.getVersion());
+  assertEquals(field1Specification.getFullName(),referencedFieldData.getType());
+  ValueData valueData=(ValueData)rootData.getFieldContent()[1];
+  assertEquals(valueSpecification.getFullName(),valueData.getType());
+  assertEquals(value,valueData.getValue());
+  NullData emptyFieldData=(NullData)rootData.getFieldContent()[3];
+  assertNotNull(emptyFieldData);
+}

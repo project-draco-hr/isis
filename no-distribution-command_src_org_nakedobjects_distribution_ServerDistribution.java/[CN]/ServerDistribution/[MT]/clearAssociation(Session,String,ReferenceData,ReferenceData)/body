@@ -1,0 +1,11 @@
+{
+  LOG.debug("request clearAssociation " + fieldIdentifier + " on "+ target+ " of "+ associated+ " for "+ session);
+  NakedObject inObject=getPersistentNakedObject(session,target);
+  NakedObject associate=getPersistentNakedObject(session,associated);
+  NakedObjectAssociation association=(NakedObjectAssociation)inObject.getSpecification().getField(fieldIdentifier);
+  Hint about=inObject.getHint(association,associate);
+  if (about.canAccess().isVetoed() || about.canUse().isVetoed()) {
+    throw new NakedObjectRuntimeException();
+  }
+  inObject.clearAssociation(association,associate);
+}
