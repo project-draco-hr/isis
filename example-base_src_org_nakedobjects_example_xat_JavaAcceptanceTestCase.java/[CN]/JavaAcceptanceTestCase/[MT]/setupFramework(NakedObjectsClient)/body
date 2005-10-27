@@ -10,24 +10,15 @@
   objectManager.setObjectStore(objectStore);
   objectManager.setPersistAlgorithm(persistAlgorithm);
   nakedObjects.setObjectManager(objectManager);
-  NakedObjectSpecificationLoader specificationLoader;
-  specificationLoader=new StaticNakedObjectSpecificationLoader(){
-    protected NakedObjectSpecification load(    String className){
-      JavaReflector reflector=new JavaReflector(className);
-      NakedObjectSpecificationImpl specification=new NakedObjectSpecificationImpl();
-      ((NakedObjectSpecificationImpl)specification).reflect(className,reflector);
-      return specification;
-    }
-  }
-;
+  ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
+  JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+  specificationLoader.setReflectionPeerBuilder(factories);
   nakedObjects.setSpecificationLoader(specificationLoader);
-  LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
   ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
   nakedObjects.setObjectLoader(objectLoader);
   objectLoader.setObjectFactory(objectFactory);
   objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
   objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
   objectLoader.setAdapterFactory(new JavaAdapterFactory());
-  nakedObjects.setReflectionFactory(reflectionFactory);
   objectManager.init();
 }
