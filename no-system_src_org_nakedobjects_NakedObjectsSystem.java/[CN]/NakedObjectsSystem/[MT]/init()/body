@@ -1,0 +1,30 @@
+{
+  PropertyConfigurator.configure(LOGGING_PROPERTIES);
+  AboutNakedObjects.logVersion();
+  String name=this.getClass().getName();
+  name=name.substring(name.lastIndexOf('.') + 1);
+  splash=null;
+  try {
+    Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(configurationFile,false));
+    boolean noSplash=configuration.getBoolean("nosplash",false);
+    if (!noSplash) {
+      splash=new SplashWindow();
+    }
+    setUpLocale(configuration.getString("locale"));
+    LocalObjectManager objectManager=createObjectManager();
+    NakedObjectSpecificationLoader specificationLoader=createSpecificationLoader();
+    LocalReflectionFactory reflectionFactory=createReflectionFactory();
+    AdapterFactory reflectorFactory=createReflectorFactory();
+    ObjectLoaderImpl objectLoader=createObjectLoader();
+    NakedObjectsClient nakedObjects=setupNakedObjects(configuration,objectManager,specificationLoader,reflectionFactory,reflectorFactory,objectLoader);
+    nakedObjects.init();
+  }
+ catch (  Exception e) {
+    LOG.error("Exploration startup problem",e);
+  }
+ finally {
+    if (splash != null) {
+      splash.removeAfterDelay(4);
+    }
+  }
+}
