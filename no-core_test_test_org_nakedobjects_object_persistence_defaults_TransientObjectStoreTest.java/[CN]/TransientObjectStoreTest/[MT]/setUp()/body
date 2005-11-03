@@ -1,0 +1,14 @@
+{
+  BasicConfigurator.configure();
+  Logger.getRootLogger().setLevel(Level.OFF);
+  superClassObjectSpec=new DummyNakedObjectSpecification();
+  objectSpec=new DummyNakedObjectSpecification();
+  superClassObjectSpec.setupSubclasses(new NakedObjectSpecification[]{objectSpec});
+  transientObjectStoreInstancesForSuperClass=new TransientObjectStoreInstances();
+  transientObjectStoreInstancesForClass=new TransientObjectStoreInstances();
+  objectStore=new TransientObjectStore();
+  objectStore.instances.put(superClassObjectSpec,transientObjectStoreInstancesForSuperClass);
+  objectStore.instances.put(objectSpec,transientObjectStoreInstancesForClass);
+  system=new TestSystem();
+  system.init();
+}

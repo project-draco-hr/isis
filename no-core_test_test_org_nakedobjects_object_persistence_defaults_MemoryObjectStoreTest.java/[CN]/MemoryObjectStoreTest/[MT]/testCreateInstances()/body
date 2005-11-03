@@ -1,0 +1,8 @@
+{
+  NakedObject object1=createTestObject();
+  NakedObject object2=createTestObject();
+  PersistenceCommand[] commands=new PersistenceCommand[]{objectStore.createCreateObjectCommand(object1),objectStore.createCreateObjectCommand(object2)};
+  objectStore.runTransaction(commands);
+  transientObjectStoreInstancesForClass.assertAction(0,"save " + object1);
+  transientObjectStoreInstancesForClass.assertAction(1,"save " + object2);
+}

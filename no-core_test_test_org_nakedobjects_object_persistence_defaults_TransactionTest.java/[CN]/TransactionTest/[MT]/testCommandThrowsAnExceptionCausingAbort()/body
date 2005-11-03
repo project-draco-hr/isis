@@ -1,0 +1,15 @@
+{
+  t.addCommand(createSaveCommand(object1,"command 1"));
+  t.addCommand(createCommandThatAborts(object2,"command 2"));
+  t.addCommand(createSaveCommand(object1,"command 3"));
+  try {
+    t.commit();
+    fail();
+  }
+ catch (  ObjectPerstsistenceException expected) {
+  }
+  os.assertAction(0,"start");
+  os.assertAction(1,"run command 1");
+  os.assertAction(2,"run command 2");
+  os.assertAction(3,"abort");
+}

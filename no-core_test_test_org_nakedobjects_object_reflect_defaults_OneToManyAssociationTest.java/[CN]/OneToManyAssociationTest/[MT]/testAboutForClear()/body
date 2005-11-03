@@ -1,0 +1,14 @@
+{
+  assertFalse(association.hasHint());
+  Hint about=association.getHint(nakedObject,associate,false);
+  assertNull(associationDelegate.hint);
+  assertTrue(about instanceof DefaultHint);
+  associationDelegate.assertActions(0);
+  associationDelegate.hasAbout=true;
+  assertTrue(association.hasHint());
+  about=association.getHint(nakedObject,associate,false);
+  assertEquals(associationDelegate.hint,about);
+  associationDelegate.assertAction(0,"about " + nakedObject);
+  associationDelegate.assertAction(1,"about " + associate);
+  associationDelegate.assertAction(2,"about " + false);
+}

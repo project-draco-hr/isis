@@ -1,0 +1,17 @@
+{
+  new NakedObjectsClient();
+  DummyOneToManyPeer peer=new DummyOneToManyPeer();
+  MockAuthorisationManager manager=new MockAuthorisationManager();
+  OneToManyAuthorisation oneToMany=new OneToManyAuthorisation(peer,manager);
+  NakedObject object=new DummyNakedObject();
+  NakedObject associate=new DummyNakedObject();
+  MemberIdentifier identifier=new MemberIdentifierImpl("cls","fld");
+  peer.expect("getHint " + identifier + " "+ object+ " "+ associate+ " true");
+  MockHint hint=new MockHint();
+  peer.setupHint(hint);
+  manager.setupUsable(true);
+  manager.setupVisible(true);
+  Hint returnedHint=oneToMany.getHint(identifier,object,associate,true);
+  assertEquals(hint,returnedHint);
+  peer.verify();
+}
