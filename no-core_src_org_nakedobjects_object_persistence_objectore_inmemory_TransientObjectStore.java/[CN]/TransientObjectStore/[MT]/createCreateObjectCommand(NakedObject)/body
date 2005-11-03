@@ -1,0 +1,20 @@
+{
+  return new CreateObjectCommand(){
+    public void execute() throws ObjectPerstsistenceException {
+      LOG.debug("  create object " + object);
+      NakedObjectSpecification specification=object.getSpecification();
+      LOG.debug("   saving object " + object + " as instance of "+ specification.getFullName());
+      TransientObjectStoreInstances ins=instancesFor(specification);
+      ins.add(object);
+      objects.put(object.getOid(),object);
+      object.setOptimisticLock(new LongNumberVersion(1,"user",new Date()));
+    }
+    public NakedObject onObject(){
+      return object;
+    }
+    public String toString(){
+      return "CreateObjectCommand [object=" + object + "]";
+    }
+  }
+;
+}

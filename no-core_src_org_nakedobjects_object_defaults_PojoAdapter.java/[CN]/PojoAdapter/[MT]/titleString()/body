@@ -1,0 +1,15 @@
+{
+  NakedObjectSpecification specification=getSpecification();
+  String title=specification.getTitle(this);
+  if (title == null) {
+    ResolveState resolveState=getResolveState();
+    if (resolveState.isGhost()) {
+      LOG.info("attempting to use unresolved object; resolving it immediately: " + this);
+      NakedObjects.getPersistenceManager().resolveImmediately(this);
+    }
+  }
+  if (title == null) {
+    title=getDefaultTitle();
+  }
+  return title;
+}

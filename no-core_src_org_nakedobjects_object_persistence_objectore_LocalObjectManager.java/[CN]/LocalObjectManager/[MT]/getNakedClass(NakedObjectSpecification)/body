@@ -1,0 +1,14 @@
+{
+  if (nakedClasses.contains(specification)) {
+    return (NakedClass)nakedClasses.get(specification);
+  }
+  NakedClass spec;
+  try {
+    spec=objectStore.getNakedClass(specification.getFullName());
+  }
+ catch (  ObjectNotFoundException e) {
+    spec=new NakedClassImpl(specification.getFullName());
+  }
+  nakedClasses.put(specification,spec);
+  return spec;
+}

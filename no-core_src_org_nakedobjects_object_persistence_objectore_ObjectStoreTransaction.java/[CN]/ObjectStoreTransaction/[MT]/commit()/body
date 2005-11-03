@@ -1,0 +1,20 @@
+{
+  LOG.info("commit transaction " + this);
+  if (complete) {
+    throw new TransactionException("Transaction already complete; cannot commit");
+  }
+  PersistenceCommand[] commandsArray=new PersistenceCommand[commands.size()];
+  commands.copyInto(commandsArray);
+  if (commandsArray.length > 0) {
+    objectStore.startTransaction();
+    try {
+      objectStore.runTransaction(commandsArray);
+      objectStore.endTransaction();
+    }
+ catch (    ObjectPerstsistenceException e) {
+      objectStore.abortTransaction();
+      throw e;
+    }
+  }
+  complete=true;
+}
