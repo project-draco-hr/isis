@@ -1,0 +1,13 @@
+{
+  Assert.assertNotNull(className);
+  try {
+    Class cls=Class.forName(className);
+    return load(cls);
+  }
+ catch (  ClassNotFoundException e) {
+    LOG.warn("not a class " + className + "; 'null' specification created");
+    NoMemberSpecification spec=new NoMemberSpecification(className);
+    cache.cache(className,spec);
+    return spec;
+  }
+}

@@ -1,0 +1,33 @@
+{
+  introspector.introspect();
+  classHint=introspector.classHint();
+  classActions=introspector.getClassActions();
+  fields=introspector.getFields();
+  objectActions=introspector.getObjectActions();
+  fullName=introspector.getFullName();
+  pluralName=introspector.pluralName();
+  singularName=introspector.singularName();
+  shortName=introspector.shortName();
+  title=introspector.title();
+  isAbstract=introspector.isAbstract();
+  isCollection=introspector.isCollection();
+  isLookup=introspector.isLookup();
+  isObject=introspector.isObject();
+  isValue=introspector.isValue();
+  String superclassName=introspector.getSuperclass();
+  String[] interfaceNames=introspector.getInterfaces();
+  NakedObjectSpecificationLoader loader=NakedObjects.getSpecificationLoader();
+  if (superclassName != null) {
+    superclass=loader.loadSpecification(superclassName);
+    if (superclass != null) {
+      LOG.debug("  Superclass " + superclassName);
+      superclass.addSubclass(this);
+    }
+  }
+  interfaces=new NakedObjectSpecification[interfaceNames.length];
+  for (int i=0; i < interfaceNames.length; i++) {
+    interfaces[i]=loader.loadSpecification(interfaceNames[i]);
+    interfaces[i].addSubclass(this);
+  }
+  introspector=null;
+}
