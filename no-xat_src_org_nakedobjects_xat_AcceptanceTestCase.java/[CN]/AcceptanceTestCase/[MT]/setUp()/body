@@ -1,17 +1,23 @@
 {
   File f=new File("xat.properties");
-  Configuration configuration;
+  PropertiesConfiguration configuration;
   if (f.exists()) {
-    configuration=new Configuration(new ConfigurationPropertiesLoader(f.getAbsolutePath(),true));
+    configuration=new PropertiesConfiguration(new PropertiesFileLoader(f.getAbsolutePath(),true));
   }
  else {
-    configuration=new Configuration();
+    configuration=new PropertiesConfiguration();
   }
   nakedObjects=new NakedObjectsClient();
   nakedObjects.setConfiguration(configuration);
   fixtureBuilder=createFixtureBuilder();
   if (testObjectFactory == null) {
-    testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent(TEST_OBJECT_FACTORY,NonDocumentingTestObjectFactory.class,TestObjectFactory.class);
+    String factoryName=configuration.getString(TEST_OBJECT_FACTORY);
+    if (factoryName != null) {
+      testObjectFactory=(TestObjectFactory)ComponentLoader.loadComponent(factoryName,TestObjectFactory.class);
+    }
+ else {
+      testObjectFactory=new NonDocumentingTestObjectFactory();
+    }
   }
   documentor=testObjectFactory.getDocumentor();
   documentor.start();
@@ -27,7 +33,7 @@
     String[] cls=fixtureBuilder.getClasses();
     for (int i=0; i < cls.length; i++) {
       NakedObjectSpecification spec=NakedObjects.getSpecificationLoader().loadSpecification(cls[i]);
-      NakedClass nakedClass=new NakedClass(cls[i]);
+      NakedClass nakedClass=new NakedClassImpl(cls[i]);
       TestClass view=testObjectFactory.createTestClass(nakedClass);
       classes.put(spec.getFullName().toLowerCase(),view);
     }
@@ -36,5 +42,5 @@
     e.printStackTrace();
     throw e;
   }
-  NakedObjects.getObjectManager().reset();
+  NakedObjects.getPersistenceManager().reset();
 }
