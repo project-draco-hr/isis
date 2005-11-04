@@ -1,0 +1,26 @@
+{
+  NakedObjectSpecification nos=cache.get(cls);
+  if (nos != null) {
+    return nos;
+  }
+ else {
+synchronized (cache) {
+      String className=cls.getName();
+      NakedObjectSpecification specification;
+      if (InternalNakedObject.class.isAssignableFrom(cls) || Exception.class.isAssignableFrom(cls)) {
+        LOG.info("initialising specification for " + className + " using internal reflector");
+        specification=new InternalSpecification(cls,reflectionPeerBuilder);
+      }
+ else {
+        specification=install(cls,reflectionPeerBuilder);
+      }
+      if (specification == null) {
+        LOG.info("unrecognised class " + className + "; 'null' specification created");
+        specification=new NoMemberSpecification(className);
+      }
+      cache.cache(cls,specification);
+      specification.introspect();
+      return specification;
+    }
+  }
+}
