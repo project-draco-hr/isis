@@ -5,18 +5,17 @@
   name=name.substring(name.lastIndexOf('.') + 1);
   splash=null;
   try {
-    Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(configurationFile,false));
+    PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader(configurationFile,false));
     boolean noSplash=configuration.getBoolean("nosplash",false);
     if (!noSplash) {
       splash=new SplashWindow();
     }
     setUpLocale(configuration.getString("locale"));
-    LocalObjectManager objectManager=createObjectManager();
+    ObjectStorePersistenceManager objectManager=createObjectManager();
     NakedObjectSpecificationLoader specificationLoader=createSpecificationLoader();
-    LocalReflectionFactory reflectionFactory=createReflectionFactory();
-    AdapterFactory reflectorFactory=createReflectorFactory();
+    AdapterFactory adapterFactory=createReflectorFactory();
     ObjectLoaderImpl objectLoader=createObjectLoader();
-    NakedObjectsClient nakedObjects=setupNakedObjects(configuration,objectManager,specificationLoader,reflectionFactory,reflectorFactory,objectLoader);
+    NakedObjectsClient nakedObjects=setupNakedObjects(configuration,objectManager,specificationLoader,adapterFactory,objectLoader);
     nakedObjects.init();
   }
  catch (  Exception e) {

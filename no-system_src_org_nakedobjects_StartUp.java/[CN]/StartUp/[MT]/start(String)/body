@@ -1,0 +1,21 @@
+{
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader(name,true));
+  PropertyConfigurator.configure(configuration.getProperties("log4j"));
+  AboutNakedObjects.logVersion();
+  LOG.debug("Configuring system using " + name);
+  String componentNames=configuration.getString("components");
+  StringTokenizer st=new StringTokenizer(componentNames,",;/:");
+  Properties properties=configuration.getProperties("nakedobjects.component");
+  while (st.hasMoreTokens()) {
+    String componentName=((String)st.nextToken()).trim();
+    String componentClass=properties.getProperty("nakedobjects.component." + componentName);
+    LOG.debug("loading core component " + componentName + ": "+ componentClass);
+    if (componentClass == null) {
+      throw new StartupException("No component specified for nakedobjects.component." + componentName);
+    }
+    NakedObjectsComponent component=(NakedObjectsComponent)loadComponent(componentClass,NakedObjectsComponent.class);
+    setProperties(component,"nakedobjects." + "component." + componentName,properties);
+    component.init();
+  }
+}
