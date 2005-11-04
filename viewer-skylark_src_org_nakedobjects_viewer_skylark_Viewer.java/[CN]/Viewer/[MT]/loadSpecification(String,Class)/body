@@ -1,3 +1,11 @@
 {
-  return (ViewSpecification)ComponentLoader.loadComponent(SPECIFICATION_BASE + name,cls,ViewSpecification.class);
+  String factoryName=NakedObjects.getConfiguration().getString(SPECIFICATION_BASE + name);
+  ViewSpecification spec;
+  if (factoryName != null) {
+    spec=(ViewSpecification)ComponentLoader.loadComponent(factoryName,ViewSpecification.class);
+  }
+ else {
+    spec=(ViewSpecification)ComponentLoader.loadComponent(cls.getName(),ViewSpecification.class);
+  }
+  return spec;
 }

@@ -3,21 +3,13 @@
     public void execute(){
       NakedClass nakedClass=getNakedClass();
       Naked object=null;
-      InternalAbout about=new InternalAbout();
       if (click.isCtrl()) {
         if (getViewManager().isRunningAsExploration()) {
-          nakedClass.aboutExplorationActionInstances(about);
-          if (about.canUse().isAllowed()) {
+          Consent consent=nakedClass.useAllInstance();
+          if (consent.isAllowed()) {
             NakedCollection instances=nakedClass.allInstances();
             object=instances;
           }
-        }
-      }
- else {
-        nakedClass.aboutExplorationActionFind(about);
-        if (about.canUse().isAllowed() && getViewManager().isRunningAsExploration()) {
-          FastFinder finder=nakedClass.explorationActionFind();
-          object=NakedObjects.getObjectLoader().createAdapterForTransient(finder);
         }
       }
       if (object != null) {

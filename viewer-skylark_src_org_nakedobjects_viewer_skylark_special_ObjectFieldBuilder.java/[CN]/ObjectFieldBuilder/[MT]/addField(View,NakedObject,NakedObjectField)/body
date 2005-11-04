@@ -1,0 +1,14 @@
+{
+  try {
+    Naked value=object.getField(field);
+    Content content=createContent(object,value,field);
+    View fieldView=subviewDesign.createSubview(content,view.getViewAxis());
+    if (fieldView != null) {
+      view.addView(decorateSubview(fieldView));
+    }
+  }
+ catch (  NakedObjectFieldException e) {
+    LOG.error("invalid field",e);
+    view.addView(new FieldErrorView(e.getMessage()));
+  }
+}

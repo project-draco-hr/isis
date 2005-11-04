@@ -10,10 +10,9 @@
   NakedObject source=((ObjectContent)drag.getSourceContent()).getObject();
   View newView;
   if (source.getObject() instanceof NakedClass && drag.isCtrl()) {
-    InternalAbout about=new InternalAbout();
     NakedClass nakedClass=((NakedClass)source.getObject());
-    nakedClass.aboutExplorationActionNewInstance(about);
-    if (about.canUse().isVetoed() || !getViewManager().isRunningAsExploration()) {
+    Consent consent=nakedClass.useCreate();
+    if (consent.isVetoed() || !getViewManager().isRunningAsExploration()) {
       return;
     }
     NakedObjectSpecification spec=nakedClass.forObjectType();

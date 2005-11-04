@@ -27,7 +27,7 @@
 );
   options.add(MenuOptionSet.DEBUG,new MenuOption("Restart object manager"){
     public void execute(    Workspace workspace,    View view,    Location at){
-      NakedObjects.getObjectManager().reset();
+      NakedObjects.getPersistenceManager().reset();
     }
   }
 );
@@ -41,7 +41,7 @@
 );
   options.add(MenuOptionSet.DEBUG,new MenuOption("Debug object manager"){
     public void execute(    Workspace workspace,    View view,    Location at){
-      NakedObjectManager om=NakedObjects.getObjectManager();
+      NakedObjectPersistenceManager om=NakedObjects.getPersistenceManager();
       InfoDebugFrame f=new InfoDebugFrame();
       f.setInfo(om);
       f.show(at.x + 50,workspace.getBounds().y + 6);
@@ -53,6 +53,14 @@
       NakedObjectLoader om=NakedObjects.getObjectLoader();
       InfoDebugFrame f=new InfoDebugFrame();
       f.setInfo(om);
+      f.show(at.x + 50,workspace.getBounds().y + 6);
+    }
+  }
+);
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug repository"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      InfoDebugFrame f=new InfoDebugFrame();
+      f.setInfo(NakedObjects.debug());
       f.show(at.x + 50,workspace.getBounds().y + 6);
     }
   }

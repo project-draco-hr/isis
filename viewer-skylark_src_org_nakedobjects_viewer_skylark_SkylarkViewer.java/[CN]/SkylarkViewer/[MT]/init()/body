@@ -1,12 +1,12 @@
 {
   if (updateNotifier == null) {
-    throw new StartupException("No update notifier set for " + this);
+    throw new NullPointerException("No update notifier set for " + this);
   }
   if (shutdownListener == null) {
-    throw new StartupException("No shutdown listener set for " + this);
+    throw new NullPointerException("No shutdown listener set for " + this);
   }
   if (applicationContext == null) {
-    throw new StartupException("No application context set for " + this);
+    throw new NullPointerException("No application context set for " + this);
   }
   if (bounds == null) {
     bounds=new Bounds(10,10,800,600);
@@ -19,13 +19,13 @@
   viewer.setListener(shutdownListener);
   viewer.setExploration(inExplorationMode);
   frame.setViewer(viewer);
-  NakedObjects.getObjectManager().addObjectChangedListener(updateNotifier);
+  NakedObjects.getPersistenceManager().addObjectChangedListener(updateNotifier);
   NakedObject rootObject=NakedObjects.getObjectLoader().createAdapterForTransient(applicationContext);
   RootWorkspaceSpecification spec=new RootWorkspaceSpecification();
   View view=spec.createView(new RootObject(rootObject),null);
   viewer.setRootView(view);
   viewer.init();
-  frame.setTitle(title == null ? applicationContext.name() : title);
+  frame.setTitle(title == null ? applicationContext.getName() : title);
   frame.init();
   frame.show();
   viewer.sizeChange();
