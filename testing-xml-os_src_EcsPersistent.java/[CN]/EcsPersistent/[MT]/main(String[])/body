@@ -1,6 +1,6 @@
 {
   BasicConfigurator.configure();
-  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
+  PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader(DEFAULT_CONFIG,false));
   if (configuration.getString(SHOW_EXPLORATION_OPTIONS) == null) {
     configuration.add(SHOW_EXPLORATION_OPTIONS,"yes");
   }
@@ -24,14 +24,15 @@
     persistAlgorithm.setOidGenerator(oidGenerator);
     DefaultPersistAlgorithm algo=new DefaultPersistAlgorithm();
     algo.setOidGenerator(oidGenerator);
-    LocalObjectManager objectManager=new LocalObjectManager();
+    ObjectStorePersistenceManager objectManager=new ObjectStorePersistenceManager();
     objectManager.setObjectStore(objectStore);
     objectManager.setPersistAlgorithm(persistAlgorithm);
     objectManager.setCheckObjectsForDirtyFlag(true);
-    nakedObjects.setObjectManager(objectManager);
-    nakedObjects.setSpecificationLoader(new JavaSpecificationLoader());
-    LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
-    nakedObjects.setReflectionFactory(reflectionFactory);
+    nakedObjects.setPersistenceManager(objectManager);
+    ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
+    JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+    specificationLoader.setReflectionPeerFactories(factories);
+    nakedObjects.setSpecificationLoader(specificationLoader);
     new SystemClock();
     nakedObjects.setSession(new SimpleSession());
     ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();

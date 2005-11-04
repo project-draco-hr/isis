@@ -4,7 +4,7 @@
     public void run(){
       final PipedServer server=new PipedServer();
       server.setConnection(connection);
-      nakedObjects.setConfiguration(new Configuration());
+      nakedObjects.setConfiguration(new PropertiesConfiguration());
       JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
       new SystemClock();
       JavaObjectFactory objectFactory=new JavaObjectFactory();
@@ -12,21 +12,22 @@
       OidGenerator oidGenerator=new SimpleOidGenerator();
       DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
       persistAlgorithm.setOidGenerator(oidGenerator);
-      LocalObjectManager localObjectManager=new LocalObjectManager();
+      ObjectStorePersistenceManager localObjectManager=new ObjectStorePersistenceManager();
       localObjectManager.setObjectStore(objectStore);
       localObjectManager.setPersistAlgorithm(persistAlgorithm);
       localObjectManager.setCheckObjectsForDirtyFlag(true);
-      NakedObjectManager objectManager=localObjectManager;
-      nakedObjects.setObjectManager(objectManager);
-      LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
+      NakedObjectPersistenceManager objectManager=localObjectManager;
+      nakedObjects.setPersistenceManager(objectManager);
       ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
       objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
       objectLoader.setObjectFactory(objectFactory);
       objectLoader.setAdapterFactory(new JavaAdapterFactory());
       objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
       nakedObjects.setObjectLoader(objectLoader);
-      nakedObjects.setReflectionFactory(reflectionFactory);
-      nakedObjects.setSpecificationLoader(new JavaSpecificationLoader());
+      ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
+      JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+      specificationLoader.setReflectionPeerFactories(factories);
+      nakedObjects.setSpecificationLoader(specificationLoader);
       SingleResponseUpdateNotifier updateNotifier=new SingleResponseUpdateNotifier();
       ServerDistribution sd=new ServerDistribution();
       DataFactory dataFactory=new JavaDataFactory();

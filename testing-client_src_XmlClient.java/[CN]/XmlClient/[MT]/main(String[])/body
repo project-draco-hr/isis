@@ -1,7 +1,7 @@
 {
   BasicConfigurator.configure();
   NakedObjectsClient nakedObjects=new NakedObjectsClient();
-  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,true));
+  PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader(DEFAULT_CONFIG,true));
   if (configuration.getString(SHOW_EXPLORATION_OPTIONS) == null) {
     configuration.add(SHOW_EXPLORATION_OPTIONS,"yes");
   }
@@ -24,22 +24,24 @@
     JavaObjectFactory objectFactory=new JavaObjectFactory();
     objectFactory.setContainer(container);
     JavaDataFactory objectDataFactory=new JavaDataFactory();
-    ProxyObjectManager proxyObjectManager=new ProxyObjectManager();
+    ProxyPersistenceManager proxyObjectManager=new ProxyPersistenceManager();
     proxyObjectManager.setConnection(connection);
     proxyObjectManager.setObjectDataFactory(objectDataFactory);
-    NakedObjectManager objectManager=new ObjectManagerLogger(proxyObjectManager,"manager.log");
-    nakedObjects.setObjectManager(objectManager);
-    ProxyReflectionFactory reflectionFactory=new ProxyReflectionFactory();
-    reflectionFactory.setConnection(connection);
-    reflectionFactory.setObjectDataFactory(objectDataFactory);
+    NakedObjectPersistenceManager objectManager=new ObjectPesistorLogger(proxyObjectManager,"manager.log");
+    nakedObjects.setPersistenceManager(objectManager);
     ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
     objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
     objectLoader.setAdapterFactory(new JavaAdapterFactory());
     objectLoader.setObjectFactory(objectFactory);
     objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
     nakedObjects.setObjectLoader(objectLoader);
-    nakedObjects.setReflectionFactory(reflectionFactory);
-    nakedObjects.setSpecificationLoader(new JavaSpecificationLoader());
+    ProxyPeerFactory reflectionFactory=new ProxyPeerFactory();
+    reflectionFactory.setConnection(connection);
+    reflectionFactory.setObjectDataFactory(objectDataFactory);
+    ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{reflectionFactory};
+    JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+    specificationLoader.setReflectionPeerFactories(factories);
+    nakedObjects.setSpecificationLoader(specificationLoader);
     ViewUpdateNotifier updateNotifier=new ViewUpdateNotifier();
     proxyObjectManager.setUpdateNotifier(updateNotifier);
     nakedObjects.init();

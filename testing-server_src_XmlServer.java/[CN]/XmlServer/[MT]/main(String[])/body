@@ -1,7 +1,7 @@
 {
   BasicConfigurator.configure();
   NakedObjectsClient nakedObjects=new NakedObjectsClient();
-  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader("server.properties",true));
+  PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader("server.properties",true));
   nakedObjects.setConfiguration(configuration);
   PropertyConfigurator.configure(configuration.getProperties("log4j"));
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
@@ -14,20 +14,21 @@
   OidGenerator oidGenerator=new SimpleOidGenerator();
   DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
   persistAlgorithm.setOidGenerator(oidGenerator);
-  LocalObjectManager objectManager=new LocalObjectManager();
+  ObjectStorePersistenceManager objectManager=new ObjectStorePersistenceManager();
   objectManager.setObjectStore(objectStore);
   objectManager.setPersistAlgorithm(persistAlgorithm);
   objectManager.setCheckObjectsForDirtyFlag(true);
-  nakedObjects.setObjectManager(objectManager);
-  LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
-  nakedObjects.setReflectionFactory(reflectionFactory);
+  nakedObjects.setPersistenceManager(objectManager);
+  ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
+  JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+  specificationLoader.setReflectionPeerFactories(factories);
+  nakedObjects.setSpecificationLoader(specificationLoader);
   ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
   objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
   objectLoader.setAdapterFactory(new JavaAdapterFactory());
   objectLoader.setObjectFactory(objectFactory);
   objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
   nakedObjects.setObjectLoader(objectLoader);
-  nakedObjects.setSpecificationLoader(new JavaSpecificationLoader());
   ServerDistribution sd=new ServerDistribution();
   sd.setObjectDataFactory(objectDataFactory);
   ServerListener serverListener=new ServerListener();
