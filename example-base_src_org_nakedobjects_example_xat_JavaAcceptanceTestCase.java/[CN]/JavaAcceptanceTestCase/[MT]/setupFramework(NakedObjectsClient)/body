@@ -6,13 +6,13 @@
   OidGenerator oidGenerator=new TimeBasedOidGenerator();
   DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
   persistAlgorithm.setOidGenerator(oidGenerator);
-  LocalObjectManager objectManager=new LocalObjectManager();
+  ObjectStorePersitenceManager objectManager=new ObjectStorePersitenceManager();
   objectManager.setObjectStore(objectStore);
   objectManager.setPersistAlgorithm(persistAlgorithm);
-  nakedObjects.setObjectManager(objectManager);
+  nakedObjects.setPersistenceManager(objectManager);
   ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
   JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
-  specificationLoader.setReflectionPeerBuilder(factories);
+  specificationLoader.setReflectionPeerFactories(factories);
   nakedObjects.setSpecificationLoader(specificationLoader);
   ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
   nakedObjects.setObjectLoader(objectLoader);

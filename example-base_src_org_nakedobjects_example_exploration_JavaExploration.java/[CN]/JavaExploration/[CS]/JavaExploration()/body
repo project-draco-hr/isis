@@ -1,5 +1,5 @@
 {
-  ConfigurationPropertiesLoader loadedProperties=new ConfigurationPropertiesLoader("log4j.properties",false);
+  PropertiesFileLoader loadedProperties=new PropertiesFileLoader("log4j.properties",false);
   Properties p=loadedProperties.getProperties();
   if (p.size() == 0) {
     BasicConfigurator.configure();
@@ -12,7 +12,7 @@
   try {
     String name=this.getClass().getName();
     name=name.substring(name.lastIndexOf('.') + 1);
-    Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(configurationFile(),false));
+    PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader(configurationFile(),false));
     NakedObjectsClient nakedObjects=new NakedObjectsClient();
     nakedObjects.setConfiguration(configuration);
     PropertyConfigurator.configure(configuration.getProperties("log4j"));
@@ -29,17 +29,17 @@
     OidGenerator oidGenerator=new SimpleOidGenerator();
     DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
     persistAlgorithm.setOidGenerator(oidGenerator);
-    LocalObjectManager objectManager=new LocalObjectManager();
+    ObjectStorePersitenceManager objectManager=new ObjectStorePersitenceManager();
     objectManager.setObjectStore(objectStore);
     objectManager.setPersistAlgorithm(persistAlgorithm);
-    nakedObjects.setObjectManager(objectManager);
+    nakedObjects.setPersistenceManager(objectManager);
     HelpManagerAssist helpManager=new HelpManagerAssist();
     helpManager.setDecorated(new SimpleHelpManager());
     HelpPeerFactory helpPeerFactory=new HelpPeerFactory();
     helpPeerFactory.setHelpManager(helpManager);
     ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{helpPeerFactory,new TransactionPeerFactory()};
     JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
-    specificationLoader.setReflectionPeerBuilder(factories);
+    specificationLoader.setReflectionPeerFactories(factories);
     nakedObjects.setSpecificationLoader(specificationLoader);
     ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
     objectLoader.setObjectFactory(objectFactory);
