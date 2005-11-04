@@ -1,9 +1,10 @@
 {
-  system.addSpecification(new DummyNakedObjectSpecification());
-  system.addSpecification(new DummyNakedObjectSpecification());
-  FieldPeer[] fields=reflector.fields();
-  assertEquals(1,fields.length);
-  JavaField member=(JavaField)fields[0];
-  assertEquals("Value",member.getName());
-  assertEquals("aboutValue",member.getAboutMethod().getName());
+  NakedObjectField[] fields=reflector.getFields();
+  assertEquals(3,fields.length);
+  OneToOnePeer member=((DummyOneToOneAssociation)fields[0]).getPeer();
+  assertEquals("One",member.getName());
+  assertEquals(false,member.isObject());
+  member=((DummyOneToOneAssociation)fields[2]).getPeer();
+  assertEquals("Three",member.getName());
+  assertEquals(true,member.isObject());
 }

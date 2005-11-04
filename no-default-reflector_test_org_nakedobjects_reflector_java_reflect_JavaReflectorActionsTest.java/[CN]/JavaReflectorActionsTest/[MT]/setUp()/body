@@ -3,6 +3,7 @@
   system=new TestSystem();
   system.init();
   system.addSpecification(new DummyNakedObjectSpecification());
-  reflector=new JavaReflector(BusinessObjectWithActions.class.getName());
-  actions=reflector.actionPeers(false);
+  reflector=new JavaIntrospector(BusinessObjectWithActions.class,new DummyBuilder());
+  reflector.introspect();
+  actions=reflector.getObjectActions();
 }
