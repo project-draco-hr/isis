@@ -26,9 +26,10 @@
     NakedCollection collection=(NakedCollection)object.getField(oneToManyFields[i]);
     NakedObjects.getObjectLoader();
   }
-  long version=rs.getLong(versionColumn);
+  long number=rs.getLong(versionColumn);
   String user=rs.getString(lastActivityUserColumn);
   Date time=rs.getDate(lastActivityDateColumn);
-  object.setOptimisticLock(version,user,time);
+  Version version=new LongNumberVersion(number,user,time);
+  object.setOptimisticLock(version);
   NakedObjects.getObjectLoader().end(object);
 }
