@@ -1,7 +1,7 @@
 {
   BasicConfigurator.configure();
   NakedObjectsClient nakedObjects=new NakedObjectsClient();
-  Configuration configuration=new Configuration(new ConfigurationPropertiesLoader(DEFAULT_CONFIG,false));
+  PropertiesConfiguration configuration=new PropertiesConfiguration(new PropertiesFileLoader(DEFAULT_CONFIG,false));
   nakedObjects.setConfiguration(configuration);
   if (configuration.getString(SHOW_EXPLORATION_OPTIONS) == null) {
     configuration.add(SHOW_EXPLORATION_OPTIONS,"yes");
@@ -26,31 +26,32 @@
     OidGenerator oidGenerator=new SimpleOidGenerator();
     DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
     persistAlgorithm.setOidGenerator(oidGenerator);
-    LocalObjectManager lom=new LocalObjectManager();
+    ObjectStorePersistenceManager lom=new ObjectStorePersistenceManager();
     lom.setObjectStore(objectStore);
     lom.setCheckObjectsForDirtyFlag(true);
     lom.setPersistAlgorithm(persistAlgorithm);
-    NakedObjectManager objectManager=new ObjectManagerLogger(lom,"manager.log");
-    nakedObjects.setObjectManager(objectManager);
-    NakedObjectSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+    NakedObjectPersistenceManager objectManager=new ObjectPesistorLogger(lom,"manager.log");
+    nakedObjects.setPersistenceManager(objectManager);
+    ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
+    JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
+    specificationLoader.setReflectionPeerFactories(factories);
     nakedObjects.setSpecificationLoader(specificationLoader);
-    LocalReflectionFactory reflectionFactory=new LocalReflectionFactory();
-    JavaAdapterFactory reflectorFactory=new JavaAdapterFactory();
     ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
     objectLoader.setObjectFactory(objectFactory);
     objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
-    objectLoader.setAdapterFactory(reflectorFactory);
+    objectLoader.setAdapterFactory(new JavaAdapterFactory());
     objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
     nakedObjects.setObjectLoader(objectLoader);
-    nakedObjects.setReflectionFactory(reflectionFactory);
+    nakedObjects.setSession(new SimpleSession());
+    nakedObjects.init();
     JavaFixtureBuilder fixtureBuilder=new JavaFixtureBuilder();
     fixtureBuilder.addFixture(new EcsFixture());
     fixtureBuilder.installFixtures();
-    nakedObjects.setSession(new SimpleSession());
     SkylarkViewer viewer=new SkylarkViewer();
     viewer.setUpdateNotifier(new ViewUpdateNotifier());
     Context ecs=new Context();
     viewer.setApplication(ecs);
+    viewer.setExploration(true);
     viewer.setShutdownListener(new ObjectViewingMechanismListener(){
       public void viewerClosing(){
         System.out.println("EXITED");
