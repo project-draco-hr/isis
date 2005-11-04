@@ -4,7 +4,9 @@
   assertNull(associationDelegate.hint);
   assertTrue(about instanceof DefaultHint);
   associationDelegate.assertActions(0);
-  associationDelegate.hasAbout=true;
+  MockHint mockHint=new MockHint();
+  associationDelegate.hint=mockHint;
+  associationDelegate.expect("getHint " + "#members()" + " " + nakedObject + " "+ associate+ " true");
   assertTrue(association.hasHint());
   about=association.getHint(nakedObject,associate,true);
   assertEquals(associationDelegate.hint,about);
