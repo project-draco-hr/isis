@@ -1,10 +1,9 @@
 {
   Assert.assertTrue("Only suitable for 0 param methods",action.parameters().length == 0);
-  Hint about=object.getHint(action,null);
-  if (about.canAccess().isVetoed()) {
+  if (!action.isAccessible() || object.isVisible(action).isVetoed()) {
     return null;
   }
-  String labelName=object.getLabel(action);
+  String labelName=action.getLabel();
   ImmediateObjectOption option=new ImmediateObjectOption(labelName,object,action);
   return option;
 }

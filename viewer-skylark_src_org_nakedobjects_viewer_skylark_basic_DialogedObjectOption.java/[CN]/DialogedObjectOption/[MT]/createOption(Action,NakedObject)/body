@@ -1,11 +1,10 @@
 {
   int paramCount=action.getParameterCount();
   Assert.assertTrue("Only for actions taking one or more params",paramCount > 0);
-  Hint about=object.getHint(action,action.parameterStubs());
-  if (about.canAccess().isVetoed()) {
+  if (!action.isAccessible() || object.isVisible(action).isVetoed()) {
     return null;
   }
-  String label=object.getLabel(action) + "...";
+  String label=action.getLabel() + "...";
   DialogedObjectOption option=new DialogedObjectOption(label,action,object);
   return option;
 }

@@ -3,8 +3,8 @@
     OneToManyField internalCollectionContent=(OneToManyField)getContent();
     OneToManyAssociation field=internalCollectionContent.getOneToManyAssociation();
     NakedObject target=((ObjectContent)getParent().getContent()).getObject();
-    Hint about=target.getHint(field,result);
-    if (about.canUse().isAllowed()) {
+    Consent about=target.canAdd(field,(NakedObject)result);
+    if (about.isAllowed()) {
       target.setAssociation(field,(NakedObject)result);
     }
   }

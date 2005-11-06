@@ -1,13 +1,13 @@
 {
-  Hint about=object.getHint(action,null);
-  if (about.canUse().isAllowed()) {
-    String description=getName(view) + ": " + about.getDescription();
+  Consent valid=object.isValid(action,null);
+  if (valid.isAllowed()) {
+    String description=getName(view) + ": " + action.getDescription();
     if (action.hasReturn()) {
       description+=" returns a " + action.getReturnType().getSingularName();
     }
     return new Allow(description);
   }
  else {
-    return about.canUse();
+    return valid;
   }
 }
