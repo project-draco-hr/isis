@@ -5,7 +5,6 @@
     Method getMethod=(Method)e.nextElement();
     Class returnType=getMethod.getReturnType();
     String name=getMethod.getName().substring(GET_PREFIX.length());
-    Method aboutMethod=findMethod(OBJECT,ABOUT_PREFIX + name,null,new Class[]{InternalAbout.class,returnType});
     Method setMethod=findMethod(OBJECT,SET_PREFIX + name,null,new Class[]{returnType});
     Class[] params=new Class[]{returnType};
     if ((findMethod(OBJECT,SET_PREFIX + name,void.class,params) != null)) {
@@ -15,7 +14,7 @@
       LOG.error("the method associate" + name + " is not needed for the NakedValue class "+ className());
     }
     LOG.info("  value " + name + " ->"+ getMethod);
-    InternalOneToOneAssociation association=new InternalOneToOneAssociation(false,name,getMethod.getReturnType(),getMethod,setMethod,null,null,aboutMethod);
+    InternalOneToOneAssociation association=new InternalOneToOneAssociation(false,className(),name,getMethod.getReturnType(),getMethod,setMethod,null,null);
     fields.addElement(association);
   }
   return fields;

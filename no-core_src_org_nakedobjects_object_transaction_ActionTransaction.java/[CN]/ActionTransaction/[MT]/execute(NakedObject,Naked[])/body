@@ -1,0 +1,24 @@
+{
+  NakedObjectPersistenceManager objectManager=NakedObjects.getPersistenceManager();
+  try {
+    objectManager.startTransaction();
+    NakedObject transactionObject;
+    Naked[] transactionParameters=new Naked[parameters == null ? 0 : parameters.length];
+    transactionObject=object;
+    transactionParameters=parameters == null ? new Naked[0] : parameters;
+    Naked result=super.execute(transactionObject,transactionParameters);
+    objectManager.saveChanges();
+    objectManager.endTransaction();
+    return result;
+  }
+ catch (  RuntimeException e) {
+    LOG.info("exception executing " + getIdentifier() + "; aborting transaction");
+    try {
+      objectManager.abortTransaction();
+    }
+ catch (    Exception e2) {
+      LOG.error("failure during abort",e2);
+    }
+    throw e;
+  }
+}

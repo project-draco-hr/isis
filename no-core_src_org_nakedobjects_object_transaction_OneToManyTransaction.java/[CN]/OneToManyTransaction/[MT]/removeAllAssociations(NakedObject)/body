@@ -1,0 +1,18 @@
+{
+  NakedObjectPersistenceManager objectManager=NakedObjects.getPersistenceManager();
+  if (inObject.getResolveState().isPersistent()) {
+    try {
+      objectManager.startTransaction();
+      super.removeAllAssociations(inObject);
+      objectManager.saveChanges();
+      objectManager.endTransaction();
+    }
+ catch (    RuntimeException e) {
+      abort(objectManager);
+      throw e;
+    }
+  }
+ else {
+    super.removeAllAssociations(inObject);
+  }
+}

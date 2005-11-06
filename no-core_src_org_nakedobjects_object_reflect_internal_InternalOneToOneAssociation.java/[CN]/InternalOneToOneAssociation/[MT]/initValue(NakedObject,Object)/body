@@ -1,0 +1,18 @@
+{
+  LOG.debug("init value " + getIdentifier() + " in "+ inObject.getOid()+ " - "+ setValue);
+  try {
+    setMethod.invoke(inObject.getObject(),new Object[]{setValue});
+  }
+ catch (  InvocationTargetException e) {
+    LOG.error("exception executing " + setMethod,e.getTargetException());
+    if (e.getTargetException() instanceof RuntimeException) {
+      throw (RuntimeException)e.getTargetException();
+    }
+ else {
+      throw new RuntimeException(e.getTargetException().getMessage());
+    }
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("illegal access of " + setMethod,ignore);
+  }
+}

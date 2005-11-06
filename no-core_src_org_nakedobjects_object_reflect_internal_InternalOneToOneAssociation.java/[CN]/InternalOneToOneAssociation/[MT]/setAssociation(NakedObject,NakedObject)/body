@@ -1,0 +1,37 @@
+{
+  LOG.debug("set association " + getIdentifier() + " in "+ inObject+ " - "+ associate);
+  try {
+    if (associate == null) {
+      if (removeMethod != null) {
+        removeMethod.invoke(inObject.getObject(),new Object[]{getAssociation(inObject)});
+      }
+ else {
+        setMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+      }
+    }
+ else {
+      if (hasAddMethod()) {
+        addMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+      }
+ else {
+        setMethod.invoke(inObject.getObject(),new Object[]{associate.getObject()});
+      }
+    }
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException(setMethod + " method doesn't expect a " + associate.getClass().getName());
+  }
+catch (  InvocationTargetException e) {
+    LOG.error("exception executing " + setMethod,e.getTargetException());
+    if (e.getTargetException() instanceof RuntimeException) {
+      throw (RuntimeException)e.getTargetException();
+    }
+ else {
+      throw new RuntimeException(e.getTargetException().getMessage());
+    }
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("illegal access of " + setMethod,ignore);
+    throw new RuntimeException(ignore.getMessage());
+  }
+}
