@@ -1,8 +1,9 @@
 {
   Method aboutMethod=getAboutMethod();
   Class parameter=getMethod.getReturnType();
+  Object object2=object.getObject();
   if (associate != null && associate.getObject() != null && !parameter.isAssignableFrom(associate.getObject().getClass())) {
-    SimpleFieldAbout about=new SimpleFieldAbout(NakedObjects.getCurrentSession(),object.getObject());
+    SimpleFieldAbout about=new SimpleFieldAbout(NakedObjects.getCurrentSession(),object2);
     about.unmodifiable("Invalid type: field must be set with a " + NakedObjects.getSpecificationLoader().loadSpecification(parameter.getName()));
     return about;
   }
@@ -11,7 +12,7 @@
     return hint;
   }
   try {
-    SimpleFieldAbout hint=new SimpleFieldAbout(NakedObjects.getCurrentSession(),object.getObject());
+    SimpleFieldAbout hint=new SimpleFieldAbout(NakedObjects.getCurrentSession(),object2);
     Object[] parameters;
     if (aboutMethod.getParameterTypes().length == 2) {
       parameters=new Object[]{hint,associate == null ? null : associate.getObject()};
@@ -19,7 +20,7 @@
  else {
       parameters=new Object[]{hint};
     }
-    aboutMethod.invoke(object.getObject(),parameters);
+    aboutMethod.invoke(object2,parameters);
     if (hint.getDescription().equals("") && associate != null) {
       hint.setDescription("Set field " + getIdentifier() + " to "+ associate.getObject());
     }
