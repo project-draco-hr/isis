@@ -16,7 +16,7 @@
   }
   NakedObject nakedObject=(NakedObject)getForNaked();
   boolean isAccessible=true;
-  isAccessible=association.isAccessible() && nakedObject.isVisible(association).isVetoed();
+  isAccessible=association.isAccessible() && nakedObject.isVisible(association).isAllowed();
   if (!isAccessible) {
     throw new IllegalActionError("Cannot access the field " + field);
   }
@@ -31,7 +31,7 @@
  else {
     throw new NakedObjectRuntimeException();
   }
-  if (!valid.isVetoed()) {
+  if (valid.isVetoed()) {
     throw new IllegalActionError("Cannot associate " + obj + " in the field "+ field+ " within "+ nakedObject+ ": "+ valid.getReason());
   }
   nakedObject.setAssociation(association,obj);
