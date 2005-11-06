@@ -1,0 +1,14 @@
+{
+  if (field.isValue()) {
+    return;
+  }
+  NakedReference reference=(NakedReference)object.getField(field);
+  if (reference.getResolveState().isResolved()) {
+    return;
+  }
+  if (!reference.getResolveState().isPersistent()) {
+    return;
+  }
+  LOG.info("resolve-field" + object + "/"+ field.getId());
+  objectStore.resolveField(object,field);
+}
