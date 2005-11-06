@@ -26,12 +26,12 @@
     OidGenerator oidGenerator=new SimpleOidGenerator();
     DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
     persistAlgorithm.setOidGenerator(oidGenerator);
-    ObjectStorePersistenceManager lom=new ObjectStorePersistenceManager();
+    ObjectStorePersistor lom=new ObjectStorePersistor();
     lom.setObjectStore(objectStore);
     lom.setCheckObjectsForDirtyFlag(true);
     lom.setPersistAlgorithm(persistAlgorithm);
-    NakedObjectPersistenceManager objectManager=new ObjectPesistorLogger(lom,"manager.log");
-    nakedObjects.setPersistenceManager(objectManager);
+    NakedObjectPersistor objectManager=new ObjectPesistorLogger(lom,"manager.log");
+    nakedObjects.setObjectPersistor(objectManager);
     ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
     JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
     specificationLoader.setReflectionPeerFactories(factories);
