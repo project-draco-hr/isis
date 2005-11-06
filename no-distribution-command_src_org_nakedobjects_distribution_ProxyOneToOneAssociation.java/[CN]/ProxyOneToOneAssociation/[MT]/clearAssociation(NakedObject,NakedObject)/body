@@ -1,0 +1,12 @@
+{
+  if (isPersistent(inObject)) {
+    LOG.debug("clear association remotely " + inObject + "/"+ associate);
+    ReferenceData targetReference=objectDataFactory.createReference(inObject);
+    ReferenceData associateReference=objectDataFactory.createReference(associate);
+    connection.clearAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+  }
+ else {
+    LOG.debug("clear association locally " + inObject + "/"+ associate);
+    super.clearAssociation(inObject,associate);
+  }
+}

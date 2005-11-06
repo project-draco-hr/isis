@@ -1,0 +1,18 @@
+{
+  if (isPersistent(inObject)) {
+    LOG.debug("set association remotely " + getIdentifier() + " in "+ inObject+ " with "+ associate);
+    try {
+      ReferenceData targetReference=objectDataFactory.createReference(inObject);
+      ReferenceData associateReference=objectDataFactory.createReference(associate);
+      connection.setAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+    }
+ catch (    NakedObjectRuntimeException e) {
+      LOG.error("problem with distribution ",e.getCause());
+      throw (NakedObjectRuntimeException)e.getCause();
+    }
+  }
+ else {
+    LOG.debug("set association locally " + getIdentifier() + " in "+ inObject+ " with "+ associate);
+    super.addAssociation(inObject,associate);
+  }
+}
