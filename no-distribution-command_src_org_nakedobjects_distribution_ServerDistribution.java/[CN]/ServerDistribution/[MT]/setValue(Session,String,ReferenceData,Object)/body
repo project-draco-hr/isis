@@ -2,7 +2,7 @@
   LOG.debug("request setValue " + fieldIdentifier + " on "+ target+ " with "+ value+ " for "+ session);
   NakedObject inObject=getPersistentNakedObject(session,target);
   OneToOneAssociation association=(OneToOneAssociation)inObject.getSpecification().getField(fieldIdentifier);
-  if (!association.isAccessible() || association.isEditable().isVetoed()) {
+  if (!association.isAccessible() || association.isEditable(inObject).isVetoed()) {
     throw new IllegalRequestException("can't modify field as not visible or editable");
   }
   NakedValue fieldValue=(NakedValue)inObject.getValue(association);

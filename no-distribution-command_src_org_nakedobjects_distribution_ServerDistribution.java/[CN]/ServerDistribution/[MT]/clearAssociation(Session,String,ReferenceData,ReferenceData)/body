@@ -3,7 +3,7 @@
   NakedObject inObject=getPersistentNakedObject(session,target);
   NakedObject associate=getPersistentNakedObject(session,associated);
   NakedObjectAssociation association=(NakedObjectAssociation)inObject.getSpecification().getField(fieldIdentifier);
-  if (!association.isAccessible() || association.isEditable().isVetoed()) {
+  if (!association.isAccessible() || association.isEditable(inObject).isVetoed()) {
     throw new IllegalRequestException("can't modify field as not visible or editable");
   }
   inObject.clearAssociation(association,associate);
