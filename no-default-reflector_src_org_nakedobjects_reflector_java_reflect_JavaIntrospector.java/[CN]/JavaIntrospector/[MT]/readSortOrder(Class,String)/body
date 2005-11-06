@@ -1,0 +1,34 @@
+{
+  Method method=findMethod(true,type + "Order",String.class,null);
+  if (method == null) {
+    return null;
+  }
+ else {
+    try {
+      if (Modifier.isStatic(method.getModifiers())) {
+        String s=(String)method.invoke(null,NO_PARAMETERS);
+        if (s.trim().length() > 0) {
+          java.util.StringTokenizer st=new java.util.StringTokenizer(s,",");
+          String[] a=new String[st.countTokens()];
+          int element=0;
+          while (st.hasMoreTokens()) {
+            a[element]=st.nextToken().trim();
+            element++;
+          }
+          return a;
+        }
+ else {
+          return null;
+        }
+      }
+ else {
+        LOG.warn("method " + aClass.getName() + "."+ type+ "Order() must be decared as static");
+      }
+    }
+ catch (    IllegalAccessException ignore) {
+    }
+catch (    InvocationTargetException ignore) {
+    }
+    return null;
+  }
+}

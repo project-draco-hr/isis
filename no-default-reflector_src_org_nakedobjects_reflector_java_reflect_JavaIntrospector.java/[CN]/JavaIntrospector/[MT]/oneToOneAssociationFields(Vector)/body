@@ -1,0 +1,30 @@
+{
+  Vector v=findPrefixedMethods(OBJECT,GET_PREFIX,Object.class,0);
+  Enumeration e=v.elements();
+  while (e.hasMoreElements()) {
+    Method getMethod=(Method)e.nextElement();
+    LOG.info("  identified 1-1 association method " + getMethod);
+    if (getMethod.getName().equals("getNakedClass")) {
+      continue;
+    }
+    String name=javaBaseName(getMethod.getName());
+    Class[] params=new Class[]{getMethod.getReturnType()};
+    Method aboutMethod=findMethod(OBJECT,ABOUT_PREFIX + name,null,new Class[]{FieldAbout.class,getMethod.getReturnType()});
+    if (aboutMethod == null) {
+      aboutMethod=defaultAboutFieldMethod;
+    }
+    Method addMethod=findMethod(OBJECT,"associate" + name,void.class,params);
+    if (addMethod == null) {
+      addMethod=findMethod(OBJECT,"add" + name,void.class,params);
+    }
+    Method removeMethod=findMethod(OBJECT,"dissociate" + name,void.class,null);
+    if (removeMethod == null) {
+      removeMethod=findMethod(OBJECT,"remove" + name,void.class,null);
+    }
+    Method setMethod=findMethod(OBJECT,SET_PREFIX + name,void.class,params);
+    LOG.info("one-to-one association " + name + " ->"+ addMethod);
+    MemberIdentifier identifier=new MemberIdentifierImpl(className,name);
+    JavaOneToOneAssociation association=new JavaOneToOneAssociation(true,identifier,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod,setMethod == null);
+    associations.addElement(association);
+  }
+}

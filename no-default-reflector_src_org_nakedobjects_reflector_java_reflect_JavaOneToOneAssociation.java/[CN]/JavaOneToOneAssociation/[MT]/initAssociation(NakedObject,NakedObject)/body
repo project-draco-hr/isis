@@ -1,0 +1,16 @@
+{
+  LOG.debug("local set association " + getIdentifier() + " in "+ inObject+ " with "+ associate);
+  try {
+    setMethod.invoke(inObject.getObject(),new Object[]{associate == null ? null : associate.getObject()});
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException(setMethod + " method doesn't expect a " + associate.getObject().getClass().getName());
+  }
+catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + setMethod,e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("illegal access of " + setMethod,ignore);
+    throw new RuntimeException(ignore.getMessage());
+  }
+}

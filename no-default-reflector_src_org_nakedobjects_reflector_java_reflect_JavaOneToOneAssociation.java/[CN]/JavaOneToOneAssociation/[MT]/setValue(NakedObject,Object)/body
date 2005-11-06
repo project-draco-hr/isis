@@ -1,0 +1,21 @@
+{
+  LOG.debug("local setValue() " + inObject.getOid() + "/"+ getIdentifier()+ "/"+ setValue);
+  try {
+    if (setMethod == null) {
+      NakedObjects.getPersistenceManager().objectChanged(inObject);
+    }
+ else {
+      setMethod.invoke(inObject.getObject(),new Object[]{setValue});
+    }
+  }
+ catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + setMethod,e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("illegal access of " + setMethod,ignore);
+  }
+catch (  ValueParseException e) {
+    e.printStackTrace();
+    throw e;
+  }
+}

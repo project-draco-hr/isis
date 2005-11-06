@@ -1,0 +1,13 @@
+{
+  LOG.debug("creating JavaIntrospector for " + cls);
+  this.builder=builder;
+  if (!Modifier.isPublic(cls.getModifiers())) {
+    throw new NakedObjectSpecificationException("A NakedObject class must be marked as public.  Error in " + cls);
+  }
+  this.cls=cls;
+  methods=cls.getMethods();
+  isDirtyMethod=findMethod(false,"isDirty",boolean.class,new Class[0]);
+  clearDirtyMethod=findMethod(false,"clearDirty",void.class,new Class[0]);
+  markDirtyMethod=findMethod(false,"markDirty",void.class,new Class[0]);
+  className=cls.getName();
+}

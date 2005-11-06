@@ -1,0 +1,26 @@
+{
+  LOG.debug("local initValue() " + getIdentifier() + " "+ inObject.getOid()+ "/"+ setValue);
+  try {
+    if (setMethod == null) {
+      BusinessValueHolder value=(BusinessValueHolder)getMethod.invoke(inObject.getObject(),new Object[]{});
+      if (setValue instanceof String) {
+        value.parseUserEntry((String)setValue);
+      }
+ else       if (setValue instanceof BusinessValueHolder) {
+        value.copyObject((BusinessValueHolder)setValue);
+      }
+    }
+ else {
+      setMethod.invoke(inObject.getObject(),new Object[]{setValue == null ? null : setValue});
+    }
+  }
+ catch (  InvocationTargetException e) {
+    invocationException("Exception executing " + setMethod,e);
+  }
+catch (  IllegalAccessException ignore) {
+    LOG.error("illegal access of " + setMethod,ignore);
+  }
+catch (  ValueParseException e) {
+    LOG.error("parse error: " + setValue,e);
+  }
+}

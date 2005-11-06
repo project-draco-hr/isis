@@ -1,0 +1,17 @@
+{
+  if (clearDirtyMethod == null) {
+    return;
+  }
+  try {
+    clearDirtyMethod.invoke(object.getObject(),NO_PARAMETERS);
+  }
+ catch (  IllegalArgumentException e) {
+    throw new NakedObjectRuntimeException(e);
+  }
+catch (  IllegalAccessException e) {
+    LOG.error("illegal access of " + clearDirtyMethod,e);
+  }
+catch (  InvocationTargetException e) {
+    JavaMember.invocationException("Exception executing " + clearDirtyMethod,e);
+  }
+}
