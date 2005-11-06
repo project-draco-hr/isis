@@ -1,0 +1,21 @@
+{
+  Class c=null;
+  try {
+    c=Class.forName(className);
+    if (requiredClass.isAssignableFrom(c)) {
+      return c.newInstance();
+    }
+ else {
+      throw new ConfigurationException("Component class " + className + " must be of the type "+ requiredClass);
+    }
+  }
+ catch (  ClassNotFoundException e) {
+    throw new ConfigurationException("The component class " + className + " can not be found");
+  }
+catch (  InstantiationException e) {
+    throw new ConfigurationException("Could not instantiate an object of class " + c.getName() + "; "+ e.getMessage());
+  }
+catch (  IllegalAccessException e) {
+    throw new ConfigurationException("Could not access the class " + c.getName() + "; "+ e.getMessage());
+  }
+}
