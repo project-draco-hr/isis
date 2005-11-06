@@ -12,8 +12,7 @@
       value=NakedObjects.getObjectLoader().createValueInstance(field.getSpecification());
     }
     value.parseTextEntry(textEntry);
-    Hint hint=object.getHint(field,value);
-    if (hint.isValid().isVetoed()) {
+    if (object.isValid((OneToOneAssociation)field,value).isVetoed()) {
       throw new NakedAssertionFailedError("Value is not valid: " + textEntry);
     }
     object.setValue((OneToOneAssociation)field,value.getObject());

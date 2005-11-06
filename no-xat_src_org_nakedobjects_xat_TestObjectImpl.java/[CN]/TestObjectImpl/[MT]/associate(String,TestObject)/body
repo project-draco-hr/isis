@@ -15,22 +15,24 @@
     throw new IllegalActionError("Can't drop a " + object.getForNaked().getSpecification().getShortName() + " on to the "+ fieldName+ " field (which accepts "+ association.getSpecification()+ ")");
   }
   NakedObject nakedObject=(NakedObject)getForNaked();
-  Hint about;
+  boolean isAccessible=true;
+  isAccessible=association.isAccessible() && nakedObject.isVisible(association).isVetoed();
+  if (!isAccessible) {
+    throw new IllegalActionError("Cannot access the field " + field);
+  }
+  Consent valid;
   if (association instanceof OneToOneAssociation) {
     assertEmpty(fieldName);
-    about=nakedObject.getHint(association,obj);
+    valid=nakedObject.isValid((OneToOneAssociation)association,obj);
   }
  else   if (association instanceof OneToManyAssociation) {
-    about=((OneToManyAssociation)association).getHint(nakedObject,obj,true);
+    valid=nakedObject.canAdd((OneToManyAssociation)association,obj);
   }
  else {
     throw new NakedObjectRuntimeException();
   }
-  if (about.canAccess().isVetoed()) {
-    throw new IllegalActionError("Cannot access the field " + field);
-  }
-  if (about.canUse().isVetoed()) {
-    throw new IllegalActionError("Cannot associate " + obj + " in the field "+ field+ " within "+ nakedObject+ ": "+ about.canUse().getReason());
+  if (!valid.isVetoed()) {
+    throw new IllegalActionError("Cannot associate " + obj + " in the field "+ field+ " within "+ nakedObject+ ": "+ valid.getReason());
   }
   nakedObject.setAssociation(association,obj);
 }
