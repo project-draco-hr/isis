@@ -7,16 +7,16 @@
     if (!field.isDerived()) {
       if (field.isCollection()) {
         InternalCollection coll=(InternalCollection)object.getField(field);
-        d.addField(field.getName(),createData(coll));
+        d.addField(field.getId(),createData(coll));
       }
  else       if (field.isObject()) {
         NakedObject ref=object.getAssociation((OneToOneAssociation)field);
         Object refOid=ref == null ? null : new Data(ref.getOid(),ref.getResolveState().name(),ref.getSpecification().getFullName());
-        d.addField(field.getName(),refOid);
+        d.addField(field.getId(),refOid);
       }
  else       if (field.isValue()) {
         NakedValue value=object.getValue((OneToOneAssociation)field);
-        d.addField(field.getName(),value.asEncodedString());
+        d.addField(field.getId(),value.asEncodedString());
       }
     }
   }
