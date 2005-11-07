@@ -1,10 +1,12 @@
 {
-  assertTrue("Action cannot be seen (by this user): " + action.getLabel(),!action.isAccessible());
-  assertTrue("Action cannot be seen (in current state): " + action.getLabel(),getForNakedObject().isVisible(action).isAllowed());
-  Naked[] parameterObjects=nakedObjects(parameters);
-  Consent canUse=getForNakedObject().isValid(action,parameterObjects);
-  boolean allowed=canUse.isAllowed();
-  if (allowed) {
-    throw new NakedAssertionFailedError("Action '" + name + "' is usable: "+ canUse.getReason());
+  assertTrue("Action cannot be seen (by this user): " + action.getName(),action.isAuthorised());
+  assertTrue("Action cannot be seen (in current state): " + action.getName(),getForNakedObject().isVisible(action).isAllowed());
+  Consent canUse=getForNakedObject().isUsable(action);
+  if (canUse.isAllowed()) {
+    Naked[] parameterObjects=nakedObjects(parameters);
+    Consent canExecute=getForNakedObject().isValid(action,parameterObjects);
+    if (canExecute.isAllowed()) {
+      throw new NakedAssertionFailedError("Action '" + name + "' is usable and executable: "+ canExecute.getReason());
+    }
   }
 }
