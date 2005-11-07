@@ -2,8 +2,8 @@
   LOG.debug("request setAssociation " + fieldIdentifier + " on "+ target+ " with "+ associated+ " for "+ session);
   NakedObject inObject=getPersistentNakedObject(session,target);
   NakedObject associate=getPersistentNakedObject(session,associated);
-  NakedObjectAssociation association=(NakedObjectAssociation)inObject.getSpecification().getField(fieldIdentifier);
-  if (!association.isAccessible() || association.isEditable(inObject).isVetoed()) {
+  NakedObjectField association=(NakedObjectField)inObject.getSpecification().getField(fieldIdentifier);
+  if (!association.isAuthorised() || association.isUsable(inObject).isVetoed()) {
     throw new IllegalRequestException("can't modify field as not visible or editable");
   }
   inObject.setAssociation(association,associate);
