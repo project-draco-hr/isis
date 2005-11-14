@@ -1,0 +1,9 @@
+{
+  ((DummyNakedObject)object3).setupTitleString("title");
+  Version version=object3.getVersion();
+  PersistenceCommand[] commands=new PersistenceCommand[]{objectStore.createSaveObjectCommand(object3)};
+  objectStore.startTransaction();
+  objectStore.runTransaction(commands);
+  objectStore.endTransaction();
+  assertNotSame(version,object3.getVersion());
+}
