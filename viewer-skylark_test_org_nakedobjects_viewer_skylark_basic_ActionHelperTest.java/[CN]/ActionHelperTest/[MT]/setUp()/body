@@ -1,12 +1,15 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  DummyActionPeer mockActionPeer=new DummyActionPeer();
-  mockActionPeer.setUpParamterTypes(new NakedObjectSpecification[]{});
-  Action action=new ActionImpl("cls name","method name",mockActionPeer);
-  target=new DummyNakedObject();
   param1=new DummyNakedObject();
   param2=new DummyNakedObject();
   Naked[] values=new Naked[]{param1,param2};
+  MockControl control2=MockControl.createControl(Action.class);
+  Action action=(Action)control2.getMock();
+  control2.replay();
+  MockControl control=MockControl.createControl(NakedObject.class);
+  target=(NakedObject)control.getMock();
+  control.expectAndReturn(target.execute(action,values),null);
+  control.replay();
   NakedObjectSpecification[] types=new DummyNakedObjectSpecification[]{new DummyNakedObjectSpecification(),new DummyNakedObjectSpecification()};
   String[] labels={"one","two"};
   actionHelper=new ActionHelper(target,action,labels,values,types,new boolean[2]);

@@ -1,8 +1,8 @@
 {
-  MockView[] views=new MockView[2];
-  views[1]=new MockView();
-  views[1].setupContent(new ObjectParameter("name",null,null,false,1,actionContent));
-  view.setupSubviews(views);
-  builder.build(view);
-  view.verify();
+  MockControl control=MockControl.createControl(View.class);
+  View view=(View)control.getMock();
+  control.expectAndDefaultReturn(view.getView(),view);
+  control.expectAndDefaultReturn(view.getContent(),null);
+  control.replay();
+  control.verify();
 }
