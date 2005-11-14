@@ -1,0 +1,26 @@
+{
+  DummyNakedValue value=new DummyNakedValue();
+  MockControl factoryControl=MockControl.createControl(TestObjectFactory.class);
+  TestObjectFactory factory=(TestObjectFactory)factoryControl.getMock();
+  factoryControl.expectAndDefaultReturn(factory.createTestValue(value),new TestValueImpl(value));
+  factoryControl.replay();
+  MockControl fieldControl=MockControl.createControl(OneToOneAssociation.class);
+  OneToOneAssociation field=(OneToOneAssociation)fieldControl.getMock();
+  fieldControl.expectAndReturn(field.isAuthorised(),true);
+  fieldControl.replay();
+  MockControl specificationControl=MockControl.createControl(NakedObjectSpecification.class);
+  NakedObjectSpecification specification=(NakedObjectSpecification)specificationControl.getMock();
+  specificationControl.expectAndReturn(specification.getField("fieldname"),field,1);
+  specificationControl.replay();
+  MockControl nakedObjectControl=MockControl.createControl(NakedObject.class);
+  NakedObject nakedObject=(NakedObject)nakedObjectControl.getMock();
+  nakedObjectControl.expectAndReturn(nakedObject.getSpecification(),specification,1);
+  nakedObjectControl.expectAndReturn(nakedObject.isVisible(field),Veto.DEFAULT);
+  nakedObjectControl.replay();
+  TestObjectImpl testObject=new TestObjectImpl(nakedObject,factory);
+  testObject.assertFieldInvisible("fieldname");
+  factoryControl.verify();
+  fieldControl.verify();
+  specificationControl.verify();
+  nakedObjectControl.verify();
+}
