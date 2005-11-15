@@ -3,7 +3,7 @@
   nakedObjects.setConfiguration(configuration);
   PipedClient client=new PipedClient();
   client.setConnection(connection);
-  Distribution clientLogger=client;
+  Distribution clientLogger=new DistributionLogger(client,"client-connection.log");
   Date.setClock(new SystemClock());
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
   JavaObjectFactory objectFactory=new JavaObjectFactory();
@@ -20,10 +20,10 @@
   objectLoader.setObjectFactory(objectFactory);
   objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
   nakedObjects.setObjectLoader(objectLoader);
-  ProxyPeerFactory reflectionFactory=new ProxyPeerFactory();
-  reflectionFactory.setConnection(clientLogger);
-  reflectionFactory.setObjectDataFactory(objectDataFactory);
-  ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{reflectionFactory};
+  ProxyPeerFactory proxyPeerFactory=new ProxyPeerFactory();
+  proxyPeerFactory.setConnection(clientLogger);
+  proxyPeerFactory.setObjectDataFactory(objectDataFactory);
+  ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{proxyPeerFactory,new TransactionPeerFactory()};
   JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
   specificationLoader.setReflectionPeerFactories(factories);
   nakedObjects.setSpecificationLoader(specificationLoader);
