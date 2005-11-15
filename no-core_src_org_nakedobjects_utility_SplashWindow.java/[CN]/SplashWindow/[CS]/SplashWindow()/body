@@ -2,43 +2,33 @@
   super(new Frame());
   parent=(Frame)getParent();
   logo=loadImage(LOGO_FILE);
-  labelFont=new Font("SansSerif",Font.PLAIN,9);
+  textFont=new Font("SansSerif",Font.PLAIN,10);
   titleFont=new Font("SansSerif",Font.BOLD,11);
-  FontMetrics labelMetrics=getFontMetrics(labelFont);
-  FontMetrics titleMetrics=getFontMetrics(titleFont);
-  labelLineHeight=(int)(labelMetrics.getHeight() * 1.05);
+  logoFont=new Font("Serif",Font.PLAIN,36);
+  textLineHeight=(int)(getFontMetrics(textFont).getHeight() * 0.85);
+  titleLineHeight=(int)(getFontMetrics(titleFont).getHeight() * 1.20);
+  int height=0;
   int width=0;
-  int height=PADDING;
   if (logo != null) {
     width=logo.getWidth(this);
     height+=logo.getHeight(this);
   }
+ else {
+    FontMetrics metrics=getFontMetrics(logoFont);
+    width=metrics.stringWidth(LOGO_TEXT);
+    height=metrics.getHeight();
+  }
   height+=PADDING;
-  width=Math.max(width,titleMetrics.stringWidth(AboutNakedObjects.getApplicationName()));
-  height+=titleMetrics.getHeight();
-  width=Math.max(width,labelMetrics.stringWidth(AboutNakedObjects.getApplicationCopyrightNotice()));
-  height+=labelLineHeight;
-  width=Math.max(width,labelMetrics.stringWidth(AboutNakedObjects.getApplicationVersion()));
-  height+=labelLineHeight;
-  width=Math.max(width,titleMetrics.stringWidth(AboutNakedObjects.getFrameworkName()));
-  height+=titleMetrics.getHeight();
-  width=Math.max(width,labelMetrics.stringWidth(AboutNakedObjects.getFrameworkCopyrightNotice()));
-  height+=labelLineHeight;
-  width=Math.max(width,labelMetrics.stringWidth(frameworkVersion()));
-  height+=labelLineHeight;
-  height+=PADDING * 2;
+  Dimension text=textBounds();
+  width=Math.max(width,text.width);
+  height+=text.height;
+  height=PADDING + height + PADDING;
   width=PADDING + width + PADDING;
   setSize(width,height);
   this.height=height;
   this.width=width;
-  Dimension screen=getToolkit().getScreenSize();
-  int x=(screen.width / 2) - (width / 2);
-  if ((screen.width / screen.height) >= 2) {
-    x=(screen.width / 4) - (width / 2);
-  }
-  int y=(screen.height / 2) - (width / 2);
-  setLocation(x,y);
-  setBackground(Color.black);
+  this.left=width / 2 - text.width / 2;
+  setupCenterLocation();
   show();
   toFront();
 }
