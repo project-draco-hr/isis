@@ -1,9 +1,10 @@
 {
-  if (collection.getResolveState().isPersistent()) {
+  if (collection.getResolveState() != ResolveState.GHOST) {
     return;
   }
   LOG.info("persist " + collection);
-  collection.persistedAs(null);
+  NakedObjects.getObjectLoader().start(collection,ResolveState.RESOLVING);
+  NakedObjects.getObjectLoader().end(collection);
   for (int j=0; j < collection.size(); j++) {
     makePersistent(collection.elementAt(j),manager);
   }
