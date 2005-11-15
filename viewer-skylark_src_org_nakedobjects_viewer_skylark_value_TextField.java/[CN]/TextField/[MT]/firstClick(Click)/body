@@ -4,6 +4,9 @@
     at.subtract(HPADDING,VPADDING);
     cursor.cursorAt(at);
     resetSelection();
+    if (cursor.getLine() > textContent.getNoLinesOfContent()) {
+      throw new NakedObjectRuntimeException("not inside content for line " + cursor.getLine() + " : "+ textContent.getNoLinesOfContent());
+    }
     markDamaged();
   }
   if (!canChangeValue() || click.isShift()) {
