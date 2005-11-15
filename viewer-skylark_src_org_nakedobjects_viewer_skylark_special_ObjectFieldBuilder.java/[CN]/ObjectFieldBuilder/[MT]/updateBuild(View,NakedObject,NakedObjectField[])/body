@@ -14,9 +14,13 @@
   subviews=view.getSubviews();
   for (int i=0; i < subviews.length; i++) {
     View subview=subviews[i];
-    NakedObjectField fieldReflector=((FieldContent)subview.getContent()).getField();
-    Naked value=object.getField(fieldReflector);
-    if (fieldReflector.isValue()) {
+    NakedObjectField field=((FieldContent)subview.getContent()).getField();
+    Naked value=object.getField(field);
+    if (field.isValue()) {
+      if (!value.getObject().equals(subview.getContent().getNaked().getObject())) {
+        View fieldView=createFieldView(view,object,field,value);
+        view.replaceView(subview,decorateSubview(fieldView));
+      }
       subview.refresh();
     }
  else     if (value instanceof NakedCollection) {
@@ -28,7 +32,7 @@
       if (changedValue) {
         View fieldView;
         try {
-          fieldView=subviewDesign.createSubview(createContent(object,value,fieldReflector),view.getViewAxis());
+          fieldView=createFieldView(view,object,field,value);
         }
  catch (        NakedObjectFieldException e) {
           LOG.error("invalid field",e);
