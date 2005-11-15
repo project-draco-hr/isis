@@ -5,11 +5,21 @@
   int width=Style.TITLE.stringWidth(AboutNakedObjects.getFrameworkName());
   width=Math.max(width,Style.LABEL.stringWidth(AboutNakedObjects.getFrameworkCopyrightNotice()));
   width=Math.max(width,Style.LABEL.stringWidth(frameworkVersion()));
-  height+=Style.TITLE.getAscent();
-  height+=Style.LABEL.getLineHeight();
-  width=Math.max(width,Style.TITLE.stringWidth(AboutNakedObjects.getApplicationName()));
-  width=Math.max(width,Style.LABEL.stringWidth(AboutNakedObjects.getApplicationCopyrightNotice()));
-  width=Math.max(width,Style.LABEL.stringWidth(AboutNakedObjects.getApplicationVersion()));
+  String text=AboutNakedObjects.getApplicationName();
+  if (text != null) {
+    height+=Style.TITLE.getAscent();
+    width=Math.max(width,Style.TITLE.stringWidth(text));
+  }
+  text=AboutNakedObjects.getApplicationCopyrightNotice();
+  if (text != null) {
+    height+=Style.LABEL.getLineHeight();
+    width=Math.max(width,Style.LABEL.stringWidth(text));
+  }
+  text=AboutNakedObjects.getApplicationVersion();
+  if (text != null) {
+    height+=Style.LABEL.getLineHeight();
+    width=Math.max(width,Style.LABEL.stringWidth(text));
+  }
   if (showingImage()) {
     height=Math.max(height,image.getHeight());
     width=image.getWidth() + padding + width;
