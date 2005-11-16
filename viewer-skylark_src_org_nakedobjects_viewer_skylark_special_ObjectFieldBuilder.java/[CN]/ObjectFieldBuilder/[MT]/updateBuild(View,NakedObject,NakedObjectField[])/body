@@ -17,7 +17,8 @@
     NakedObjectField field=((FieldContent)subview.getContent()).getField();
     Naked value=object.getField(field);
     if (field.isValue()) {
-      if (!value.getObject().equals(subview.getContent().getNaked().getObject())) {
+      Naked naked=subview.getContent().getNaked();
+      if (value != null && !value.getObject().equals(naked.getObject())) {
         View fieldView=createFieldView(view,object,field,value);
         view.replaceView(subview,decorateSubview(fieldView));
       }
