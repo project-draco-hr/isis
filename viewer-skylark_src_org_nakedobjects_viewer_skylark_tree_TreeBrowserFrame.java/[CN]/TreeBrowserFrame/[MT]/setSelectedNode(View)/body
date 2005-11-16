@@ -1,13 +1,21 @@
 {
-  Naked object=view.getContent().getNaked();
-  if (object != null) {
-    if (mainViewFormSpec.canDisplay(view.getContent())) {
+  Content content=view.getContent();
+  Naked object=content.getNaked();
+  NakedObjectSpecification specification=object.getSpecification();
+  if (specification.isObject()) {
+    if (object != null && mainViewFormSpec.canDisplay(content)) {
       selectedNode=view;
-      showInRightPane(mainViewFormSpec.createView(view.getContent(),null));
+      showInRightPane(mainViewFormSpec.createView(content,null));
     }
- else     if (mainViewTableSpec.canDisplay(view.getContent())) {
+  }
+ else   if (specification.isCollection() && ((NakedCollection)object).size() > 0) {
+    if (mainViewTableSpec.canDisplay(content)) {
       selectedNode=view;
-      showInRightPane(mainViewTableSpec.createView(view.getContent(),null));
+      showInRightPane(mainViewTableSpec.createView(content,null));
+    }
+ else     if (mainViewListSpec.canDisplay(content)) {
+      selectedNode=view;
+      showInRightPane(mainViewListSpec.createView(content,null));
     }
   }
 }
