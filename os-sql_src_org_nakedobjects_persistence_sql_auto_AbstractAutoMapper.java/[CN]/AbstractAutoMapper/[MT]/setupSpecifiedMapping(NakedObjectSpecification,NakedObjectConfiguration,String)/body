@@ -1,23 +1,23 @@
 {
-  Properties columnMappings=configParameters.getProperties(parameterBase + "column");
+  NakedObjectConfiguration columnMappings=NakedObjects.getConfiguration().createSubset(parameterBase + ".mapper.");
   int columnsSize=columnMappings.size();
   columnNames=new String[columnsSize];
   oneToOnefields=new NakedObjectField[columnsSize];
   int i=0;
-  for (Enumeration names=columnMappings.propertyNames(); names.hasMoreElements(); i++) {
+  for (Enumeration names=columnMappings.properties(); names.hasMoreElements(); i++) {
     String columnName=(String)names.nextElement();
     columnNames[i]=columnName;
-    String fieldName=columnMappings.getProperty(columnName);
+    String fieldName=columnMappings.getString(columnName);
     oneToOnefields[i]=nakedClass.getField(fieldName);
   }
-  Properties collectionMappings=configParameters.getProperties(parameterBase + "collection");
+  NakedObjectConfiguration collectionMappings=NakedObjects.getConfiguration().createSubset(parameterBase + ".mapper.");
   int collectionsSize=collectionMappings.size();
   collectionMappers=new AutoAssociationMapper[collectionsSize];
   oneToManyFields=new NakedObjectField[collectionsSize];
   int j=0;
-  for (Enumeration names=collectionMappings.propertyNames(); names.hasMoreElements(); j++) {
+  for (Enumeration names=collectionMappings.properties(); names.hasMoreElements(); j++) {
     String collectionName=(String)names.nextElement();
-    String type=collectionMappings.getProperty(collectionName);
+    String type=collectionMappings.getString(collectionName);
     oneToManyFields[j]=nakedClass.getField(collectionName);
     if (type.equals("auto")) {
       collectionMappers[j]=new AutoAssociationMapper(this,nakedClass,oneToManyFields[j]);

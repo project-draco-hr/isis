@@ -17,14 +17,14 @@
   oneToOnefields=new NakedObjectField[simpleFieldCount];
   oneToManyFields=new NakedObjectField[collectionFieldCount];
   collectionMappers=new CollectionMapper[collectionFieldCount];
-  Properties collectionMappings=configParameters.getPropertiesStrippingPrefix(parameterBase + "collection");
+  NakedObjectConfiguration subset=NakedObjects.getConfiguration().createSubset(parameterBase + ".mapper.");
   for (int i=0, simpleFieldNo=0, collectionFieldNo=0; i < allFields.length; i++) {
     if (allFields[i].isDerived()) {
       continue;
     }
  else     if (allFields[i].isCollection()) {
       oneToManyFields[collectionFieldNo]=allFields[i];
-      String type=collectionMappings.getProperty(allFields[i].getId());
+      String type=subset.getString(allFields[i].getId());
       if (type == null || type.equals("association-table")) {
         collectionMappers[collectionFieldNo]=new AutoAssociationMapper(this,nakedClass,oneToManyFields[collectionFieldNo]);
       }
