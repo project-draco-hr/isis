@@ -14,11 +14,11 @@
   OidGenerator oidGenerator=new SimpleOidGenerator();
   DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
   persistAlgorithm.setOidGenerator(oidGenerator);
-  ObjectStorePersistor objectManager=new ObjectStorePersistor();
-  objectManager.setObjectStore(objectStore);
-  objectManager.setPersistAlgorithm(persistAlgorithm);
-  objectManager.setCheckObjectsForDirtyFlag(true);
-  nakedObjects.setObjectPersistor(objectManager);
+  ObjectStorePersistor objectPersistor=new ObjectStorePersistor();
+  objectPersistor.setObjectStore(objectStore);
+  objectPersistor.setPersistAlgorithm(persistAlgorithm);
+  objectPersistor.setCheckObjectsForDirtyFlag(true);
+  nakedObjects.setObjectPersistor(objectPersistor);
   ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{new TransactionPeerFactory()};
   JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
   specificationLoader.setReflectionPeerFactories(factories);
@@ -31,9 +31,10 @@
   nakedObjects.setObjectLoader(objectLoader);
   ServerDistribution sd=new ServerDistribution();
   sd.setObjectDataFactory(objectDataFactory);
-  ServerListener serverListener=new ServerListener();
+  sd.setUpdateNotifier(updateNotifier);
+  XServerListener serverListener=new XServerListener();
   serverListener.setServerDistribution(sd);
-  objectManager.addObjectChangedListener(updateNotifier);
+  objectPersistor.addObjectChangedListener(updateNotifier);
   nakedObjects.init();
   serverListener.start();
   JavaFixtureBuilder fb=new JavaFixtureBuilder();
@@ -49,7 +50,7 @@
     }
   }
 ;
-  DebugInfo debugInfo=objectManager;
+  DebugInfo debugInfo=objectPersistor;
   debugFrame.setInfo(debugInfo);
   debugFrame.setBounds(10,10,1000,800);
   debugFrame.refresh();
