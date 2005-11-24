@@ -1,9 +1,10 @@
 {
   try {
     socket.setSoTimeout(1000);
+    LOG.debug("listening for connection on " + socket);
     while (acceptConnection) {
       try {
-        ServerConnection connection=new ServerConnection(socket.accept(),server);
+        ServerConnection connection=connect(socket.accept());
         LOG.debug("connection requested from " + connection.getClient());
         clients.addElement(connection);
         connection.start();

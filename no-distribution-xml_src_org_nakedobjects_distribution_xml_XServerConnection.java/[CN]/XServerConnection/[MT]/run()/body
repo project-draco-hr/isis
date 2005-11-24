@@ -3,22 +3,7 @@
     try {
       String requestData=(String)input.readObject();
       LOG.debug("request received \n" + requestData);
-      XStream xstream=new XStream();
-      Request request=(Request)xstream.fromXML(requestData);
-      LOG.debug("request received " + request);
-      String responseData;
-      try {
-        request.execute(server);
-        Response response;
-        response=new Response(request);
-        response.setUpdates(server.getUpdates());
-        LOG.debug("sending " + response);
-        responseData=xstream.toXML(response);
-      }
- catch (      Exception e) {
-        LOG.debug("sending exception " + e);
-        responseData=xstream.toXML(e);
-      }
+      String responseData=respond(requestData);
       LOG.debug("send response \n" + responseData);
       output.writeObject(responseData);
       output.flush();
