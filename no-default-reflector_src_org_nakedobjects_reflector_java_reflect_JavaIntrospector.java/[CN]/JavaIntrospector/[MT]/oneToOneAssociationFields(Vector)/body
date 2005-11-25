@@ -22,9 +22,14 @@
       removeMethod=findMethod(OBJECT,"remove" + name,void.class,null);
     }
     Method setMethod=findMethod(OBJECT,SET_PREFIX + name,void.class,params);
+    boolean isHidden=false;
+    if (name.startsWith(HIDDEN_PREFIX)) {
+      isHidden=true;
+      name=name.substring(HIDDEN_PREFIX.length());
+    }
     LOG.info("one-to-one association " + name + " ->"+ addMethod);
     MemberIdentifier identifier=new MemberIdentifierImpl(className,name);
-    JavaOneToOneAssociation association=new JavaOneToOneAssociation(true,identifier,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod,setMethod == null);
+    JavaOneToOneAssociation association=new JavaOneToOneAssociation(true,identifier,getMethod.getReturnType(),getMethod,setMethod,addMethod,removeMethod,aboutMethod,isHidden,setMethod == null);
     associations.addElement(association);
   }
 }

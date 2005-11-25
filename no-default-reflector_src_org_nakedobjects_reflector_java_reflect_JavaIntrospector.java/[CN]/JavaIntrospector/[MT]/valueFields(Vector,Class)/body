@@ -17,9 +17,14 @@
     if (findMethod(OBJECT,"associate" + name,void.class,params) != null) {
       LOG.error("the method associate" + name + " is not needed for the NakedValue class "+ className());
     }
+    boolean isHidden=false;
+    if (name.startsWith(HIDDEN_PREFIX)) {
+      isHidden=true;
+      name=name.substring(HIDDEN_PREFIX.length());
+    }
     LOG.info("  identified value " + name + " -> "+ getMethod);
     MemberIdentifier identifier=new MemberIdentifierImpl(className,name);
-    JavaOneToOneAssociation association=new JavaOneToOneAssociation(false,identifier,getMethod.getReturnType(),getMethod,setMethod,null,null,aboutMethod,setMethod == null && !valueHolder);
+    JavaOneToOneAssociation association=new JavaOneToOneAssociation(false,identifier,getMethod.getReturnType(),getMethod,setMethod,null,null,aboutMethod,isHidden,setMethod == null && !valueHolder);
     fields.addElement(association);
   }
   return fields;

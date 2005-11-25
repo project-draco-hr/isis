@@ -30,7 +30,12 @@
     if (((aboutType != null) && (aboutType != elementType)) || ((addType != null) && (addType != elementType)) || ((removeType != null) && (removeType != elementType))) {
       LOG.error("The add/remove/associate/dissociate/about methods in " + className() + " must "+ "all deal with same type of object.  There are at least two different "+ "types");
     }
+    boolean isHidden=false;
+    if (name.startsWith(HIDDEN_PREFIX)) {
+      isHidden=true;
+      name=name.substring(HIDDEN_PREFIX.length());
+    }
     MemberIdentifier identifier=new MemberIdentifierImpl(className,name);
-    associations.addElement(new JavaOneToManyAssociation(identifier,elementType,getMethod,addMethod,removeMethod,aboutMethod));
+    associations.addElement(new JavaOneToManyAssociation(identifier,elementType,getMethod,addMethod,removeMethod,aboutMethod,isHidden));
   }
 }
