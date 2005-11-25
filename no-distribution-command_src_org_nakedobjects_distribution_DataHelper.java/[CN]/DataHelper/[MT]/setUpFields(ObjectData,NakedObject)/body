@@ -1,58 +1,22 @@
 {
-  Object[] fieldContent=data.getFieldContent();
+  Data[] fieldContent=data.getFieldContent();
   if (fieldContent != null && fieldContent.length > 0) {
     NakedObjectField[] fields=object.getSpecification().getFields();
     for (int i=0; i < fields.length; i++) {
-      if (fieldContent[i] == null || fields[i].isDerived()) {
-        LOG.debug("no data for field " + fields[i].getId());
+      NakedObjectField field=fields[i];
+      Data fieldData=fieldContent[i];
+      if (fieldData == null || field.isDerived()) {
+        LOG.debug("no data for field " + field.getId());
         continue;
       }
-      if (fields[i].isCollection()) {
-        CollectionData collection=(CollectionData)fieldContent[i];
-        if (collection.hasAllElements()) {
-          int size=collection.getElements().length;
-          NakedObject[] elements=new NakedObject[size];
-          for (int j=0; j < elements.length; j++) {
-            elements[j]=restoreObject(((ObjectData)collection.getElements()[j]));
-            LOG.debug("adding element to " + fields[i].getId() + ": "+ elements[j]);
-          }
-          NakedCollection col=(NakedCollection)object.getField(fields[i]);
-          ResolveState initialState=col.getResolveState();
-          ResolveState state=null;
-          if (initialState == ResolveState.RESOLVED) {
-            state=ResolveState.UPDATING;
-          }
- else           if (initialState == ResolveState.GHOST || initialState == ResolveState.PART_RESOLVED) {
-            state=collection.hasAllElements() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
-          }
- else           if (initialState == ResolveState.TRANSIENT) {
-            state=ResolveState.SERIALIZING_TRANSIENT;
-          }
-          if (state != null) {
-            NakedObjects.getObjectLoader().start(col,state);
-            object.initAssociation((OneToManyAssociation)fields[i],elements);
-            NakedObjects.getObjectLoader().end(col);
-          }
- else {
-            LOG.warn("not initialising collection " + col + " due to current state "+ initialState);
-          }
-        }
+      if (field.isCollection()) {
+        setUpCollectionField(object,field,(CollectionData)fieldData);
       }
- else       if (fields[i].isValue()) {
-        LOG.debug("setting value for field " + fields[i].getId() + ": "+ fieldContent[i]);
-        object.initValue((OneToOneAssociation)fields[i],fieldContent[i] instanceof NullData ? null : ((ValueData)fieldContent[i]).getValue());
+ else       if (field.isValue()) {
+        setUpValueField(object,field,fieldData);
       }
  else {
-        OneToOneAssociation field=(OneToOneAssociation)fields[i];
-        NakedObject associate;
-        if (fieldContent[i] instanceof NullData) {
-          associate=null;
-        }
- else {
-          associate=restoreObject((ObjectData)fieldContent[i]);
-        }
-        LOG.debug("setting association for field " + fields[i].getId() + ": "+ associate);
-        object.initAssociation(field,associate);
+        setUpReferenceField(object,field,fieldData);
       }
     }
   }

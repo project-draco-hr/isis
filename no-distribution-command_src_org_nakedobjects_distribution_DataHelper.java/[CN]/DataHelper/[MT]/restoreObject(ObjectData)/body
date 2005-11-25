@@ -1,62 +1,13 @@
 {
   Oid oid=data.getOid();
-  String type=data.getType();
-  NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(type);
   NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
   if (oid == null) {
-    NakedObject object;
-    object=objectLoader.recreateTransientInstance(specification);
-    LOG.debug("restore transient object " + object);
-    setUpFields(data,object);
-    return object;
+    return restoreTransient(data,objectLoader);
   }
  else   if (objectLoader.isIdentityKnown(oid)) {
-    NakedObject object;
-    object=objectLoader.getAdapterFor(oid);
-    if (data.getFieldContent() != null) {
-      object.setOptimisticLock(data.getVersion());
-      ResolveState initialState=object.getResolveState();
-      ResolveState state=null;
-      if (initialState == ResolveState.RESOLVED) {
-        state=ResolveState.UPDATING;
-      }
- else       if (initialState == ResolveState.GHOST || initialState == ResolveState.PART_RESOLVED) {
-        state=data.hasCompleteData() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
-      }
-      if (state != null) {
-        LOG.debug("updating existing object (" + state.name() + ") "+ object);
-        if (object.getResolveState().isResolvable(state)) {
-          objectLoader.start(object,state);
-          setUpFields(data,object);
-          objectLoader.end(object);
-        }
-        updateNotifier.addDirty(object);
-      }
-    }
- else {
-      if (data.getVersion().different(object.getVersion())) {
-      }
-    }
-    return object;
+    return updateLoadedObject(data,oid,objectLoader);
   }
  else {
-    NakedObject object;
-    object=objectLoader.recreateAdapterForPersistent(oid,specification);
-    object.setOptimisticLock(data.getVersion());
-    if (data.getFieldContent() != null) {
-      ResolveState state;
-      state=data.hasCompleteData() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
-      LOG.debug("restoring existing object (" + state.name() + ") "+ object);
-      if (object.getResolveState().isResolvable(state)) {
-        objectLoader.start(object,state);
-        setUpFields(data,object);
-        objectLoader.end(object);
-      }
-    }
- else {
-      if (data.getVersion().different(object.getVersion())) {
-      }
-    }
-    return object;
+    return restorePersistentObject(data,oid,objectLoader);
   }
 }
