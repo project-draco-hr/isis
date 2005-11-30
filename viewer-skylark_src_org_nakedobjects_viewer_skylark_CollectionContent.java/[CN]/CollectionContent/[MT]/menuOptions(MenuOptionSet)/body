@@ -1,6 +1,6 @@
 {
-  Naked object=getNaked();
-  Action[] actions=object.getSpecification().getObjectActions(Action.USER);
+  final NakedCollection collection=getCollection();
+  Action[] actions=collection.getSpecification().getObjectActions(Action.USER);
   for (int i=0; i < actions.length; i++) {
     MenuOption option;
     option=new MenuOption(actions[i].getId()){
@@ -12,4 +12,13 @@
       options.add(MenuOptionSet.OBJECT,option);
     }
   }
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Clear resolved"){
+    public Consent disabled(    View component){
+      return AbstractConsent.allow(collection == null || collection.getResolveState() != ResolveState.TRANSIENT || collection.getResolveState() == ResolveState.GHOST);
+    }
+    public void execute(    Workspace workspace,    View view,    Location at){
+      collection.debugClearResolved();
+    }
+  }
+);
 }
