@@ -1,14 +1,14 @@
 {
   String updateWhereClause=updateWhereClause(object,true);
-  object.setOptimisticLock(new LongNumberVersion(0,"",new Date()));
+  long versionSequence=((LongNumberVersion)object.getVersion()).getSequence() + 1;
   StringBuffer assignments=new StringBuffer();
   int fld=0;
-  for (int i=0; i < oneToOnefields.length; i++) {
-    Naked fieldValue=object.getField(oneToOnefields[i]);
-    if (i > 0) {
+  for (fld=0; fld < oneToOnefields.length; fld++) {
+    Naked fieldValue=object.getField(oneToOnefields[fld]);
+    if (fld > 0) {
       assignments.append(", ");
     }
-    assignments.append(quote(columnNames[fld++]));
+    assignments.append(quote(columnNames[fld]));
     assignments.append('=');
     if (fieldValue instanceof NakedObject) {
       if (fieldValue == null) {
@@ -20,19 +20,26 @@
       }
     }
  else     if (fieldValue instanceof NakedValue) {
-      ValueMapper mapper=typeMapper.mapperFor(oneToOnefields[i].getSpecification());
+      ValueMapper mapper=typeMapper.mapperFor(oneToOnefields[fld].getSpecification());
       assignments.append(mapper.valueAsDBString((NakedValue)fieldValue));
     }
  else {
       assignments.append("NULL");
     }
   }
+  if (fld > 0) {
+    assignments.append(", ");
+  }
+  assignments.append(quote(versionColumn));
+  assignments.append('=');
+  assignments.append(versionSequence);
   String id=primaryKey(object.getOid());
   String statement="update " + quote(table) + " set "+ assignments+ " where "+ quote(idColumn)+ "="+ id+ updateWhereClause;
   int updateCount=connector.update(statement);
   if (updateCount == 0) {
-    throw new NakedObjectRuntimeException(new NakedObjectRuntimeException("No update: " + statement));
+    throw new ConcurrencyException();
   }
+  object.setOptimisticLock(new LongNumberVersion(versionSequence,"",new Date()));
   for (int i=0; i < collectionMappers.length; i++) {
     collectionMappers[i].saveInternalCollection(connector,object);
   }

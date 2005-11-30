@@ -1,6 +1,9 @@
 {
   NakedObjects.getObjectLoader().start(object,ResolveState.RESOLVING);
   for (int i=0; i < oneToOnefields.length; i++) {
+    if (oneToOnefields[i].isDerived()) {
+      continue;
+    }
     if (oneToOnefields[i].isValue()) {
       ValueMapper mapper=ValueMapperLookup.getInstance().mapperFor(oneToOnefields[i].getSpecification());
       mapper.setFromDBColumn(columnNames[i],oneToOnefields[i],object,rs);
