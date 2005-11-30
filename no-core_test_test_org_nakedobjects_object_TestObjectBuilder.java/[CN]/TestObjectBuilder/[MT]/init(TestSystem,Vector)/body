@@ -1,0 +1,37 @@
+{
+  String className=pojo.getClass().getName();
+  if (specification == null) {
+    specification=new DummyNakedObjectSpecification(className);
+  }
+  if (adapter == null) {
+    adapter=new DummyNakedObject(pojo.toString());
+  }
+  adapter.setupResolveState(resolveState);
+  adapter.setupObject(pojo);
+  adapter.setupSpecification(specification);
+  if (oid != null) {
+    system.addRecreated(oid,adapter);
+  }
+  system.addSpecification(specification);
+  NakedObjectField[] fields=new NakedObjectField[fieldNames.size()];
+  for (int i=0; i < fieldNames.size(); i++) {
+    String name=(String)fieldNames.elementAt(i);
+    Object content=fieldContents.elementAt(i);
+    if (content instanceof TestObjectBuilder) {
+      TestObjectBuilder testObjectSpec=((TestObjectBuilder)content);
+      if (!previous.contains(testObjectSpec)) {
+        previous.addElement(testObjectSpec);
+        testObjectSpec.init(system,previous);
+        fields[i]=new OneToOneAssociationImpl(className,name,testObjectSpec.specification,new TestPojoReferencePeer());
+        adapter.setupFieldValue(name,testObjectSpec.getAdapter());
+      }
+    }
+ else     if (content instanceof TestValue) {
+      DummyNakedObjectSpecification valueFieldSpec=new DummyNakedObjectSpecification();
+      valueFieldSpec.setupIsValue();
+      fields[i]=new OneToOneAssociationImpl(className,name,valueFieldSpec,new TestPojoValuePeer());
+      adapter.setupFieldValue(name,new DummyNakedValue());
+    }
+  }
+  specification.setupFields(fields);
+}
