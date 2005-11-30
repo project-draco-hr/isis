@@ -1,4 +1,7 @@
 {
+  if (object.getResolveState().isSerializing()) {
+    return data;
+  }
   Oid oid=object.getOid();
   String type=data.getType();
   ReferenceData[] fieldContent=data.getFieldContent() == null ? null : new ReferenceData[data.getFieldContent().length];
@@ -32,6 +35,7 @@
     }
   }
   NakedObjects.getObjectLoader().end(object);
-  ObjectData createReferenceData=createObjectData(oid,type,fieldContent,true,version);
+  ObjectData createReferenceData=createObjectData(oid,type,true,version);
+  createReferenceData.setFieldContent(fieldContent);
   return createReferenceData;
 }

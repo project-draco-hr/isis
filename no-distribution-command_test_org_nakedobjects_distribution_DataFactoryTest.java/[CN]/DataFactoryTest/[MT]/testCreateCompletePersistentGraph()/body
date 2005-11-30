@@ -18,7 +18,7 @@
   assertEquals(field1Specification.getFullName(),referencedFieldData.getType());
   ObjectData referencedFieldData2=(ObjectData)referencedFieldData.getFieldContent()[0];
   assertEquals(referencedOid2,referencedFieldData2.getOid());
-  assertEquals(0,referencedFieldData2.getFieldContent().length);
+  assertEquals(1,referencedFieldData2.getFieldContent().length);
   assertEquals(new DummyVersion(13),referencedFieldData2.getVersion());
   assertEquals(field1Specification.getFullName(),referencedFieldData.getType());
   ValueData valueData=(ValueData)rootData.getFieldContent()[1];
@@ -26,4 +26,10 @@
   assertEquals(value,valueData.getValue());
   NullData emptyFieldData=(NullData)rootData.getFieldContent()[3];
   assertNotNull(emptyFieldData);
+  CollectionData collectionData=(CollectionData)rootData.getFieldContent()[2];
+  assertEquals(2,collectionData.getElements().length);
+  ObjectData fieldOfField=(ObjectData)referencedFieldData2.getFieldContent()[0];
+  assertSame(fieldOfField,rootData);
+  ObjectData fieldOfElement=(ObjectData)collectionData.getElements()[0].getFieldContent()[0];
+  assertSame(fieldOfElement,rootData);
 }

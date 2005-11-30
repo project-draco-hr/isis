@@ -10,7 +10,7 @@
   field1.setupResolveState(ResolveState.RESOLVED);
   field1.setupSpecification(field1Specification);
   field1_1Specification=new DummyNakedObjectSpecification();
-  field1_1Specification.fields=new NakedObjectField[0];
+  field1_1Specification.fields=new NakedObjectField[1];
   field1Specification.fields[0]=new DummyField("four",field1Specification);
   field1_1=new DummyNakedObject();
   field1_1.setupVersion(new DummyVersion(13));
@@ -21,11 +21,13 @@
   value=new Date();
   field2.setupObject(value);
   valueSpecification=field2.getSpecification();
-  DummyNakedObjectSpecification elementSpecification=new DummyNakedObjectSpecification();
+  DummyNakedObjectSpecification element1Specification=new DummyNakedObjectSpecification();
+  element1Specification.fields=new NakedObjectField[1];
   element1=new DummyNakedObject();
   element1.setupVersion(new DummyVersion(17));
   element1.setupResolveState(ResolveState.RESOLVED);
-  element1.setupSpecification(elementSpecification);
+  element1.setupSpecification(element1Specification);
+  DummyNakedObjectSpecification elementSpecification=new DummyNakedObjectSpecification();
   element2=new DummyNakedObject();
   element2.setupVersion(new DummyVersion(19));
   element2.setupResolveState(ResolveState.RESOLVED);
@@ -52,4 +54,10 @@
   rootObject.setupFieldValue("one",field1);
   rootObject.setupFieldValue("two",field2);
   rootObject.setupFieldValue("collection",field3);
+  DummyNakedObject field1_1_1=rootObject;
+  field1_1Specification.fields[0]=new DummyField("backref1",rootSpecification);
+  field1_1.setupFieldValue("backref1",field1_1_1);
+  DummyNakedObject element1_field1=rootObject;
+  element1Specification.fields[0]=new DummyField("backref2",rootSpecification);
+  element1.setupFieldValue("backref2",element1_field1);
 }

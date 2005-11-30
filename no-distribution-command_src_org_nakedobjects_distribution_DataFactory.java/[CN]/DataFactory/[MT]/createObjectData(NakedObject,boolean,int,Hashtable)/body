@@ -3,11 +3,16 @@
     return null;
   }
   boolean nextLevel=object.getResolveState().isTransient() || recursePersistentObjects;
+  if (previous.containsKey(object)) {
+    return (ObjectData)previous.get(object);
+  }
   Oid oid=object.getOid();
   NakedObjectSpecification specification=object.getSpecification();
   String type=specification.getFullName();
   ResolveState resolveState=object.getResolveState();
   boolean isComplete=object.getResolveState() == ResolveState.TRANSIENT || object.getResolveState() == ResolveState.RESOLVED;
+  ObjectData data=createObjectData(oid,type,isComplete,object.getVersion());
+  previous.put(object,data);
   Data[] fieldContent;
   if (resolveState.isSerializing() || !nextLevel || depth == 0 || resolveState.isGhost()) {
     fieldContent=null;
@@ -31,13 +36,14 @@
         fieldContent[i]=createValueData(field);
       }
  else       if (fields[i].isCollection()) {
-        fieldContent[i]=createCollectionData((NakedCollection)field,recursePersistentObjects,depth - 1);
+        fieldContent[i]=createCollectionData((NakedCollection)field,recursePersistentObjects,depth - 1,previous);
       }
  else {
-        fieldContent[i]=createObjectData((NakedObject)field,recursePersistentObjects,depth - 1);
+        fieldContent[i]=createObjectData((NakedObject)field,recursePersistentObjects,depth - 1,previous);
       }
     }
     NakedObjects.getObjectLoader().end(object);
   }
-  return createObjectData(oid,type,fieldContent,isComplete,object.getVersion());
+  data.setFieldContent(fieldContent);
+  return data;
 }

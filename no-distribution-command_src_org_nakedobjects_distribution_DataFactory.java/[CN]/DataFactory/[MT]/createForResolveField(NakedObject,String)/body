@@ -7,6 +7,7 @@
   NakedObjectField[] fields=specification.getFields();
   fieldContent=new Data[fields.length];
   NakedObjects.getObjectLoader().start(object,object.getResolveState().serializeFrom());
+  Hashtable previous=new Hashtable();
   for (int i=0; i < fields.length; i++) {
     if (fields[i].getId().equals(fieldName)) {
       Naked field=object.getField(fields[i]);
@@ -17,14 +18,16 @@
         fieldContent[i]=createValueData(field);
       }
  else       if (fields[i].isCollection()) {
-        fieldContent[i]=createCollectionData((NakedCollection)field,true,persistentGraphDepth);
+        fieldContent[i]=createCollectionData((NakedCollection)field,true,persistentGraphDepth,previous);
       }
  else {
-        fieldContent[i]=createObjectData((NakedObject)field,true,persistentGraphDepth);
+        fieldContent[i]=createObjectData((NakedObject)field,true,persistentGraphDepth,previous);
       }
       break;
     }
   }
   NakedObjects.getObjectLoader().end(object);
-  return createObjectData(oid,type,fieldContent,resolveState.isResolved(),object.getVersion());
+  ObjectData data=createObjectData(oid,type,resolveState.isResolved(),object.getVersion());
+  data.setFieldContent(fieldContent);
+  return data;
 }
