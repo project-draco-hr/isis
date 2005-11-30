@@ -24,7 +24,7 @@
       if (!(fieldValue instanceof NakedObject)) {
         throw new NakedObjectRuntimeException();
       }
-      makePersistent((NakedObject)fieldValue,manager);
+      makePersistent((NakedObject)fieldValue,persistor);
     }
   }
   for (int i=0; i < fields.length; i++) {
@@ -37,15 +37,15 @@
     }
  else     if (field instanceof OneToManyAssociation) {
       InternalCollection collection=(InternalCollection)object.getField(field);
-      makePersistent(collection,manager);
-      NakedObjects.getObjectLoader().madePersistent(collection,createOid(object));
+      makePersistent(collection,persistor);
+      collection.changeState(ResolveState.RESOLVED);
       for (int j=0; j < collection.size(); j++) {
-        makePersistent(collection.elementAt(j),manager);
+        makePersistent(collection.elementAt(j),persistor);
       }
     }
  else {
       continue;
     }
   }
-  manager.createObject(object);
+  persistor.createObject(object);
 }
