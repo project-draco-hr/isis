@@ -12,7 +12,8 @@
  else   if (data instanceof ObjectData) {
     ObjectData objectData=((ObjectData)data);
     str.append("ObjectData " + objectData.getType() + ":"+ objectData.getOid()+ ":"+ (objectData.hasCompleteData() ? "C" : "-")+ ":"+ objectData.getVersion());
-    NakedObjectField[] fs=NakedObjects.getSpecificationLoader().loadSpecification(objectData.getType()).getFields();
+    NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(objectData.getType());
+    NakedObjectField[] fs=dataStructure.getFields(specification);
     Object[] fields=objectData.getFieldContent();
     for (int i=0; fields != null && i < fields.length; i++) {
       str.append("\n");
