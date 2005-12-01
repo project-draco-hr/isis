@@ -3,7 +3,6 @@
     LOG.warn("can't make object persistent - either already persistent, or transient only: " + object);
     return;
   }
-  manager.createObject(object);
   NakedObjectField[] fields=object.getFields();
   for (int i=0; i < fields.length; i++) {
     NakedObjectField field=fields[i];
@@ -13,6 +12,7 @@
   }
   LOG.info("persist " + object);
   NakedObjects.getObjectLoader().madePersistent(object,createOid(object));
+  manager.createObject(object);
   for (int i=0; i < fields.length; i++) {
     NakedObjectField field=fields[i];
     if (field.isDerived()) {
