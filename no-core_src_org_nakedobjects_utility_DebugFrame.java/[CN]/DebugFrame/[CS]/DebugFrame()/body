@@ -1,4 +1,11 @@
 {
+  frames.addElement(this);
+  addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      closeDialog();
+    }
+  }
+);
   URL url=DebugFrame.class.getResource("/" + "images/debug.png");
   if (url != null) {
     Image image=Toolkit.getDefaultToolkit().getImage(url);
@@ -6,57 +13,7 @@
       setIconImage(image);
     }
   }
-  frames.addElement(this);
   setLayout(new BorderLayout(7,7));
-  addWindowListener(new WindowAdapter(){
-    public void windowClosing(    WindowEvent e){
-      closeDialog();
-    }
-  }
-);
-  TextArea area=new TextArea("",60,110,TextArea.SCROLLBARS_BOTH);
-  area.setForeground(Color.black);
-  Font font=new Font("Courier",Font.PLAIN,11);
-  area.setFont(font);
-  add("Center",area);
-  field=area;
-  Panel buttons=new Panel();
-  buttons.setLayout(new FlowLayout());
-  add(buttons,BorderLayout.SOUTH);
-  Button b=new java.awt.Button("Refresh");
-  b.setFont(font);
-  buttons.add(b);
-  b.addActionListener(new java.awt.event.ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      refresh();
-    }
-  }
-);
-  b=new java.awt.Button("Print...");
-  b.setFont(font);
-  b.setEnabled(false);
-  buttons.add(b);
-  b.addActionListener(new java.awt.event.ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-    }
-  }
-);
-  b=new java.awt.Button("Save...");
-  b.setFont(font);
-  b.setEnabled(false);
-  buttons.add(b);
-  b.addActionListener(new java.awt.event.ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-    }
-  }
-);
-  b=new java.awt.Button("Close");
-  b.setFont(font);
-  buttons.add(b);
-  b.addActionListener(new java.awt.event.ActionListener(){
-    public void actionPerformed(    ActionEvent e){
-      closeDialog();
-    }
-  }
-);
+  Panel tabPane=createTabPane();
+  add(tabPane);
 }
