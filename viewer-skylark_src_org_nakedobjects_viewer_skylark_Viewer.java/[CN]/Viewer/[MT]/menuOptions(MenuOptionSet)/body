@@ -32,43 +32,19 @@
     }
   }
 );
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug notification receivers..."){
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug system..."){
     public void execute(    Workspace workspace,    View view,    Location at){
       InfoDebugFrame f=new InfoDebugFrame();
-      f.setInfo(updateNotifier);
+      f.setInfo(new DebugInfo[]{NakedObjects.debug(),NakedObjects.getObjectPersistor(),NakedObjects.getObjectLoader(),NakedObjects.getConfiguration(),NakedObjects.getSpecificationLoader(),updateNotifier});
       f.show(at.x + 50,workspace.getBounds().y + 6);
     }
   }
 );
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug object persistor"){
-    public void execute(    Workspace workspace,    View view,    Location at){
-      NakedObjectPersistor om=NakedObjects.getObjectPersistor();
-      InfoDebugFrame f=new InfoDebugFrame();
-      f.setInfo(om);
-      f.show(at.x + 50,workspace.getBounds().y + 6);
-    }
-  }
-);
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug object loader"){
-    public void execute(    Workspace workspace,    View view,    Location at){
-      NakedObjectLoader om=NakedObjects.getObjectLoader();
-      InfoDebugFrame f=new InfoDebugFrame();
-      f.setInfo(om);
-      f.show(at.x + 50,workspace.getBounds().y + 6);
-    }
-  }
-);
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug repository"){
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug viewer..."){
     public void execute(    Workspace workspace,    View view,    Location at){
       InfoDebugFrame f=new InfoDebugFrame();
-      f.setInfo(NakedObjects.debug());
+      f.setInfo(new DebugInfo[]{Skylark.getViewFactory(),updateNotifier});
       f.show(at.x + 50,workspace.getBounds().y + 6);
-    }
-  }
-);
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Dump all"){
-    public void execute(    Workspace workspace,    View view,    Location at){
-      DebugFileDump.dump(NakedObjects.debug());
     }
   }
 );
@@ -79,11 +55,9 @@
     }
   }
 );
-  options.add(MenuOptionSet.DEBUG,new MenuOption("Debug prototypes..."){
+  options.add(MenuOptionSet.DEBUG,new MenuOption("Dump all"){
     public void execute(    Workspace workspace,    View view,    Location at){
-      InfoDebugFrame f=new InfoDebugFrame();
-      f.setInfo(Skylark.getViewFactory());
-      f.show(at.x + 50,workspace.getBounds().y + 6);
+      DebugFileDump.dump(NakedObjects.debug());
     }
   }
 );
