@@ -11,17 +11,14 @@
       splash=new SplashWindow();
     }
     setUpLocale(configuration.getString("locale"));
-    ObjectStorePersistor objectManager=createObjectManager();
+    ObjectStorePersistor objectManager=createObjectPersistor();
     NakedObjectSpecificationLoader specificationLoader=createSpecificationLoader();
     AdapterFactory adapterFactory=createReflectorFactory();
     ObjectLoaderImpl objectLoader=createObjectLoader();
     NakedObjectsClient nakedObjects=setupNakedObjects(configuration,objectManager,specificationLoader,adapterFactory,objectLoader);
     nakedObjects.init();
   }
- catch (  Exception e) {
-    LOG.error("Exploration startup problem",e);
-  }
- finally {
+  finally {
     if (splash != null) {
       splash.removeAfterDelay(4);
     }
