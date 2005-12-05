@@ -1,6 +1,8 @@
 {
   NakedObject object=((ObjectContent)view.getContent()).getObject();
-  NakedObjectPersistor manager=NakedObjects.getObjectPersistor();
-  manager.destroyObject(object);
+  NakedObjectPersistor persistor=NakedObjects.getObjectPersistor();
+  persistor.startTransaction();
+  persistor.destroyObject(object);
+  persistor.endTransaction();
   workspace.removeViewsFor(object);
 }
