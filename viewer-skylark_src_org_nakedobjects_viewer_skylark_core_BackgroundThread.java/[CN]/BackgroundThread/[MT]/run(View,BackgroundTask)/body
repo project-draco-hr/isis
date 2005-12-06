@@ -12,12 +12,14 @@
           String message="Error while running background task " + task.getName();
           LOG.error(message,e);
         }
-        Naked error=NakedObjects.getObjectLoader().createAdapterForTransient(e);
+        Naked error=NakedObjects.getObjectLoader().getAdapterForElseCreateAdapterForTransient(e);
         view.getWorkspace().addOpenViewFor(error,new Location(20,20));
       }
-      view.getState().setInactive();
-      view.getViewManager().clearBusy(view);
-      repaint(view);
+ finally {
+        view.getState().setInactive();
+        view.getViewManager().clearBusy(view);
+        repaint(view);
+      }
     }
   }
 ;
