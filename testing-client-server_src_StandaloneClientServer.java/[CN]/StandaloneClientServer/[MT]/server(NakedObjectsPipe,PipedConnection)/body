@@ -12,12 +12,12 @@
       OidGenerator oidGenerator=new SimpleOidGenerator();
       DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
       persistAlgorithm.setOidGenerator(oidGenerator);
-      ObjectStorePersistor localObjectManager=new ObjectStorePersistor();
-      localObjectManager.setObjectStore(objectStore);
-      localObjectManager.setPersistAlgorithm(persistAlgorithm);
-      localObjectManager.setCheckObjectsForDirtyFlag(true);
-      NakedObjectPersistor objectManager=localObjectManager;
-      nakedObjects.setObjectPersistor(objectManager);
+      ObjectStorePersistor objectStorePersistor=new ObjectStorePersistor();
+      objectStorePersistor.setObjectStore(objectStore);
+      objectStorePersistor.setPersistAlgorithm(persistAlgorithm);
+      objectStorePersistor.setCheckObjectsForDirtyFlag(true);
+      NakedObjectPersistor persistor=objectStorePersistor;
+      nakedObjects.setObjectPersistor(persistor);
       ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
       objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
       objectLoader.setObjectFactory(objectFactory);
@@ -36,7 +36,7 @@
       Distribution serverLogger=sd;
       server.setFacade(serverLogger);
       server.setDistribution(sd);
-      objectManager.addObjectChangedListener(updateNotifier);
+      persistor.addObjectChangedListener(updateNotifier);
       nakedObjects.init();
       JavaFixtureBuilder fb=new JavaFixtureBuilder();
       CitiesFixture cities;
@@ -51,8 +51,7 @@
         }
       }
 ;
-      DebugInfo debugInfo=objectManager;
-      debugFrame.setInfo(debugInfo);
+      debugFrame.setInfo(new DebugInfo[]{NakedObjects.debug(),NakedObjects.getObjectPersistor(),NakedObjects.getObjectLoader(),NakedObjects.getConfiguration(),NakedObjects.getSpecificationLoader(),updateNotifier});
       debugFrame.setBounds(500,300,1000,700);
       debugFrame.refresh();
       debugFrame.show();
