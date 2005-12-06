@@ -15,12 +15,14 @@
   field1.setupFields(field1Specification.getFields());
   field1.setupOid(new DummyOid(583));
   DummyCollectionData coll=new DummyCollectionData(null,"coll",new ObjectData[]{el1,el2},null);
-  ObjectData data=new DummyObjectData(null,"root",false,null);
-  data.setFieldContent(new Data[]{reference1,value,coll,null});
+  ObjectData rootData=new DummyObjectData(null,"root",false,null);
+  rootData.setFieldContent(new Data[]{reference1,value,coll,null});
   rootObject.setupResolveState(ResolveState.TRANSIENT);
   rootObject.setupFields(rootSpecification.getFields());
   rootObject.setupOid(new DummyOid(712));
-  ObjectData transientGraph=factory.createMadePersistentGraph(data,rootObject,new SingleResponseUpdateNotifier());
+  reference2.setFieldContent(new Data[]{rootData});
+  el1.setFieldContent(new Data[]{rootData});
+  ObjectData transientGraph=factory.createMadePersistentGraph(rootData,rootObject,new SingleResponseUpdateNotifier());
   assertEquals(new DummyOid(712),transientGraph.getOid());
   assertEquals(new DummyVersion(11),transientGraph.getVersion());
   assertEquals(4,transientGraph.getFieldContent().length);

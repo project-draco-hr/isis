@@ -3,16 +3,28 @@
     Data[] parameterObjectData=parameterValues(parameters);
     LOG.debug(debug("execute remotely",getIdentifier(),target,parameters));
     ObjectData targetReference=dataFactory.createDataForActionTarget(target);
-    Data result;
+    ResultData result;
     try {
       result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),getIdentifier().getName(),targetReference,parameterObjectData);
     }
  catch (    NakedObjectRuntimeException e) {
-      LOG.error("remote exception " + e.getMessage(),e);
+      LOG.error("remote exception: " + e.getMessage(),e);
       throw e;
     }
+    madePersistent(target,result.getPersistedTarget());
+    for (int i=0; i < parameters.length; i++) {
+      if (getParameterTypes()[i].isObject()) {
+        madePersistent((NakedObject)parameters[i],result.getPersistedParameters()[i]);
+      }
+    }
+    Data returned=result.getReturn();
     Naked returnedObject;
-    returnedObject=result instanceof NullData ? null : DataHelper.restore(result);
+    returnedObject=returned instanceof NullData ? null : DataHelper.restore(returned);
+    ObjectData[] updates=result.getUpdates();
+    for (int i=0; i < updates.length; i++) {
+      LOG.debug("update " + DistributionLogger.dump(updates[i]));
+      DataHelper.restore(updates[i]);
+    }
     return returnedObject;
   }
  else {

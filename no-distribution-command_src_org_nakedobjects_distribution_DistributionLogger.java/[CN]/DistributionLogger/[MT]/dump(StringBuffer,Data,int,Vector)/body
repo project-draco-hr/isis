@@ -1,0 +1,25 @@
+{
+  if (data == null) {
+    str.append("null");
+  }
+ else   if (data instanceof NullData) {
+    str.append("NULL (NullData object)");
+  }
+ else   if (data instanceof ValueData) {
+    ValueData valueData=((ValueData)data);
+    str.append("ValueData " + valueData.getType() + ":"+ valueData.getValue());
+  }
+ else   if (data instanceof ObjectData) {
+    dumpObjectData(str,data,indent,complete);
+  }
+ else   if (data instanceof CollectionData) {
+    dumpCollectionData(str,data,indent,complete);
+  }
+ else   if (data instanceof ReferenceData) {
+    ReferenceData referenceData=(ReferenceData)data;
+    str.append("ReferenceData " + referenceData.getType() + ":"+ referenceData.getOid()+ ":"+ referenceData.getVersion());
+  }
+ else {
+    str.append("Unknown: " + data);
+  }
+}
