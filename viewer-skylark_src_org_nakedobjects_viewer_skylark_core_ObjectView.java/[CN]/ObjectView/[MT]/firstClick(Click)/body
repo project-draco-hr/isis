@@ -6,12 +6,17 @@
   }
  else {
     if (click.button2()) {
-      View view=getWorkspace().createSubviewFor(getContent().getNaked(),false);
+      View view;
+      Content content=Skylark.getContentFactory().createRootContent(getContent().getNaked());
+      ViewSpecification spec=new TreeBrowserFormSpecification();
+      view=spec.createView(content,null);
+      view=new PanelBorder(Color.RED,Color.LIGHT_GRAY,view);
       Size size=view.getRequiredSize();
       view.setSize(size);
       Location location=new Location(click.getLocationWithinViewer());
       location.subtract(size.getWidth() / 2,size.getHeight() / 2);
       view.setLocation(location);
+      view.layout();
       getViewManager().setOverlayView(view);
     }
   }
