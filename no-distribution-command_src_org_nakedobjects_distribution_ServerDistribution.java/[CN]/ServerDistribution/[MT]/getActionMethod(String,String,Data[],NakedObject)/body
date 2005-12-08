@@ -4,6 +4,15 @@
     parameterSpecifiactions[i]=getSpecification(parameterData[i].getType());
   }
   Action.Type type=ActionImpl.getType(actionType);
-  Action action=(Action)object.getSpecification().getObjectAction(type,actionIdentifier,parameterSpecifiactions);
+  int pos=actionIdentifier.indexOf('#');
+  String className=actionIdentifier.substring(0,pos);
+  String methodName=actionIdentifier.substring(pos + 1);
+  Action action;
+  if (object == null) {
+    action=(Action)NakedObjects.getSpecificationLoader().loadSpecification(className).getClassAction(type,methodName,parameterSpecifiactions);
+  }
+ else {
+    action=(Action)object.getSpecification().getObjectAction(type,methodName,parameterSpecifiactions);
+  }
   return action;
 }

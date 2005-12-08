@@ -1,3 +1,11 @@
 {
-  connection.startTransaction(session);
+  LOG.debug("startTransaction");
+  if (clientSideTransaction == null) {
+    clientSideTransaction=new ClientSideTransaction();
+  }
+ else {
+    ClientSideTransaction transaction=clientSideTransaction;
+    clientSideTransaction=null;
+    throw new ObjectPerstsistenceException("Can't start transaction when one already started: " + transaction);
+  }
 }

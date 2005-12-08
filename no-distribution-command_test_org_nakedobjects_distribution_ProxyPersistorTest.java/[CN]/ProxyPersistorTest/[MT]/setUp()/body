@@ -1,0 +1,15 @@
+{
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  persistor=new ProxyPersistor();
+  distributionControl=MockControl.createControl(Distribution.class);
+  distributionControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
+  distribution=(Distribution)distributionControl.getMock();
+  dataFactoryControl=MockControl.createControl(DataFactory.class);
+  dataFactoryHelper=(DataFactory)dataFactoryControl.getMock();
+  persistor.setConnection(distribution);
+  ObjectEncoder dataFactory=new ObjectEncoder();
+  dataFactory.setDataFactory(dataFactoryHelper);
+  persistor.setObjectDataFactory(dataFactory);
+  system=new TestSystem();
+  system.init();
+}

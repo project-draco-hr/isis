@@ -1,0 +1,44 @@
+{
+  if (object.getResolveState().isSerializing()) {
+    return data;
+  }
+  if (data == null || data.getOid() != null) {
+    return null;
+  }
+  Oid oid=object.getOid();
+  String type=data.getType();
+  ReferenceData[] fieldContent=data.getFieldContent() == null ? null : new ReferenceData[data.getFieldContent().length];
+  Version version=object.getVersion();
+  updateNotifier.removeUpdateFor(object);
+  NakedObjectField[] fields=dataStructure.getFields(object.getSpecification());
+  NakedObjects.getObjectLoader().start(object,object.getResolveState().serializeFrom());
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i].isValue() || data.getFieldContent()[i] == null) {
+      continue;
+    }
+ else     if (fields[i].isCollection()) {
+      CollectionData f=(CollectionData)data.getFieldContent()[i];
+      ObjectData[] elements=new ObjectData[f.getElements().length];
+      NakedCollection coll=(NakedCollection)object.getField(fields[i]);
+      for (int j=0; j < f.getElements().length; j++) {
+        ObjectData element=f.getElements()[j];
+        if (element != null && element.getOid() == null) {
+          NakedObject el=coll.elementAt(j);
+          elements[j]=createMadePersistentGraph(element,el,updateNotifier);
+        }
+      }
+      fieldContent[i]=helper.createCollectionData(coll.getOid(),f.getType(),elements,f.hasAllElements(),coll.getVersion());
+    }
+ else {
+      Data f=data.getFieldContent()[i];
+      if (f != null && !(f instanceof NullData) && ((ObjectData)f).getOid() == null) {
+        NakedObject o=(NakedObject)object.getField(fields[i]);
+        fieldContent[i]=createMadePersistentGraph(((ObjectData)f),o,updateNotifier);
+      }
+    }
+  }
+  NakedObjects.getObjectLoader().end(object);
+  ObjectData createReferenceData=helper.createObjectData(oid,type,true,version);
+  createReferenceData.setFieldContent(fieldContent);
+  return createReferenceData;
+}

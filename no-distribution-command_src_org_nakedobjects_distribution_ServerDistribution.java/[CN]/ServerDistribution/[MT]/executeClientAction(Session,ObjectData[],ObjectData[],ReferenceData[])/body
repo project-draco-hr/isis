@@ -1,0 +1,33 @@
+{
+  LOG.debug("execute client action for " + session);
+  LOG.debug("start transaction");
+  NakedObjectPersistor persistor=persistor();
+  persistor.startTransaction();
+  try {
+    ObjectData[] madePersistent=new ObjectData[persisted.length];
+    for (int i=0; i < persisted.length; i++) {
+      LOG.debug("  makePersistent " + persisted[i]);
+      NakedObject object=(NakedObject)ObjectDecoder.restore(persisted[i]);
+      persistor.makePersistent(object);
+      madePersistent[i]=objectDataFactory.createMadePersistentGraph(persisted[i],object,updateNotifier);
+    }
+    for (int i=0; i < changed.length; i++) {
+      LOG.debug("  objectChanged " + changed[i]);
+      NakedObject object=(NakedObject)ObjectDecoder.restore(changed[i]);
+      persistor.objectChanged(object);
+    }
+    for (int i=0; i < deleted.length; i++) {
+      LOG.debug("  destroyObject " + deleted[i] + " for "+ session);
+      NakedObject inObject=getPersistentNakedObject(session,deleted[i]);
+      persistor.destroyObject(inObject);
+    }
+    LOG.debug("  end transaction");
+    persistor.endTransaction();
+    return madePersistent;
+  }
+ catch (  RuntimeException e) {
+    LOG.debug("abort transaction",e);
+    persistor.abortTransaction();
+    throw e;
+  }
+}

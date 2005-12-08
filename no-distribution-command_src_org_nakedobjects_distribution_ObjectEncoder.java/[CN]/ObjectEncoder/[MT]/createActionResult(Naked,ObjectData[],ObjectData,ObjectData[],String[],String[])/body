@@ -1,0 +1,16 @@
+{
+  Data result;
+  if (returns == null) {
+    result=helper.createNullData("");
+  }
+ else   if (returns instanceof NakedCollection) {
+    result=createCollectionData((NakedCollection)returns,true,persistentGraphDepth,new Hashtable());
+  }
+ else   if (returns instanceof NakedObject) {
+    result=createCompletePersistentGraph((NakedObject)returns);
+  }
+ else {
+    throw new NakedObjectRuntimeException();
+  }
+  return helper.createResultData(result,updatesData,persistedTarget,persistedParameters,messages,warnings);
+}

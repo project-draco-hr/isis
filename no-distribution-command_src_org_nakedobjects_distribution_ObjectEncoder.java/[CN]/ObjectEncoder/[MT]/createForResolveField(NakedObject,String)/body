@@ -1,0 +1,33 @@
+{
+  Oid oid=object.getOid();
+  NakedObjectSpecification specification=object.getSpecification();
+  String type=specification.getFullName();
+  ResolveState resolveState=object.getResolveState();
+  Data[] fieldContent;
+  NakedObjectField[] fields=getFields(specification);
+  fieldContent=new Data[fields.length];
+  NakedObjects.getObjectLoader().start(object,object.getResolveState().serializeFrom());
+  Hashtable previous=new Hashtable();
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i].getId().equals(fieldName)) {
+      Naked field=object.getField(fields[i]);
+      if (field == null) {
+        fieldContent[i]=helper.createNullData(fields[i].getSpecification().getFullName());
+      }
+ else       if (fields[i].isValue()) {
+        fieldContent[i]=createValueData(field);
+      }
+ else       if (fields[i].isCollection()) {
+        fieldContent[i]=createCollectionData((NakedCollection)field,true,persistentGraphDepth,previous);
+      }
+ else {
+        fieldContent[i]=createObjectData((NakedObject)field,true,persistentGraphDepth,previous);
+      }
+      break;
+    }
+  }
+  NakedObjects.getObjectLoader().end(object);
+  ObjectData data=helper.createObjectData(oid,type,resolveState.isResolved(),object.getVersion());
+  data.setFieldContent(fieldContent);
+  return data;
+}

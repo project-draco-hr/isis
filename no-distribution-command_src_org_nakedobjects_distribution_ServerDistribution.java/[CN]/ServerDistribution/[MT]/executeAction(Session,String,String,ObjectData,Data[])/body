@@ -5,7 +5,10 @@
     object=getPersistentNakedObject(session,(ReferenceData)target);
   }
  else   if (target instanceof ObjectData) {
-    object=(NakedObject)DataHelper.restore(target);
+    object=(NakedObject)ObjectDecoder.restore(target);
+  }
+ else   if (target == null) {
+    object=null;
   }
  else {
     throw new NakedObjectRuntimeException();
@@ -13,13 +16,24 @@
   Action action=getActionMethod(actionType,actionIdentifier,parameterData,object);
   checkHint(session,actionType,actionIdentifier,target,parameterData);
   Naked[] parameters=getParameters(session,parameterData);
-  Naked result=object.execute(action,parameters);
-  ObjectData persistedTarget=objectDataFactory.createMadePersistentGraph(target,object,updateNotifier);
+  if (action == null) {
+    throw new NakedObjectsRemoteException("Could not find method " + actionIdentifier);
+  }
+  Naked result=action.execute(object,parameters);
+  ObjectData persistedTarget;
+  if (target == null) {
+    persistedTarget=null;
+  }
+ else {
+    persistedTarget=objectDataFactory.createMadePersistentGraph(target,object,updateNotifier);
+  }
   ObjectData[] persistedParameters=new ObjectData[parameterData.length];
   for (int i=0; i < persistedParameters.length; i++) {
     if (action.getParameterTypes()[i].isObject() && parameterData[i] instanceof ObjectData) {
       persistedParameters[i]=objectDataFactory.createMadePersistentGraph((ObjectData)parameterData[i],(NakedObject)parameters[i],updateNotifier);
     }
   }
-  return objectDataFactory.createActionResult(result,getUpdates(),persistedTarget,persistedParameters);
+  String[] messages=new String[0];
+  String[] warnings=new String[0];
+  return objectDataFactory.createActionResult(result,getUpdates(),persistedTarget,persistedParameters,messages,warnings);
 }
