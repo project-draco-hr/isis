@@ -7,7 +7,8 @@
   JavaBusinessObjectContainer container=new JavaBusinessObjectContainer();
   new SystemClock();
   TransientObjectStore objectStore=new TransientObjectStore();
-  DataFactory objectDataFactory=new JavaDataFactory();
+  ObjectEncoder encoder=new ObjectEncoder();
+  encoder.setDataFactory(new JavaDataFactory());
   SingleResponseUpdateNotifier updateNotifier=new SingleResponseUpdateNotifier();
   JavaObjectFactory objectFactory=new JavaObjectFactory();
   objectFactory.setContainer(container);
@@ -30,7 +31,7 @@
   objectLoader.setIdentityAdapterMap(new IdentityAdapterHashMap());
   nakedObjects.setObjectLoader(objectLoader);
   ServerDistribution sd=new ServerDistribution();
-  sd.setObjectDataFactory(objectDataFactory);
+  sd.setObjectDataFactory(encoder);
   sd.setUpdateNotifier(updateNotifier);
   XServerListener serverListener=new XServerListener();
   serverListener.setServerDistribution(sd);
