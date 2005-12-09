@@ -12,7 +12,7 @@
     if (fields[i].getId().equals(fieldName)) {
       Naked field=object.getField(fields[i]);
       if (field == null) {
-        fieldContent[i]=helper.createNullData(fields[i].getSpecification().getFullName());
+        fieldContent[i]=factory.createNullData(fields[i].getSpecification().getFullName());
       }
  else       if (fields[i].isValue()) {
         fieldContent[i]=createValueData(field);
@@ -27,7 +27,7 @@
     }
   }
   NakedObjects.getObjectLoader().end(object);
-  ObjectData data=helper.createObjectData(oid,type,resolveState.isResolved(),object.getVersion());
+  ObjectData data=factory.createObjectData(oid,type,resolveState.isResolved(),object.getVersion());
   data.setFieldContent(fieldContent);
   return data;
 }

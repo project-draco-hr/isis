@@ -1,0 +1,10 @@
+{
+  distribution.hasInstances(session,Movie.class.getName());
+  distributionControl.setReturnValue(true);
+  distributionControl.setReturnValue(false);
+  distributionControl.replay();
+  NakedObjectSpecification type=NakedObjects.getSpecificationLoader().loadSpecification(Movie.class);
+  assertTrue(persistor.hasInstances(type,false));
+  assertFalse(persistor.hasInstances(type,false));
+  distributionControl.verify();
+}

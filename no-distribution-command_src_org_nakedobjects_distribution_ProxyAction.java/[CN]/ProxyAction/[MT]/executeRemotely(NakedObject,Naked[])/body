@@ -1,11 +1,11 @@
 {
   Data[] parameterObjectData=parameterValues(parameters);
   LOG.debug(debug("execute remotely",getIdentifier(),target,parameters));
-  ObjectData targetReference=dataFactory.createDataForActionTarget(target);
-  ActionResultData result;
+  ObjectData targetReference=encoder.createDataForActionTarget(target);
+  ServerActionResultData result;
   try {
     String name=getIdentifier().getClassName() + "#" + getIdentifier().getName();
-    result=connection.executeAction(NakedObjects.getCurrentSession(),getType().getName(),name,targetReference,parameterObjectData);
+    result=connection.executeServerAction(NakedObjects.getCurrentSession(),getType().getName(),name,targetReference,parameterObjectData);
   }
  catch (  NakedObjectRuntimeException e) {
     LOG.error("remote exception: " + e.getMessage(),e);

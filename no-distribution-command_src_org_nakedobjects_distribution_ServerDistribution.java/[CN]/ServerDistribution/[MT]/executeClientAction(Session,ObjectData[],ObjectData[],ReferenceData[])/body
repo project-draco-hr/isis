@@ -9,12 +9,14 @@
       LOG.debug("  makePersistent " + persisted[i]);
       NakedObject object=(NakedObject)ObjectDecoder.restore(persisted[i]);
       persistor.makePersistent(object);
-      madePersistent[i]=objectDataFactory.createMadePersistentGraph(persisted[i],object,updateNotifier);
+      madePersistent[i]=encoder.createMadePersistentGraph(persisted[i],object,updateNotifier);
     }
+    Version[] changedVersion=new Version[changed.length];
     for (int i=0; i < changed.length; i++) {
       LOG.debug("  objectChanged " + changed[i]);
       NakedObject object=(NakedObject)ObjectDecoder.restore(changed[i]);
       persistor.objectChanged(object);
+      changedVersion[i]=object.getVersion();
     }
     for (int i=0; i < deleted.length; i++) {
       LOG.debug("  destroyObject " + deleted[i] + " for "+ session);
@@ -23,7 +25,7 @@
     }
     LOG.debug("  end transaction");
     persistor.endTransaction();
-    return madePersistent;
+    return encoder.createClientActionResultData(madePersistent,changedVersion);
   }
  catch (  RuntimeException e) {
     LOG.debug("abort transaction",e);

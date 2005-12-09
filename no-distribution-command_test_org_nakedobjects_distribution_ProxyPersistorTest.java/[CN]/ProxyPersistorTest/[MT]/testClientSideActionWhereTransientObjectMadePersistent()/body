@@ -1,0 +1,21 @@
+{
+  DummyObjectData movieData=new DummyObjectData(null,Movie.class.getName(),true,null);
+  NullData directorData=new DummyNullValue(Person.class.getName());
+  DummyValueData nameData=new DummyValueData("Star Wars",String.class.getName());
+  movieData.setFieldContent(new Data[]{directorData,nameData});
+  DummyObjectData updateData=new DummyObjectData(new DummyOid(123),"type",true,new DummyVersion(456));
+  distribution.executeClientAction(session,new ObjectData[]{movieData},new ObjectData[0],new ReferenceData[0]);
+  distributionControl.setReturnValue(new DummyClientResultData(new ObjectData[]{updateData},null));
+  distributionControl.replay();
+  Movie movie=new Movie();
+  movie.setName("Star Wars");
+  NakedObject transientObject=loader.createAdapterForTransient(movie);
+  assertEquals(null,transientObject.getOid());
+  assertEquals(null,transientObject.getVersion());
+  persistor.startTransaction();
+  persistor.makePersistent(transientObject);
+  persistor.endTransaction();
+  assertEquals(new DummyOid(123),transientObject.getOid());
+  assertEquals(new DummyVersion(456),transientObject.getVersion());
+  distributionControl.verify();
+}

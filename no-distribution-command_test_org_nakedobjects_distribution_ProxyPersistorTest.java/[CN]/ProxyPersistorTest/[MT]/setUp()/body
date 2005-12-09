@@ -1,15 +1,24 @@
 {
-  LogManager.getRootLogger().setLevel(Level.OFF);
+  BasicConfigurator.configure();
+  LogManager.getRootLogger().setLevel(Level.DEBUG);
   persistor=new ProxyPersistor();
   distributionControl=MockControl.createControl(Distribution.class);
   distributionControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
   distribution=(Distribution)distributionControl.getMock();
-  dataFactoryControl=MockControl.createControl(DataFactory.class);
-  dataFactoryHelper=(DataFactory)dataFactoryControl.getMock();
   persistor.setConnection(distribution);
-  ObjectEncoder dataFactory=new ObjectEncoder();
-  dataFactory.setDataFactory(dataFactoryHelper);
-  persistor.setObjectDataFactory(dataFactory);
-  system=new TestSystem();
-  system.init();
+  ObjectEncoder encoder=new ObjectEncoder();
+  encoder.setDataFactory(new DummyObjectDataFactory());
+  persistor.setEncoder(encoder);
+  persistor.setUpdateNotifier(new NullDirtyObjectSet());
+  session=new NullSession();
+  NakedObjectsClient nakedObjects=new NakedObjectsClient();
+  loader=new ObjectLoaderImpl();
+  loader.setAdapterFactory(new TestAdapterFactory());
+  loader.setObjectFactory(new TestObjectFactory());
+  nakedObjects.setObjectLoader(loader);
+  nakedObjects.setConfiguration(new TestConfiguration());
+  nakedObjects.setSpecificationLoader(new TestSpecificationLoader());
+  nakedObjects.setObjectPersistor(persistor);
+  nakedObjects.setSession(session);
+  nakedObjects.init();
 }

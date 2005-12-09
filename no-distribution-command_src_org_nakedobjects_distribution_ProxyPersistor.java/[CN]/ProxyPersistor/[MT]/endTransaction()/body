@@ -9,23 +9,32 @@
   NakedObject[] persistedObjects=clientSideTransaction.getPersisted();
   ObjectData[] persisted=new ObjectData[persistedObjects.length];
   for (int i=0; i < persistedObjects.length; i++) {
-    persisted[i]=objectDataFactory.createMakePersistentGraph(persistedObjects[i]);
+    persisted[i]=encoder.createMakePersistentGraph(persistedObjects[i]);
   }
   NakedObject[] changedObjects=clientSideTransaction.getChanged();
   ObjectData[] changed=new ObjectData[changedObjects.length];
   for (int i=0; i < changedObjects.length; i++) {
-    changed[i]=objectDataFactory.createDataForChangedObject(changedObjects[i]);
+    changed[i]=encoder.createDataForChangedObject(changedObjects[i]);
     updateNotifier.addDirty(changedObjects[i]);
   }
   NakedObject[] deletedObjects=clientSideTransaction.getDeleted();
   ReferenceData[] deleted=new ReferenceData[deletedObjects.length];
   for (int i=0; i < deletedObjects.length; i++) {
-    deleted[i]=objectDataFactory.createReference(deletedObjects[i]);
+    deleted[i]=encoder.createReference(deletedObjects[i]);
   }
-  ObjectData[] data=connection.executeClientAction(session,persisted,changed,deleted);
-  if (data != null) {
-    for (int i=0; i < data.length; i++) {
-      madePersistent(persistedObjects[i],data[i]);
+  ClientActionResultData results=connection.executeClientAction(session,persisted,changed,deleted);
+  if (results != null) {
+    ObjectData[] persistedUpdates=results.getPersisted();
+    if (persistedUpdates != null) {
+      for (int i=0; i < persistedUpdates.length; i++) {
+        madePersistent(persistedObjects[i],persistedUpdates[i]);
+      }
+    }
+    Version[] changedVersions=results.getChanged();
+    if (changedVersions != null) {
+      for (int i=0; i < changedVersions.length; i++) {
+        changedObjects[i].setOptimisticLock(changedVersions[i]);
+      }
     }
   }
   clientSideTransaction=null;

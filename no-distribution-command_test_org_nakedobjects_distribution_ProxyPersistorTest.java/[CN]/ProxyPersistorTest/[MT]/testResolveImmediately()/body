@@ -1,0 +1,18 @@
+{
+  DummyObjectData instance1=new DummyObjectData(new DummyOid(5),Movie.class.getName(),true,new DummyVersion(3));
+  DummyValueData name=new DummyValueData("ET","java.lang.String");
+  instance1.setFieldContent(new Data[]{new DummyNullValue(Person.class.getName()),name});
+  DummyReferenceData ref=new DummyReferenceData(new DummyOid(5),Movie.class.getName(),null);
+  distribution.resolveImmediately(session,ref);
+  distributionControl.setReturnValue(instance1);
+  distributionControl.replay();
+  NakedObject object;
+  object=loader.recreateAdapterForPersistent(new DummyOid(5),NakedObjects.getSpecificationLoader().loadSpecification(Movie.class));
+  Movie movie=(Movie)object.getObject();
+  assertEquals(null,movie.getName());
+  persistor.resolveImmediately(object);
+  distributionControl.verify();
+  assertEquals("ET",movie.getName());
+  assertEquals(new DummyOid(5),object.getOid());
+  assertEquals(new DummyVersion(3),object.getVersion());
+}

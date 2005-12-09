@@ -8,23 +8,25 @@
   }
   Data[] fieldData=updates.getFieldContent();
   NakedObjectField[] fields=object.getSpecification().getFields();
-  for (int i=0; i < fieldData.length; i++) {
-    if (fieldData[i] == null) {
-      continue;
-    }
-    if (fields[i].isObject()) {
-      NakedObject field=object.getAssociation((OneToOneAssociation)fields[i]);
-      ObjectData fieldContent=(ObjectData)updates.getFieldContent()[i];
-      if (field != null) {
-        madePersistent(field,fieldContent);
+  if (fieldData != null) {
+    for (int i=0; i < fieldData.length; i++) {
+      if (fieldData[i] == null) {
+        continue;
       }
-    }
- else     if (fields[i].isCollection()) {
-      CollectionData collectionData=(CollectionData)updates.getFieldContent()[i];
-      for (int j=0; j < collectionData.getElements().length; j++) {
-        NakedObject element=((NakedCollection)object.getField(fields[i])).elementAt(j);
-        ObjectData elementData=collectionData.getElements()[j];
-        madePersistent(element,elementData);
+      if (fields[i].isObject()) {
+        NakedObject field=object.getAssociation((OneToOneAssociation)fields[i]);
+        ObjectData fieldContent=(ObjectData)updates.getFieldContent()[i];
+        if (field != null) {
+          madePersistent(field,fieldContent);
+        }
+      }
+ else       if (fields[i].isCollection()) {
+        CollectionData collectionData=(CollectionData)updates.getFieldContent()[i];
+        for (int j=0; j < collectionData.getElements().length; j++) {
+          NakedObject element=((NakedCollection)object.getField(fields[i])).elementAt(j);
+          ObjectData elementData=collectionData.getElements()[j];
+          madePersistent(element,elementData);
+        }
       }
     }
   }

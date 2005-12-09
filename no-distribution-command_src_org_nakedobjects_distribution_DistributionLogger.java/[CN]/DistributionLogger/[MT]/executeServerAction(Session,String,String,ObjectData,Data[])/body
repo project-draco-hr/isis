@@ -1,0 +1,16 @@
+{
+  log("execute action " + actionIdentifier + "/"+ actionType+ indentedNewLine()+ "target: "+ dump(target)+ indentedNewLine()+ "parameters: "+ dump(parameters));
+  ServerActionResultData result;
+  try {
+    result=decorated.executeServerAction(session,actionType,actionIdentifier,target,parameters);
+    log("  <-- returns: " + dump(result.getReturn()));
+    log("  <-- persisted target: " + dump(result.getPersistedTarget()));
+    log("  <-- persisted parameters: " + dump(result.getPersistedParameters()));
+    log("  <-- updates: " + dump(result.getUpdates()));
+  }
+ catch (  RuntimeException e) {
+    log("  <-- exception: " + e.getClass().getName() + " "+ e.getMessage());
+    throw e;
+  }
+  return result;
+}

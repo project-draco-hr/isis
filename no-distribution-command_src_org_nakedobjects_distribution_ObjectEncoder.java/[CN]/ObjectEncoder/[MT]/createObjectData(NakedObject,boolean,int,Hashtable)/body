@@ -11,7 +11,7 @@
   String type=specification.getFullName();
   ResolveState resolveState=object.getResolveState();
   boolean isComplete=object.getResolveState() == ResolveState.TRANSIENT || object.getResolveState() == ResolveState.RESOLVED;
-  ObjectData data=helper.createObjectData(oid,type,isComplete,object.getVersion());
+  ObjectData data=factory.createObjectData(oid,type,isComplete,object.getVersion());
   previous.put(object,data);
   Data[] fieldContent;
   if (resolveState.isSerializing() || !nextLevel || depth == 0 || resolveState.isGhost()) {
@@ -27,7 +27,7 @@
         fieldContent[i]=null;
       }
  else       if (field == null && isComplete) {
-        fieldContent[i]=helper.createNullData(fields[i].getSpecification().getFullName());
+        fieldContent[i]=factory.createNullData(fields[i].getSpecification().getFullName());
       }
  else       if (field == null && !isComplete) {
         fieldContent[i]=null;
@@ -39,7 +39,12 @@
         fieldContent[i]=createCollectionData((NakedCollection)field,recursePersistentObjects,depth - 1,previous);
       }
  else {
-        fieldContent[i]=createObjectData((NakedObject)field,recursePersistentObjects,depth - 1,previous);
+        if (recursePersistentObjects || field.getOid() == null) {
+          fieldContent[i]=createObjectData((NakedObject)field,recursePersistentObjects,depth - 1,previous);
+        }
+ else {
+          fieldContent[i]=createReference((NakedObject)field);
+        }
       }
     }
     NakedObjects.getObjectLoader().end(object);

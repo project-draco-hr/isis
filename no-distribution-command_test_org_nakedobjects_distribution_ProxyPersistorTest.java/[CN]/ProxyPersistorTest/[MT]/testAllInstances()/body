@@ -1,0 +1,16 @@
+{
+  DummyObjectData instance1=new DummyObjectData(new DummyOid(12),Movie.class.getName(),true,new DummyVersion(3));
+  DummyValueData name=new DummyValueData("ET","java.lang.String");
+  instance1.setFieldContent(new Data[]{new DummyNullValue(Person.class.getName()),name});
+  distribution.allInstances(session,Movie.class.getName(),false);
+  distributionControl.setReturnValue(new ObjectData[]{instance1});
+  distributionControl.replay();
+  TypedNakedCollection instances=persistor.allInstances(NakedObjects.getSpecificationLoader().loadSpecification(Movie.class),false);
+  distributionControl.verify();
+  assertEquals(1,instances.size());
+  NakedObject object=instances.elementAt(0);
+  Movie movie=(Movie)object.getObject();
+  assertEquals("ET",movie.getName());
+  assertEquals(new DummyOid(12),object.getOid());
+  assertEquals(new DummyVersion(3),object.getVersion());
+}
