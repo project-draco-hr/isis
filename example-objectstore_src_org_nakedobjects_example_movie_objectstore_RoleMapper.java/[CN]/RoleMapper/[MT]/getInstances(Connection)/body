@@ -1,21 +1,21 @@
 {
   NakedObject[] instances=new NakedObject[45];
   int i=0;
-  String query="select * from person";
+  String query="select * from role";
   Statement s=connection.createStatement();
   ResultSet rs=s.executeQuery(query);
   while (rs.next() && i < instances.length) {
     Oid oid=new SqlOid(rs.getInt(1));
-    Person person;
+    Person role;
     if (NakedObjects.getObjectLoader().isIdentityKnown(oid)) {
       instances[i++]=NakedObjects.getObjectLoader().getAdapterFor(oid);
-      person=(Person)NakedObjects.getObjectLoader().getAdapterFor(oid).getObject();
+      role=(Person)NakedObjects.getObjectLoader().getAdapterFor(oid).getObject();
     }
  else {
       NakedObject instance=NakedObjects.getObjectLoader().recreateAdapterForPersistent(oid,NakedObjects.getSpecificationLoader().loadSpecification(Person.class));
       NakedObjects.getObjectLoader().start(instance,ResolveState.RESOLVING);
-      person=(Person)instance.getObject();
-      person.setName(rs.getString(2));
+      role=(Person)instance.getObject();
+      role.setName(rs.getString(2));
       NakedObjects.getObjectLoader().end(instance);
       instances[i++]=instance;
     }
