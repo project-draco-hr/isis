@@ -1,0 +1,20 @@
+{
+  Movie movie=new Movie();
+  NakedObject movieAdapter=loader.createAdapterForTransient(movie);
+  movieAdapter.persistedAs(new DummyOid(1));
+  movieAdapter.setOptimisticLock(new DummyVersion(2));
+  Person person=new Person();
+  NakedObject personAdapter=loader.createAdapterForTransient(person);
+  personAdapter.persistedAs(new DummyOid(3));
+  personAdapter.setOptimisticLock(new DummyVersion(4));
+  assertNull(movie.getDirector());
+  persistor.setupAddObject(movieAdapter);
+  persistor.setupAddObject(personAdapter);
+  updates.addDirty(movieAdapter);
+  DummyReferenceData movieData=new DummyReferenceData(new DummyOid(1),Movie.class.getName(),new DummyVersion(2));
+  DummyReferenceData personData=new DummyReferenceData(new DummyOid(3),Person.class.getName(),new DummyVersion(4));
+  ObjectData[] updates=distribution.setAssociation(session,"director",movieData,personData);
+  assertEquals(person,movie.getDirector());
+  assertEquals(1,updates.length);
+  assertEquals(new DummyOid(1),updates[0].getOid());
+}
