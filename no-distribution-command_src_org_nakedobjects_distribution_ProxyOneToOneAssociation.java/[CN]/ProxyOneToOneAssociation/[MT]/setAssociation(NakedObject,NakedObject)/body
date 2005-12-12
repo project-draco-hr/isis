@@ -1,9 +1,10 @@
 {
   if (isPersistent(inObject)) {
     LOG.debug("set association remotely " + getIdentifier() + " in "+ inObject+ " with "+ associate);
-    ReferenceData targetReference=objectDataFactory.createReference(inObject);
-    ReferenceData associateReference=objectDataFactory.createReference(associate);
-    connection.setAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+    ReferenceData targetReference=encoder.createReference(inObject);
+    ReferenceData associateReference=encoder.createReference(associate);
+    ObjectData[] updates=connection.setAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+    updateChangedObjects(updates);
   }
  else {
     LOG.debug("set association locally " + getIdentifier() + " in "+ inObject+ " with "+ associate);

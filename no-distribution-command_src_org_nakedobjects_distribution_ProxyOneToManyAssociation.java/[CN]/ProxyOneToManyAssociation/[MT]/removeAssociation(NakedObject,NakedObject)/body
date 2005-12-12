@@ -4,7 +4,8 @@
     try {
       ReferenceData targetReference=objectDataFactory.createReference(inObject);
       ReferenceData associateReference=objectDataFactory.createReference(associate);
-      connection.clearAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+      ObjectData[] updates=connection.clearAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+      updateChangedObjects(updates);
     }
  catch (    NakedObjectRuntimeException e) {
       throw (NakedObjectRuntimeException)e.getCause();

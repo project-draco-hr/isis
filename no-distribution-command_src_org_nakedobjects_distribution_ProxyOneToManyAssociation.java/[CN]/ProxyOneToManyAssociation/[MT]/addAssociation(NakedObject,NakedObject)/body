@@ -4,7 +4,8 @@
     try {
       ReferenceData targetReference=objectDataFactory.createReference(inObject);
       ReferenceData associateReference=objectDataFactory.createReference(associate);
-      connection.setAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+      ObjectData[] updates=connection.setAssociation(NakedObjects.getCurrentSession(),getIdentifier().getName(),targetReference,associateReference);
+      updateChangedObjects(updates);
     }
  catch (    NakedObjectRuntimeException e) {
       LOG.error("problem with distribution ",e.getCause());

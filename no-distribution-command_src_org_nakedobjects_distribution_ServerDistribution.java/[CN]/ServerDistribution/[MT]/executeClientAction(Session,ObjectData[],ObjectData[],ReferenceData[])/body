@@ -4,19 +4,19 @@
   NakedObjectPersistor persistor=persistor();
   persistor.startTransaction();
   try {
-    ObjectData[] madePersistent=new ObjectData[persisted.length];
+    NakedObject[] persistedObjects=new NakedObject[persisted.length];
     for (int i=0; i < persisted.length; i++) {
       LOG.debug("  makePersistent " + persisted[i]);
       NakedObject object=(NakedObject)ObjectDecoder.restore(persisted[i]);
       persistor.makePersistent(object);
-      madePersistent[i]=encoder.createMadePersistentGraph(persisted[i],object,updateNotifier);
+      persistedObjects[i]=object;
     }
-    Version[] changedVersion=new Version[changed.length];
+    NakedObject[] changedObjects=new NakedObject[changed.length];
     for (int i=0; i < changed.length; i++) {
       LOG.debug("  objectChanged " + changed[i]);
       NakedObject object=(NakedObject)ObjectDecoder.restore(changed[i]);
       persistor.objectChanged(object);
-      changedVersion[i]=object.getVersion();
+      changedObjects[i]=object;
     }
     for (int i=0; i < deleted.length; i++) {
       LOG.debug("  destroyObject " + deleted[i] + " for "+ session);
@@ -25,6 +25,14 @@
     }
     LOG.debug("  end transaction");
     persistor.endTransaction();
+    ObjectData[] madePersistent=new ObjectData[persisted.length];
+    for (int i=0; i < persisted.length; i++) {
+      madePersistent[i]=encoder.createMadePersistentGraph(persisted[i],persistedObjects[i],updateNotifier);
+    }
+    Version[] changedVersion=new Version[changed.length];
+    for (int i=0; i < changed.length; i++) {
+      changedVersion[i]=changedObjects[i].getVersion();
+    }
     return encoder.createClientActionResultData(madePersistent,changedVersion);
   }
  catch (  RuntimeException e) {
