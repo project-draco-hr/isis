@@ -1,15 +1,15 @@
 {
-  NakedObjectField[] viewFields=new NakedObjectField[fields.length];
-  int v=0;
-  for (int i=0; i < fields.length; i++) {
-    boolean useField=!fields[i].isHidden() && fields[i].isAuthorised();
-    if (useField) {
-      viewFields[v++]=fields[i];
+  if (accessibleFields == null) {
+    NakedObjectField[] selectedFields=new NakedObjectField[fields.length];
+    int v=0;
+    for (int i=0; i < fields.length; i++) {
+      boolean isAccessible=!fields[i].isHidden() && fields[i].isAuthorised();
+      if (isAccessible) {
+        selectedFields[v++]=fields[i];
+      }
     }
+    accessibleFields=new NakedObjectField[v];
+    System.arraycopy(selectedFields,0,accessibleFields,0,v);
   }
-  NakedObjectField[] selectedFields=new NakedObjectField[v];
-  for (int i=0; i < selectedFields.length; i++) {
-    selectedFields[i]=viewFields[i];
-  }
-  return selectedFields;
+  return accessibleFields;
 }
