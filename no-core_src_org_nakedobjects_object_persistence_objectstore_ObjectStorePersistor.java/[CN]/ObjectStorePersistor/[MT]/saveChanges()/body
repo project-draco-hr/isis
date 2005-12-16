@@ -1,12 +1,3 @@
 {
-  LOG.info("saving changed objects");
   collateChanges();
-  Enumeration e=objectsToBeSaved.dirtyObjects();
-  while (e.hasMoreElements()) {
-    NakedObject object=(NakedObject)e.nextElement();
-    LOG.debug("  changed " + object);
-    if (isPersistent(object)) {
-      getTransaction().addCommand(objectStore.createSaveObjectCommand(object));
-    }
-  }
 }
