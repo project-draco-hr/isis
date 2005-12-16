@@ -5,13 +5,21 @@
   }
  else {
     for (int i=0; i < fields.length; i++) {
-      if (fields[i] instanceof OneToManyAssociation) {
-        OneToManyAssociation f=(OneToManyAssociation)fields[i];
-        aboutDetail(debug,f);
+      NakedObjectField f=(NakedObjectField)fields[i];
+      debug.appendln(4,f.getName());
+      if (f.getDescription() != null && !f.getDescription().equals("")) {
+        debug.appendln(12,"Description",f.getDescription());
       }
- else       if (fields[i] instanceof OneToOneAssociation) {
-        OneToOneAssociation f=(OneToOneAssociation)fields[i];
-        aboutDetail(debug,f);
+      debug.appendln(8,f.getClass().getName());
+      debug.appendln(8,"ID",f.getId());
+      debug.appendln(8,"Type",(f.isCollection() ? "Collection" : f.isObject() ? "Object" : f.isValue() ? "Value" : "Unknown") + " (" + f.getSpecification().getFullName()+ ")");
+      debug.appendln(8,"Flags",(f.isAuthorised() ? "Authorised " : "") + (f.isDerived() ? "Derived " : "") + (f.isHidden() ? "Hidden " : "")+ (f.isMandatory() ? "Mandatory " : ""));
+      Class[] extensions=f.getExtensions();
+      if (extensions.length > 0) {
+        debug.appendln(12,"Extensions");
+        for (int j=0; j < extensions.length; j++) {
+          debug.appendln(16,extensions[j].getName());
+        }
       }
     }
   }
