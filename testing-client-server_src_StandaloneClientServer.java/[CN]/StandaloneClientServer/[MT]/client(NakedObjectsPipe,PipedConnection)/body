@@ -10,10 +10,11 @@
   objectFactory.setContainer(container);
   ObjectEncoder objectDataFactory=new ObjectEncoder();
   objectDataFactory.setDataFactory(new JavaDataFactory());
-  ProxyPersistor proxyObjectManager=new ProxyPersistor();
-  proxyObjectManager.setConnection(clientLogger);
-  proxyObjectManager.setEncoder(objectDataFactory);
-  NakedObjectPersistor objectManager=proxyObjectManager;
+  ProxyPersistor proxyPersistor=new ProxyPersistor();
+  proxyPersistor.setConnection(clientLogger);
+  proxyPersistor.setEncoder(objectDataFactory);
+  proxyPersistor.setCheckObjectsForDirtyFlag(true);
+  NakedObjectPersistor objectManager=proxyPersistor;
   nakedObjects.setObjectPersistor(objectManager);
   ObjectLoaderImpl objectLoader=new ObjectLoaderImpl();
   objectLoader.setPojoAdapterMap(new PojoAdapterHashMap());
@@ -23,14 +24,14 @@
   nakedObjects.setObjectLoader(objectLoader);
   ProxyPeerFactory proxyPeerFactory=new ProxyPeerFactory();
   proxyPeerFactory.setConnection(clientLogger);
-  proxyPeerFactory.setObjectDataFactory(objectDataFactory);
+  proxyPeerFactory.setEncoder(objectDataFactory);
   ReflectionPeerFactory[] factories=new ReflectionPeerFactory[]{proxyPeerFactory,new TransactionPeerFactory()};
   JavaSpecificationLoader specificationLoader=new JavaSpecificationLoader();
   specificationLoader.setReflectionPeerFactories(factories);
   nakedObjects.setSpecificationLoader(specificationLoader);
   nakedObjects.init();
   ViewUpdateNotifier updateNotifier=new ViewUpdateNotifier();
-  proxyObjectManager.setUpdateNotifier(updateNotifier);
+  proxyPersistor.setUpdateNotifier(updateNotifier);
   SkylarkViewer skylark=new SkylarkViewer();
   skylark.setUpdateNotifier(updateNotifier);
   skylark.setShutdownListener(new ObjectViewingMechanismListener(){
