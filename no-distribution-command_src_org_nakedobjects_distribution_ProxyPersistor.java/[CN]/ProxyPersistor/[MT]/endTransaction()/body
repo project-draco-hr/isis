@@ -6,15 +6,16 @@
     clientSideTransaction=null;
     return;
   }
+  ObjectEncoder.KnownTransients knownObjects=ObjectEncoder.createKnownTransients();
   NakedObject[] persistedObjects=clientSideTransaction.getPersisted();
   ObjectData[] persisted=new ObjectData[persistedObjects.length];
   for (int i=0; i < persistedObjects.length; i++) {
-    persisted[i]=encoder.createMakePersistentGraph(persistedObjects[i]);
+    persisted[i]=encoder.createMakePersistentGraph(persistedObjects[i],knownObjects);
   }
   NakedObject[] changedObjects=clientSideTransaction.getChanged();
   ObjectData[] changed=new ObjectData[changedObjects.length];
   for (int i=0; i < changedObjects.length; i++) {
-    changed[i]=encoder.createDataForChangedObject(changedObjects[i]);
+    changed[i]=encoder.createDataForChangedObject(changedObjects[i],knownObjects);
     updateNotifier.addDirty(changedObjects[i]);
   }
   NakedObject[] deletedObjects=clientSideTransaction.getDeleted();

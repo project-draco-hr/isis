@@ -1,0 +1,22 @@
+{
+  if (!content.hasAllElements()) {
+    return;
+  }
+  int size=content.getElements().length;
+  NakedObject[] elements=new NakedObject[size];
+  for (int j=0; j < elements.length; j++) {
+    elements[j]=restoreObject(((ObjectData)content.getElements()[j]),knownTransients);
+    LOG.debug("adding element to " + field.getId() + ": "+ elements[j]);
+  }
+  NakedCollection col=(NakedCollection)object.getField(field);
+  ResolveState initialState=col.getResolveState();
+  ResolveState state=nextState(initialState,content.hasAllElements());
+  if (state != null) {
+    NakedObjects.getObjectLoader().start(col,state);
+    object.initAssociation((OneToManyAssociation)field,elements);
+    NakedObjects.getObjectLoader().end(col);
+  }
+ else {
+    LOG.warn("not initialising collection " + col + " due to current state "+ initialState);
+  }
+}

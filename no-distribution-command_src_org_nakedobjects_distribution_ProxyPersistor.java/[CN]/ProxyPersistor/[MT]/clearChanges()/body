@@ -1,0 +1,16 @@
+{
+  if (checkObjectsForDirtyFlag) {
+    LOG.debug("clearing changed objects");
+    Enumeration e=NakedObjects.getObjectLoader().getIdentifiedObjects();
+    while (e.hasMoreElements()) {
+      Object o=e.nextElement();
+      if (o instanceof NakedObject) {
+        NakedObject object=(NakedObject)o;
+        if (object.getSpecification().isDirty(object)) {
+          LOG.debug("  found dirty object " + object);
+          object.getSpecification().clearDirty(object);
+        }
+      }
+    }
+  }
+}

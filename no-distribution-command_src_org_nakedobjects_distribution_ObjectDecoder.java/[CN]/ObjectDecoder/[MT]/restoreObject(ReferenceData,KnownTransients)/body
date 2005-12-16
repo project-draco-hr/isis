@@ -1,0 +1,13 @@
+{
+  Oid oid=data.getOid();
+  NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
+  NakedObject object;
+  if (objectLoader.isIdentityKnown(oid)) {
+    object=objectLoader.getAdapterFor(oid);
+  }
+ else {
+    NakedObjectSpecification specification=NakedObjects.getSpecificationLoader().loadSpecification(data.getType());
+    object=objectLoader.recreateAdapterForPersistent(oid,specification);
+  }
+  return object;
+}

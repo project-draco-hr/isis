@@ -1,0 +1,14 @@
+{
+  NakedObject associate;
+  if (data instanceof NullData) {
+    associate=null;
+  }
+ else   if (data instanceof ObjectData) {
+    associate=restoreObject((ObjectData)data,knownTransients);
+  }
+ else {
+    associate=restoreObject((ReferenceData)data,knownTransients);
+  }
+  LOG.debug("setting association for field " + field.getId() + ": "+ associate);
+  object.initAssociation(field,associate);
+}

@@ -1,0 +1,23 @@
+{
+  Data[] fieldContent=data.getFieldContent();
+  if (fieldContent != null && fieldContent.length > 0) {
+    NakedObjectField[] fields=dataStructure.getFields(object.getSpecification());
+    for (int i=0; i < fields.length; i++) {
+      NakedObjectField field=fields[i];
+      Data fieldData=fieldContent[i];
+      if (fieldData == null || field.isDerived()) {
+        LOG.debug("no data for field " + field.getId());
+        continue;
+      }
+      if (field.isCollection()) {
+        setUpCollectionField(object,field,(CollectionData)fieldData,knownTransients);
+      }
+ else       if (field.isValue()) {
+        setUpValueField(object,field,fieldData);
+      }
+ else {
+        setUpReferenceField(object,field,fieldData,knownTransients);
+      }
+    }
+  }
+}

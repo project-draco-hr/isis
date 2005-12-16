@@ -1,5 +1,7 @@
 {
   LOG.debug("getInstances of " + criteria.getSpecification() + " with "+ criteria);
   ObjectData[] instances=connection.findInstances(session,criteria);
-  return convertToNakedObjects(criteria.getSpecification(),instances);
+  TypedNakedCollection nakedObjects=convertToNakedObjects(criteria.getSpecification(),instances);
+  clearChanges();
+  return nakedObjects;
 }

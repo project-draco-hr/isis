@@ -1,0 +1,18 @@
+{
+  if (knownTransients.containsKey(data)) {
+    return knownTransients.get(data);
+  }
+  Oid oid=data.getOid();
+  NakedObjectLoader objectLoader=NakedObjects.getObjectLoader();
+  NakedObject object;
+  if (oid == null) {
+    object=restoreTransient(data,objectLoader,knownTransients);
+  }
+ else   if (objectLoader.isIdentityKnown(oid)) {
+    object=updateLoadedObject(data,oid,objectLoader,knownTransients);
+  }
+ else {
+    object=restorePersistentObject(data,oid,objectLoader,knownTransients);
+  }
+  return object;
+}
