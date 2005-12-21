@@ -4,13 +4,13 @@
     result=factory.createNullData("");
   }
  else   if (returns instanceof NakedCollection) {
-    result=createCollectionData((NakedCollection)returns,true,persistentGraphDepth,new KnownTransients());
+    result=createCollection((NakedCollection)returns,true,persistentGraphDepth,new KnownTransients());
   }
  else   if (returns instanceof NakedObject) {
     result=createCompletePersistentGraph((NakedObject)returns);
   }
  else {
-    throw new NakedObjectRuntimeException();
+    throw new UnknownTypeException(returns);
   }
   return factory.createActionResultData(result,updatesData,persistedTarget,persistedParameters,messages,warnings);
 }
