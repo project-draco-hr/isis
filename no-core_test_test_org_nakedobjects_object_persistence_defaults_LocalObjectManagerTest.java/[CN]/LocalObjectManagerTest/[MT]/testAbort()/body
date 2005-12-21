@@ -2,6 +2,8 @@
   objectManager.startTransaction();
   objectManager.destroyObject(testNakedObject);
   objectManager.abortTransaction();
-  objectStore.assertAction(0,"destroyObject " + testNakedObject);
-  objectStore.assertLastAction(0);
+  objectStore.assertAction(0,"startTransaction");
+  objectStore.assertAction(1,"destroyObject " + testNakedObject);
+  objectStore.assertAction(2,"abortTransaction");
+  objectStore.assertLastAction(2);
 }
