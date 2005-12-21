@@ -1,10 +1,10 @@
 {
   if (criteria instanceof TitleCriteria) {
-    DatabaseConnector connection=getDatabaseConnector();
+    DatabaseConnector connection=connectionPool.acquire();
     NakedObjectSpecification spec=criteria.getSpecification();
     ObjectMapper mapper=mapperLookup.getMapper(connection,spec);
     NakedObject[] instances=mapper.getInstances(connection,spec,((TitleCriteria)criteria).getRequiredTitle());
-    releaseConnectionIfNotInTransaction(connection);
+    connectionPool.release(connection);
     return instances;
   }
   throw new UnsupportedFindException();

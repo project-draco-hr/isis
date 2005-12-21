@@ -1,10 +1,9 @@
 {
   return new CreateObjectCommand(){
-    public void execute(){
+    public void execute(    ExecutionContext context){
+      DatabaseConnector connection=((SqlExecutionContext)context).getConnection();
       LOG.debug("  create object " + object);
-      DatabaseConnector connection=getDatabaseConnector();
       mapperLookup.getMapper(connection,object).createObject(connection,object);
-      releaseConnectionIfNotInTransaction(connection);
     }
     public NakedObject onObject(){
       return object;

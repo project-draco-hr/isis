@@ -37,7 +37,9 @@
     sql.append(",");
     sql.append(quote(lastActivityDateColumn));
     sql.append(" timestamp)");
+    connection.begin();
     connection.update(sql.toString());
+    connection.commit();
   }
   for (int i=0; collectionMappers != null && i < collectionMappers.length; i++) {
     if (collectionMappers[i].needsTables(connection)) {

@@ -1,6 +1,6 @@
 {
-  DatabaseConnector connection=getDatabaseConnector();
+  DatabaseConnector connection=connectionPool.acquire();
   int number=mapperLookup.getMapper(connection,cls).numberOfInstances(connection,cls);
-  releaseConnectionIfNotInTransaction(connection);
+  connectionPool.release(connection);
   return number;
 }

@@ -1,9 +1,7 @@
 {
-  String connectorClass=NakedObjects.getConfiguration().getString(BASE_NAME + ".connector");
-  connectorFactory=(DatabaseConnectorFactory)ComponentLoader.loadComponent(connectorClass,DatabaseConnectorFactory.class);
-  DatabaseConnector db=connectorFactory.createConnector();
+  DatabaseConnector db=connectionPool.acquire();
   try {
-    db.open();
+    db.begin();
     if (!db.hasTable("no_serial_id")) {
       db.update("create table \"no_serial_id\" (\"number\" INTEGER)");
       db.update("insert into \"no_serial_id\" values (1)");
@@ -12,9 +10,13 @@
     rs.next();
     number=rs.getLong("number");
     rs.close();
-    db.close();
+    db.commit();
   }
  catch (  ObjectPerstsistenceException e) {
+    db.rollback();
     throw new NakedObjectRuntimeException(e);
+  }
+ finally {
+    connectionPool.release(db);
   }
 }

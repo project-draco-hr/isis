@@ -1,6 +1,6 @@
 {
-  DatabaseConnector connection=getDatabaseConnector();
+  DatabaseConnector connection=connectionPool.acquire();
   NakedObject object=mapperLookup.getMapper(connection,hint).getObject(connection,oid,hint);
-  releaseConnectionIfNotInTransaction(connection);
+  connectionPool.release(connection);
   return object;
 }

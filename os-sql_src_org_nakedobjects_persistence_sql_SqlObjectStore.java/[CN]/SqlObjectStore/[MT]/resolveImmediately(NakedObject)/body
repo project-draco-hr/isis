@@ -1,5 +1,5 @@
 {
-  DatabaseConnector connection=getDatabaseConnector();
+  DatabaseConnector connection=connectionPool.acquire();
   mapperLookup.getMapper(connection,object).resolve(connection,object);
-  releaseConnectionIfNotInTransaction(connection);
+  connectionPool.release(connection);
 }
