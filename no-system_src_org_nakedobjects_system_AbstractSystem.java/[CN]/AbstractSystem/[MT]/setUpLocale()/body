@@ -1,0 +1,18 @@
+{
+  String localeSpec=NakedObjects.getConfiguration().getString("locale");
+  if (localeSpec != null) {
+    int pos=localeSpec.indexOf('_');
+    Locale locale;
+    if (pos == -1) {
+      locale=new Locale(localeSpec,"");
+    }
+ else {
+      String language=localeSpec.substring(0,pos);
+      String country=localeSpec.substring(pos + 1);
+      locale=new Locale(language,country);
+    }
+    Locale.setDefault(locale);
+    LOG.info("locale set to " + locale);
+  }
+  LOG.debug("locale is " + Locale.getDefault());
+}

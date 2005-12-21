@@ -1,0 +1,16 @@
+{
+  if (className.startsWith("ref:")) {
+    String referencedName=className.substring(4);
+    if (components.containsKey(referencedName)) {
+      return components.get(referencedName);
+    }
+ else {
+      throw new StartupException("Could not reference the object names " + referencedName);
+    }
+  }
+  LOG.debug("loading component " + className + " for "+ name);
+  Object object=loadComponent(className);
+  components.put(name,object);
+  setProperties(object,name,properties);
+  return object;
+}

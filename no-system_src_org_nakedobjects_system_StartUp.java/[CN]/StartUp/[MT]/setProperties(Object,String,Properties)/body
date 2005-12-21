@@ -1,0 +1,34 @@
+{
+  LOG.debug("looking for properties starting with " + prefix);
+  Enumeration e=properties.propertyNames();
+  while (e.hasMoreElements()) {
+    String key=(String)e.nextElement();
+    if (key.startsWith(prefix) && key.length() > prefix.length() && key.substring(prefix.length() + 1).indexOf('.') == -1) {
+      LOG.debug("  property " + key + " (of prefix "+ prefix+ ")");
+      String className=properties.getProperty(key).trim();
+      Object value;
+      if (className.indexOf(',') > 0) {
+        StringTokenizer st=new StringTokenizer(className,",");
+        Object[] elements=new Object[st.countTokens()];
+        int i=0;
+        while (st.hasMoreTokens()) {
+          String cls=st.nextToken();
+          elements[i++]=load(cls,key,properties);
+        }
+        value=elements;
+      }
+ else {
+        if (className.equalsIgnoreCase("true")) {
+          value=Boolean.TRUE;
+        }
+ else         if (className.equalsIgnoreCase("false")) {
+          value=Boolean.FALSE;
+        }
+ else {
+          value=load(className,key,properties);
+        }
+      }
+      setProperty(object,key,value);
+    }
+  }
+}

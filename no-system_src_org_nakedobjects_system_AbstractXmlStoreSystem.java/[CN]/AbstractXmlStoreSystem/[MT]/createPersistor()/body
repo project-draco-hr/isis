@@ -1,0 +1,12 @@
+{
+  XmlObjectStore objectStore=new XmlObjectStore();
+  String dir=configuration.getString("nakedobjects.xmlos.dir","xml");
+  objectStore.setDataManager(new XmlDataManager(dir));
+  DefaultPersistAlgorithm persistAlgorithm=new DefaultPersistAlgorithm();
+  persistAlgorithm.setOidGenerator(new TimeBasedOidGenerator());
+  ObjectStorePersistor persistor=new ObjectStorePersistor();
+  persistor.setObjectStore(objectStore);
+  persistor.setPersistAlgorithm(persistAlgorithm);
+  persistor.setCheckObjectsForDirtyFlag(true);
+  return persistor;
+}

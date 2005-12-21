@@ -1,0 +1,18 @@
+{
+  ObjectMapperLookup mapperLookup=new ObjectMapperLookup();
+  DatabaseConnectorFactory connectorFactory=new JdbcConnectorFactory();
+  mapperLookup.setMapperFactory(new AutoMapperFactory());
+  DatabaseConnectorPool connectionPool=new DatabaseConnectorPool(connectorFactory,1);
+  mapperLookup.setConnectionPool(connectionPool);
+  SqlObjectStore objectStore=new SqlObjectStore();
+  objectStore.setMapperLookup(mapperLookup);
+  objectStore.setConnectionPool(connectionPool);
+  OidGenerator oidGenerator=new SqlOidGenerator(connectionPool);
+  TwoPassPersistAlgorithm persistAlgorithm=new TwoPassPersistAlgorithm();
+  persistAlgorithm.setOidGenerator(oidGenerator);
+  ObjectStorePersistor persistor=new ObjectStorePersistor();
+  persistor.setObjectStore(objectStore);
+  persistor.setPersistAlgorithm(persistAlgorithm);
+  persistor.setCheckObjectsForDirtyFlag(true);
+  return persistor;
+}

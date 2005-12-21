@@ -1,0 +1,42 @@
+{
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  configuration=new PropertiesConfiguration(new PropertiesFileLoader(DEFAULT_CONFIG,true));
+  if (configuration.getString(SHOW_EXPLORATION_OPTIONS) == null) {
+    configuration.add(SHOW_EXPLORATION_OPTIONS,"yes");
+  }
+  PropertyConfigurator.configure(configuration.getProperties("log4j"));
+  SystemClock systemClock=new SystemClock();
+  Date.setClock(systemClock);
+  Time.setClock(systemClock);
+  DateTime.setClock(systemClock);
+  org.nakedobjects.application.value.Date.setClock(systemClock);
+  nakedObjects=createRepository();
+  nakedObjects.setConfiguration(configuration);
+  AboutNakedObjects.logVersion();
+  SplashWindow splash=null;
+  boolean noSplash=configuration.getBoolean("nosplash",false);
+  if (!noSplash) {
+    splash=new SplashWindow();
+  }
+  try {
+    setUpLocale();
+    NakedObjectPersistor objectManager=createPersistor();
+    nakedObjects.setObjectPersistor(objectManager);
+    NakedObjectSpecificationLoader specificationLoader=createReflector();
+    nakedObjects.setSpecificationLoader(specificationLoader);
+    NakedObjectLoader objectLoader=createLoader();
+    nakedObjects.setObjectLoader(objectLoader);
+    nakedObjects.setSession(new SimpleSession());
+    nakedObjects.init();
+    setupFixtures();
+    displayUserInterface();
+  }
+ catch (  Exception e) {
+    LOG.error("startup problem",e);
+  }
+ finally {
+    if (splash != null) {
+      splash.removeAfterDelay(6);
+    }
+  }
+}
