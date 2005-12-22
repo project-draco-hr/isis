@@ -2,10 +2,7 @@
   Assert.assertNotNull(object);
   ResolveState resolveState=object.getResolveState();
   boolean isTransient=resolveState.isTransient();
-  if (!isTransient && (resolveState.isSerializing() || resolveState.isGhost() || !recursePersistentObjects)) {
-    return createReference(object);
-  }
-  if (!isTransient && depth <= 0) {
+  if (!isTransient && (resolveState.isSerializing() || resolveState.isGhost() || graphDepth <= 0)) {
     return createReference(object);
   }
   if (isTransient && knownTransients.containsKey(object)) {
@@ -30,14 +27,14 @@
       fieldContent[i]=createValueData(field);
     }
  else     if (fields[i].isCollection()) {
-      fieldContent[i]=createCollection((NakedCollection)field,recursePersistentObjects,depth - 1,knownTransients);
+      fieldContent[i]=createCollection((NakedCollection)field,graphDepth - 1,knownTransients);
     }
  else     if (fields[i].isObject()) {
       if (field == null) {
         fieldContent[i]=!withCompleteData ? null : factory.createNullData(fields[i].getSpecification().getFullName());
       }
  else {
-        fieldContent[i]=serializeObject2((NakedObject)field,recursePersistentObjects,depth - 1,knownTransients);
+        fieldContent[i]=serializeObject2((NakedObject)field,graphDepth - 1,knownTransients);
       }
     }
  else {
