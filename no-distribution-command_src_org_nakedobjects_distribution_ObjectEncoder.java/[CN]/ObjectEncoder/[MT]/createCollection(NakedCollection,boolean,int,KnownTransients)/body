@@ -2,14 +2,14 @@
   Oid oid=collection.getOid();
   String type=collection.getSpecification().getFullName();
   boolean hasAllElements=collection.getResolveState().isTransient() || collection.getResolveState().isResolved();
-  ObjectData[] elements;
+  ReferenceData[] elements;
   if (hasAllElements) {
     Enumeration e=collection.elements();
-    elements=new ObjectData[collection.size()];
+    elements=new ReferenceData[collection.size()];
     int i=0;
     while (e.hasMoreElements()) {
       NakedObject element=(NakedObject)e.nextElement();
-      elements[i++]=createObjectData(element,recursePersistentObjects,graphDepth,knownObjects);
+      elements[i++]=serializeObject(element,recursePersistentObjects,graphDepth,knownObjects);
     }
   }
  else {

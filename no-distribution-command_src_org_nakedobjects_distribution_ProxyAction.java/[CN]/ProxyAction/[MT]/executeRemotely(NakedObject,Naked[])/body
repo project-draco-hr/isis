@@ -1,7 +1,7 @@
 {
   Data[] parameterObjectData=parameterValues(parameters);
   LOG.debug(debug("execute remotely",getIdentifier(),target,parameters));
-  ObjectData targetReference=encoder.createActionTarget(target);
+  ReferenceData targetReference=encoder.createActionTarget(target);
   ServerActionResultData result;
   try {
     String name=getIdentifier().getClassName() + "#" + getIdentifier().getName();
@@ -11,10 +11,10 @@
     LOG.error("remote exception: " + e.getMessage(),e);
     throw e;
   }
-  madePersistent(target,result.getPersistedTarget());
+  ObjectDecoder.madePersistent(target,result.getPersistedTarget());
   for (int i=0; i < parameters.length; i++) {
     if (getParameterTypes()[i].isObject()) {
-      madePersistent((NakedObject)parameters[i],result.getPersistedParameters()[i]);
+      ObjectDecoder.madePersistent((NakedObject)parameters[i],result.getPersistedParameters()[i]);
     }
   }
   Data returned=result.getReturn();

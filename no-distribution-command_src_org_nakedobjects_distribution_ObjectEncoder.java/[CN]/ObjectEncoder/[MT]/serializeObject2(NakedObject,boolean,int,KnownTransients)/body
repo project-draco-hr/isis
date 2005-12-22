@@ -1,0 +1,55 @@
+{
+  Assert.assertNotNull(object);
+  ResolveState resolveState=object.getResolveState();
+  boolean isTransient=resolveState.isTransient();
+  if (!isTransient && (resolveState.isSerializing() || resolveState.isGhost() || !recursePersistentObjects)) {
+    return createReference(object);
+  }
+  if (!isTransient && depth <= 0) {
+    return createReference(object);
+  }
+  if (isTransient && knownTransients.containsKey(object)) {
+    return (ObjectData)knownTransients.get(object);
+  }
+  boolean withCompleteData=resolveState == ResolveState.TRANSIENT || resolveState == ResolveState.RESOLVED;
+  String type=object.getSpecification().getFullName();
+  Oid oid=object.getOid();
+  ObjectData data=factory.createObjectData(oid,type,withCompleteData,object.getVersion());
+  if (isTransient) {
+    knownTransients.put(object,data);
+  }
+{
+    if (depth <= 0) {
+      return data;
+    }
+  }
+  NakedObjectField[] fields=getFields(object.getSpecification());
+  Data[] fieldContent=new Data[fields.length];
+  NakedObjects.getObjectLoader().start(object,object.getResolveState().serializeFrom());
+  for (int i=0; i < fields.length; i++) {
+    Naked field=object.getField(fields[i]);
+    if (fields[i].isDerived()) {
+      continue;
+    }
+    if (fields[i].isValue()) {
+      fieldContent[i]=createValueData(field);
+    }
+ else     if (fields[i].isCollection()) {
+      fieldContent[i]=createCollection((NakedCollection)field,recursePersistentObjects,depth - 1,knownTransients);
+    }
+ else     if (fields[i].isObject()) {
+      if (field == null) {
+        fieldContent[i]=!withCompleteData ? null : factory.createNullData(fields[i].getSpecification().getFullName());
+      }
+ else {
+        fieldContent[i]=serializeObject2((NakedObject)field,recursePersistentObjects,depth - 1,knownTransients);
+      }
+    }
+ else {
+      throw new UnknownTypeException(fields[i]);
+    }
+  }
+  NakedObjects.getObjectLoader().end(object);
+  data.setFieldContent(fieldContent);
+  return data;
+}

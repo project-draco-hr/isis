@@ -21,10 +21,10 @@
       ObjectData[] elements=new ObjectData[f.getElements().length];
       NakedCollection coll=(NakedCollection)object.getField(fields[i]);
       for (int j=0; j < f.getElements().length; j++) {
-        ObjectData element=f.getElements()[j];
-        if (element != null && element.getOid() == null) {
+        ReferenceData element=f.getElements()[j];
+        if (element instanceof ObjectData) {
           NakedObject el=coll.elementAt(j);
-          elements[j]=createMadePersistentGraph(element,el,updateNotifier);
+          elements[j]=createMadePersistentGraph((ObjectData)element,el,updateNotifier);
         }
       }
       fieldContent[i]=factory.createCollectionData(coll.getOid(),f.getType(),elements,f.hasAllElements(),coll.getVersion());

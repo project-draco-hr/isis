@@ -4,12 +4,12 @@
   }
   if (object.getSpecification().isObject()) {
     NakedObject nakedObject=(NakedObject)object;
-    return createObjectData(nakedObject,ROOT_PERSISTENT_OBJECT_ONLY,persistentGraphDepth,new KnownTransients());
+    return serializeObject(nakedObject,ROOT_PERSISTENT_OBJECT_ONLY,persistentGraphDepth,new KnownTransients());
   }
  else   if (object.getSpecification().isValue()) {
     return createValueData(object);
   }
  else {
-    throw new IllegalArgumentException("Expected a naked object or a naked value, but got " + object);
+    throw new UnknownTypeException(object.getSpecification());
   }
 }

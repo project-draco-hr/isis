@@ -1,24 +1,19 @@
 {
   rootObject.setupResolveState(ResolveState.TRANSIENT);
   field1.setupResolveState(ResolveState.TRANSIENT);
-  Data[] results=encoder.createParameters(new NakedObjectSpecification[]{new DummyNakedObjectSpecification()},new Naked[]{rootObject});
-  ObjectData rootData=(ObjectData)results[0];
   assertEquals(ResolveState.TRANSIENT,rootObject.getResolveState());
-  assertEquals(null,rootData.getOid());
-  assertEquals(rootSpecification.getFullName(),rootData.getType());
-  assertEquals(new DummyVersion(11),rootData.getVersion());
-  assertEquals(4,rootData.getFieldContent().length);
+  field1_1.setupOid(new DummyOid(123));
+  element1.setupOid(new DummyOid(125));
+  element2.setupOid(new DummyOid(127));
+  Data[] data=encoder.createParameters(new NakedObjectSpecification[]{new DummyNakedObjectSpecification()},new Naked[]{rootObject});
+  ObjectData rootData=(ObjectData)data[0];
+  assertObjectData(rootObject,RESOLVED,rootData);
+  assertHasFields(4,rootData);
   ObjectData referencedFieldData=(ObjectData)rootData.getFieldContent()[0];
-  assertEquals(1,referencedFieldData.getFieldContent().length);
-  assertEquals(new DummyVersion(12),referencedFieldData.getVersion());
-  assertEquals(field1Specification.getFullName(),referencedFieldData.getType());
-  ObjectData referencedFieldData2=(ObjectData)referencedFieldData.getFieldContent()[0];
-  assertEquals(null,referencedFieldData2.getFieldContent());
-  assertEquals(new DummyVersion(13),referencedFieldData2.getVersion());
-  assertEquals(field1Specification.getFullName(),referencedFieldData.getType());
-  ValueData valueData=(ValueData)rootData.getFieldContent()[1];
-  assertEquals(valueSpecification.getFullName(),valueData.getType());
-  assertEquals(value,valueData.getValue());
+  assertObjectData(field1,RESOLVED,referencedFieldData);
+  assertHasFields(1,referencedFieldData);
+  assertReferenceData(field1_1,referencedFieldData.getFieldContent()[0]);
+  assertValueData(field2,rootData.getFieldContent()[1]);
   NullData emptyFieldData=(NullData)rootData.getFieldContent()[3];
-  assertNotNull(emptyFieldData);
+  assertNullData(emptyFieldData);
 }

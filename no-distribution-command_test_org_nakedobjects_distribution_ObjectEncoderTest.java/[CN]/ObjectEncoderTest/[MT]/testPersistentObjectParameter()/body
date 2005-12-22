@@ -2,11 +2,8 @@
   assertEquals(ResolveState.RESOLVED,rootObject.getResolveState());
   DummyOid rootOid=new DummyOid(1);
   rootObject.setupOid(rootOid);
-  Data[] results=encoder.createParameters(new NakedObjectSpecification[]{new DummyNakedObjectSpecification()},new Naked[]{rootObject});
-  ObjectData rootData=(ObjectData)results[0];
-  assertEquals(ResolveState.RESOLVED,rootObject.getResolveState());
-  assertEquals(rootOid,rootData.getOid());
-  assertEquals(rootSpecification.getFullName(),rootData.getType());
-  assertEquals(new DummyVersion(11),rootData.getVersion());
-  assertNull(rootData.getFieldContent());
+  Data[] results=encoder.createParameters(new NakedObjectSpecification[]{new DummyNakedObjectSpecification(),new DummyNakedObjectSpecification()},new Naked[]{rootObject,null});
+  assertEquals(2,results.length);
+  assertReferenceData(rootObject,results[0]);
+  assertNullData(results[1]);
 }
