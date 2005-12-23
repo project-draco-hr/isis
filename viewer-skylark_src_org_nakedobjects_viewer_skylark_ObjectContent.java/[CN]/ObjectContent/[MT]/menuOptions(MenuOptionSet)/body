@@ -33,6 +33,25 @@
       return AbstractConsent.allow(object != null);
     }
     public void execute(    Workspace workspace,    View view,    Location at){
+      NakedObject original=getObject();
+      NakedObjectSpecification spec=original.getSpecification();
+      NakedObject clone=NakedObjects.getObjectPersistor().createTransientInstance(spec);
+      NakedObjectField[] fields=spec.getFields();
+      for (int i=0; i < fields.length; i++) {
+        Naked fld=original.getField(fields[i]);
+        if (fields[i].isObject()) {
+          clone.setAssociation(fields[i],(NakedObject)fld);
+        }
+ else         if (fields[i].isValue()) {
+          clone.setValue((OneToOneAssociation)fields[i],fld.getObject());
+        }
+ else         if (fields[i].isCollection()) {
+        }
+      }
+      Content content=Skylark.getContentFactory().createRootContent(clone);
+      View cloneView=Skylark.getViewFactory().createWindow(content);
+      cloneView.setLocation(at);
+      workspace.addView(cloneView);
     }
   }
 );

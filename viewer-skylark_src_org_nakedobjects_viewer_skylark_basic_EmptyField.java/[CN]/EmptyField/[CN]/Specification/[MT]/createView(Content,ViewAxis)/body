@@ -1,7 +1,10 @@
 {
   EmptyField emptyField=new EmptyField(content,this,axis);
   NakedObjectSpecification contentType=content.getSpecification();
-  if (contentType.isLookup()) {
+  if (content instanceof ObjectParameter && ((ObjectParameter)content).getOptions().length > 0) {
+    return new ObjectBorder(new OptionBorder(emptyField));
+  }
+ else   if (contentType.isLookup()) {
     return new ObjectBorder(new LookupBorder(emptyField));
   }
  else {
