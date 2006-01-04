@@ -1,11 +1,20 @@
 {
+  saveCurrentFieldEntry();
   Location at=click.getLocation();
   boolean forView=rootView.viewAreaType(new Location(click.getLocation())) == ViewAreaType.VIEW;
   forView=click.isAlt() ^ forView;
   boolean includeExploration=runningAsExploration && (click.isCtrl() || showExplorationMenuByDefault);
   boolean includeDebug=click.isShift() && click.isCtrl();
+  DefaultPopupMenu popup=new DefaultPopupMenu();
   popup.init(over,rootView,at,forView,includeExploration,includeDebug);
   popupStatus(over,forView,includeExploration,includeDebug);
-  setOverlayView(popup);
-  makeFocus(popup);
+  DefaultPopupMenu overlay=popup;
+  Size size=overlay.getRequiredSize();
+  overlay.setSize(size);
+  Location location=new Location(at);
+  location.move(-14,-10);
+  overlay.setLocation(location);
+  overlay.limitBoundsWithin(getOverlayBounds());
+  setOverlayView(overlay);
+  makeFocus(overlay);
 }
