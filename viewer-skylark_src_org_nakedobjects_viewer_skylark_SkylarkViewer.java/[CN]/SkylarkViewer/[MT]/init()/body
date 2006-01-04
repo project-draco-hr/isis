@@ -8,10 +8,10 @@
   if (applicationContext == null) {
     throw new NullPointerException("No application context set for " + this);
   }
-  if (bounds == null) {
-    bounds=new Bounds(10,10,800,600);
-  }
   frame=new ViewerFrame();
+  if (bounds == null) {
+    bounds=calculateBounds(frame.getToolkit().getScreenSize());
+  }
   frame.setBounds(bounds.getX(),bounds.getY(),bounds.getWidth(),bounds.getHeight());
   viewer=new Viewer();
   viewer.setRenderingArea(frame);

@@ -1,0 +1,30 @@
+{
+  super(owner,"Naked Objects",true);
+  setLayout(new GridLayout(2,3,10,10));
+  add(new Label("Exit Naked Objects?",Label.LEFT));
+  add(new Panel());
+  add(new Panel());
+  add(new Panel());
+  add(quit=new Button(QUIT_LABEL));
+  quit.addActionListener(this);
+  quit.addKeyListener(this);
+  add(cancel=new Button(CANCEL_LABEL));
+  cancel.addActionListener(this);
+  cancel.addKeyListener(this);
+  pack();
+  int width=getSize().width;
+  int height=getSize().height;
+  Dimension screen=owner.getSize();
+  Point point=owner.getLocation();
+  int x=point.x + (screen.width / 2) - (width / 2);
+  int y=point.y + (screen.height / 2) - (height / 2);
+  setLocation(x,y);
+  show();
+  quit.requestFocus();
+  addWindowListener(new WindowAdapter(){
+    public void windowClosing(    WindowEvent e){
+      dispose();
+    }
+  }
+);
+}
