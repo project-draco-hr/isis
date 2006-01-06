@@ -1,31 +1,33 @@
 {
-  Dimension size=getSize();
-  g.setColor(Color.gray);
-  g.drawRect(0,20,size.width - 1,size.height - 21);
-  FontMetrics fm;
-  fm=g.getFontMetrics();
-  int offset=0;
-  int maxWidth=size.width / info.length - 1;
-  for (int i=0; i < info.length; i++) {
-    String title=info[i].getDebugTitle();
-    title=title == null ? info[i].getClass().getName() : title;
-    int width=Math.min(maxWidth,fm.stringWidth(title) + 20);
-    tabs[i]=new Rectangle(offset,0,width,20);
+  if (info != null) {
+    Dimension size=getSize();
     g.setColor(Color.gray);
-    g.drawRect(offset + 0,0,width,20);
-    if (i == panel) {
-      g.setColor(Color.white);
-      g.fillRect(offset + 1,1,width - 1,20);
-      g.setColor(Color.black);
-    }
- else {
-      g.setColor(Color.lightGray);
-      g.fillRect(offset + 1,1,width - 1,20 - 1);
+    g.drawRect(0,20,size.width - 1,size.height - 21);
+    FontMetrics fm;
+    fm=g.getFontMetrics();
+    int offset=0;
+    int maxWidth=size.width / info.length - 1;
+    for (int i=0; i < info.length; i++) {
+      String title=info[i].getDebugTitle();
+      title=title == null ? info[i].getClass().getName() : title;
+      int width=Math.min(maxWidth,fm.stringWidth(title) + 20);
+      tabs[i]=new Rectangle(offset,0,width,20);
       g.setColor(Color.gray);
+      g.drawRect(offset + 0,0,width,20);
+      if (i == panel) {
+        g.setColor(Color.white);
+        g.fillRect(offset + 1,1,width - 1,20);
+        g.setColor(Color.black);
+      }
+ else {
+        g.setColor(Color.lightGray);
+        g.fillRect(offset + 1,1,width - 1,20 - 1);
+        g.setColor(Color.gray);
+      }
+      g.drawString(title,offset + 9,20 - 5);
+      offset+=width;
     }
-    g.drawString(title,offset + 9,20 - 5);
-    offset+=width;
+    g.setColor(Color.white);
+    g.fillRect(offset + 1,1,size.width - offset,20 - 1);
   }
-  g.setColor(Color.white);
-  g.fillRect(offset + 1,1,size.width - offset,20 - 1);
 }
