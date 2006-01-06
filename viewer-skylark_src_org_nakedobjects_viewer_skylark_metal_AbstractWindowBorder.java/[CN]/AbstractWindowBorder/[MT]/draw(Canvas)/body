@@ -5,15 +5,15 @@
   int height=s.getHeight();
   Bounds bounds=getBounds();
   canvas.drawSolidRectangle(3,3,bounds.getWidth() - 6,bounds.getHeight() - 6,Style.background(getSpecification()));
-  canvas.drawRectangle(1,0,width - 3,height - 1,Style.SECONDARY1);
-  canvas.drawRectangle(0,1,width - 1,height - 3,Style.SECONDARY1);
+  canvas.drawRectangle(1,0,width - 2,height,Style.SECONDARY1);
+  canvas.drawRectangle(0,1,width,height - 2,Style.SECONDARY1);
   for (int i=2; i < left; i++) {
-    canvas.drawRectangle(i,i,width - 2 * i - 1,height - 2 * i - 1,Style.SECONDARY1);
+    canvas.drawRectangle(i,i,width - 2 * i,height - 2 * i,Style.SECONDARY1);
   }
   ViewState state=getState();
   if (state.isActive()) {
     int i=left;
-    canvas.drawRectangle(i,top,width - 2 * i - 1,height - 2 * i - 1 - top,Style.ACTIVE);
+    canvas.drawRectangle(i,top,width - 2 * i,height - 2 * i - top,Style.ACTIVE);
   }
   canvas.drawLine(2,15,2,height - 15,Style.BLACK);
   canvas.drawLine(3,16,3,height - 14,Style.PRIMARY1);
@@ -24,7 +24,8 @@
   canvas.drawLine(15,height - 3,width - 15,height - 3,Style.BLACK);
   canvas.drawLine(16,height - 2,width - 14,height - 2,Style.PRIMARY1);
   canvas.drawSolidRectangle(left,LINE_THICKNESS,width - left - right,titlebarHeight,getState().isRootViewIdentified() ? Style.PRIMARY2 : Style.SECONDARY2);
-  canvas.drawLine(x,top - 1,width - right - 1,top - 1,Style.SECONDARY1);
+  int y=LINE_THICKNESS + titlebarHeight - 1;
+  canvas.drawLine(x,y,width - right - 1,y,Style.SECONDARY1);
   canvas.drawText(title(),x + HPADDING,baseline,Style.BLACK,TITLE_STYLE);
   for (int i=0; controls != null && i < controls.length; i++) {
     Canvas controlCanvas=canvas.createSubcanvas(controls[i].getBounds());

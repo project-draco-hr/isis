@@ -10,39 +10,24 @@
       spy.setLocationInViewer(location);
       View overView=viewer.identifyView(new Location(location),true);
       spy.setOver(overView);
+      spy.addAction("moved " + location);
       if (overView != null) {
-        if (previouslyIdentifiedView == null) {
-          previouslyIdentifiedView=overView;
-        }
- else {
-          if (overView != previouslyIdentifiedView) {
-            if (overView == previouslyIdentifiedView) {
-              spy.addAction("moved into subview from " + previouslyIdentifiedView);
-              previouslyIdentifiedView.enteredSubview();
+        if (overView != identifiedView) {
+          if (identifiedView != null) {
+            if (!isBusy(identifiedView)) {
             }
- else {
-              spy.addAction("exited " + previouslyIdentifiedView);
-              if (!isBusy(previouslyIdentifiedView)) {
-              }
-              previouslyIdentifiedView.exited();
-            }
-            View previouslyIdentified=previouslyIdentifiedView;
-            previouslyIdentifiedView=overView;
-            if (overView != null) {
-              if (overView == previouslyIdentified) {
-                spy.addAction("moved back to from " + previouslyIdentified);
-                overView.exitedSubview();
-              }
- else {
-                spy.addAction("entered " + overView);
-                if (isBusy(overView)) {
-                }
-                overView.entered();
-              }
-            }
-            redraw();
+            spy.addAction("exited " + identifiedView);
+            identifiedView.exited();
           }
+          if (overView != null) {
+            spy.addAction("entered " + overView);
+            if (isBusy(overView)) {
+            }
+            overView.entered();
+          }
+          redraw();
         }
+        identifiedView=overView;
         spy.addTrace("--> mouse moved");
         viewer.mouseMoved(location);
         spy.addTrace(overView," mouse location",location);

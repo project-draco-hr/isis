@@ -1,10 +1,10 @@
 {
-  super.draw(canvas);
   int width=getSize().getWidth();
   int height=getSize().getHeight();
-  canvas.drawSolidRectangle(0,0,width - 1,height - 1,backgroundColor);
-  canvas.draw3DRectangle(0,0,width - 1,height - 1,true);
-  int baseLine=style().getAscent() + VPADDING;
+  canvas.drawSolidRectangle(0,0,width,height,backgroundColor);
+  canvas.draw3DRectangle(0,0,width,height,backgroundColor,true);
+  int itemHeight=style().getLineHeight() + VPADDING;
+  int baseLine=itemHeight / 2 + style().getAscent() / 2 + getPadding().getTop();
   int left=getPadding().getLeft();
   for (int i=0; i < items.length; i++) {
     if (items[i].isBlank) {
@@ -18,7 +18,9 @@
         color=disabledColor();
       }
  else       if (getOption() == i) {
-        canvas.drawSolidRectangle(2,baseLine - style().getAscent(),width - 4,style().getTextHeight() + 2,backgroundColor.darker());
+        int top=getPadding().getTop() + i * itemHeight;
+        int depth=style().getLineHeight() + 2;
+        canvas.drawSolidRectangle(2,top,width - 4,depth,backgroundColor.darker());
         color=reversedColor();
       }
  else {
@@ -26,6 +28,6 @@
       }
       canvas.drawText(items[i].name,left,baseLine,color,style());
     }
-    baseLine+=style().getTextHeight() + VPADDING;
+    baseLine+=itemHeight;
   }
 }

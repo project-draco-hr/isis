@@ -1,13 +1,12 @@
 {
   super(view);
-  int buttonHeight=VPADDING + Style.NORMAL.getTextHeight() + VPADDING;
   buttons=new Button[actions.length];
   for (int i=0; i < actions.length; i++) {
     ButtonAction action=actions[i];
+    buttons[i]=new Button(action,view);
     if (action.isDefault()) {
       defaultAction=action;
     }
-    buttons[i]=new Button(action,buttonHeight,view);
   }
-  bottom=VPADDING + 2 + buttonHeight;
+  bottom=1 + VPADDING + buttons[0].getRequiredSize().getHeight()+ VPADDING;
 }
