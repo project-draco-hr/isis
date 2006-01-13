@@ -1,0 +1,21 @@
+{
+  if (click.getLocation().getY() <= height) {
+    TableAxis axis=((TableAxis)getViewAxis());
+    int column=axis.getColumnAt(click.getLocation().getX()) - 1;
+    if (column == -2) {
+      super.firstClick(click);
+    }
+ else     if (column == -1) {
+      ((CollectionContent)getContent()).setOrderByElement();
+      invalidateContent();
+    }
+ else {
+      NakedObjectField field=axis.getFieldForColumn(column);
+      ((CollectionContent)getContent()).setOrderByField(field);
+      invalidateContent();
+    }
+  }
+ else {
+    super.firstClick(click);
+  }
+}
