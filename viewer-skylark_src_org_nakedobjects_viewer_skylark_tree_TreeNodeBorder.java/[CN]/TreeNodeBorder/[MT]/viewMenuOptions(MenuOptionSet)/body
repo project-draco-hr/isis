@@ -1,7 +1,7 @@
 {
   super.viewMenuOptions(options);
   TreeDisplayRules.menuOptions(options);
-  options.add(MenuOptionSet.VIEW,new MenuOption("Select node"){
+  options.add(MenuOptionSet.USER,new MenuOption("Select node"){
     public void execute(    Workspace workspace,    View view,    Location at){
       selectNode();
     }
@@ -10,4 +10,14 @@
     }
   }
 );
+  Naked object=getView().getContent().getNaked();
+  ResolveState resolveState=((NakedReference)object).getResolveState();
+  if (object instanceof NakedReference && (resolveState.isGhost() || resolveState.isPartlyResolved())) {
+    options.add(MenuOptionSet.USER,new MenuOption("Load object"){
+      public void execute(      Workspace workspace,      View view,      Location at){
+        resolveContent();
+      }
+    }
+);
+  }
 }
