@@ -5,7 +5,12 @@
     return null;
   }
  else   if (content instanceof ValueContent) {
-    cellSpec=factory.getValueFieldSpecification((ValueContent)content);
+    if (content.getNaked() instanceof MultilineStringValue) {
+      cellSpec=new TextFieldSpecification();
+    }
+ else {
+      cellSpec=factory.getValueFieldSpecification((ValueContent)content);
+    }
   }
  else   if (content instanceof ObjectContent) {
     cellSpec=factory.getIconizedSubViewSpecification((ObjectContent)content);
