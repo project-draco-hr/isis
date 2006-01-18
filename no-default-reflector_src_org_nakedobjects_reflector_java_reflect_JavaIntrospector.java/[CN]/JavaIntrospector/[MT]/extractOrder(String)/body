@@ -1,0 +1,24 @@
+{
+  Set set=new Set();
+  StringTokenizer st=new StringTokenizer(s,",");
+  while (st.hasMoreTokens()) {
+    String element=st.nextToken().trim();
+    boolean ends;
+    if (ends=element.endsWith(")")) {
+      element=element.substring(0,element.length() - 1).trim();
+    }
+    if (element.startsWith("(")) {
+      int colon=element.indexOf(':');
+      String groupName=element.substring(1,colon).trim();
+      element=element.substring(colon + 1).trim();
+      set=new Set(set,groupName,element);
+    }
+ else {
+      set.add(element);
+    }
+    if (ends) {
+      set=set.getParent();
+    }
+  }
+  return set;
+}
