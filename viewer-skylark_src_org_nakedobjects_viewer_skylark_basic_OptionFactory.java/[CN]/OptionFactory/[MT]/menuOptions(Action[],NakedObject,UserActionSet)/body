@@ -1,0 +1,18 @@
+{
+  for (int i=0; i < actions.length; i++) {
+    UserAction option=null;
+    if (actions[i].getActions().length > 0) {
+      option=new UserActionSet(actions[i].getName(),menuOptionSet);
+      menuOptions(actions[i].getActions(),object,(UserActionSet)option);
+    }
+ else     if (actions[i].getParameterTypes().length == 0) {
+      option=ImmediateObjectOption.createOption(actions[i],object);
+    }
+ else {
+      option=DialogedObjectOption.createOption(actions[i],object);
+    }
+    if (option != null) {
+      menuOptionSet.add(option);
+    }
+  }
+}

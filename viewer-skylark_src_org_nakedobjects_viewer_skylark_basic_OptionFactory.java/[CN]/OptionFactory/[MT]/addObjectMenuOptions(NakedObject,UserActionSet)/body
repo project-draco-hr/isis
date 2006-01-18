@@ -1,0 +1,22 @@
+{
+  if (object != null) {
+    if (object.getObject() instanceof FastFinder) {
+      options.add(new FindFirstOption());
+      options.add(new FindAllOption());
+    }
+ else {
+      Action[] actions1=object.getSpecification().getObjectActions(Action.USER);
+      Action[] actions2=object.getSpecification().getObjectActions(Action.EXPLORATION);
+      Action[] actions3=object.getSpecification().getObjectActions(Action.DEBUG);
+      Action[] actions=new Action[actions1.length + actions2.length + actions3.length];
+      System.arraycopy(actions1,0,actions,0,actions1.length);
+      System.arraycopy(actions2,0,actions,actions1.length,actions2.length);
+      System.arraycopy(actions3,0,actions,actions1.length + actions2.length,actions3.length);
+      menuOptions(actions,object,options);
+    }
+    boolean isPersistent=object.getOid() != null;
+    if (!(object.getObject() instanceof NakedClass) && !(object.getObject() instanceof InstanceCollectionVector) && isPersistent) {
+      options.add(new DestroyObjectOption());
+    }
+  }
+}

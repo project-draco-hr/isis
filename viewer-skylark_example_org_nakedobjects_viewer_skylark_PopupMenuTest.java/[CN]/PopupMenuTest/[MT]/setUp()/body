@@ -32,6 +32,14 @@
   }
 );
   popup=new MockPopup();
-  view=new MockView(null);
-  popup.init(view,view,new Location(0,0),true,false,false);
+  view=new PopupTargetView(null);
+  UserActionSet options=new UserActionSet(false,false,UserAction.USER);
+  view.action1=new MockUserAction("option 1",UserAction.DEBUG);
+  options.add(view.action1);
+  view.action3=new MockUserAction("option 3",UserAction.USER);
+  options.add(view.action3);
+  view.action4=new MockUserAction("option 4",UserAction.USER);
+  options.add(view.action4);
+  popup.init(view,new UserAction[]{view.action1,view.action3,view.action4},null);
+  popup.layout();
 }

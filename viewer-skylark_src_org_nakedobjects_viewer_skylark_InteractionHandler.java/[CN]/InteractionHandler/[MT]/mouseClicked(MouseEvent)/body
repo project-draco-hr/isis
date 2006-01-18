@@ -5,11 +5,9 @@
   try {
     Click click=new Click(identifiedView,downAt,me.getModifiers());
     spy.addAction("Mouse clicked " + click.getLocation());
-    if (click.button3() && viewer.getOverlayView() == null) {
-      if (identifiedView != null) {
-        spy.addAction(" popup " + downAt + " over "+ identifiedView);
-        viewer.popupMenu(identifiedView,click);
-      }
+    if (click.button3() && viewer.isOverlayAvailable() && identifiedView != null) {
+      spy.addAction(" popup " + downAt + " over "+ identifiedView);
+      viewer.popupMenu(identifiedView,click);
     }
  else {
 switch (me.getClickCount()) {

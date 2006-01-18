@@ -1,6 +1,6 @@
 {
-  int width=getSize().getWidth();
-  int height=getSize().getHeight();
+  int width=coreSize.getWidth();
+  int height=coreSize.getHeight();
   canvas.drawSolidRectangle(0,0,width,height,backgroundColor);
   canvas.draw3DRectangle(0,0,width,height,backgroundColor,true);
   int itemHeight=style().getLineHeight() + VPADDING;
@@ -27,7 +27,17 @@
         color=normalColor();
       }
       canvas.drawText(items[i].name,left,baseLine,color,style());
+      if (items[i].action instanceof UserActionSet) {
+        Shape arrow;
+        arrow=new Shape(0,0);
+        arrow.extendsLine(4,4);
+        arrow.extendsLine(-4,4);
+        canvas.drawSolidShape(arrow,width - 10,baseLine - 8,color);
+      }
     }
     baseLine+=itemHeight;
   }
+  Canvas submenuCanvas=canvas.createSubcanvas(submenu.getBounds());
+  LOG.debug(submenu.getBounds());
+  submenu.draw(submenuCanvas);
 }

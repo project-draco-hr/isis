@@ -1,17 +1,24 @@
 {
   int option=getOption();
-  Workspace workspace=getWorkspace();
   Item item=items[option];
-  Location location=new Location(getAbsoluteLocation());
-  location.subtract(workspace.getView().getAbsoluteLocation());
-  Padding padding=workspace.getView().getPadding();
-  location.move(-padding.getLeft(),-padding.getTop());
-  location.move(30,0);
-  dispose();
-  if (!item.isBlank && item.action != null && item.action.disabled(forView).isAllowed()) {
-    showStatus("Executing " + item);
-    LOG.debug("execute " + item.name + " on "+ forView+ " in "+ workspace);
-    item.action.execute(workspace,forView,location);
-    showStatus("");
+  if (item.isBlank || item.action == null || item.action.disabled(forView).isVetoed()) {
+    return;
+  }
+ else   if (item.action instanceof UserActionSet) {
+  }
+ else {
+    Workspace workspace=getWorkspace();
+    Location location=new Location(getAbsoluteLocation());
+    location.subtract(workspace.getView().getAbsoluteLocation());
+    Padding padding=workspace.getView().getPadding();
+    location.move(-padding.getLeft(),-padding.getTop());
+    location.move(30,0);
+    dispose();
+    if (!item.isBlank && item.action != null && item.action.disabled(forView).isAllowed()) {
+      showStatus("Executing " + item);
+      LOG.debug("execute " + item.name + " on "+ forView+ " in "+ workspace);
+      item.action.execute(workspace,forView,location);
+      showStatus("");
+    }
   }
 }

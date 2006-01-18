@@ -1,10 +1,28 @@
 {
-  int option=(at.getY() - getPadding().getTop()) / (style().getLineHeight() + VPADDING);
-  option=Math.max(option,0);
-  option=Math.min(option,items.length - 1);
-  if (option >= 0 && optionIdentified != option) {
-    setOption(option);
-    getViewManager().forceRepaint();
-    markDamaged();
+  if (coreSize.contains(at)) {
+    int option=(at.getY() - getPadding().getTop()) / (style().getLineHeight() + VPADDING);
+    option=Math.max(option,0);
+    option=Math.min(option,items.length - 1);
+    if (option >= 0 && optionIdentified != option) {
+      setOption(option);
+      Item item=items[option];
+      if (item.action instanceof UserActionSet) {
+        int itemHeight=style().getLineHeight() + VPADDING;
+        Location menuLocation=new Location(coreSize.getWidth() - 8,itemHeight * option);
+        submenu=new DefaultPopupMenu();
+        ((DefaultPopupMenu)submenu).init(forView,((UserActionSet)item.action).getMenuOptions(),backgroundColor);
+        submenu.setLocation(menuLocation);
+        invalidateLayout();
+      }
+ else {
+        submenu=new NullView();
+      }
+      getViewManager().forceRepaint();
+      markDamaged();
+    }
+  }
+ else {
+    at.subtract(submenu.getLocation());
+    submenu.mouseMoved(at);
   }
 }
