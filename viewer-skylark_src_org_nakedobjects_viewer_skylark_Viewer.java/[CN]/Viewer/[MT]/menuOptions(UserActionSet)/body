@@ -1,0 +1,75 @@
+{
+  options.add(new AbstractUserAction("Quit"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      Viewer.this.close();
+    }
+  }
+);
+  options.add(loggingOption("Off",Level.OFF));
+  options.add(loggingOption("Error",Level.ERROR));
+  options.add(loggingOption("Warn",Level.WARN));
+  options.add(loggingOption("Info",Level.INFO));
+  options.add(loggingOption("Debug",Level.DEBUG));
+  String showExplorationMenu="Always show exploration menu " + (showExplorationMenuByDefault ? "off" : "on");
+  options.add(new AbstractUserAction(showExplorationMenu,UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      showExplorationMenuByDefault=!showExplorationMenuByDefault;
+      view.markDamaged();
+    }
+  }
+);
+  String repaint="Show painting area  " + (showRepaintArea ? "off" : "on");
+  options.add(new AbstractUserAction(repaint,UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      showRepaintArea=!showRepaintArea;
+      view.markDamaged();
+    }
+  }
+);
+  String debug="Debug graphics " + (AbstractView.debug ? "off" : "on");
+  options.add(new AbstractUserAction(debug,UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      AbstractView.debug=!AbstractView.debug;
+      view.markDamaged();
+    }
+  }
+);
+  String action=this.isShowingMouseSpy() ? "Hide" : "Show";
+  options.add(new AbstractUserAction(action + " mouse spy",UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      Viewer.this.setShowMouseSpy(!Viewer.this.isShowingMouseSpy());
+    }
+  }
+);
+  options.add(new AbstractUserAction("Restart object loader/persistor",UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      NakedObjects.getObjectPersistor().reset();
+      NakedObjects.getObjectLoader().reset();
+    }
+  }
+);
+  options.add(new AbstractUserAction("Debug system...",UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      InfoDebugFrame f=new InfoDebugFrame();
+      f.setInfo(new DebugInfo[]{NakedObjects.debug(),NakedObjects.getObjectPersistor(),NakedObjects.getObjectLoader(),NakedObjects.getConfiguration(),NakedObjects.getSpecificationLoader(),updateNotifier});
+      f.show(at.x + 50,workspace.getBounds().y + 6);
+    }
+  }
+);
+  options.add(new AbstractUserAction("Debug viewer...",UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      InfoDebugFrame f=new InfoDebugFrame();
+      f.setInfo(new DebugInfo[]{Skylark.getViewFactory(),updateNotifier});
+      f.show(at.x + 50,workspace.getBounds().y + 6);
+    }
+  }
+);
+  options.add(new AbstractUserAction("Debug overlay...",UserAction.DEBUG){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      DebugFrame f=new OverlayDebugFrame(Viewer.this);
+      f.show(at.x + 50,workspace.getBounds().y + 6);
+    }
+  }
+);
+  options.add(new DebugDumpSnapshotOption());
+}

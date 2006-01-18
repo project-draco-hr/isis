@@ -1,0 +1,24 @@
+{
+  super.draw(canvas);
+  int left=0;
+  int top=0;
+  int width=getSize().getWidth();
+  int height=getSize().getHeight();
+  canvas.drawSolidRectangle(left,top,width - 1,height - 1,Style.WHITE);
+  canvas.drawRectangle(left,top,width - 1,height - 1,Style.BLACK);
+  left=20;
+  top+=Style.TITLE.getTextHeight();
+  String message=((MessageContent)getContent()).getMessage();
+  String heading=((MessageContent)getContent()).title();
+  String detail=((MessageContent)getContent()).getDetail();
+  canvas.drawText(heading,left,top,Color.RED,Style.TITLE);
+  top+=30;
+  canvas.drawText(message,left,top,Color.RED,Style.NORMAL);
+  top+=30;
+  StringTokenizer st=new StringTokenizer(detail,"\n\r");
+  while (st.hasMoreTokens()) {
+    String line=st.nextToken();
+    canvas.drawText(line,left + (line.startsWith("\t") ? 20 : 00),top,Color.BLACK,Style.NORMAL);
+    top+=Style.NORMAL.getTextHeight();
+  }
+}

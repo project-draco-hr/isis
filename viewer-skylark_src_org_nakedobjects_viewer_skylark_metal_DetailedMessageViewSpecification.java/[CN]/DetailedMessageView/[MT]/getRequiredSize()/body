@@ -1,0 +1,18 @@
+{
+  Size size=new Size();
+  size.extendHeight(Style.TITLE.getTextHeight());
+  size.extendHeight(30);
+  String message=((MessageContent)getContent()).getMessage();
+  size.ensureWidth(Style.NORMAL.stringWidth(message));
+  size.extendHeight(Style.NORMAL.getTextHeight());
+  size.extendHeight(30);
+  String detail=((MessageContent)getContent()).getDetail();
+  StringTokenizer st=new StringTokenizer(detail,"\n\r");
+  while (st.hasMoreTokens()) {
+    String line=st.nextToken();
+    size.ensureWidth((line.startsWith("\t") ? 20 : 0) + Style.NORMAL.stringWidth(line));
+    size.extendHeight(Style.NORMAL.getTextHeight());
+  }
+  size.extend(40,20);
+  return size;
+}

@@ -10,6 +10,9 @@
   setStatus(buf.toString());
   String[] warnings=NakedObjects.getMessageBroker().getWarnings();
   for (int i=0; i < warnings.length; i++) {
-    rootView.getWorkspace().addOpenViewFor(NakedObjects.getObjectLoader().createAdapterForTransient(warnings[i]),new Location(20,20));
+    TextMessageContent content=new TextMessageContent("Warning",warnings[i]);
+    View view=Skylark.getViewFactory().createWindow(content);
+    view.setLocation(new Location(20,20));
+    rootView.getWorkspace().addView(view);
   }
 }

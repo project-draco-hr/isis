@@ -5,16 +5,23 @@
   forView=click.isAlt() ^ forView;
   boolean includeExploration=runningAsExploration && (click.isCtrl() || showExplorationMenuByDefault);
   boolean includeDebug=click.isShift() && click.isCtrl();
-  DefaultPopupMenu popup=new DefaultPopupMenu();
-  popup.init(over,rootView,at,forView,includeExploration,includeDebug);
   popupStatus(over,forView,includeExploration,includeDebug);
-  DefaultPopupMenu overlay=popup;
-  Size size=overlay.getRequiredSize();
-  overlay.setSize(size);
+  UserActionSet optionSet=new UserActionSet(includeExploration,includeDebug,UserAction.USER);
+  if (forView) {
+    over.viewMenuOptions(optionSet);
+  }
+ else {
+    over.contentMenuOptions(optionSet);
+  }
+  optionSet.add(DEBUG_OPTION);
+  DefaultPopupMenu menuContainer=new DefaultPopupMenu();
+  setOverlayView(menuContainer);
+  menuContainer.init(over,optionSet.getMenuOptions(),optionSet.getColor());
+  Size size=menuContainer.getRequiredSize();
+  menuContainer.setSize(size);
   Location location=new Location(at);
   location.move(-14,-10);
-  overlay.setLocation(location);
-  overlay.limitBoundsWithin(getOverlayBounds());
-  setOverlayView(overlay);
-  makeFocus(overlay);
+  menuContainer.setLocation(location);
+  menuContainer.limitBoundsWithin(getOverlayBounds());
+  makeFocus(menuContainer);
 }
