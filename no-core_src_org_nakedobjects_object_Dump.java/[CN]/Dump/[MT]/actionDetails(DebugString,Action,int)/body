@@ -1,0 +1,35 @@
+{
+  debug.appendln(indent,f.getName());
+  indent+=4;
+  if (f instanceof ActionSet) {
+    Action[] debActions=f.getActions();
+    for (int i=0; i < debActions.length; i++) {
+      actionDetails(debug,debActions[i],indent);
+    }
+  }
+ else {
+    if (f.getDescription() != null && !f.getDescription().equals("")) {
+      debug.appendln(indent,"Description",f.getDescription());
+    }
+    debug.appendln(indent,f.getClass().getName());
+    debug.appendln(indent,"ID",f.getId());
+    NakedObjectSpecification[] parameters=f.getParameterTypes();
+    if (parameters.length == 0) {
+      debug.appendln(indent,"Parameters: none");
+    }
+ else {
+      debug.appendln(indent,"Parameters");
+    }
+    for (int j=0; j < parameters.length; j++) {
+      debug.appendln(16,parameters[j].getFullName());
+    }
+    debug.appendln(indent,"Target",f.getTarget());
+    Class[] extensions=f.getExtensions();
+    if (extensions.length > 0) {
+      debug.appendln(indent,"Extensions");
+      for (int j=0; j < extensions.length; j++) {
+        debug.appendln(16,extensions[j].getName());
+      }
+    }
+  }
+}
