@@ -1,6 +1,6 @@
 {
   if (object.getResolveState().isSerializing()) {
-    return data;
+    return null;
   }
   if (data == null || data.getOid() != null) {
     return null;
@@ -29,12 +29,15 @@
       }
       fieldContent[i]=factory.createCollectionData(coll.getOid(),f.getType(),elements,f.hasAllElements(),coll.getVersion());
     }
- else {
+ else     if (fields[i].isObject()) {
       Data f=data.getFieldContent()[i];
       if (f != null && !(f instanceof NullData) && ((ReferenceData)f).getOid() == null) {
         NakedObject o=(NakedObject)object.getField(fields[i]);
         fieldContent[i]=createMadePersistentGraph(((ObjectData)f),o,updateNotifier);
       }
+    }
+ else {
+      throw new UnknownTypeException();
     }
   }
   NakedObjects.getObjectLoader().end(object);

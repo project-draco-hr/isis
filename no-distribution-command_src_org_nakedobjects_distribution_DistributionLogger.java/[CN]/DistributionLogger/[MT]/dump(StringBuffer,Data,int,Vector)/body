@@ -7,17 +7,17 @@
   }
  else   if (data instanceof ValueData) {
     ValueData valueData=((ValueData)data);
-    str.append("ValueData " + valueData.getType() + ":"+ valueData.getValue());
+    str.append("ValueData@" + Integer.toHexString(valueData.hashCode()) + " "+ valueData.getType()+ ":"+ valueData.getValue());
+  }
+ else   if (data instanceof IdentityData) {
+    IdentityData referenceData=(IdentityData)data;
+    str.append("ReferenceData@" + Integer.toHexString(referenceData.hashCode()) + " "+ referenceData.getType()+ ":"+ referenceData.getOid()+ ":"+ referenceData.getVersion());
   }
  else   if (data instanceof ObjectData) {
     dumpObjectData(str,data,indent,complete);
   }
  else   if (data instanceof CollectionData) {
     dumpCollectionData(str,data,indent,complete);
-  }
- else   if (data instanceof ReferenceData) {
-    ReferenceData referenceData=(ReferenceData)data;
-    str.append("ReferenceData " + referenceData.getType() + ":"+ referenceData.getOid()+ ":"+ referenceData.getVersion());
   }
  else {
     str.append("Unknown: " + data);

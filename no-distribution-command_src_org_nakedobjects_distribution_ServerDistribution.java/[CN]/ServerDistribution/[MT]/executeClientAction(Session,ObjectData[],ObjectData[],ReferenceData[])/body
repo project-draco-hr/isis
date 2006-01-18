@@ -7,10 +7,12 @@
     KnownTransients knownObjects=ObjectDecoder.createKnownTransients();
     NakedObject[] persistedObjects=new NakedObject[persisted.length];
     for (int i=0; i < persisted.length; i++) {
-      LOG.debug("  makePersistent " + persisted[i]);
       NakedObject object=(NakedObject)ObjectDecoder.restore(persisted[i],knownObjects);
-      persistor.makePersistent(object);
       persistedObjects[i]=object;
+      if (object.getOid() == null) {
+        LOG.debug("  makePersistent " + persisted[i]);
+        persistor.makePersistent(object);
+      }
     }
     NakedObject[] changedObjects=new NakedObject[changed.length];
     for (int i=0; i < changed.length; i++) {
@@ -21,7 +23,7 @@
     }
     for (int i=0; i < deleted.length; i++) {
       LOG.debug("  destroyObject " + deleted[i] + " for "+ session);
-      NakedObject inObject=getPersistentNakedObject(session,deleted[i]);
+      NakedObject inObject=getPersistentNakedObject(session,(IdentityData)deleted[i]);
       persistor.destroyObject(inObject);
     }
     LOG.debug("  end transaction");
@@ -37,7 +39,7 @@
     return encoder.createClientActionResult(madePersistent,changedVersion);
   }
  catch (  RuntimeException e) {
-    LOG.debug("abort transaction",e);
+    LOG.info("abort transaction",e);
     persistor.abortTransaction();
     throw e;
   }
