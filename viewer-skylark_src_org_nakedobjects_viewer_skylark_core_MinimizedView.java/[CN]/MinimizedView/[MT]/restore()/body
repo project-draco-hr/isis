@@ -1,0 +1,14 @@
+{
+  Workspace workspace=getWorkspace();
+  View[] views=workspace.getSubviews();
+  for (int i=0; i < views.length; i++) {
+    if (views[i] == this) {
+      viewToMinimize.setParent(workspace);
+      viewToMinimize.setLocation(getLocation());
+      workspace.removeView(this);
+      workspace.addView(viewToMinimize);
+      workspace.invalidateLayout();
+      return;
+    }
+  }
+}

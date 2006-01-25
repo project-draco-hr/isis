@@ -1,5 +1,15 @@
 {
-  View iconView=new RootIconSpecification().createView(view.getContent(),null);
-  iconView.setLocation(view.getLocation());
-  workspace.replaceView(view,iconView);
+  MinimizedView minimizedView=new MinimizedView(view);
+  minimizedView.setLocation(view.getLocation());
+  View[] views=workspace.getSubviews();
+  for (int i=0; i < views.length; i++) {
+    if (views[i] == view) {
+      minimizedView.setParent(workspace);
+      minimizedView.setLocation(view.getLocation());
+      workspace.removeView(view);
+      workspace.addView(minimizedView);
+      workspace.invalidateLayout();
+      return;
+    }
+  }
 }
