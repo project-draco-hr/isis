@@ -1,0 +1,22 @@
+{
+  saveCurrentFieldEntry();
+  includeExploration=runningAsExploration && (includeExploration || showExplorationMenuByDefault);
+  popupStatus(over,forView,includeExploration,includeDebug);
+  UserActionSet optionSet=new UserActionSet(includeExploration,includeDebug,UserAction.USER);
+  if (forView) {
+    over.viewMenuOptions(optionSet);
+  }
+ else {
+    over.contentMenuOptions(optionSet);
+  }
+  optionSet.add(DEBUG_OPTION);
+  DefaultPopupMenu menuContainer=new DefaultPopupMenu();
+  setOverlayView(menuContainer);
+  menuContainer.init(over,optionSet.getMenuOptions(),optionSet.getColor());
+  Size size=menuContainer.getRequiredSize();
+  menuContainer.setSize(size);
+  Location location=new Location(at);
+  location.move(-14,-10);
+  menuContainer.setLocation(location);
+  menuContainer.limitBoundsWithin(getOverlayBounds());
+}

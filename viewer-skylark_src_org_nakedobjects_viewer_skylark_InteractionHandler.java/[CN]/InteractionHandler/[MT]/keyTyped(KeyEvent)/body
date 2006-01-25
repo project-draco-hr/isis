@@ -2,13 +2,11 @@
   if (isBusy(null)) {
     return;
   }
-  lastTyped=ke;
-  if (!ke.isActionKey()) {
-    LOG.debug("typed '" + ke.getKeyChar() + "':  "+ ke);
-    keyboardManager.typed(ke.getKeyChar());
+  char keyChar=ke.getKeyChar();
+  if (!Character.isISOControl(keyChar)) {
+    keyboardManager.typed(keyChar);
+    ke.consume();
+    lastTyped=ke;
     redraw();
-  }
- else {
-    LOG.debug("typed (ignored) " + ke.getKeyChar());
   }
 }

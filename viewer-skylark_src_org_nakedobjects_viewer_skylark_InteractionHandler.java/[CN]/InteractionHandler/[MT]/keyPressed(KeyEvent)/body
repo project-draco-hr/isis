@@ -4,7 +4,7 @@
   }
   lastTyped=null;
   try {
-    if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+    if (ke.getKeyCode() == KeyEvent.VK_ESCAPE && drag != null) {
       if (drag != null) {
         drag.cancel(viewer);
         drag=null;
@@ -12,10 +12,16 @@
       viewer.clearStatus();
       viewer.clearOverlayView();
     }
-    keyboardManager.pressed(ke.getKeyCode(),ke.getModifiers());
+ else     if (ke.getKeyCode() == KeyEvent.VK_ESCAPE && viewer.isOverlayAvailable()) {
+      viewer.clearStatus();
+      viewer.clearOverlayView();
+    }
+ else {
+      keyboardManager.pressed(ke.getKeyCode(),ke.getModifiers());
+    }
     redraw();
   }
  catch (  Exception e) {
-    log("keyPressed",e);
+    interactionException("keyPressed",e);
   }
 }

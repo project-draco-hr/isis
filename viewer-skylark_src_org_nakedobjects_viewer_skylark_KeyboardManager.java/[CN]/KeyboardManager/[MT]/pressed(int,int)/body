@@ -1,7 +1,58 @@
 {
+  LOG.debug("key " + KeyEvent.getKeyModifiersText(modifiers) + " '"+ KeyEvent.getKeyText(keyCode)+ "' pressed");
   View keyboardFocus=getFocus();
-  if (keyboardFocus != null) {
-    keyboardFocus.keyPressed(keyCode,modifiers);
+  if (keyboardFocus == null) {
+    throw new NakedObjectRuntimeException("No focus set");
+  }
+  KeyboardAction keyboardAction=new KeyboardAction(keyCode,modifiers);
+  keyboardFocus.keyPressed(keyboardAction);
+  if (keyboardAction.isConsumed()) {
+    return;
+  }
+  if ((modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK && keyCode == KeyEvent.VK_X) {
+    viewer.close();
+    return;
+  }
+  if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK && keyCode == KeyEvent.VK_F10) {
+    Location location=keyboardFocus.getAbsoluteLocation();
+    location.add(20,14);
+    viewer.popupMenu(keyboardFocus,location,true,false,false);
+    return;
+  }
+  if (keyCode == KeyEvent.VK_F10) {
+    Location location=keyboardFocus.getAbsoluteLocation();
+    location.add(20,14);
+    viewer.popupMenu(keyboardFocus,location,false,false,false);
+    return;
+  }
+  if (keyCode == KeyEvent.VK_ENTER) {
+    Location location=keyboardFocus.getAbsoluteLocation();
+    location.add(1,1);
+    viewer.secondClick(new Click(keyboardFocus,location,modifiers));
+    return;
+  }
+  if (keyCode == KeyEvent.VK_F4 && (modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+    return;
+  }
+  if (keyCode == KeyEvent.VK_DOWN) {
+    focusManager.focusFirstChildView();
+    return;
+  }
+  if (keyCode == KeyEvent.VK_UP) {
+    focusManager.focusParentView();
+    return;
+  }
+  if (keyCode == KeyEvent.VK_HOME) {
+    viewer.makeRootFocus();
+    return;
+  }
+  if (keyCode == KeyEvent.VK_RIGHT) {
+    focusManager.focusNextView();
+    return;
+  }
+  if (keyCode == KeyEvent.VK_LEFT) {
+    focusManager.focusPreviousView();
+    return;
   }
   int action=0;
   if (keyCode == KeyEvent.VK_F1) {
@@ -12,15 +63,16 @@
   }
 switch (action) {
 case KeyboardAction.NEXT_VIEW:
-    focusNextSubview(keyboardFocus);
+    focusManager.focusNextView();
   break;
 case KeyboardAction.PREVIOUS_VIEW:
-focusPreviousSubview(keyboardFocus);
+focusManager.focusPreviousView();
 break;
 case KeyboardAction.NEXT_WINDOW:
-focusNextRootView(keyboardFocus);
+focusManager.focusParentView();
 break;
 case KeyboardAction.PREVIOUS_WINDOW:
+focusManager.focusFirstChildView();
 break;
 }
 }

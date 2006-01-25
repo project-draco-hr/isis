@@ -5,9 +5,14 @@
   try {
     Click click=new Click(identifiedView,downAt,me.getModifiers());
     spy.addAction("Mouse clicked " + click.getLocation());
-    if (click.button3() && viewer.isOverlayAvailable() && identifiedView != null) {
+    if (click.button3() && !viewer.isOverlayAvailable() && identifiedView != null) {
       spy.addAction(" popup " + downAt + " over "+ identifiedView);
-      viewer.popupMenu(identifiedView,click);
+      Location at=click.getLocation();
+      boolean forView=viewer.viewAreaType(new Location(click.getLocation())) == ViewAreaType.VIEW;
+      forView=click.isAlt() ^ forView;
+      boolean includeExploration=click.isCtrl();
+      boolean includeDebug=click.isShift() && click.isCtrl();
+      viewer.popupMenu(identifiedView,at,forView,includeExploration,includeDebug);
     }
  else {
 switch (me.getClickCount()) {
@@ -27,6 +32,6 @@ break;
 redraw();
 }
  catch (Exception e) {
-log("mouseClicked",e);
+interactionException("mouseClicked",e);
 }
 }
