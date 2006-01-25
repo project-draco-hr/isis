@@ -2,27 +2,34 @@
   if (!canChangeValue()) {
     return;
   }
+  int keyCode=key.getKeyCode();
   if (keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_ALT) {
     return;
   }
 switch (keyCode) {
 case KeyEvent.VK_LEFT:
-    delete();
-  break;
+    key.consume();
+  delete();
+break;
 case KeyEvent.VK_DELETE:
+key.consume();
 delete();
 break;
 case KeyEvent.VK_BACK_SPACE:
+key.consume();
 delete();
 break;
 case KeyEvent.VK_TAB:
+key.consume();
 editComplete();
 break;
 case KeyEvent.VK_ENTER:
+key.consume();
 editComplete();
-getParent().keyPressed(keyCode,modifiers);
+getParent().keyPressed(key);
 break;
 case KeyEvent.VK_ESCAPE:
+key.consume();
 escape();
 break;
 default :
