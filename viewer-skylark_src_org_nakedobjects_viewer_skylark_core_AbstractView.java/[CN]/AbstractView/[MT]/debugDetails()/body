@@ -1,29 +1,37 @@
 {
   DebugString b=new DebugString();
-  b.append("View:      ");
   String name=getClass().getName();
-  b.append(name.substring(name.lastIndexOf('.') + 1) + getId());
+  b.append("Root:      " + name.substring(name.lastIndexOf('.') + 1) + getId());
   b.append("\n           size " + getSize());
   b.append("\n           req'd " + getRequiredSize());
   b.append("\n           padding " + getPadding());
   b.append("\n           baseline " + getBaseline());
+  b.appendln();
+  b.appendln();
+  b.appendTitle("Specification");
+  if (specification == null) {
+    b.append("\nnone");
+  }
+ else {
+    b.appendln(specification.getName());
+    b.appendln("  " + specification.getClass().getName());
+    b.appendln("  " + (specification.isOpen() ? "open" : "closed"));
+    b.appendln("  " + (specification.isReplaceable() ? "replaceable" : "non-replaceable"));
+    b.appendln("  " + (specification.isSubView() ? "subview" : "main view"));
+  }
   b.append("\n");
-  b.append("\nChangable: " + canChangeValue());
-  b.append("\nFocus:     " + canFocus());
+  b.appendTitle("View");
+  b.append("Changable: " + canChangeValue());
+  b.append("\n");
+  b.append("\nFocus:     " + (canFocus() ? "focusable" : "non-focusable"));
+  b.append("\nHas focus:     " + hasFocus());
+  b.append("\nContains focus:     " + containsFocus());
+  b.append("\nFocus manager:     " + getFocusManager());
+  b.append("\n");
   b.append("\nSelf:      " + getView());
   b.append("\nAxis:      " + getViewAxis());
   b.append("\nState:     " + getState());
   b.append("\nLocation:  " + getLocation());
-  if (specification == null) {
-    b.append("\nSpec:      none");
-  }
- else {
-    b.append("\nSpec:      " + specification.getName() + " ("+ specification+ ")");
-    b.append("\n           " + (specification.isOpen() ? "open" : "closed"));
-    b.append("\n           " + (specification.isReplaceable() ? "replaceable" : "non-replaceable"));
-    b.append("\n           " + (specification.isSubView() ? "subview" : "main view"));
-  }
-  b.append("\n           " + (canFocus() ? "focusable" : "non-focusable"));
   b.append("\nParent:    ");
   View p=getParent();
   String parent=p == null ? "none" : "" + p;
@@ -33,6 +41,6 @@
     b.append("\n           " + p);
   }
   b.append("\nWorkspace: " + getWorkspace());
-  b.append("\n\n");
+  b.append("\n\n\n");
   return b.toString();
 }

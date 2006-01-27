@@ -1,4 +1,8 @@
 {
   ButtonAction[] actions=new ButtonAction[]{new ExecuteAndCloseAction(),new CancelAction()};
-  return new DialogBorder(new ButtonBorder(actions,new IconBorder(super.createView(content,new LabelAxis()))),false);
+  View container=super.createView(content,new LabelAxis());
+  ButtonBorder buttonBorder=new ButtonBorder(actions,new IconBorder(container));
+  DialogBorder dialog=new DialogBorder(buttonBorder,false);
+  dialog.setFocusManager(new ActionDialogFocusManager(buttonBorder));
+  return dialog;
 }
