@@ -1,4 +1,17 @@
 {
-  row=1;
-  cell=1;
+  if (view == table) {
+    return;
+  }
+  View[] rows=table.getSubviews();
+  for (row=0; row < rows.length; row++) {
+    View[] cells=rows[row].getSubviews();
+    for (int j=0; j < cells.length; j++) {
+      if (view == cells[j] && cells[j].canFocus()) {
+        cells[cell].markDamaged();
+        cell=j;
+        cells[j].markDamaged();
+        return;
+      }
+    }
+  }
 }
