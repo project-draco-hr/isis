@@ -1,11 +1,20 @@
 {
   CursorPosition from=selection.from();
   CursorPosition to=selection.to();
+  int line=from.getLine();
+  String text=getText(line);
   if (from.getLine() == to.getLine()) {
-    TextBlockReference block=getBlockFor(from.getLine());
-    return block.block.getText().substring(from.getCharacter(),to.getCharacter());
+    return text.substring(from.getCharacter(),to.getCharacter());
   }
  else {
-    throw new NotImplementedException();
+    StringBuffer str=new StringBuffer();
+    str.append(text.substring(from.getCharacter()));
+    for (int i=line + 1; i < line + (to.getLine() - from.getLine()); i++) {
+      text=getText(i);
+      str.append(text);
+    }
+    text=getText(line + (to.getLine() - from.getLine()));
+    str.append(text.substring(0,to.getCharacter()));
+    return str.toString();
   }
 }
