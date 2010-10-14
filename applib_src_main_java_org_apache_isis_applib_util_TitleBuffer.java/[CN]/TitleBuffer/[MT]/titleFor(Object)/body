@@ -1,0 +1,27 @@
+{
+  if (object == null) {
+    return null;
+  }
+ else {
+    Method method;
+    try {
+      method=object.getClass().getMethod("title",new Class[0]);
+      return (String)method.invoke(object,new Object[0]);
+    }
+ catch (    SecurityException e) {
+      throw new TitleBufferException(e);
+    }
+catch (    NoSuchMethodException e) {
+      return object.toString();
+    }
+catch (    IllegalArgumentException e) {
+      throw new TitleBufferException(e);
+    }
+catch (    IllegalAccessException e) {
+      throw new TitleBufferException(e);
+    }
+catch (    InvocationTargetException e) {
+      throw new TitleBufferException(e);
+    }
+  }
+}

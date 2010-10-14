@@ -1,0 +1,39 @@
+{
+  if (entry.trim().equals("")) {
+    clear();
+  }
+ else {
+    String text=entry.trim();
+    String str=text.toLowerCase();
+    Calendar cal=createCalendar();
+    if (str.equals("today") || str.equals("now")) {
+    }
+ else     if (str.startsWith("+")) {
+      int hours;
+      hours=Integer.valueOf(str.substring(1)).intValue();
+      cal.setTime(date);
+      cal.add(Calendar.HOUR,hours);
+    }
+ else     if (str.startsWith("-")) {
+      int hours;
+      hours=Integer.valueOf(str.substring(1)).intValue();
+      cal.setTime(date);
+      cal.add(Calendar.HOUR,-hours);
+    }
+ else {
+      DateFormat[] formats=new DateFormat[]{LONG_FORMAT,MEDIUM_FORMAT,SHORT_FORMAT,ISO_LONG,ISO_SHORT};
+      for (int i=0; i < formats.length; i++) {
+        try {
+          cal.setTime(formats[i].parse(text));
+          break;
+        }
+ catch (        ParseException e) {
+          if ((i + 1) == formats.length) {
+            throw new ValueParseException("Invalid timeStamp " + text,e);
+          }
+        }
+      }
+    }
+    set(cal);
+  }
+}

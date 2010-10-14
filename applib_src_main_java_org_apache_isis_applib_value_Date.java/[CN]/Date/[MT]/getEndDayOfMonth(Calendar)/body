@@ -1,0 +1,17 @@
+{
+  final Class<?> cls=originalCalendar.getClass();
+  try {
+    final Method getActualMaximum=cls.getMethod("getActualMaximum",new Class[]{int.class});
+    Integer dayOfMonth=Integer.valueOf(Calendar.DAY_OF_MONTH);
+    return ((Integer)getActualMaximum.invoke(originalCalendar,new Object[]{dayOfMonth})).intValue();
+  }
+ catch (  final NoSuchMethodException ignore) {
+  }
+catch (  final IllegalAccessException e) {
+    throw new RuntimeException(e.getMessage());
+  }
+catch (  final InvocationTargetException e) {
+    throw new RuntimeException(e.getMessage());
+  }
+  return getEndDayOfMonthOneDotOne(originalCalendar);
+}
