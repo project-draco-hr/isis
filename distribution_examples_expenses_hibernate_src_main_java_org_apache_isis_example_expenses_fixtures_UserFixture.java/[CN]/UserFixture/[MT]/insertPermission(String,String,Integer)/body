@@ -1,0 +1,21 @@
+{
+  try {
+    final int nextId=getNextId("permissions");
+    HibernateUtil.startTransaction();
+    final SQLQuery sq=HibernateUtil.getCurrentSession().createSQLQuery(SQL[INSERT_PERMISSION]);
+    sq.setInteger(0,nextId);
+    sq.setString(1,role);
+    sq.setString(2,permission);
+    if (flag == null) {
+      sq.setParameter(3,null,Hibernate.INTEGER);
+    }
+ else {
+      sq.setInteger(3,flag.intValue());
+    }
+    sq.executeUpdate();
+    HibernateUtil.commitTransaction();
+  }
+ catch (  final Exception e) {
+    HibernateUtil.rollbackTransaction();
+  }
+}

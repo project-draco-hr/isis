@@ -1,0 +1,29 @@
+{
+  final InternetAddress fromAddress;
+  try {
+    fromAddress=new InternetAddress(SMTP_AUTH_USER);
+  }
+ catch (  final AddressException e) {
+    throw new ApplicationException("Invalid email address " + SMTP_AUTH_USER,e);
+  }
+  try {
+    final Properties properties=new Properties();
+    properties.put("mail.smtp.host",SMTP_HOST_NAME);
+    properties.put("mail.smtp.auth",authenticate ? "true" : "false");
+    final Authenticator authenticator=authenticate ? new SMTPAuthenticator() : null;
+    final Session session=Session.getDefaultInstance(properties,authenticator);
+    final Message message=new MimeMessage(session);
+    final InternetAddress toAddress=new InternetAddress(toEmailAddress);
+    message.setFrom(fromAddress);
+    message.setRecipient(Message.RecipientType.TO,toAddress);
+    message.setSubject("Expenses notification");
+    message.setContent(text,"text/plain");
+    Transport.send(message);
+  }
+ catch (  final AddressException e) {
+    throw new ApplicationException("Invalid email address " + toEmailAddress,e);
+  }
+catch (  final MessagingException e) {
+    throw new ApplicationException("Problem sending email ",e);
+  }
+}

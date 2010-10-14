@@ -1,0 +1,15 @@
+{
+  try {
+    final int nextId=getNextId("user_role");
+    HibernateUtil.startTransaction();
+    final SQLQuery sq=HibernateUtil.getCurrentSession().createSQLQuery(SQL[INSERT_USER_ROLE]);
+    sq.setInteger(0,nextId);
+    sq.setString(1,user);
+    sq.setString(2,role);
+    sq.executeUpdate();
+    HibernateUtil.commitTransaction();
+  }
+ catch (  final Exception e) {
+    HibernateUtil.rollbackTransaction();
+  }
+}

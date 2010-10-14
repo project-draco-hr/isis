@@ -1,0 +1,13 @@
+{
+  Order order=newTransientInstance(Order.class);
+  order.setDeliveryAddress(cart.getAddress());
+  order.setPaymentMethod(cart.getPaymentMethod());
+  Iterator<OrderItem> iterator=cart.getItems().iterator();
+  while (iterator.hasNext()) {
+    OrderItem item=iterator.next();
+    order.addToItems(item);
+  }
+  persist(order);
+  cart.resetCart();
+  return order;
+}

@@ -1,0 +1,20 @@
+{
+  Profile templateProfile=newUserProfile();
+  Perspective perspective=templateProfile.newPerspective("Expenses");
+  perspective.addToServices(Claims.class);
+  perspective.addToServices(Employees.class);
+  saveAsDefault(templateProfile);
+  Profile svenProfile=newUserProfile();
+  Perspective claimsPerspective=svenProfile.newPerspective("Claims");
+  claimsPerspective.addToServices(Claims.class);
+  claimsPerspective.addToServices(Employees.class);
+  saveForUser("sven",svenProfile);
+  saveForUser("bob",newUserProfile(svenProfile));
+  saveForUser("joe",newUserProfile(svenProfile));
+  Profile dickProfile=newUserProfile();
+  Perspective supervisorPerspective=dickProfile.newPerspective("Supervisor");
+  supervisorPerspective.addToServices(Claims.class);
+  supervisorPerspective.addToServices(Employees.class);
+  supervisorPerspective.addToServices(RecordActionServiceImpl.class);
+  saveForUser("dick",dickProfile);
+}

@@ -1,0 +1,11 @@
+{
+  try {
+    HibernateUtil.startTransaction();
+    final SQLQuery sq=HibernateUtil.getCurrentSession().createSQLQuery(createSQL);
+    sq.executeUpdate();
+    HibernateUtil.commitTransaction();
+  }
+ catch (  final Exception e) {
+    HibernateUtil.rollbackTransaction();
+  }
+}

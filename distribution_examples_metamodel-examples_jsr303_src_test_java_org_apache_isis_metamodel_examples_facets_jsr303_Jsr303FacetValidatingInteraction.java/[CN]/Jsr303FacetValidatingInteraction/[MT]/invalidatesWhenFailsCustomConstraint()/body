@@ -1,0 +1,14 @@
+{
+  mockery.checking(new Expectations(){
+{
+      one(mockTargetObjectAdapter).getObject();
+      will(returnValue(domainObjectWithCustomValidation));
+      one(mockProposedObjectAdapter).getObject();
+      will(returnValue("NONSENSE"));
+    }
+  }
+);
+  final String reason=facet.invalidates(mockContext);
+  assertThat(reason,is(not(nullValue())));
+  assertThat(reason,is("serialNumber is invalid: must match ....-....-...."));
+}

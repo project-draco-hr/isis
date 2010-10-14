@@ -1,0 +1,14 @@
+{
+  try {
+    HibernateUtil.startTransaction();
+    final String tableSQL=SQL[GET_ID].replace("?",fromTable);
+    final SQLQuery sq=HibernateUtil.getCurrentSession().createSQLQuery(tableSQL);
+    final Integer id=(Integer)sq.uniqueResult();
+    HibernateUtil.commitTransaction();
+    return id != null ? id.intValue() + 1 : 0;
+  }
+ catch (  final Exception e) {
+    HibernateUtil.rollbackTransaction();
+  }
+  return 0;
+}

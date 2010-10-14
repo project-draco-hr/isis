@@ -1,0 +1,16 @@
+{
+  if (!isPersistent(pickup) || !isPersistent(dropoff)) {
+    throw new ApplicationException("Both locations must be persistent");
+  }
+  Booking booking=(Booking)newTransientInstance(Booking.class);
+  booking.setDropOff(dropoff);
+  booking.setPickUp(pickup);
+  booking.setCity(pickup.getCity());
+  persist(booking);
+  Customer customer=pickup.getCustomer();
+  if (customer != null) {
+    booking.modifyCustomer(customer);
+    booking.setPaymentMethod(customer.getPreferredPaymentMethod());
+  }
+  return booking;
+}

@@ -1,0 +1,9 @@
+{
+  changeStatusToReturned();
+  for (  final ExpenseItem item : getExpenseItems()) {
+    item.setLocked(false);
+  }
+  getRecordActionService().recordMenuAction(this,"Return To Claimant",message);
+  final String fullMessage=("Your Expenses Claim: " + title() + " has been returned to you with the message "+ message);
+  sendEmailIfPossible(sendEmail,getClaimant().getEmailAddress(),fullMessage);
+}
