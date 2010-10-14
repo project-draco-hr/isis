@@ -1,0 +1,22 @@
+{
+  String databaseKeywords="";
+synchronized (sessionFactoryLock) {
+    final Session session=getSessionFactory().openSession();
+    Transaction tx=null;
+    try {
+      tx=session.beginTransaction();
+      final DatabaseMetaData metaData=session.connection().getMetaData();
+      databaseKeywords=metaData.getSQLKeywords();
+      tx.commit();
+    }
+ catch (    final SQLException e) {
+      tx.rollback();
+      throw new IsisException(e);
+    }
+ finally {
+      session.close();
+    }
+    sessionFactory=null;
+  }
+  buildkeywordMap(databaseKeywords);
+}

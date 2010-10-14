@@ -1,0 +1,15 @@
+{
+  String name=request.getOptionalProperty(NAME,"selected");
+  String objectId=request.getRequiredProperty(OBJECT);
+  String equalsId=request.getOptionalProperty("equals");
+  String title=request.getOptionalProperty(TITLE);
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(objectId);
+  ObjectAdapter other=request.getContext().getMappedObjectOrResult(equalsId);
+  if (object == other || object.equals(title)) {
+    request.getContext().addVariable(ID," id=\"" + name + "\" ",Scope.INTERACTION);
+  }
+ else {
+    request.getContext().addVariable(ID,"",Scope.INTERACTION);
+  }
+  request.closeEmpty();
+}

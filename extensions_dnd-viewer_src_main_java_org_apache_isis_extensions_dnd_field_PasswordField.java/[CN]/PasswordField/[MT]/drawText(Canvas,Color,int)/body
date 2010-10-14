@@ -1,0 +1,21 @@
+{
+  final String[] lines=textContent.getDisplayLines();
+  if (lines.length > 1) {
+    throw new IsisException("Password field should contain a string that contains no line breaks; contains " + lines.length);
+  }
+  final String chars=lines[0];
+  if (chars == null) {
+    throw new IsisException();
+  }
+  if (chars.endsWith("\n")) {
+    throw new IsisException();
+  }
+  final int baseline=getBaseline();
+  String echoPassword=echoPassword(chars);
+  if (hasFocus() && canChangeValue().isAllowed()) {
+    final int pos=style.stringWidth(echoPassword) - HPADDING;
+    Color color=Toolkit.getColor(ColorsAndFonts.COLOR_TEXT_CURSOR);
+    canvas.drawLine(pos,(baseline + style.getDescent()),pos,baseline - style.getAscent(),color);
+  }
+  canvas.drawText(echoPassword,HPADDING,baseline,textColor,style);
+}

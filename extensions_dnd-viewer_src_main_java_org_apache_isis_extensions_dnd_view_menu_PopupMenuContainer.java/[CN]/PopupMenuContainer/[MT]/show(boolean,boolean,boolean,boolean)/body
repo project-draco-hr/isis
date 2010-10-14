@@ -1,0 +1,25 @@
+{
+  final boolean withExploration=getViewManager().isRunningAsExploration() && includeExploration;
+  final boolean withPrototype=getViewManager().isRunningAsPrototype() && includePrototype;
+  final UserActionSet optionSet=new UserActionSetImpl(withExploration,withPrototype,includeDebug,ObjectActionType.USER);
+  if (forView) {
+    target.viewMenuOptions(optionSet);
+  }
+ else {
+    target.contentMenuOptions(optionSet);
+  }
+  optionSet.add(DEBUG_OPTION);
+  final Enumeration e=options.elements();
+  while (e.hasMoreElements()) {
+    final MenuOptions element=(MenuOptions)e.nextElement();
+    element.menuOptions(optionSet);
+  }
+  menu=new PopupMenu(this);
+  backgroundColor=optionSet.getColor();
+  menu.show(target,optionSet.getUserActions(),backgroundColor);
+  getViewManager().setOverlayView(this);
+  if (target != null) {
+    final String status=changeStatus(target,forView,withExploration,includeDebug);
+    getFeedbackManager().setViewDetail(status);
+  }
+}

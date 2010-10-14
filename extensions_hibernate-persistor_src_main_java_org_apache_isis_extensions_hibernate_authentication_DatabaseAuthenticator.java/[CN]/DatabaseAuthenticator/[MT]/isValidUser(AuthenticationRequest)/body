@@ -1,0 +1,22 @@
+{
+  final AuthenticationRequestPassword passwordRequest=(AuthenticationRequestPassword)request;
+  final String username=passwordRequest.getName();
+  if (username == null || username.equals("")) {
+    return FAILED_AUTHENTICATION;
+  }
+  final String password=passwordRequest.getPassword();
+  Assert.assertNotNull(password);
+  try {
+    HibernateUtil.startTransaction();
+    final SQLQuery sq=HibernateUtil.getCurrentSession().createSQLQuery(SELECT_USER_SQL);
+    sq.setString(0,username);
+    sq.setString(1,generateHash(password));
+    final Object result=sq.uniqueResult();
+    HibernateUtil.commitTransaction();
+    return count(result) > 0;
+  }
+ catch (  final Exception e) {
+    HibernateUtil.rollbackTransaction();
+  }
+  return FAILED_AUTHENTICATION;
+}

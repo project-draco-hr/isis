@@ -1,0 +1,40 @@
+{
+  if (relativeToView == null) {
+    return new Location();
+  }
+  Size workspaceSize=workspace.getSize();
+  View rootView=rootView(workspace,relativeToView);
+  Location rootViewLocation=rootView.getLocation();
+  Size rootViewSize=rootView.getSize();
+  Location newLocation=new Location(rootViewLocation);
+  Size requiredSize=newView.getView().getRequiredSize(Size.createMax());
+  if (rootViewLocation.getX() + rootViewSize.getWidth() + PADDING+ requiredSize.getWidth() < workspaceSize.getWidth()) {
+    newLocation.add(rootViewSize.getWidth() + PADDING,0);
+  }
+ else   if (rootViewLocation.getY() + rootViewSize.getHeight() + PADDING+ requiredSize.getHeight() < workspaceSize.getHeight()) {
+    newLocation.add(0,rootViewSize.getHeight() + PADDING);
+  }
+ else   if (requiredSize.getWidth() + PADDING < rootViewLocation.getX()) {
+    newLocation.subtract(requiredSize.getWidth() + PADDING,0);
+  }
+ else   if (requiredSize.getHeight() + PADDING < rootViewLocation.getY()) {
+    newLocation.subtract(0,requiredSize.getHeight() + PADDING);
+  }
+ else {
+    newLocation.add(PADDING * 6,PADDING * 6);
+  }
+  int maxSpaceToLeft=workspaceSize.getWidth() - requiredSize.getWidth();
+  int maxSpaceAbove=workspaceSize.getHeight() - requiredSize.getHeight();
+  ensureWidth(newLocation,maxSpaceToLeft);
+  ensureHeight(newLocation,maxSpaceAbove);
+  Location firstAttempt=new Location(newLocation);
+  while (workspace.subviewFor(newLocation) != null && workspace.subviewFor(newLocation).getLocation().equals(newLocation)) {
+    newLocation.add(PADDING * 4,PADDING * 4);
+    ensureWidth(newLocation,maxSpaceToLeft);
+    ensureHeight(newLocation,maxSpaceAbove);
+    if (newLocation.equals(firstAttempt)) {
+      break;
+    }
+  }
+  return newLocation;
+}

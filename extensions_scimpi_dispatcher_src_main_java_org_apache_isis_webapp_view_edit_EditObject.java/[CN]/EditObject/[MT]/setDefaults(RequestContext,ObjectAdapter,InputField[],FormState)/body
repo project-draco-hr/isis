@@ -1,0 +1,23 @@
+{
+  for (int i=0; i < formFields.length; i++) {
+    String fieldId=formFields[i].getName();
+    ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
+    ObjectAdapter defaultValue=(ObjectAdapter)field.getDefault(object);
+    if (defaultValue == null) {
+      continue;
+    }
+    String title=defaultValue.titleString();
+    if (field.getSpecification().containsFacet(ParseableFacet.class)) {
+      formFields[i].setValue(title);
+    }
+ else     if (field.isOneToOneAssociation()) {
+      ObjectSpecification objectSpecification=field.getSpecification();
+      if (defaultValue != null) {
+        String html="<img class=\"small-icon\" src=\"" + context.imagePath(objectSpecification) + "\" alt=\""+ objectSpecification.getShortName()+ "\"/>"+ title;
+        formFields[i].setHtml(html);
+        String value=defaultValue == null ? null : context.mapObject(defaultValue,Scope.INTERACTION);
+        formFields[i].setValue(value);
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  EditFieldBlock block=(EditFieldBlock)request.getBlockContent();
+  String field=request.getRequiredProperty(FIELD);
+  if (block.isVisible(field)) {
+    String id=request.getRequiredProperty(COLLECTION);
+    String exclude=request.getOptionalProperty("exclude");
+    ObjectAdapter collection=request.getContext().getMappedObjectOrResult(id);
+    RequestContext context=request.getContext();
+    CollectionFacet facet=(CollectionFacet)collection.getSpecification().getFacet(CollectionFacet.class);
+    Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+    StringBuffer buffer=new StringBuffer();
+    while (iterator.hasNext()) {
+      ObjectAdapter element=iterator.next();
+      Scope scope=Scope.INTERACTION;
+      String elementId=context.mapObject(element,scope);
+      if (exclude != null && context.getMappedObject(exclude) == element) {
+        continue;
+      }
+      String title=element.titleString();
+      String checked="";
+      buffer.append("<input type=\"radio\" name=\"" + field + "\" value=\""+ elementId+ "\""+ checked+ ">"+ title+ "</input><br/>\n");
+    }
+    block.replaceContent(field,buffer.toString());
+  }
+}

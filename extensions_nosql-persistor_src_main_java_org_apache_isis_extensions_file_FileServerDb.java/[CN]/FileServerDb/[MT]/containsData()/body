@@ -1,0 +1,16 @@
+{
+  ClientConnection connection=getConnection();
+  boolean flag;
+  try {
+    connection.request('X',"contains-data");
+    connection.validateRequest();
+    flag=connection.getResponseAsBoolean();
+  }
+ catch (  RuntimeException e) {
+    LOG.error("aborting containsData",e);
+    abortConnection(connection);
+    throw e;
+  }
+  returnConnection(connection);
+  return flag;
+}

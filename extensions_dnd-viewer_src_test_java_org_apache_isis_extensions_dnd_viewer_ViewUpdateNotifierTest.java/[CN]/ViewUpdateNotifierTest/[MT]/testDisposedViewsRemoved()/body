@@ -1,0 +1,21 @@
+{
+  TestProxySystem testProxySystem=new TestProxySystem();
+  testProxySystem.init();
+  final DummyWorkspaceView workspace=new DummyWorkspaceView();
+  final Vector vector=new Vector();
+  final DummyView view1=createView(object);
+  view1.setParent(workspace);
+  workspace.addView(view1);
+  vector.addElement(view1);
+  final DummyView view2=createView(object);
+  view2.setParent(workspace);
+  workspace.addView(view2);
+  vector.addElement(view2);
+  notifier.setupViewsForObject(object,vector);
+  notifier.invalidateViewsForChangedObjects();
+  assertEquals(0,view1.invalidateContent);
+  assertEquals(0,view2.invalidateContent);
+  IsisContext.getUpdateNotifier().addDisposedObject(object);
+  notifier.removeViewsForDisposedObjects();
+  assertEquals(0,workspace.getSubviews().length);
+}

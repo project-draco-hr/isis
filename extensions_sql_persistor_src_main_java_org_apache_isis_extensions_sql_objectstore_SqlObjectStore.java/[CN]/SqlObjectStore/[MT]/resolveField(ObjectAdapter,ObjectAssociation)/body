@@ -1,0 +1,12 @@
+{
+  if (field.isOneToManyAssociation()) {
+    DatabaseConnector connection=connectionPool.acquire();
+    ObjectSpecification spec=object.getSpecification();
+    ObjectMapping mapper=objectMappingLookup.getMapping(spec,connection);
+    mapper.resolveCollection(connection,object,field);
+    connectionPool.release(connection);
+  }
+ else {
+    resolveImmediately(field.get(object));
+  }
+}

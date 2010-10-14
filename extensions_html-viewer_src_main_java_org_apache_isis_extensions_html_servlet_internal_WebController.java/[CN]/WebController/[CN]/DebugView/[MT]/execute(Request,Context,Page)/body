@@ -1,0 +1,34 @@
+{
+  page.setTitle("Debug");
+  final DebugPane debugPane=context.getComponentFactory().createDebugPane();
+  page.setDebug(debugPane);
+  final DebugString debug=new DebugString();
+  AuthenticationSession authenticationSession=IsisContext.getAuthenticationSession();
+  debug.appendTitle("Session");
+  if (authenticationSession != null) {
+    debug.appendln("user",authenticationSession.getUserName());
+    debug.appendln("roles",authenticationSession.getRoles());
+  }
+ else {
+    debug.appendln("none");
+  }
+  final UserProfile userProfile=IsisContext.getUserProfile();
+  debug.appendTitle("User profile");
+  if (userProfile != null) {
+    userProfile.debugData(debug);
+  }
+ else {
+    debug.appendln("none");
+  }
+  debug.appendTitle("Actions");
+  final Iterator e=actions.entrySet().iterator();
+  debug.indent();
+  while (e.hasNext()) {
+    final Map.Entry element=(Map.Entry)e.next();
+    debug.appendln(element.getKey() + " -> " + element.getValue());
+  }
+  debug.unindent();
+  context.debug(debug);
+  ImageLookup.debug(debug);
+  debugPane.appendln("<pre>" + debug.toString() + "</pre>");
+}

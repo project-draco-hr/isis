@@ -1,0 +1,50 @@
+{
+  FormState formState=new FormState();
+  ObjectActionParameter[] parameters2=action.getParameters();
+  int parameterCount=action.getParameterCount();
+  for (int i=0; i < parameterCount; i++) {
+    String fieldName=parameterName(i);
+    String newEntry=context.getParameter(fieldName);
+    if (newEntry.equals("-OTHER-")) {
+      newEntry=context.getParameter(fieldName + "-other");
+    }
+    if (newEntry == null) {
+      ObjectSpecification spec=parameters2[i].getSpecification();
+      if (spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(boolean.class)) || spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(Boolean.class))) {
+        newEntry=FALSE;
+      }
+ else {
+        newEntry="";
+      }
+    }
+    FieldEditState fieldState=formState.createField(fieldName,newEntry);
+    Consent consent=null;
+    if (!parameters2[i].isOptional() && newEntry.equals("")) {
+      consent=new Veto(parameters2[i].getName() + " required");
+    }
+ else     if (parameters2[i].getSpecification().getFacet(ParseableFacet.class) != null) {
+      try {
+        ParseableFacet facet=(ParseableFacet)parameters2[i].getSpecification().getFacet(ParseableFacet.class);
+        ObjectAdapter entry=facet.parseTextEntry(null,newEntry);
+        fieldState.setValue(entry);
+      }
+ catch (      TextEntryParseException e) {
+        consent=new Veto(e.getMessage());
+      }
+    }
+ else {
+      fieldState.setValue(newEntry == null ? null : context.getMappedObject(newEntry));
+    }
+    if (consent != null && consent.isVetoed()) {
+      fieldState.setError(consent.getReason());
+    }
+  }
+  if (formState.isValid()) {
+    ObjectAdapter[] parameters=getParameters(action,formState);
+    Consent consent=action.isProposedArgumentSetValid(object,parameters);
+    if (consent != null && consent.isVetoed()) {
+      formState.setError(consent.getReason());
+    }
+  }
+  return formState;
+}

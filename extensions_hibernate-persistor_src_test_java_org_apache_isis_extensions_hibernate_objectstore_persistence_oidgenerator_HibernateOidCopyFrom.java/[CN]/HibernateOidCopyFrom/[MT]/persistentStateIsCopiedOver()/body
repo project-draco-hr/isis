@@ -1,0 +1,11 @@
+{
+  final HibernateOid oid=HibernateOid.createPersistent(Object.class,"x");
+  final HibernateOid oidCopy=HibernateOid.createTransient(Object.class,2L);
+  assertNotNull(oid.getHibernateId());
+  assertFalse(oid.isTransient());
+  assertNull(oidCopy.getHibernateId());
+  assertTrue(oidCopy.isTransient());
+  oidCopy.copyFrom(oid);
+  assertNotNull(oidCopy.getHibernateId());
+  assertFalse(oidCopy.isTransient());
+}

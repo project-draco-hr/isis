@@ -1,0 +1,22 @@
+{
+  for (int i=0; i < formFields.length; i++) {
+    String fieldId=formFields[i].getName();
+    ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
+    InputField formField=formFields[i];
+    AuthenticationSession session=IsisContext.getAuthenticationSession();
+    if (field.isVisible(session,object).isAllowed() && (includeUnusableFields || field.isUsable(session,object).isAllowed())) {
+      ObjectAdapter[] options=field.getChoices(object);
+      FieldFactory.initializeField(context,object,field,options,!field.isMandatory(),includeUnusableFields,formField);
+      Consent usable=field.isUsable(session,object);
+      boolean isEditable=true;
+      isEditable=isEditable && usable.isAllowed();
+      if (usable.isVetoed()) {
+        formField.setDescription(usable.getReason());
+      }
+      formField.setEditable(isEditable);
+    }
+ else {
+      formFields[i].setHidden(true);
+    }
+  }
+}

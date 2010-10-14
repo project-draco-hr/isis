@@ -1,0 +1,8 @@
+{
+  ObjectSpecification specification=query.getSpecification();
+  DatabaseConnector connector=connectionPool.acquire();
+  ObjectMapping mapper=objectMappingLookup.getMapping(specification,connector);
+  ObjectAdapter instances[]=mapper.getInstances(connector,specification,query);
+  connectionPool.release(connector);
+  return instances;
+}

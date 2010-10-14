@@ -1,0 +1,14 @@
+{
+  Serializable entityId=event.getEntityId();
+  final HibernateOid oid=HibernateOid.createPersistent(event.getEntityClassName(),entityId);
+  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(event.getEntityClassName());
+  ObjectAdapter adapter=getAdapterManager().getAdapterFor(oid);
+  if (adapter == null) {
+    adapter=getHydrator().recreateAdapter(oid,spec);
+    Assert.assertFalse(persistenceContext.isEntryFor(adapter.getObject()));
+    return adapter.getObject();
+  }
+ else {
+    return load(event,persister,keyToLoad,options);
+  }
+}

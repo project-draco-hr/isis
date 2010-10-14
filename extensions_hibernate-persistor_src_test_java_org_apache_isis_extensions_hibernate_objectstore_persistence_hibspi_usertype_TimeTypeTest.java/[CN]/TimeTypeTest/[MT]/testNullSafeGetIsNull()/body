@@ -1,0 +1,10 @@
+{
+  final MockControl<ResultSet> control=MockControl.createControl(ResultSet.class);
+  final ResultSet rs=(ResultSet)control.getMock();
+  control.expectAndReturn(rs.getTime(names[0]),null);
+  control.expectAndReturn(rs.wasNull(),true);
+  control.replay();
+  final TimeType type=new TimeType();
+  assertNull(type.nullSafeGet(rs,names,null));
+  control.verify();
+}

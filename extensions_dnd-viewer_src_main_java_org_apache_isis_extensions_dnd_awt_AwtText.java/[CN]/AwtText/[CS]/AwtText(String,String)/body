@@ -1,0 +1,17 @@
+{
+  final IsisConfiguration cfg=IsisContext.getConfiguration();
+  font=cfg.getFont(FONT_PROPERTY_STEM + propertyName,Font.decode(defaultFont));
+  LOG.info("font " + propertyName + " loaded as "+ font);
+  this.propertyName=propertyName;
+  if (font == null) {
+    font=cfg.getFont(FONT_PROPERTY_STEM + ColorsAndFonts.TEXT_DEFAULT,new Font("SansSerif",Font.PLAIN,12));
+  }
+  metrics=fontMetricsComponent.getFontMetrics(font);
+  maxCharWidth=metrics.getMaxAdvance() + 1;
+  if (maxCharWidth == 0) {
+    maxCharWidth=(charWidth('X') + 3);
+  }
+  lineSpacing=cfg.getInteger(SPACING_PROPERTYSTEM + propertyName,0);
+  ascentAdjust=cfg.getBoolean(ASCENT_ADJUST,false);
+  LOG.debug("font " + propertyName + " height="+ metrics.getHeight()+ ", leading="+ metrics.getLeading()+ ", ascent="+ metrics.getAscent()+ ", descent="+ metrics.getDescent()+ ", line spacing="+ lineSpacing);
+}

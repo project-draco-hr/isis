@@ -1,0 +1,86 @@
+{
+  if (!canChangeValue().isAllowed()) {
+    return;
+  }
+  final int keyCode=key.getKeyCode();
+  if (keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_ALT) {
+    return;
+  }
+  final int modifiers=key.getModifiers();
+  final boolean alt=(modifiers & InputEvent.ALT_MASK) > 0;
+  final boolean shift=(modifiers & InputEvent.SHIFT_MASK) > 0;
+  final boolean ctrl=(modifiers & InputEvent.CTRL_MASK) > 0;
+switch (keyCode) {
+case KeyEvent.VK_PAGE_UP:
+    key.consume();
+  pageUp(shift,ctrl);
+break;
+case KeyEvent.VK_PAGE_DOWN:
+key.consume();
+pageDown(shift,ctrl);
+break;
+case KeyEvent.VK_V:
+if (ctrl) {
+key.consume();
+pasteFromClipboard();
+highlight(false);
+}
+break;
+case KeyEvent.VK_C:
+if (ctrl) {
+key.consume();
+copyToClipboard();
+}
+break;
+case KeyEvent.VK_DOWN:
+key.consume();
+down(shift);
+break;
+case KeyEvent.VK_UP:
+key.consume();
+up(shift);
+break;
+case KeyEvent.VK_HOME:
+key.consume();
+home(alt,shift);
+break;
+case KeyEvent.VK_END:
+key.consume();
+end(alt,shift);
+break;
+case KeyEvent.VK_LEFT:
+key.consume();
+left(alt,shift);
+break;
+case KeyEvent.VK_RIGHT:
+key.consume();
+right(alt,shift);
+break;
+case KeyEvent.VK_DELETE:
+key.consume();
+deleteForward();
+break;
+case KeyEvent.VK_BACK_SPACE:
+key.consume();
+delete();
+break;
+case KeyEvent.VK_TAB:
+key.consume();
+boolean moveToNextField=!shift;
+tab(moveToNextField);
+break;
+case KeyEvent.VK_ENTER:
+if (!enter()) {
+getParent().keyPressed(key);
+}
+break;
+case KeyEvent.VK_ESCAPE:
+key.consume();
+escape();
+break;
+default :
+break;
+}
+LOG.debug("character at " + cursor.getCharacter() + " line "+ cursor.getLine());
+LOG.debug(selection);
+}

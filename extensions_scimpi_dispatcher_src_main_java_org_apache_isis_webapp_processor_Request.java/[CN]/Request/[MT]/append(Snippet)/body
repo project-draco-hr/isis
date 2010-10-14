@@ -1,0 +1,15 @@
+{
+  try {
+    String html=snippet.getHtml();
+    if (((HtmlSnippet)snippet).isContainsVariable()) {
+      html=context.replaceVariables(html,true);
+    }
+    appendHtml(html);
+  }
+ catch (  TagProcessingException e) {
+    throw e;
+  }
+catch (  RuntimeException e) {
+    throw new TagProcessingException(snippet.errorAt(),e);
+  }
+}

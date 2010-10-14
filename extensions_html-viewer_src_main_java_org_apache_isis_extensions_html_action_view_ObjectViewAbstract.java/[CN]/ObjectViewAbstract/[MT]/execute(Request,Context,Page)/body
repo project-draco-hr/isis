@@ -1,0 +1,26 @@
+{
+  final String idString=request.getObjectId();
+  final ObjectAdapter adapter=context.getMappedObject(idString);
+  if (adapter == null) {
+    throw new ActionException("No such object: " + idString);
+  }
+  IsisContext.getPersistenceSession().resolveImmediately(adapter);
+  page.setTitle(adapter.titleString());
+  final ViewPane content=page.getViewPane();
+  content.setWarningsAndMessages(context.getMessages(),context.getWarnings());
+  content.setTitle(adapter.titleString(),adapter.getSpecification().getDescription());
+  content.setIconName(adapter.getIconName());
+  if (addObjectToHistory()) {
+    context.addObjectToHistory(idString);
+  }
+  context.purge();
+  content.setMenu(MenuUtil.menu(adapter,idString,context));
+  String iconName=adapter.getIconName();
+  if (iconName == null) {
+    iconName=adapter.getSpecification().getShortName();
+  }
+  content.setIconName(iconName);
+  final String field=request.getProperty();
+  doExecute(context,content,adapter,field);
+  context.clearMessagesAndWarnings();
+}

@@ -1,0 +1,13 @@
+{
+  final ObjectAdapter object=((ObjectContent)content).getObject();
+  final ObjectAssociation[] fields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),object));
+  for (int i=0; i < fields.length; i++) {
+    if (fields[i].isOneToManyAssociation()) {
+      return CAN_OPEN;
+    }
+    if (showObjectContents && fields[i].isOneToOneAssociation() && !(SpecificationFacets.isBoundedSet(object.getSpecification()))) {
+      return CAN_OPEN;
+    }
+  }
+  return CANT_OPEN;
+}

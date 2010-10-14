@@ -1,0 +1,27 @@
+{
+  Color color;
+  final ViewState state=view.getState();
+  if (resolveFailure) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_ERROR);
+  }
+ else   if (state.canDrop()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_VALID);
+  }
+ else   if (state.cantDrop()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_INVALID);
+  }
+ else   if (state.isObjectIdentified()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_IDENTIFIED);
+  }
+ else {
+    color=this.color;
+  }
+  String text=TextUtils.limitText(getTitle(),style,maxWidth);
+  final int xt=x;
+  final int yt=baseline;
+  if (Toolkit.debug) {
+    final int x2=style.stringWidth(text);
+    canvas.drawDebugOutline(new Bounds(xt,yt - style.getAscent(),x2,style.getTextHeight()),baseline,Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_DRAW));
+  }
+  canvas.drawText(text,xt,yt,color,style);
+}

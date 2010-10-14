@@ -1,0 +1,27 @@
+{
+  ObjectAssociation field=adapter.getSpecification().getAssociation(fieldName);
+  if (field == null) {
+    throw new ScimpiException("No field " + fieldName + " in "+ adapter.getSpecification().getFullName());
+  }
+  if (field.isVisible(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
+    throw new ForbiddenException("Field " + fieldName + " in "+ adapter.getSpecification().getFullName()+ " is not visible");
+  }
+  IsisContext.getPersistenceSession().resolveField(adapter,field);
+  if (valid(request,adapter)) {
+    String classSegment=" class=\"" + cssClass + "\"";
+    String objectId=request.getContext().mapObject(adapter,Scope.INTERACTION);
+    String elementId=request.getContext().mapObject(element,Scope.INTERACTION);
+    String action=RemoveAction.ACTION + Dispatcher.COMMAND_ROOT;
+    request.appendHtml("<form" + classSegment + " method=\"POST\" action=\""+ action+ "\" >");
+    request.appendHtml("<input type=\"hidden\" name=\"" + OBJECT + "\" value=\""+ objectId+ "\" />");
+    request.appendHtml("<input type=\"hidden\" name=\"" + FIELD + "\" value=\""+ fieldName+ "\" />");
+    request.appendHtml("<input type=\"hidden\" name=\"" + ELEMENT + "\" value=\""+ elementId+ "\" />");
+    if (resultOverride != null) {
+      request.appendHtml("<input type=\"hidden\" name=\"" + RESULT_OVERRIDE + "\" value=\""+ resultOverride+ "\" />");
+    }
+    request.appendHtml("<input type=\"hidden\" name=\"" + VIEW + "\" value=\""+ view+ "\" />");
+    request.appendHtml("<input type=\"hidden\" name=\"" + ERRORS + "\" value=\""+ error+ "\" />");
+    request.appendHtml("<input class=\"button\" type=\"submit\" value=\"" + title + "\" />");
+    request.appendHtml("</form>");
+  }
+}

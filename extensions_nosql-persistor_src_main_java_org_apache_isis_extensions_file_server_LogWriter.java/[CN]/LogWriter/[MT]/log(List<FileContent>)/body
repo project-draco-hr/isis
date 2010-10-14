@@ -1,0 +1,27 @@
+{
+  if (startNewFile) {
+    close();
+    openNewFile();
+    startNewFile=false;
+  }
+  try {
+    writer.write(("#transaction started - " + new Date().toString() + "\n").getBytes());
+    for (    FileContent content : items) {
+      writer.write(content.command);
+      writer.write(content.type.getBytes("utf-8"));
+      writer.write(' ');
+      writer.write(content.id.getBytes("utf-8"));
+      writer.write(' ');
+      writer.write(content.currentVersion.getBytes("utf-8"));
+      writer.write(' ');
+      writer.write(content.data.getBytes("utf-8"));
+      writer.write('\n');
+      writer.write('\n');
+    }
+    writer.write("#transaction ended\n\n".getBytes());
+    writer.flush();
+  }
+ catch (  IOException e) {
+    throw new NoSqlStoreException("Failed to write data to log file",e);
+  }
+}

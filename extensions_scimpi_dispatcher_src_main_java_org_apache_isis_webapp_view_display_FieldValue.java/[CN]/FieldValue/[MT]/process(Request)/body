@@ -1,0 +1,16 @@
+{
+  String className=request.getOptionalProperty(CLASS);
+  String id=request.getOptionalProperty(OBJECT);
+  String fieldName=request.getRequiredProperty(FIELD);
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+  if (field == null) {
+    throw new ScimpiException("No field " + fieldName + " in "+ object.getSpecification().getFullName());
+  }
+  if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+    throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+  }
+  boolean isIconShowing=request.isRequested(SHOW_ICON,true);
+  String truncateTo=request.getOptionalProperty(TRUNCATE,"0");
+  write(request,(ObjectAdapter)object,field,null,className,isIconShowing,Integer.valueOf(truncateTo).intValue());
+}

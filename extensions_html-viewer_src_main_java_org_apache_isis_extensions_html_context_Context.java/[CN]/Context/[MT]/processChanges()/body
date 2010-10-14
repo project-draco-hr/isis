@@ -1,0 +1,20 @@
+{
+  List<ObjectAdapter> disposedObjects=IsisContext.getUpdateNotifier().getDisposedObjects();
+  for (  ObjectAdapter adapter : disposedObjects) {
+    ObjectMapping mapping=objectMapping(adapter);
+    if (objectMap.containsValue(mapping)) {
+      String existingId=findExistingId(objectMap,mapping);
+      history.remove(existingId);
+      ArrayList<Crumb> relatedCrumbs=new ArrayList<Crumb>();
+      for (      Crumb crumb : getCrumbs()) {
+      }
+      for (      Crumb crumb : relatedCrumbs) {
+        crumbs.remove(crumb);
+      }
+      for (      CollectionMapping collection : collectionMap.values()) {
+        collection.remove(existingId);
+      }
+      objectMap.remove(existingId);
+    }
+  }
+}

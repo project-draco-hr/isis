@@ -1,0 +1,14 @@
+{
+  for (int i=0; i < formFields.length; i++) {
+    String fieldId=formFields[i].getName();
+    ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
+    InputField formField=formFields[i];
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed() && formField.isEditable()) {
+      FieldEditState fieldState=entryState.getField(field.getId());
+      String entry=fieldState == null ? "" : fieldState.getEntry();
+      formField.setValue(entry);
+      String error=fieldState == null ? "" : fieldState.getError();
+      formField.setErrorText(error);
+    }
+  }
+}

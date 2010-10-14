@@ -1,0 +1,11 @@
+{
+  boolean haveReadAMappingFile=false;
+  final String path=getNofConfiguration().getString(HibernateConstants.HBM_EXPORT_KEY,new File(".").getAbsolutePath() + FILE_SEPERATOR + MAPPING_DIR);
+  final List<File> mappingFiles=readMappingFiles(path);
+  for (  final File file : mappingFiles) {
+    cfg.addFile(file);
+    haveReadAMappingFile=true;
+    LOG.info("reading mapping file: " + file.getAbsolutePath());
+  }
+  return haveReadAMappingFile;
+}

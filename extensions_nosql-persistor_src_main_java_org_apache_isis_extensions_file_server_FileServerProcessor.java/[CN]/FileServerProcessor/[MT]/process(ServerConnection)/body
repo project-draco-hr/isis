@@ -1,0 +1,46 @@
+{
+  try {
+    if (acceptNewRequests) {
+      char command=connection.getCommand();
+switch (command) {
+case 'L':
+        list(connection);
+      break;
+case 'R':
+    read(connection);
+  break;
+case 'W':
+write(connection);
+break;
+case 'I':
+hasInstances(connection);
+break;
+case 'S':
+service(connection);
+break;
+case 'T':
+saveService(connection);
+break;
+case 'N':
+nextSerialBatch(connection);
+break;
+case 'X':
+status(connection);
+break;
+default :
+LOG.warn("Unrecognised command " + command);
+connection.error("Unrecognised command " + command);
+}
+}
+ else {
+connection.abort();
+}
+}
+ catch (Exception e) {
+LOG.error("Request failed",e);
+connection.error("Remote exception thrown:\n" + e.getMessage(),e);
+}
+ finally {
+connection.close();
+}
+}

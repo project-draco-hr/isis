@@ -1,0 +1,20 @@
+{
+  LOG.debug("rebuild view " + view + " for "+ actionContent);
+  final View[] subviews=view.getSubviews();
+  for (int i=0; i < subviews.length; i++) {
+    final View subview=subviews[i];
+    final Content content=subview.getContent();
+    final ObjectAdapter subviewsObject=subview.getContent().getAdapter();
+    final ObjectAdapter invocationsObject=((ActionContent)view.getContent()).getParameterObject(i);
+    if (content instanceof ObjectParameter) {
+      if (subviewsObject != invocationsObject) {
+        final ObjectParameter parameter=new ObjectParameterImpl((ObjectParameterImpl)content,invocationsObject);
+        final View fieldView=createFieldView(view,parameter,i);
+        view.replaceView(subview,decorateSubview(view.getViewAxes(),fieldView));
+      }
+    }
+ else {
+      subview.refresh();
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  if (isBusy(identifiedView)) {
+    return;
+  }
+  try {
+    final Click click=new ClickImpl(downAt,me.getModifiers());
+    spy.addAction("Mouse clicked " + click.getLocation());
+    if (click.button3() && identifiedView != null) {
+    }
+ else     if (viewer.isOverlayAvailable()) {
+      overlayClick(click);
+    }
+ else {
+      fireClick(click,me.getClickCount());
+    }
+    redraw();
+  }
+ catch (  final Exception e) {
+    interactionException("mouseClicked",e);
+  }
+}

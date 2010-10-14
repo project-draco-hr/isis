@@ -1,0 +1,21 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("instantiate entityName=" + entityName + ", id="+ id+ ", mode="+ entityMode);
+  }
+  final HibernateOid oid=HibernateOid.createPersistent(entityName,id);
+  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(entityName);
+  final ObjectAdapter adapter=getPersistenceSession().recreateAdapter(oid,spec);
+  final ResolveState nextState=adapter.getResolveState().isResolved() ? ResolveState.UPDATING : ResolveState.RESOLVING;
+  if (!adapter.getResolveState().isResolving()) {
+    PersistorUtil.start(adapter,nextState);
+  }
+  final Object object=adapter.getObject();
+  try {
+    ClassMetadata classMetadata=HibernateUtil.getSessionFactory().getClassMetadata(entityName);
+    classMetadata.setIdentifier(object,id,entityMode);
+  }
+ catch (  final HibernateException e) {
+    throw new CallbackException("Error getting identifier property for class " + entityName,e);
+  }
+  return object;
+}

@@ -1,0 +1,70 @@
+{
+  String name=context.getParameter("name");
+  ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(name);
+  DebugString str=new DebugString();
+  Dump.specification(spec,str);
+  view.divider(spec.getFullName());
+  view.appendRow("Hash code","#" + Integer.toHexString(spec.hashCode()));
+  view.appendRow("ID",spec.getIdentifier());
+  view.appendRow("Full name",spec.getFullName());
+  view.appendRow("Short name",spec.getShortName());
+  view.appendRow("Singular name",spec.getSingularName());
+  view.appendRow("Plural name",spec.getPluralName());
+  view.appendRow("Description",spec.getDescription());
+  view.appendRow("Type","?");
+  view.appendRow("Value/aggregated",String.valueOf(!spec.isValueOrIsAggregated()));
+  view.appendRow("Parent specification",specificationLink(spec.superclass()));
+  specificationClasses(view,"Child specifications",spec.subclasses());
+  specificationClasses(view,"Implemented interfaces",spec.interfaces());
+  speficationFacets(view,spec);
+  ObjectAssociation[] fields=spec.getAssociations();
+  specificationMembers(view,"Fields",fields);
+  ObjectAction[] userActions=spec.getObjectActions(ObjectActionType.USER);
+  specificationMembers(view,"User Actions",userActions);
+  specificationMembers(view,"Exploration Actions",spec.getObjectActions(ObjectActionType.EXPLORATION));
+  specificationMembers(view,"Prototype Actions",spec.getObjectActions(ObjectActionType.PROTOTYPE));
+  specificationMembers(view,"Debug Actions",spec.getObjectActions(ObjectActionType.DEBUG));
+  for (int i=0; i < fields.length; i++) {
+    ObjectAssociation field=fields[i];
+    view.divider("<span id=\"" + field.getId() + "\">Field: "+ field.getName()+ "</span>");
+    view.appendRow("ID",field.getIdentifier());
+    view.appendRow("Short ID",field.getId());
+    view.appendRow("Name",field.getName());
+    view.appendRow("Specification",specificationLink(field.getSpecification()));
+    view.appendRow("Type",field.isOneToManyAssociation() ? "Collection" : field.isOneToOneAssociation() ? "Object" : "Unknown");
+    view.appendRow("Flags",(field.isAlwaysHidden() ? "" : "Visible ") + (field.isNotPersisted() ? "Not Persisted" : " ") + (field.isMandatory() ? "Mandatory " : ""));
+    speficationFacets(view,field);
+  }
+  for (int i=0; i < userActions.length; i++) {
+    ObjectAction action=userActions[i];
+    view.divider("<span id=\"" + action.getId() + "\">Action: "+ action.getName()+ "</span>");
+    view.appendRow("ID",action.getIdentifier());
+    view.appendRow("Short ID",action.getId());
+    view.appendRow("Name",action.getName());
+    view.appendRow("Specification",specificationLink(action.getSpecification()));
+    view.appendRow("Target",action.getTarget());
+    view.appendRow("On type",specificationLink(action.getOnType()));
+    ObjectSpecification returnType=action.getReturnType();
+    view.appendRow("Returns",returnType == null ? "VOID" : specificationLink(returnType));
+    speficationFacets(view,action);
+    ObjectActionParameter[] parameters=action.getParameters();
+    StringBuffer buffer=new StringBuffer();
+    if (parameters.length == 0) {
+      buffer.append("none");
+    }
+ else {
+      ObjectActionParameter[] p=action.getParameters();
+      for (int j=0; j < parameters.length; j++) {
+        buffer.append(p[j].getName());
+        buffer.append(" (");
+        buffer.append(specificationLink(parameters[j].getSpecification()));
+        buffer.append(")<br>");
+        Class<? extends Facet>[] parameterFacets=p[j].getFacetTypes();
+        for (int k=0; k < parameterFacets.length; k++) {
+          buffer.append("&nbsp;&nbsp;" + p[j].getFacet(parameterFacets[k]).toString() + "<br>");
+        }
+      }
+    }
+    view.appendRow("Parameters",buffer.toString());
+  }
+}

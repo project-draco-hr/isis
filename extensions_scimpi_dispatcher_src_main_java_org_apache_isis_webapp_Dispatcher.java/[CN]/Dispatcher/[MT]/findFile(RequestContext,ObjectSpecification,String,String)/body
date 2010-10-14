@@ -1,0 +1,17 @@
+{
+  String className=specification.getShortName();
+  String fileName=context.findFile("/" + className + "/"+ name+ "."+ extension);
+  if (fileName == null) {
+    ObjectSpecification[] interfaces=specification.interfaces();
+    for (int i=0; i < interfaces.length; i++) {
+      fileName=findFile(context,interfaces[i],name,extension);
+      if (fileName != null) {
+        return fileName;
+      }
+    }
+    if (specification.superclass() != null) {
+      fileName=findFile(context,specification.superclass(),name,extension);
+    }
+  }
+  return fileName;
+}

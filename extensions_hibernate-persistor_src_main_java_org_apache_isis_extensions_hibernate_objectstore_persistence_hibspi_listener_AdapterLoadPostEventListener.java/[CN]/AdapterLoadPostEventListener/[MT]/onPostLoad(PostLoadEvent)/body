@@ -1,0 +1,10 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("PostLoadEvent " + logString(event));
+  }
+  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(event.getEntity());
+  if (adapter.getResolveState() == ResolveState.RESOLVING) {
+    PersistorUtil.end(adapter);
+  }
+  clearDirtyFor(adapter);
+}

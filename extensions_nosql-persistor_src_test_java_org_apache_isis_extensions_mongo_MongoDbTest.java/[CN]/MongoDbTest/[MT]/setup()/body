@@ -1,0 +1,14 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  testObjects=new TrialObjects();
+  Mongo m=new Mongo();
+  m.dropDatabase("testdb");
+  testDb=m.getDB("testdb");
+  db=new MongoDb("localhost",0,"testdb",new SerialKeyCreator());
+  db.open();
+  ExampleValuePojo pojo=new ExampleValuePojo();
+  pojo.setName("Fred Smith");
+  oid=SerialOid.createTransient(3);
+  object=testObjects.createAdapter(pojo,oid);
+  specification=object.getSpecification();
+}

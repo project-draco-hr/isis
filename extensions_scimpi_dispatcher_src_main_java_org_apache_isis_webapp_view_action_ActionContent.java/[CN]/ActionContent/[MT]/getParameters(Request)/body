@@ -1,0 +1,15 @@
+{
+  ObjectAdapter[] params=new ObjectAdapter[parameters.length];
+  ObjectActionParameter[] pars=action.getParameters();
+  for (int i=0; i < parameters.length; i++) {
+    ObjectSpecification typ=pars[i].getSpecification();
+    if (typ.getFacet(ParseableFacet.class) != null) {
+      ParseableFacet facet=(ParseableFacet)typ.getFacet(ParseableFacet.class);
+      params[i]=facet.parseTextEntry(null,parameters[i]);
+    }
+ else {
+      params[i]=request.getContext().getMappedObject(parameters[i]);
+    }
+  }
+  return params;
+}

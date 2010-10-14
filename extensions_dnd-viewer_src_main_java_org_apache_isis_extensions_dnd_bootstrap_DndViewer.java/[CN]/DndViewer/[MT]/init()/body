@@ -1,0 +1,34 @@
+{
+  super.init();
+  new AwtImageFactory(IsisContext.getTemplateImageLoader());
+  new AwtToolkit();
+  setShutdownListener(new ShutdownListener(){
+    public void logOut(){
+      DndViewer.this.logOut();
+    }
+    public void quit(){
+      DndViewer.this.quit();
+    }
+  }
+);
+  updateNotifier=new ViewUpdateNotifierImpl();
+  if (updateNotifier == null) {
+    throw new NullPointerException("No update notifier set for " + this);
+  }
+  if (shutdownListener == null) {
+    throw new NullPointerException("No shutdown listener set for " + this);
+  }
+  while (acceptingLogIns) {
+    if (login()) {
+      openViewer();
+      try {
+        wait();
+      }
+ catch (      final InterruptedException e) {
+      }
+    }
+ else {
+      quit();
+    }
+  }
+}

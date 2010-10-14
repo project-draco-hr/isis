@@ -1,0 +1,30 @@
+{
+  if (bulletType == null) {
+    request.appendHtml("<ol>");
+  }
+ else {
+    request.appendHtml("<ul type=\"" + bulletType + "\">");
+  }
+  CollectionFacet facet=(CollectionFacet)collection.getSpecification().getFacet(CollectionFacet.class);
+  Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+  while (iterator.hasNext()) {
+    ObjectAdapter element=(ObjectAdapter)iterator.next();
+    request.appendHtml("<li>");
+    if (linkRow != null) {
+      Scope scope=linkRow == null ? Scope.INTERACTION : RequestContext.scope(linkRow.getScope());
+      String rowId=request.getContext().mapObject(element,scope);
+      request.appendHtml("<a class=\"item-select\" href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ "\">");
+    }
+    request.appendHtml(element.titleString());
+    if (linkRow != null) {
+      request.appendHtml("</a>");
+    }
+    request.appendHtml("</li>\n");
+  }
+  if (bulletType == null) {
+    request.appendHtml("</ol>");
+  }
+ else {
+    request.appendHtml("</ul>");
+  }
+}

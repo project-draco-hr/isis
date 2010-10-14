@@ -1,0 +1,45 @@
+{
+  for (final Iterator<PersistentSpecification> iter=classes.values().iterator(); iter.hasNext(); ) {
+    final PersistentSpecification thisPersistentClass=iter.next();
+    final ObjectAssociation[] uniqueFields=thisPersistentClass.getUniqueFields();
+    for (int i=0; i < uniqueFields.length; i++) {
+      final ObjectAssociation field=uniqueFields[i];
+      if (field.getSpecification().isValueOrIsAggregated() || field.isNotPersisted() || thisPersistentClass.hasAssociation(field.getId())) {
+        continue;
+      }
+      final String associatedClassName=field.getSpecification().getFullName();
+      if (!thisPersistentClass.isUniqueAssociation(associatedClassName)) {
+        continue;
+      }
+      final PersistentSpecification associatedClass=getPersistentClass(associatedClassName);
+      if (associatedClass == null) {
+        continue;
+      }
+      final ObjectAssociation associatedField=associatedClass.getUniqueAssociation(thisPersistentClass.getName());
+      if (associatedField == null || associatedClass.hasAssociation(associatedField.getId())) {
+        continue;
+      }
+      boolean inverse;
+      if (field.isOneToOneAssociation()) {
+        if (associatedField.isOneToOneAssociation()) {
+          inverse=associatedClassName.compareTo(thisPersistentClass.getName()) < 0;
+        }
+ else {
+          inverse=false;
+        }
+      }
+ else {
+        if (associatedField.isOneToOneAssociation()) {
+          inverse=true;
+        }
+ else {
+          inverse=associatedClassName.compareTo(thisPersistentClass.getName()) < 0;
+        }
+      }
+      final Association association=new Association(associatedClass,associatedField,inverse);
+      thisPersistentClass.addAssociation(field.getId(),association);
+      final Association reverseAssociation=new Association(thisPersistentClass,field,!inverse);
+      associatedClass.addAssociation(associatedField.getId(),reverseAssociation);
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  RequestContext context=request.getContext();
+  Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+  StringBuffer buffer=new StringBuffer();
+  while (iterator.hasNext()) {
+    ObjectAdapter element=iterator.next();
+    String elementId=context.mapObject(element,Scope.INTERACTION);
+    String title=element.titleString();
+    String checked="";
+    buffer.append("<input type=\"radio\" name=\"" + field + "\" value=\""+ elementId+ "\""+ checked+ ">"+ title+ "</input><br/>\n");
+  }
+  return buffer.toString();
+}

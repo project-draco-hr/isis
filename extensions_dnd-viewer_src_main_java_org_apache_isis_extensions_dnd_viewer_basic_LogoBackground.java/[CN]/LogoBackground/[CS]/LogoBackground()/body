@@ -1,0 +1,15 @@
+{
+  final IsisConfiguration configuration=IsisContext.getConfiguration();
+  final String fileName=configuration.getString(PARAMETER_BASE + "image","background");
+  logo=ImageFactory.getInstance().loadImage(fileName);
+  if (logo == null) {
+    logo=ImageFactory.getInstance().loadImage("poweredby-logo");
+  }
+  if (logo == null) {
+    LOG.debug("logo image not found: " + fileName);
+  }
+ else {
+    location=Properties.getLocation(PARAMETER_BASE + "location",new Location(-30,-30));
+    logoSize=Properties.getSize(PARAMETER_BASE + "size",logo.getSize());
+  }
+}

@@ -1,0 +1,26 @@
+{
+  String id=request.getOptionalProperty(OBJECT);
+  String fieldName=request.getOptionalProperty(FIELD);
+  boolean isIconShowing=request.isRequested(SHOW_ICON,true);
+  String className=request.getOptionalProperty(CLASS);
+  className=className == null ? "title-icon" : className;
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  if (fieldName != null) {
+    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+    }
+    object=field.get(object);
+  }
+  if (object != null) {
+    request.appendHtml("<span class=\"object\">");
+    IsisContext.getPersistenceSession().resolveImmediately(object);
+    if (isIconShowing) {
+      String iconPath=request.getContext().imagePath(object);
+      request.appendHtml("<img class=\"" + className + "\" src=\""+ iconPath+ "\" />");
+    }
+    request.appendHtml(object.titleString());
+    request.appendHtml("</span>");
+  }
+  request.closeEmpty();
+}

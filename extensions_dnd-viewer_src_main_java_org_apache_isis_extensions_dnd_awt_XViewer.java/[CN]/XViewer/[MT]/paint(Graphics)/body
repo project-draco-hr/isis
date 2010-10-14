@@ -1,0 +1,35 @@
+{
+  redrawCount++;
+  graphic.translate(insets.left,insets.top);
+  final Rectangle paintArea=graphic.getClipBounds();
+  final Rectangle layoutArea=layoutViews();
+  if (layoutArea != null) {
+    paintArea.union(layoutArea);
+  }
+  if (spy != null) {
+    spy.redraw(paintArea.toString(),redrawCount);
+  }
+  if (UI_LOG.isDebugEnabled()) {
+    UI_LOG.debug("------ repaint viewer #" + redrawCount + " "+ paintArea.x+ ","+ paintArea.y+ " "+ paintArea.width+ "x"+ paintArea.height);
+  }
+  final Canvas c=createCanvas(graphic,paintArea);
+  if (background != null) {
+    background.draw(c.createSubcanvas(),rootView.getSize());
+  }
+  if (rootView != null) {
+    rootView.draw(c.createSubcanvas());
+  }
+  Bounds bounds=overlayView.getBounds();
+  if (paintArea.intersects(new Rectangle(bounds.getX(),bounds.getY(),bounds.getWidth(),bounds.getHeight()))) {
+    overlayView.draw(c.createSubcanvas(bounds));
+  }
+  if (doubleBuffering) {
+    graphic.drawImage(doubleBuffer,0,0,null);
+  }
+  if (showRepaintArea) {
+    graphic.setColor(((AwtColor)Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_REPAINT)).getAwtColor());
+    graphic.drawRect(paintArea.x,paintArea.y,paintArea.width - 1,paintArea.height - 1);
+    graphic.drawString("#" + redrawCount,paintArea.x + 3,paintArea.y + 15);
+  }
+  paintStatus(graphic);
+}

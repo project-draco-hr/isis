@@ -1,0 +1,12 @@
+{
+  set.add(new UserActionAbstract(user){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final MultiUserExplorationSession session=(MultiUserExplorationSession)getAuthenticationSession();
+      session.setCurrentSession(user);
+    }
+    @Override public Consent disabled(    View view){
+      return user.equals(currentUser) ? new Veto("Current user") : Allow.DEFAULT;
+    }
+  }
+);
+}

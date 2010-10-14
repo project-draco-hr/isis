@@ -1,0 +1,14 @@
+{
+  try {
+    if (HibernateUtil.hasInitRun()) {
+      final HibernateOid oid=(HibernateOid)getAdapterManager().getAdapterFor(target).getOid();
+      if (oid != null) {
+        return oid.getHibernateId();
+      }
+    }
+    return null;
+  }
+ catch (  final Exception e) {
+    throw new PropertyAccessException(e,"could not get a value by reflection",false,clazz,name);
+  }
+}

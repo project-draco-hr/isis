@@ -1,0 +1,18 @@
+{
+  xmlFile.writeXml(SERVICES_FILE_NAME,new ContentWriter(){
+    public void write(    Writer writer) throws IOException {
+      final String tag=SERVICES_FILE_NAME;
+      writer.append("<" + tag + ">\n");
+      for (final Enumeration e=services.elements(); e.hasMoreElements(); ) {
+        final ServiceElement element=(ServiceElement)e.nextElement();
+        writer.append("  <service oid=\"");
+        writer.append(encodedOid(element.oid));
+        writer.append("\" id=\"");
+        writer.append(element.id);
+        writer.append("\" />\n");
+      }
+      writer.append("</" + tag + ">\n");
+    }
+  }
+);
+}

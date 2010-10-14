@@ -1,0 +1,24 @@
+{
+  response.setContentType("text/html");
+  try {
+    final Page page=controller.generatePage(context,req);
+    if (context.isValid()) {
+      if (controller.isDebug()) {
+        controller.addDebug(page,req);
+        addDebug(request,page);
+      }
+      PrintWriter writer;
+      writer=response.getWriter();
+      page.write(writer);
+    }
+ else {
+      response.sendRedirect(HtmlServletConstants.LOGON_APP_PAGE);
+    }
+  }
+  finally {
+    if (!context.isLoggedIn()) {
+      final HttpSession httpSession=request.getSession(false);
+      LOG.info("dropping session: " + httpSession);
+    }
+  }
+}

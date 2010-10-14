@@ -1,0 +1,25 @@
+{
+  ObjectAdapter collection=association.get(object);
+  CollectionFacet facet=collection.getSpecification().getFacet(CollectionFacet.class);
+  if (association.getSpecification().isAggregated()) {
+    List<StateReader> readers=reader.readCollection(association.getId());
+    String id=association.getId();
+    ObjectAdapter[] elements=new ObjectAdapter[readers.size()];
+    int i=0;
+    for (    StateReader elementReader : readers) {
+      AggregatedOid oid=new AggregatedOid(object.getOid(),id,i);
+      elements[i++]=restoreAggregatedObject(elementReader,oid,keyCreator);
+    }
+    facet.init(collection,elements);
+  }
+ else {
+    String referencesList=reader.readField(association.getId());
+    if (referencesList == null || referencesList.length() == 0) {
+      facet.init(collection,new ObjectAdapter[0]);
+    }
+ else {
+      ObjectAdapter[] elements=restoreElements(referencesList,keyCreator);
+      facet.init(collection,elements);
+    }
+  }
+}

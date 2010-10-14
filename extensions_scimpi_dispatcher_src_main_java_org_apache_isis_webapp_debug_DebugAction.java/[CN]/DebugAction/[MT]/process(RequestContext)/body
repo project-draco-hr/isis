@@ -1,0 +1,33 @@
+{
+  DebugView view=new DebugView(context.getWriter());
+  view.header();
+  view.appendln("<div class=\"links\">");
+  view.appendln("<a href=\"debug.app?action=system\">System</a>");
+  view.appendln(" | <a href=\"debug.app?action=specifications\">List specifications</a>");
+  view.appendln(" | <a href=\"debug.app?action=context\">Context</a>");
+  view.appendln(" | <a href=\"debug.app?action=dispatcher\">Dispatcher</a>");
+  view.appendln("</div>");
+  view.startTable();
+  String action=context.getParameter("action");
+  if ("specifications".equals(action)) {
+    listSpecifications(view);
+  }
+ else   if ("specification".equals(action)) {
+    specification(context,view);
+  }
+ else   if ("object".equals(action)) {
+    object(context,view);
+  }
+ else   if ("system".equals(action)) {
+    system(context,view);
+  }
+ else   if ("context".equals(action)) {
+    context.append(view);
+  }
+ else   if ("dispatcher".equals(action)) {
+    dispatcher.debug(view);
+  }
+  view.endTable();
+  view.footer();
+  context.clearRequestedPath();
+}

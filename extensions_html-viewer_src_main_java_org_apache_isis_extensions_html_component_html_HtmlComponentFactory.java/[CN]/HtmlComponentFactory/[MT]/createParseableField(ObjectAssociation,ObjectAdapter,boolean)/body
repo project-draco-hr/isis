@@ -1,0 +1,17 @@
+{
+  final BooleanValueFacet facet=field.getSpecification().getFacet(BooleanValueFacet.class);
+  if (facet != null) {
+    return createCheckboxBlock(isEditable,facet.isSet(value));
+  }
+ else {
+    final String titleString=value != null ? value.titleString() : "";
+    final MultiLineFacet multiLineFacet=field.getSpecification().getFacet(MultiLineFacet.class);
+    final boolean isWrapped=multiLineFacet != null && !multiLineFacet.preventWrapping();
+    if (isWrapped) {
+      return createInlineBlock("value","<pre>" + titleString + "</pre>",null);
+    }
+ else {
+      return createInlineBlock("value",titleString,null);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  if (args.length != 1) {
+    throw new IllegalArgumentException("Invoking a addTo should only have a single argument");
+  }
+  resolveIfRequired(targetAdapter);
+  final Object argumentObj=underlying(args[0]);
+  if (argumentObj == null) {
+    throw new IllegalArgumentException("Must provide a non-null object to add");
+  }
+  final ObjectAdapter argumentNO=getRuntimeContext().adapterFor(argumentObj);
+  final InteractionResult interactionResult=otma.isValidToAdd(targetAdapter,argumentNO).getInteractionResult();
+  notifyListenersAndVetoIfRequired(interactionResult);
+  if (getExecutionMode() == ExecutionMode.EXECUTE) {
+    otma.addElement(targetAdapter,argumentNO);
+  }
+  objectChangedIfRequired(targetAdapter);
+  return null;
+}

@@ -1,0 +1,36 @@
+{
+  final String idString=request.getObjectId();
+  if (idString == null) {
+    throw new ActionException("Task no longer in progress");
+  }
+  final ObjectAdapter target=context.getMappedObject(idString);
+  final String id=request.getActionId();
+  final ObjectAction action=context.getMappedAction(id);
+  if (action == null) {
+    throw new ActionException("No such action: " + id);
+  }
+  boolean executeImmediately=false;
+  final boolean isContributedMethod=action.isContributed();
+  if (action.getParameterCount() == 0) {
+    executeImmediately=true;
+  }
+ else   if (action.getParameterCount() == 1 && isContributedMethod && target.getSpecification().isOfType(action.getParameters()[0].getSpecification())) {
+    executeImmediately=true;
+  }
+  if (executeImmediately) {
+    final ObjectAdapter[] parameters=isContributedMethod ? new ObjectAdapter[]{target} : null;
+    final ObjectAdapter result=action.execute(target,parameters);
+    final MessageBroker broker=IsisContext.getMessageBroker();
+    final List<String> messages=broker.getMessages();
+    final List<String> warnings=broker.getWarnings();
+    context.setMessagesAndWarnings(messages,warnings);
+    context.processChanges();
+    final String targetId=context.mapObject(target);
+    displayMethodResult(request,context,page,result,targetId);
+  }
+ else {
+    final MethodTask methodTask=new MethodTask(context,target,action);
+    context.addTaskCrumb(methodTask);
+    request.forward(ForwardRequest.task(methodTask));
+  }
+}

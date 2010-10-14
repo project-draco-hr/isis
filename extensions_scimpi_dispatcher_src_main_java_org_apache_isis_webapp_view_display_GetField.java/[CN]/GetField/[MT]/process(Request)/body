@@ -1,0 +1,25 @@
+{
+  String id=request.getOptionalProperty(OBJECT);
+  String fieldName=request.getRequiredProperty(FIELD);
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+  if (field == null) {
+    throw new ScimpiException("No field " + fieldName + " in "+ object.getSpecification().getFullName());
+  }
+  if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+    throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+  }
+  String pattern=request.getOptionalProperty("decimal-format");
+  Format format=null;
+  if (pattern != null) {
+    format=new DecimalFormat(pattern);
+  }
+  pattern=request.getOptionalProperty("date-format");
+  if (pattern != null) {
+    format=new SimpleDateFormat(pattern);
+  }
+  String name=request.getOptionalProperty(RESULT_NAME,fieldName);
+  String scopeName=request.getOptionalProperty(SCOPE);
+  Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
+  process(request,object,field,format,name,scope);
+}

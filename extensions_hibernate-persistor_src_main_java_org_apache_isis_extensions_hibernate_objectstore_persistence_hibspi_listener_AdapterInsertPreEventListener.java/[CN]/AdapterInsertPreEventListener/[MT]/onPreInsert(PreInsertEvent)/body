@@ -1,0 +1,12 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("PreInsertEvent " + logString(event));
+  }
+  final Object entity=event.getEntity();
+  final ObjectAdapter adapter=getAdapterFor(entity);
+  if (adapter.getResolveState() == ResolveState.TRANSIENT) {
+    adapter.changeState(ResolveState.RESOLVED);
+    adapter.changeState(ResolveState.UPDATING);
+  }
+  return false;
+}

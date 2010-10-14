@@ -1,0 +1,27 @@
+{
+  if (Toolkit.debug) {
+    canvas.drawRectangle(x - 2,y,width + 4,height,Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_VIEW));
+  }
+  Color color=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY2);
+  int arrowHeight=width / 2;
+  Shape upArrow=new Shape(0,arrowHeight);
+  upArrow.addVector(arrowHeight,-arrowHeight);
+  upArrow.addVector(arrowHeight,arrowHeight);
+  if (mouseOverButton == over + 6) {
+    canvas.drawSolidShape(upArrow,x,y + 2,color);
+  }
+ else {
+    canvas.drawShape(upArrow,x,y + 2,color);
+  }
+  Shape downArrow=new Shape(0,0);
+  downArrow.addVector(arrowHeight,arrowHeight);
+  downArrow.addVector(arrowHeight,-arrowHeight);
+  if (mouseOverButton == over) {
+    canvas.drawSolidShape(downArrow,x,y + height - 4 - arrowHeight,color);
+  }
+ else {
+    canvas.drawShape(downArrow,x,y + height - 4 - arrowHeight,color);
+  }
+  int charWidth=style.stringWidth(label);
+  canvas.drawText(label,x + width / 2 - charWidth / 2,y + 2 + arrowHeight+ style.getAscent(),color,style);
+}

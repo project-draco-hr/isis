@@ -1,0 +1,48 @@
+{
+  builder=new ViewBuilder(){
+    ViewBuilder objectBuilder=new ObjectFieldBuilder(new ViewFactory(){
+      public View createView(      Content content,      Axes axes,      int sequence){
+        if (content.isTextParseable() || content.getAdapter() == null) {
+          return null;
+        }
+ else         if (content.isObject()) {
+          return new IconElementFactory().createView(content,axes,0);
+        }
+ else {
+          return TreeNodeSpecification.this.createView(content,axes,-1);
+        }
+      }
+    }
+);
+    ViewBuilder collectiontBuilder=new CollectionElementBuilder(new IconElementFactory());
+{
+      Factory decorator=new ExpandableViewBorder.Factory(null,TreeNodeSpecification.this,null);
+      objectBuilder.addSubviewDecorator(decorator);
+      collectiontBuilder.addSubviewDecorator(decorator);
+    }
+    public void addSubviewDecorator(    SubviewDecorator decorator){
+    }
+    public void build(    View view,    Axes axes){
+synchronized (view) {
+        (view.getContent().isCollection() ? collectiontBuilder : objectBuilder).build(view,axes);
+      }
+    }
+    public void createAxes(    Axes axes,    Content content){
+    }
+    public boolean isOpen(){
+      return false;
+    }
+    public boolean isReplaceable(){
+      return true;
+    }
+    public boolean isSubView(){
+      return true;
+    }
+    public boolean canDragView(){
+      return true;
+    }
+    public void viewMenuOptions(    UserActionSet options,    View view){
+    }
+  }
+;
+}

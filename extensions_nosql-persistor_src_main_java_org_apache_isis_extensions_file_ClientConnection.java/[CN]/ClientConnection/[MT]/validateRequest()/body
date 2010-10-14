@@ -1,0 +1,22 @@
+{
+  writer.println();
+  writer.flush();
+  getReponseHeader();
+  String status=readNext();
+  if (status.equals("error")) {
+    String message=getResponseData();
+    throw new RemotingException(message);
+  }
+ else   if (status.equals("concurrency")) {
+    String data=getResponseData();
+    if (data.startsWith("{")) {
+      throw new ConcurrencyException(data,(Throwable)null);
+    }
+ else {
+      throw new ConcurrencyException(data,(Throwable)null);
+    }
+  }
+ else   if (!status.equals("ok")) {
+    throw new RemotingException("Invalid status in response: " + status);
+  }
+}

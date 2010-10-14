@@ -1,0 +1,13 @@
+{
+  LOG.debug("typed '" + keyChar + "'");
+  if (viewer.isOverlayAvailable()) {
+    viewer.getOverlayView().keyTyped(new KeyboardActionImpl(keyChar,0));
+    return;
+  }
+  final View keyboardFocus=getFocus();
+  if (keyboardFocus != null) {
+    if (!Character.isISOControl(keyChar)) {
+      keyboardFocus.keyTyped(new KeyboardActionImpl(keyChar,0));
+    }
+  }
+}

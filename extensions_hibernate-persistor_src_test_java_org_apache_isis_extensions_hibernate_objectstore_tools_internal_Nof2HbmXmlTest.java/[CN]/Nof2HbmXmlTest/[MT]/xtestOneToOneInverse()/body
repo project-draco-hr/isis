@@ -1,0 +1,10 @@
+{
+  final PersistentSpecifications classes=PersistentSpecifications.buildPersistentSpecifications(Boolean.TRUE);
+  final Nof2HbmXml nof2HbmXml=new Nof2HbmXml();
+  final Document doc=nof2HbmXml.createDocument(classes.getPersistentClass(OneToOne.class.getName()));
+  final Element manyToOne=doc.getRootElement().element("class").element("many-to-one");
+  assertEquals("name","one",manyToOne.attribute("name").getData());
+  assertEquals("class",BiDirectional.class.getName(),manyToOne.attribute("class").getData());
+  assertEquals("unique","true",manyToOne.attribute("unique").getData());
+  assertEquals("column","FKone",manyToOne.attribute("column").getData());
+}

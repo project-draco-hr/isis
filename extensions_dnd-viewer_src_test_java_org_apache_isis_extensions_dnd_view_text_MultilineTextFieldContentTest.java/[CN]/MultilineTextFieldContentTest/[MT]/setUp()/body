@@ -1,0 +1,27 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  servicesList=Collections.emptyList();
+  mockTemplateImageLoader=mockery.mock(TemplateImageLoader.class);
+  mockSpecificationLoader=mockery.mock(SpecificationLoader.class);
+  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
+  mockUserProfileLoader=mockery.mock(UserProfileLoader.class);
+  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  mockAuthorizationManager=mockery.mock(AuthorizationManager.class);
+  mockery.checking(new Expectations(){
+{
+      ignoring(mockTemplateImageLoader);
+      ignoring(mockSpecificationLoader);
+      ignoring(mockPersistenceSessionFactory);
+      ignoring(mockUserProfileLoader);
+      ignoring(mockAuthenticationManager);
+      ignoring(mockAuthorizationManager);
+    }
+  }
+);
+  IsisSessionFactoryDefault sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,new PropertiesConfiguration(),mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList);
+  IsisContextStatic.createRelaxedInstance(sessionFactory);
+  sessionFactory.init();
+  final TextBlockTarget target=new TextBlockTargetExample();
+  content=new TextContent(target,4,TextContent.WRAPPING);
+  content.setText("Line one\nLine two\nLine three\nLine four that is long enough that it wraps");
+}

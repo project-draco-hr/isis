@@ -1,0 +1,18 @@
+{
+  BackgroundWork.runTaskInBackground(view,new BackgroundTask(){
+    public void execute(){
+      ObjectAdapter result;
+      result=action.execute(target,null);
+      view.objectActionResult(result,new Placement(view));
+      view.getViewManager().disposeUnneededViews();
+      view.getFeedbackManager().showMessagesAndWarnings();
+    }
+    public String getDescription(){
+      return "Running action " + getName() + " on  "+ view.getContent().getAdapter();
+    }
+    public String getName(){
+      return "ObjectAction " + action.getName();
+    }
+  }
+);
+}

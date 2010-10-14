@@ -1,0 +1,31 @@
+{
+  String classSegment=" class=\"" + className + (id == null ? "\"" : "\" id=\"" + id + "\"");
+  request.appendHtml("<form " + classSegment + " action=\""+ action+ "\" method=\"post\" accept-charset=\"ISO-8859-1\">\n");
+  if (legend != null && legend.trim().length() > 0) {
+    classSegment=" class=\"legend\"";
+    request.appendHtml("<div" + classSegment + ">"+ legend+ "</div>\n");
+  }
+  for (int i=0; i < hiddenFields.length; i++) {
+    HiddenInputField hiddenField=hiddenFields[i];
+    if (hiddenField == null) {
+      continue;
+    }
+    request.appendHtml("  <input type=\"hidden\" name=\"" + hiddenField.getName() + "\" value=\""+ hiddenField.getValue()+ "\">\n");
+  }
+  request.appendHtml(request.getContext().interactionFields());
+  for (int i=0; i < fields.length; i++) {
+    InputField fld=fields[i];
+    if (fld.isHidden()) {
+      request.appendHtml("  <input type=\"hidden\" name=\"" + fld.getName() + "\" value=\""+ fld.getValue()+ "\">\n");
+    }
+ else {
+      String errorSegment=fld.getErrorText() == null ? "" : "<span class=\"error\">" + fld.getErrorText() + "</span>";
+      String fieldSegment=createField(fld);
+      String title=fld.getDescription().equals("") ? "" : " title=\"" + fld.getDescription() + "\"";
+      request.appendHtml("  <div class=\"field\"><label" + title + ">"+ fld.getLabel()+ ":</label>"+ fieldSegment+ errorSegment+ "</div>\n");
+    }
+  }
+  Errors.append(request,null);
+  request.appendHtml("  <input class=\"button\" type=\"submit\" value=\"" + buttonTitle + "\" name=\"execute\">\n");
+  request.appendHtml("</form>\n");
+}

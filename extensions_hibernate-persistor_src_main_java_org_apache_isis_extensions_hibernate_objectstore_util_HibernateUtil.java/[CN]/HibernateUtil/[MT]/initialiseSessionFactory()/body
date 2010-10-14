@@ -1,0 +1,16 @@
+{
+  try {
+    HibernateUtil.configuration=createConfiguration();
+    HibernateUtil.createMapping();
+    HibernateUtil.bindListeners();
+    final String transactionStrategy=HibernateUtil.configuration.getProperty(Environment.TRANSACTION_STRATEGY);
+    MANAGED_TRANSACTIONS=CMTTransactionFactory.class.getName().equals(transactionStrategy) || JTATransactionFactory.class.getName().equals(transactionStrategy);
+    if (HibernateUtil.configuration.getProperty(Environment.SESSION_FACTORY_NAME) != null) {
+      HibernateUtil.configuration.buildSessionFactory();
+    }
+  }
+ catch (  final Throwable ex) {
+    LOG.error("building SessionFactory failed.",ex);
+    throw new IsisException(ex);
+  }
+}

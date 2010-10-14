@@ -1,0 +1,23 @@
+{
+  String specName=object.getSpecification().getFullName();
+  StateWriter writer=((NoSqlCommandContext)context).createStateWriter(specName);
+  String key=keyCreator.key(object.getOid());
+  writer.writeId(key);
+  writeFields(writer,specName,object);
+  final String user=IsisContext.getAuthenticationSession().getUserName();
+  Version currentVersion=object.getVersion();
+  Version newVersion=isUpdate ? versionCreator.nextVersion(currentVersion) : versionCreator.newVersion(user);
+  object.setOptimisticLock(newVersion);
+  if (newVersion != null) {
+    String version=currentVersion == null ? null : versionCreator.versionString(currentVersion);
+    writer.writeVersion(version,versionCreator.versionString(newVersion));
+    writer.writeUser(newVersion.getUser());
+    writer.writeTime(versionCreator.timeString(newVersion));
+  }
+  if (isUpdate) {
+    ((NoSqlCommandContext)context).update(writer);
+  }
+ else {
+    ((NoSqlCommandContext)context).insert(writer);
+  }
+}

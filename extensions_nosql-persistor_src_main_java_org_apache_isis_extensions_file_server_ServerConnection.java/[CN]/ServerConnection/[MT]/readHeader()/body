@@ -1,0 +1,19 @@
+{
+  try {
+    String header=reader.readLine();
+    LOG.debug("request: " + header);
+    if (header == null || header.length() == 0) {
+      return false;
+    }
+ else {
+      command=header.charAt(0);
+      headers=header.substring(1).split(" ");
+      this.header=0;
+      return true;
+    }
+  }
+ catch (  IOException e) {
+    logFailure();
+    throw new NoSqlStoreException(e);
+  }
+}

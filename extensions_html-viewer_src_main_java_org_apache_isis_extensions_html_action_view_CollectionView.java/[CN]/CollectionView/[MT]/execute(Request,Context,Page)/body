@@ -1,0 +1,30 @@
+{
+  final String idString=request.getObjectId();
+  final ObjectAdapter collection=context.getMappedCollection(idString);
+  if (collection == null) {
+    throw new ActionException("No such collection: " + idString);
+  }
+  final String titleString=collection.titleString();
+  page.setTitle(titleString);
+  final TypeOfFacet facet=collection.getSpecification().getFacet(TypeOfFacet.class);
+  final ObjectSpecification elementSpecification=facet.valueSpec();
+  final ViewPane content=page.getViewPane();
+  content.setWarningsAndMessages(context.getMessages(),context.getWarnings());
+  content.setTitle(titleString,null);
+  String iconName=collection.getIconName();
+  if (iconName == null) {
+    iconName=elementSpecification.getShortName();
+  }
+  content.setIconName(iconName);
+  if (elementSpecification.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS).length != 0) {
+    final Table table=TableUtil.createTable(context,false,collection,titleString,elementSpecification);
+    content.add(table);
+  }
+ else {
+    final Table table=TableUtil.createTable(context,false,collection,titleString,elementSpecification);
+    content.add(table);
+  }
+  context.addCollectionCrumb(idString);
+  context.addCollectionToHistory(idString);
+  context.clearMessagesAndWarnings();
+}

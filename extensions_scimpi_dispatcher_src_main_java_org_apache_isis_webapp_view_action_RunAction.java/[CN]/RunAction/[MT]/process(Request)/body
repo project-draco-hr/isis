@@ -1,0 +1,28 @@
+{
+  RequestContext context=request.getContext();
+  String objectId=request.getOptionalProperty(OBJECT);
+  ObjectAdapter object=MethodsUtils.findObject(context,objectId);
+  String methodName=request.getRequiredProperty(METHOD);
+  ObjectAction action=MethodsUtils.findAction(object,methodName);
+  String variableName=request.getOptionalProperty(RESULT_NAME);
+  String scopeName=request.getOptionalProperty(SCOPE);
+  ActionContent parameterBlock=new ActionContent(action);
+  request.setBlockContent(parameterBlock);
+  request.processUtilCloseTag();
+  ObjectAdapter[] parameters=parameterBlock.getParameters(request);
+  if (!MethodsUtils.isVisibleAndUsable(object,action)) {
+    throw new ScimpiException("Action is not visible/enabled: " + action.getName());
+  }
+  if (action.isContributed()) {
+    ObjectActionParameter[] parameterSpecs=action.getParameters();
+    for (int i=0; i < parameters.length; i++) {
+      if (parameters[i] == null && object.getSpecification().isOfType(parameterSpecs[i].getSpecification())) {
+        parameters[i]=object;
+        break;
+      }
+    }
+  }
+  Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
+  MethodsUtils.runMethod(context,action,object,parameters,variableName,scope);
+  request.popBlockContent();
+}

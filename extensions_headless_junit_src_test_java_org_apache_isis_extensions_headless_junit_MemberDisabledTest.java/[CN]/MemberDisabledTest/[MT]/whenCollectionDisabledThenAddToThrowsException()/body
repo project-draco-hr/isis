@@ -1,0 +1,13 @@
+{
+  List<Order> orders=custJsVO.getOrders();
+  final Order order=orders.get(0);
+  try {
+    custJsVO.addToMoreOrders(order);
+    fail("Should have thrown exception");
+  }
+ catch (  final DisabledException ex) {
+    assertThat(ex.getAdvisorClass(),classEqualTo(DisabledFacetAnnotation.class));
+    assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("More Orders"));
+    assertThat(ex.getMessage(),equalTo("Always disabled"));
+  }
+}

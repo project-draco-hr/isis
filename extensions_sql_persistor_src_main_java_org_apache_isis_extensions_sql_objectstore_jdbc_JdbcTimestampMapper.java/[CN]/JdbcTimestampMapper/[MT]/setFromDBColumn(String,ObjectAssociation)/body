@@ -1,0 +1,27 @@
+{
+  String year=encodedValue.substring(0,4);
+  String month=encodedValue.substring(5,7);
+  String day=encodedValue.substring(8,10);
+  String hour=encodedValue.substring(11,13);
+  String minute=encodedValue.substring(14,16);
+  String second=encodedValue.substring(17,19);
+  int length=encodedValue.length();
+  String millisecond;
+  if (length > 20) {
+    millisecond=encodedValue.substring(20,length);
+  }
+ else {
+    millisecond="";
+  }
+  if (length < 21) {
+    millisecond=millisecond + "000";
+  }
+ else   if (length < 22) {
+    millisecond=millisecond + "00";
+  }
+ else   if (length < 23) {
+    millisecond=millisecond + "0";
+  }
+  String valueString=year + month + day+ "T"+ hour+ minute+ second+ millisecond;
+  return field.getSpecification().getFacet(EncodableFacet.class).fromEncodedString(valueString);
+}

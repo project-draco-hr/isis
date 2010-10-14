@@ -1,0 +1,38 @@
+{
+  Content content=requirement.getContent();
+  ObjectSpecification specification=content.getSpecification();
+  boolean isValue=specification != null && specification.containsFacet(ValueFacet.class);
+  if (content.isObject() && !isValue && content.getAdapter() == null) {
+    return getEmptyFieldSpecification();
+  }
+ else {
+    if (specification != null) {
+      Options viewOptions=Properties.getDefaultViewOptions(specification);
+      String spec=viewOptions.getString("spec");
+      if (spec == null) {
+        if (content instanceof ObjectContent && requirement.isObject() && requirement.isClosed()) {
+          spec=Properties.getDefaultIconViewOptions();
+        }
+ else         if (content instanceof CollectionContent && requirement.isCollection()) {
+          spec=Properties.getDefaultCollectionViewOptions();
+        }
+ else         if (content instanceof ObjectContent && requirement.isObject() && requirement.isOpen()) {
+          spec=Properties.getDefaultObjectViewOptions();
+        }
+      }
+      if (spec != null) {
+        ViewSpecification lookSpec=lookupSpecByName(spec);
+        if (lookSpec != null && lookSpec.canDisplay(requirement)) {
+          return lookSpec;
+        }
+      }
+    }
+    for (    ViewSpecification viewSpecification : viewSpecifications) {
+      if (viewSpecification.canDisplay(requirement)) {
+        return viewSpecification;
+      }
+    }
+    LOG.error("missing specification; using fall back");
+    return fallback;
+  }
+}

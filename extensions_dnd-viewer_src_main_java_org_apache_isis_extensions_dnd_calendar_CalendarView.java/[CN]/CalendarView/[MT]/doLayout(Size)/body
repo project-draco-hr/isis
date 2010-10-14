@@ -1,0 +1,16 @@
+{
+  LOG.debug("doLayout() " + maximumSize + "  "+ getSize());
+  View toolbar=getSubviews()[0];
+  maximumSize.contract(getPadding());
+  Size toolbarSize=toolbar.getRequiredSize(maximumSize);
+  LOG.debug("   toolbar " + toolbarSize);
+  Bounds bounds=new Bounds(toolbarSize);
+  toolbar.setBounds(bounds);
+  View grid=getSubviews()[1];
+  Size gridSize=getRequiredSize(Size.createMax());
+  gridSize.contract(getPadding());
+  gridSize.contractHeight(toolbarSize.getHeight());
+  bounds=new Bounds(new Location(0,toolbarSize.getHeight()),gridSize);
+  grid.setBounds(bounds);
+  LOG.debug("   grid " + toolbarSize);
+}

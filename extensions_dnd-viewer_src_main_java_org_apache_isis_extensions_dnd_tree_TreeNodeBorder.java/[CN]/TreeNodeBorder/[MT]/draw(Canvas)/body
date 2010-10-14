@@ -1,0 +1,49 @@
+{
+  Color secondary1=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1);
+  Color secondary2=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY2);
+  Color secondary3=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3);
+  if (getState().isObjectIdentified()) {
+    canvas.drawRectangle(left,0,getSize().getWidth() - left,top,secondary2);
+    final int xExtent=getSize().getWidth();
+    canvas.drawSolidRectangle(xExtent - BORDER + 1,1,BORDER - 2,top - 2,secondary3);
+    canvas.drawLine(xExtent - BORDER,0,xExtent - BORDER,top - 2,secondary2);
+  }
+  int x=0;
+  final int y=top / 2;
+  canvas.drawLine(x,y,x + left,y,secondary2);
+  boolean isOpen=getSpecification().isOpen();
+  final int canOpen=canOpen();
+  final boolean addBox=isOpen || canOpen != NodeSpecification.CANT_OPEN;
+  if (addBox) {
+    x+=BOX_X_OFFSET;
+    canvas.drawLine(x,y,x + BOX_SIZE - 1,y,secondary3);
+    canvas.drawSolidRectangle(x,y - BOX_SIZE / 2,BOX_SIZE,BOX_SIZE,Toolkit.getColor(ColorsAndFonts.COLOR_WHITE));
+    canvas.drawRectangle(x,y - BOX_SIZE / 2,BOX_SIZE,BOX_SIZE,secondary1);
+    if (canOpen == NodeSpecification.UNKNOWN) {
+    }
+ else {
+      Color black=Toolkit.getColor(ColorsAndFonts.COLOR_BLACK);
+      canvas.drawLine(x + BOX_PADDING,y,x + BOX_SIZE - 1 - BOX_PADDING,y,black);
+      if (!isOpen) {
+        x+=BOX_SIZE / 2;
+        canvas.drawLine(x,y - BOX_SIZE / 2 + BOX_PADDING,x,y + BOX_SIZE / 2 - BOX_PADDING,black);
+      }
+    }
+  }
+  final View[] nodes=getSubviews();
+  if (nodes.length > 0) {
+    final int y1=top / 2;
+    final View node=nodes[nodes.length - 1];
+    final int y2=top + node.getLocation().getY() + top / 2;
+    canvas.drawLine(left - 1,y1,left - 1,y2,secondary2);
+  }
+  x=left + 1;
+  icon.draw(canvas,x,baseline);
+  x+=icon.getSize().getWidth();
+  int maxWith=getSize().getWidth() - x;
+  text.draw(canvas,x,baseline,maxWith);
+  if (Toolkit.debug) {
+    canvas.drawRectangleAround(getBounds(),Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BASELINE));
+  }
+  super.draw(canvas);
+}

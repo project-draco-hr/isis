@@ -1,0 +1,24 @@
+{
+  for (int i=0; i < actions.length; i++) {
+    UserAction option=null;
+    if (actions[i].getActions().length > 0) {
+      option=menuOptionSet.addNewActionSet(actions[i].getName());
+      menuOptions(actions[i].getActions(),target,(UserActionSet)option);
+    }
+ else {
+      final int noOfParameters=actions[i].getParameterCount();
+      if (noOfParameters == 0) {
+        option=ImmediateObjectOption.createOption(actions[i],target);
+      }
+ else       if (actions[i].isContributed() && noOfParameters == 1 && target != null && target.getSpecification().isOfType(actions[i].getParameters()[0].getSpecification())) {
+        option=ImmediateObjectOption.createServiceOption(actions[i],target);
+      }
+ else {
+        option=DialoggedObjectOption.createOption(actions[i],target);
+      }
+      if (option != null) {
+        menuOptionSet.add(option);
+      }
+    }
+  }
+}

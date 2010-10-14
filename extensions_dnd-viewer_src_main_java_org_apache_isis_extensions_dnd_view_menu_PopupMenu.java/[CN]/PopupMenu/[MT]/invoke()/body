@@ -1,0 +1,24 @@
+{
+  final int option=getOption();
+  final Item item=items[option];
+  if (item.isBlank || item.action == null || item.action.disabled(forView).isVetoed()) {
+    return;
+  }
+ else   if (item.action instanceof UserActionSet) {
+    UserAction[] menuOptions=((UserActionSet)item.action).getUserActions();
+    ((PopupMenuContainer)getParent()).openSubmenu(menuOptions);
+  }
+ else {
+    final Workspace workspace=getWorkspace();
+    final Location location=new Location(getAbsoluteLocation());
+    location.subtract(workspace.getView().getAbsoluteLocation());
+    final Padding padding=workspace.getView().getPadding();
+    location.move(-padding.getLeft(),-padding.getTop());
+    final int itemHeight=style().getLineHeight() + VPADDING;
+    int baseLine=itemHeight * option;
+    location.add(0,baseLine);
+    getParent().dispose();
+    LOG.debug("execute " + item.name + " on "+ forView+ " in "+ workspace);
+    item.action.execute(workspace,forView,location);
+  }
+}

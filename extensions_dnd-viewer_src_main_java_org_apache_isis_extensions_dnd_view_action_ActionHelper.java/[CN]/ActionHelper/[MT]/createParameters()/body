@@ -1,0 +1,16 @@
+{
+  final ParameterContent[] parameterContents=new ParameterContent[parameters.length];
+  for (int i=0; i < parameters.length; i++) {
+    final ObjectActionParameter[] parameters2=action.getParameters();
+    final ObjectAdapter adapter=parameters[i];
+    final ObjectSpecification specification=parameters2[i].getSpecification();
+    if (specification.isParseable()) {
+      final ParseableEntryActionParameter parseableEntryActionParameter=(ParseableEntryActionParameter)parameters2[i];
+      parameterContents[i]=new TextParseableParameterImpl(parseableEntryActionParameter,adapter,options[i],i,this);
+    }
+ else {
+      parameterContents[i]=new ObjectParameterImpl((OneToOneActionParameter)parameters2[i],adapter,options[i],i,this);
+    }
+  }
+  return parameterContents;
+}

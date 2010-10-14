@@ -1,0 +1,18 @@
+{
+  ClientConnection connection=getConnection();
+  String data;
+  try {
+    String request=specificationName + " " + key;
+    connection.request('R',request);
+    connection.validateRequest();
+    data=connection.getResponseData();
+  }
+ catch (  RuntimeException e) {
+    LOG.error("aborting getInstance",e);
+    abortConnection(connection);
+    throw e;
+  }
+  JsonStateReader reader=new JsonStateReader(data);
+  returnConnection(connection);
+  return reader;
+}

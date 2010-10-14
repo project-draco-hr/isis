@@ -1,0 +1,20 @@
+{
+  final Object[] underlyingArgs=new Object[args.length];
+  int i=0;
+  for (  final Object arg : args) {
+    underlyingArgs[i++]=underlying(arg);
+  }
+  final ObjectAdapter[] argAdapters=new ObjectAdapter[underlyingArgs.length];
+  int j=0;
+  for (  final Object underlyingArg : underlyingArgs) {
+    argAdapters[j++]=underlyingArg != null ? getRuntimeContext().adapterFor(underlyingArg) : null;
+  }
+  final InteractionResult interactionResult=noa.isProposedArgumentSetValid(targetAdapter,argAdapters).getInteractionResult();
+  notifyListenersAndVetoIfRequired(interactionResult);
+  if (getExecutionMode() == ExecutionMode.EXECUTE) {
+    final ObjectAdapter actionReturnNO=noa.execute(targetAdapter,argAdapters);
+    return IsisUtils.unwrap(actionReturnNO);
+  }
+  objectChangedIfRequired(targetAdapter);
+  return null;
+}

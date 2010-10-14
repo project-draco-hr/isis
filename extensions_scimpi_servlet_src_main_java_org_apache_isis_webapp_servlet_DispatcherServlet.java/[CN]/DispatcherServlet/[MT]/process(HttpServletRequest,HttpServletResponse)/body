@@ -1,0 +1,16 @@
+{
+  try {
+    HttpSession httpSession=request.getSession(true);
+    ServletRequestContext context=(ServletRequestContext)httpSession.getAttribute("scimpi-context");
+    if (context == null || !context.isValid()) {
+      context=new ServletRequestContext();
+      httpSession.setAttribute("scimpi-context",context);
+    }
+    context.startRequest(request,response,getServletContext());
+    dispatcher.process(context,request.getServletPath());
+  }
+ catch (  RuntimeException e) {
+    LOG.error("servlet exception",e);
+    throw e;
+  }
+}

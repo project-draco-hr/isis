@@ -1,0 +1,14 @@
+{
+  LOG.debug("getInstances - class=" + specification.getFullName());
+  try {
+    final boolean started=startHibernateTransaction();
+    final Query query=createQuery(null,specification);
+    ObjectAdapter[] objects=loadObjects(HibernateUtil.getCurrentSession(),specification,query.list());
+    commitHibernateTransaction(started);
+    return objects;
+  }
+ catch (  final RuntimeException e) {
+    HibernateUtil.rollbackTransaction();
+    throw e;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  RequestContext context=request.getContext();
+  Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+  StringBuffer buffer=new StringBuffer();
+  size=size == null ? "" : " size =\"" + size + "\"";
+  buffer.append("<select name=\"" + field + "\""+ size+ " >\n");
+  while (iterator.hasNext()) {
+    ObjectAdapter element=iterator.next();
+    String elementId=context.mapObject(element,Scope.INTERACTION);
+    String title=element.titleString();
+    String checked="";
+    buffer.append("  <option value=\"" + elementId + "\""+ checked+ ">"+ title+ "</option>\n");
+  }
+  buffer.append("</select>\n");
+  return buffer.toString();
+}

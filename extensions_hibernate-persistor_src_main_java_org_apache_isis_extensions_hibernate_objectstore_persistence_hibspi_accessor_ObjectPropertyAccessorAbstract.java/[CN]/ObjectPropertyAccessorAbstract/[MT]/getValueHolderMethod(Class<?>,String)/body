@@ -1,0 +1,22 @@
+{
+  final String naturalName=propertyName.substring(0,1).toUpperCase() + propertyName.substring(1);
+  Method getMethod=null;
+  try {
+    getMethod=theClass.getMethod("get" + naturalName,(Class[])null);
+  }
+ catch (  final SecurityException se) {
+    throw new PropertyNotFoundException("Cannot access method get" + naturalName + " in "+ theClass+ " : "+ se.getMessage());
+  }
+catch (  final NoSuchMethodException nsme) {
+    try {
+      getMethod=theClass.getMethod("get_" + naturalName,(Class[])null);
+    }
+ catch (    final SecurityException se) {
+      throw new PropertyNotFoundException("Cannot access method get_" + naturalName + " in "+ theClass+ " : "+ se.getMessage());
+    }
+catch (    final NoSuchMethodException nsme2) {
+      throw new PropertyNotFoundException("Unknown property " + naturalName + " in "+ theClass);
+    }
+  }
+  return getMethod;
+}

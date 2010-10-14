@@ -1,0 +1,23 @@
+{
+  return new SaveObjectCommand(){
+    public void execute(    final PersistenceCommandContext context){
+      DatabaseConnector connection=((SqlExecutionContext)context).getConnection();
+      LOG.debug("  save object " + object);
+      if (object.getSpecification().isCollectionOrIsAggregated()) {
+        throw new NotYetImplementedException(object.toString());
+      }
+ else {
+        ObjectMapping mapping=objectMappingLookup.getMapping(object,connection);
+        mapping.save(connection,object);
+        connectionPool.release(connection);
+      }
+    }
+    public ObjectAdapter onObject(){
+      return object;
+    }
+    public String toString(){
+      return "SaveObjectCommand [object=" + object + "]";
+    }
+  }
+;
+}

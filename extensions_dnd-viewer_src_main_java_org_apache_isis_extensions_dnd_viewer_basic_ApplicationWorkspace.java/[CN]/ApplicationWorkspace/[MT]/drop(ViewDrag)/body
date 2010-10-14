@@ -1,0 +1,25 @@
+{
+  getFeedbackManager().showDefaultCursor();
+  final View sourceView=drag.getSourceView();
+  final Location newLocation=drag.getViewDropLocation();
+  if (sourceView.getSpecification() != null && sourceView.getSpecification().isSubView()) {
+    if (sourceView.getSpecification().isOpen() && sourceView.getSpecification().isReplaceable()) {
+    }
+ else     if (sourceView.getContent() instanceof FieldContent) {
+      ViewRequirement requirement=new ViewRequirement(sourceView.getContent(),ViewRequirement.OPEN);
+      View view=Toolkit.getViewFactory().createView(requirement);
+      addWindow(view,new Placement(newLocation));
+      sourceView.getState().clearViewIdentified();
+    }
+ else {
+      addWindowFor(sourceView.getContent().getAdapter(),new Placement(newLocation));
+      sourceView.getState().clearViewIdentified();
+    }
+  }
+ else {
+    sourceView.markDamaged();
+    sourceView.setLocation(newLocation);
+    sourceView.limitBoundsWithin(getSize());
+    sourceView.markDamaged();
+  }
+}

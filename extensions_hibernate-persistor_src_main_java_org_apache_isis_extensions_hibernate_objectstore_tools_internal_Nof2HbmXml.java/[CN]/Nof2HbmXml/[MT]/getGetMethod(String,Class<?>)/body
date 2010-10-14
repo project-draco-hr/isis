@@ -1,0 +1,31 @@
+{
+  if (clazz == Object.class || clazz == null) {
+    return null;
+  }
+  Method method=null;
+  try {
+    method=clazz.getDeclaredMethod(javaBeanGetterName(name),(Class[])null);
+  }
+ catch (  final NoSuchMethodException nsme) {
+    try {
+      method=clazz.getDeclaredMethod(dotNetBeanGetterName(name),(Class[])null);
+    }
+ catch (    final NoSuchMethodException nsme2) {
+    }
+  }
+  if (method == null) {
+    if (clazz.isInterface()) {
+      final Class<?>[] interfaces=clazz.getInterfaces();
+      for (int i=0; i < interfaces.length; i++) {
+        method=getGetMethod(name,interfaces[i]);
+        if (method != null) {
+          return method;
+        }
+      }
+    }
+ else {
+      return getGetMethod(name,clazz.getSuperclass());
+    }
+  }
+  return method;
+}

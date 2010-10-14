@@ -1,0 +1,12 @@
+{
+  StringBuffer sql=createSelectStatement();
+  sql.append(" where ");
+  idMapping.appendWhereClause(sql,oid);
+  Results rs=connector.select(completeSelectStatement(sql));
+  if (rs.next()) {
+    return loadObject(connector,hint,rs);
+  }
+ else {
+    throw new ObjectNotFoundException("No object with with " + oid + " in table "+ table);
+  }
+}

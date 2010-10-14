@@ -1,0 +1,34 @@
+{
+  if (action.isVisible(IsisContext.getAuthenticationSession(),adapter).isAllowed()) {
+    request.appendHtml("<div class=\"action\">");
+    if (IsisContext.getSession() == null) {
+      request.appendHtml("<span class=\"disabled\" title=\"no user logged in\">");
+      request.appendHtml(action.getName());
+      request.appendHtml("</span>");
+    }
+ else     if (action.isUsable(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
+      request.appendHtml("<span class=\"disabled\" title=\"" + action.isUsable(IsisContext.getAuthenticationSession(),adapter).getReason() + "\">");
+      request.appendHtml(action.getName());
+      request.appendHtml("</span>");
+    }
+ else {
+      String version=request.getContext().mapVersion(adapter);
+      if (action.getParameterCount() == 0) {
+        ActionButton.write(request,adapter,action,parameters,objectId,version,"_generic." + Dispatcher.EXTENSION,null,null,null,null,null,null,null);
+      }
+ else       if (showForms) {
+        CreateFormParameter params=new CreateFormParameter();
+        params.objectId=objectId;
+        params.methodName=action.getId();
+        params.forwardResultTo="_generic." + Dispatcher.EXTENSION;
+        params.buttonTitle="OK";
+        params.legend=action.getName();
+        ActionForm.createForm(request,params,true);
+      }
+ else {
+        request.appendHtml("<a href=\"_generic_action." + Dispatcher.EXTENSION + "?_result="+ objectId+ "&"+ VERSION+ "="+ version+ "&method="+ action.getId()+ "\" title="+ action.getDescription()+ ">"+ action.getName()+ "</a>");
+      }
+    }
+    request.appendHtml("</div>");
+  }
+}

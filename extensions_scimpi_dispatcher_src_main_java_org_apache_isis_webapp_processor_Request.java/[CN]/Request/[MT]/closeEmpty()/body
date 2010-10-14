@@ -1,0 +1,16 @@
+{
+  SwfTag tag=getTag();
+  if (tag.getType() == SwfTag.EMPTY) {
+    return;
+  }
+  if (index < snippets.size()) {
+    Snippet snippet=snippets.get(index);
+    if (snippet instanceof SwfTag) {
+      SwfTag nextTag=(SwfTag)snippet;
+      if (nextTag.getType() == SwfTag.EMPTY) {
+        return;
+      }
+    }
+  }
+  throw new ScimpiException("Empty tag not closed");
+}

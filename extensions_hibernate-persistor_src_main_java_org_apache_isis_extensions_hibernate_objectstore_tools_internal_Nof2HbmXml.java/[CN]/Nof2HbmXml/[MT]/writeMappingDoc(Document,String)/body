@@ -1,0 +1,21 @@
+{
+  final OutputFormat outformat=OutputFormat.createPrettyPrint();
+  final File basedirFile=new File(exportDirectory);
+  String dir="";
+  String file;
+  final int pos=className.lastIndexOf(".");
+  if (pos < 0) {
+    file=className;
+  }
+ else {
+    file=className.substring(pos + 1);
+    dir=className.substring(0,pos).replace(".",FILE_SEPERATOR);
+  }
+  file+=".hbm.xml";
+  final File outputDir=new File(basedirFile,dir);
+  outputDir.mkdirs();
+  final File outFile=new File(outputDir,file);
+  LOG.info("writing " + outFile.getAbsolutePath());
+  serializeToXML(doc,outFile,outformat);
+  LOG.info("Writing mapping file: " + outFile.getAbsolutePath());
+}

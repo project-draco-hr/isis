@@ -1,0 +1,38 @@
+{
+  try {
+    ObjectAssociation[] associations=object.getSpecification().getAssociations();
+    ByteArrayOutputStream dataStream=new ByteArrayOutputStream();
+    DataOutputStream outputStream=new DataOutputStream(dataStream);
+    String specName=object.getSpecification().getFullName();
+    outputStream.writeUTF(specName);
+    long serialNo=((SerialOid)object.getOid()).getSerialNo();
+    outputStream.writeLong(serialNo);
+    for (    ObjectAssociation association : associations) {
+      ObjectAdapter field=association.get(object);
+      if (association.getSpecification().isValueOrIsAggregated()) {
+        String data;
+        if (field == null) {
+          data="";
+        }
+ else {
+          EncodableFacet encodeableFacet=field.getSpecification().getFacet(EncodableFacet.class);
+          data=encodeableFacet.toEncodedString(field);
+        }
+        outputStream.writeUTF(data);
+      }
+ else {
+        if (field == null) {
+          outputStream.writeLong(0L);
+        }
+ else {
+          long serialNo2=((SerialOid)field.getOid()).getSerialNo();
+          outputStream.writeLong(serialNo2);
+        }
+      }
+    }
+    return dataStream.toByteArray();
+  }
+ catch (  IOException e) {
+    throw new BerkeleyObjectStoreException(e);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  EditFieldBlock block=(EditFieldBlock)request.getBlockContent();
+  String field=request.getRequiredProperty(FIELD);
+  if (block.isVisible(field)) {
+    request.pushNewBuffer();
+    request.processUtilCloseTag();
+    String content=request.popBuffer();
+    block.replaceContent(field,content);
+  }
+}

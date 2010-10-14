@@ -1,0 +1,29 @@
+{
+  int fldNo=0;
+  for (int i=boundaries[step]; i < boundaries[step + 1]; i++) {
+    String textEntry=request.getFieldEntry(fldNo++);
+    if (readOnly[i]) {
+      continue;
+    }
+    final ObjectSpecification spec=fieldSpecifications[i];
+    if (spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(boolean.class)) || spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(Boolean.class))) {
+      if (textEntry == null || !textEntry.equals("true")) {
+        textEntry="false";
+      }
+    }
+    entryText[i]=textEntry;
+    try {
+      errors[i]=null;
+      setFromField(context,i,spec,textEntry);
+      if (!optional[i] && (textEntry == null || textEntry.equals(""))) {
+        errors[i]="Field required";
+      }
+    }
+ catch (    final InvalidEntryException e) {
+      errors[i]=e.getMessage();
+    }
+catch (    final TextEntryParseException e) {
+      errors[i]=e.getMessage();
+    }
+  }
+}

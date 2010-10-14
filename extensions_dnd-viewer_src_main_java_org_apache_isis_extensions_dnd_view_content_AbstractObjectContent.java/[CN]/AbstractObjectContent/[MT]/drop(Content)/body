@@ -1,0 +1,28 @@
+{
+  if (!(sourceContent instanceof ObjectContent)) {
+    return null;
+  }
+  final ObjectAdapter source=sourceContent.getAdapter();
+  Assert.assertNotNull(source);
+  final ObjectAdapter target=getObject();
+  Assert.assertNotNull(target);
+  if (!canDrop(sourceContent).isAllowed()) {
+    return null;
+  }
+  final ObjectAction action=dropAction(source,target);
+  if ((action != null) && action.isProposedArgumentSetValid(target,new ObjectAdapter[]{source}).isAllowed()) {
+    return action.execute(target,new ObjectAdapter[]{source});
+  }
+  final ObjectAssociation[] associations=target.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),target));
+  for (int i=0; i < associations.length; i++) {
+    final ObjectAssociation association=associations[i];
+    if (association.isOneToOneAssociation() && source.getSpecification().isOfType(association.getSpecification())) {
+      OneToOneAssociation otoa=(OneToOneAssociation)association;
+      if (association.get(target) == null && otoa.isAssociationValid(target,source).isAllowed()) {
+        otoa.setAssociation(target,source);
+        break;
+      }
+    }
+  }
+  return null;
+}

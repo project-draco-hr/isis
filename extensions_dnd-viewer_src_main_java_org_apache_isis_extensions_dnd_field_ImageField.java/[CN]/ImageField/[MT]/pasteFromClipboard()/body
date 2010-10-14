@@ -1,0 +1,17 @@
+{
+  final Clipboard cb=java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+  final Transferable content=cb.getContents(this);
+  try {
+    if (content.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+      final String filename=(String)content.getTransferData(DataFlavor.stringFlavor);
+      LOG.debug("pasted image from " + filename);
+      loadImageFromFile("file://" + filename);
+    }
+ else {
+      LOG.info("unsupported paste operation " + content);
+    }
+  }
+ catch (  final Throwable e) {
+    LOG.error("invalid paste operation " + e);
+  }
+}

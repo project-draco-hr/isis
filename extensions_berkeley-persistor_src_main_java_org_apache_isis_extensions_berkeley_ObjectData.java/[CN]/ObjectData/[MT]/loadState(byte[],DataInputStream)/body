@@ -1,0 +1,32 @@
+{
+  ResolveState resolveState=ResolveState.RESOLVING;
+  object.changeState(resolveState);
+  ObjectAssociationContainer specification=object.getSpecification();
+  ObjectAssociation[] associations=specification.getAssociations();
+  for (  ObjectAssociation association : associations) {
+    if (association.getSpecification().isValueOrIsAggregated()) {
+      String fieldData=inputStream.readUTF();
+      EncodableFacet encodeableFacet=association.getSpecification().getFacet(EncodableFacet.class);
+      if (encodeableFacet != null) {
+        ObjectAdapter value=encodeableFacet.fromEncodedString(fieldData);
+        ((OneToOneAssociation)association).set(object,value);
+      }
+ else {
+        ((OneToOneAssociation)association).set(object,null);
+      }
+    }
+ else {
+      ObjectAdapter fieldObject;
+      long id2=inputStream.readLong();
+      if (id2 == 0) {
+        fieldObject=null;
+      }
+ else {
+        SerialOid oid2=SerialOid.createPersistent(id2);
+        fieldObject=getAdapter(association.getSpecification(),oid2);
+      }
+      ((OneToOneAssociation)association).set(object,fieldObject);
+    }
+  }
+  object.changeState(resolveState.getEndState());
+}

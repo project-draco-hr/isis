@@ -1,0 +1,24 @@
+{
+  List<FileContent> files=null;
+  try {
+    files=getWriteRequests(connection);
+    String error=acquireLocks(files);
+    if (error == null) {
+      logger.log(files);
+      DataWriter content=new DataWriter(files);
+      content.writeData();
+      connection.ok();
+    }
+ else {
+      connection.error(error);
+    }
+  }
+ catch (  IOException e) {
+    throw new NoSqlStoreException("Failed to write data",e);
+  }
+ finally {
+    if (files != null) {
+      releaseLocks(files);
+    }
+  }
+}

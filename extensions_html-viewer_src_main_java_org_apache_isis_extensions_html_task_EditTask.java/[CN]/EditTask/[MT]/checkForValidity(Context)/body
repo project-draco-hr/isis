@@ -1,0 +1,25 @@
+{
+  final ObjectAdapter target=getTarget(context);
+  final ObjectAdapter[] entries=getEntries(context);
+  final int len=fields.length;
+  for (int i=0; i < len; i++) {
+    if (readOnly[i] || errors[i] != null) {
+      continue;
+    }
+    final ObjectAssociation fld=fields[i];
+    if (fld.isOneToOneAssociation()) {
+      final OneToOneAssociation oneToOneAssociation=(OneToOneAssociation)fld;
+      final ObjectAdapter entryReference=entries[i];
+      final ObjectAdapter currentReference=oneToOneAssociation.get(target);
+      if (currentReference != entryReference) {
+        final Consent valueValid=((OneToOneAssociation)fld).isAssociationValid(target,entryReference);
+        errors[i]=valueValid.getReason();
+      }
+    }
+  }
+  if (target.isTransient()) {
+    saveState(target,entries);
+    Consent isValid=target.getSpecification().isValid(target);
+    error=isValid.isVetoed() ? isValid.getReason() : null;
+  }
+}

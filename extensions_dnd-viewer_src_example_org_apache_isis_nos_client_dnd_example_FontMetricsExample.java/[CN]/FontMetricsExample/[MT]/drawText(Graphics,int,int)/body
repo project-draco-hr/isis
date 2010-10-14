@@ -1,0 +1,26 @@
+{
+  Font font=new Font("sansserif",0,size);
+  g.setFont(font);
+  FontMetrics fm=g.getFontMetrics();
+  int lineHeight=fm.getHeight();
+  int baselineOffset=fm.getLeading() + fm.getAscent();
+  g.setColor(Color.LIGHT_GRAY);
+  g.drawRect(left - 10,top,width + 20,lineHeight - 1);
+  g.setColor(Color.LIGHT_GRAY);
+  g.drawLine(left - 10,top + baselineOffset,left + 10 + width,top + baselineOffset);
+  g.setColor(Color.BLUE);
+  g.drawLine(left,top + fm.getLeading(),left + width,top + fm.getLeading());
+  g.setColor(Color.GREEN);
+  g.drawLine(left,top + baselineOffset + fm.getDescent(),left + width,top + baselineOffset + fm.getDescent());
+  g.setColor(Color.RED);
+  g.drawLine(left,top + baselineOffset - fm.getAscent() - 1,left + width,top + baselineOffset - fm.getAscent() - 1);
+  g.setColor(Color.ORANGE);
+  g.drawLine(left,top + fm.getDescent(),left + width,top + fm.getDescent());
+  g.setColor(Color.BLACK);
+  g.drawString("Xy ? \u00c3",left,top + baselineOffset);
+  System.out.println(font.getFontName() + "  " + size+ ": "+ fm.getHeight()+ " = "+ fm.getLeading()+ " + "+ fm.getAscent()+ " + "+ fm.getDescent());
+  System.out.println("    " + fm.getMaxAscent() + " + "+ fm.getMaxDescent());
+  LineMetrics lm=fm.getLineMetrics("test",g);
+  System.out.println("    " + lm.getLeading() + "    "+ lm.getAscent()+ " + "+ lm.getDescent());
+  return fm.getHeight() + 14;
+}

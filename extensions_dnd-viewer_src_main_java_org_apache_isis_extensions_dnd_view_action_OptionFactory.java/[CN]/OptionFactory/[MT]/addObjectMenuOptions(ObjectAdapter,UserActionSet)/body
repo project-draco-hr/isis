@@ -1,0 +1,18 @@
+{
+  if (adapter == null) {
+    return;
+  }
+  ObjectSpecification noSpec=adapter.getSpecification();
+  menuOptions(noSpec.getObjectActions(ObjectActionType.USER,ObjectActionType.EXPLORATION,ObjectActionType.PROTOTYPE,ObjectActionType.DEBUG),adapter,options);
+  if (adapter.getObject() instanceof ObjectList) {
+    return;
+  }
+  Oid oid=adapter.getOid();
+  if (oid != null && oid.isTransient()) {
+    return;
+  }
+  if (noSpec.isService()) {
+    return;
+  }
+  options.add(new DisposeObjectOption());
+}

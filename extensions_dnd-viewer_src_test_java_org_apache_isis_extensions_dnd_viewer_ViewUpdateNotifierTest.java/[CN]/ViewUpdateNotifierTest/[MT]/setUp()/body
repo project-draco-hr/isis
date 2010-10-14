@@ -1,0 +1,40 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  servicesList=Collections.emptyList();
+  mockTemplateImageLoader=mockery.mock(TemplateImageLoader.class);
+  mockSpecificationLoader=mockery.mock(SpecificationLoader.class);
+  mockUserProfileLoader=mockery.mock(UserProfileLoader.class);
+  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
+  mockPersistenceSession=mockery.mock(PersistenceSession.class);
+  mockTransactionManager=mockery.mock(IsisTransactionManager.class);
+  mockTransaction=mockery.mock(IsisTransaction.class);
+  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  mockAuthorizationManager=mockery.mock(AuthorizationManager.class);
+  mockery.checking(new Expectations(){
+{
+      ignoring(mockTemplateImageLoader);
+      ignoring(mockSpecificationLoader);
+      ignoring(mockAuthenticationManager);
+      ignoring(mockAuthorizationManager);
+      one(mockUserProfileLoader).getProfile(with(any(AuthenticationSession.class)));
+      will(returnValue(new UserProfile()));
+      ignoring(mockUserProfileLoader);
+      allowing(mockPersistenceSessionFactory).createPersistenceSession();
+      will(returnValue(mockPersistenceSession));
+      ignoring(mockPersistenceSessionFactory);
+      allowing(mockPersistenceSession).getTransactionManager();
+      will(returnValue(mockTransactionManager));
+      ignoring(mockPersistenceSession);
+      allowing(mockTransactionManager).getTransaction();
+      will(returnValue(mockTransaction));
+      ignoring(mockTransaction);
+    }
+  }
+);
+  IsisSessionFactory sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,new PropertiesConfiguration(),mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList);
+  sessionFactory.init();
+  IsisContextStatic.createRelaxedInstance(sessionFactory);
+  IsisContext.openSession(new ExplorationSession());
+  notifier=new ExposedViewUpdateNotifier();
+  object=new TestProxyAdapter();
+}

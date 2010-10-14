@@ -1,0 +1,10 @@
+{
+  if (!(persistenceQuery instanceof PersistenceQueryBuiltIn)) {
+    throw new IllegalArgumentException(MessageFormat.format("Provided PersistenceQuery not supported; was {0}; " + "the XML object store only supports {1}",persistenceQuery.getClass().getName(),PersistenceQueryBuiltIn.class.getName()));
+  }
+  PersistenceQueryBuiltIn builtIn=(PersistenceQueryBuiltIn)persistenceQuery;
+  LOG.debug("getInstances of " + builtIn.getSpecification() + " where "+ builtIn);
+  final ObjectData patternData=new ObjectData(builtIn.getSpecification(),null,null);
+  final ObjectAdapter[] instances=getInstances(patternData,builtIn);
+  return instances;
+}

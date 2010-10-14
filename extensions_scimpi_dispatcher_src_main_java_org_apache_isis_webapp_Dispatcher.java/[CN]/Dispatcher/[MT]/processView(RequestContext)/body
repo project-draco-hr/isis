@@ -1,0 +1,44 @@
+{
+  String file=context.getRequestedFile();
+  if (file == null) {
+    LOG.warn("No view specified to process");
+    return;
+  }
+  if (file.endsWith(COMMAND_ROOT)) {
+    return;
+  }
+  file=determineFile(context,file);
+  String fullPath=context.requestedFilePath(file);
+  LOG.debug("processing file " + fullPath);
+  context.setResourcePath(fullPath);
+  context.setContentType("text/html");
+  context.addVariable("title","Untitled Page",Scope.REQUEST);
+  Stack<Snippet> tags=loadPageTemplate(context,fullPath);
+  Request request=new Request(file,context,tags,processors);
+  try {
+    request.processNextTag();
+    List<String> messages=IsisContext.getMessageBroker().getMessages();
+    if (messages.size() > 0) {
+      context.getWriter().println("Ignored messages");
+    }
+    List<String> warnings=IsisContext.getMessageBroker().getWarnings();
+    if (warnings.size() > 0) {
+      context.getWriter().println("Ignored warnings");
+    }
+    IsisContext.getUpdateNotifier().clear();
+  }
+ catch (  RuntimeException e) {
+    IsisContext.getMessageBroker().getMessages();
+    IsisContext.getMessageBroker().getWarnings();
+    IsisContext.getUpdateNotifier().clear();
+    throw e;
+  }
+  String page=request.popBuffer();
+  context.getWriter().write(page);
+  if (context.getDebug() == Debug.PAGE) {
+    DebugView view=new DebugView(context.getWriter());
+    view.startTable();
+    context.append(view);
+    view.endTable();
+  }
+}

@@ -1,0 +1,14 @@
+{
+  View root=getView();
+  View parent=getParent();
+  parent.markDamaged();
+  getViewManager().removeFromNotificationList(root);
+  for (  View view : root.getSubviews()) {
+    view.dispose();
+  }
+  wrappedView=withReplacement;
+  wrappedView.setView(root);
+  wrappedView.setParent(parent);
+  getViewManager().addToNotificationList(withReplacement);
+  wrappedView.invalidateContent();
+}

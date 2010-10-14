@@ -1,0 +1,14 @@
+{
+  ResolveState resolveState=ResolveState.RESOLVING;
+  object.changeState(resolveState);
+  Version version=null;
+  String versionString=reader.readVersion();
+  if (!versionString.equals("")) {
+    String user=reader.readUser();
+    String time=reader.readTime();
+    version=versionCreator.version(versionString,user,time);
+  }
+  readFields(reader,object,keyCreator);
+  object.setOptimisticLock(version);
+  object.changeState(resolveState.getEndState());
+}

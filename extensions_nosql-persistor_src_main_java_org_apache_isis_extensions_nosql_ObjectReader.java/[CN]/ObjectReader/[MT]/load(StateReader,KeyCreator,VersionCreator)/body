@@ -1,0 +1,24 @@
+{
+  String className=reader.readObjectType();
+  ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(className);
+  String id=reader.readId();
+  Oid oid=keyCreator.oid(id);
+  ObjectAdapter object=getAdapter(specification,oid);
+  if (object.getResolveState().isResolved()) {
+    Version version=null;
+    String versionString=reader.readVersion();
+    if (!versionString.equals("")) {
+      String user=reader.readUser();
+      String time=reader.readTime();
+      version=versionCreator.version(versionString,user,time);
+    }
+    if (version.different(object.getVersion())) {
+      throw new UnexpectedCallException();
+    }
+ else {
+      return object;
+    }
+  }
+  loadState(reader,keyCreator,versionCreator,object);
+  return object;
+}

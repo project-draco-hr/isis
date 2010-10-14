@@ -1,0 +1,27 @@
+{
+  String objectId=request.getOptionalProperty(OBJECT);
+  String method=request.getOptionalProperty(METHOD);
+  String forwardResultTo=request.getOptionalProperty(VIEW);
+  String forwardVoidTo=request.getOptionalProperty(VOID);
+  String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
+  String resultOverrideSegment=resultOverride == null ? "" : "&" + RESULT_OVERRIDE + "="+ resultOverride;
+  String resultName=request.getOptionalProperty(RESULT_NAME);
+  String resultNameSegment=resultName == null ? "" : "&" + RESULT_NAME + "="+ resultName;
+  String scope=request.getOptionalProperty(SCOPE);
+  String scopeSegment=scope == null ? "" : "&" + SCOPE + "="+ scope;
+  String confirm=request.getOptionalProperty(CONFIRM);
+  String confirmSegment=confirm == null ? "" : "&" + CONFIRM + "="+ URLEncoder.encode(confirm);
+  RequestContext context=request.getContext();
+  ObjectAdapter object=MethodsUtils.findObject(context,objectId);
+  String version=context.mapVersion(object);
+  ObjectAction action=MethodsUtils.findAction(object,method);
+  ActionContent parameterBlock=new ActionContent(action);
+  request.setBlockContent(parameterBlock);
+  request.pushNewBuffer();
+  request.processUtilCloseTag();
+  String text=request.popBuffer();
+  if (MethodsUtils.isVisibleAndUsable(object,action)) {
+    writeLink(request,objectId,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,scopeSegment,confirmSegment,context,action,parameterBlock,text);
+  }
+  request.popBlockContent();
+}

@@ -1,0 +1,36 @@
+{
+  actionMap.clear();
+  clearMessagesAndWarnings();
+  final Map newCollectionMap=new HashMap();
+  final Map newObjectMap=new HashMap();
+  Iterator<HistoryEntry> elements=history.elements();
+  while (elements.hasNext()) {
+    HistoryEntry entry=elements.next();
+    if (entry.type == HistoryEntry.OBJECT) {
+      final Object item=objectMap.get(entry.id);
+      newObjectMap.put(entry.id,item);
+      LOG.debug("copied object map " + entry.id + " for "+ item);
+      ((ObjectMapping)item).updateVersion();
+    }
+ else     if (entry.type == HistoryEntry.COLLECTION) {
+      final CollectionMapping coll=(CollectionMapping)collectionMap.get(entry.id);
+      newCollectionMap.put(entry.id,coll);
+      LOG.debug("copied collection map for " + coll);
+      final Enumeration e1=coll.elements();
+      while (e1.hasMoreElements()) {
+        final String id1=(String)e1.nextElement();
+        final Object item=objectMap.get(id1);
+        if (item != null) {
+          newObjectMap.put(id1,item);
+          LOG.debug("copied object map " + id1 + " for "+ item);
+          ((ObjectMapping)item).updateVersion();
+        }
+      }
+    }
+  }
+  collectionMap.clear();
+  collectionMap.putAll(newCollectionMap);
+  objectMap.clear();
+  objectMap.putAll(newObjectMap);
+  objectMap.putAll(serviceMap);
+}

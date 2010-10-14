@@ -1,0 +1,24 @@
+{
+  context.checking(new Expectations(){
+{
+      one(commandContext).createStateWriter(object4.getSpecification().getFullName());
+      will(returnValue(writer));
+      one(keyCreator).key(SerialOid.createPersistent(6));
+      will(returnValue("6"));
+      one(writer).writeId("6");
+      one(writer).writeType(object4.getSpecification().getFullName());
+      one(keyCreator).reference(object1);
+      will(returnValue("ref@3"));
+      one(keyCreator).reference(object2);
+      will(returnValue("ref@4"));
+      one(writer).writeField("homogenousCollection","ref@3|ref@4|");
+      one(writer).writeVersion(null,"2");
+      one(writer).writeUser("username");
+      one(writer).writeTime("1057");
+      one(commandContext).insert(writer);
+    }
+  }
+);
+  new WriteObjectCommand(false,keyCreator,versionCreator,object4).execute(commandContext);
+  context.assertIsSatisfied();
+}

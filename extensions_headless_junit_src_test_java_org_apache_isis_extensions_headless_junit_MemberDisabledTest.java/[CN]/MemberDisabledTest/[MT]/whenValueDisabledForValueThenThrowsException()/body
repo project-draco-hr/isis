@@ -1,0 +1,12 @@
+{
+  custJsDO.disableFirstName="cannot alter";
+  try {
+    custJsVO.setFirstName("Dick");
+    fail("Should have thrown exception");
+  }
+ catch (  final DisabledException ex) {
+    assertThat(ex.getAdvisorClass(),classEqualTo(DisableForContextFacetViaMethod.class));
+    assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("First Name"));
+    assertThat(ex.getMessage(),equalTo("cannot alter"));
+  }
+}

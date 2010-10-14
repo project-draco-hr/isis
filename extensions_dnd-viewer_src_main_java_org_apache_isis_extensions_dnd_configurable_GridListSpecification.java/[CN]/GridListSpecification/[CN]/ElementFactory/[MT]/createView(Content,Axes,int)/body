@@ -1,0 +1,12 @@
+{
+  final GlobalViewFactory factory=Toolkit.getViewFactory();
+  ViewSpecification elementSpecification=axes.getAxis(ConfigurationAxis.class).getElementSpecification();
+  if (elementSpecification == null) {
+    int defaultRequirement=ViewRequirement.CLOSED | ViewRequirement.SUBVIEW;
+    ViewRequirement viewRequirement=new ViewRequirement(content,defaultRequirement);
+    return factory.createView(viewRequirement);
+  }
+ else {
+    return elementSpecification.createView(content,axes,sequence);
+  }
+}

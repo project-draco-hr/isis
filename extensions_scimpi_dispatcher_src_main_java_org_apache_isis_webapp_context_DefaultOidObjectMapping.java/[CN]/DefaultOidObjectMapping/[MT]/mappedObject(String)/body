@@ -1,0 +1,47 @@
+{
+  char type=id.charAt(0);
+  if ((type == 'T')) {
+    TransientObjectMapping mapping=sessionTransients.get(id);
+    if (mapping == null) {
+      mapping=requestTransients.get(id);
+    }
+    if (mapping == null) {
+      return null;
+    }
+    ObjectAdapter mappedTransientObject=mapping.getObject();
+    LOG.debug("retrieved " + mappedTransientObject.getOid() + " for "+ id);
+    return mappedTransientObject;
+  }
+ else {
+    String[] split=id.split("@");
+    ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
+    try {
+      String oidData=split[1];
+      LOG.debug("decoding " + oidData);
+      ObjectAdapter loadObject;
+      Oid oid;
+      if (oidType == null) {
+        oidType=IsisContext.getPersistenceSession().getServices().get(0).getOid().getClass();
+      }
+      if (split.length > 2) {
+        SerialOid parentOid=SerialOid.createPersistent(Long.parseLong(oidData,16));
+        int element=(split.length == 3) ? -1 : Integer.valueOf(split[3]);
+        oid=new AggregatedOid(parentOid,split[2],element);
+        IsisContext.getPersistenceSession().loadObject(parentOid,spec);
+        loadObject=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(oid);
+      }
+ else       if (oidType.isAssignableFrom(SerialOid.class)) {
+        oid=SerialOid.createPersistent(Long.parseLong(oidData,16));
+        loadObject=IsisContext.getPersistenceSession().loadObject(oid,spec);
+      }
+ else {
+        oid=IsisContext.getPersistenceSession().getOidGenerator().getOidStringifier().deString(oidData);
+        loadObject=IsisContext.getPersistenceSession().loadObject(oid,spec);
+      }
+      return loadObject;
+    }
+ catch (    SecurityException e) {
+      throw new IsisException(e);
+    }
+  }
+}

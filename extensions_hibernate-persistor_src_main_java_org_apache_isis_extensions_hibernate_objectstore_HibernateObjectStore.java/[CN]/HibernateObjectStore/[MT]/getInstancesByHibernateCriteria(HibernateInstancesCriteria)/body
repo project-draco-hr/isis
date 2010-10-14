@@ -1,0 +1,14 @@
+{
+  try {
+    final boolean started=startHibernateTransaction();
+    criteria.setSession(HibernateUtil.getCurrentSession());
+    final List<?> results=criteria.getResults();
+    final ObjectAdapter[] objects=loadObjects(HibernateUtil.getCurrentSession(),criteria.getSpecification(),results);
+    commitHibernateTransaction(started);
+    return objects;
+  }
+ catch (  final RuntimeException e) {
+    HibernateUtil.rollbackTransaction();
+    throw e;
+  }
+}

@@ -1,0 +1,68 @@
+{
+  page.setTitle(task.getName());
+  final ViewPane content=page.getViewPane();
+  final ObjectAdapter targetAdapter=task.getTarget(context);
+  String titleString=targetAdapter.titleString();
+  if (targetAdapter.isTransient()) {
+    titleString+=" (Unsaved)";
+  }
+  content.setTitle(titleString,targetAdapter.getSpecification().getDescription());
+  String iconName=targetAdapter.getIconName();
+  if (iconName == null) {
+    iconName=targetAdapter.getSpecification().getShortName();
+  }
+  content.setIconName(iconName);
+  final StringBuffer crumbs=new StringBuffer();
+  final String[] trail=task.getTrail();
+  for (int i=0; i < trail.length; i++) {
+    crumbs.append(" : ");
+    crumbs.append(trail[i]);
+  }
+  final Component[] action=new Component[1];
+  action[0]=context.getComponentFactory().createInlineBlock("name",task.getName(),task.getDescription());
+  content.setMenu(action);
+  if (task.getError() != null) {
+    content.add(context.getComponentFactory().createInlineBlock("error",task.getError(),null));
+  }
+  final Form form=context.getComponentFactory().createForm(task.getId(),name(),task.getStep(),task.numberOfSteps(),task.isEditing());
+  final String[] parameterLabels=task.getNames();
+  final String[] parameterDescriptions=task.getFieldDescriptions();
+  final String[] errors=task.getErrors();
+  final String[] entryText=task.getEntryText();
+  final int[] noLines=task.getNoLines();
+  final boolean[] canWrap=task.getWraps();
+  final int[] maxLength=task.getMaxLength();
+  final int[] typicalLength=task.getTypicalLength();
+  final ObjectAdapter[][] options=task.getOptions(context);
+  final boolean[] optional=task.getOptional();
+  final boolean[] readOnly=task.getReadOnly();
+  final ObjectSpecification[] types=task.getTypes();
+  for (int i=0; i < parameterLabels.length; i++) {
+    final ObjectSpecification paramSpec=types[i];
+    final String fieldId="fld" + i;
+    final String fieldLabel=parameterLabels[i] == null ? "" : parameterLabels[i];
+    ;
+    final String fieldDescription=parameterDescriptions[i] == null ? "" : parameterDescriptions[i];
+    final String currentEntryTitle=entryText[i];
+    final String error=errors[i];
+    if (readOnly[i]) {
+      addReadOnlyField(form,fieldLabel,currentEntryTitle,fieldDescription);
+    }
+ else     if (paramSpec.isParseable() && options[i] != null && options[i].length > 0) {
+      addSelectorForValueOptions(form,currentEntryTitle,fieldId,fieldLabel,fieldDescription,options[i],!optional[i],error,task);
+    }
+ else     if (paramSpec.isParseable()) {
+      addTextFieldForParseable(form,paramSpec,currentEntryTitle,fieldId,fieldLabel,fieldDescription,noLines[i],canWrap[i],maxLength[i],typicalLength[i],!optional[i],error);
+    }
+ else     if (paramSpec.isNotCollection() && options[i] != null && options[i].length > 0) {
+      addSelectorForObjectOptions(context,form,currentEntryTitle,fieldId,fieldLabel,fieldDescription,options[i],!optional[i],error,task);
+    }
+ else     if (paramSpec.isNotCollection()) {
+      addSelectorForKnownReferences(context,form,paramSpec,currentEntryTitle,fieldId,fieldLabel,fieldDescription,!optional[i],error,task);
+    }
+ else {
+      throw new IsisException();
+    }
+  }
+  content.add(form);
+}

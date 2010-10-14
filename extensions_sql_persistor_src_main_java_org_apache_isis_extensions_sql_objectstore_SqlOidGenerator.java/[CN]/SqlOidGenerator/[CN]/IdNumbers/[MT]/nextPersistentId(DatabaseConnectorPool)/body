@@ -1,0 +1,10 @@
+{
+  if (lastId > newBatchAt) {
+    throw new SqlObjectStoreException("ID exception, last id (" + lastId + ") past new batch boundary ("+ newBatchAt+ ")");
+  }
+  if (lastId == newBatchAt) {
+    prepareNewBatch(connectionPool);
+  }
+  lastId++;
+  return lastId;
+}

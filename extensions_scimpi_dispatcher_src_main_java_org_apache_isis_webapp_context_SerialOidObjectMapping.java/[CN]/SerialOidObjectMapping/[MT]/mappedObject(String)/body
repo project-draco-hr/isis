@@ -1,0 +1,20 @@
+{
+  boolean isTransient=id.charAt(0) == 'T';
+  if (isTransient) {
+    TransientObjectMapping mapping=transients.get(id);
+    if (mapping == null) {
+      return null;
+    }
+    return mapping.getObject();
+  }
+ else {
+    int pos=id.indexOf('@');
+    if (pos == -1) {
+      return null;
+    }
+    ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(id.substring(1,pos));
+    long serialNumber=Long.parseLong(id.substring(pos + 1),RADIX);
+    SerialOid oid=isTransient ? SerialOid.createTransient(serialNumber) : SerialOid.createPersistent(serialNumber);
+    return IsisContext.getPersistenceSession().loadObject(oid,spec);
+  }
+}

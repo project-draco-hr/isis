@@ -1,0 +1,16 @@
+{
+  final GregorianCalendar cal=new GregorianCalendar(2001,02,07);
+  cal.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+  final java.sql.Date returnedDate=new java.sql.Date(cal.getTimeInMillis());
+  final MockControl<ResultSet> control=MockControl.createControl(ResultSet.class);
+  final ResultSet rs=(ResultSet)control.getMock();
+  control.expectAndReturn(rs.getDate(names[0]),returnedDate);
+  control.expectAndReturn(rs.wasNull(),false);
+  control.replay();
+  final DateType type=new DateType();
+  final Date returned=(Date)type.nullSafeGet(rs,names,null);
+  assertEquals("day",7,returned.getDay());
+  assertEquals("month",3,returned.getMonth());
+  assertEquals("year",2001,returned.getYear());
+  control.verify();
+}

@@ -1,0 +1,26 @@
+{
+  try {
+    DatabaseMetaData metaData=connection.getMetaData();
+    debug.appendln("Product",metaData.getDatabaseProductName() + "  " + metaData.getDatabaseProductVersion());
+    try {
+      debug.appendln("Product Version",metaData.getDatabaseMajorVersion() + "." + metaData.getDatabaseMinorVersion());
+    }
+ catch (    AbstractMethodError ignore) {
+    }
+    debug.appendln("Drive",metaData.getDriverName() + "  " + metaData.getDriverVersion());
+    debug.appendln("Driver Version",metaData.getDriverMajorVersion() + "." + metaData.getDriverMinorVersion());
+    debug.appendln("Keywords",metaData.getSQLKeywords());
+    debug.appendln("Date/Time functions",metaData.getTimeDateFunctions());
+    debug.appendln("Date/Time functions",metaData.getTimeDateFunctions());
+    debug.appendln("Mixed case identifiers",metaData.supportsMixedCaseIdentifiers());
+    debug.appendln("Lower case identifiers",metaData.storesLowerCaseIdentifiers());
+    debug.appendln("Lower case quoted",metaData.storesLowerCaseQuotedIdentifiers());
+    debug.appendln("Mixed case identifiers",metaData.storesMixedCaseIdentifiers());
+    debug.appendln("Mixed case quoted",metaData.storesMixedCaseQuotedIdentifiers());
+    debug.appendln("Upper case identifiers",metaData.storesUpperCaseIdentifiers());
+    debug.appendln("Upper case quoted",metaData.storesUpperCaseQuotedIdentifiers());
+  }
+ catch (  SQLException e) {
+    throw new SqlObjectStoreException("Metadata error",e);
+  }
+}

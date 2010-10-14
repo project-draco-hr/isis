@@ -1,0 +1,38 @@
+{
+  int start=value.indexOf("${");
+  if (start == -1) {
+    return value;
+  }
+ else {
+    int end=value.indexOf('}');
+    if (end == -1) {
+      throw new PropertyException("No closing brace in " + value.substring(start));
+    }
+ else     if (end < start) {
+      throw new PropertyException("Closing brace before opening brace in " + value.substring(end));
+    }
+    String name=value.substring(start + 2,end);
+    if (name != null) {
+      Object replacementValue=getParameter(name);
+      if (replacementValue == null) {
+        replacementValue=getVariable(name);
+      }
+      if (replacementValue == null) {
+        replacementValue=getBuiltIn(name);
+      }
+      if (replacementValue == null) {
+        if (ensureExists) {
+          throw new PropertyException("No value for the variable " + value.substring(start,end + 1));
+        }
+ else {
+          replacementValue="";
+        }
+      }
+      value=value.substring(0,start) + replacementValue + value.substring(end + 1);
+      return replaceVariables(value,ensureExists);
+    }
+ else {
+      throw new PropertyException("No value for " + name);
+    }
+  }
+}

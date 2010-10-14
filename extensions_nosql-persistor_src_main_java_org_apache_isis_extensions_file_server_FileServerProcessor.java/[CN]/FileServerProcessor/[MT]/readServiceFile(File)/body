@@ -1,0 +1,20 @@
+{
+  BufferedReader reader=null;
+  try {
+    reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),Util.ENCODING));
+    String[] split=reader.readLine().split(" ");
+    return split[1];
+  }
+ catch (  IOException e) {
+    LOG.error("failed to read service file",e);
+    throw new FileServerException("Failed to read service file",e);
+  }
+ finally {
+    try {
+      reader.close();
+    }
+ catch (    IOException e) {
+      LOG.error("failed to close file",e);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  if (!MANAGED_TRANSACTIONS) {
+    final Session session=getSessionFactory().getCurrentSession();
+    final Transaction tx=session.getTransaction();
+    if (tx.isActive()) {
+      tx.commit();
+    }
+ else {
+      session.close();
+    }
+  }
+}

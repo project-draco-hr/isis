@@ -1,0 +1,13 @@
+{
+  PropertiesConfiguration configuration=new PropertiesConfiguration();
+  configuration.add(properties);
+  persistorName=configuration.getString("isis.persistence");
+  resetPersistorState(configuration);
+  sqlDataClassFactory=new SqlDataClassFactory();
+  if (system != null) {
+    system.shutDown();
+  }
+  system=new TestProxySystemIII();
+  system.setConfiguration(configuration);
+  system.init(sqlDataClassFactory);
+}

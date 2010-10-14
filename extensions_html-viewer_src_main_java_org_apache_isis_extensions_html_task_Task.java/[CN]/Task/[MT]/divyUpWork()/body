@@ -1,0 +1,23 @@
+{
+  if (numberOfEntries == 0) {
+    boundaries=new int[2];
+  }
+ else {
+    final int[] b=new int[numberOfEntries + 2];
+    int count=0;
+    b[count++]=0;
+    ObjectSpecification type=fieldSpecifications[0];
+    boolean direct=simpleField(type,0);
+    for (int i=1; i < numberOfEntries; i++) {
+      type=fieldSpecifications[i];
+      if (true || direct && (simpleField(type,i))) {
+        continue;
+      }
+      b[count++]=i;
+      direct=simpleField(type,i);
+    }
+    b[count++]=numberOfEntries;
+    boundaries=new int[count];
+    System.arraycopy(b,0,boundaries,0,count);
+  }
+}

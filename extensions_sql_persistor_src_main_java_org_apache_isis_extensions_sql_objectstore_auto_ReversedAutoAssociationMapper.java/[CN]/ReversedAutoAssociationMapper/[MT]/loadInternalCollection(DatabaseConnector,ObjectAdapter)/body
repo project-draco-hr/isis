@@ -1,0 +1,28 @@
+{
+  ObjectAdapter collection=(ObjectAdapter)field.get(parent);
+  if (collection.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    LOG.debug("loading internal collection " + field);
+    StringBuffer sql=new StringBuffer();
+    sql.append("select ");
+    idMapping.appendColumnNames(sql);
+    sql.append(", ");
+    sql.append(columnList());
+    sql.append(" from ");
+    sql.append(table);
+    sql.append(" where ");
+    idMapping.appendUpdateValues(sql,parent);
+    Results rs=connector.select(sql.toString());
+    List<ObjectAdapter> list=new ArrayList<ObjectAdapter>();
+    while (rs.next()) {
+      Oid oid=idMapping.recreateOid(rs,specification);
+      ObjectAdapter element=getAdapter(specification,oid);
+      loadFields(element,rs);
+      LOG.debug("  element  " + element.getOid());
+      list.add(element);
+    }
+    CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+    collectionFacet.init(collection,list.toArray(new ObjectAdapter[list.size()]));
+    rs.close();
+    PersistorUtil.end(collection);
+  }
+}

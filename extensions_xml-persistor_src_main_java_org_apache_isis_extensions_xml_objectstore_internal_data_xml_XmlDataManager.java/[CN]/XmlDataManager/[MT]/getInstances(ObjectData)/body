@@ -1,0 +1,17 @@
+{
+  final Vector<SerialOid> instances=loadInstances(pattern.getSpecification());
+  if (instances == null) {
+    return new ObjectDataVector();
+  }
+  final ObjectDataVector matches=new ObjectDataVector();
+  for (  SerialOid oid : instances) {
+    final ObjectData instanceData=(ObjectData)loadData(oid);
+    if (instanceData == null) {
+      throw new IsisException("No data found for " + oid + " (possible missing file)");
+    }
+    if (matchesPattern(pattern,instanceData)) {
+      matches.addElement(instanceData);
+    }
+  }
+  return matches;
+}

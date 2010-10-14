@@ -1,0 +1,23 @@
+{
+  for (final Iterator<PersistentSpecification> iter=classes.values().iterator(); iter.hasNext(); ) {
+    final PersistentSpecification persistentClass=iter.next();
+    final ObjectAssociation[] fields=persistentClass.getUniqueFields();
+    for (int i=0; i < fields.length; i++) {
+      if (fields[i].getSpecification().isValueOrIsAggregated() || fields[i].isNotPersisted()) {
+        continue;
+      }
+      final PersistentSpecification associatedClass=getPersistentClass(fields[i].getSpecification().getFullName());
+      if (associatedClass == null) {
+        continue;
+      }
+      final String inverse=getInverse(persistentClass,fields[i].getId());
+      if (inverse != null) {
+        final ObjectAssociation associatedField=associatedClass.getSpecification().getAssociation(inverse);
+        final Association association=new Association(associatedClass,associatedField,false);
+        persistentClass.addAssociation(fields[i].getId(),association);
+        final Association reverseAssociation=new Association(persistentClass,fields[i],true);
+        associatedClass.addAssociation(inverse,reverseAssociation);
+      }
+    }
+  }
+}

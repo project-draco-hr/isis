@@ -1,0 +1,10 @@
+{
+  if (object.getSpecification().isAggregated()) {
+    Oid parentOid=((AggregatedOid)object.getOid()).getParentOid();
+    ObjectAdapter parent=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(parentOid);
+    return new WriteObjectCommand(true,keyCreator,versionCreator,parent);
+  }
+ else {
+    return new WriteObjectCommand(true,keyCreator,versionCreator,object);
+  }
+}

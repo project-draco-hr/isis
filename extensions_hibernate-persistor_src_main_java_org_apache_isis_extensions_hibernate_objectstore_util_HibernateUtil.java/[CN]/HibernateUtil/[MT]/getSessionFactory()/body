@@ -1,0 +1,27 @@
+{
+  SessionFactory sf=null;
+  final String sfName=HibernateUtil.configuration.getProperty(Environment.SESSION_FACTORY_NAME);
+  if (sfName != null) {
+    LOG.debug("Looking up SessionFactory in JNDI.");
+    try {
+      sf=(SessionFactory)new InitialContext().lookup(sfName);
+    }
+ catch (    final NamingException ex) {
+      throw new IsisException(ex);
+    }
+  }
+ else {
+    if (sessionFactory == null) {
+synchronized (sessionFactoryLock) {
+        if (sessionFactory == null) {
+          sessionFactory=HibernateUtil.configuration.buildSessionFactory();
+        }
+      }
+    }
+    sf=sessionFactory;
+  }
+  if (sf == null) {
+    throw new IllegalStateException("SessionFactory not available.");
+  }
+  return sf;
+}

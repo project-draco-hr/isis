@@ -1,0 +1,15 @@
+{
+  while (index < snippets.size() - 1) {
+    index++;
+    Snippet snippet=snippets.get(index);
+    if (snippet instanceof HtmlSnippet) {
+      append(snippet);
+    }
+ else {
+      SwfTag tag=(SwfTag)snippet;
+      String name=tag.getName();
+      ElementProcessor processor=processors.getFor(name);
+      process(tag,processor);
+    }
+  }
+}

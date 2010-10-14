@@ -1,0 +1,9 @@
+{
+  HibernateOid oid=(HibernateOid)((ObjectAdapter)object).getOid();
+  boolean isTransient=oid.isTransient();
+  String id=(isTransient ? "T" : "P") + oid.getClassName() + "@"+ (oid.getPrimaryKey() instanceof String ? "$" : "*")+ oid.getPrimaryKey();
+  if (isTransient) {
+    transients.put(id,new TransientObjectMapping((ObjectAdapter)object));
+  }
+  return id;
+}

@@ -1,0 +1,48 @@
+{
+  String id=request.getOptionalProperty(OBJECT);
+  String fieldName=request.getOptionalProperty(FIELD);
+  request.appendHtml("<pre class=\"debug\">");
+  try {
+    ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+    ObjectAssociation field=null;
+    if (fieldName != null) {
+      field=object.getSpecification().getAssociation(fieldName);
+      if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+        throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+      }
+      object=field.get(object);
+    }
+    request.processUtilCloseTag();
+    ObjectSpecification specification=field == null ? object.getSpecification() : field.getSpecification();
+    request.appendHtml(specification.getSingularName() + " (" + specification.getFullName()+ ") \n");
+    ObjectAssociation[] fields=specification.getAssociations();
+    for (    ObjectAssociation fld : fields) {
+      if (!fld.isAlwaysHidden()) {
+        request.appendHtml("   " + fld.getId() + " - '"+ fld.getName()+ "' -> "+ fld.getSpecification().getSingularName()+ (fld.isOneToManyAssociation() ? " (collection of)" : "")+ "\n");
+      }
+    }
+    request.appendHtml("   --------------\n");
+    ObjectAction[] actions=specification.getObjectActions(ObjectActionType.USER);
+    ;
+    for (    ObjectAction action : actions) {
+      request.appendHtml("   " + action.getId() + " (");
+      boolean first=true;
+      for (      ObjectActionParameter parameter : action.getParameters()) {
+        if (!first) {
+          request.appendHtml(", ");
+        }
+        request.appendHtml(parameter.getSpecification().getSingularName());
+        first=false;
+      }
+      request.appendHtml(")" + " - '" + action.getName() + "'");
+      if (action.getSpecification() != null) {
+        request.appendHtml(" -> " + action.getSpecification().getSingularName() + ")");
+      }
+      request.appendHtml("\n");
+    }
+  }
+ catch (  ScimpiException e) {
+    request.appendHtml("Debug failed: " + e.getMessage());
+  }
+  request.appendHtml("</pre>");
+}

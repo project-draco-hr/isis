@@ -1,0 +1,31 @@
+{
+  request.appendHtml("<div" + classString + ">");
+  if (title != null) {
+    request.appendHtml("<div class=\"title\">" + title + "</div>");
+  }
+  int row=1;
+  for (int i=0; i < fields.length; i++) {
+    ObjectAssociation field=fields[i];
+    if (ignoreField(field)) {
+      continue;
+    }
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      continue;
+    }
+    String description=field.getDescription().equals("") ? "" : "title=\"" + field.getDescription() + "\"";
+    String cls;
+    if (row++ % 2 == 1) {
+      cls=" class=\"field " + (oddRowClass == null ? ODD_ROW_CLASS : oddRowClass) + "\"";
+    }
+ else {
+      cls=" class=\"field " + (evenRowClass == null ? EVEN_ROW_CLASS : evenRowClass) + "\"";
+    }
+    request.appendHtml("<div " + cls + description+ "><span class=\"label\">");
+    request.appendHtml(field.getName());
+    request.appendHtml(":</span><span class=\"value\">");
+    LinkedObject linkedObject=linkFields[i];
+    addField(request,object,field,linkedObject);
+    request.appendHtml("</span></div>");
+  }
+  request.appendHtml("</div>");
+}

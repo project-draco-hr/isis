@@ -1,0 +1,48 @@
+{
+  int x=0;
+  int y=0;
+  final View views[]=view.getSubviews();
+  final int max[]=new int[size];
+  int column=0;
+  for (int i=0; i < views.length; i++) {
+    final View v=views[i];
+    final Size s=v.getRequiredSize(new Size(maximumSize));
+    if (orientation == COLUMNS) {
+      max[column]=Math.max(max[column],s.getWidth());
+    }
+ else {
+      max[column]=Math.max(max[column],s.getHeight());
+    }
+    column++;
+    if (column >= size) {
+      column=0;
+    }
+  }
+  column=0;
+  for (int i=0; i < views.length; i++) {
+    final View v=views[i];
+    final Size s=v.getRequiredSize(new Size(maximumSize));
+    v.setLocation(new Location(x,y));
+    if (orientation == COLUMNS) {
+      x+=max[column];
+      s.ensureWidth(max[column]);
+    }
+ else {
+      y+=max[column];
+      s.ensureHeight(max[column]);
+    }
+    v.setSize(s);
+    column++;
+    if (column >= size) {
+      column=0;
+      if (orientation == COLUMNS) {
+        x=0;
+        y+=s.getHeight();
+      }
+ else {
+        y=0;
+        x+=s.getWidth();
+      }
+    }
+  }
+}

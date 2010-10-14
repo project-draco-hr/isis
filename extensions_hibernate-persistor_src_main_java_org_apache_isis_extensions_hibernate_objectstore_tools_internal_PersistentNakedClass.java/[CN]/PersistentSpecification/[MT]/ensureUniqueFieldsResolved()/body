@@ -1,0 +1,24 @@
+{
+  if (uniqueFields != null) {
+    return;
+  }
+  if (parent.isRoot()) {
+    uniqueFields=spec.getAssociations();
+    return;
+  }
+  final ObjectAssociation[] parentFields=parent.getSpecification().getAssociations();
+  final HashMap<String,String> parentIds=new HashMap<String,String>();
+  for (int i=0; i < parentFields.length; i++) {
+    if (!parentFields[i].isNotPersisted()) {
+      parentIds.put(parentFields[i].getId(),"");
+    }
+  }
+  final List<ObjectAssociation> uniqueList=new ArrayList<ObjectAssociation>();
+  final ObjectAssociation[] fields=spec.getAssociations();
+  for (int i=0; i < fields.length; i++) {
+    if (!parentIds.containsKey(fields[i].getId())) {
+      uniqueList.add(fields[i]);
+    }
+  }
+  uniqueFields=uniqueList.toArray(new ObjectAssociation[0]);
+}

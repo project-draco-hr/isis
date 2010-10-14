@@ -1,0 +1,12 @@
+{
+  final Content objectContent=context.mock(Content.class,"object");
+  context.checking(new Expectations(){
+{
+      one(objectContent).isCollection();
+      will(returnValue(false));
+    }
+  }
+);
+  ViewRequirement requirement=new ViewRequirement(objectContent,ViewRequirement.CLOSED);
+  assertTrue(!viewSpecification.canDisplay(requirement));
+}

@@ -1,0 +1,19 @@
+{
+  addAction(new ActionAction());
+  addAction(new DebugAction(this));
+  addAction(new EditAction());
+  addAction(new RemoveAction());
+  addAction(new LogonAction());
+  addAction(new LogoutAction());
+  String configFile=getParameter("config");
+  if (configFile != null) {
+    File file=new File(dir,configFile);
+    if (file.exists()) {
+      loadConfigFile(file);
+    }
+ else {
+      throw new ScimpiException("Configuration file not found: " + configFile);
+    }
+  }
+  processors.init();
+}

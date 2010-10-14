@@ -1,0 +1,17 @@
+{
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(ExampleReferencePojo.class);
+  ObjectAdapter object=IsisContext.getPersistenceSession().createInstance(specification);
+  object.setOptimisticLock(new SerialNumberVersion(3,"username",new Date(1000)));
+  long id=((SerialOid)object.getOid()).getSerialNo();
+  final String key=Long.toHexString(id);
+  Mockery context=new Mockery();
+  final NoSqlCommandContext commandContext=context.mock(NoSqlCommandContext.class);
+  context.checking(new Expectations(){
+{
+      one(commandContext).delete(specification.getFullName(),key,"3");
+    }
+  }
+);
+  DestroyObjectCommandImplementation command=new DestroyObjectCommandImplementation(new SerialKeyCreator(),new SerialNumberVersionCreator(),object);
+  command.execute(commandContext);
+}

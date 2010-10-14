@@ -1,0 +1,27 @@
+{
+  super.viewMenuOptions(menuOptions);
+  menuOptions.add(new UserActionAbstract("Hide"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      View parent=wrappedView.getParent();
+      wrappedView=new BlankView(getContent());
+      wrappedView.setParent(parent);
+      wrappedView.setView(ConfigurableFieldBorder.this);
+      invalidateLayout();
+    }
+  }
+);
+  menuOptions.add(new UserActionAbstract("Show label"){
+    public void execute(    Workspace workspace,    View view,    Location at){
+      if (wrappedView instanceof LabelBorder) {
+        wrappedView=((LabelBorder)wrappedView).getWrapped();
+      }
+ else {
+        wrappedView=LabelBorder.createFieldLabelBorder(view.getParent().getViewAxes().getAxis(LabelAxis.class),wrappedView);
+      }
+      wrappedView.setView(ConfigurableFieldBorder.this);
+      getView().invalidateLayout();
+    }
+  }
+);
+  replaceOptions(Toolkit.getViewFactory().availableViews(new ViewRequirement(getContent(),ViewRequirement.OPEN | ViewRequirement.CLOSED | ViewRequirement.SUBVIEW)),menuOptions);
+}

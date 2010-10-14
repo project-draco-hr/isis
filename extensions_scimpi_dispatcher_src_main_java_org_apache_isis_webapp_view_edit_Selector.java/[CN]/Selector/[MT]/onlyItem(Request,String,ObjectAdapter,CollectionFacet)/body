@@ -1,0 +1,10 @@
+{
+  RequestContext context=request.getContext();
+  Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+  StringBuffer buffer=new StringBuffer();
+  ObjectAdapter element=iterator.next();
+  String elementId=context.mapObject(element,Scope.INTERACTION);
+  buffer.append("<img class=\"small-icon\" src=\"" + request.getContext().imagePath(element) + "\" alt=\""+ element.getSpecification().getShortName()+ "\"/>"+ element.titleString()+ "\n");
+  buffer.append("<input type=\"hidden\" name=\"" + field + "\" value=\""+ elementId+ "\""+ "/>\n");
+  return buffer.toString();
+}

@@ -1,0 +1,68 @@
+{
+  tabPane=new TabPane();
+  tabPane.addMouseListener(new MouseAdapter(){
+    @Override public void mouseClicked(    final MouseEvent e){
+      final Point point=e.getPoint();
+      panel=tabPane.select(point);
+      showDebugForPane();
+    }
+  }
+);
+  tabPane.setLayout(new BorderLayout(7,7));
+  final TextArea textArea=new TextArea("",60,110,TextArea.SCROLLBARS_BOTH);
+  textArea.setForeground(Color.black);
+  textArea.setEditable(false);
+  final Font font=new Font("Monospaced",Font.PLAIN,11);
+  textArea.setFont(font);
+  tabPane.add("Center",textArea);
+  field=textArea;
+  final Panel buttons=new Panel();
+  buttons.setLayout(new FlowLayout());
+  tabPane.add(buttons,BorderLayout.SOUTH);
+  Button b=new java.awt.Button("Refresh");
+  b.setFont(font);
+  buttons.add(b);
+  b.addActionListener(new java.awt.event.ActionListener(){
+    public void actionPerformed(    final ActionEvent e){
+      showDebugForPane();
+    }
+  }
+);
+  b=new java.awt.Button("Print...");
+  b.setFont(font);
+  buttons.add(b);
+  b.addActionListener(new java.awt.event.ActionListener(){
+    public void actionPerformed(    final ActionEvent e){
+      DebugOutput.print("Debug " + tabPane.getName(),field.getText());
+    }
+  }
+);
+  b=new java.awt.Button("Save...");
+  b.setFont(font);
+  buttons.add(b);
+  b.addActionListener(new java.awt.event.ActionListener(){
+    public void actionPerformed(    final ActionEvent e){
+      DebugOutput.saveToFile("Save details","Debug " + tabPane.getName(),field.getText());
+    }
+  }
+);
+  b=new java.awt.Button("Copy");
+  b.setFont(font);
+  buttons.add(b);
+  b.addActionListener(new java.awt.event.ActionListener(){
+    public void actionPerformed(    final ActionEvent e){
+      DebugOutput.saveToClipboard(field.getText());
+    }
+  }
+);
+  b=new java.awt.Button("Close");
+  b.setFont(font);
+  buttons.add(b);
+  b.addActionListener(new java.awt.event.ActionListener(){
+    public void actionPerformed(    final ActionEvent e){
+      closeDialog();
+    }
+  }
+);
+  return tabPane;
+}

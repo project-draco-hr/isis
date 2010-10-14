@@ -1,0 +1,30 @@
+{
+  if (initRun) {
+    return true;
+  }
+  initialiseSessionFactory();
+  if (MANAGED_TRANSACTIONS) {
+    if (HibernateUtil.getNofConfiguration().getBoolean(HibernateConstants.HIB_SCHEMA_EXPORT_KEY)) {
+      LOG.warn(HibernateConstants.HIB_SCHEMA_EXPORT_KEY + " is set, but cannot be run in this environment");
+    }
+    if (HibernateUtil.getNofConfiguration().getBoolean(HibernateConstants.HIB_SCHEMA_UPDATE_KEY)) {
+      LOG.warn(HibernateConstants.HIB_SCHEMA_UPDATE_KEY + " is set, but cannot be run in this environment");
+    }
+    initRun=true;
+    return true;
+  }
+  final boolean isInitialized=isInitialized();
+  if (isInitialized) {
+    if (HibernateUtil.getNofConfiguration().getBoolean(HibernateConstants.HIB_SCHEMA_UPDATE_KEY)) {
+      HibernateTools.updateSchema(false,true);
+    }
+  }
+ else {
+    if (HibernateUtil.getNofConfiguration().getBoolean(HibernateConstants.HIB_SCHEMA_EXPORT_KEY,true)) {
+      HibernateTools.exportSchema(false,true);
+    }
+  }
+  HibernateUtil.getSessionFactory();
+  initRun=true;
+  return isInitialized;
+}

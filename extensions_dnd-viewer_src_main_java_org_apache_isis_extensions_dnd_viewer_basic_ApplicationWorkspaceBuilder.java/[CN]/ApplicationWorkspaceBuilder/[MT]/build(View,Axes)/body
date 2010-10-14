@@ -1,0 +1,17 @@
+{
+  final ApplicationWorkspace workspace=(ApplicationWorkspace)view1;
+  PerspectiveContent perspectiveContent=(PerspectiveContent)view1.getContent();
+  workspace.clearServiceViews();
+  PerspectiveEntry perspective=perspectiveContent.getPerspective();
+  for (  Object object : perspective.getObjects()) {
+    ObjectAdapter adapter=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(object);
+    workspace.addIconFor(adapter,new Placement(ApplicationWorkspaceBuilder.UNPLACED));
+  }
+  for (  Object service : perspective.getServices()) {
+    ObjectAdapter adapter=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(service);
+    if (isHidden(adapter)) {
+      continue;
+    }
+    workspace.addServiceIconFor(adapter);
+  }
+}

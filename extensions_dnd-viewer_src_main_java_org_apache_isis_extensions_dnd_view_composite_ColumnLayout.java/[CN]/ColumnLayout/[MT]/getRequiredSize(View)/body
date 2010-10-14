@@ -1,0 +1,17 @@
+{
+  int height=0;
+  int width=0;
+  int maxWidth=0;
+  final View views[]=view.getSubviews();
+  for (int i=0; i < views.length; i++) {
+    final View v=views[i];
+    final Size s=v.getRequiredSize(new Size(Integer.MAX_VALUE,Integer.MAX_VALUE));
+    width+=s.getWidth();
+    maxWidth=Math.max(maxWidth,s.getWidth());
+    height=Math.max(height,s.getHeight());
+  }
+  if (fixedWidth) {
+    width=maxWidth / 2 * views.length;
+  }
+  return new Size(width,height);
+}

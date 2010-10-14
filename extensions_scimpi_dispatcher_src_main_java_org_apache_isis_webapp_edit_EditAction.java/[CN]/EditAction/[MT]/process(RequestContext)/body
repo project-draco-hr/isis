@@ -1,0 +1,63 @@
+{
+  try {
+    String objectId=context.getParameter(OBJECT);
+    String version=context.getParameter(VERSION);
+    String resultName=context.getParameter(RESULT_NAME);
+    resultName=resultName == null ? RequestContext.RESULT : resultName;
+    String override=context.getParameter(RESULT_OVERRIDE);
+    ObjectAdapter adapter=(ObjectAdapter)context.getMappedObject(objectId);
+    ObjectAssociation[] fields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
+    FormState entryState=validateObject(context,adapter,fields);
+    Version adapterVersion=adapter.getVersion();
+    Version formVersion=context.getVersion(version);
+    if (formVersion != null && adapterVersion.different(formVersion)) {
+      IsisContext.getMessageBroker().addMessage("The " + adapter.getSpecification().getSingularName() + " was edited "+ "by another user ("+ adapterVersion.getUser()+ "). Please  make your changes based on their changes.");
+      String view=context.getParameter(ERRORS);
+      context.setRequestPath(view,Dispatcher.EDIT);
+      entryState.setForm(objectId);
+      context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
+      context.addVariable(resultName,objectId,Scope.REQUEST);
+      if (override != null) {
+        context.addVariable(resultName,override,Scope.REQUEST);
+      }
+    }
+ else     if (entryState.isValid()) {
+      changeObject(context,adapter,entryState,fields);
+      if (adapter.isTransient()) {
+        IsisContext.getPersistenceSession().makePersistent(adapter);
+        context.unmapObject(adapter,Scope.REQUEST);
+      }
+      String view=context.getParameter(VIEW);
+      String id=context.mapObject(adapter,Scope.REQUEST);
+      context.addVariable(resultName,id,Scope.REQUEST);
+      if (override != null) {
+        context.addVariable(resultName,override,Scope.REQUEST);
+      }
+      int questionMark=view == null ? -1 : view.indexOf("?");
+      if (questionMark > -1) {
+        String params=view.substring(questionMark + 1);
+        int equals=params.indexOf("=");
+        context.addVariable(params.substring(0,equals),params.substring(equals + 1),Scope.REQUEST);
+        view=view.substring(0,questionMark);
+      }
+      context.setRequestPath(view);
+    }
+ else {
+      String view=context.getParameter(ERRORS);
+      context.setRequestPath(view,Dispatcher.EDIT);
+      entryState.setForm(objectId);
+      context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
+      context.addVariable(resultName,objectId,Scope.REQUEST);
+      if (override != null) {
+        context.addVariable(resultName,override,Scope.REQUEST);
+      }
+    }
+  }
+ catch (  RuntimeException e) {
+    IsisContext.getMessageBroker().getMessages();
+    IsisContext.getMessageBroker().getWarnings();
+    IsisContext.getUpdateNotifier().clear();
+    IsisContext.getUpdateNotifier().clear();
+    throw e;
+  }
+}

@@ -1,0 +1,17 @@
+{
+  try {
+    if (!MANAGED_TRANSACTIONS) {
+      final Session session=getSessionFactory().getCurrentSession();
+      final Transaction tx=session.getTransaction();
+      if (tx.isActive()) {
+        tx.rollback();
+      }
+ else {
+        session.close();
+      }
+    }
+  }
+ catch (  final Exception e) {
+    LOG.warn("Rollback Failure: " + e.getMessage());
+  }
+}

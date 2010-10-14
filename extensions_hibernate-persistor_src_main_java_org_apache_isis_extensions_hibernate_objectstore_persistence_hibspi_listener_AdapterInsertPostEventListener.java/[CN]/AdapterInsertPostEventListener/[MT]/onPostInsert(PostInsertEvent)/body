@@ -1,0 +1,19 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("PostInsertEvent " + logString(event));
+  }
+  Object entity=event.getEntity();
+  final ObjectAdapter adapter=getAdapterFor(entity);
+  final HibernateOid oid=(HibernateOid)adapter.getOid();
+  if (!oid.isTransient()) {
+    throw new IsisException("Not transient: oid=" + oid + ","+ " resolve state="+ adapter.getResolveState()+ " for "+ entity);
+  }
+  replaceCollections(adapter,event);
+  oid.setHibernateId(event.getId());
+  oid.makePersistent();
+  if (getPersistenceSession() instanceof ToPersistObjectSet) {
+    ToPersistObjectSet persistedObjectAdder=(ToPersistObjectSet)getPersistenceSession();
+    persistedObjectAdder.remapAsPersistent(adapter);
+  }
+  clearDirtyFor(adapter);
+}

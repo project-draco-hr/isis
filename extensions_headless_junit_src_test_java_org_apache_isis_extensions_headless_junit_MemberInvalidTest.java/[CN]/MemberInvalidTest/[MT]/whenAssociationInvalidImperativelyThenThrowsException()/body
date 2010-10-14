@@ -1,0 +1,15 @@
+{
+  custJsDO.validateCountryOfBirth="bad country of birth";
+  final Country[] values=new Country[]{countryUsaDO,null};
+  for (  final Country value : values) {
+    try {
+      custJsVO.setCountryOfBirth(value);
+      fail("Should have thrown exception");
+    }
+ catch (    final InvalidException ex) {
+      assertThat(ex.getAdvisorClass(),classEqualTo(PropertyValidateFacetViaMethod.class));
+      assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("Country Of Birth"));
+      assertThat(ex.getMessage(),equalTo("bad country of birth"));
+    }
+  }
+}

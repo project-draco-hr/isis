@@ -1,0 +1,19 @@
+{
+  RequestContext context=request.getContext();
+  if (defaultId != null) {
+    String variable=(String)request.getContext().getVariable(variableName);
+    if (variable == null) {
+      context.addVariable(variableName,defaultId,scope);
+    }
+  }
+ else {
+    ObjectAdapter variable=context.getMappedObject(objectId);
+    if (variable != null && (cls == null || cls.isAssignableFrom(variable.getObject().getClass()))) {
+      context.addVariable(variableName,objectId,scope);
+    }
+ else {
+      Object id2=context.getVariable(variableName);
+      context.addVariable(variableName,id2,scope);
+    }
+  }
+}

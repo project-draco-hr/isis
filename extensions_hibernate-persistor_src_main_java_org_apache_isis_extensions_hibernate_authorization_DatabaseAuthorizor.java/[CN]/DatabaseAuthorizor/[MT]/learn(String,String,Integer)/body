@@ -1,0 +1,24 @@
+{
+  if (isMatch(role,key,flag)) {
+    return true;
+  }
+  try {
+    final int permissionId=getNextId();
+    final int roleId=getRoleId(role);
+    HibernateUtil.startTransaction();
+    final SQLQuery sq=HibernateUtil.getCurrentSession().createSQLQuery(flag == null ? NO_FLAG_INSERT : FLAG_INSERT);
+    sq.setInteger(0,permissionId);
+    sq.setInteger(1,roleId);
+    sq.setString(2,key);
+    if (flag != null) {
+      sq.setInteger(3,flag.intValue());
+    }
+    sq.executeUpdate();
+    HibernateUtil.commitTransaction();
+  }
+ catch (  final Exception e) {
+    HibernateUtil.rollbackTransaction();
+    throw new IsisException(e);
+  }
+  return true;
+}

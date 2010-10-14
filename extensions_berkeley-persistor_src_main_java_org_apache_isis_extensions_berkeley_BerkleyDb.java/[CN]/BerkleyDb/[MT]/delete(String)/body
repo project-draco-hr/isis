@@ -1,0 +1,15 @@
+{
+  try {
+    DatabaseEntry theKey=new DatabaseEntry(key.getBytes("UTF-8"));
+    OperationStatus status=myDatabase.delete(txn,theKey);
+    if (status != OperationStatus.SUCCESS) {
+      throw new BerkeleyObjectStoreException("Data deletion got status " + status);
+    }
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new BerkeleyObjectStoreException(e);
+  }
+catch (  DatabaseException e) {
+    throw new BerkeleyObjectStoreException(e);
+  }
+}

@@ -1,0 +1,26 @@
+{
+  ObjectAdapter collection=(ObjectAdapter)field.get(parent);
+  LOG.debug("saving internal collection " + collection);
+  StringBuffer sql=new StringBuffer();
+  sql.append("delete from ");
+  sql.append(tableName);
+  sql.append(" where ");
+  idMapping.appendWhereClause(sql,parent.getOid());
+  connector.update(sql.toString());
+  sql=new StringBuffer();
+  sql.append("insert into ");
+  sql.append(tableName);
+  sql.append(" (");
+  idMapping.appendColumnNames(sql);
+  sql.append(", ");
+  elementMapping.appendColumnNames(sql);
+  sql.append(" ) values (");
+  idMapping.appendInsertValues(sql,parent);
+  sql.append(", ");
+  CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+  for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
+    StringBuffer values=new StringBuffer();
+    elementMapping.appendInsertValues(values,element);
+    connector.update(sql.toString() + values + ")");
+  }
+}

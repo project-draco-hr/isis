@@ -1,0 +1,14 @@
+{
+  LOG.debug("Rebuilding the SessionFactory from given Configuration.");
+synchronized (sessionFactoryLock) {
+    if (sessionFactory != null && !sessionFactory.isClosed()) {
+      sessionFactory.close();
+    }
+    if (HibernateUtil.configuration.getProperty(Environment.SESSION_FACTORY_NAME) != null) {
+      HibernateUtil.configuration.buildSessionFactory();
+    }
+ else {
+      sessionFactory=HibernateUtil.configuration.buildSessionFactory();
+    }
+  }
+}

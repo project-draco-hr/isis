@@ -1,0 +1,34 @@
+{
+  ObjectAdapter fieldReference=field.get(object);
+  String classSection="class=\"" + (className == null ? "field" : className) + "\"";
+  request.appendHtml("<span " + classSection + ">");
+  if (fieldReference != null) {
+    if (field.isOneToOneAssociation()) {
+      IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)fieldReference);
+    }
+    if (!field.getSpecification().containsFacet(ParseableFacet.class) && showIcon) {
+      request.appendHtml("<img class=\"small-icon\" src=\"" + request.getContext().imagePath(fieldReference) + "\" alt=\""+ field.getSpecification().getShortName()+ "\"/>");
+    }
+    if (linkedField != null) {
+      String id=request.getContext().mapObject((ObjectAdapter)fieldReference,linkedField.getScope(),Scope.INTERACTION);
+      request.appendHtml("<a href=\"" + linkedField.getForwardView() + "?"+ linkedField.getVariable()+ "="+ id+ request.getContext().encodedInteractionParameters()+ "\">");
+    }
+    String value=fieldReference == null ? "" : fieldReference.titleString();
+    if (truncateTo > 0 && value.length() > truncateTo) {
+      value=value.substring(0,truncateTo) + "...";
+    }
+    ObjectSpecification spec=field.getSpecification();
+    BooleanValueFacet facet=(BooleanValueFacet)spec.getFacet(BooleanValueFacet.class);
+    if (facet != null) {
+      boolean flag=facet.isSet(fieldReference);
+      String valueSegment=flag ? " checked=\"checked\"" : "";
+      String disabled=" disabled=\"disabled\"";
+      value="<input type=\"checkbox\"" + valueSegment + disabled+ ">";
+    }
+    request.appendHtml(value);
+    if (linkedField != null) {
+      request.appendHtml("</a>");
+    }
+    request.appendHtml("</span>");
+  }
+}

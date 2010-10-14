@@ -1,0 +1,18 @@
+{
+  String id=request.getOptionalProperty(OBJECT);
+  String fieldName=request.getOptionalProperty(FIELD);
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  if (fieldName == null) {
+    request.appendHtml(object.titleString());
+  }
+ else {
+    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+    }
+    ObjectAdapter fieldReference=field.get(object);
+    if (fieldReference != null) {
+      request.appendHtml(fieldReference.titleString());
+    }
+  }
+}

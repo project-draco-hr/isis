@@ -1,0 +1,39 @@
+{
+  final String entry=textContent.getText();
+  final ObjectAdapter value=getValue();
+  if (!entry.equals(value == null ? "" : value.titleString())) {
+    LOG.debug("field edited: \'" + entry + "\' to replace \'"+ (value == null ? "" : value.titleString())+ "\'");
+    try {
+      parseEntry(entry.toString());
+      invalidReason=null;
+      getViewManager().getSpy().addAction("VALID ENTRY: " + entry);
+      markDamaged();
+      getParent().invalidateContent();
+    }
+ catch (    final TextEntryParseException e) {
+      invalidReason="Invalid Entry: " + e.getMessage();
+      getFeedbackManager().setError(invalidReason);
+      getState().setInvalid();
+      markDamaged();
+    }
+catch (    final InvalidEntryException e) {
+      invalidReason="Invalid Entry: " + e.getMessage();
+      getFeedbackManager().setError(invalidReason);
+      getState().setInvalid();
+      markDamaged();
+    }
+catch (    final ConcurrencyException e) {
+      invalidReason="Update Failure: " + e.getMessage();
+      getState().setOutOfSynch();
+      markDamaged();
+      throw e;
+    }
+catch (    final IsisException e) {
+      invalidReason="Update Failure: " + e.getMessage();
+      getFeedbackManager().setError(invalidReason);
+      getState().setOutOfSynch();
+      markDamaged();
+      throw e;
+    }
+  }
+}

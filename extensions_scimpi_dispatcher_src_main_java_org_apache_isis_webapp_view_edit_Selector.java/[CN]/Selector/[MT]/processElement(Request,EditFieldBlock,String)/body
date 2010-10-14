@@ -1,0 +1,40 @@
+{
+  String type=request.getOptionalProperty(TYPE,"dropdown");
+  if (!request.isPropertySpecified(METHOD) && request.isPropertySpecified(COLLECTION)) {
+    String id=request.getRequiredProperty(COLLECTION,Request.NO_VARIABLE_CHECKING);
+    String selector=showSelectionList(request,id,type);
+    block.replaceContent(field,selector);
+  }
+ else {
+    String objectId=request.getOptionalProperty(OBJECT);
+    String methodName=request.getRequiredProperty(METHOD);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
+    ObjectAction action=MethodsUtils.findAction(object,methodName);
+    if (action.getParameterCount() == 0) {
+      ObjectAdapter collection=action.execute(object,new ObjectAdapter[0]);
+      String selector=showSelectionList(request,collection,type);
+      block.replaceContent(field,selector);
+    }
+ else {
+      String id="selector_options";
+      String id2=(String)request.getContext().getVariable(id);
+      String selector=showSelectionList(request,id2,type);
+      CreateFormParameter parameters=new CreateFormParameter();
+      parameters.objectId=objectId;
+      parameters.methodName=methodName;
+      parameters.buttonTitle=request.getOptionalProperty(TITLE,"Search");
+      parameters.legend=request.getOptionalProperty(LEGEND);
+      parameters.className=request.getOptionalProperty(CLASS,"selector");
+      parameters.id=request.getOptionalProperty(ID);
+      parameters.resultName=id;
+      parameters.forwardResultTo=request.getContext().getResourceFile();
+      parameters.forwardVoidTo="error";
+      parameters.forwardErrorTo=parameters.forwardResultTo;
+      parameters.scope=Scope.REQUEST.name();
+      request.pushNewBuffer();
+      ActionForm.createForm(request,parameters);
+      block.replaceContent(field,selector);
+      request.appendHtml(request.popBuffer());
+    }
+  }
+}

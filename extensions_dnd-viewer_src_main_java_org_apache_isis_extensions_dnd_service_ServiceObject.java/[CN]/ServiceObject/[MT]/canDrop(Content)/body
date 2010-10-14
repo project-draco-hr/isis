@@ -1,0 +1,12 @@
+{
+  ObjectAction action=actionFor(sourceContent);
+  if (action == null) {
+    return Veto.DEFAULT;
+  }
+ else {
+    ObjectAdapter source=sourceContent.getAdapter();
+    final Consent parameterSetValid=action.isProposedArgumentSetValid(adapter,new ObjectAdapter[]{source});
+    parameterSetValid.setDescription("Execute '" + action.getName() + "' with "+ source.titleString());
+    return parameterSetValid;
+  }
+}

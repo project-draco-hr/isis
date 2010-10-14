@@ -1,0 +1,13 @@
+{
+  ObjectAdapter fieldReference=field.get(object);
+  if (format != null && fieldReference.getResolveState().isValue()) {
+    DateValueFacet facet=fieldReference.getSpecification().getFacet(DateValueFacet.class);
+    Date date=facet.dateValue(fieldReference);
+    String value=format.format(date);
+    request.getContext().addVariable(name,value,scope);
+  }
+ else {
+    String source=fieldReference == null ? "" : request.getContext().mapObject(fieldReference,scope);
+    request.getContext().addVariable(name,source,scope);
+  }
+}

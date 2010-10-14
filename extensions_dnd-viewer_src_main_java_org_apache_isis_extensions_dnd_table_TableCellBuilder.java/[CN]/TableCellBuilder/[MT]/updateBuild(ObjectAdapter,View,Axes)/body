@@ -1,0 +1,35 @@
+{
+  final TableAxis viewAxis=(TableAxis)axes.getAxis(TableAxis.class);
+  LOG.debug("update view " + view + " for "+ object);
+  final View[] subviews=view.getSubviews();
+  final ObjectSpecification spec=object.getSpecification();
+  for (int i=0; i < subviews.length; i++) {
+    final ObjectAssociation field=fieldFromActualSpec(spec,viewAxis.getFieldForColumn(i));
+    final View subview=subviews[i];
+    final ObjectAdapter value=field.get(object);
+    if (field.getSpecification().isParseable()) {
+      final boolean visiblityChange=!field.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed() ^ (subview instanceof BlankView);
+      final ObjectAdapter adapter=subview.getContent().getAdapter();
+      final boolean valueChange=value != null && value.getObject() != null && !value.getObject().equals(adapter.getObject());
+      if (visiblityChange || valueChange) {
+        final View fieldView=createFieldView(view,axes,object,field,value);
+        view.replaceView(subview,decorateSubview(axes,fieldView));
+      }
+      subview.refresh();
+    }
+ else     if (field.isOneToOneAssociation()) {
+      final ObjectAdapter existing=((ObjectContent)subviews[i].getContent()).getObject();
+      final boolean changedValue=value != existing;
+      if (changedValue) {
+        View fieldView;
+        fieldView=createFieldView(view,axes,object,field,value);
+        if (fieldView != null) {
+          view.replaceView(subview,decorateSubview(axes,fieldView));
+        }
+ else {
+          view.addView(new FieldErrorView("No field for " + value));
+        }
+      }
+    }
+  }
+}

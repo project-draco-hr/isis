@@ -1,0 +1,42 @@
+{
+  Assert.assertEquals(view.getView(),view);
+  final Content content=view.getContent();
+  final OneToManyAssociation field=content instanceof OneToManyField ? ((OneToManyField)content).getOneToManyAssociation() : null;
+  LOG.debug("rebuild view " + view + " for "+ content);
+  final CollectionContent collectionContent=((CollectionContent)content);
+  Enumeration elements;
+  elements=collectionContent.allElements();
+  final View[] subviews=view.getSubviews();
+  final ObjectAdapter[] existingElements=new ObjectAdapter[subviews.length];
+  for (int i=0; i < subviews.length; i++) {
+    view.removeView(subviews[i]);
+    existingElements[i]=subviews[i].getContent().getAdapter();
+  }
+  int elementNumber=0;
+  while (elements.hasMoreElements()) {
+    final ObjectAdapter element=(ObjectAdapter)elements.nextElement();
+    View elementView=null;
+    for (int i=0; i < subviews.length; i++) {
+      if (existingElements[i] == element) {
+        elementView=subviews[i];
+        existingElements[i]=null;
+        break;
+      }
+    }
+    if (elementView == null) {
+      Content elementContent;
+      if (field == null) {
+        elementContent=new CollectionElement(element);
+      }
+ else {
+        final ObjectAdapter obj=((OneToManyField)view.getContent()).getParent();
+        final ObjectAdapter parent=obj;
+        elementContent=new OneToManyFieldElementImpl(parent,element,field);
+      }
+      elementView=subviewDesign.createView(elementContent,axes,elementNumber++);
+    }
+    if (elementView != null) {
+      view.addView(decorateSubview(axes,elementView));
+    }
+  }
+}

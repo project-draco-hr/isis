@@ -1,0 +1,13 @@
+{
+  int i=0;
+  for (  ObjectAssociation field : fields) {
+    maxValues[i]=0;
+    CollectionFacet collectionFacet=content.getAdapter().getSpecification().getFacet(CollectionFacet.class);
+    for (    ObjectAdapter element : collectionFacet.iterable(content.getAdapter())) {
+      ObjectAdapter value=field.get(element);
+      double doubleValue=NumberAdapters.doubleValue(field,value);
+      maxValues[i]=Math.max(maxValues[i],doubleValue);
+    }
+    i++;
+  }
+}

@@ -1,0 +1,12 @@
+{
+  final ObjectAssociation[] nofAssociations=parent.getSpecification().getAssociations();
+  final StandardProperty[] hibProperties=event.getPersister().getEntityMetamodel().getProperties();
+  Object[] hibCollections=event.getState();
+  for (int i=0; i < nofAssociations.length; i++) {
+    if (!nofAssociations[i].isOneToManyAssociation()) {
+      continue;
+    }
+    final String nofCollectionId=nofAssociations[i].getId();
+    replaceCollection(parent,hibProperties,hibCollections,nofCollectionId);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+  if (association.getSpecification().isAggregated()) {
+    List<StateWriter> elements=new ArrayList<StateWriter>();
+    for (    ObjectAdapter element : collectionFacet.iterable(collection)) {
+      StateWriter elementWriter=writer.createElementWriter();
+      writeFields(elementWriter,association.getSpecification().getFullName(),element);
+      elements.add(elementWriter);
+    }
+    writer.writeCollection(association.getId(),elements);
+  }
+ else {
+    String refs="";
+    for (    ObjectAdapter element : collectionFacet.iterable(collection)) {
+      refs+=keyCreator.reference(element) + "|";
+    }
+    if (refs.length() > 0) {
+      writer.writeField(association.getId(),refs);
+    }
+  }
+}

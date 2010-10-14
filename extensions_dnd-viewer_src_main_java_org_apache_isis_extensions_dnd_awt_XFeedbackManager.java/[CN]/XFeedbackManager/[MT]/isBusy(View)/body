@@ -1,0 +1,14 @@
+{
+  if (view != null) {
+    final Content content=view.getContent();
+    if (content != null && content.isObject()) {
+      final ObjectAdapter object=((ObjectContent)content).getObject();
+      if (busy.contains(object)) {
+        return true;
+      }
+    }
+    final View parent=view.getParent();
+    return parent != null && isBusy(parent);
+  }
+  return false;
+}

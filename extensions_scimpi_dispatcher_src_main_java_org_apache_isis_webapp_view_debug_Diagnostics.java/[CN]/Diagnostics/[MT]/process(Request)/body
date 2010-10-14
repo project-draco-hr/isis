@@ -1,0 +1,15 @@
+{
+  if (request.getContext().getDebug() == RequestContext.Debug.ON) {
+    RequestContext context=request.getContext();
+    request.appendHtml("<div class=\"debug\">");
+    request.appendHtml("<a class=\"option\" target=\"debug\" href=\"debug.app\">Object</a>");
+    request.appendHtml("<pre>");
+    request.appendHtml("URI:  " + context.getUri());
+    request.appendHtml("\n");
+    request.appendHtml("File: " + context.fullFilePath(context.getResourceFile()));
+    request.appendHtml("\n\n");
+    context.append(request,"variables");
+    request.appendHtml("</pre>");
+    request.appendHtml("</div>");
+  }
+}

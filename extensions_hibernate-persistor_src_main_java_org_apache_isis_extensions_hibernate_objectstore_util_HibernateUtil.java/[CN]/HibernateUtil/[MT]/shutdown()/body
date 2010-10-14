@@ -1,0 +1,54 @@
+{
+  LOG.info("Shutting down Hibernate.");
+  if (sessionFactory == null) {
+    return;
+  }
+  final boolean shutdown=HibernateUtil.getNofConfiguration().getBoolean(HibernateConstants.PROPERTY_PREFIX + "shutdown",false);
+  String url=null;
+  if (shutdown) {
+    url=getConfiguration().getProperty("connection.url");
+    if (url != null && url.startsWith("jdbc:hsqldb:")) {
+      LOG.info("Shutdown/compact hsqldb");
+      Statement stmt=null;
+      try {
+        final String command="SHUTDOWN COMPACT";
+        startTransaction();
+        final Session session=getCurrentSession();
+        LOG.info("HSQLDB: " + command);
+        stmt=session.connection().createStatement();
+        stmt.execute(command);
+      }
+ catch (      final Throwable ex) {
+        LOG.error("could not compact database",ex);
+      }
+ finally {
+        if (stmt != null) {
+          try {
+            stmt.close();
+          }
+ catch (          final SQLException ex) {
+            LOG.error("SQLException",ex);
+          }
+        }
+      }
+    }
+  }
+  rollbackTransaction();
+  getSessionFactory().close();
+  HibernateUtil.configuration=null;
+  sessionFactory=null;
+  if (shutdown && url != null && url.startsWith("jdbc:derby:")) {
+    LOG.info("Shutdown Derby");
+    try {
+      DriverManager.getConnection("jdbc:derby:;shutdown=true");
+    }
+ catch (    final SQLException e) {
+      if (e.getSQLState().equals("XJ015")) {
+        LOG.info(e.getMessage());
+      }
+ else {
+        LOG.error("Exception in Derby shutdown",e);
+      }
+    }
+  }
+}

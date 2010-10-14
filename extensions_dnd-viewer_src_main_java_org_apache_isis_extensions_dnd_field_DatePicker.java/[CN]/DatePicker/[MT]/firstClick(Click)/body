@@ -1,0 +1,24 @@
+{
+  if (mouseOverButton != -1) {
+    buttons[mouseOverButton].adjustDate(date);
+    roundDownDate();
+    markDamaged();
+    return;
+  }
+  if (isEditable) {
+    Location location=click.getLocation();
+    int col=column(location);
+    int row=row(location);
+    if (col >= 0 && col < COLUMNS && row >= 0 && row < ROWS) {
+      date.add(Calendar.DAY_OF_MONTH,row * 7 + col);
+      Content content=getContent();
+      DateValueFacet facet=content.getSpecification().getFacet(DateValueFacet.class);
+      ObjectAdapter value=facet.createValue(date.getTime());
+      ((TextParseableContent)content).parseTextEntry(value.titleString());
+      ((TextParseableContent)content).entryComplete();
+      View view=getView();
+      getView().refresh();
+    }
+  }
+  getViewManager().clearOverlayView();
+}

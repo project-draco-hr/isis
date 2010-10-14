@@ -1,0 +1,15 @@
+{
+  final Customer newCustomer=getDomainObjectContainer().newTransientInstance(Customer.class);
+  assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(false));
+  final Customer newCustomerViewObject=getHeadlessViewer().view(newCustomer);
+  newCustomerViewObject.setCustomerNumber(123);
+  newCustomerViewObject.setLastName("Smith");
+  newCustomerViewObject.setMandatoryAssociation(countryGbrDO);
+  newCustomerViewObject.setMandatoryValue("foo");
+  newCustomerViewObject.setMaxLengthField("abc");
+  newCustomerViewObject.setRegExCaseInsensitiveField("ABCd");
+  newCustomerViewObject.setRegExCaseSensitiveField("abcd");
+  final ViewObject<Customer> proxyNewCustomer=asViewObject(newCustomerViewObject);
+  proxyNewCustomer.save();
+  assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(true));
+}

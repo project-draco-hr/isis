@@ -1,0 +1,11 @@
+{
+  if (object == null) {
+    throw new ScimpiException("Object not specified when looking for " + methodName);
+  }
+  ObjectAction[] actions=object.getSpecification().getObjectActions(ObjectActionType.USER,ObjectActionType.EXPLORATION,ObjectActionType.PROTOTYPE,ObjectActionType.DEBUG);
+  ObjectAction action=findAction(actions,methodName);
+  if (action == null) {
+    throw new DispatchException("Failed to find action " + methodName + " on "+ object);
+  }
+  return action;
+}

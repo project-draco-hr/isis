@@ -1,0 +1,18 @@
+{
+  requestContext.setStatus(500);
+  requestContext.setContentType("text/html");
+  PrintWriter writer=requestContext.getWriter();
+  DebugView errorView=new DebugView(writer);
+  errorView.header();
+  errorView.startTable();
+  try {
+    errorView.exception(exception);
+    requestContext.append(errorView);
+  }
+ catch (  RuntimeException e) {
+    errorView.exception(e);
+  }
+  errorView.endTable();
+  errorView.footer();
+  writer.close();
+}

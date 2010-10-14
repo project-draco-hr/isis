@@ -1,0 +1,12 @@
+{
+  StringBuffer sql=new StringBuffer();
+  sql.append("delete from " + table + " where ");
+  idMapping.appendWhereClause(sql,object.getOid());
+  sql.append(" and ");
+  sql.append(versionMapping.whereClause((SerialNumberVersion)object.getVersion()));
+  int updateCount=connector.update(sql.toString());
+  if (updateCount == 0) {
+    LOG.info("concurrency conflict object " + this + "; no deletion performed");
+    throw new ConcurrencyException("",object.getOid());
+  }
+}

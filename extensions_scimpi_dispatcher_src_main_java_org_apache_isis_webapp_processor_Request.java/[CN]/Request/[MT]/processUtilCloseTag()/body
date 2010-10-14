@@ -1,0 +1,26 @@
+{
+  SwfTag tag=getTag();
+  if (tag.getType() == SwfTag.EMPTY) {
+    return;
+  }
+  while (index < snippets.size() - 1) {
+    index++;
+    Snippet snippet=snippets.get(index);
+    if (snippet instanceof HtmlSnippet) {
+      append(snippet);
+    }
+ else {
+      SwfTag nextTag=(SwfTag)snippet;
+      if (tag.getName().equals(nextTag.getName())) {
+        if (nextTag.getType() == SwfTag.START) {
+        }
+ else {
+          return;
+        }
+      }
+      String name=nextTag.getName();
+      ElementProcessor processor=processors.getFor(name);
+      process(nextTag,processor);
+    }
+  }
+}

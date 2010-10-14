@@ -1,0 +1,13 @@
+{
+  custJsDO.addToVisitedCountries(countryGbrDO);
+  custJsDO.validateRemoveFromVisitedCountries="bad country";
+  try {
+    custJsVO.removeFromVisitedCountries(countryGbrDO);
+    fail("Should have thrown exception");
+  }
+ catch (  final InvalidException ex) {
+    assertThat(ex.getAdvisorClass(),classEqualTo(CollectionValidateRemoveFromFacetViaMethod.class));
+    assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("Visited Countries"));
+    assertThat(ex.getMessage(),equalTo("bad country"));
+  }
+}

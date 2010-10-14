@@ -1,0 +1,26 @@
+{
+  int versionSequence=1;
+  SerialNumberVersion version=createVersion(versionSequence);
+  StringBuffer sql=new StringBuffer();
+  sql.append("insert into " + table + " (");
+  idMapping.appendColumnNames(sql);
+  sql.append(", ");
+  sql.append(columnList());
+  sql.append(", ");
+  titleMapping.appendColumnNames(sql);
+  sql.append(", ");
+  sql.append(versionMapping.insertColumns());
+  sql.append(") values (");
+  idMapping.appendInsertValues(sql,object);
+  sql.append(", ");
+  sql.append(values(object));
+  titleMapping.appendInsertValues(sql,object);
+  sql.append(", ");
+  sql.append(versionMapping.insertValues(version));
+  sql.append(") ");
+  connector.insert(sql.toString());
+  object.setOptimisticLock(version);
+  for (int i=0; i < collectionMappers.length; i++) {
+    collectionMappers[i].saveInternalCollection(connector,object);
+  }
+}

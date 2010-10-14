@@ -1,0 +1,13 @@
+{
+  final PersistenceQuery persistenceQuery=context.mock(PersistenceQuery.class);
+  context.checking(new Expectations(){
+{
+      one(persistenceQuery).getSpecification();
+      will(returnValue(specification));
+      one(db).instancesOf(specification.getFullName());
+      will(returnIterator());
+    }
+  }
+);
+  store.getInstances(persistenceQuery);
+}

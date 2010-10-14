@@ -1,0 +1,20 @@
+{
+  int batchSize=connection.getRequestAsInt();
+  long nextId;
+  File file=Util.serialNumberFile();
+  if (!file.exists()) {
+    nextId=1;
+    LOG.info("Initial ID batch created at " + nextId);
+  }
+ else {
+    BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),Util.ENCODING));
+    nextId=Long.valueOf(reader.readLine()).longValue();
+    reader.close();
+    LOG.info("New ID batch allocated, from " + nextId);
+  }
+  FileOutputStream fileOutput=new FileOutputStream(file);
+  long newBatchAt=nextId + batchSize;
+  fileOutput.write(Long.toString(newBatchAt).getBytes("utf-8"));
+  fileOutput.close();
+  connection.response(nextId);
+}

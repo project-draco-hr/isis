@@ -1,0 +1,11 @@
+{
+  if (value == null) {
+    statement.setNull(index,Hibernate.BIG_DECIMAL.sqlType());
+    statement.setNull(index + 1,Hibernate.STRING.sqlType());
+  }
+ else {
+    final Money amount=(Money)value;
+    statement.setBigDecimal(index,amount.getAmount());
+    statement.setString(index + 1,amount.getCurrency());
+  }
+}

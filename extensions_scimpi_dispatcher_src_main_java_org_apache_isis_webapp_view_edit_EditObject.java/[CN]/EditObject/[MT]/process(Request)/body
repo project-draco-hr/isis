@@ -1,0 +1,44 @@
+{
+  RequestContext context=request.getContext();
+  String objectId=request.getOptionalProperty(OBJECT);
+  String forwardEditedTo=request.getOptionalProperty(VIEW);
+  String forwardErrorTo=request.getOptionalProperty(ERRORS);
+  boolean hideNonEditableFields=request.isRequested("hide-uneditable",false);
+  String buttonTitle=request.getOptionalProperty(TITLE,"Save");
+  String legend=request.getOptionalProperty(LEGEND);
+  String variable=request.getOptionalProperty(RESULT_NAME);
+  String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
+  String scope=request.getOptionalProperty(SCOPE);
+  String className=request.getOptionalProperty(CLASS,"edit");
+  String id=request.getOptionalProperty(ID);
+  final ObjectAdapter object=(ObjectAdapter)context.getMappedObjectOrResult(objectId);
+  String actualObjectId=context.mapObject(object,Scope.INTERACTION);
+  String version=context.mapVersion(object);
+  EditFieldBlock containedBlock=new EditFieldBlock(){
+    public boolean isVisible(    String name){
+      ObjectAssociation fld=object.getSpecification().getAssociation(name);
+      boolean isVisible=fld.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed();
+      boolean isUseable=fld.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
+      return isVisible && isUseable;
+    }
+  }
+;
+  request.setBlockContent(containedBlock);
+  request.processUtilCloseTag();
+  AuthenticationSession session=IsisContext.getAuthenticationSession();
+  ObjectAssociation[] fields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object));
+  fields=containedBlock.includedFields(fields);
+  InputField[] formFields=createFields(fields);
+  FormState entryState=(FormState)context.getVariable(ENTRY_FIELDS);
+  initializeFields(context,object,formFields,entryState,!hideNonEditableFields);
+  setDefaults(context,object,formFields,entryState);
+  copyFieldContent(context,object,formFields);
+  overrideWithHtml(context,containedBlock,formFields);
+  if (entryState != null && entryState.isForForm(actualObjectId)) {
+    copyEntryState(context,object,formFields,entryState);
+  }
+  String errorView=context.fullFilePath(forwardErrorTo == null ? context.getResourceFile() : forwardErrorTo);
+  HiddenInputField[] hiddenFields=new HiddenInputField[]{new HiddenInputField(OBJECT,actualObjectId),new HiddenInputField(VERSION,version),forwardEditedTo == null ? null : new HiddenInputField(VIEW,context.fullFilePath(forwardEditedTo)),new HiddenInputField(ERRORS,errorView),variable == null ? null : new HiddenInputField(RESULT_NAME,variable),resultOverride == null ? null : new HiddenInputField(RESULT_OVERRIDE,resultOverride),scope == null ? null : new HiddenInputField(SCOPE,scope)};
+  InputForm.createForm(request,EditAction.ACTION + ".app",buttonTitle,formFields,hiddenFields,legend,className,id);
+  request.popBlockContent();
+}

@@ -1,0 +1,58 @@
+{
+  getFeedbackManager().showDefaultCursor();
+  if (!drag.getSourceContent().isObject()) {
+    return;
+  }
+  if (drag.getSourceContent().getAdapter() == getPerspective()) {
+    getFeedbackManager().setAction("can' drop self on workspace");
+    return;
+  }
+  final ObjectAdapter source=((ObjectContent)drag.getSourceContent()).getObject();
+  if (source.getSpecification().isService()) {
+    getPerspective().addToServices(source.getObject());
+    invalidateContent();
+  }
+ else {
+    if (!drag.isShift()) {
+      getPerspective().addToObjects(source.getObject());
+    }
+  }
+  View newView;
+  if (source.getSpecification().isService()) {
+    return;
+  }
+ else {
+    final Location dropLocation=drag.getTargetLocation();
+    dropLocation.subtract(drag.getOffset());
+    if (drag.isShift()) {
+      newView=Toolkit.getViewFactory().createView(new ViewRequirement(getContent(),ViewRequirement.OPEN | ViewRequirement.SUBVIEW));
+      drag.getTargetView().addView(newView);
+      newView.setLocation(dropLocation);
+    }
+ else {
+      final View sourceView=drag.getSource();
+      if (!sourceView.getSpecification().isOpen()) {
+        final View[] subviews=getSubviews();
+        for (int i=0; i < subviews.length; i++) {
+          if (subviews[i] == sourceView) {
+            sourceView.markDamaged();
+            sourceView.setLocation(dropLocation);
+            sourceView.markDamaged();
+            return;
+          }
+        }
+      }
+ else {
+        for (        View view : iconViews) {
+          if (view.getContent().getAdapter() == source) {
+            view.markDamaged();
+            view.setLocation(dropLocation);
+            view.markDamaged();
+            return;
+          }
+        }
+      }
+      addIconFor(source,new Placement(dropLocation));
+    }
+  }
+}

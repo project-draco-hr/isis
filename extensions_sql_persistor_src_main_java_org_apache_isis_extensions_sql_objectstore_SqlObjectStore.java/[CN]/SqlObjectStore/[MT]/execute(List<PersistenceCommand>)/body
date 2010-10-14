@@ -1,0 +1,22 @@
+{
+  DatabaseConnector connector=connectionPool.acquire();
+  connector.begin();
+  IsisTransactionManager transactionManager=IsisContext.getTransactionManager();
+  MessageBroker messageBroker=IsisContext.getMessageBroker();
+  UpdateNotifier updateNotifier=IsisContext.getUpdateNotifier();
+  SqlExecutionContext context=new SqlExecutionContext(connector,transactionManager,messageBroker,updateNotifier);
+  try {
+    for (    PersistenceCommand command : commands) {
+      command.execute(context);
+    }
+    connector.commit();
+  }
+ catch (  IsisException e) {
+    LOG.warn("Failure during execution",e);
+    connector.rollback();
+    throw e;
+  }
+ finally {
+    connectionPool.release(connector);
+  }
+}

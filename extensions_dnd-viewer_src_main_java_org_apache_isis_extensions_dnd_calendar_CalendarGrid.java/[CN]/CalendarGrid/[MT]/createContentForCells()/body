@@ -1,0 +1,18 @@
+{
+  CalendarCellContent[] cellContents=new CalendarCellContent[rows * columns];
+  CollectionContent content=(CollectionContent)getContent();
+  for (  ObjectAdapter element : content.elements()) {
+    Date date=dateFor(element);
+    if (date == null) {
+      continue;
+    }
+    int period=cellLayout.getPeriodFor(date);
+    if (period >= 0 && period < cellContents.length) {
+      if (cellContents[period] == null) {
+        cellContents[period]=new CalendarCellContent(cellLayout.title(period));
+      }
+      cellContents[period].addElement(element);
+    }
+  }
+  return cellContents;
+}

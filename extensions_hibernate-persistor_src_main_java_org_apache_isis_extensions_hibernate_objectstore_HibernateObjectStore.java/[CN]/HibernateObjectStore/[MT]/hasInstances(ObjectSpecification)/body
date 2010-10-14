@@ -1,0 +1,21 @@
+{
+  if (!specification.persistability().isPersistable()) {
+    LOG.warn("trying to run hasInstances for non-persistent class " + specification);
+    return false;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("hasInstances - class=" + specification.getFullName());
+  }
+  try {
+    final boolean started=startHibernateTransaction();
+    final Query query=createQuery("select o.id",specification);
+    query.setMaxResults(1);
+    boolean result=!query.list().isEmpty();
+    commitHibernateTransaction(started);
+    return result;
+  }
+ catch (  final RuntimeException e) {
+    HibernateUtil.rollbackTransaction();
+    throw e;
+  }
+}

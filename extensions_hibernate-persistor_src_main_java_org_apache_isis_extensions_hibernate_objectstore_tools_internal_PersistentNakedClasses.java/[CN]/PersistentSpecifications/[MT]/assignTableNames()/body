@@ -1,0 +1,27 @@
+{
+  final IsisConfiguration config=IsisContext.getConfiguration();
+  final HashMap<String,PersistentSpecification> tableNames=new HashMap<String,PersistentSpecification>(classes.size() * 2);
+  for (final Iterator<PersistentSpecification> iter=classes.values().iterator(); iter.hasNext(); ) {
+    final PersistentSpecification persistentClass=iter.next();
+    final String fullName=persistentClass.getName();
+    String candidate=config.getString(HibernateConstants.PROPERTY_PREFIX + "table." + fullName);
+    if (candidate != null) {
+      candidate=candidate.trim().toUpperCase();
+    }
+ else {
+      candidate=fullName.substring(fullName.lastIndexOf('.') + 1).toUpperCase();
+    }
+    if (tableNames.containsKey(candidate)) {
+      duplicateTableName(tableNames,persistentClass,candidate);
+      final PersistentSpecification duplicate=tableNames.get(candidate);
+      if (duplicate != null) {
+        tableNames.put(candidate,null);
+        duplicateTableName(tableNames,duplicate,candidate);
+      }
+    }
+ else {
+      tableNames.put(candidate,persistentClass);
+      persistentClass.setTableName(candidate);
+    }
+  }
+}

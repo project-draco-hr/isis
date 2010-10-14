@@ -1,0 +1,9 @@
+{
+  final MockControl<PreparedStatement> control=MockControl.createControl(PreparedStatement.class);
+  final PreparedStatement ps=(PreparedStatement)control.getMock();
+  ps.setNull(1,Hibernate.TIME.sqlType());
+  control.replay();
+  final TimeType type=new TimeType();
+  type.nullSafeSet(ps,null,1);
+  control.verify();
+}

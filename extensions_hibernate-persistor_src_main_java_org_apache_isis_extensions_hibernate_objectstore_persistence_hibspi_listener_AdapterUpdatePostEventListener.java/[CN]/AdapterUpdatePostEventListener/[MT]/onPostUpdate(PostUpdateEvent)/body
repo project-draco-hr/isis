@@ -1,0 +1,10 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("PostUpdateEvent " + event.getEntity().getClass() + " "+ event.getId());
+  }
+  final ObjectAdapter adapter=getAdapterFor(event.getEntity());
+  clearDirtyFor(adapter);
+  if (adapter.getResolveState() == ResolveState.UPDATING) {
+    PersistorUtil.end(adapter);
+  }
+}

@@ -1,0 +1,15 @@
+{
+  String id=request.getOptionalProperty(OBJECT);
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  String field=request.getOptionalProperty(FIELD);
+  if (field != null) {
+    ObjectAssociation objectField=object.getSpecification().getAssociation(field);
+    String error=checkFieldType(objectField);
+    if (error != null) {
+      throw new ScimpiException("Field " + objectField.getId() + " "+ error);
+    }
+    IsisContext.getPersistenceSession().resolveField(object,objectField);
+    object=objectField.get(object);
+  }
+  process(request,object);
+}

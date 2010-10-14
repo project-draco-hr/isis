@@ -1,0 +1,20 @@
+{
+  String initialLocation=optionFor(name);
+  if (initialLocation == null) {
+    initialLocation=IsisContext.getConfiguration().getString(name);
+  }
+  if (initialLocation != null) {
+    final StringTokenizer st=new StringTokenizer(initialLocation,",");
+    if (st.countTokens() == 2) {
+      int x=0;
+      int y=0;
+      x=Integer.valueOf(st.nextToken().trim()).intValue();
+      y=Integer.valueOf(st.nextToken().trim()).intValue();
+      return new Location(x,y);
+    }
+ else {
+      throw new ConfigurationException("Location not specified correctly in " + name + ": "+ initialLocation);
+    }
+  }
+  return defaultLocation;
+}

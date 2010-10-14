@@ -1,0 +1,98 @@
+{
+  LOG.debug("parent/file: " + parentPath + " & "+ filePath);
+  File directory=filePath.startsWith("/") ? new File(".") : new File(parentPath);
+  File loadFile=new File(directory.getParentFile(),filePath);
+  String loadPath=loadFile.getPath().replace('\\','/');
+  LOG.debug("loading template '" + loadPath + "'");
+  InputStream in=context.openStream(loadPath);
+  Page page;
+  try {
+    page=new Page(in,null);
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new ScimpiException(e);
+  }
+  Lexer lexer=new Lexer(page);
+  Node node=null;
+  try {
+    Stack<Snippet> tags=allTags;
+    String lineNumbers="0";
+    String template=null;
+    tags.push(new HtmlSnippet(lineNumbers,filePath));
+    while ((node=lexer.nextNode()) != null) {
+      if (node instanceof Remark) {
+        continue;
+      }
+ else       if (node instanceof TagNode && ((TagNode)node).getTagName().startsWith("SWF:")) {
+        TagNode tagNode=(TagNode)node;
+        String tagName=tagNode.getTagName().toUpperCase();
+        LOG.debug(tagName);
+        if (tagName.equals("SWF:IMPORT")) {
+          if (!tagNode.isEmptyXmlTag()) {
+            throw new ScimpiException("Import tag must be empty");
+          }
+          String importFile=tagNode.getAttribute("file");
+          importFile=context.replaceVariables(importFile,true);
+          parseHtmlFile(loadPath,importFile,context,tags,tagsForPreviousTemplate);
+          continue;
+        }
+        if (tagName.equals("SWF:TEMPLATE")) {
+          if (!tagNode.isEmptyXmlTag()) {
+            throw new ScimpiException("Template tag must be empty");
+          }
+          if (template != null) {
+            throw new ScimpiException("Template tag can only be used once within a file");
+          }
+          template=tagNode.getAttribute("file");
+          template=context.replaceVariables(template,true);
+          tags=new Stack<Snippet>();
+          continue;
+        }
+        if (tagName.equals("SWF:CONTENT")) {
+          if (!tagNode.isEmptyXmlTag()) {
+            throw new ScimpiException("Content tag must be empty");
+          }
+          tags.addAll(tagsForPreviousTemplate);
+          continue;
+        }
+        Attributes attributes=new Attributes(tagNode,context);
+        int type=0;
+        if (tagNode.isEndTag()) {
+          type=SwfTag.END;
+        }
+ else {
+          type=tagNode.isEmptyXmlTag() ? SwfTag.EMPTY : SwfTag.START;
+        }
+        testForProcessorForTag(lexer,tagName);
+        lineNumbers=lineNumbering(node);
+        SwfTag tag=new SwfTag(tagName,attributes,type,lineNumbers,filePath);
+        tags.push(tag);
+      }
+ else {
+        Snippet snippet=tags.size() == 0 ? null : tags.peek();
+        if (snippet instanceof HtmlSnippet) {
+          ((HtmlSnippet)snippet).append(node.toHtml());
+        }
+ else {
+          HtmlSnippet htmlSnippet=new HtmlSnippet(lineNumbers,filePath);
+          htmlSnippet.append(node.toHtml());
+          tags.push(htmlSnippet);
+        }
+      }
+    }
+    in.close();
+    if (template != null) {
+      String filePathRoot=loadPath.startsWith("/") ? "" : "/";
+      parseHtmlFile(filePathRoot + loadPath,template,context,allTags,tags);
+    }
+  }
+ catch (  ParserException e) {
+    exception(loadPath,node,e);
+  }
+catch (  RuntimeException e) {
+    exception(loadPath,node,e);
+  }
+catch (  IOException e) {
+    throw new ScimpiException(e);
+  }
+}

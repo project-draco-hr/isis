@@ -1,0 +1,16 @@
+{
+  final Property thisProperty=HibernateUtil.getConfiguration().getClassMapping(theClass.getName()).getProperty(propertyName);
+  final MetaAttribute propertyMeta=thisProperty.getMetaAttribute(PropertyHelper.NAKED_PROPERTY);
+  if (propertyMeta != null) {
+    String access=null;
+    final MetaAttribute accessMeta=thisProperty.getMetaAttribute(PropertyHelper.NAKED_ACCESS);
+    if (accessMeta != null) {
+      access=accessMeta.getValue();
+    }
+    final PropertyAccessor wrappedAccessor=PropertyAccessorFactory.getPropertyAccessor(access);
+    if (wrappedAccessor != null) {
+      return wrappedAccessor.getGetter(theClass,propertyMeta.getValue());
+    }
+  }
+  return new OptimisticLockGetter(theClass,propertyName,getLongVersionAccessor());
+}

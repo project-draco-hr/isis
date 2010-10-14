@@ -1,0 +1,13 @@
+{
+  final List<ObjectAdapter> instances=new ArrayList<ObjectAdapter>();
+  for (  String id : objectMap.keySet()) {
+    final ObjectAdapter adapter=getMappedObject(id);
+    IsisContext.getPersistenceSession().resolveImmediately(adapter);
+    if (adapter.getSpecification().isOfType(type)) {
+      instances.add(adapter);
+    }
+  }
+  final ObjectAdapter[] array=new ObjectAdapter[instances.size()];
+  instances.toArray(array);
+  return array;
+}

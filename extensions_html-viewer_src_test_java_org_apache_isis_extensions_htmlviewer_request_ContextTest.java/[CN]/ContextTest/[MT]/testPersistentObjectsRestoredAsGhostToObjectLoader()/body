@@ -1,0 +1,16 @@
+{
+  final ObjectAdapter object=system.createPersistentTestObject();
+  context.mapObject(object);
+  final Oid oid=object.getOid();
+  system.resetLoader();
+  assertNull("loader still has the object",getAdapterManager().getAdapterFor(oid));
+  context.restoreAllObjectsToLoader();
+  assertNotNull("loaders is missing the object",getAdapterManager().getAdapterFor(oid));
+  final ObjectAdapter newAdapter=getAdapterManager().getAdapterFor(oid);
+  assertNotSame("expect the loader to have a new adapter",object,newAdapter);
+  assertEquals("expect oids to match",object.getOid(),newAdapter.getOid());
+  assertNotSame(object.getObject(),newAdapter.getObject());
+  assertEquals(object.getObject().getClass(),newAdapter.getObject().getClass());
+  assertEquals("expect versions to match",object.getVersion(),newAdapter.getVersion());
+  assertEquals(ResolveState.GHOST,newAdapter.getResolveState());
+}

@@ -1,0 +1,39 @@
+{
+  Color color;
+  if (hasFocus()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY1);
+  }
+ else   if (getParent().getState().isObjectIdentified()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_IDENTIFIED);
+  }
+ else   if (getParent().getState().isRootViewIdentified()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY2);
+  }
+ else {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1);
+  }
+  int top=0;
+  int left=0;
+  final Size size=getSize();
+  int w=size.getWidth() - 1;
+  int h=size.getHeight() - 1;
+  canvas.drawRectangle(left,top,w,h,color);
+  left++;
+  top++;
+  w-=1;
+  h-=1;
+  final ObjectAdapter value=getContent().getAdapter();
+  if (value != null) {
+    final ImageValueFacet facet=value.getSpecification().getFacet(ImageValueFacet.class);
+    final java.awt.Image image=facet.getImage(value);
+    if (image != null) {
+      final Size imageSize=new Size(facet.getWidth(value),facet.getHeight(value));
+      if (imageSize.getWidth() <= w && imageSize.getHeight() <= h) {
+        canvas.drawImage(new AwtImage(image),left,top);
+      }
+ else {
+        canvas.drawImage(new AwtImage(image),left,top,w,h);
+      }
+    }
+  }
+}

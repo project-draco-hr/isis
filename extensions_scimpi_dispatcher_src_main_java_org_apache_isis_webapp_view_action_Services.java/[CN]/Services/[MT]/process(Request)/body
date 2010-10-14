@@ -1,0 +1,15 @@
+{
+  boolean showForms=request.isRequested(FORMS,false);
+  InclusionList inclusionList=new InclusionList();
+  request.setBlockContent(inclusionList);
+  request.processUtilCloseTag();
+  List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+  for (  ObjectAdapter adapter : serviceAdapters) {
+    String serviceId=request.getContext().mapObject(adapter,Scope.REQUEST);
+    request.appendHtml("<div class=\"actions\">");
+    request.appendHtml("<h3>" + adapter.titleString() + "</h3>");
+    Methods.writeMethods(request,serviceId,adapter,showForms,inclusionList);
+    request.appendHtml("</div>");
+  }
+  request.popBlockContent();
+}

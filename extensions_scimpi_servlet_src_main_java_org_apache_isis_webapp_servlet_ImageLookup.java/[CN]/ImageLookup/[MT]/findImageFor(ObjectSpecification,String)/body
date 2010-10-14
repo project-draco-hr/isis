@@ -1,0 +1,23 @@
+{
+  String name=specification.getShortName();
+  String fileName=imageFile(name,contextPath);
+  if (fileName != null) {
+    images.put(name,fileName);
+    return fileName;
+  }
+ else {
+    for (    ObjectSpecification interfaceSpec : specification.interfaces()) {
+      String path=findImageFor(interfaceSpec,contextPath);
+      if (path != null) {
+        return path;
+      }
+    }
+    ObjectSpecification superclass=specification.superclass();
+    if (superclass != null) {
+      return findImageFor(superclass,contextPath);
+    }
+ else {
+      return null;
+    }
+  }
+}

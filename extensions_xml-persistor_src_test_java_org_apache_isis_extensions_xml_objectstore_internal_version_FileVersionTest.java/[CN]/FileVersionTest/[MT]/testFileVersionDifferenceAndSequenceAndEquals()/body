@@ -1,0 +1,17 @@
+{
+  final Version version=context.mock(Version.class);
+  context.checking(new Expectations(){
+{
+      ignoring(extended);
+      one(version);
+    }
+  }
+);
+  FileVersion testVersion=new FileVersion(extended);
+  assertFalse(testVersion.different(version));
+  assertTrue(testVersion.sequence().length() > 0);
+  assertTrue(testVersion.getSequence() == 0);
+  assertTrue(testVersion.toString().length() > 0);
+  assertTrue(testVersion.equals(testVersion));
+  assertFalse(testVersion.equals(version));
+}

@@ -1,0 +1,11 @@
+{
+  LOG.info("InitializeCollectionEvent");
+  final ObjectAdapter adapter=getAdapterFor(event.getCollection());
+  if (adapter.getResolveState().isResolvable(ResolveState.RESOLVING)) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Setting collection to resolved " + adapter);
+    }
+    adapter.changeState(ResolveState.RESOLVING);
+    adapter.changeState(ResolveState.RESOLVED);
+  }
+}

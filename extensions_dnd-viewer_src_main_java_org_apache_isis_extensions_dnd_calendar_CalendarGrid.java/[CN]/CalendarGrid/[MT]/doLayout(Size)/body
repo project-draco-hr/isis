@@ -1,0 +1,25 @@
+{
+  boolean hasHeader=cellLayout.header(0) != null;
+  int topInset=0 + (acrossThenDown && hasHeader ? 30 : 0);
+  int leftInset=!acrossThenDown && hasHeader ? 50 : 0;
+  int width=maximumSize.getWidth();
+  int height=maximumSize.getHeight();
+  int columnWidth=(width - leftInset) / columns;
+  int rowHeight=(height - topInset) / rows;
+  View[] cells=getSubviews();
+  int i=0;
+  int top=CalendarConstants.style.getLineHeight() + VPADDING;
+  CalendarConstants.style.getLineSpacing();
+  Location location=new Location(leftInset,topInset + top);
+  Size size=new Size(columnWidth,rowHeight - top);
+  for (int row=0; row < rows; row++) {
+    for (int column=0; column < columns; column++) {
+      View cell=cells[i++];
+      cell.setSize(size);
+      cell.setLocation(location);
+      location.add(columnWidth,0);
+    }
+    location.setX(leftInset);
+    location.add(0,rowHeight);
+  }
+}

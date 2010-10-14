@@ -1,0 +1,46 @@
+{
+  SqlIntegrationTestSingleton.drop(getPersonTableName());
+  SqlIntegrationTestSingleton.drop(getSimpleClassTableName());
+  SqlIntegrationTestSingleton.drop(getSimpleClassTwoTableName());
+  SqlDataClassFactory factory=SqlIntegrationTestSingleton.getSqlDataClassFactory();
+  SqlDataClass sqlDataClass=factory.newDataClass();
+  sqlDataClass.setString("Test String");
+  sqlDataClass.setDate(applibDate);
+  sqlDataClass.setSqlDate(sqlDate);
+  sqlDataClass.setDateTime(dateTime);
+  sqlDataClass.setTimeStamp(timeStamp);
+  sqlDataClass.setTime(time);
+  sqlDataClass.setColor(color);
+  sqlDataClass.setImage(image);
+  sqlDataClass.setPassword(password);
+  sqlDataClass.setPercentage(percentage);
+  simpleClassTwoA=factory.newSimpleClassTwo();
+  simpleClassTwoA.setText("A");
+  sqlDataClass.setSimpleClassTwo(simpleClassTwoA);
+  boolean bMustAdd=false;
+  if (simpleClassList1.size() == 0) {
+    bMustAdd=true;
+  }
+  for (  String string : SqlIntegrationTestCommon.stringList1) {
+    SimpleClass simpleClass=factory.newSimpleClass();
+    simpleClass.setString(string);
+    simpleClass.setSimpleClassTwoA(simpleClassTwoA);
+    sqlDataClass.addToSimpleClasses1(simpleClass);
+    if (bMustAdd) {
+      simpleClassList1.add(simpleClass);
+    }
+  }
+  for (  String string : SqlIntegrationTestCommon.stringList2) {
+    SimpleClass simpleClass=factory.newSimpleClass();
+    simpleClass.setString(string);
+    simpleClass.setSimpleClassTwoA(simpleClassTwoA);
+    sqlDataClass.addToSimpleClasses2(simpleClass);
+    if (bMustAdd) {
+      simpleClassList2.add(simpleClass);
+    }
+  }
+  factory.save(sqlDataClass);
+  if (getProperties().getProperty("isis.persistence") == "in-memory") {
+    getSingletonInstance().setState(1);
+  }
+}

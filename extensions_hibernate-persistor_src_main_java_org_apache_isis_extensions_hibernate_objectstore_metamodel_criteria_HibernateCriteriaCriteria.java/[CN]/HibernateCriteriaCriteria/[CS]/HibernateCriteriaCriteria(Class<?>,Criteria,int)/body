@@ -1,0 +1,10 @@
+{
+  super(cls,resultType);
+  Criteria rootCriteria=criteria;
+  while (!(rootCriteria instanceof CriteriaImpl)) {
+    Assert.assertTrue(rootCriteria instanceof CriteriaImpl.Subcriteria);
+    rootCriteria=((CriteriaImpl.Subcriteria)rootCriteria).getParent();
+    Assert.assertFalse(criteria == rootCriteria);
+  }
+  this.criteria=(CriteriaImpl)rootCriteria;
+}

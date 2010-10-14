@@ -1,0 +1,10 @@
+{
+  db.close();
+  String specificationName=specification.getFullName();
+  DBCollection instances=testDb.getCollection(specificationName);
+  BasicDBObject dbObject=new BasicDBObject().append("test","test");
+  instances.insert(dbObject);
+  db.open();
+  db.delete(specificationName,dbObject.getString("_id"));
+  assertFalse(db.hasInstances(specificationName));
+}

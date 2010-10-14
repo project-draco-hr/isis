@@ -1,0 +1,24 @@
+{
+  if (canChangeValue().isAllowed()) {
+    final Location at=click.getLocation();
+    at.subtract(HPADDING,VPADDING);
+    cursor.cursorAt(at);
+    resetSelection();
+    if (cursor.getLine() > textContent.getNoLinesOfContent()) {
+      throw new IsisException("not inside content for line " + cursor.getLine() + " : "+ textContent.getNoLinesOfContent());
+    }
+    markDamaged();
+  }
+  if (!canChangeValue().isAllowed() || click.isShift() || click.button2()) {
+    ObjectAdapter valueAdapter=getContent().getAdapter();
+    if (valueAdapter != null && valueAdapter.titleString().length() > 0) {
+      final View textView=new BackgroundBorder(Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY3),new LineBorder(1,Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY1),new TextView(getContent(),null)));
+      getViewManager().setOverlayView(textView);
+      int offset=getView().getPadding().getLeft();
+      Location location=getAbsoluteLocation();
+      location.add(offset,0);
+      textView.setLocation(location);
+      textView.markDamaged();
+    }
+  }
+}

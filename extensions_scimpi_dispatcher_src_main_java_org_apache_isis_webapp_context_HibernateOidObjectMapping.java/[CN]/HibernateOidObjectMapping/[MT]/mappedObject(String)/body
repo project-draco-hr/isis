@@ -1,0 +1,34 @@
+{
+  boolean isTransient=id.charAt(0) == 'T';
+  if (isTransient) {
+    TransientObjectMapping mapping=transients.get(id);
+    if (mapping == null) {
+      return null;
+    }
+    return mapping.getObject();
+  }
+ else {
+    int pos=id.indexOf('@');
+    if (pos == -1) {
+      return null;
+    }
+    String className=id.substring(1,pos);
+    String type=id.substring(pos + 1,pos + 2);
+    ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(className);
+    Serializable key;
+    if (type.equals("$")) {
+      key=id.substring(pos + 2);
+    }
+ else {
+      key=Long.valueOf(id.substring(pos + 2));
+    }
+    HibernateOid oid;
+    if (isTransient) {
+      oid=HibernateOid.createTransient(className,key);
+    }
+ else {
+      oid=HibernateOid.createPersistent(className,key,key);
+    }
+    return IsisContext.getPersistenceSession().loadObject(oid,spec);
+  }
+}

@@ -1,0 +1,9 @@
+{
+  boolean started=false;
+  if (!HibernateUtil.inTransaction()) {
+    HibernateUtil.startTransaction();
+    started=true;
+  }
+  boolean flushed=getTransactionManager().flushTransaction();
+  return started && !flushed;
+}

@@ -1,0 +1,16 @@
+{
+  IsisConfiguration configParameters=IsisContext.getConfiguration();
+  table=configParameters.getString(parameterBase + "table");
+  if (table == null) {
+    String name=className.substring(className.lastIndexOf('.') + 1).toUpperCase();
+    table=Sql.sqlName(name);
+  }
+  dbCreatesId=configParameters.getBoolean(parameterBase + "db-ids",false);
+  if (configParameters.getBoolean(parameterBase + "all-fields",true)) {
+    setupFullMapping(lookup,objectMapperLookup,className,configParameters,parameterBase);
+  }
+ else {
+  }
+  table=Sql.identifier(table);
+  LOG.info("table mapping: " + table + " ("+ columnList()+ ")");
+}

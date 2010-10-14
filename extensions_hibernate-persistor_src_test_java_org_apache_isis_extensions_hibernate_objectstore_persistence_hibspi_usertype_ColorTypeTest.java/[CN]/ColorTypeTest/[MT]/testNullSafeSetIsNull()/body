@@ -1,0 +1,9 @@
+{
+  final MockControl<PreparedStatement> control=MockControl.createControl(PreparedStatement.class);
+  final PreparedStatement ps=(PreparedStatement)control.getMock();
+  ps.setNull(1,Hibernate.INTEGER.sqlType());
+  control.replay();
+  final ColorType type=new ColorType();
+  type.nullSafeSet(ps,null,1);
+  control.verify();
+}

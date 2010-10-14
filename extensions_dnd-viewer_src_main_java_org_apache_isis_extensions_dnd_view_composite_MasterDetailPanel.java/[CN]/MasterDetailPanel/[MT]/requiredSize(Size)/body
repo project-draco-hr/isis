@@ -1,0 +1,22 @@
+{
+  View[] subviews=getSubviews();
+  View left=subviews[0];
+  View right=subviews.length > 1 ? subviews[1] : null;
+  Size leftPanelRequiredSize=left.getRequiredSize(new Size(availableSpace));
+  Size rightPanelRequiredSize=right == null ? new Size() : right.getRequiredSize(new Size(availableSpace));
+  if (leftPanelRequiredSize.getWidth() + rightPanelRequiredSize.getWidth() > availableSpace.getWidth()) {
+    final int availableWidth=availableSpace.getWidth();
+    final int leftWidth=leftPanelRequiredSize.getWidth();
+    final int rightWidth=Math.max(MINIMUM_WIDTH,rightPanelRequiredSize.getWidth());
+    final int totalWidth=leftWidth + rightWidth;
+    final int bestWidth=(int)(1.0 * leftWidth / totalWidth * availableWidth);
+    final Size maximumSizeLeft=new Size(bestWidth,availableSpace.getHeight());
+    leftPanelRequiredSize=left.getRequiredSize(maximumSizeLeft);
+    final Size maximumSizeRight=new Size(availableWidth - leftPanelRequiredSize.getWidth(),availableSpace.getHeight());
+    rightPanelRequiredSize=right == null ? new Size() : right.getRequiredSize(maximumSizeRight);
+  }
+  final Size combinedSize=new Size(leftPanelRequiredSize);
+  combinedSize.extendWidth(rightPanelRequiredSize.getWidth());
+  combinedSize.ensureHeight(rightPanelRequiredSize.getHeight());
+  return combinedSize;
+}

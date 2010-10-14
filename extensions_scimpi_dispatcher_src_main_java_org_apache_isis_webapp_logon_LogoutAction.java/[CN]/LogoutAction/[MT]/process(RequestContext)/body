@@ -1,0 +1,13 @@
+{
+  AuthenticationSession session=context.getSession();
+  if (session != null) {
+    IsisContext.getUpdateNotifier().clear();
+    UserManager.logoffUser(session);
+    context.endSession();
+  }
+  String view=context.getParameter("view");
+  if (view == null) {
+    view=context.getContextPath();
+  }
+  context.redirectTo(view);
+}

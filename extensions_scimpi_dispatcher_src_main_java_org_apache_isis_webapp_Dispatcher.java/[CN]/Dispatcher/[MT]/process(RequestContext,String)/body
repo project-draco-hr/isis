@@ -1,0 +1,44 @@
+{
+  try {
+    UserManager.startRequest(context);
+    AuthenticationSession session=context.getSession();
+    IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
+    context.startRequest();
+    context.setRequestPath(servletPath);
+    processActions(context,servletPath);
+    boolean stillSameSession=context.getSession() == session;
+    List<String> copyMessages=IsisContext.getMessageBroker().getMessages();
+    List<String> copyWarnings=IsisContext.getMessageBroker().getWarnings();
+    if (stillSameSession) {
+      IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
+    }
+    IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
+    for (    String message : copyMessages) {
+      IsisContext.getMessageBroker().addMessage(message);
+    }
+    for (    String warning : copyWarnings) {
+      IsisContext.getMessageBroker().addWarning(warning);
+    }
+    processView(context);
+    IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
+  }
+ catch (  Throwable e) {
+    LOG.error("process failed",e);
+    generateErrorPage(e,context);
+    IsisContext.getPersistenceSession().getTransactionManager().abortTransaction();
+  }
+ finally {
+    try {
+      context.endRequest();
+    }
+ catch (    Exception e) {
+      LOG.error("endRequest call failed",e);
+    }
+    try {
+      UserManager.endRequest(context.getSession());
+    }
+ catch (    Exception e) {
+      LOG.error("endRequest call failed",e);
+    }
+  }
+}

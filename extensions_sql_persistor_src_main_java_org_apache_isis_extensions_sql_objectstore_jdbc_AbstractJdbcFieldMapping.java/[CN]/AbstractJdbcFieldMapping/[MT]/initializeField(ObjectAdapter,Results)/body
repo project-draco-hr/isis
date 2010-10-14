@@ -1,0 +1,12 @@
+{
+  String columnName=Sql.sqlFieldName(field.getId());
+  String encodedValue=(String)rs.getString(columnName);
+  ObjectAdapter restoredValue;
+  if (encodedValue == null) {
+    restoredValue=null;
+  }
+ else {
+    restoredValue=setFromDBColumn(encodedValue,field);
+  }
+  ((OneToOneAssociation)field).initAssociation(object,restoredValue);
+}

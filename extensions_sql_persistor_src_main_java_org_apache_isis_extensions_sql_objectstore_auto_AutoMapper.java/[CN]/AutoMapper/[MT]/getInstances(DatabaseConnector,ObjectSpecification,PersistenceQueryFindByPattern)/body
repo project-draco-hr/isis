@@ -1,0 +1,19 @@
+{
+  StringBuffer sql=createSelectStatement();
+  sql.append(" where ");
+  int initialLength=sql.length();
+  ObjectAdapter pattern=query.getPattern();
+  for (  ObjectAssociation assoc : specification.getAssociations()) {
+    ObjectAdapter field=assoc.get(pattern);
+    if (field != null) {
+      FieldMapping fieldMapping=fieldMappingFor(assoc);
+      if (fieldMapping != null) {
+        if (sql.length() > initialLength) {
+          sql.append(" and ");
+        }
+        fieldMapping.appendWhereClause(sql,pattern);
+      }
+    }
+  }
+  return loadInstances(connector,spec,completeSelectStatement(sql));
+}

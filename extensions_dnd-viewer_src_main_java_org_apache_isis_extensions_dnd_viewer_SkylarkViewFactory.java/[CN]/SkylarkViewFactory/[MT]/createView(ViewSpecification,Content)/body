@@ -1,0 +1,20 @@
+{
+  ViewSpecification spec;
+  if (specification == null) {
+    LOG.warn("no suitable view for " + content + " using fallback view");
+    spec=new FallbackView.Specification();
+  }
+ else {
+    spec=specification;
+  }
+  Axes axes=new Axes();
+  View createView=spec.createView(content,axes,-1);
+  if (content.isObject()) {
+    final ObjectAdapter adapter=content.getAdapter();
+    if (adapter != null && adapter.getResolveState().isDestroyed()) {
+      createView=new DisposedObjectBorder(createView);
+    }
+  }
+  createView.getSubviews();
+  return createView;
+}

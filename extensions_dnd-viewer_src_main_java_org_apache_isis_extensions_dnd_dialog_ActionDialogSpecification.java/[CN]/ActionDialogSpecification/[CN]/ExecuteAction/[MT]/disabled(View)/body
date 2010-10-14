@@ -1,0 +1,32 @@
+{
+  final View[] subviews=view.getSubviews();
+  final StringBuffer missingFields=new StringBuffer();
+  final StringBuffer invalidFields=new StringBuffer();
+  for (int i=0; i < subviews.length; i++) {
+    final View field=subviews[i];
+    final ParameterContent content=((ParameterContent)field.getContent());
+    final boolean isEmpty=content.getAdapter() == null;
+    if (content.isRequired() && isEmpty) {
+      final String parameterName=content.getParameterName();
+      if (missingFields.length() > 0) {
+        missingFields.append(", ");
+      }
+      missingFields.append(parameterName);
+    }
+ else     if (field.getState().isInvalid()) {
+      final String parameterName=content.getParameterName();
+      if (invalidFields.length() > 0) {
+        invalidFields.append(", ");
+      }
+      invalidFields.append(parameterName);
+    }
+  }
+  if (missingFields.length() > 0) {
+    return new Veto(String.format("Fields needed: %s",missingFields));
+  }
+  if (invalidFields.length() > 0) {
+    return new Veto(String.format("Invalid fields: %s",invalidFields));
+  }
+  final ActionContent actionContent=((ActionContent)view.getContent());
+  return actionContent.disabled();
+}

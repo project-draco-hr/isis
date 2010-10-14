@@ -1,0 +1,15 @@
+{
+  if (actionName.endsWith(COMMAND_ROOT)) {
+    int pos=actionName.lastIndexOf('/');
+    Action action=actions.get(actionName.substring(pos,actionName.length() - COMMAND_ROOT.length()));
+    if (action == null) {
+      throw new ScimpiException("No logic for " + actionName);
+    }
+    LOG.debug("processing " + action);
+    action.process(context);
+    String fowardTo=context.forwardTo();
+    if (fowardTo != null) {
+      processActions(context,fowardTo);
+    }
+  }
+}

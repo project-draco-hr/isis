@@ -1,0 +1,14 @@
+{
+  String jdbcClassName=PropertiesConfiguration.getString("isis.persistence.sql.jdbc.driver");
+  if (jdbcClassName == null) {
+    c=null;
+    s=null;
+    return;
+  }
+  Class<Driver> driverClass=(Class<Driver>)Class.forName(jdbcClassName);
+  Driver driver=driverClass.newInstance();
+  DriverManager.registerDriver(driver);
+  c=DriverManager.getConnection(PropertiesConfiguration.getString("isis.persistence.sql.jdbc.connection"),PropertiesConfiguration.getString("isis.persistence.sql.jdbc.user"),PropertiesConfiguration.getString("isis.persistence.sql.jdbc.password"));
+  s=c.createStatement();
+  dropTable("no_services");
+}

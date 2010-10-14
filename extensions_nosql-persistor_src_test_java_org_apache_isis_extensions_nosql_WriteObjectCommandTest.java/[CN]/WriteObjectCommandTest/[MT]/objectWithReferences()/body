@@ -1,0 +1,23 @@
+{
+  context.checking(new Expectations(){
+{
+      one(commandContext).createStateWriter(object3.getSpecification().getFullName());
+      will(returnValue(writer));
+      one(keyCreator).key(SerialOid.createPersistent(5));
+      will(returnValue("5"));
+      one(keyCreator).reference(object1);
+      will(returnValue("ref@3"));
+      one(writer).writeId("5");
+      one(writer).writeType(object3.getSpecification().getFullName());
+      one(writer).writeField("reference1","ref@3");
+      one(writer).writeField("reference2",null);
+      one(writer).writeVersion(null,"2");
+      one(writer).writeUser("username");
+      one(writer).writeTime("1057");
+      one(commandContext).insert(writer);
+    }
+  }
+);
+  new WriteObjectCommand(false,keyCreator,versionCreator,object3).execute(commandContext);
+  context.assertIsSatisfied();
+}

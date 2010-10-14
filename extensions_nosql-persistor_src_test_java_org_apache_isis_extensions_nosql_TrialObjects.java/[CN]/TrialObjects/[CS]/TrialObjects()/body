@@ -1,0 +1,33 @@
+{
+  PropertiesConfiguration configuration=new PropertiesConfiguration();
+  reflector=new JavaReflector(configuration,new ClassSubstitutorIdentity(),new CollectionTypeRegistryDefault(),new SpecificationTraverserDefault(),new ProgrammingModelFacetsJava5(),new HashSet<FacetDecorator>(),new MetaModelValidatorNoop());
+  reflector.setRuntimeContext(new RuntimeContextNoRuntime(){
+    public ObjectAdapter adapterFor(    Object pattern){
+      return adapters.get(pattern);
+    }
+    public ObjectAdapter adapterFor(    Object pojo,    ObjectAdapter ownerAdapter,    Identified identified){
+      if (adapters.get(pojo) != null) {
+        return adapters.get(pojo);
+      }
+ else {
+        return factory.createAdapter(pojo,null);
+      }
+    }
+  }
+);
+  reflector.init();
+  factory=new AdapterFactoryAbstract(){
+    public TestProxyAdapter createAdapter(    Object pojo,    Oid oid){
+      ObjectSpecification specification=reflector.loadSpecification(pojo.getClass());
+      ResolveState state=oid == null ? ResolveState.VALUE : oid.isTransient() ? ResolveState.TRANSIENT : ResolveState.GHOST;
+      final TestProxyAdapter testProxyObjectAdapter=new TestProxyAdapter();
+      testProxyObjectAdapter.setupResolveState(state);
+      testProxyObjectAdapter.setupObject(pojo);
+      testProxyObjectAdapter.setupOid(oid);
+      testProxyObjectAdapter.setupSpecification(specification);
+      adapters.put(pojo,testProxyObjectAdapter);
+      return testProxyObjectAdapter;
+    }
+  }
+;
+}

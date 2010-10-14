@@ -1,0 +1,14 @@
+{
+  CollectionFacet facet=(CollectionFacet)collection.getSpecification().getFacet(CollectionFacet.class);
+  int size=facet.size(collection);
+  if (size == 0) {
+    request.appendHtml(request.getOptionalProperty("none","0"));
+  }
+ else   if (size == 1) {
+    request.appendHtml(request.getOptionalProperty("one","1"));
+  }
+ else {
+    String text=request.getOptionalProperty("many","" + size);
+    request.appendHtml(String.format(text,size));
+  }
+}

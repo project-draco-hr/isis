@@ -1,0 +1,22 @@
+{
+  RequestContext context=request.getContext();
+  request.appendHtml("<table>");
+  rowBuilder.writeHeaders(request);
+  CollectionFacet facet=(CollectionFacet)collection.getSpecification().getFacet(CollectionFacet.class);
+  Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+  int row=1;
+  while (iterator.hasNext()) {
+    ObjectAdapter element=iterator.next();
+    context.addVariable("row","" + (row),Scope.REQUEST);
+    String cls="";
+    if (rowClasses != null) {
+      cls=" class=\"" + rowClasses[row % rowClasses.length] + "\"";
+    }
+    request.appendHtml("<tr" + cls + ">");
+    rowBuilder.writeElement(request,context,element);
+    request.appendHtml("</tr>");
+    row++;
+  }
+  rowBuilder.writeFooters(request);
+  request.appendHtml("</table>");
+}

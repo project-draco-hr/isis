@@ -1,0 +1,22 @@
+{
+  ObjectAssociation[] associations=object.getSpecification().getAssociations();
+  writer.writeType(specName);
+  for (  ObjectAssociation association : associations) {
+    if (association.isNotPersisted()) {
+      continue;
+    }
+    ObjectAdapter field=association.get(object);
+    if (association.isOneToManyAssociation()) {
+      writeCollection(writer,association,field,keyCreator);
+    }
+ else     if (association.getSpecification().isValue()) {
+      writeValue(writer,association,field);
+    }
+ else     if (association.getSpecification().isAggregated()) {
+      writeAggregatedObject(writer,association,field,keyCreator);
+    }
+ else {
+      writeReference(writer,association,field,keyCreator);
+    }
+  }
+}

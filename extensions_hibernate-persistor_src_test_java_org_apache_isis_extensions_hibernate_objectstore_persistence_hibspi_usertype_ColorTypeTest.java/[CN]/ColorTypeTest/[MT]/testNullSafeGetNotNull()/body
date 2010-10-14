@@ -1,0 +1,12 @@
+{
+  final int value=4;
+  final MockControl<ResultSet> control=MockControl.createControl(ResultSet.class);
+  final ResultSet rs=(ResultSet)control.getMock();
+  control.expectAndReturn(rs.getInt(names[0]),value);
+  control.expectAndReturn(rs.wasNull(),false);
+  control.replay();
+  final ColorType type=new ColorType();
+  final Color returned=(Color)type.nullSafeGet(rs,names,null);
+  assertEquals("color",value,returned.intValue());
+  control.verify();
+}

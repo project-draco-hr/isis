@@ -1,0 +1,26 @@
+{
+  xmlFile.writeXml(filename(data.getOid()),new ContentWriter(){
+    public void write(    Writer writer) throws IOException {
+      final StringBuffer xml=new StringBuffer();
+      final boolean isObject=data instanceof ObjectData;
+      final String tag=isObject ? "isis" : "collection";
+      xml.append("<" + tag);
+      xml.append(attribute("type",data.getTypeName()));
+      xml.append(attribute("id","" + encodedOid(data.getOid())));
+      xml.append(attribute("user","" + IsisContext.getAuthenticationSession().getUserName()));
+      final long sequence=data.getVersion().getSequence();
+      final String sequenceString=Long.toHexString(sequence).toUpperCase();
+      xml.append(attribute("ver","" + sequenceString));
+      xml.append(">\n");
+      if (isObject) {
+        writeObject(data,xml);
+      }
+ else {
+        writeCollection(data,xml);
+      }
+      xml.append("</" + tag + ">\n");
+      writer.write(xml.toString());
+    }
+  }
+);
+}

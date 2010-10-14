@@ -1,0 +1,13 @@
+{
+  DatabaseConnector connector=connectionPool.acquire();
+  ObjectMapping mapper=objectMappingLookup.getMapping(spec,connector);
+  ObjectAdapter[] instances=mapper.getInstances(connector,spec);
+  Vector<ObjectAdapter> matchingInstances=new Vector<ObjectAdapter>();
+  for (int i=0; i < instances.length; i++) {
+    matchingInstances.addElement(instances[i]);
+  }
+  connectionPool.release(connector);
+  ObjectAdapter[] instanceArray=new ObjectAdapter[matchingInstances.size()];
+  matchingInstances.copyInto(instanceArray);
+  return instanceArray;
+}

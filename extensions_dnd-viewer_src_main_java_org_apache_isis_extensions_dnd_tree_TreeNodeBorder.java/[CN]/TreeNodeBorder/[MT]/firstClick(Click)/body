@@ -1,0 +1,18 @@
+{
+  final int x=click.getLocation().getX();
+  final int y=click.getLocation().getY();
+  if (withinBox(x,y)) {
+    if (canOpen() == NodeSpecification.UNKNOWN) {
+      resolveContent();
+      markDamaged();
+    }
+    LOG.debug((getSpecification().isOpen() ? "close" : "open") + " node " + getContent().getAdapter());
+    if (canOpen() == NodeSpecification.CAN_OPEN) {
+      final View newView=replaceWithSpecification.createView(getContent(),getViewAxes(),-1);
+      getParent().replaceView(getView(),newView);
+    }
+  }
+ else {
+    super.firstClick(click);
+  }
+}

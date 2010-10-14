@@ -1,0 +1,86 @@
+{
+  final String showExplorationMenu="Always show exploration menu " + (viewer.showExplorationMenuByDefault ? "off" : "on");
+  options.add(new UserActionAbstract(showExplorationMenu,ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      viewer.showExplorationMenuByDefault=!viewer.showExplorationMenuByDefault;
+      view.markDamaged();
+    }
+  }
+);
+  final String repaint="Show painting area  " + (viewer.showRepaintArea ? "off" : "on");
+  options.add(new UserActionAbstract(repaint,ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      viewer.showRepaintArea=!viewer.showRepaintArea;
+      view.markDamaged();
+    }
+  }
+);
+  final String debug="Debug graphics " + (Toolkit.debug ? "off" : "on");
+  options.add(new UserActionAbstract(debug,ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      Toolkit.debug=!Toolkit.debug;
+      view.markDamaged();
+    }
+  }
+);
+  final String action=viewer.isShowingMouseSpy() ? "Hide" : "Show";
+  options.add(new UserActionAbstract(action + " mouse spy",ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      viewer.setShowMouseSpy(!viewer.isShowingMouseSpy());
+    }
+  }
+);
+  options.add(new UserActionAbstract("Diagnostics...",ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final InfoDebugFrame f=new InfoDebugFrame();
+      DebugInfo info=new DebugInfo(){
+        public void debugData(        DebugString debug){
+          ByteArrayOutputStream out2=new ByteArrayOutputStream();
+          PrintStream out=new PrintStream(out2);
+          new SystemPrinter(out).printDiagnostics();
+          debug.append(out2.toString());
+        }
+        public String debugTitle(){
+          return "Diagnostics";
+        }
+      }
+;
+      f.setInfo(info);
+      f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
+    }
+  }
+);
+  options.add(new UserActionAbstract("Debug system...",ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final InfoDebugFrame f=new InfoDebugFrame();
+      final DebugInfo[] contextInfo=IsisContext.debugSystem();
+      f.setInfo(contextInfo);
+      f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
+    }
+  }
+);
+  options.add(new UserActionAbstract("Debug session...",ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final InfoDebugFrame f=new InfoDebugFrame();
+      final DebugInfo[] contextInfo=IsisContext.debugSession();
+      f.setInfo(contextInfo);
+      f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
+    }
+  }
+);
+  options.add(new UserActionAbstract("Debug viewer...",ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final InfoDebugFrame f=new InfoDebugFrame();
+      f.setInfo(new DebugInfo[]{Toolkit.getViewFactory(),viewer.updateNotifier});
+      f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
+    }
+  }
+);
+  options.add(new UserActionAbstract("Debug overlay...",ObjectActionType.DEBUG){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final DebugFrame f=new OverlayDebugFrame(viewer);
+      f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
+    }
+  }
+);
+}

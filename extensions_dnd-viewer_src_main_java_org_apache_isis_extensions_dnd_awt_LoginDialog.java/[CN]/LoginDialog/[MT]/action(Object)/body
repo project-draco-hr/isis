@@ -1,0 +1,29 @@
+{
+  if (widget == cancel) {
+    cancel(widget);
+  }
+ else   if (widget == login || widget == password) {
+    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    instructionLabel.setText("Authorising...");
+    instructionLabel.setForeground(Color.BLACK);
+    AuthenticationRequestPassword authenticationRequest=new AuthenticationRequestPassword(getUser(),getPassword());
+    session=authenticationManager.authenticate(authenticationRequest);
+    if (session == null) {
+      try {
+        Thread.sleep(750);
+      }
+ catch (      InterruptedException ignore) {
+      }
+      instructionLabel.setText("Invalid user name or password; please try again.");
+      instructionLabel.setForeground(Color.RED);
+    }
+ else {
+      logIn=true;
+      notify();
+    }
+    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+  }
+ else   if (widget == user) {
+    password.requestFocus();
+  }
+}

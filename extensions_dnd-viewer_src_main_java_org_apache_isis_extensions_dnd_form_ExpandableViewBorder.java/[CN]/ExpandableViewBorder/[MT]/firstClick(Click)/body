@@ -1,0 +1,26 @@
+{
+  if (click.getLocation().getX() < left) {
+    if (canOpen == UNKNOWN) {
+      resolveContent();
+      markDamaged();
+    }
+    if (canOpen != CANT_OPEN) {
+      isOpen=!isOpen;
+      View parent=wrappedView.getParent();
+      getViewManager().removeFromNotificationList(wrappedView);
+      if (isOpen) {
+        wrappedView=createOpenView();
+      }
+ else {
+        wrappedView=createClosedView();
+      }
+      setView(this);
+      setParent(parent);
+      getParent().invalidateLayout();
+      canOpen();
+    }
+  }
+ else {
+    super.firstClick(click);
+  }
+}

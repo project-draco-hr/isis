@@ -1,0 +1,19 @@
+{
+  Facet[] facets=facetHolder.getFacets(new AbstractFilter<Facet>(){
+    public boolean accept(    Facet facet){
+      return true;
+    }
+  }
+);
+  StringBuffer buffer=new StringBuffer();
+  if (facets == null || facets.length == 0) {
+    buffer.append("none");
+  }
+ else {
+    for (int i=0; i < facets.length; i++) {
+      String facetType=facets[i].facetType().getName();
+      buffer.append("<span class=\"facet-type\">" + facetType.substring(facetType.lastIndexOf('.') + 1) + "</span>:  "+ facets[i]+ "<br>");
+    }
+  }
+  view.appendRow("Facets",buffer.toString());
+}

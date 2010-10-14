@@ -1,0 +1,21 @@
+{
+  final String nameWithNoSpaces=name.replace(" ","");
+  Method method=null;
+  try {
+    final Class<?> clazz=Class.forName(spec.getFullName());
+    try {
+      method=clazz.getMethod(javaBeanGetterName(nameWithNoSpaces),(Class[])null);
+    }
+ catch (    final NoSuchMethodException nsme) {
+      try {
+        method=clazz.getMethod(dotNetBeanGetterName(nameWithNoSpaces),(Class[])null);
+      }
+ catch (      final NoSuchMethodException nsme2) {
+      }
+    }
+  }
+ catch (  final Exception e) {
+    throw new IsisException(e);
+  }
+  return method;
+}

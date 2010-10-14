@@ -1,0 +1,16 @@
+{
+  final PersistentSpecifications classes=PersistentSpecifications.buildPersistentSpecifications(Boolean.TRUE);
+  final Nof2HbmXml nof2HbmXml=new Nof2HbmXml();
+  final Document subClassDoc=nof2HbmXml.createDocument(classes.getPersistentClass(SimpleSubClass.class.getName()));
+  final Element subclass=subClassDoc.getRootElement().element("subclass");
+  assertNotNull("subclass",subclass);
+  assertEquals(SimpleSubClass.class.getName(),subclass.attribute("name").getData());
+  assertEquals(SimpleObject.class.getName(),subclass.attribute("extends").getData());
+  assertEquals("org.apache.isis.nos.store.hibernate.testobjects.SimpleSubClass",subclass.attribute("discriminator-value").getData());
+  assertEquals("property element count",1,subclass.elements("property").size());
+  final Element property=subclass.element("property");
+  assertEquals("uniqueString",property.attribute("column").getData());
+  assertEquals(String.class.getName(),property.attribute("type").getData());
+  assertNull("access",property.attribute("access"));
+  assertEquals("uniqueString",property.attribute("name").getData());
+}

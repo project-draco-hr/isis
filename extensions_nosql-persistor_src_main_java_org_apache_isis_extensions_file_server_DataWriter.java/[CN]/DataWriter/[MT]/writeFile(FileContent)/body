@@ -1,0 +1,26 @@
+{
+  FileOutputStream output=null;
+  File file=Util.dataFile(content.type,content.id);
+  if (!file.getParentFile().exists()) {
+    file.getParentFile().mkdir();
+  }
+  try {
+    output=new FileOutputStream(file);
+    output.write(content.type.getBytes("utf-8"));
+    output.write(' ');
+    output.write(content.id.getBytes("utf-8"));
+    output.write(' ');
+    output.write(content.newVersion.getBytes("utf-8"));
+    output.write('\n');
+    output.write(content.data.getBytes("utf-8"));
+  }
+  finally {
+    if (output != null) {
+      try {
+        output.close();
+      }
+ catch (      IOException e) {
+      }
+    }
+  }
+}

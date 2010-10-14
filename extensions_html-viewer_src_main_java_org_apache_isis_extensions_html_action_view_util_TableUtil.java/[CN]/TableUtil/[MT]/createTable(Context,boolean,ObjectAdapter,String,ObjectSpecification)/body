@@ -1,0 +1,38 @@
+{
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+  final ObjectAssociation[] columnAssociations=elementType.getAssociations(STATICALLY_VISIBLE_ASSOCIATIONS.and(PROPERTIES));
+  int len=columnAssociations.length;
+  ComponentFactory factory=context.getComponentFactory();
+  final Table table=factory.createTable(len,addSelector);
+  table.setSummary(summary);
+  for (  ObjectAssociation columnAssociation : columnAssociations) {
+    table.addColumnHeader(columnAssociation.getName());
+  }
+  for (  ObjectAdapter rowAdapter : facet.iterable(collection)) {
+    getPersistenceSession().resolveImmediately(rowAdapter);
+    final String elementId=context.mapObject(rowAdapter);
+    table.addRowHeader(factory.createObjectIcon(rowAdapter,elementId,"icon"));
+    for (    ObjectAssociation columnAssociation : columnAssociations) {
+      final ObjectAdapter columnAdapter=columnAssociation.get(rowAdapter);
+      ObjectSpecification columnSpec=columnAssociation.getSpecification();
+      if (!columnAssociation.isVisible(getAuthenticationSession(),rowAdapter).isAllowed()) {
+        table.addEmptyCell();
+      }
+ else       if (columnSpec.isParseable()) {
+        final MultiLineFacet multiline=columnSpec.getFacet(MultiLineFacet.class);
+        final boolean shouldTruncate=multiline != null && multiline.numberOfLines() > 1;
+        final String titleString=columnAdapter != null ? columnAdapter.titleString() : "";
+        table.addCell(titleString,shouldTruncate);
+      }
+ else       if (columnAdapter == null) {
+        table.addEmptyCell();
+      }
+ else {
+        getPersistenceSession().resolveImmediately(columnAdapter);
+        final String objectId=context.mapObject(columnAdapter);
+        table.addCell(factory.createObjectIcon(columnAssociation,columnAdapter,objectId,"icon"));
+      }
+    }
+  }
+  return table;
+}

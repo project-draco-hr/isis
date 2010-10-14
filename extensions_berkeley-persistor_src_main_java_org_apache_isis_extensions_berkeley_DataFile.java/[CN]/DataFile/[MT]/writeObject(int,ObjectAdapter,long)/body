@@ -1,0 +1,29 @@
+{
+  try {
+    seekBlock(block);
+    ObjectSpecification specification=object.getSpecification();
+    ByteBuffer buffer=ByteBuffer.allocate(BLOCK_SIZE);
+    buffer.put(specification.getFullName().getBytes());
+    buffer.put((byte)'\n');
+    buffer.put((serialNumber + "").getBytes());
+    buffer.put((byte)'\n');
+    ObjectAssociation[] associations=specification.getAssociations();
+    for (    ObjectAssociation association : associations) {
+      ObjectAdapter property=association.get(object);
+      if (property != null) {
+        EncodableFacet encodable=property.getSpecification().getFacet(EncodableFacet.class);
+        if (encodable != null) {
+          String data=encodable.toEncodedString(property);
+          buffer.put(data.getBytes());
+        }
+      }
+      buffer.put((byte)'\n');
+    }
+    long length=file.length();
+    file.seek(length);
+    file.write(buffer.array());
+  }
+ catch (  IOException e) {
+    throw new BerkeleyObjectStoreException(e);
+  }
+}

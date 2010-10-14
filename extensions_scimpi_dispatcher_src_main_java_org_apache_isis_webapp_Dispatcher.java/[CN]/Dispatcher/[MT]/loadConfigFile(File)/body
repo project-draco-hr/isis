@@ -1,0 +1,33 @@
+{
+  try {
+    Document document;
+    SAXReader reader=new SAXReader();
+    document=reader.read(file);
+    Element root=document.getRootElement();
+    for (Iterator i=root.elementIterator(); i.hasNext(); ) {
+      Element element=(Element)i.next();
+      if (element.getName().equals("actions")) {
+        for (Iterator actions=element.elementIterator("action"); actions.hasNext(); ) {
+          Element action=(Element)actions.next();
+          String className=action.getText();
+          Action instance=(Action)InstanceFactory.createInstance(className);
+          addAction(instance);
+        }
+      }
+      if (element.getName().equals("processors")) {
+        for (Iterator processors=element.elementIterator("processor"); processors.hasNext(); ) {
+          Element processor=(Element)processors.next();
+          String className=processor.getText();
+          ElementProcessor instance=(ElementProcessor)InstanceFactory.createInstance(className);
+          this.processors.addElementProcessor(instance);
+        }
+      }
+    }
+  }
+ catch (  MalformedURLException e) {
+    throw new IsisException(e);
+  }
+catch (  DocumentException e) {
+    throw new IsisException(e);
+  }
+}

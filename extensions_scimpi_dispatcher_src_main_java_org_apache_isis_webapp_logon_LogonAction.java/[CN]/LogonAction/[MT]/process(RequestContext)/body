@@ -1,0 +1,17 @@
+{
+  String password=context.getParameter("password");
+  String username=context.getParameter("username");
+  AuthenticationSession session=UserManager.authenticate(new AuthenticationRequestPassword(username,password));
+  String view;
+  if (session == null) {
+    view=context.getParameter("error");
+  }
+ else {
+    context.setSession(session);
+    view=context.getParameter("view");
+    if (view == null) {
+      view="start." + Dispatcher.EXTENSION;
+    }
+  }
+  context.redirectTo(view);
+}

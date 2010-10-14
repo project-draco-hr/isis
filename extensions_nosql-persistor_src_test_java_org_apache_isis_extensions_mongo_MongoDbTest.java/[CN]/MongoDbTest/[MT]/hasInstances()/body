@@ -1,0 +1,10 @@
+{
+  String specificationName=specification.getFullName();
+  assertFalse(db.hasInstances(specificationName));
+  db.close();
+  DBCollection instances=testDb.getCollection(specificationName);
+  instances.insert(new BasicDBObject().append("test","test"));
+  db.open();
+  assertTrue(db.hasInstances(specificationName));
+  assertFalse(db.hasInstances("org.xxx.unknown"));
+}

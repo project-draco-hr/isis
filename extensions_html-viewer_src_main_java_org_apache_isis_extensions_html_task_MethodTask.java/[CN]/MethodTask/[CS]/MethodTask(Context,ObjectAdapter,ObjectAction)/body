@@ -1,0 +1,33 @@
+{
+  super(context,action.getName(),action.getDescription(),target,action.getParameterCount());
+  this.action=action;
+  final ObjectActionParameter[] parameters=action.getParameters();
+  final int len=parameters.length;
+  for (int i=0; i < len; i++) {
+    names[i]=parameters[i].getName();
+    descriptions[i]=parameters[i].getDescription();
+    fieldSpecifications[i]=parameters[i].getSpecification();
+    optional[i]=parameters[i].isOptional();
+    if (parameters[i].getSpecification().isParseable()) {
+      final ParseableEntryActionParameter valueParameter=(ParseableEntryActionParameter)parameters[i];
+      noLines[i]=valueParameter.getNoLines();
+      wraps[i]=valueParameter.canWrap();
+      maxLength[i]=valueParameter.getMaximumLength();
+      typicalLength[i]=valueParameter.getTypicalLineLength();
+    }
+  }
+  final ObjectAdapter[] defaultParameterValues=action.getDefaults(target);
+  for (int i=0; i < names.length; i++) {
+    if (defaultParameterValues[i] == null) {
+      if (action.isContributed()) {
+        initialState[i]=target;
+      }
+ else {
+        initialState[i]=null;
+      }
+    }
+ else {
+      initialState[i]=defaultParameterValues[i];
+    }
+  }
+}

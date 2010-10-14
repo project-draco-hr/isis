@@ -1,0 +1,19 @@
+{
+  final IsisConfiguration configuration=IsisContext.getConfiguration();
+  final SpecificationLoader loader=IsisContext.getSpecificationLoader();
+  String classPrefix=configuration.getString(NAKEDOBJECTS_CLASSES_PREFIX);
+  classPrefix=classPrefix == null ? "" : classPrefix.trim();
+  if (classPrefix.length() > 0 && !classPrefix.endsWith(".")) {
+    classPrefix=classPrefix + ".";
+  }
+  final String classList=configuration.getString(NAKEDOBJECTS_CLASSES_LIST);
+  if (classList != null) {
+    final StringTokenizer classes=new StringTokenizer(classList,LIST_SEPARATOR);
+    while (classes.hasMoreTokens()) {
+      final ObjectSpecification specification=loader.loadSpecification(classPrefix + classes.nextToken().trim());
+      if (specification instanceof ObjectSpecificationNoMember) {
+        throw new IsisException("No such class " + specification.getFullName());
+      }
+    }
+  }
+}

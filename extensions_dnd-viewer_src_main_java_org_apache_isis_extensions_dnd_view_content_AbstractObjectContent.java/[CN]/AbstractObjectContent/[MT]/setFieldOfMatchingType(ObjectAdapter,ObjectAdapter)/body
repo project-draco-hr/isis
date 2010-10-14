@@ -1,0 +1,22 @@
+{
+  if (targetAdapter.isTransient() && sourceAdapter.isPersistent()) {
+    return new Veto("Can't set field in persistent object with reference to non-persistent object");
+  }
+  final ObjectAssociation[] fields=targetAdapter.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),targetAdapter));
+  for (  final ObjectAssociation fld : fields) {
+    if (!fld.isOneToOneAssociation()) {
+      continue;
+    }
+    if (!sourceAdapter.getSpecification().isOfType(fld.getSpecification())) {
+      continue;
+    }
+    if (fld.get(targetAdapter) != null) {
+      continue;
+    }
+    final Consent associationValid=((OneToOneAssociation)fld).isAssociationValid(targetAdapter,sourceAdapter);
+    if (associationValid.isAllowed()) {
+      return associationValid.setDescription("Set field " + fld.getName());
+    }
+  }
+  return new Veto(String.format("No empty field accepting object of type %s in %s",sourceAdapter.getSpecification().getSingularName(),title()));
+}

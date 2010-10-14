@@ -1,0 +1,15 @@
+{
+  Assert.assertEquals("ensure the view is the complete decorated view",view.getView(),view);
+  final Content content=view.getContent();
+  final ObjectAdapter object=((ObjectContent)content).getObject();
+  LOG.debug("build view " + view + " for "+ object);
+  ObjectSpecification spec=object.getSpecification();
+  Filter<ObjectAssociation> filter=ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),object);
+  final ObjectAssociation[] flds=spec.getAssociations(filter);
+  if (view.getSubviews().length == 0) {
+    initialBuild(view,axes,object,flds);
+  }
+ else {
+    updateBuild(view,axes,object,flds);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  for (int i=0; i < EXTENSIONS.length; i++) {
+    URL resource;
+    try {
+      String imagePath=imageDirectory + imageName + "."+ EXTENSIONS[i];
+      resource=context.getResource(imagePath);
+      if (resource != null) {
+        LOG.debug("image found at " + contextPath + imagePath);
+        return contextPath + imagePath;
+      }
+      URL onClasspath=ImageLookup.class.getResource(imagePath);
+      if (onClasspath != null) {
+        LOG.debug("image found on classpath " + onClasspath);
+        return contextPath + imagePath;
+      }
+    }
+ catch (    MalformedURLException ignore) {
+    }
+  }
+  return null;
+}

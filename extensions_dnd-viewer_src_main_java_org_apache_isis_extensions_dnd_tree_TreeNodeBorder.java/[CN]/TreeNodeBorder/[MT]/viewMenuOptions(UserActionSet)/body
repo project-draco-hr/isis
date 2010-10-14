@@ -1,0 +1,23 @@
+{
+  super.viewMenuOptions(options);
+  TreeDisplayRules.menuOptions(options);
+  options.add(new UserActionAbstract("Select node"){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      selectNode();
+    }
+    @Override public String getDescription(    final View view){
+      return "Show this node in the right-hand pane";
+    }
+  }
+);
+  final ObjectAdapter object=getView().getContent().getAdapter();
+  final ResolveState resolveState=(object).getResolveState();
+  if (object instanceof ObjectAdapter && (resolveState.isGhost() || resolveState.isPartlyResolved())) {
+    options.add(new UserActionAbstract("Load object"){
+      @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
+        resolveContent();
+      }
+    }
+);
+  }
+}

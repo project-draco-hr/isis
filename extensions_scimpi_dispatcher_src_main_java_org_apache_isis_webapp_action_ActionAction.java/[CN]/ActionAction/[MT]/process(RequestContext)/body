@@ -1,0 +1,69 @@
+{
+  String objectId=context.getParameter(OBJECT);
+  String version=context.getParameter(VERSION);
+  String methodName=context.getParameter(METHOD);
+  String override=context.getParameter(RESULT_OVERRIDE);
+  String resultName=context.getParameter(RESULT_NAME);
+  resultName=resultName == null ? RequestContext.RESULT : resultName;
+  FormState entryState=null;
+  try {
+    ObjectAdapter object=MethodsUtils.findObject(context,objectId);
+    ObjectAction action=MethodsUtils.findAction(object,methodName);
+    entryState=validateParameters(context,action,object);
+    object.checkLock(context.getVersion(version));
+    if (entryState.isValid()) {
+      boolean hasResult=invokeMethod(context,resultName,object,action,entryState);
+      String view=context.getParameter(hasResult ? VIEW : VOID);
+      int questionMark=view == null ? -1 : view.indexOf("?");
+      if (questionMark > -1) {
+        String params=view.substring(questionMark + 1);
+        int equals=params.indexOf("=");
+        context.addVariable(params.substring(0,equals),params.substring(equals + 1),Scope.REQUEST);
+        view=view.substring(0,questionMark);
+      }
+      context.setRequestPath(view);
+      if (override != null) {
+        context.addVariable(resultName,override,Scope.REQUEST);
+      }
+      if (context.getVariable(resultName) == null) {
+        context.addVariable(resultName,objectId,Scope.REQUEST);
+      }
+    }
+ else {
+      entryState.setForm(objectId + ":" + methodName);
+      context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
+      context.addVariable(resultName,objectId,Scope.REQUEST);
+      if (override != null) {
+        context.addVariable(resultName,override,Scope.REQUEST);
+      }
+      final String error=entryState.getError();
+      if (error != null) {
+        context.addVariable(RequestContext.ERROR,error,Scope.REQUEST);
+      }
+      String view=context.getParameter(ERRORS);
+      context.setRequestPath(view,Dispatcher.ACTION);
+    }
+  }
+ catch (  ConcurrencyException e) {
+    IsisContext.getMessageBroker().addMessage(e.getMessage());
+    entryState.setForm(objectId + ":" + methodName);
+    context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
+    context.addVariable(resultName,objectId,Scope.REQUEST);
+    if (override != null) {
+      context.addVariable(resultName,override,Scope.REQUEST);
+    }
+    final String error=entryState.getError();
+    if (error != null) {
+      context.addVariable(RequestContext.ERROR,error,Scope.REQUEST);
+    }
+    String view=context.getParameter(ERRORS);
+    context.setRequestPath(view,Dispatcher.ACTION);
+  }
+catch (  RuntimeException e) {
+    IsisContext.getMessageBroker().getMessages();
+    IsisContext.getMessageBroker().getWarnings();
+    IsisContext.getUpdateNotifier().clear();
+    IsisContext.getUpdateNotifier().clear();
+    throw e;
+  }
+}

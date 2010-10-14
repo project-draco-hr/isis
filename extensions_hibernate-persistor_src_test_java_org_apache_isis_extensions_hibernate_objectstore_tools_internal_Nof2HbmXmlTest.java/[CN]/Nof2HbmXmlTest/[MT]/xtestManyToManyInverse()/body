@@ -1,0 +1,13 @@
+{
+  final PersistentSpecifications classes=PersistentSpecifications.buildPersistentSpecifications(Boolean.TRUE);
+  final Nof2HbmXml nof2HbmXml=new Nof2HbmXml();
+  final Document doc=nof2HbmXml.createDocument(classes.getPersistentClass(ManyToMany.class.getName()));
+  final Element bag=doc.getRootElement().element("class").element("bag");
+  assertEquals("bag name","many",bag.attribute("name").getData());
+  assertEquals("bag table","BIDIRECTIONAL_MANYTOMANY",bag.attribute("table").getData());
+  assertEquals("bag inverse","true",bag.attribute("inverse").getData());
+  assertEquals("key","FKmanytomany",bag.element("key").attribute("column").getData());
+  final Element manyToMany=bag.element("many-to-many");
+  assertEquals("many class",BiDirectional.class.getName(),manyToMany.attribute("class").getData());
+  assertEquals("many column","FKbidirectional",manyToMany.attribute("column").getData());
+}

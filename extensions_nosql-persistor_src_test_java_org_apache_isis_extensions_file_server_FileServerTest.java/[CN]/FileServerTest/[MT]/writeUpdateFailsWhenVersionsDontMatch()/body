@@ -1,0 +1,10 @@
+{
+  File file2=new File("target/test/org.domain.Class","1026.data");
+  FileWriter fileWriter=new FileWriter(file2);
+  String originalData="org.domain.Class 1026 21\n{datax}";
+  fileWriter.write(originalData);
+  fileWriter.close();
+  ServerConnection connection=new ServerConnection(inputStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n"),out);
+  server.process(connection);
+  assertEquals("error\n{datax}\n",out.toString());
+}

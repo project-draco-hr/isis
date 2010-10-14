@@ -1,0 +1,20 @@
+{
+  String path=request.getOptionalProperty("file");
+  String id=request.getOptionalProperty(OBJECT);
+  String fieldName=request.getOptionalProperty(FIELD);
+  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  if (fieldName != null) {
+    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+    }
+    object=field.get(object);
+    id=request.getContext().mapObject(object,Scope.REQUEST);
+  }
+  if (object != null) {
+    IsisContext.getPersistenceSession().resolveImmediately(object);
+    request.getContext().addVariable("_object",id,Scope.REQUEST);
+    Import.importFile(request,path);
+  }
+  request.closeEmpty();
+}

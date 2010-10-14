@@ -1,0 +1,23 @@
+{
+  final View[] subviews=getSubviews();
+  for (int i=0; i < subviews.length; i++) {
+    if (subviews[i].getState().isViewIdentified()) {
+      axis.setSelection((OptionContent)subviews[i].getContent());
+      final View view=axis.getOriginalView();
+      final View parentView=view.getParent();
+      final View[] parentsSubviews=parentView.getSubviews();
+      int index=0;
+      for (int j=0; j < parentsSubviews.length; j++) {
+        if (view == parentsSubviews[j]) {
+          index=j;
+          break;
+        }
+      }
+      parentView.updateView();
+      parentView.invalidateContent();
+      parentView.getFocusManager().setFocus(parentView.getSubviews()[index]);
+      getView().dispose();
+      break;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  try {
+    DatabaseEntry secondaryKey=new DatabaseEntry(className(specification));
+    DatabaseEntry foundData=new DatabaseEntry();
+    SecondaryCursor mySecCursor=mySecDb.openSecondaryCursor(null,null);
+    OperationStatus status=mySecCursor.getSearchKey(secondaryKey,foundData,LockMode.DEFAULT);
+    boolean hasInstances=status == OperationStatus.SUCCESS;
+    mySecCursor.close();
+    return hasInstances;
+  }
+ catch (  DatabaseException e) {
+    throw new BerkeleyObjectStoreException(e);
+  }
+}

@@ -1,0 +1,17 @@
+{
+  return new DestroyObjectCommand(){
+    public void execute(    final PersistenceCommandContext context){
+      DatabaseConnector connection=((SqlExecutionContext)context).getConnection();
+      LOG.debug("  destroy object " + object);
+      ObjectMapping mapping=objectMappingLookup.getMapping(object,connection);
+      mapping.destroyObject(connection,object);
+    }
+    public ObjectAdapter onObject(){
+      return object;
+    }
+    public String toString(){
+      return "DestroyObjectCommand [object=" + object + "]";
+    }
+  }
+;
+}

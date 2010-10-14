@@ -1,0 +1,55 @@
+{
+  String rowId=context.mapObject(element,Scope.INTERACTION);
+  String scope=linkRow == null ? "" : "&" + SCOPE + "="+ linkRow.getScope();
+  String result="";
+  result=context.encodedInteractionParameters();
+  if (fields.length == 0) {
+    if (linkRow != null) {
+      request.appendHtml("<td><a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">"+ element.titleString()+ "</a></td>");
+    }
+ else {
+      request.appendHtml("<td>" + element.titleString() + "</td>");
+    }
+  }
+ else {
+    for (int i=0; i < fields.length; i++) {
+      if (fields[i].isOneToManyAssociation()) {
+        continue;
+      }
+      request.appendHtml("<td>");
+      ObjectAdapter field=fields[i].get(element);
+      if (field != null) {
+        if (!fields[i].getSpecification().containsFacet(ParseableFacet.class)) {
+          request.appendHtml("<img class=\"" + "small-icon" + "\" src=\"" + request.getContext().imagePath(field) + "\" alt=\""+ fields[i].getSpecification().getShortName()+ "\"/>");
+        }
+        if (linkRow != null) {
+          request.appendHtml("<a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">");
+        }
+ else         if (linkedFields[i] != null) {
+          ObjectAdapter fieldObject=(ObjectAdapter)fields[i].get(element);
+          String id=context.mapObject(fieldObject,Scope.INTERACTION);
+          request.appendHtml("<a href=\"" + linkedFields[i].getForwardView() + "?"+ linkedFields[i].getVariable()+ "="+ id+ "\">");
+          context.mapObject(fieldObject,RequestContext.scope(linkedFields[i].getScope()));
+        }
+        request.appendHtml(field.titleString());
+        if (linkRow != null || linkedFields[i] != null) {
+          request.appendHtml("</a>");
+        }
+      }
+      request.appendHtml("</td>");
+    }
+  }
+  request.appendHtml("<td>");
+  if (showSelectOption) {
+    request.appendHtml("<a class=\"element-select\" href=\"" + "_generic." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">view</a>");
+  }
+  if (showEditOption) {
+    request.appendHtml(" <a class=\"element-edit\" href=\"" + "_generic_edit." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">edit</a>");
+  }
+  if (showDeleteOption && parent != null) {
+    String view=request.getViewPath();
+    view=context.fullFilePath(view == null ? context.getResourceFile() : view);
+    RemoveElement.write(request,context.getMappedObject(parent),fieldName,element,null,view,view,"delete","element-delete");
+  }
+  request.appendHtml("</td>");
+}

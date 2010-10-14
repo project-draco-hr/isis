@@ -1,0 +1,10 @@
+{
+  LOG.debug("reading file " + id);
+  locks.acquireRead(id,getTransactionId());
+  try {
+    return new DataReader(type,id);
+  }
+ catch (  FileNotFoundException e) {
+    throw new NoSqlStoreException(Util.FILE_NOT_FOUND + " for " + type+ " & "+ id,e);
+  }
+}

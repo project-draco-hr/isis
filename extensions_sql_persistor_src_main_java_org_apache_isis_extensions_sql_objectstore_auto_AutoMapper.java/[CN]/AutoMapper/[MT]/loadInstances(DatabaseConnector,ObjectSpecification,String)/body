@@ -1,0 +1,14 @@
+{
+  LOG.debug("loading instances from SQL " + table);
+  Vector<ObjectAdapter> instances=new Vector<ObjectAdapter>();
+  Results rs=connector.select(selectStatment);
+  for (int count=0; rs.next() && count < MAX_INSTANCES; count++) {
+    ObjectAdapter instance=loadObject(connector,cls,rs);
+    LOG.debug("  instance  " + instance);
+    instances.addElement(instance);
+  }
+  rs.close();
+  ObjectAdapter[] array=new ObjectAdapter[instances.size()];
+  instances.copyInto(array);
+  return array;
+}

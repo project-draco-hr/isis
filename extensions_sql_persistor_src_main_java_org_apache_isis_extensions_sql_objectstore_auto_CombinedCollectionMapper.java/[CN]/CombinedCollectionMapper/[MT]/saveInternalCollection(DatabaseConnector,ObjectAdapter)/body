@@ -1,0 +1,24 @@
+{
+  ObjectAdapter collection=field.get(parent);
+  LOG.debug("Saving internal collection " + collection);
+  StringBuffer sql=new StringBuffer();
+  sql.append("update ");
+  sql.append(table);
+  sql.append(" set ");
+  sql.append(foreignKeyName);
+  sql.append(" = NULL where ");
+  foreignKeyMapping.appendUpdateValues(sql,parent);
+  connector.update(sql.toString());
+  sql=new StringBuffer();
+  sql.append("update ");
+  sql.append(table);
+  sql.append(" set ");
+  CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+  for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
+    StringBuffer update=new StringBuffer(sql);
+    foreignKeyMapping.appendUpdateValues(update,parent);
+    update.append(" where ");
+    idMapping.appendWhereClause(update,element.getOid());
+    connector.insert(update.toString());
+  }
+}

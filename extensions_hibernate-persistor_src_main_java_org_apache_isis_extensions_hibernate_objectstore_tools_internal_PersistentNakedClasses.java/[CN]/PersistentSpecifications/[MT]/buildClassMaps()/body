@@ -1,0 +1,14 @@
+{
+  final ObjectSpecification objectSpec=IsisContext.getSpecificationLoader().loadSpecification(Object.class);
+  buildClassHierachy(objectSpec,rootClass);
+  findInterfaces(classes.values().toArray(new PersistentSpecification[0]));
+  optimiseInterfaces();
+  checkAssociations();
+  removeUnusedAbstractClasses();
+  assignTableNames();
+  checkInverseAssociations();
+  if (assumeBidirectional) {
+    mapAssociations();
+  }
+  markVersionInfo();
+}

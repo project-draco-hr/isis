@@ -1,0 +1,29 @@
+{
+  if (s == null) {
+    if (persistorName == "xml") {
+    }
+    if (tableName == "sqldataclass") {
+      List<SqlDataClass> list=sqlDataClassFactory.allDataClasses();
+      for (      SqlDataClass sqlDataClass : list) {
+        sqlDataClassFactory.delete(sqlDataClass);
+      }
+      return;
+    }
+    if (tableName == "simpleclass") {
+      List<SimpleClass> list=sqlDataClassFactory.allSimpleClasses();
+      for (      SimpleClass sqlClass : list) {
+        sqlDataClassFactory.delete(sqlClass);
+      }
+      return;
+    }
+    return;
+  }
+  try {
+    s.executeUpdate("DROP TABLE " + tableName + ";");
+  }
+ catch (  PSQLException e) {
+  }
+catch (  SQLException e) {
+    e.printStackTrace();
+  }
+}

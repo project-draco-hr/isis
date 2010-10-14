@@ -1,0 +1,27 @@
+{
+  if (result == null) {
+    request.forward(ForwardRequest.viewService(targetId));
+  }
+ else {
+    if (result.getSpecification().isCollection()) {
+      final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(result);
+      if (facet.size(result) == 1) {
+        forwardObjectResult(request,context,facet.firstElement(result));
+      }
+ else {
+        forwardCollectionResult(request,context,result);
+      }
+    }
+ else     if (result.getSpecification().isValueOrIsAggregated()) {
+      List<String> messages=context.getMessages();
+      messages.add(0,"Action returned: " + result.titleString());
+      request.forward(ForwardRequest.viewObject(targetId));
+    }
+ else     if (result.getSpecification().isNotCollection()) {
+      forwardObjectResult(request,context,result);
+    }
+ else {
+      throw new UnknownTypeException(result.getSpecification().getFullName());
+    }
+  }
+}

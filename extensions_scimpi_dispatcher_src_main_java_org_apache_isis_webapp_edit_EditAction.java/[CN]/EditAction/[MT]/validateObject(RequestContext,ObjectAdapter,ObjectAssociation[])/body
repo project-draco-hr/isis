@@ -1,0 +1,55 @@
+{
+  FormState formState=new FormState();
+  for (int i=0; i < fields.length; i++) {
+    ObjectAssociation field=fields[i];
+    String fieldId=field.getId();
+    String newEntry=context.getParameter(fieldId);
+    if (fields[i].isOneToManyAssociation()) {
+      continue;
+    }
+    if (fields[i].isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      continue;
+    }
+    if (field.isUsable(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      continue;
+    }
+    if (newEntry == null) {
+      ObjectSpecification spec=field.getSpecification();
+      if (spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(boolean.class)) || spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(Boolean.class))) {
+        newEntry=FALSE;
+      }
+ else {
+        continue;
+      }
+    }
+    FieldEditState fieldState=formState.createField(fieldId,newEntry);
+    Consent consent=null;
+    if (field.isMandatory() && newEntry.equals("")) {
+      consent=new Veto(field.getName() + " required");
+    }
+ else     if (field.getSpecification().containsFacet(ParseableFacet.class)) {
+      try {
+        ParseableFacet facet=(ParseableFacet)field.getSpecification().getFacet(ParseableFacet.class);
+        ObjectAdapter originalValue=field.get(object);
+        ObjectAdapter newValue=facet.parseTextEntry(originalValue,newEntry);
+        consent=((OneToOneAssociation)field).isAssociationValid(object,newValue);
+        fieldState.setValue(originalValue);
+      }
+ catch (      TextEntryParseException e) {
+        consent=new Veto(e.getMessage());
+      }
+    }
+ else {
+      ObjectAdapter associate=(ObjectAdapter)context.getMappedObject(newEntry);
+      if (associate != null) {
+        IsisContext.getPersistenceSession().resolveImmediately(associate);
+      }
+      consent=((OneToOneAssociation)field).isAssociationValid(object,associate);
+      fieldState.setValue(associate);
+    }
+    if (consent.isVetoed()) {
+      fieldState.setError(consent.getReason());
+    }
+  }
+  return formState;
+}

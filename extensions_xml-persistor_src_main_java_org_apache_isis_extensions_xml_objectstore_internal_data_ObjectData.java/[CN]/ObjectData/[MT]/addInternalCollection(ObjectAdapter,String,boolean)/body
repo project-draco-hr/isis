@@ -1,0 +1,11 @@
+{
+  initCollection(fieldId);
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+  for (  ObjectAdapter element : facet.iterable(collection)) {
+    final Object elementOid=element.getOid();
+    if (elementOid == null) {
+      throw new IllegalStateException("Element is not persistent " + element);
+    }
+    addElement(fieldId,(SerialOid)elementOid);
+  }
+}

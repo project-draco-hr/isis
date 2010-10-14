@@ -1,0 +1,14 @@
+{
+  if (!initializedAlgorithm) {
+    try {
+      ALGORITHM=getConfiguration().getString(ALGORITHM_CFG,ALGORITHM);
+      if (!ALGORITHM.equalsIgnoreCase(NO_ALGORITHM)) {
+        messageDigest=MessageDigest.getInstance(ALGORITHM);
+      }
+    }
+ catch (    final NoSuchAlgorithmException nsa) {
+      throw new IsisException(nsa);
+    }
+    initializedAlgorithm=true;
+  }
+}

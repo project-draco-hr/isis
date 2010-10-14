@@ -1,0 +1,13 @@
+{
+  ObjectAdapter fieldObject;
+  String ref=reader.readField(association.getId());
+  if (ref == null || ref.equals("null")) {
+    fieldObject=null;
+  }
+ else {
+    Oid oid=keyCreator.oidFromReference(ref);
+    ObjectSpecification specification=keyCreator.specificationFromReference(ref);
+    fieldObject=getAdapter(specification,oid);
+  }
+  association.initAssociation(object,fieldObject);
+}

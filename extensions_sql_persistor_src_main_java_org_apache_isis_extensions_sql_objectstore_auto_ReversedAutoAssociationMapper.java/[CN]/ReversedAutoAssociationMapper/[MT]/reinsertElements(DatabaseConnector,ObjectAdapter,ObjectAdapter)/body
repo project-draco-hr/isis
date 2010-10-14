@@ -1,0 +1,22 @@
+{
+  StringBuffer sql=new StringBuffer();
+  sql.append("insert into " + table + " (");
+  idMapping.appendColumnNames(sql);
+  sql.append(", ");
+  sql.append(columnList());
+  sql.append(", ");
+  sql.append(versionMapping.insertColumns());
+  sql.append(") values (");
+  idMapping.appendInsertValues(sql,parent);
+  sql.append(", ");
+  CollectionFacet collectionFacet=field.getFacet(CollectionFacet.class);
+  for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
+    StringBuffer insert=new StringBuffer(sql);
+    insert.append(values(element));
+    SerialNumberVersion version=new SerialNumberVersion(0,"",new Date());
+    insert.append(versionMapping.insertValues(version));
+    insert.append(") ");
+    connector.insert(insert.toString());
+    element.setOptimisticLock(version);
+  }
+}
