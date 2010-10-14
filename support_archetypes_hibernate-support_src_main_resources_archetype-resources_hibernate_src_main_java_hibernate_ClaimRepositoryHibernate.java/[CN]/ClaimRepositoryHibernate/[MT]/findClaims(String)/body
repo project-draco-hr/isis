@@ -1,0 +1,14 @@
+{
+  final Criteria criteria=hibernateHelper.createCriteria(Claim.class);
+  criteria.add(Restrictions.like("description",description,MatchMode.ANYWHERE));
+  criteria.addOrder(Order.desc("dateCreated"));
+  List<Claim> foundClaims=hibernateHelper.findByCriteria(criteria,Employee.class);
+  if (foundClaims.size() > MAX_CLAIMS) {
+    warnUser("Too many claims found - refine search");
+    return null;
+  }
+ else   if (foundClaims.size() == 0) {
+    informUser("No claims found");
+  }
+  return foundClaims;
+}
