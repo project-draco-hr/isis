@@ -1,0 +1,15 @@
+{
+class Customer {
+    @Override public String toString(){
+      return "Some title via toString";
+    }
+  }
+  final Method toStringMethod=findMethod(Customer.class,"toString");
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(TitleFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TitleFacetViaToStringMethod);
+  final TitleFacetViaToStringMethod titleFacetViaTitleMethod=(TitleFacetViaToStringMethod)facet;
+  assertEquals(toStringMethod,titleFacetViaTitleMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(toStringMethod));
+}

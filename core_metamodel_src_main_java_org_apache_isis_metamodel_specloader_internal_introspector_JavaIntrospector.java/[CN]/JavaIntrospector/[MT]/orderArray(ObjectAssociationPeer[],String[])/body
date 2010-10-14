@@ -1,0 +1,43 @@
+{
+  if (order == null) {
+    return original;
+  }
+ else {
+    for (int i=0; i < order.length; i++) {
+      order[i]=NameUtils.simpleName(order[i]);
+    }
+    final ObjectAssociationPeer[] ordered=new ObjectAssociationPeer[original.length];
+    int orderedIndex=0;
+    ordering:     for (int orderIndex=0; orderIndex < order.length; orderIndex++) {
+      for (int memberIndex=0; memberIndex < original.length; memberIndex++) {
+        final ObjectAssociationPeer member=original[memberIndex];
+        if (member == null) {
+          continue;
+        }
+        if (member.getIdentifier().getMemberName().equalsIgnoreCase(order[orderIndex])) {
+          ordered[orderedIndex++]=original[memberIndex];
+          original[memberIndex]=null;
+          continue ordering;
+        }
+      }
+      if (!order[orderIndex].trim().equals("")) {
+        LOG.warn("invalid ordering element '" + order[orderIndex]);
+      }
+    }
+    final ObjectAssociationPeer[] results=new ObjectAssociationPeer[original.length];
+    int index=0;
+    for (int i=0; i < ordered.length; i++) {
+      final ObjectAssociationPeer member=ordered[i];
+      if (member != null) {
+        results[index++]=member;
+      }
+    }
+    for (int i=0; i < original.length; i++) {
+      final ObjectAssociationPeer member=original[i];
+      if (member != null) {
+        results[index++]=member;
+      }
+    }
+    return results;
+  }
+}

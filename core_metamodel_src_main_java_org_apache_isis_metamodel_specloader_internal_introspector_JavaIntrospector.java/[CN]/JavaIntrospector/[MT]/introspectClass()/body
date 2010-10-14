@@ -1,0 +1,26 @@
+{
+  LOG.info("introspecting " + className());
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("introspecting " + className() + ": class-level details");
+  }
+  final JavaIntrospectorMethodRemover methodRemover=new JavaIntrospectorMethodRemover();
+  getFacetProcessor().process(type,methodRemover,javaSpecification);
+  final FacetsFacet facetsFacet=(FacetsFacet)javaSpecification.getFacet(FacetsFacet.class);
+  if (facetsFacet != null) {
+    final Class<? extends FacetFactory>[] facetFactories=facetsFacet.facetFactories();
+    for (int i=0; i < facetFactories.length; i++) {
+      FacetFactory facetFactory=null;
+      try {
+        facetFactory=(FacetFactory)facetFactories[i].newInstance();
+      }
+ catch (      final InstantiationException e) {
+        throw new IsisException(e);
+      }
+catch (      final IllegalAccessException e) {
+        throw new IsisException(e);
+      }
+      getFacetProcessor().injectDependenciesInto(facetFactory);
+      facetFactory.process(type,methodRemover,javaSpecification);
+    }
+  }
+}

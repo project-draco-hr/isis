@@ -1,0 +1,19 @@
+{
+  super(facetType,holder,adaptedClass,typicalLength,immutable,equalByContent,defaultValue,configuration,specificationLoader,runtimeContext);
+  final Hashtable formats=formats();
+  final Enumeration elements=formats.elements();
+  while (elements.hasMoreElements()) {
+    final DateFormat format=(DateFormat)elements.nextElement();
+    format.setLenient(false);
+    if (ignoreTimeZone()) {
+      format.setTimeZone(UTC_TIME_ZONE);
+    }
+  }
+  final String defaultFormat=configuration.getString(ConfigurationConstants.ROOT + "value.format." + propertyName,defaultFormat());
+  final String required=defaultFormat.toLowerCase().trim();
+  format=(DateFormat)formats.get(required);
+  if (format == null) {
+    setMask(defaultFormat);
+  }
+  encodingFormat=(DateFormat)formats.get(ISO_ENCODING_FORMAT);
+}

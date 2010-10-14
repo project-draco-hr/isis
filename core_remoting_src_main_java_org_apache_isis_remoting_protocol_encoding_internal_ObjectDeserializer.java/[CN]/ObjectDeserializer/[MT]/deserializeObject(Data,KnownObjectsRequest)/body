@@ -1,0 +1,20 @@
+{
+  if (data instanceof NullData) {
+    return null;
+  }
+ else   if (data instanceof ObjectData) {
+    ObjectData objectData=(ObjectData)data;
+    return deserializeObjectFromObjectData(objectData,knownObjects);
+  }
+ else   if (data instanceof IdentityData) {
+    IdentityData identityData=(IdentityData)data;
+    return deserializeObjectFromIdentityData(identityData,knownObjects);
+  }
+ else   if (data instanceof EncodableObjectData) {
+    EncodableObjectData encodableObjectData=(EncodableObjectData)data;
+    return deserializeObjectFromEncodableObjectData(encodableObjectData);
+  }
+ else {
+    throw new UnknownTypeException(data);
+  }
+}

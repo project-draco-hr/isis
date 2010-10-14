@@ -1,0 +1,15 @@
+{
+  if (adapterData.getFieldContent() != null) {
+    adapter.setOptimisticLock(adapterData.getVersion());
+    final ResolveState state=nextState(adapter.getResolveState(),adapterData.hasCompleteData());
+    if (state != null) {
+      LOG.debug("updating existing object (" + state.name() + ") "+ adapter);
+      setupFields(adapter,adapterData,state,knownObjects);
+      getUpdateNotifier().addChangedObject(adapter);
+    }
+  }
+ else {
+    if (adapterData.getVersion() != null && adapterData.getVersion().different(adapter.getVersion())) {
+    }
+  }
+}

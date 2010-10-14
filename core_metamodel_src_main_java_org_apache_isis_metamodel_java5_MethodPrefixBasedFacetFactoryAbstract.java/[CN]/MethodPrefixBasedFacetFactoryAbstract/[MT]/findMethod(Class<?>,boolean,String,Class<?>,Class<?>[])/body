@@ -1,0 +1,37 @@
+{
+  Method method;
+  try {
+    method=type.getMethod(name,paramTypes);
+  }
+ catch (  final SecurityException e) {
+    return null;
+  }
+catch (  final NoSuchMethodException e) {
+    return null;
+  }
+  final int modifiers=method.getModifiers();
+  if (!Modifier.isPublic(modifiers)) {
+    return null;
+  }
+  if (Modifier.isStatic(modifiers) != forClass) {
+    return null;
+  }
+  if (!method.getName().equals(name)) {
+    return null;
+  }
+  if (returnType != null && returnType != method.getReturnType()) {
+    return null;
+  }
+  if (paramTypes != null) {
+    final Class<?>[] parameterTypes=method.getParameterTypes();
+    if (paramTypes.length != parameterTypes.length) {
+      return null;
+    }
+    for (int c=0; c < paramTypes.length; c++) {
+      if ((paramTypes[c] != null) && (paramTypes[c] != parameterTypes[c])) {
+        return null;
+      }
+    }
+  }
+  return method;
+}

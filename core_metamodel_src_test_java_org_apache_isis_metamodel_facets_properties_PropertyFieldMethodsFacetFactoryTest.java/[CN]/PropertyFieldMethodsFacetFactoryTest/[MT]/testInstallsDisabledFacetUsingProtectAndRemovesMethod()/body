@@ -1,0 +1,9 @@
+{
+  final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getFirstName");
+  final Method propertyProtectMethod=findMethod(CustomerStatic.class,"protectFirstName");
+  facetFactory.process(CustomerStatic.class,propertyAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(DisabledFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DisabledFacetAlways);
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(propertyProtectMethod));
+}

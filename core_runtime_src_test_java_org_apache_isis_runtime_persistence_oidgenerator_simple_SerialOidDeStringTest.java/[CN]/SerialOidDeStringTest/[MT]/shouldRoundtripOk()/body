@@ -1,0 +1,8 @@
+{
+  SerialOid oid=SerialOid.createTransient(Long.MIN_VALUE + 1);
+  String enString=oid.enString();
+  assertThat(enString,is("TOID:-7FFFFFFFFFFFFFFF"));
+  SerialOid oid2=SerialOid.deString(enString);
+  assertThat(oid2.getSerialNo(),is(oid.getSerialNo()));
+  assertThat(oid2.isTransient(),is(oid.isTransient()));
+}

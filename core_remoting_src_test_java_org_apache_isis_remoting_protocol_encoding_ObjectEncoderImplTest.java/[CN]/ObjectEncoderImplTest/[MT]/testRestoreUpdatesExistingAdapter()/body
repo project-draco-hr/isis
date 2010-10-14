@@ -1,0 +1,15 @@
+{
+  final Movie movie=new Movie();
+  final ObjectAdapter adapter=system.createPersistentTestObject(movie);
+  adapter.changeState(ResolveState.RESOLVED);
+  final DummyObjectData data=new DummyObjectData(adapter.getOid(),Movie.class.getName(),true,new TestProxyVersion(3));
+  final DummyEncodeableObjectData name=new DummyEncodeableObjectData("ET","java.lang.String");
+  final DummyNullValue reference=new DummyNullValue(Person.class.getName());
+  data.setFieldContent(new Data[]{reference,name});
+  getTransactionManager().startTransaction();
+  final ObjectAdapter object=encoder.decode(data);
+  getTransactionManager().endTransaction();
+  assertEquals(new TestProxyVersion(3),object.getVersion());
+  assertEquals("ET",movie.getName());
+  assertEquals(movie,object.getObject());
+}

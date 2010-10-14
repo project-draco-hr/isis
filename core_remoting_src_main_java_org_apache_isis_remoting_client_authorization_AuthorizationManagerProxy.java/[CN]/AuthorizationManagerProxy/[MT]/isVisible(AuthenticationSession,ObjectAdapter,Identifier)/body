@@ -1,0 +1,11 @@
+{
+  final IdentityData targetData=encoderDecoder.encodeIdentityData(target);
+  final String idString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARMS);
+  if (!visibilityCache.containsKey(idString)) {
+    AuthorizationRequestVisibility request=new AuthorizationRequestVisibility(session,targetData,idString);
+    final AuthorizationResponse response=serverFacade.authorizeVisibility(request);
+    Boolean authorized=isAuthorized(response);
+    visibilityCache.put(idString,authorized);
+  }
+  return visibilityCache.get(idString);
+}

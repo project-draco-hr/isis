@@ -1,0 +1,20 @@
+{
+  ensureThatState(getState().canCommit(),is(true),"state is: " + getState());
+  if (LOG.isInfoEnabled()) {
+    LOG.info("commit transaction " + this);
+  }
+  if (getState() == State.COMMITTED) {
+    if (LOG.isInfoEnabled()) {
+      LOG.info("already committed; ignoring");
+    }
+    return;
+  }
+  try {
+    doFlush();
+    setState(State.COMMITTED);
+  }
+ catch (  RuntimeException ex) {
+    setAbortCause(ex);
+    throw ex;
+  }
+}

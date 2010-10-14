@@ -1,0 +1,13 @@
+{
+  final ObjectSpecification[] parameterSpecs=new ObjectSpecification[parameterData.length];
+  for (int i=0; i < parameterSpecs.length; i++) {
+    parameterSpecs[i]=getSpecification(parameterData[i].getType());
+  }
+  final ObjectActionType type=ObjectActionImpl.getType(actionType);
+  final int pos=actionIdentifier.indexOf('#');
+  final String methodName=actionIdentifier.substring(pos + 1);
+  if (adapter == null) {
+    throw new UnexpectedCallException("object not specified");
+  }
+  return adapter.getSpecification().getObjectAction(type,methodName,parameterSpecs);
+}

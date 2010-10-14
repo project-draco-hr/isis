@@ -1,0 +1,14 @@
+{
+  final Class<?>[] parameterTypes=method.getParameterTypes();
+  if (paramNum >= parameterTypes.length) {
+    return false;
+  }
+  final java.lang.annotation.Annotation[] parameterAnnotations=getParameterAnnotations(method)[paramNum];
+  for (int i=0; i < parameterAnnotations.length; i++) {
+    if (parameterAnnotations[i] instanceof Mask) {
+      final Mask annotation=(Mask)parameterAnnotations[i];
+      return addMaskFacetAndCorrespondingTitleFacet(holder,annotation,parameterTypes[i]);
+    }
+  }
+  return false;
+}

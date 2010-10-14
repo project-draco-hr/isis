@@ -1,0 +1,20 @@
+{
+  if (object.getSpecification().isCollection()) {
+    LOG.info("persist " + object);
+    if (object.getResolveState() == ResolveState.GHOST) {
+      object.changeState(ResolveState.RESOLVING);
+      object.changeState(ResolveState.RESOLVED);
+    }
+ else     if (object.getResolveState() == ResolveState.TRANSIENT) {
+      object.changeState(ResolveState.RESOLVED);
+    }
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(object);
+    for (    ObjectAdapter element : facet.iterable(object)) {
+      persist(element,toPersistObjectSet);
+    }
+  }
+ else {
+    assertObjectNotPersistentAndPersistable(object);
+    persist(object,toPersistObjectSet);
+  }
+}

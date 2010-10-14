@@ -1,0 +1,23 @@
+{
+  try {
+    method.invoke(target,parameters);
+  }
+ catch (  final SecurityException e) {
+    throw new ReflectionException(String.format("Cannot access the %s method in %s",method.getName(),target.getClass().getName()));
+  }
+catch (  final IllegalArgumentException e1) {
+    throw new ReflectionException(e1);
+  }
+catch (  final IllegalAccessException e1) {
+    throw new ReflectionException(String.format("Cannot access the %s method in %s",method.getName(),target.getClass().getName()));
+  }
+catch (  final InvocationTargetException e) {
+    final Throwable targetException=e.getTargetException();
+    if (targetException instanceof RuntimeException) {
+      throw (RuntimeException)targetException;
+    }
+ else {
+      throw new ReflectionException(targetException);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  debug.appendln("Name",getName());
+  debug.blankLine();
+  debug.appendTitle("Services (Ids)");
+  debug.indent();
+  for (  Object service : getServices()) {
+    debug.appendln(ServiceUtil.id(service));
+  }
+  debug.unindent();
+  debug.blankLine();
+  debug.appendTitle("Objects");
+  debug.indent();
+  AdapterManager adapterManager=IsisContext.getPersistenceSession().getAdapterManager();
+  for (  Object obj : getObjects()) {
+    debug.appendln(adapterManager.adapterFor(obj).toString());
+  }
+  debug.unindent();
+}

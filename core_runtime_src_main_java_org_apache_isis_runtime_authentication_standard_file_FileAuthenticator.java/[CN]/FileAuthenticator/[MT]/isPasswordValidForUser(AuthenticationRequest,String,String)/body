@@ -1,0 +1,16 @@
+{
+  int posFirstColon=line.indexOf(':');
+  int posPasswordStart=posFirstColon + 1;
+  int posSecondColonIfAny=line.indexOf(':',posPasswordStart);
+  int posPasswordEnd=posSecondColonIfAny == -1 ? line.length() : posSecondColonIfAny;
+  String parsedPassword=line.substring(posPasswordStart,posPasswordEnd);
+  if (parsedPassword.equals(password)) {
+    if (posSecondColonIfAny != -1) {
+      setRoles(request,line.substring(posSecondColonIfAny + 1));
+    }
+    return true;
+  }
+ else {
+    return false;
+  }
+}

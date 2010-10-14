@@ -1,0 +1,16 @@
+{
+  Data resultData;
+  if (result == null) {
+    resultData=dataFactory.createNullData("");
+  }
+ else   if (result.getSpecification().isCollection()) {
+    resultData=serializer.serializeCollection(result,serverSideRetrievedObjectGraphDepth,new KnownObjectsRequest());
+  }
+ else   if (result.getSpecification().isNotCollection()) {
+    resultData=encodeCompletePersistentGraph(result);
+  }
+ else {
+    throw new UnknownTypeException(result);
+  }
+  return new ExecuteServerActionResponse(resultData,updatesData,disposedData,persistedTargetData,persistedParametersData,messages,warnings);
+}

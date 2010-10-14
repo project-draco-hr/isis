@@ -1,0 +1,13 @@
+{
+  ResolveState state=null;
+  if (initialState == ResolveState.RESOLVED) {
+    state=ResolveState.UPDATING;
+  }
+ else   if (initialState == ResolveState.GHOST || initialState == ResolveState.PART_RESOLVED) {
+    state=complete ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+  }
+ else   if (initialState == ResolveState.TRANSIENT) {
+    state=ResolveState.SERIALIZING_TRANSIENT;
+  }
+  return state;
+}

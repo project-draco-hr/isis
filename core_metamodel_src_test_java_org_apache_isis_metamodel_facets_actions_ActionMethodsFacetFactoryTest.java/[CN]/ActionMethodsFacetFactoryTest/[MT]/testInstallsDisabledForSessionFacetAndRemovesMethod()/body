@@ -1,0 +1,12 @@
+{
+  final Method actionMethod=findMethod(CustomerStatic.class,"someAction",new Class[]{int.class,Long.class});
+  final Method disableMethod=findMethod(CustomerStatic.class,"disableSomeAction",new Class[]{UserMemento.class});
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(CustomerStatic.class,actionMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(DisableForSessionFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DisableForSessionFacetViaMethod);
+  final DisableForSessionFacetViaMethod disableForSessionFacetViaMethod=(DisableForSessionFacetViaMethod)facet;
+  assertEquals(disableMethod,disableForSessionFacetViaMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(disableMethod));
+}

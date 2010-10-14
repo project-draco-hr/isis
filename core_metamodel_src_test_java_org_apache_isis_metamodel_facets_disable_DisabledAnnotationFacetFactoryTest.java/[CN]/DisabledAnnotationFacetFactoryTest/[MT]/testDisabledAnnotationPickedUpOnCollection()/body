@@ -1,0 +1,13 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @Disabled public Collection getOrders(){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"getOrders");
+  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(DisabledFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DisabledFacetAbstract);
+  assertNoMethodsRemoved();
+}

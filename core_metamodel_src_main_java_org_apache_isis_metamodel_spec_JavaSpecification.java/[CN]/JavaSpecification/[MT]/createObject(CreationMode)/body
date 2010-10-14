@@ -1,0 +1,21 @@
+{
+  if (cls.isArray()) {
+    return Array.newInstance(cls.getComponentType(),0);
+  }
+  try {
+    Object object=getRuntimeContext().instantiate(cls);
+    if (creationMode == CreationMode.INITIALIZE) {
+      final ObjectAdapter adapter=getRuntimeContext().adapterFor(object);
+      final ObjectAssociation[] fields=adapter.getSpecification().getAssociations();
+      for (int i=0; i < fields.length; i++) {
+        fields[i].toDefault(adapter);
+      }
+      getRuntimeContext().injectDependenciesInto(object);
+      CallbackUtils.callCallback(adapter,CreatedCallbackFacet.class);
+    }
+    return object;
+  }
+ catch (  final ObjectInstantiationException e) {
+    throw new IsisException("Failed to create instance of type " + cls.getName(),e);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  final AuthenticationRequestPassword passwordRequest=(AuthenticationRequestPassword)authRequest;
+  final String username=passwordRequest.getName();
+  if (StringUtils.isEmpty(username)) {
+    return null;
+  }
+  final String password=passwordRequest.getPassword();
+  OpenSessionRequest request=new OpenSessionRequest(username,password);
+  OpenSessionResponse response=serverFacade.openSession(request);
+  return response.getSession();
+}

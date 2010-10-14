@@ -1,0 +1,9 @@
+{
+  IsisContext.getTransactionManager().startTransaction();
+  ClearAssociationRequest request=new ClearAssociationRequest(authenticationSession,"director",movieData,personData);
+  ClearAssociationResponse response=server.clearAssociation(request);
+  final ObjectData[] updatesData=response.getUpdates();
+  IsisContext.getTransactionManager().endTransaction();
+  nameField.assertFieldEmpty(movieAdapter);
+  assertEquals(0,updatesData.length);
+}

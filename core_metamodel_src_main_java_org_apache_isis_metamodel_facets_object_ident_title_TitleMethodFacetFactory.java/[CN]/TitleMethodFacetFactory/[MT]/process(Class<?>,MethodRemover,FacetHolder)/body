@@ -1,0 +1,22 @@
+{
+  Method method=findMethod(type,OBJECT,TITLE,String.class,null);
+  if (method != null) {
+    methodRemover.removeMethod(method);
+    return FacetUtil.addFacet(new TitleFacetViaTitleMethod(method,facetHolder));
+  }
+  try {
+    method=findMethod(type,OBJECT,TO_STRING,String.class,null);
+    if (method == null) {
+      return false;
+    }
+    if (JavaClassUtils.isJavaClass(method.getDeclaringClass())) {
+      return false;
+    }
+    methodRemover.removeMethod(method);
+    FacetUtil.addFacet(new TitleFacetViaToStringMethod(method,facetHolder));
+    return false;
+  }
+ catch (  final Exception e) {
+    return false;
+  }
+}

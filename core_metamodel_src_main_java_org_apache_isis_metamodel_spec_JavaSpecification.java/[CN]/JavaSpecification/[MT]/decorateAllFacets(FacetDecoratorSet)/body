@@ -1,0 +1,15 @@
+{
+  decoratorSet.decorateAllFacets(this);
+  for (int i=0; i < fields.length; i++) {
+    ObjectAssociation objectAssociation=fields[i];
+    decoratorSet.decorateAllFacets(objectAssociation);
+  }
+  for (int i=0; i < objectActions.length; i++) {
+    ObjectAction objectAction=objectActions[i];
+    decoratorSet.decorateAllFacets(objectAction);
+    final ObjectActionParameter[] parameters=objectActions[i].getParameters();
+    for (int j=0; j < parameters.length; j++) {
+      decoratorSet.decorateAllFacets(parameters[j]);
+    }
+  }
+}

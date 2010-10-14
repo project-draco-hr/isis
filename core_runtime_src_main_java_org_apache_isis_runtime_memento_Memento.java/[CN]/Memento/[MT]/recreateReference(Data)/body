@@ -1,0 +1,26 @@
+{
+  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(data.getClassName());
+  if (data instanceof StandaloneData) {
+    StandaloneData standaloneData=(StandaloneData)data;
+    return standaloneData.getAdapter();
+  }
+  final Oid oid=data.getOid();
+  if (oid == null) {
+    return null;
+  }
+  ObjectAdapter ref;
+  if (oid.isTransient()) {
+    ref=getHydrator().recreateAdapter(oid,spec);
+  }
+ else {
+    ref=getHydrator().recreateAdapter(oid,spec);
+    ResolveState resolveState=ResolveState.GHOST;
+    if (ref.getResolveState().isValidToChangeTo(resolveState)) {
+      ref.changeState(resolveState);
+    }
+    if (data instanceof ObjectData) {
+      updateObject(ref,data,resolveState);
+    }
+  }
+  return ref;
+}

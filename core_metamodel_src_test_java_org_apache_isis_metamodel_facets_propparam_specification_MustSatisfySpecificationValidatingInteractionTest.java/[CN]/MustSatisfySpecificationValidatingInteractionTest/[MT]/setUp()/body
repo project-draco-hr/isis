@@ -1,0 +1,19 @@
+{
+  mockHolder=mockery.mock(Identified.class);
+  specificationAlwaysSatisfied=new SpecificationAlwaysSatisfied();
+  specificationNeverSatisfied=new SpecificationNeverSatisfied();
+  facetForSpecificationAlwaysSatisfied=new MustSatisfySpecificationFacet(Utils.listOf(specificationAlwaysSatisfied),mockHolder);
+  facetForSpecificationNeverSatisfied=new MustSatisfySpecificationFacet(Utils.listOf(specificationNeverSatisfied),mockHolder);
+  mockContext=mockery.mock(PropertyModifyContext.class);
+  mockProposedObjectAdapter=mockery.mock(ObjectAdapter.class,"proposed");
+  mockProposedObject=mockery.mock(Object.class,"proposedObject");
+  mockery.checking(new Expectations(){
+{
+      one(mockContext).getProposed();
+      will(returnValue(mockProposedObjectAdapter));
+      one(mockProposedObjectAdapter).getObject();
+      will(returnValue(mockProposedObject));
+    }
+  }
+);
+}

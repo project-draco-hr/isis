@@ -1,0 +1,27 @@
+{
+  if (true) {
+    return;
+  }
+  if (adapter == null || all.contains(adapter)) {
+    return;
+  }
+  all.addElement(adapter);
+  PersistorUtil.start(adapter,ResolveState.RESOLVING);
+  final ObjectAssociation[] fields=adapter.getSpecification().getAssociations();
+  for (int i=0; i < fields.length; i++) {
+    final ObjectAssociation field=fields[i];
+    if (field.isOneToManyAssociation()) {
+      final ObjectAdapter col=field.get(adapter);
+      final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(col);
+      for (final Iterator<ObjectAdapter> e=facet.iterator(col); e.hasNext(); ) {
+        final ObjectAdapter element=e.next();
+        setupReferencedObjects(element,all);
+      }
+    }
+ else     if (field.isOneToOneAssociation()) {
+      final ObjectAdapter fieldContent=field.get(adapter);
+      setupReferencedObjects(fieldContent,all);
+    }
+  }
+  PersistorUtil.end(adapter);
+}

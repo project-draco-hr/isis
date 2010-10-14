@@ -1,0 +1,13 @@
+{
+  AuthenticationSession session=request.getSession();
+  String fieldIdentifier=request.getFieldIdentifier();
+  IdentityData targetIdentityData=request.getTarget();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("request clearValue " + fieldIdentifier + " on "+ targetIdentityData+ " for "+ session);
+  }
+  final ObjectAdapter targetAdapter=getPersistentObjectAdapter(session,targetIdentityData);
+  final OneToOneAssociation association=(OneToOneAssociation)targetAdapter.getSpecification().getAssociation(fieldIdentifier);
+  ensureAssociationModifiableElseThrowException(session,targetAdapter,association);
+  association.clearAssociation(targetAdapter);
+  return new ClearValueResponse(getUpdates());
+}

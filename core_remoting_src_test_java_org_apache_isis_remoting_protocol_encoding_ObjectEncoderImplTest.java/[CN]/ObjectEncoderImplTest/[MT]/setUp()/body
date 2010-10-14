@@ -1,0 +1,38 @@
+{
+  encoder=new ObjectEncoderDecoderDefault();
+  system.addSpecification(new MovieSpecification());
+  system.addSpecification(new PersonSpecification());
+  system.getSpecification(String.class).setupIsEncodeable();
+  system.getSpecification(String.class).addFacet(new EncodableFacet(){
+    public String toEncodedString(    final ObjectAdapter object){
+      return object.getObject().toString();
+    }
+    public ObjectAdapter fromEncodedString(    final String encodedData){
+      return getAdapterManager().adapterFor(encodedData);
+    }
+    public Class<? extends Facet> facetType(){
+      return EncodableFacet.class;
+    }
+    public FacetHolder getFacetHolder(){
+      return null;
+    }
+    public void setFacetHolder(    final FacetHolder facetHolder){
+    }
+    public boolean alwaysReplace(){
+      return false;
+    }
+    public boolean isDerived(){
+      return false;
+    }
+    public boolean isNoop(){
+      return false;
+    }
+    public Facet getUnderlyingFacet(){
+      return null;
+    }
+    public void setUnderlyingFacet(    Facet underlyingFacet){
+      throw new UnsupportedOperationException();
+    }
+  }
+);
+}

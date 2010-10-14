@@ -1,0 +1,66 @@
+{
+  AuthenticationSession session=request.getSession();
+  ReferenceData[] data=request.getData();
+  int[] types=request.getTypes();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("execute client action for " + session);
+    LOG.debug("start transaction");
+  }
+  getTransactionManager().startTransaction();
+  try {
+    final KnownObjectsRequest knownObjects=new KnownObjectsRequest();
+    final ObjectAdapter[] persistedObjects=new ObjectAdapter[data.length];
+    final ObjectAdapter[] disposedObjects=new ObjectAdapter[data.length];
+    final ObjectAdapter[] changedObjects=new ObjectAdapter[data.length];
+    for (int i=0; i < data.length; i++) {
+      ObjectAdapter object;
+switch (types[i]) {
+case ClientTransactionEvent.ADD:
+        object=encoderDecoder.decode(data[i],knownObjects);
+      persistedObjects[i]=object;
+    if (object.getOid().isTransient()) {
+      LOG.debug("  makePersistent " + data[i]);
+      getPersistenceSession().makePersistent(object);
+    }
+  break;
+case ClientTransactionEvent.CHANGE:
+final ObjectAdapter obj=getPersistentObjectAdapter(data[i]);
+obj.checkLock(data[i].getVersion());
+object=encoderDecoder.decode(data[i],knownObjects);
+LOG.debug("  objectChanged " + data[i]);
+getPersistenceSession().objectChanged(object);
+changedObjects[i]=object;
+break;
+case ClientTransactionEvent.DELETE:
+final ObjectAdapter inObject=getPersistentObjectAdapter(data[i]);
+inObject.checkLock(data[i].getVersion());
+LOG.debug("  destroyObject " + data[i] + " for "+ session);
+disposedObjects[i]=inObject;
+getPersistenceSession().destroyObject(inObject);
+break;
+}
+}
+if (LOG.isDebugEnabled()) {
+LOG.debug("  end transaction");
+}
+getTransactionManager().endTransaction();
+final ReferenceData[] madePersistent=new ReferenceData[data.length];
+final Version[] changedVersion=new Version[data.length];
+for (int i=0; i < data.length; i++) {
+switch (types[i]) {
+case ClientTransactionEvent.ADD:
+madePersistent[i]=encoderDecoder.encodeIdentityData(persistedObjects[i]);
+break;
+case ClientTransactionEvent.CHANGE:
+changedVersion[i]=changedObjects[i].getVersion();
+break;
+}
+}
+return encoderDecoder.encodeClientActionResult(madePersistent,changedVersion,getUpdates());
+}
+ catch (final RuntimeException e) {
+LOG.info("abort transaction",e);
+getTransactionManager().abortTransaction();
+throw e;
+}
+}

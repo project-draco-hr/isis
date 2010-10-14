@@ -1,0 +1,27 @@
+{
+  if (objects.contains(adapter.getObject())) {
+    return;
+  }
+  objects.add(adapter.getObject());
+  ObjectSpecification adapterSpec=adapter.getSpecification();
+  final ObjectAssociation[] associations=adapterSpec.getAssociations();
+  for (  ObjectAssociation association : associations) {
+    if (association.isNotPersisted()) {
+      continue;
+    }
+    final ObjectAdapter associatedObject=association.get(adapter);
+    final boolean isEmpty=association.isEmpty(adapter);
+    if (isEmpty) {
+      continue;
+    }
+    if (association.isOneToManyAssociation()) {
+      CollectionFacet facet=associatedObject.getSpecification().getFacet(CollectionFacet.class);
+      for (      ObjectAdapter element : facet.iterable(associatedObject)) {
+        addObjectAndAssociates(element);
+      }
+    }
+ else     if (association.isOneToOneAssociation() && !association.getSpecification().isParseable()) {
+      addObjectAndAssociates(associatedObject);
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  Oid oid=request.getOid();
+  String specificationName=request.getSpecificationName();
+  final ObjectSpecification specification=getSpecification(specificationName);
+  final ObjectAdapter adapter=getPersistenceSession().loadObject(oid,specification);
+  return new GetObjectResponse(encoderDecoder.encodeForUpdate(adapter));
+}

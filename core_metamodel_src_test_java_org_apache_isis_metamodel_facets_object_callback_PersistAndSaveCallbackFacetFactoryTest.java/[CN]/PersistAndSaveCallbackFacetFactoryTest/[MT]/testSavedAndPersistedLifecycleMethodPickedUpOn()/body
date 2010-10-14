@@ -1,0 +1,20 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") public void saved(){
+    }
+    @SuppressWarnings("unused") public void persisted(){
+    }
+  }
+  final Method saveMethod=findMethod(Customer.class,"saved");
+  final Method persistMethod=findMethod(Customer.class,"persisted");
+  saveFacetFactory.process(Customer.class,methodRemover,facetHolder);
+  persistFacetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(PersistedCallbackFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PersistedCallbackFacetViaMethod);
+  final PersistedCallbackFacetViaMethod persistedCallbackFacetViaMethod=(PersistedCallbackFacetViaMethod)facet;
+  List<Method> methods=persistedCallbackFacetViaMethod.getMethods();
+  assertTrue(methods.contains(saveMethod));
+  assertTrue(methods.contains(persistMethod));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(saveMethod));
+}

@@ -1,0 +1,22 @@
+{
+  Assert.assertNotNull(adapter);
+  final Object pojo=adapter.getObject();
+  Assert.assertFalse("POJO Map already contains object",pojo,getPojoAdapterMap().containsPojo(pojo));
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("adding identity for adapter with oid=" + adapter.getOid());
+  }
+  if (adapter.getResolveState().isValue()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("not mapping value adapter");
+    }
+    servicesInjector.injectDependencies(pojo);
+    return adapter;
+  }
+  ObjectSpecification noSpec=adapter.getSpecification();
+  if (!adapter.isAggregated() || adapter.isAggregated() && !noSpec.isImmutable()) {
+    getPojoAdapterMap().add(pojo,adapter);
+  }
+  getOidAdapterMap().add(adapter.getOid(),adapter);
+  servicesInjector.injectDependencies(pojo);
+  return adapter;
+}

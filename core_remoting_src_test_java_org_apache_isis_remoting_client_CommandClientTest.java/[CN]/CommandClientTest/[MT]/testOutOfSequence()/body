@@ -1,0 +1,26 @@
+{
+  ClientConnection connection=new ClientConnection(){
+    public ResponseEnvelope executeRemotely(    final Request request){
+      return new ResponseEnvelope(new RequestAbstract((AuthenticationSession)null){
+        private static final long serialVersionUID=1L;
+        public void execute(        final ServerFacade serverFacade){
+        }
+      }
+);
+    }
+    public void init(){
+    }
+    public void shutdown(){
+    }
+  }
+;
+  serverFacadeProxy=new ServerFacadeProxy(connection);
+  try {
+    OidForServiceRequest request=new OidForServiceRequest(session,"domain.Service");
+    serverFacadeProxy.oidForService(request);
+    fail();
+  }
+ catch (  final IsisRemoteException e) {
+    assertTrue(e.getMessage().startsWith("Response out of sequence"));
+  }
+}

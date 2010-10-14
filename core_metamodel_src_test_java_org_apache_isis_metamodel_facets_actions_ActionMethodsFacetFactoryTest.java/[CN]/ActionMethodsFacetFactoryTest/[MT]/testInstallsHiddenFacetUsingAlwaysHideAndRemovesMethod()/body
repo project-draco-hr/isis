@@ -1,0 +1,12 @@
+{
+  final Method actionMethod=findMethod(CustomerStatic.class,"someAction",new Class[]{int.class,Long.class});
+  final Method alwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideSomeAction",new Class[]{int.class,Long.class});
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(CustomerStatic.class,actionMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(HiddenFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HiddenFacetAbstract);
+  final HiddenFacetAbstract hiddenFacetAbstract=(HiddenFacetAbstract)facet;
+  assertEquals(When.ALWAYS,hiddenFacetAbstract.value());
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(alwaysHideMethod));
+}

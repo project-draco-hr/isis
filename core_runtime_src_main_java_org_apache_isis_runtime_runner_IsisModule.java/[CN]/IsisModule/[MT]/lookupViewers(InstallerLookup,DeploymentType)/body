@@ -1,0 +1,11 @@
+{
+  List<String> viewersToStart=Lists.newArrayList(viewerNames);
+  deploymentType.addDefaultViewer(viewersToStart);
+  List<IsisViewer> viewers=Lists.newArrayList();
+  for (  String requestedViewer : viewersToStart) {
+    final IsisViewerInstaller viewerInstaller=installerLookup.viewerInstaller(requestedViewer);
+    final IsisViewer viewer=viewerInstaller.createViewer();
+    viewers.add(viewer);
+  }
+  return new ViewerList(viewers);
+}

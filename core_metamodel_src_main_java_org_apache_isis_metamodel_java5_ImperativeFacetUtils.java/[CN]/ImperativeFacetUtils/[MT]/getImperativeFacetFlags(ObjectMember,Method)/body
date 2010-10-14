@@ -1,0 +1,22 @@
+{
+  ImperativeFacetFlags flags=new ImperativeFacetFlags();
+  if (member == null) {
+    return flags;
+  }
+  Facet[] allFacets=member.getFacets(AbstractFilter.noop(Facet.class));
+  for (  Facet facet : allFacets) {
+    ImperativeFacet imperativeFacet=ImperativeFacetUtils.getImperativeFacet(facet);
+    if (imperativeFacet == null) {
+      continue;
+    }
+    List<Method> methods=imperativeFacet.getMethods();
+    if (!methods.contains(method)) {
+      continue;
+    }
+    flags.apply(imperativeFacet);
+    if (flags.bothSet()) {
+      break;
+    }
+  }
+  return flags;
+}

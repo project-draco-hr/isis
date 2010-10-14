@@ -1,0 +1,11 @@
+{
+  HasInstancesRequest request=new HasInstancesRequest(session,"pkg.Class");
+  serverFacade.hasInstances(request);
+  final boolean data=true;
+  control.setReturnValue(new HasInstancesResponse(data));
+  control.replay();
+  HasInstancesResponse response=serverFacadeProxy.hasInstances(request);
+  final boolean ret=response.hasInstances();
+  control.verify();
+  assertEquals(data,ret);
+}

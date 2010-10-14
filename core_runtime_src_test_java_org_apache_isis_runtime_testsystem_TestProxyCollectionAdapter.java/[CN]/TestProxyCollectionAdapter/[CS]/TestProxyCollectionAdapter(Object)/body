@@ -1,0 +1,19 @@
+{
+  if (wrappedCollection instanceof Collection) {
+    collection=new Vector((Collection)wrappedCollection);
+  }
+ else   if (wrappedCollection.getClass().isArray()) {
+    final Object[] array=(Object[])wrappedCollection;
+    collection=new Vector(array.length);
+    for (int i=0; i < array.length; i++) {
+      collection.add(array[i]);
+    }
+  }
+ else   if (wrappedCollection instanceof ObjectList) {
+    final Enumeration elements=((ObjectList)wrappedCollection).elements();
+    collection=new Vector();
+    while (elements.hasMoreElements()) {
+      collection.add(elements.nextElement());
+    }
+  }
+}

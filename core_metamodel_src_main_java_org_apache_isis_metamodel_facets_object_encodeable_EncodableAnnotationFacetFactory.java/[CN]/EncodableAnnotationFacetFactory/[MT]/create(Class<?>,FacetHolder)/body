@@ -1,0 +1,17 @@
+{
+  final Encodable annotation=getAnnotation(cls,Encodable.class);
+  if (annotation != null) {
+    final EncodableFacetAnnotation facet=new EncodableFacetAnnotation(cls,getIsisConfiguration(),holder,getRuntimeContext());
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  final String encoderDecoderName=EncoderDecoderUtil.encoderDecoderNameFromConfiguration(cls,getIsisConfiguration());
+  if (!StringUtils.isEmpty(encoderDecoderName)) {
+    final EncodableFacetFromConfiguration facet=new EncodableFacetFromConfiguration(encoderDecoderName,holder,getRuntimeContext());
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  return null;
+}

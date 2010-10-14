@@ -1,0 +1,27 @@
+{
+  final ObjectAdapter collection=field.get(object);
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+  final List<ObjectAdapter> original=Lists.newArrayList();
+  for (  ObjectAdapter adapter : facet.iterable(collection)) {
+    original.add(adapter);
+  }
+  Data[] elements=collectionData.elements;
+  for (  Data data : elements) {
+    final ObjectAdapter element=recreateReference(data);
+    if (!facet.contains(collection,element)) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("  association " + field + " changed, added "+ element.getOid());
+      }
+      field.addElement(object,element);
+    }
+ else {
+      field.removeElement(object,element);
+    }
+  }
+  for (  ObjectAdapter element : original) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("  association " + field + " changed, removed "+ element.getOid());
+    }
+    field.removeElement(object,element);
+  }
+}

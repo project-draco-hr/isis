@@ -1,0 +1,12 @@
+{
+class Customer implements ProgramPersistable {
+  }
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(NotPersistableFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NotPersistableFacetMarkerInterface);
+  final NotPersistableFacetMarkerInterface notPersistableFacetMarkerInterface=(NotPersistableFacetMarkerInterface)facet;
+  final org.apache.isis.metamodel.facets.object.notpersistable.InitiatedBy value=notPersistableFacetMarkerInterface.value();
+  assertEquals(org.apache.isis.metamodel.facets.object.notpersistable.InitiatedBy.USER,value);
+  assertNoMethodsRemoved();
+}

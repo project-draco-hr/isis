@@ -1,0 +1,11 @@
+{
+@Immutable class Customer {
+  }
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(ImmutableFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ImmutableFacetAnnotation);
+  final ImmutableFacetAnnotation immutableFacetAnnotation=(ImmutableFacetAnnotation)facet;
+  assertEquals(org.apache.isis.metamodel.facets.When.ALWAYS,immutableFacetAnnotation.value());
+  assertNoMethodsRemoved();
+}

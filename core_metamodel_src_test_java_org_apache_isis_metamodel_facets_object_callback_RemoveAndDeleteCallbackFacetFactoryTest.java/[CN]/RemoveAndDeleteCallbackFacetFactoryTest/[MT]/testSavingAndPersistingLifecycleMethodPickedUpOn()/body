@@ -1,0 +1,20 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") public void deleting(){
+    }
+    @SuppressWarnings("unused") public void removing(){
+    }
+  }
+  final Method deleteMethod=findMethod(Customer.class,"deleting");
+  final Method removeMethod=findMethod(Customer.class,"removing");
+  removeFacetFactory.process(Customer.class,methodRemover,facetHolder);
+  deleteFacetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(RemovingCallbackFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof RemovingCallbackFacetViaMethod);
+  final RemovingCallbackFacetViaMethod removingCallbackFacetViaMethod=(RemovingCallbackFacetViaMethod)facet;
+  List<Method> methods=removingCallbackFacetViaMethod.getMethods();
+  assertTrue(methods.contains(deleteMethod));
+  assertTrue(methods.contains(removeMethod));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(deleteMethod));
+}

@@ -1,0 +1,18 @@
+{
+  final Method method=findAndRemoveMethod(MethodScope.CLASS,type + "Order",String.class,NO_PARAMETERS_TYPES);
+  if (method == null) {
+    return null;
+  }
+ else   if (!JavaClassUtils.isStatic(method)) {
+    LOG.warn("method " + className + "."+ type+ "Order() must be declared as static");
+    return null;
+  }
+ else {
+    String s;
+    s=(String)invokeMethod(method,NO_PARAMETERS);
+    if (s.trim().length() == 0) {
+      return null;
+    }
+    return s;
+  }
+}

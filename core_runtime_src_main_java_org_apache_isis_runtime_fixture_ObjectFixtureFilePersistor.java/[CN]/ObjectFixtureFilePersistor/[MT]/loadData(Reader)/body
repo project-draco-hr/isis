@@ -1,0 +1,32 @@
+{
+  final Set<Object> objects=new HashSet<Object>();
+  BufferedReader buffer=new BufferedReader(reader);
+  LoadedObjects loaded=new LoadedObjects(objects);
+  String line;
+  ObjectAdapter object=null;
+  int lineNo=0;
+  try {
+    while ((line=buffer.readLine()) != null) {
+      lineNo++;
+      if (line.trim().startsWith("#")) {
+        continue;
+      }
+ else       if (line.startsWith("  ")) {
+        loadFieldData(object,loaded,line);
+      }
+ else {
+        if (object != null && !object.isPersistent()) {
+          IsisContext.getPersistenceSession().makePersistent(object);
+        }
+        object=loaded.get(line);
+      }
+    }
+    if (object != null && !object.isPersistent()) {
+      IsisContext.getPersistenceSession().makePersistent(object);
+    }
+  }
+ catch (  Exception e) {
+    throw new FixtureException("failed to load data at line " + lineNo,e);
+  }
+  return objects;
+}

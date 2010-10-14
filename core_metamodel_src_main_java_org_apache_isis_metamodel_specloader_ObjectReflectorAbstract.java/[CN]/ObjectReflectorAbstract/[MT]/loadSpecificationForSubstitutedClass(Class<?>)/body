@@ -1,0 +1,18 @@
+{
+  Assert.assertNotNull(type);
+  String typeName=type.getName();
+  SpecificationCache specificationCache=getCache();
+synchronized (specificationCache) {
+    final ObjectSpecification spec=specificationCache.get(typeName);
+    if (spec != null) {
+      return spec;
+    }
+    ObjectSpecification specification=createSpecification(type);
+    if (specification == null) {
+      throw new IsisException("Failed to create specification for class " + typeName);
+    }
+    specificationCache.cache(typeName,specification);
+    introspectSpecificationIfRequired(specification);
+    return specification;
+  }
+}

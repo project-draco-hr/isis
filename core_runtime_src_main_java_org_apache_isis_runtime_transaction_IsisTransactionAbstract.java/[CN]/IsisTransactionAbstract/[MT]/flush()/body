@@ -1,0 +1,14 @@
+{
+  ensureThatState(getState().canFlush(),is(true),"state is: " + getState());
+  if (LOG.isInfoEnabled()) {
+    LOG.info("flush transaction " + this);
+  }
+  try {
+    doFlush();
+  }
+ catch (  RuntimeException ex) {
+    setState(State.MUST_ABORT);
+    setAbortCause(ex);
+    throw ex;
+  }
+}

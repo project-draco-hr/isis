@@ -1,0 +1,22 @@
+{
+  if (inObject.isPersistent()) {
+    try {
+      final IdentityData targetReference=encoderDecoder.encodeIdentityData(inObject);
+      final IdentityData associateReference=encoderDecoder.encodeIdentityData(referencedAdapter);
+      SetAssociationRequest request=new SetAssociationRequest(getAuthenticationSession(),name,targetReference,associateReference);
+      SetAssociationResponse response=serverFacade.setAssociation(request);
+      ObjectData[] updates=response.getUpdates();
+      encoderDecoder.decode(updates);
+    }
+ catch (    final ConcurrencyException e) {
+      throw ProxyUtil.concurrencyException(e);
+    }
+catch (    final IsisException e) {
+      LOG.error("remote exception: " + e.getMessage(),e);
+      throw e;
+    }
+  }
+ else {
+    underlyingFacet.add(inObject,referencedAdapter);
+  }
+}

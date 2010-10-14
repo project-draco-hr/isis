@@ -1,0 +1,18 @@
+{
+  ClassLoader classLoader=Thread.currentThread().getContextClassLoader();
+  URL url=classLoader.getResource(resource);
+  if (url != null) {
+    return url;
+  }
+  classLoader=Resources.class.getClassLoader();
+  url=classLoader.getResource(resource);
+  if (url != null) {
+    return url;
+  }
+  try {
+    return ClassLoader.getSystemResource(resource);
+  }
+ catch (  final NullPointerException ignore) {
+    return null;
+  }
+}

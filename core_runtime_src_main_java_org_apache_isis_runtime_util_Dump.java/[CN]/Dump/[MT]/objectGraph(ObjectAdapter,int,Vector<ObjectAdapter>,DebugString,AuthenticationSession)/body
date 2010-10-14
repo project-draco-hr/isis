@@ -1,0 +1,34 @@
+{
+  ignoreObjects.addElement(object);
+  try {
+    ObjectAssociation[] fields;
+    fields=object.getSpecification().getAssociations();
+    for (int i=0; i < fields.length; i++) {
+      final ObjectAssociation field=fields[i];
+      final ObjectAdapter obj=field.get(object);
+      final String name=field.getId();
+      graphIndent(s,level);
+      if (field.isVisible(authenticationSession,object).isVetoed()) {
+        s.append(name + ": (not visible)");
+        s.append("\n");
+      }
+ else {
+        if (obj == null) {
+          s.append(name + ": null\n");
+        }
+ else {
+          if (ignoreObjects.contains(obj)) {
+            s.append(name + ": " + obj+ "*\n");
+          }
+ else {
+            s.append(name + ": " + obj);
+            graph(obj,level + 1,ignoreObjects,s,authenticationSession);
+          }
+        }
+      }
+    }
+  }
+ catch (  final RuntimeException e) {
+    s.appendException(e);
+  }
+}

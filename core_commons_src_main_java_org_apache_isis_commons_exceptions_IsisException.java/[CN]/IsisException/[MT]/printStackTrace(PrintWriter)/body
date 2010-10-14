@@ -1,0 +1,15 @@
+{
+  if (THROWABLE_SUPPORTS_CAUSE) {
+    super.printStackTrace(s);
+  }
+ else {
+synchronized (s) {
+      super.printStackTrace(s);
+      final Throwable c=getCause();
+      if (c != null) {
+        s.println("Root cause: ");
+        c.printStackTrace(s);
+      }
+    }
+  }
+}

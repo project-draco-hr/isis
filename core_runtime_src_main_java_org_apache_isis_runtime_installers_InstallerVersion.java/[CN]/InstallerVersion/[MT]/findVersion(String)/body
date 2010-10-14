@@ -1,0 +1,16 @@
+{
+  try {
+    String module=moduleId.replace(":","/");
+    InputStream resourceAsStream=AboutIsis.class.getClassLoader().getResourceAsStream("META-INF/maven/" + module + "/pom.properties");
+    if (resourceAsStream == null) {
+      return "no version";
+    }
+    Properties p=new Properties();
+    p.load(resourceAsStream);
+    String version=p.getProperty("version");
+    return version;
+  }
+ catch (  IOException e) {
+    throw new IsisException(e);
+  }
+}

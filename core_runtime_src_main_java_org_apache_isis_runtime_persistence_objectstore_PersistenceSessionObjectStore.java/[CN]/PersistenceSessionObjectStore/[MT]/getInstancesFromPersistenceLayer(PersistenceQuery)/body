@@ -1,0 +1,11 @@
+{
+  return getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturnAbstract<ObjectAdapter[]>(){
+    public ObjectAdapter[] execute(){
+      return objectStore.getInstances(persistenceQuery);
+    }
+    @Override public void onSuccess(){
+      clearAllDirty();
+    }
+  }
+);
+}

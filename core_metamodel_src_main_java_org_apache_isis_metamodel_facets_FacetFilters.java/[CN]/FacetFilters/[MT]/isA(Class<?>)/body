@@ -1,0 +1,12 @@
+{
+  return new AbstractFilter<Facet>(){
+    @Override public boolean accept(    final Facet facet){
+      if (facet instanceof DecoratingFacet) {
+        final DecoratingFacet<?> decoratingFacet=(DecoratingFacet<?>)facet;
+        return accept(decoratingFacet.getDecoratedFacet());
+      }
+      return superClass.isAssignableFrom(facet.getClass());
+    }
+  }
+;
+}

@@ -1,0 +1,9 @@
+{
+  PipedInputStream pipedInputStream=new PipedInputStream();
+  PipedOutputStream pipedOutputStream=new PipedOutputStream(pipedInputStream);
+  DataOutputStreamExtended outputImpl=new DataOutputStreamExtended(pipedOutputStream);
+  DataInputStreamExtended inputImpl=new DataInputStreamExtended(pipedInputStream);
+  outputImpl.writeEncodable(encodable);
+  Object decodedEncodable=inputImpl.readEncodable(Object.class);
+  assertRoundtripped(decodedEncodable,encodable);
+}

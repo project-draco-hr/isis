@@ -1,0 +1,27 @@
+{
+  final KnownObjectsRequest knownObjects=new KnownObjectsRequest();
+  final ClientTransactionEvent[] transactionEntries=getTransaction().getEntries();
+  final ReferenceData[] referenceData=asData(transactionEntries,knownObjects);
+  final int[] eventTypes=asEventTypes(transactionEntries);
+  ExecuteClientActionResponse results;
+  try {
+    ExecuteClientActionRequest request=new ExecuteClientActionRequest(getAuthenticationSession(),referenceData,eventTypes);
+    results=connection.executeClientAction(request);
+  }
+ catch (  final ConcurrencyException e) {
+    if (LOG.isInfoEnabled()) {
+      LOG.info("concurrency conflict: " + e.getMessage());
+    }
+    final Oid oid=e.getSource();
+    if (oid == null) {
+      throw e;
+    }
+ else {
+      final ObjectAdapter failedObject=transactionManagement.reload(oid);
+      throw new ConcurrencyException("Object automatically reloaded: " + failedObject.getSpecification().getTitle(failedObject),e);
+    }
+  }
+  if (results != null) {
+    handleResults(transactionEntries,results);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  final ObjectSpecification specification=getSpecificationLoader().loadSpecification(adapterData.getType());
+  ObjectAdapter adapter=getHydrator().recreateAdapter(adapterData.getOid(),specification);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("restore transient object " + adapter);
+  }
+  knownObjects.put(adapter,adapterData);
+  setUpFields(adapter,adapterData,knownObjects);
+  return adapter;
+}

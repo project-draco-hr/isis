@@ -1,0 +1,12 @@
+{
+  Enhancer enhancer=enhancerByResultFactory.get(resultFactory);
+  Class<T> cls=resultFactory.getResultClass();
+  if (enhancer == null) {
+    enhancer=new Enhancer();
+    enhancer.setSuperclass(cls);
+    enhancer.setInterfaces(ArrayUtils.combine(cls.getInterfaces(),new Class<?>[]{Future.class}));
+    enhancer.setCallback(new EvaluatingMethodInterceptor<T>(resultFactory));
+    enhancerByResultFactory.put(resultFactory,enhancer);
+  }
+  return enhancer;
+}

@@ -1,0 +1,19 @@
+{
+  if (!deploymentType.canInstallFixtures()) {
+    return;
+  }
+  fixtureInstaller=obtainFixturesInstaller();
+  if (fixtureInstaller == null || NoopUtils.isNoop(fixtureInstaller)) {
+    return;
+  }
+  IsisContext.openSession(new InitialisationSession());
+  fixtureInstaller.installFixtures();
+  try {
+    if (!deploymentType.isProduction()) {
+      logonFixture=fixtureInstaller.getLogonFixture();
+    }
+  }
+  finally {
+    IsisContext.closeSession();
+  }
+}

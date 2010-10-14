@@ -1,0 +1,66 @@
+{
+  final ObjectAssociation[] fields=specification.getAssociations();
+  debug.appendln("All");
+  debug.indent();
+  for (int i=0; i < fields.length; i++) {
+    debug.appendln((i + 1) + "." + fields[i].getId());
+  }
+  debug.unindent();
+  final ObjectAssociation[] fields2=specification.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
+  debug.appendln("Static");
+  debug.indent();
+  for (int i=0; i < fields2.length; i++) {
+    debug.appendln((i + 1) + "." + fields2[i].getId());
+  }
+  debug.unindent();
+  debug.appendln();
+  try {
+    if (fields.length == 0) {
+      debug.appendln("none");
+    }
+ else {
+      for (int i=0; i < fields.length; i++) {
+        final ObjectAssociation field=(ObjectAssociation)fields[i];
+        debug.appendln((i + 1) + "." + field.getId()+ "  ("+ field.getClass().getName()+ ")");
+        debug.indent();
+        final String description=field.getDescription();
+        if (description != null && !description.equals("")) {
+          debug.appendln("Description",description);
+        }
+        final String help=field.getHelp();
+        if (help != null && !help.equals("")) {
+          debug.appendln("Help",help.substring(0,Math.min(30,help.length())) + (help.length() > 30 ? "..." : ""));
+        }
+        debug.appendln("ID",field.getIdentifier());
+        debug.appendln("Short ID",field.getId());
+        debug.appendln("Name",field.getName());
+        final String type=field.isOneToManyAssociation() ? "Collection" : field.isOneToOneAssociation() ? "Object" : "Unknown";
+        debug.appendln("Type",type);
+        debug.appendln("Has identity",!field.getSpecification().isCollectionOrIsAggregated());
+        debug.appendln("Spec",field.getSpecification().getFullName());
+        debug.appendln("Flags",(field.isAlwaysHidden() ? "" : "Visible ") + (field.isNotPersisted() ? "Not Persisted " : " ") + (field.isMandatory() ? "Mandatory " : ""));
+        final Class<? extends Facet>[] facets=field.getFacetTypes();
+        if (facets.length > 0) {
+          debug.appendln("Facets");
+          debug.indent();
+          boolean none=true;
+          for (int j=0; j < facets.length; j++) {
+            debug.appendln(field.getFacet(facets[j]).toString());
+            none=false;
+          }
+          if (none) {
+            debug.appendln("none");
+          }
+          debug.unindent();
+        }
+        debug.appendln(field.debugData());
+        debug.unindent();
+        debug.unindent();
+        debug.indent();
+      }
+    }
+  }
+ catch (  final RuntimeException e) {
+    debug.appendException(e);
+  }
+}

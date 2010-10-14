@@ -1,0 +1,12 @@
+{
+  BasicConfigurator.configure();
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  mockEncoder=mockery.mock(ObjectEncoderDecoder.class);
+  server=new ServerFacadeImpl(mockAuthenticationManager);
+  server.setEncoder(mockEncoder);
+  server.init();
+  system=new TestProxySystem();
+  system.init();
+  session=IsisContext.getAuthenticationSession();
+}

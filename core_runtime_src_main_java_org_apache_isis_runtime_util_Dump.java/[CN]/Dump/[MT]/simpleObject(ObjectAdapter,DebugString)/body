@@ -1,0 +1,35 @@
+{
+  s.appendln(object.titleString());
+  s.indent();
+  final ObjectSpecification objectSpec=object.getSpecification();
+  if (objectSpec.isCollection()) {
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(object);
+    final Enumeration e=facet.elements(object);
+    int i=1;
+    while (e.hasMoreElements()) {
+      final ObjectAdapter element=((ObjectAdapter)e.nextElement());
+      s.appendln(i++ + " " + element.titleString());
+    }
+  }
+ else {
+    try {
+      ObjectAssociation[] fields;
+      fields=objectSpec.getAssociations();
+      for (int i=0; i < fields.length; i++) {
+        final ObjectAssociation field=fields[i];
+        final ObjectAdapter obj=field.get((ObjectAdapter)object);
+        final String name=field.getId();
+        if (obj == null) {
+          s.appendln(name,"null");
+        }
+ else {
+          s.appendln(name,obj.titleString());
+        }
+      }
+    }
+ catch (    final RuntimeException e) {
+      s.appendException(e);
+    }
+  }
+  s.unindent();
+}

@@ -1,0 +1,17 @@
+{
+  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  mockObjectEncoder=mockery.mock(ObjectEncoderDecoder.class);
+  server=new ServerFacadeImpl(mockAuthenticationManager);
+  server.setEncoder(mockObjectEncoder);
+  server.init();
+  authenticationSession=IsisContext.getAuthenticationSession();
+  movieAdapter=system.createPersistentTestObject();
+  final Oid movieOid=movieAdapter.getOid();
+  movieData=new DummyReferenceData(movieOid,"none",movieAdapter.getVersion());
+  final TestProxySpecification spec=(TestProxySpecification)movieAdapter.getSpecification();
+  nameField=new TestProxyAssociation("director",system.getSpecification(String.class));
+  spec.setupFields(new ObjectAssociation[]{nameField});
+  personAdapter=system.createPersistentTestObject();
+  final Oid personOid=personAdapter.getOid();
+  personData=new DummyReferenceData(personOid,"none",personAdapter.getVersion());
+}

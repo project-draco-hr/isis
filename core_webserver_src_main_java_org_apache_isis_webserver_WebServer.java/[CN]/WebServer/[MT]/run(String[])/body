@@ -1,0 +1,10 @@
+{
+  final IsisRunner runner=new IsisRunner(args,new OptionHandlerDeploymentTypeWebServer());
+  runner.addOptionHandler(new OptionHandlerPort());
+  runner.addOptionHandler(new OptionHandlerAddress());
+  runner.addOptionHandler(new OptionHandlerResourceBase());
+  if (!runner.parseAndValidate()) {
+    return;
+  }
+  runner.bootstrap(new WebServerBootstrapper(runner));
+}

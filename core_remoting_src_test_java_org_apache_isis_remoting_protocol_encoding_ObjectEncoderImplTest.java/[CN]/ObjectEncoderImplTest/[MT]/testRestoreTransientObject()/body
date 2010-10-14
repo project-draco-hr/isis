@@ -1,0 +1,12 @@
+{
+  final DummyObjectData movieData=new DummyObjectData(new TestProxyOid(-1),Movie.class.getName(),true,null);
+  final NullData directorData=new DummyNullValue(Person.class.getName());
+  final DummyEncodeableObjectData nameData=new DummyEncodeableObjectData("Star Wars",String.class.getName());
+  movieData.setFieldContent(new Data[]{directorData,nameData});
+  final ObjectAdapter object=encoder.decode(movieData);
+  final Movie movie=(Movie)object.getObject();
+  assertEquals(movie,object.getObject());
+  assertEquals(new TestProxyOid(-1),object.getOid());
+  assertEquals(ResolveState.TRANSIENT,object.getResolveState());
+  assertEquals(null,object.getVersion());
+}

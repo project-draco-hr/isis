@@ -1,0 +1,39 @@
+{
+  String id=saved.getId(adapter);
+  writer.println(adapter.getSpecification().getFullName() + "#" + id);
+  ObjectSpecification adapterSpec=adapter.getSpecification();
+  final ObjectAssociation[] associations=adapterSpec.getAssociations();
+  for (  ObjectAssociation association : associations) {
+    if (association.isNotPersisted()) {
+      continue;
+    }
+    final ObjectAdapter associatedObject=association.get(adapter);
+    final boolean isEmpty=association.isEmpty(adapter);
+    final String associationId=association.getId();
+    writer.write("  " + associationId + ": ");
+    if (isEmpty) {
+      writer.println();
+      continue;
+    }
+    if (association.isOneToManyAssociation()) {
+      CollectionFacet facet=associatedObject.getSpecification().getFacet(CollectionFacet.class);
+      for (      ObjectAdapter element : facet.iterable(associatedObject)) {
+        String refId=saved.getId(element);
+        String cls=element.getSpecification().getFullName();
+        writer.print(cls + "#" + refId+ " ");
+      }
+      writer.println();
+    }
+ else     if (association.getSpecification().isParseable()) {
+      final ParseableFacet facet=associatedObject.getSpecification().getFacet(ParseableFacet.class);
+      String encodedValue=facet.parseableTitle(associatedObject);
+      encodedValue=encodedValue.replaceAll("\n","\\n");
+      writer.println(encodedValue);
+    }
+ else     if (association.isOneToOneAssociation()) {
+      String refId=saved.getId(associatedObject);
+      String cls=associatedObject.getSpecification().getFullName();
+      writer.println(cls + "#" + refId);
+    }
+  }
+}

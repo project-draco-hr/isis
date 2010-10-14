@@ -1,0 +1,16 @@
+{
+  final PersistenceQueryData c=new TestCriteria();
+  ObjectSpecification noSpec=getSpecificationLoader().loadSpecification(Movie.class);
+  final PersistenceQueryFindAllInstances criteria=new PersistenceQueryFindAllInstances(noSpec);
+  final FindInstancesRequest request=new FindInstancesRequest(session,c);
+  mockery.checking(new Expectations(){
+{
+      one(mockDistribution).findInstances(request);
+      will(returnValue(new ObjectData[0]));
+      one(mockEncoder).encodePersistenceQuery(criteria);
+      will(returnValue(c));
+    }
+  }
+);
+  persistenceSessionProxy.findInstances(criteria);
+}

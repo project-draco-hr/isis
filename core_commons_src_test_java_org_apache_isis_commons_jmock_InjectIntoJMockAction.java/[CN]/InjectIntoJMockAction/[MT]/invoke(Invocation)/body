@@ -1,0 +1,19 @@
+{
+  Object injectable=invocation.getInvokedObject();
+  Object toInjectInto=invocation.getParameter(0);
+  Method[] methods=toInjectInto.getClass().getMethods();
+  for (  Method method : methods) {
+    if (!method.getName().startsWith("set")) {
+      continue;
+    }
+    if (method.getParameterTypes().length != 1) {
+      continue;
+    }
+    Class<?> methodParameterType=method.getParameterTypes()[0];
+    if (methodParameterType.isAssignableFrom(injectable.getClass())) {
+      method.invoke(toInjectInto,injectable);
+      break;
+    }
+  }
+  return null;
+}

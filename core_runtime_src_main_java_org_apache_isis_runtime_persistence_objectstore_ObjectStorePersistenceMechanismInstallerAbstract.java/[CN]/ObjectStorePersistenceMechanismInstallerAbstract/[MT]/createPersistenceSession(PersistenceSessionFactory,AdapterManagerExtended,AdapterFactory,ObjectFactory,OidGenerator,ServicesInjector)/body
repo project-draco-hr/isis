@@ -1,0 +1,17 @@
+{
+  final PersistAlgorithm persistAlgorithm=createPersistAlgorithm(getConfiguration());
+  ObjectStore objectStore=createObjectStore(getConfiguration(),adapterFactory,adapterManager);
+  ensureThatArg(persistAlgorithm,is(not(nullValue())));
+  ensureThatArg(objectStore,is(not(nullValue())));
+  if (getConfiguration().getBoolean(LOGGING_PROPERTY,false)) {
+    String level=getConfiguration().getString(LOGGING_PROPERTY + ".level","info");
+    objectStore=new IsisStoreLogger(objectStore,level);
+  }
+  final PersistenceSessionObjectStore persistenceSession=createObjectStorePersistor(persistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,oidGenerator,adapterManager,persistAlgorithm,objectStore);
+  IsisTransactionManager transactionManager=createTransactionManager(persistenceSession,objectStore);
+  ensureThatArg(persistenceSession,is(not(nullValue())));
+  ensureThatArg(transactionManager,is(not(nullValue())));
+  persistenceSession.setDirtiableSupport(true);
+  transactionManager.injectInto(persistenceSession);
+  return persistenceSession;
+}

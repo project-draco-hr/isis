@@ -1,0 +1,38 @@
+{
+  final String capitalizedName=NameUtils.capitalizeName(actionMethod.getName());
+  final Class<?> returnType=actionMethod.getReturnType();
+  final Class<?>[] paramTypes=actionMethod.getParameterTypes();
+  final List<Facet> facets=new ArrayList<Facet>();
+  final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
+  final ObjectSpecification returnSpec=getSpecificationLoader().loadSpecification(returnType.getName());
+  if (returnSpec != null) {
+    facets.add(new ActionInvocationFacetViaMethod(actionMethod,typeSpec,returnSpec,action,getRuntimeContext()));
+    checkForDebugPrefix(facets,capitalizedName,action);
+    checkForExplorationPrefix(facets,capitalizedName,action);
+    checkForExecutionLocationPrefix(facets,capitalizedName,action);
+  }
+  removeMethod(methodRemover,actionMethod);
+  final boolean forClass=(actionMethod.getModifiers() & Modifier.STATIC) > 0;
+  findAndRemoveValidMethod(facets,methodRemover,cls,forClass,capitalizedName,returnType,paramTypes,action);
+  boolean oldChoicesOrDefaultsMethodsUsed=findAndRemoveParametersDefaultsMethod(facets,methodRemover,cls,forClass,capitalizedName,returnType,paramTypes,action);
+  oldChoicesOrDefaultsMethodsUsed=findAndRemoveParametersChoicesMethod(facets,methodRemover,cls,forClass,capitalizedName,returnType,paramTypes,action) || oldChoicesOrDefaultsMethodsUsed;
+  defaultNamedFacet(facets,methodRemover,capitalizedName,action);
+  findAndRemoveNameMethod(facets,methodRemover,cls,capitalizedName,new Class[]{},action);
+  findAndRemoveDescriptionMethod(facets,methodRemover,cls,capitalizedName,new Class[]{},action);
+  findAndRemoveAlwaysHideMethod(facets,methodRemover,cls,capitalizedName,paramTypes,action);
+  findAndRemoveProtectMethod(facets,methodRemover,cls,capitalizedName,paramTypes,action);
+  findAndRemoveHideForSessionMethod(facets,methodRemover,cls,capitalizedName,UserMemento.class,action);
+  findAndRemoveDisableForSessionMethod(facets,methodRemover,cls,capitalizedName,UserMemento.class,action);
+  findAndRemoveHideMethod(facets,methodRemover,cls,forClass,capitalizedName,paramTypes,action);
+  findAndRemoveDisableMethod(facets,methodRemover,cls,forClass,capitalizedName,paramTypes,action);
+  if (action instanceof JavaObjectActionPeer) {
+    final JavaObjectActionPeer javaObjectActionPeer=(JavaObjectActionPeer)action;
+    final ObjectActionParamPeer[] actionParameters=javaObjectActionPeer.getParameters();
+    findAndRemoveOptionalForActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,actionParameters);
+    findAndRemoveNamesForActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,actionParameters);
+    findAndRemoveDescriptionsforActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,actionParameters);
+    findAndRemoveChoicesForActionParametersMethod(oldChoicesOrDefaultsMethodsUsed,methodRemover,cls,capitalizedName,paramTypes,actionParameters);
+    findAndRemoveDefaultForActionParametersMethod(oldChoicesOrDefaultsMethodsUsed,methodRemover,cls,capitalizedName,paramTypes,actionParameters);
+  }
+  return FacetUtil.addFacets(facets);
+}

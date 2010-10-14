@@ -1,0 +1,14 @@
+{
+  final ObjectSpecification specification=getSpecificationLoader().loadSpecification(data.getType());
+  ObjectAdapter adapter=getHydrator().recreateAdapter(oid,specification);
+  if (data.getFieldContent() != null) {
+    adapter.setOptimisticLock(data.getVersion());
+    ResolveState state;
+    state=data.hasCompleteData() ? ResolveState.RESOLVING : ResolveState.RESOLVING_PART;
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("restoring existing object (" + state.name() + ") "+ adapter);
+    }
+    setupFields(adapter,data,state,knownObjects);
+  }
+  return adapter;
+}

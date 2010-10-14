@@ -1,0 +1,23 @@
+{
+  final Attributes attrs=new BasicAttributes(true);
+  final Attribute objclass=new BasicAttribute("objectclass");
+  objclass.add("top");
+  objclass.add("javaContainer");
+  objclass.add("groupOfUniqueNames");
+  if (isClass) {
+    objclass.add("javaObject");
+  }
+  final Attribute cn=new BasicAttribute("cn");
+  cn.add(cnName);
+  final Attribute uniqueMember=new BasicAttribute("uniquemember");
+  uniqueMember.add(role);
+  if (isClass) {
+    final Attribute javaClass=new BasicAttribute("javaclassname");
+    javaClass.add(cnName);
+    attrs.put(javaClass);
+  }
+  attrs.put(objclass);
+  attrs.put(cn);
+  attrs.put(uniqueMember);
+  return attrs;
+}

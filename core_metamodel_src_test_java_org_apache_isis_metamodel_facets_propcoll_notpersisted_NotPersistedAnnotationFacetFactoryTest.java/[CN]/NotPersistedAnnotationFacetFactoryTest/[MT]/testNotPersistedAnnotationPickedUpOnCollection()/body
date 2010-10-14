@@ -1,0 +1,15 @@
+{
+class Order {
+  }
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") @NotPersisted() public Collection<Order> getOrders(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getOrders");
+  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(NotPersistedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NotPersistedFacetAnnotation);
+  assertNoMethodsRemoved();
+}

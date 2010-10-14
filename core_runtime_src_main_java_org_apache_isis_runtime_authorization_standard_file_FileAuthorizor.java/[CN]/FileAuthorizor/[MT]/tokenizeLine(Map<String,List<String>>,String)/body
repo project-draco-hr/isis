@@ -1,0 +1,13 @@
+{
+  if (line.trim().startsWith("#") || line.trim().length() == 0) {
+    return;
+  }
+  final StringTokenizer tokens=new StringTokenizer(line.trim(),":",false);
+  Assert.assertTrue(tokens.countTokens() == 2);
+  final String token1=tokens.nextToken();
+  final String token2=tokens.nextToken();
+  final Identifier identifier=memberFromString(token1.trim());
+  final List<String> roles=tokenizeRoles(token2);
+  String identityString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARMS);
+  map.put(identityString,roles);
+}

@@ -1,0 +1,12 @@
+{
+  final Method method=findMethod(cls,OBJECT,ADD_TO_PREFIX + capitalizedName,void.class);
+  removeMethod(methodRemover,method);
+  final Class<?> addType=(method == null || method.getParameterTypes().length != 1) ? null : method.getParameterTypes()[0];
+  if (method != null) {
+    collectionFacets.add(new CollectionAddToFacetViaMethod(method,collection));
+  }
+ else {
+    collectionFacets.add(new CollectionAddToFacetViaAccessor(getMethod,collection,getRuntimeContext()));
+  }
+  return addType;
+}

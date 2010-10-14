@@ -1,0 +1,14 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  system=new TestProxySystem();
+  system.init();
+  MemberIdentifier identifer=new MemberIdentifierImpl(TestObjectWithCollection.class.getName());
+  Class elementType=TestPojo.class;
+  collectionField=new JavaCollectionAssociation(identifer,elementType);
+  Method getMethod=TestObjectWithCollection.class.getMethod("getList",new Class[0]);
+  collectionField.addFacet(new JavaBeanPropertyAccessorMethod(getMethod,collectionField));
+  collection=new Vector();
+  testPojo=new TestObjectWithCollection(collection,false);
+  testAdapter=system.createPersistentTestObject(testPojo);
+  elementToAdd=new TestPojo();
+}

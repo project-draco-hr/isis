@@ -1,0 +1,25 @@
+{
+  final StringBuffer s=new StringBuffer();
+  recursiveElements.addElement(object);
+  ObjectAssociation[] fields;
+  fields=object.getSpecification().getAssociations();
+  for (int i=0; i < fields.length; i++) {
+    final ObjectAssociation field=fields[i];
+    final Object obj=field.get(object);
+    final String id=field.getId();
+    indent(s,level);
+    if (field.isOneToManyAssociation()) {
+      s.append(id + ": \n" + debugCollectionGraph((ObjectAdapter)obj,level + 1,recursiveElements));
+    }
+ else {
+      if (recursiveElements.contains(obj)) {
+        s.append(id + ": " + obj+ "*\n");
+      }
+ else {
+        s.append(id + ": " + obj);
+        s.append(debugGraph((ObjectAdapter)obj,level + 1,recursiveElements));
+      }
+    }
+  }
+  return s.toString();
+}

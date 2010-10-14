@@ -1,0 +1,36 @@
+{
+  final int numberOfEvents=entries.length;
+  final int[] eventTypes=asEventTypes(entries);
+  final ReferenceData[] persistedUpdates=results.getPersisted();
+  final Version[] changedVersions=results.getChanged();
+  for (int i=0; i < numberOfEvents; i++) {
+switch (eventTypes[i]) {
+case ClientTransactionEvent.ADD:
+      final ReferenceData update=persistedUpdates[i];
+    Oid updatedOid=update.getOid();
+  adapterManager.remapUpdated(updatedOid);
+final ObjectAdapter adapter=adapterManager.getAdapterFor(updatedOid);
+adapter.changeState(ResolveState.RESOLVED);
+entries[i].getObject().setOptimisticLock(update.getVersion());
+break;
+case ClientTransactionEvent.CHANGE:
+entries[i].getObject().setOptimisticLock(changedVersions[i]);
+getUpdateNotifier().addChangedObject(entries[i].getObject());
+break;
+}
+}
+final ObjectData[] updates=results.getUpdates();
+for (int i=0; i < updates.length; i++) {
+if (LOG.isDebugEnabled()) {
+LOG.debug("update " + updates[i].getOid());
+}
+encoder.decode(updates[i]);
+}
+for (int i=0; i < numberOfEvents; i++) {
+switch (eventTypes[i]) {
+case ClientTransactionEvent.DELETE:
+getUpdateNotifier().addDisposedObject(entries[i].getObject());
+break;
+}
+}
+}

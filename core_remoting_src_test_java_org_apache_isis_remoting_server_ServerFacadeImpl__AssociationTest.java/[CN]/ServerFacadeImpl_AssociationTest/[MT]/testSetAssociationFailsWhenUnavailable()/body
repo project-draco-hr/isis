@@ -1,0 +1,11 @@
+{
+  nameField.setUpIsUnusableFor(movieAdapter);
+  try {
+    SetAssociationRequest request=new SetAssociationRequest(authenticationSession,"director",movieData,personData);
+    server.setAssociation(request);
+    fail();
+  }
+ catch (  final IsisException expected) {
+    assertEquals("can't modify field as not visible or editable",expected.getMessage());
+  }
+}

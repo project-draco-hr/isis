@@ -1,0 +1,21 @@
+{
+  ensureThatArg(configuration,is(notNullValue()));
+  ensureThatArg(classSubstitutor,is(notNullValue()));
+  ensureThatArg(collectionTypeRegistry,is(notNullValue()));
+  ensureThatArg(programmingModelFacets,is(notNullValue()));
+  ensureThatArg(specificationTraverser,is(notNullValue()));
+  ensureThatArg(facetDecorators,is(notNullValue()));
+  ensureThatArg(metaModelValidator,is(notNullValue()));
+  this.configuration=configuration;
+  this.classSubstitutor=classSubstitutor;
+  this.collectionTypeRegistry=collectionTypeRegistry;
+  this.programmingModelFacets=programmingModelFacets;
+  this.specificationTraverser=specificationTraverser;
+  this.facetDecoratorSet=new FacetDecoratorSet();
+  for (  final FacetDecorator facetDecorator : facetDecorators) {
+    this.facetDecoratorSet.add(facetDecorator);
+  }
+  this.metaModelValidator=metaModelValidator;
+  this.facetProcessor=new FacetProcessor(configuration,this,collectionTypeRegistry,programmingModelFacets);
+  this.cache=new SimpleSpecificationCache();
+}

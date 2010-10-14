@@ -1,0 +1,18 @@
+{
+  mockery.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString("isis.value.format.date");
+      will(returnValue(null));
+    }
+  }
+);
+  TestClock.initialize();
+  date=new Date(0);
+  holder=new FacetHolderImpl();
+  setValue(adapter=new JavaSqlDateValueSemanticsProvider(holder,mockConfiguration,mockSpecificationLoader,mockRuntimeContext){
+    @Override protected String defaultFormat(){
+      return "iso";
+    }
+  }
+);
+}

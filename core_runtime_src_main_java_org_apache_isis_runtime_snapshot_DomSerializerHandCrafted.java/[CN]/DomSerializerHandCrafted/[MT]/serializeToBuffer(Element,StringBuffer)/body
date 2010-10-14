@@ -1,0 +1,25 @@
+{
+  buf.append("<").append(el.getTagName());
+  final NamedNodeMap attributeMap=el.getAttributes();
+  for (int i=0; i < attributeMap.getLength(); i++) {
+    final org.w3c.dom.Node node=attributeMap.item(i);
+    if (node.getNodeType() == org.w3c.dom.Node.ATTRIBUTE_NODE) {
+      final Attr attr=(Attr)node;
+      buf.append(" ").append(attr.getName()).append("=\"").append(attr.getValue()).append("\"");
+    }
+  }
+  buf.append(">");
+  final NodeList nodeList=el.getChildNodes();
+  for (int i=0; i < nodeList.getLength(); i++) {
+    final org.w3c.dom.Node node=nodeList.item(i);
+    if (node.getNodeType() == org.w3c.dom.Node.TEXT_NODE) {
+      final Text text=(Text)node;
+      buf.append(text.getData());
+    }
+ else     if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+      final Element childEl=(Element)node;
+      serializeToBuffer(childEl,buf);
+    }
+  }
+  buf.append("</").append(el.getTagName()).append(">");
+}

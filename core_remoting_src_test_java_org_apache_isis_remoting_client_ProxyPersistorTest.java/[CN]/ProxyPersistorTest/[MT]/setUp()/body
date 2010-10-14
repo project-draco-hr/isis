@@ -1,0 +1,23 @@
+{
+  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
+  mockDistribution=mockery.mock(ServerFacade.class);
+  mockEncoder=mockery.mock(ObjectEncoderDecoder.class);
+  adapterManager=new AdapterManagerDefault();
+  adapterFactory=new PojoAdapterFactory();
+  objectFactory=new ObjectFactoryBasic();
+  oidGenerator=new TestProxyOidGenerator();
+  RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
+  DomainObjectContainerDefault container=new DomainObjectContainerDefault();
+  runtimeContext.injectInto(container);
+  runtimeContext.setContainer(container);
+  ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault();
+  servicesInjector.setContainer(container);
+  persistenceSessionProxy=new PersistenceSessionProxy(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,oidGenerator,adapterManager,mockDistribution,mockEncoder);
+  persistenceSessionProxy.setSpecificationLoader(system.getReflector());
+  transactionManager=new ClientSideTransactionManager(adapterManager,persistenceSessionProxy,mockDistribution,mockEncoder);
+  transactionManager.injectInto(persistenceSessionProxy);
+  session=IsisContext.getAuthenticationSession();
+  system.setPersistenceSession(persistenceSessionProxy);
+  ignoreCallsToInitializeMocks();
+  persistenceSessionProxy.open();
+}

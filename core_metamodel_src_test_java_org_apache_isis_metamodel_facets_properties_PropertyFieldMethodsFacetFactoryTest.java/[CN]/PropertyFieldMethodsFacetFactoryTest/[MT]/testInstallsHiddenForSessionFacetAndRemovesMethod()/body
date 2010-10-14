@@ -1,0 +1,11 @@
+{
+  final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getFirstName");
+  final Method hideMethod=findMethod(CustomerStatic.class,"hideFirstName",new Class[]{UserMemento.class});
+  facetFactory.process(CustomerStatic.class,propertyAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(HideForSessionFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HideForSessionFacetViaMethod);
+  final HideForSessionFacetViaMethod hideForSessionFacetViaMethod=(HideForSessionFacetViaMethod)facet;
+  assertEquals(hideMethod,hideForSessionFacetViaMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(hideMethod));
+}

@@ -1,0 +1,11 @@
+{
+  final String specFullName=specification.getFullName();
+  return getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturnAbstract<Boolean>(){
+    public Boolean execute(){
+      HasInstancesRequest request=new HasInstancesRequest(getAuthenticationSession(),specFullName);
+      HasInstancesResponse response=serverFacade.hasInstances(request);
+      return response.hasInstances();
+    }
+  }
+);
+}

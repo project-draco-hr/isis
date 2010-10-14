@@ -1,0 +1,15 @@
+{
+  InMemoryPersistenceSessionFactory inMemoryPersistenceSessionFactory=getInMemoryPersistenceSessionFactory();
+  persistedObjects=inMemoryPersistenceSessionFactory == null ? null : inMemoryPersistenceSessionFactory.getPersistedObjects();
+  if (persistedObjects == null) {
+    if (inMemoryPersistenceSessionFactory != null) {
+      persistedObjects=inMemoryPersistenceSessionFactory.createPersistedObjects();
+    }
+ else {
+      persistedObjects=new ObjectStorePersistedObjectsDefault();
+    }
+  }
+ else {
+    recreateAdapters();
+  }
+}

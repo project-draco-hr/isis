@@ -1,0 +1,20 @@
+{
+  final Calendar cal=Calendar.getInstance();
+  cal.setTimeZone(UTC_TIME_ZONE);
+  try {
+    cal.setTime(encodingFormat.parse(data));
+    clearFields(cal);
+    return setDate(cal.getTime());
+  }
+ catch (  final ParseException e) {
+    if (data.charAt(0) == 'T') {
+      long millis=Long.parseLong(data.substring(1));
+      cal.setTimeInMillis(millis);
+      clearFields(cal);
+      return setDate(cal.getTime());
+    }
+ else {
+      throw new EncodingException(e);
+    }
+  }
+}

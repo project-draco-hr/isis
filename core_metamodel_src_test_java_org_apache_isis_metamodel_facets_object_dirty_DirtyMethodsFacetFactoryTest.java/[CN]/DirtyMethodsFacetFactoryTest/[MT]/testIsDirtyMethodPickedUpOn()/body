@@ -1,0 +1,15 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") public boolean isDirty(){
+      return false;
+    }
+  }
+  final Method method=findMethod(Customer.class,"isDirty");
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(IsDirtyObjectFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof IsDirtyObjectFacetViaMethod);
+  final IsDirtyObjectFacetViaMethod isDirtyFacet=(IsDirtyObjectFacetViaMethod)facet;
+  assertEquals(method,isDirtyFacet.getMethods().get(0));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(method));
+}

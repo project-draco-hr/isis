@@ -1,0 +1,22 @@
+{
+  byte fieldTypeIdxAndNullability=getIdx();
+  boolean isNull=value == null;
+  if (isNull) {
+    fieldTypeIdxAndNullability+=NULL_BIT;
+  }
+  try {
+    DataOutputStream outputStream=output.getDataOutputStream();
+    outputStream.write(fieldTypeIdxAndNullability);
+    if (isNull && LOG.isDebugEnabled()) {
+      log(this,new StringBuilder().append("(null)"));
+    }
+    if (!isNull) {
+      doWrite(output,value);
+    }
+  }
+  finally {
+    if (isNull && LOG.isDebugEnabled()) {
+      unlog(this);
+    }
+  }
+}

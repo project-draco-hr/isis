@@ -1,0 +1,32 @@
+{
+  if (initialized) {
+    throw new IllegalStateException("Already initialized");
+  }
+ else {
+    initialized=true;
+  }
+  LOG.info("initialising [[NAME]] system");
+  LOG.info("working directory: " + new File(".").getAbsolutePath());
+  LOG.info("resource stream source: " + getConfiguration().getResourceStreamSource());
+  localeInitializer.initLocale(getConfiguration());
+  timeZoneInitializer.initTimeZone(getConfiguration());
+  int splashDelay=SPLASH_DELAY_DEFAULT;
+  try {
+    TemplateImageLoader splashLoader=obtainTemplateImageLoader();
+    splashLoader.init();
+    showSplash(splashLoader);
+    IsisContext.setConfiguration(getConfiguration());
+    sessionFactory=doCreateSessionFactory(deploymentType);
+    initContext(sessionFactory);
+    sessionFactory.init();
+    installFixturesIfRequired();
+  }
+ catch (  IsisSystemException ex) {
+    LOG.error("failed to initialise",ex);
+    splashDelay=0;
+    throw new RuntimeException(ex);
+  }
+ finally {
+    removeSplash(splashDelay);
+  }
+}

@@ -1,0 +1,13 @@
+{
+  super.init();
+  final int port=getConfiguration().getInteger(SocketsViewerConstants.SERVER_PORT,SocketTransportConstants.PORT_DEFAULT);
+  workerPool=new WorkerPool(5);
+  final ServerFacadeImpl serverFacade=new ServerFacadeImpl(getAuthenticationManager());
+  serverFacade.setEncoder(encoderDecoder);
+  final ServerFacade sd=new ServerFacadeLogger(encoderDecoder,serverFacade);
+  sd.init();
+  socket=newServerSocket(port);
+  LOG.info("listening for connection on " + socket);
+  acceptAndHandleRequests(sd);
+  shutdownListener();
+}

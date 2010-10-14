@@ -1,0 +1,14 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @Executed(Where.REMOTELY) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(ExecutedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ExecutedFacetAbstract);
+  final ExecutedFacetAbstract executedFacetAbstract=(ExecutedFacetAbstract)facet;
+  assertEquals(Target.REMOTE,executedFacetAbstract.getTarget());
+  assertNoMethodsRemoved();
+}

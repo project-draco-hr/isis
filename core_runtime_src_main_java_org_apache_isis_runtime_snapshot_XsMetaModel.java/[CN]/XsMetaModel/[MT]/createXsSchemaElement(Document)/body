@@ -1,0 +1,14 @@
+{
+  if (xsdDoc.getDocumentElement() != null) {
+    throw new IllegalArgumentException("XSD document already has content");
+  }
+  final Element xsSchemaElement=createXsElement(xsdDoc,"schema");
+  xsSchemaElement.setAttribute("elementFormDefault","qualified");
+  nofMeta.addNamespace(xsSchemaElement);
+  xsdDoc.appendChild(xsSchemaElement);
+  final Element xsImportElement=createXsElement(xsdDoc,"import");
+  xsImportElement.setAttribute("namespace",NofMetaModel.NOF_METAMODEL_NS_URI);
+  xsImportElement.setAttribute("schemaLocation",NofMetaModel.DEFAULT_NOF_SCHEMA_LOCATION);
+  xsSchemaElement.appendChild(xsImportElement);
+  return xsSchemaElement;
+}

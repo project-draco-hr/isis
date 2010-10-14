@@ -1,0 +1,27 @@
+{
+  final TestProxyAdapter target=new TestProxyAdapter();
+  target.setupSpecification(new TestSpecification());
+  final ObjectAdapter[] parameters=new ObjectAdapter[2];
+  final TestProxyAdapter result=new TestProxyAdapter();
+  final ActionInvocationFacet facet=new ActionInvocationFacetAbstract(mockObjectActionPeer){
+    public ObjectAdapter invoke(    ObjectAdapter target,    ObjectAdapter[] parameters){
+      return result;
+    }
+    public ObjectSpecification getReturnType(){
+      return null;
+    }
+    public ObjectSpecification getOnType(){
+      return new TestSpecification();
+    }
+  }
+;
+  mockery.checking(new Expectations(){
+{
+      exactly(2).of(mockObjectActionPeer).getFacet(ActionInvocationFacet.class);
+      will(returnValue(facet));
+    }
+  }
+);
+  final ObjectAdapter returnObject=action.execute(target,parameters);
+  assertEquals(returnObject,result);
+}

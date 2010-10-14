@@ -1,0 +1,16 @@
+{
+  ensureThatState(getState().canAbort(),is(true),"state is: " + getState());
+  if (LOG.isInfoEnabled()) {
+    LOG.info("abort transaction " + this);
+  }
+  try {
+    doAbort();
+  }
+ catch (  RuntimeException ex) {
+    setAbortCause(ex);
+    throw ex;
+  }
+ finally {
+    setState(State.ABORTED);
+  }
+}

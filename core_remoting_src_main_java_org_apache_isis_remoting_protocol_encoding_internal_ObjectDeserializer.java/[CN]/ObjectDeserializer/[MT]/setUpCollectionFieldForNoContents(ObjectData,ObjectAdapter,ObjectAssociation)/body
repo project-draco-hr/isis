@@ -1,0 +1,19 @@
+{
+  final ObjectAdapter collection=field.get(adapter);
+  if (collection.getResolveState() == ResolveState.GHOST) {
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("No data for collection: " + field.getId());
+  }
+  Version adapterVersion=adapter.getVersion();
+  Version parentVersion=parentData.getVersion();
+  if (adapterVersion.different(parentVersion)) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("clearing collection as versions differ: " + adapter.getVersion() + " "+ parentData.getVersion());
+    }
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+    facet.init(collection,new ObjectAdapter[0]);
+    collection.changeState(ResolveState.GHOST);
+  }
+}

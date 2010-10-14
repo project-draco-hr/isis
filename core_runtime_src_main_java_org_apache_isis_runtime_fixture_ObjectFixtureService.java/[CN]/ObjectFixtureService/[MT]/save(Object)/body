@@ -1,0 +1,8 @@
+{
+  ObjectAdapter adapter=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(object);
+  if (adapter.getSpecification().persistability() != Persistability.TRANSIENT) {
+    LOG.info("Saving object for fixture: " + adapter);
+    addObjectAndAssociates(adapter);
+    saveAll();
+  }
+}

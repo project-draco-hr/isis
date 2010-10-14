@@ -1,0 +1,28 @@
+{
+  try {
+    if (server == null) {
+      throw new NullPointerException("mail server must be specified");
+    }
+    if (recipient == null) {
+      throw new NullPointerException("recipient must be specified");
+    }
+    final Socket s=new Socket(server,port);
+    final BufferedReader in=new BufferedReader(new InputStreamReader(s.getInputStream(),"8859_1"));
+    final BufferedWriter out=new BufferedWriter(new OutputStreamWriter(s.getOutputStream(),"8859_1"));
+    send(in,out,"HELO " + senderDomain);
+    send(in,out,"MAIL FROM: <no-reply@" + senderDomain + ">");
+    send(in,out,"RCPT TO: " + recipient);
+    send(in,out,"DATA");
+    send(out,"Subject: " + message);
+    send(out,"From: Autosend");
+    send(out,"Content-Type: " + layout.getContentType());
+    send(out,"\r\n");
+    send(out,details);
+    send(out,"\r\n.\r\n");
+    send(in,out,"QUIT");
+    s.close();
+  }
+ catch (  final Exception e) {
+    LOG.info("failed to send email with log",e);
+  }
+}

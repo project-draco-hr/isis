@@ -1,0 +1,11 @@
+{
+  final DeploymentType deploymentType=optionHandlerDeploymentType.getDeploymentType();
+  for (  OptionValidator validator : validators) {
+    Maybe<String> errorMessage=validator.validate(deploymentType);
+    if (errorMessage.isSet()) {
+      printer.printErrorAndHelp(options,errorMessage.get());
+      return false;
+    }
+  }
+  return true;
+}

@@ -1,0 +1,9 @@
+{
+  final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getFirstName");
+  final Method propertyAlwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideFirstName");
+  facetFactory.process(CustomerStatic.class,propertyAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(HiddenFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HiddenFacetAlways);
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(propertyAlwaysHideMethod));
+}

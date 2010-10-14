@@ -1,0 +1,13 @@
+{
+  if (adapter.isTransient()) {
+    underlyingFacet.clearProperty(adapter);
+  }
+ else {
+    getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
+      public void execute(){
+        underlyingFacet.clearProperty(adapter);
+      }
+    }
+);
+  }
+}

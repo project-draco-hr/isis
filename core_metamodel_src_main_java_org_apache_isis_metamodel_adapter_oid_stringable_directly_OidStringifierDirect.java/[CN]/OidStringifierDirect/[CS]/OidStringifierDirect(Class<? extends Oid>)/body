@@ -1,0 +1,19 @@
+{
+  Ensure.ensureThatArg(oidClass,is(not(nullValue(Class.class))));
+  this.oidClass=oidClass;
+  try {
+    deStringMethod=oidClass.getMethod("deString",String.class);
+  }
+ catch (  SecurityException ex) {
+    throw new IllegalArgumentException("Trying to obtain 'deString(String)' method from  Oid class '" + oidClass.getName() + "'",ex);
+  }
+catch (  NoSuchMethodException ex) {
+    throw new IllegalArgumentException("Trying to obtain 'deString(String)' method from  Oid class '" + oidClass.getName() + "'",ex);
+  }
+  if (!JavaClassUtils.isStatic(deStringMethod)) {
+    throw new IllegalArgumentException("'deString(String)' method for Oid class '" + oidClass.getName() + "' must be static");
+  }
+  if (!JavaClassUtils.isPublic(deStringMethod)) {
+    throw new IllegalArgumentException("'deString(String)' method for Oid class '" + oidClass.getName() + "' must be public");
+  }
+}

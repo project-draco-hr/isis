@@ -1,0 +1,87 @@
+{
+  if (introspector == null) {
+    throw new ReflectionException("Introspection already taken place, cannot introspect again");
+  }
+  cls=introspector.getIntrospectedClass();
+  introspector.introspectClass();
+  fullName=introspector.getFullName();
+  shortName=introspector.shortName();
+  NamedFacet namedFacet=(NamedFacet)getFacet(NamedFacet.class);
+  if (namedFacet == null) {
+    namedFacet=new NamedFacetInferred(NameUtils.naturalName(shortName),this);
+    addFacet(namedFacet);
+  }
+  PluralFacet pluralFacet=(PluralFacet)getFacet(PluralFacet.class);
+  if (pluralFacet == null) {
+    pluralFacet=new PluralFacetInferred(NameUtils.pluralName(namedFacet.value()),this);
+    addFacet(pluralFacet);
+  }
+  whetherAbstract=introspector.isAbstract();
+  whetherFinal=introspector.isFinal();
+  final String superclassName=introspector.getSuperclass();
+  final String[] interfaceNames=introspector.getInterfaces();
+  final SpecificationLoader loader=getReflector();
+  if (superclassName != null) {
+    superClassSpecification=loader.loadSpecification(superclassName);
+    if (superClassSpecification != null) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("  Superclass " + superclassName);
+      }
+      superClassSpecification.addSubclass(this);
+    }
+  }
+  final boolean skipIntrospection=JavaClassUtils.isJavaClass(cls) || isValueClass(cls);
+  if (skipIntrospection) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("skipping introspection of properties, actions and interfaces for " + cls.getName() + " (java.xxx class)");
+    }
+    fields=new ObjectAssociation[0];
+    objectActions=new ObjectAction[0];
+    interfaces=new ObjectSpecification[0];
+  }
+ else {
+    List<ObjectSpecification> interfaceSpecList=new ArrayList<ObjectSpecification>();
+    for (int i=0; i < interfaceNames.length; i++) {
+      Class<?> substitutedInterfaceClass=getSubstitutedClass(interfaceNames[i],getClassSubstitutor());
+      if (substitutedInterfaceClass != null) {
+        ObjectSpecification interfacespec=loader.loadSpecification(substitutedInterfaceClass.getName());
+        interfaceSpecList.add(interfacespec);
+        interfacespec.addSubclass(this);
+      }
+    }
+    interfaces=interfaceSpecList.toArray(new ObjectSpecification[]{});
+    introspector.introspectPropertiesAndCollections();
+    final OrderSet orderedFields=introspector.getFields();
+    if (orderedFields != null) {
+      fields=orderFields(orderedFields);
+    }
+    introspector.introspectActions();
+    OrderSet orderedActions=introspector.getClassActions();
+    orderedActions=introspector.getObjectActions();
+    objectActions=orderActions(orderedActions);
+  }
+  decorateAllFacets(decorator);
+  clearDirtyObjectFacet=(ClearDirtyObjectFacet)getFacet(ClearDirtyObjectFacet.class);
+  markDirtyObjectFacet=(MarkDirtyObjectFacet)getFacet(MarkDirtyObjectFacet.class);
+  isDirtyObjectFacet=(IsDirtyObjectFacet)getFacet(IsDirtyObjectFacet.class);
+  namedFacet=(NamedFacet)getFacet(NamedFacet.class);
+  singularName=namedFacet.value();
+  pluralFacet=(PluralFacet)getFacet(PluralFacet.class);
+  pluralName=pluralFacet.value();
+  final DescribedAsFacet describedAsFacet=(DescribedAsFacet)getFacet(DescribedAsFacet.class);
+  description=describedAsFacet.value();
+  iconMethod=(IconFacet)getFacet(IconFacet.class);
+  final NotPersistableFacet notPersistableFacet=(NotPersistableFacet)getFacet(NotPersistableFacet.class);
+  final InitiatedBy initiatedBy=notPersistableFacet.value();
+  if (initiatedBy == InitiatedBy.USER_OR_PROGRAM) {
+    persistable=Persistability.TRANSIENT;
+  }
+ else   if (initiatedBy == InitiatedBy.USER) {
+    persistable=Persistability.PROGRAM_PERSISTABLE;
+  }
+ else {
+    persistable=Persistability.USER_PERSISTABLE;
+  }
+  introspector=null;
+  setIntrospected(true);
+}

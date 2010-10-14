@@ -1,0 +1,11 @@
+{
+  final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOrders");
+  final Method protectMethod=findMethod(CustomerStatic.class,"protectOrders");
+  facetFactory.process(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(DisabledFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DisabledFacetAlways);
+  final DisabledFacetAlways disabledFacetAlways=(DisabledFacetAlways)facet;
+  assertEquals(When.ALWAYS,disabledFacetAlways.value());
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(protectMethod));
+}

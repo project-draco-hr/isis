@@ -1,0 +1,14 @@
+{
+  final MaskFacet maskFacet=createMaskFacet(annotation,holder);
+  if (maskFacet == null) {
+    return false;
+  }
+  FacetUtil.addFacet(maskFacet);
+  ObjectSpecification type=getSpecificationLoader().loadSpecification(cls);
+  final TitleFacet underlyingTitleFacet=type.getFacet(TitleFacet.class);
+  if (underlyingTitleFacet != null) {
+    final TitleFacet titleFacet=new TitleFacetBasedOnMask(maskFacet,underlyingTitleFacet);
+    FacetUtil.addFacet(titleFacet);
+  }
+  return true;
+}

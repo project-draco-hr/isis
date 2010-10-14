@@ -1,0 +1,17 @@
+{
+  for (  Oid oid : objectStoreInstances.getOids()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("recreating adapter: oid=" + oid);
+    }
+    Object pojo=objectStoreInstances.getPojo(oid);
+    ObjectAdapter existingAdapterLookedUpByPojo=getAdapterManager().getAdapterFor(pojo);
+    if (existingAdapterLookedUpByPojo != null) {
+      getAdapterManager().removeAdapter(existingAdapterLookedUpByPojo);
+    }
+    ObjectAdapter existingAdapterLookedUpByOid=getAdapterManager().getAdapterFor(oid);
+    ensureThatState(existingAdapterLookedUpByOid,is(nullValue()),"Already have mapping for " + oid);
+    ObjectAdapter recreatedAdapter=getHydrator().recreateAdapter(oid,pojo);
+    Version version=objectStoreInstances.getVersion(oid);
+    recreatedAdapter.setOptimisticLock(version);
+  }
+}

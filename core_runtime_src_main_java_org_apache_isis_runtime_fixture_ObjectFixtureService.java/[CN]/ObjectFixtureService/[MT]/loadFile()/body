@@ -1,0 +1,24 @@
+{
+  FileReader reader=null;
+  try {
+    File file=file(false);
+    reader=new FileReader(file);
+    objects=persistor.loadData(reader);
+  }
+ catch (  FileNotFoundException e) {
+    return;
+  }
+catch (  IOException e) {
+    throw new IsisException(e);
+  }
+ finally {
+    if (reader != null) {
+      try {
+        reader.close();
+      }
+ catch (      IOException e) {
+        throw new IsisException(e);
+      }
+    }
+  }
+}

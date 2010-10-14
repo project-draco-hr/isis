@@ -1,0 +1,17 @@
+{
+  final String servletPath=StringUtils.stripLeadingSlash(request.getServletPath());
+  LOG.info("request: " + servletPath);
+  InputStream is=Resources.getResourceAsStream(servletPath);
+  if (is != null) {
+    IoUtils.copy(is,response.getOutputStream());
+    is.close();
+    return;
+  }
+  is=getRealPath(request);
+  if (is != null) {
+    IoUtils.copy(is,response.getOutputStream());
+    is.close();
+    return;
+  }
+  LOG.warn("failed to load resource from classpath or file system: " + servletPath);
+}

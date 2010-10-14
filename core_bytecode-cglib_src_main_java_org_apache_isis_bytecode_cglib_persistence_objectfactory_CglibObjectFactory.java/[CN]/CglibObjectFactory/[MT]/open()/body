@@ -1,0 +1,18 @@
+{
+  super.open();
+  changer=new DomainObjectContainerObjectChanged();
+  resolver=new DomainObjectContainerResolve();
+  ObjectResolver objectResolver=new ObjectResolver(){
+    public void resolve(    Object domainObject,    String propertyName){
+      resolver.resolve(domainObject);
+    }
+  }
+;
+  ObjectChanger objectChanger=new ObjectChanger(){
+    public void objectChanged(    Object domainObject){
+      changer.objectChanged(domainObject);
+    }
+  }
+;
+  classEnhancer=new ObjectResolveAndObjectChangedEnhancer(objectResolver,objectChanger,getSpecificationLoader());
+}

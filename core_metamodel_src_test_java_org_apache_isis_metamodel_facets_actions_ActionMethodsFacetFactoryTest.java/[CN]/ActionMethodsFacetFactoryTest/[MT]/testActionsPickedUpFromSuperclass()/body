@@ -1,0 +1,14 @@
+{
+class Customer {
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(    final int x,    final long y){
+    }
+  }
+class CustomerEx extends Customer {
+  }
+  Method actionMethod=findMethod(CustomerEx.class,"someAction",new Class[]{int.class,long.class});
+  ObjectActionPeer facetHolderWithParms=createHolderWithParms();
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(CustomerEx.class,actionMethod,methodRemover,facetHolderWithParms);
+  final Facet facet0=facetHolderWithParms.getFacet(ActionInvocationFacet.class);
+  assertNotNull(facet0);
+}

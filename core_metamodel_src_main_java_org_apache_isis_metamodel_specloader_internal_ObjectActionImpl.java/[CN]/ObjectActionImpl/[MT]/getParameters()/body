@@ -1,0 +1,24 @@
+{
+  if (this.parameters == null) {
+    final int parameterCount=getParameterCount();
+    final ObjectActionParameter[] parameters=new ObjectActionParameter[parameterCount];
+    final ObjectActionParamPeer[] paramPeers=objectActionPeer.getParameters();
+    for (int i=0; i < parameterCount; i++) {
+      final ObjectSpecification specification=paramPeers[i].getSpecification();
+      if (specification.isParseable()) {
+        parameters[i]=new ObjectActionParameterParseable(i,this,paramPeers[i]);
+      }
+ else       if (specification.isNotCollection()) {
+        parameters[i]=new OneToOneActionParameterImpl(i,this,paramPeers[i]);
+      }
+ else       if (specification.isCollection()) {
+        throw new UnknownTypeException("collections not supported as parameters: " + getIdentifier());
+      }
+ else {
+        throw new UnknownTypeException(specification);
+      }
+    }
+    this.parameters=parameters;
+  }
+  return parameters;
+}

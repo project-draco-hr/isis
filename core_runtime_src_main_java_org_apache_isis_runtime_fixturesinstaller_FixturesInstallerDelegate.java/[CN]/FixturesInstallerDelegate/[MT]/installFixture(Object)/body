@@ -1,0 +1,16 @@
+{
+  switchUserService.injectInto(fixture);
+  if (fixture instanceof ProfileServiceAware) {
+    ProfileServiceAware serviceAware=(ProfileServiceAware)fixture;
+    serviceAware.setService(perspectivePersistenceService);
+  }
+  if (fixture instanceof InstallableFixture) {
+    InstallableFixture installableFixture=(InstallableFixture)fixture;
+    if (shouldInstallFixture(installableFixture)) {
+      installableFixture.install();
+    }
+  }
+  if (fixture instanceof LogonFixture) {
+    this.logonFixture=(LogonFixture)fixture;
+  }
+}

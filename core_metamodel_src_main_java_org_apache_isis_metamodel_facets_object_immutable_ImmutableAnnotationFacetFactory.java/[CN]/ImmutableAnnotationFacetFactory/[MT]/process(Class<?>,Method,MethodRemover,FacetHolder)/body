@@ -1,0 +1,8 @@
+{
+  ObjectSpecification spec=getSpecificationLoader().loadSpecification(method.getDeclaringClass());
+  final ImmutableFacet immutableFacet=spec.getFacet(ImmutableFacet.class);
+  if (immutableFacet != null && !immutableFacet.isNoop()) {
+    return FacetUtil.addFacet(new DisabledFacetDerivedFromImmutable(immutableFacet,holder));
+  }
+  return false;
+}

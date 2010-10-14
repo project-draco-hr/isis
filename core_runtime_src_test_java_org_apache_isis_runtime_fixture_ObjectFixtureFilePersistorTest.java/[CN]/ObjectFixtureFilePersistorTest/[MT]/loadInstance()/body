@@ -1,0 +1,9 @@
+{
+  StringReader reader=new StringReader("org.apache.isis.runtime.testdomain.Person#1\n  name: Fred Smith\n  date: 08-Mar-2010 00:00");
+  Set<Object> objects=persistor.loadData(reader);
+  Assert.assertEquals(1,objects.size());
+  Object object=objects.toArray()[0];
+  Assert.assertEquals(Person.class,object.getClass());
+  Assert.assertEquals("Fred Smith",((Person)object).getName());
+  Assert.assertEquals(new Date(110,2,8,0,0),((Person)object).getDate());
+}

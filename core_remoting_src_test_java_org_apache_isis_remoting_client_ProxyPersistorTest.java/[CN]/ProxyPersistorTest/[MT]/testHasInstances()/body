@@ -1,0 +1,15 @@
+{
+  final HasInstancesRequest request=new HasInstancesRequest(session,Movie.class.getName());
+  mockery.checking(new Expectations(){
+{
+      one(mockDistribution).hasInstances(request);
+      will(returnValue(true));
+      one(mockDistribution).hasInstances(request);
+      will(returnValue(false));
+    }
+  }
+);
+  final ObjectSpecification type=getSpecificationLoader().loadSpecification(Movie.class);
+  assertTrue(persistenceSessionProxy.hasInstances(type));
+  assertFalse(persistenceSessionProxy.hasInstances(type));
+}

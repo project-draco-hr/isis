@@ -1,0 +1,18 @@
+{
+@SuppressWarnings("hiding") class Order {
+  }
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    public Collection<Order> getOrders(){
+      return null;
+    }
+  }
+class CustomerEx extends Customer {
+  }
+  final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
+  facetFactory.process(CustomerEx.class,collectionAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(PropertyAccessorFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PropertyAccessorFacetViaAccessor);
+  final PropertyAccessorFacetViaAccessor collectionAccessorFacetViaMethod=(PropertyAccessorFacetViaAccessor)facet;
+  assertEquals(collectionAccessorMethod,collectionAccessorFacetViaMethod.getMethods().get(0));
+}

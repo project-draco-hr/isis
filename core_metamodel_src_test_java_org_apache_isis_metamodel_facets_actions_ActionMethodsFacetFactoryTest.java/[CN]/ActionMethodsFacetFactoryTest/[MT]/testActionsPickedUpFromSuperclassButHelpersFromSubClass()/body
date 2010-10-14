@@ -1,0 +1,44 @@
+{
+class Customer {
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(    final int x,    final long y){
+    }
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public int[] choices0SomeAction(){
+      return new int[0];
+    }
+  }
+class CustomerEx extends Customer {
+    @Override public int[] choices0SomeAction(){
+      return new int[0];
+    }
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public long[] choices1SomeAction(){
+      return new long[0];
+    }
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public String disableSomeAction(){
+      return null;
+    }
+  }
+  Method actionMethod=findMethod(CustomerEx.class,"someAction",new Class[]{int.class,long.class});
+  Method choices0Method=findMethod(CustomerEx.class,"choices0SomeAction",new Class[]{});
+  Method choices1Method=findMethod(CustomerEx.class,"choices1SomeAction",new Class[]{});
+  Method disableMethod=findMethod(CustomerEx.class,"disableSomeAction",new Class[]{});
+  ObjectActionPeer facetHolderWithParms=createHolderWithParms();
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(CustomerEx.class,actionMethod,methodRemover,facetHolderWithParms);
+  final Facet facet0=facetHolderWithParms.getFacet(ActionInvocationFacet.class);
+  assertNotNull(facet0);
+  final Facet facet1=facetHolderWithParms.getParameters()[0].getFacet(ActionParameterChoicesFacet.class);
+  assertNotNull(facet1);
+  assertTrue(facet1 instanceof ActionParameterChoicesFacetViaMethod);
+  final ActionParameterChoicesFacetViaMethod actionChoicesFacetViaMethod0=(ActionParameterChoicesFacetViaMethod)facet1;
+  assertEquals(choices0Method,actionChoicesFacetViaMethod0.getMethods().get(0));
+  final Facet facet2=facetHolderWithParms.getParameters()[1].getFacet(ActionParameterChoicesFacet.class);
+  assertNotNull(facet2);
+  assertTrue(facet2 instanceof ActionParameterChoicesFacetViaMethod);
+  final ActionParameterChoicesFacetViaMethod actionChoicesFacetViaMethod1=(ActionParameterChoicesFacetViaMethod)facet2;
+  assertEquals(choices1Method,actionChoicesFacetViaMethod1.getMethods().get(0));
+  final Facet facet3=facetHolderWithParms.getFacet(DisableForContextFacet.class);
+  assertNotNull(facet3);
+  assertTrue(facet3 instanceof DisableForContextFacetViaMethod);
+  final DisableForContextFacetViaMethod disableFacetViaMethod=(DisableForContextFacetViaMethod)facet3;
+  assertEquals(disableMethod,disableFacetViaMethod.getMethods().get(0));
+}

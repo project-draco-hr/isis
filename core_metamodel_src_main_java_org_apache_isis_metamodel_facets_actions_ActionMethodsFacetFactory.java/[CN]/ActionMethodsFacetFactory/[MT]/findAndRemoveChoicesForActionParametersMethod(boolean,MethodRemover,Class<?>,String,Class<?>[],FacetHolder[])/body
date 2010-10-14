@@ -1,0 +1,17 @@
+{
+  for (int i=0; i < params.length; i++) {
+    final Class<?> returnType=(Array.newInstance(params[i],0)).getClass();
+    String name=PARAMETER_CHOICES_PREFIX + i + capitalizedName;
+    Method method=findMethodWithOrWithoutParameters(cls,OBJECT,name,returnType,params);
+    if (method == null) {
+      method=findMethodWithOrWithoutParameters(cls,OBJECT,name,List.class,params);
+    }
+    if (method != null) {
+      if (oldChoicesOrDefaultsMethodsUsed) {
+        throw new ReflectionException(cls + " uses both old and new choices/default syntax - must use one or other");
+      }
+      removeMethod(methodRemover,method);
+      FacetUtil.addFacet(new ActionParameterChoicesFacetViaMethod(method,returnType,parameters[i],getSpecificationLoader(),getRuntimeContext()));
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  if (!MethodFinderUtils.inScope(methodScope,actionMethod)) {
+    return false;
+  }
+  List<Class<?>> typesToLoad=new ArrayList<Class<?>>();
+  getSpecificationTraverser().traverseTypes(actionMethod,typesToLoad);
+  boolean anyLoadedAsNull=reflector.loadSpecifications(typesToLoad);
+  if (anyLoadedAsNull) {
+    return false;
+  }
+  if (!loadParamSpecs(actionMethod)) {
+    return false;
+  }
+  if (getFacetProcessor().recognizes(actionMethod)) {
+    if (actionMethod.getName().startsWith("set")) {
+      return false;
+    }
+    if (skipRecognisedHelperMethod) {
+      LOG.info("  skipping possible helper method " + actionMethod);
+      return false;
+    }
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("  identified action " + actionMethod);
+  }
+  return true;
+}

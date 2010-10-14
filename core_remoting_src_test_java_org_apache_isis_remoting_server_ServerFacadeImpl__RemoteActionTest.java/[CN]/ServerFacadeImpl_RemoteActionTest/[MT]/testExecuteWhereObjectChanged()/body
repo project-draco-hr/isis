@@ -1,0 +1,19 @@
+{
+  final ExecuteServerActionResponse results=null;
+  mockery.checking(new Expectations(){
+{
+      final ObjectData changedObjectData=new DummyObjectData();
+      one(mockEncoder).encodeForUpdate(adapter);
+      will(returnValue(changedObjectData));
+      one(mockEncoder).encodeServerActionResult(with(equalTo(adapter)),with(equalTo(new ObjectData[]{changedObjectData})),with(equalTo(new ReferenceData[0])),with(nullValue(ObjectData.class)),with(equalTo(new ObjectData[0])),with(equalTo(new String[0])),with(equalTo(new String[0])));
+      will(returnValue(null));
+    }
+  }
+);
+  IsisContext.getTransactionManager().startTransaction();
+  IsisContext.getUpdateNotifier().addChangedObject(adapter);
+  ExecuteServerActionRequest request=new ExecuteServerActionRequest(new TestProxySession(),ObjectActionType.USER,"action()",targetData,parameterData);
+  final ExecuteServerActionResponse result=server.executeServerAction(request);
+  IsisContext.getTransactionManager().endTransaction();
+  assertEquals(results,result);
+}

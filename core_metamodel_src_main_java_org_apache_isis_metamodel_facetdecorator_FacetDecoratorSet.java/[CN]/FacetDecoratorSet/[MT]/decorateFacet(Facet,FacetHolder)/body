@@ -1,0 +1,15 @@
+{
+  Class<? extends Facet> facetType=facet.facetType();
+  final Class<? extends Facet> cls=facetType;
+  final List<FacetDecorator> decoratorList=facetDecoratorByFacetType.get(cls);
+  if (decoratorList == null) {
+    return;
+  }
+  for (  FacetDecorator facetDecorator : decoratorList) {
+    Facet decoratingFacet=facetDecorator.decorate(facet,requiredHolder);
+    if (decoratingFacet == null) {
+      continue;
+    }
+    ensureDecoratorMetContract(facetDecorator,decoratingFacet,facetType,requiredHolder);
+  }
+}

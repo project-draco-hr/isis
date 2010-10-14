@@ -1,0 +1,7 @@
+{
+  final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOtherOrders");
+  final Method alwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideOtherOrders");
+  facetFactory.process(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetHolder);
+  assertNull(facetHolder.getFacet(HiddenFacet.class));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(alwaysHideMethod));
+}

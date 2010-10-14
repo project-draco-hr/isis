@@ -1,0 +1,57 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  final ObjectSpecification rootSpecification=mockery.mock(ObjectSpecification.class);
+  final OneToOneAssociation nameField=mockery.mock(OneToOneAssociation.class);
+  final ObjectSpecification nameSpecification=mockery.mock(ObjectSpecification.class,"name specification");
+  final EncodableFacet encodeableFacet=mockery.mock(EncodableFacet.class);
+  mockery.checking(new Expectations(){
+{
+      atLeast(1).of(rootSpecification).isCollection();
+      will(returnValue(false));
+      atLeast(1).of(rootSpecification).getAssociations();
+      will(returnValue(new ObjectAssociation[]{nameField}));
+      atLeast(1).of(rootSpecification).getFullName();
+      will(returnValue(TestObject.class.getName()));
+      atLeast(1).of(nameField).isNotPersisted();
+      will(returnValue(false));
+      atLeast(1).of(nameField).isOneToManyAssociation();
+      will(returnValue(false));
+      atLeast(1).of(nameField).getSpecification();
+      will(returnValue(nameSpecification));
+      atLeast(1).of(nameField).getId();
+      will(returnValue("name-field"));
+      atLeast(1).of(nameSpecification).isEncodeable();
+      will(returnValue(true));
+      atLeast(1).of(nameSpecification).getFacet(EncodableFacet.class);
+      will(returnValue(encodeableFacet));
+    }
+  }
+);
+  rootAdapter=mockery.mock(ObjectAdapter.class);
+  final ObjectAdapter nameAdapter=mockery.mock(ObjectAdapter.class,"name");
+  oid=mockery.mock(Oid.class);
+  mockery.checking(new Expectations(){
+{
+      atLeast(1).of(rootAdapter).getSpecification();
+      will(returnValue(rootSpecification));
+      atLeast(1).of(rootAdapter).getOid();
+      will(returnValue(oid));
+      atLeast(1).of(rootAdapter).getResolveState();
+      will(returnValue(ResolveState.RESOLVED));
+      atLeast(1).of(nameField).get(rootAdapter);
+      will(returnValue(nameAdapter));
+      one(encodeableFacet).toEncodedString(nameAdapter);
+      will(returnValue("_HARRY_"));
+    }
+  }
+);
+  mockery.checking(new Expectations(){
+{
+    }
+  }
+);
+  final IsisSessionFactory sessionFactory=mockery.mock(IsisSessionFactory.class);
+  IsisContextStatic.createRelaxedInstance(sessionFactory);
+  memento=new Memento(rootAdapter);
+  data=memento.getData();
+}

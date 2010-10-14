@@ -1,0 +1,27 @@
+{
+  while (!isShutdown()) {
+    try {
+      final Socket clientSocket=socket.accept();
+      LOG.info("connection accepted from " + clientSocket.getInetAddress());
+      InputStream inputStream=clientSocket.getInputStream();
+      OutputStream outputStream=clientSocket.getOutputStream();
+      if (isDebugging()) {
+        inputStream=new ProfilingInputStream(inputStream);
+        outputStream=new ProfilingOutputStream(outputStream);
+      }
+      final ServerConnection connection=createServerConnection(inputStream,outputStream,sd);
+      final Worker worker=workerPool.getWorker();
+      worker.setIncomingConnection(connection);
+    }
+ catch (    final InterruptedIOException ignore) {
+      continue;
+    }
+catch (    final IOException e) {
+      LOG.warn("connection exception",e);
+      continue;
+    }
+catch (    final ConnectionException e) {
+      LOG.warn("connection exception",e);
+    }
+  }
+}

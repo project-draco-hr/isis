@@ -1,0 +1,17 @@
+{
+  final Value annotation=getAnnotation(cls,Value.class);
+  if (annotation != null) {
+    final ValueFacetAnnotation facet=new ValueFacetAnnotation(cls,holder,getIsisConfiguration(),getSpecificationLoader(),getRuntimeContext());
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  final String semanticsProviderName=ValueSemanticsProviderUtil.semanticsProviderNameFromConfiguration(cls,configuration);
+  if (!StringUtils.isEmpty(semanticsProviderName)) {
+    final ValueFacetFromConfiguration facet=new ValueFacetFromConfiguration(semanticsProviderName,holder,getIsisConfiguration(),getSpecificationLoader(),getRuntimeContext());
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  return null;
+}

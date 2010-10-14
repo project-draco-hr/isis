@@ -1,0 +1,20 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("sending request " + request);
+  }
+  try {
+    writeToOutput(request);
+  }
+ catch (  final SocketException e) {
+    reconnect();
+    writeToOutput(request);
+  }
+  final Object object=readFromInput(Object.class);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("response received: " + object);
+  }
+  if (!isKeepAlive()) {
+    disconnect();
+  }
+  return object;
+}

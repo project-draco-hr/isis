@@ -1,0 +1,15 @@
+{
+  final Object pojo=getObjectInstances().get(oid);
+  if (pojo == null) {
+    return null;
+  }
+  ObjectAdapter adapterLookedUpByPojo=getAdapterManager().getAdapterFor(pojo);
+  if (adapterLookedUpByPojo != null) {
+    return adapterLookedUpByPojo;
+  }
+  ObjectAdapter adapterLookedUpByOid=getAdapterManager().getAdapterFor(oid);
+  if (adapterLookedUpByOid != null) {
+    return adapterLookedUpByOid;
+  }
+  return getHydrator().recreateAdapter(oid,pojo);
+}

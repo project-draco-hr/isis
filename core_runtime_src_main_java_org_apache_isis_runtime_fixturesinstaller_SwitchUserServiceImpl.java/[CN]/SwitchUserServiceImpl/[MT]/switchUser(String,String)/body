@@ -1,0 +1,9 @@
+{
+  getTransactionManager().endTransaction();
+  IsisContext.closeSession();
+  LogonFixture logonFixture=new LogonFixture(username,roles);
+  AuthenticationRequestLogonFixture authRequest=new AuthenticationRequestLogonFixture(logonFixture);
+  AuthenticationSession session=getAuthenticationManager().authenticate(authRequest);
+  IsisContext.openSession(session);
+  getTransactionManager().startTransaction();
+}

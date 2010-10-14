@@ -1,0 +1,19 @@
+{
+class Customer {
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void localAnActionWithLocalPrefix(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"localAnActionWithLocalPrefix");
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
+  Facet facet=facetHolder.getFacet(ExecutedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ExecutedFacet);
+  final ExecutedFacet executedFacet=(ExecutedFacet)facet;
+  assertEquals(ExecutedFacet.Where.LOCALLY,executedFacet.value());
+  facet=facetHolder.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacet);
+  final NamedFacet namedFacet=(NamedFacet)facet;
+  assertEquals("An Action With Local Prefix",namedFacet.value());
+}

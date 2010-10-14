@@ -1,0 +1,9 @@
+{
+  final Oid oid=data.getOid();
+  ObjectAdapter adapter=getAdapterManager().getAdapterFor(oid);
+  if (adapter == null) {
+    final ObjectSpecification specification=getSpecificationLoader().loadSpecification(data.getType());
+    adapter=getHydrator().recreateAdapter(oid,specification);
+  }
+  return adapter;
+}

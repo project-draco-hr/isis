@@ -1,0 +1,22 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
+  system=new TestProxySystem();
+  objectStore=new ObjectStoreSpy();
+  RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
+  DomainObjectContainerDefault container=new DomainObjectContainerDefault();
+  runtimeContext.injectInto(container);
+  runtimeContext.setContainer(container);
+  servicesInjector=new ServicesInjectorDefault();
+  servicesInjector.setContainer(container);
+  adapterManager=(AdapterManagerExtended)system.getAdapterManager();
+  adapterFactory=system.getAdapterFactory();
+  persistenceSession=new PersistenceSessionObjectStore(mockPersistenceSessionFactory,adapterFactory,new ObjectFactoryBasic(),servicesInjector,new TestProxyOidGenerator(),adapterManager,new DummyPersistAlgorithm(),objectStore);
+  transactionManager=new ObjectStoreTransactionManager(persistenceSession,objectStore);
+  transactionManager.injectInto(persistenceSession);
+  servicesInjector.setServices(Collections.emptyList());
+  persistenceSession.setSpecificationLoader(system.getReflector());
+  system.setPersistenceSession(persistenceSession);
+  system.init();
+  testObjectAdapter=system.createPersistentTestObject();
+}

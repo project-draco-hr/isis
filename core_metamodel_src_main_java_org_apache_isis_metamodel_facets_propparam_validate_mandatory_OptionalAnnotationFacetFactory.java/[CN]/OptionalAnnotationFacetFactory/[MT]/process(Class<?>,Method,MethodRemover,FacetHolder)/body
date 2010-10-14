@@ -1,0 +1,11 @@
+{
+  final Class<?> returnType=method.getReturnType();
+  if (returnType.isPrimitive()) {
+    return false;
+  }
+  if (!isAnnotationPresent(method,Optional.class)) {
+    return false;
+  }
+  final Optional annotation=getAnnotation(method,Optional.class);
+  return FacetUtil.addFacet(create(annotation,holder));
+}

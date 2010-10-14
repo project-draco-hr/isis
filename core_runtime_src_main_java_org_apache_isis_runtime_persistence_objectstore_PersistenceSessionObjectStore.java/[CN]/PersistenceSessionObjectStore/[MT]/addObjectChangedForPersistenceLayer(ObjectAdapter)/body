@@ -1,0 +1,19 @@
+{
+  LOG.debug("object change to be persisted " + adapter.getOid());
+  getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
+    @Override public void preExecute(){
+      CallbackUtils.callCallback(adapter,UpdatingCallbackFacet.class);
+    }
+    public void execute(){
+      SaveObjectCommand saveObjectCommand=objectStore.createSaveObjectCommand(adapter);
+      getTransactionManager().addCommand(saveObjectCommand);
+    }
+    public void onSuccess(){
+      CallbackUtils.callCallback(adapter,UpdatedCallbackFacet.class);
+    }
+    public void onFailure(){
+    }
+  }
+);
+  getUpdateNotifier().addChangedObject(adapter);
+}

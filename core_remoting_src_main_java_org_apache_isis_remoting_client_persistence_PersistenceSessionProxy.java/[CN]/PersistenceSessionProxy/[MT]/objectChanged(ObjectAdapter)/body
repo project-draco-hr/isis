@@ -1,0 +1,12 @@
+{
+  if (adapter.isTransient()) {
+    addObjectChangedToPresentationLayer(adapter);
+    return;
+  }
+  if (adapter.getResolveState().respondToChangesInPersistentObjects()) {
+    if (isImmutable(adapter)) {
+      return;
+    }
+    addObjectChangedToPersistenceLayer(adapter);
+  }
+}

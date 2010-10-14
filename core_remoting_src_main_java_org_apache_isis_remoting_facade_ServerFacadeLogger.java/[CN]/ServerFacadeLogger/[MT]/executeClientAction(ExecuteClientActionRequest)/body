@@ -1,0 +1,48 @@
+{
+  ReferenceData[] data=request.getData();
+  int[] types=request.getTypes();
+  List<Data> complete=Lists.newArrayList();
+  StringBuilder str=new StringBuilder();
+  for (int i=0; i < data.length; i++) {
+    str.append(indentedNewLine());
+    str.append("[");
+    str.append(i + 1);
+    str.append("] ");
+switch (types[i]) {
+case ClientTransactionEvent.ADD:
+      str.append("persisted: ");
+    break;
+case ClientTransactionEvent.CHANGE:
+  str.append("changed: ");
+break;
+case ClientTransactionEvent.DELETE:
+str.append("deleted: ");
+break;
+}
+dump(str,data[i],3,complete);
+}
+log("execute client action " + str);
+final ExecuteClientActionResponse results=decorated.executeClientAction(request);
+complete=new Vector();
+str=new StringBuilder();
+final ReferenceData[] persistedUpdates=results.getPersisted();
+final Version[] changedVersions=results.getChanged();
+for (int i=0; i < persistedUpdates.length; i++) {
+str.append(indentedNewLine());
+str.append("[");
+str.append(i + 1);
+str.append("] ");
+switch (types[i]) {
+case ClientTransactionEvent.ADD:
+str.append("persisted: ");
+dump(str,persistedUpdates[i],3,complete);
+break;
+case ClientTransactionEvent.CHANGE:
+str.append("changed: ");
+str.append(changedVersions[i]);
+break;
+}
+}
+log(" <--- execute client action results" + str);
+return results;
+}

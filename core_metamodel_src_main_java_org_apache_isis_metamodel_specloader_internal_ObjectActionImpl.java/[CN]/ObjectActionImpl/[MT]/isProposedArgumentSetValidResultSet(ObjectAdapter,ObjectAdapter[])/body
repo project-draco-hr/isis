@@ -1,0 +1,16 @@
+{
+  final InteractionInvocationMethod invocationMethod=InteractionInvocationMethod.BY_USER;
+  final InteractionResultSet resultSet=new InteractionResultSet();
+  final ObjectActionParameter[] actionParameters=getParameters();
+  if (proposedArguments != null) {
+    for (int i=0; i < proposedArguments.length; i++) {
+      final ValidityContext<?> ic=actionParameters[i].createProposedArgumentInteractionContext(getAuthenticationSession(),invocationMethod,object,proposedArguments,i);
+      InteractionUtils.isValidResultSet(getParameter(i),ic,resultSet);
+    }
+  }
+  if (resultSet.isAllowed()) {
+    final ValidityContext<?> ic=createActionInvocationInteractionContext(getAuthenticationSession(),invocationMethod,object,proposedArguments);
+    InteractionUtils.isValidResultSet(this,ic,resultSet);
+  }
+  return resultSet;
+}

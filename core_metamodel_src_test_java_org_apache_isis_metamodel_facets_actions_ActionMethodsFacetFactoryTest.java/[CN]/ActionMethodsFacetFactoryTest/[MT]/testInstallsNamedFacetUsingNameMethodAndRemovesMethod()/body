@@ -1,0 +1,12 @@
+{
+  final Method actionMethod=findMethod(CustomerStatic.class,"someAction",new Class[]{int.class,Long.class});
+  final Method nameMethod=findMethod(CustomerStatic.class,"nameSomeAction");
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(CustomerStatic.class,actionMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacetAbstract);
+  final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;
+  assertEquals("Another Name",namedFacetAbstract.value());
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(nameMethod));
+}

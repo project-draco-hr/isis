@@ -1,0 +1,9 @@
+{
+  final InteractionResult result=new InteractionResult(context.createInteractionEvent());
+  final Facet[] facets=facetHolder.getFacets(FacetFilters.isA(ValidatingInteractionAdvisor.class));
+  for (int i=0; i < facets.length; i++) {
+    final ValidatingInteractionAdvisor advisor=(ValidatingInteractionAdvisor)facets[i];
+    result.advise(advisor.invalidates(context),advisor);
+  }
+  return result;
+}

@@ -1,0 +1,14 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") @Mask("###") public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(MaskFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MaskFacetAnnotation);
+  final MaskFacetAnnotation maskFacet=(MaskFacetAnnotation)facet;
+  assertEquals("###",maskFacet.value());
+}

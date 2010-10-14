@@ -1,0 +1,11 @@
+{
+class Customer implements ImmutableUntilPersisted {
+  }
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(ImmutableFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ImmutableFacetMarkerInterface);
+  final ImmutableFacetMarkerInterface immutableFacetMarkerInterface=(ImmutableFacetMarkerInterface)facet;
+  assertEquals(org.apache.isis.metamodel.facets.When.UNTIL_PERSISTED,immutableFacetMarkerInterface.value());
+  assertNoMethodsRemoved();
+}

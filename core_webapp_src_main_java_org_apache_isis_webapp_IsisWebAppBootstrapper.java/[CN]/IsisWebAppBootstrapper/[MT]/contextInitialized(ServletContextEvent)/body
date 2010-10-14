@@ -1,0 +1,24 @@
+{
+  try {
+    ServletContext servletContext=servletContextEvent.getServletContext();
+    String webappDir=servletContext.getRealPath("/");
+    String webInfDir=servletContext.getRealPath("/WEB-INF");
+    loggingConfigurer.configureLogging(webInfDir,new String[0]);
+    final ConfigurationBuilder configurationBuilder=new ConfigurationBuilderResourceStreams(new ResourceStreamSourceServletContext(servletContext),new ResourceStreamSourceContextLoaderClassPath());
+    primeConfigurationBuilder(configurationBuilder,servletContext);
+    final DeploymentType deploymentType=determineDeploymentType(configurationBuilder,servletContext);
+    addConfigurationResourcesForWebApps(configurationBuilder);
+    addConfigurationResourcesForDeploymentType(configurationBuilder,deploymentType);
+    configurationBuilder.add(WebAppConstants.WEB_APP_DIR,webappDir);
+    configurationBuilder.add(SystemConstants.NOSPLASH_KEY,"true");
+    InstallerLookup installerLookup=new InstallerLookupDefault(getClass());
+    injector=createGuiceInjector(configurationBuilder,deploymentType,installerLookup);
+    IsisSystem system=injector.getInstance(IsisSystem.class);
+    servletContext.setAttribute(WebAppConstants.NAKED_OBJECTS_SYSTEM_KEY,system);
+  }
+ catch (  RuntimeException e) {
+    LOG.error("startup failed",e);
+    throw e;
+  }
+  LOG.info("server started");
+}

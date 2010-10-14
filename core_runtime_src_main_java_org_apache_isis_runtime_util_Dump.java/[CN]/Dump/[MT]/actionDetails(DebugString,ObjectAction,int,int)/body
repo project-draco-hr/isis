@@ -1,0 +1,59 @@
+{
+  debug.appendln((count + 1) + "." + a.getId()+ " ("+ a.getClass().getName()+ ")");
+  debug.indent();
+  final int newIndent=indent + 4;
+  try {
+    final ObjectAction[] debActions=a.getActions();
+    if (debActions.length > 0) {
+      for (int i=0; i < debActions.length; i++) {
+        actionDetails(debug,debActions[i],newIndent,i);
+      }
+    }
+ else {
+      if (a.getDescription() != null && !a.getDescription().equals("")) {
+        debug.appendln("Description",a.getDescription());
+      }
+      debug.appendln("ID",a.getId());
+      debug.appendln(a.debugData());
+      debug.appendln("Target",a.getTarget());
+      debug.appendln("On type",a.getOnType());
+      final Class<? extends Facet>[] facets=a.getFacetTypes();
+      if (facets.length > 0) {
+        debug.appendln("Facets");
+        debug.indent();
+        for (int j=0; j < facets.length; j++) {
+          debug.appendln(a.getFacet(facets[j]).toString());
+        }
+        debug.unindent();
+      }
+      final ObjectSpecification returnType=a.getReturnType();
+      debug.appendln("Returns",returnType == null ? "VOID" : returnType.toString());
+      final ObjectActionParameter[] parameters=a.getParameters();
+      if (parameters.length == 0) {
+        debug.appendln("Parameters","none");
+      }
+ else {
+        debug.appendln("Parameters");
+        debug.indent();
+        final ObjectActionParameter[] p=a.getParameters();
+        for (int j=0; j < parameters.length; j++) {
+          debug.append(p[j].getName());
+          debug.append(" (");
+          debug.append(parameters[j].getSpecification().getFullName());
+          debug.appendln(")");
+          debug.indent();
+          final Class<? extends Facet>[] parameterFacets=p[j].getFacetTypes();
+          for (int i=0; i < parameterFacets.length; i++) {
+            debug.appendln(p[j].getFacet(parameterFacets[i]).toString());
+          }
+          debug.unindent();
+        }
+        debug.unindent();
+      }
+    }
+  }
+ catch (  final RuntimeException e) {
+    debug.appendException(e);
+  }
+  debug.unindent();
+}

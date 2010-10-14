@@ -1,0 +1,19 @@
+{
+  HttpServletRequest httpRequest=(HttpServletRequest)request;
+  HttpServletResponse httpResponse=(HttpServletResponse)response;
+  AuthenticationSession authSession=authSessionLookupStrategy.lookup(request,response);
+  if (!isValid(authSession)) {
+    if (redirectResourceIfNoSession != null && !redirectResourceIfNoSession.equals(httpRequest.getServletPath())) {
+      httpResponse.sendRedirect(redirectResourceIfNoSession);
+    }
+ else {
+      chain.doFilter(request,response);
+    }
+  }
+ else {
+    authSessionLookupStrategy.bind(request,response,authSession);
+    IsisContext.openSession(authSession);
+    chain.doFilter(request,response);
+    IsisContext.closeSession();
+  }
+}

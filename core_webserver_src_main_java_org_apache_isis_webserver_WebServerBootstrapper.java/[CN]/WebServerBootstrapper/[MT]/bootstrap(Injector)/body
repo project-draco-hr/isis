@@ -1,0 +1,17 @@
+{
+  ConfigurationBuilder configurationBuilder=injector.getInstance(ConfigurationBuilder.class);
+  IsisConfiguration configuration=configurationBuilder.getConfiguration();
+  int port=configuration.getInteger(EMBEDDED_WEB_SERVER_PORT_KEY,EMBEDDED_WEB_SERVER_PORT_DEFAULT);
+  String webappContextPath=configuration.getString(EMBEDDED_WEB_SERVER_RESOURCE_BASE_KEY,EMBEDDED_WEB_SERVER_RESOURCE_BASE_DEFAULT);
+  Server server=new Server(port);
+  WebAppContext context=new WebAppContext(SRC_MAIN_WEBAPP,webappContextPath);
+  copyConfigurationPrimersIntoServletContext(context);
+  server.setHandler(context);
+  try {
+    server.start();
+    server.join();
+  }
+ catch (  Exception ex) {
+    throw new IsisException("Unable to start Jetty server",ex);
+  }
+}

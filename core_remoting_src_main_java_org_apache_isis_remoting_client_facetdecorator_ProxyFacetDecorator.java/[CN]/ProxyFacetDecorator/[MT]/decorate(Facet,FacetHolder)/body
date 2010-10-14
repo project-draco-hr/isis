@@ -1,0 +1,34 @@
+{
+  if (!(requiredHolder instanceof Identified)) {
+    return null;
+  }
+  Identified identified=(Identified)requiredHolder;
+  final Class<? extends Facet> facetType=facet.facetType();
+  if (facetType == PropertySetterFacet.class) {
+    final PropertySetterFacet propertySetterFacet=(PropertySetterFacet)facet;
+    PropertySetterFacetWrapProxy decoratingFacet=new PropertySetterFacetWrapProxy(propertySetterFacet,serverFacade,encoderDecoder,identified.getIdentifier().getMemberName());
+    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+  }
+  if (facetType == PropertyClearFacet.class) {
+    final PropertyClearFacet propertyClearFacet=(PropertyClearFacet)facet;
+    PropertyClearFacetWrapProxy decoratingFacet=new PropertyClearFacetWrapProxy(propertyClearFacet,serverFacade,encoderDecoder,identified.getIdentifier().getMemberName());
+    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+  }
+  if (facetType == CollectionAddToFacet.class) {
+    final CollectionAddToFacet collectionAddToFacet=(CollectionAddToFacet)facet;
+    CollectionAddToFacetWrapProxy decoratingFacet=new CollectionAddToFacetWrapProxy(collectionAddToFacet,serverFacade,encoderDecoder,identified.getIdentifier().getMemberName());
+    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+  }
+  if (facetType == CollectionRemoveFromFacet.class) {
+    final CollectionRemoveFromFacet collectionRemoveFromFacet=(CollectionRemoveFromFacet)facet;
+    CollectionRemoveFromFacetWrapProxy decoratingFacet=new CollectionRemoveFromFacetWrapProxy(collectionRemoveFromFacet,serverFacade,encoderDecoder,identified.getIdentifier().getMemberName());
+    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+  }
+  if (facetType == ActionInvocationFacet.class) {
+    ActionInvocationFacet invocationFacet=(ActionInvocationFacet)facet;
+    ObjectAction objectAction=(ObjectAction)requiredHolder;
+    ActionInvocationFacetWrapProxy decoratingFacet=new ActionInvocationFacetWrapProxy(invocationFacet,serverFacade,encoderDecoder,objectAction);
+    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+  }
+  return facet;
+}

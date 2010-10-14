@@ -1,0 +1,29 @@
+{
+  final int size=elementsLoaded() ? facet.size(this) : INCOMPLETE_COLLECTION;
+  final TypeOfFacet typeFacet=getTypeOfFacet();
+  final ObjectSpecification elementSpecification=typeFacet == null ? null : typeFacet.valueSpec();
+  if (elementSpecification == null || elementSpecification.getFullName().equals(Object.class.getName())) {
+switch (size) {
+case -1:
+      return "Objects";
+case 0:
+    return "No objects";
+case 1:
+  return "1 object";
+default :
+return size + " objects";
+}
+}
+ else {
+switch (size) {
+case -1:
+return elementSpecification.getPluralName();
+case 0:
+return "No " + elementSpecification.getPluralName();
+case 1:
+return "1 " + elementSpecification.getSingularName();
+default :
+return size + " " + elementSpecification.getPluralName();
+}
+}
+}

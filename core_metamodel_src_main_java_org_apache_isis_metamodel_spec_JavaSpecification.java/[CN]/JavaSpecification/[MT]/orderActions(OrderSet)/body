@@ -1,0 +1,27 @@
+{
+  final ObjectAction[] actions=new ObjectAction[order.size()];
+  final Enumeration<ObjectAction> elements=CastUtils.enumerationOver(order.elements(),ObjectAction.class);
+  int actionCnt=0;
+  while (elements.hasMoreElements()) {
+    final Object element=elements.nextElement();
+    if (element instanceof JavaObjectActionPeer) {
+      final JavaObjectActionPeer javaObjectActionPeer=(JavaObjectActionPeer)element;
+      final String actionId=javaObjectActionPeer.getIdentifier().getMemberName();
+      final ObjectAction objectAction=new ObjectActionImpl(actionId,javaObjectActionPeer,getRuntimeContext());
+      actions[actionCnt++]=objectAction;
+    }
+ else     if (element instanceof OrderSet) {
+      final OrderSet set=((OrderSet)element);
+      actions[actionCnt++]=new ObjectActionSet("",set.getGroupFullName(),orderActions(set),getRuntimeContext());
+    }
+ else {
+      throw new UnknownTypeException(element);
+    }
+  }
+  if (actionCnt < actions.length) {
+    final ObjectAction[] actualActions=new ObjectAction[actionCnt];
+    System.arraycopy(actions,0,actualActions,0,actionCnt);
+    return actualActions;
+  }
+  return actions;
+}

@@ -1,0 +1,42 @@
+{
+  final TestProxySpecification specf=system.getSpecification(String.class);
+  specf.addFacet(new EncodableFacet(){
+    public String toEncodedString(    final ObjectAdapter object){
+      return null;
+    }
+    public ObjectAdapter fromEncodedString(    final String encodedData){
+      return getAdapterManager().adapterFor(encodedData);
+    }
+    public Class facetType(){
+      return EncodableFacet.class;
+    }
+    public FacetHolder getFacetHolder(){
+      return null;
+    }
+    public void setFacetHolder(    final FacetHolder facetHolder){
+    }
+    public boolean alwaysReplace(){
+      return false;
+    }
+    public boolean isDerived(){
+      return false;
+    }
+    public boolean isNoop(){
+      return false;
+    }
+    public Facet getUnderlyingFacet(){
+      return null;
+    }
+    public void setUnderlyingFacet(    Facet underlyingFacet){
+      throw new UnsupportedOperationException();
+    }
+  }
+);
+  IsisContext.getTransactionManager().startTransaction();
+  SetValueRequest request=new SetValueRequest(session,"name",movieData,new DummyEncodeableObjectData("name of movie"));
+  SetValueResponse response=server.setValue(request);
+  final ObjectData[] updates=response.getUpdates();
+  IsisContext.getTransactionManager().endTransaction();
+  nameField.assertField(object,"name of movie");
+  assertEquals(0,updates.length);
+}

@@ -1,0 +1,11 @@
+{
+  final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getFirstName");
+  final Method nameMethod=findMethod(CustomerStatic.class,"nameFirstName");
+  facetFactory.process(CustomerStatic.class,propertyAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacetViaMethod);
+  final NamedFacetViaMethod namedFacet=(NamedFacetViaMethod)facet;
+  assertEquals("Given name",namedFacet.value());
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(nameMethod));
+}

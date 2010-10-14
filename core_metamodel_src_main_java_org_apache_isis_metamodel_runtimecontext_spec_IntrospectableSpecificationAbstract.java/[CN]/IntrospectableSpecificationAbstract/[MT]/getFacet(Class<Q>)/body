@@ -1,0 +1,36 @@
+{
+  final Q facet=super.getFacet(facetType);
+  Q noopFacet=null;
+  if (isNotANoopFacet(facet)) {
+    return facet;
+  }
+ else {
+    noopFacet=facet;
+  }
+  if (interfaces() != null) {
+    final ObjectSpecification[] interfaces=interfaces();
+    for (int i=0; i < interfaces.length; i++) {
+      final ObjectSpecification interfaceSpec=interfaces[i];
+      if (interfaceSpec == null) {
+        continue;
+      }
+      final Q interfaceFacet=interfaceSpec.getFacet(facetType);
+      if (isNotANoopFacet(interfaceFacet)) {
+        return interfaceFacet;
+      }
+ else {
+        if (noopFacet == null) {
+          noopFacet=interfaceFacet;
+        }
+      }
+    }
+  }
+  ObjectSpecification superSpec=superclass();
+  if (superSpec != null) {
+    Q superClassFacet=superSpec.getFacet(facetType);
+    if (isNotANoopFacet(superClassFacet)) {
+      return superClassFacet;
+    }
+  }
+  return noopFacet;
+}

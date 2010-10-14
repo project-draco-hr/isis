@@ -1,0 +1,21 @@
+{
+  Assert.assertNotNull("Class to instantiate must be specified",cls);
+  try {
+    if (requiredType == null || requiredType.isAssignableFrom(cls)) {
+      final Class<T> tClass=CastUtils.cast(cls);
+      return tClass.newInstance();
+    }
+ else {
+      throw new InstanceCreationClassException("Class '" + cls.getName() + "' is not of type '"+ requiredType+ "'");
+    }
+  }
+ catch (  final NoClassDefFoundError e) {
+    throw new InstanceCreationClassException("Class '" + cls + "'found , but is missing a dependent class: "+ e.getMessage(),e);
+  }
+catch (  final InstantiationException e) {
+    throw new InstanceCreationException("Could not instantiate an object of class '" + cls.getName() + "'; "+ e.getMessage());
+  }
+catch (  final IllegalAccessException e) {
+    throw new InstanceCreationException("Could not access the class '" + cls.getName() + "'; "+ e.getMessage());
+  }
+}

@@ -1,0 +1,24 @@
+{
+  final ObjectAssociation[] fields=new ObjectAssociation[order.size()];
+  final Enumeration<ObjectAssociation> elements=CastUtils.enumerationOver(order.elements(),ObjectAssociation.class);
+  int actionCnt=0;
+  while (elements.hasMoreElements()) {
+    final Object element=elements.nextElement();
+    if (element instanceof JavaObjectAssociationPeer) {
+      final JavaObjectAssociationPeer javaObjectAssociationPeer=(JavaObjectAssociationPeer)element;
+      final ObjectAssociation objectAssociation=createObjectField(javaObjectAssociationPeer);
+      fields[actionCnt++]=objectAssociation;
+    }
+ else     if (element instanceof OrderSet) {
+    }
+ else {
+      throw new UnknownTypeException(element);
+    }
+  }
+  if (actionCnt < fields.length) {
+    final ObjectAssociation[] actualActions=new ObjectAssociation[actionCnt];
+    System.arraycopy(fields,0,actualActions,0,actionCnt);
+    return actualActions;
+  }
+  return fields;
+}

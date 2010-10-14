@@ -1,0 +1,15 @@
+{
+  final String cls=member.toIdentityString(Identifier.CLASS);
+  final String name=member.toIdentityString(Identifier.MEMBERNAME_ONLY);
+  final String parms=member.toIdentityString(Identifier.PARMS_ONLY).replace(",","\\,");
+  if (parms.length() == 0) {
+    return;
+  }
+  final Attributes attrs=createCommonAttributes(parms,role,false);
+  try {
+    authContext.createSubcontext(createParmsBindname(cls,name,parms),attrs);
+  }
+ catch (  final NameAlreadyBoundException e) {
+    LOG.debug(e);
+  }
+}

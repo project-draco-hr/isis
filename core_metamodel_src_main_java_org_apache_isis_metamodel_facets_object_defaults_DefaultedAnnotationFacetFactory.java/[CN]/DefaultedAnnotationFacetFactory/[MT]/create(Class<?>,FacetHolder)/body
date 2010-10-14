@@ -1,0 +1,17 @@
+{
+  final Defaulted annotation=(Defaulted)getAnnotation(cls,Defaulted.class);
+  if (annotation != null) {
+    final DefaultedFacetAbstract facet=new DefaultedFacetAnnotation(cls,getIsisConfiguration(),holder,runtimeContext);
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  final String providerName=DefaultsProviderUtil.defaultsProviderNameFromConfiguration(cls,getIsisConfiguration());
+  if (!StringUtils.isEmpty(providerName)) {
+    final DefaultedFacetFromConfiguration facet=new DefaultedFacetFromConfiguration(providerName,holder,runtimeContext);
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  return null;
+}

@@ -1,0 +1,16 @@
+{
+  final String dateString=entry.trim();
+  final String str=dateString.toLowerCase();
+  if (str.equals("today") || str.equals("now")) {
+    return now();
+  }
+ else   if (dateString.startsWith("+")) {
+    return relativeDate(original == null ? now() : original,dateString,true);
+  }
+ else   if (dateString.startsWith("-")) {
+    return relativeDate(original == null ? now() : original,dateString,false);
+  }
+ else {
+    return parseDate(dateString,original == null ? now() : original);
+  }
+}

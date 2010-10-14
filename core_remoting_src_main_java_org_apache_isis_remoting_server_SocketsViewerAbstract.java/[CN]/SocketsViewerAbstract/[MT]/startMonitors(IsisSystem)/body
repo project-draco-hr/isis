@@ -1,0 +1,22 @@
+{
+  if (system.getDeploymentType().shouldMonitor()) {
+    Runnable serverMonitorRunnable=new Runnable(){
+      public void run(){
+        final SocketServerMonitor serverMonitor=new SocketServerMonitor();
+        serverMonitor.setTarget(system);
+        serverMonitor.listen();
+      }
+    }
+;
+    Threads.startThread(serverMonitorRunnable,"Monitor-1");
+    Runnable httpServerMonitorRunnable=new Runnable(){
+      public void run(){
+        final HttpServerMonitor httpServerMonitor=new HttpServerMonitor();
+        httpServerMonitor.setTarget(system);
+        httpServerMonitor.listen();
+      }
+    }
+;
+    Threads.startThread(httpServerMonitorRunnable,"Monitor-2");
+  }
+}

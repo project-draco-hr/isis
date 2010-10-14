@@ -1,0 +1,9 @@
+{
+  final Movie movie=new Movie();
+  final ObjectAdapter adapter=system.createPersistentTestObject(movie);
+  adapter.changeState(ResolveState.RESOLVED);
+  final DummyObjectData data=new DummyObjectData(adapter.getOid(),Movie.class.getName(),false,new TestProxyVersion(3));
+  final ObjectAdapter object=encoder.decode(data);
+  assertEquals(movie,object.getObject());
+  assertEquals(new TestProxyVersion(1),object.getVersion());
+}

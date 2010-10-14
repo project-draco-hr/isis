@@ -1,0 +1,12 @@
+{
+  String key=ConfigurationConstants.ROOT + "exploration-objects.file";
+  String fileName="test.data";
+  system.addToConfiguration(key,fileName);
+  service.loadFile();
+  Set<Object> objects=service.allSavedObjects();
+  Assert.assertEquals(1,objects.size());
+  Object object=objects.toArray()[0];
+  Assert.assertEquals(Person.class,object.getClass());
+  Assert.assertEquals("Fred Smith",((Person)object).getName());
+  Assert.assertEquals(new Date(110,2,8,13,32),((Person)object).getDate());
+}

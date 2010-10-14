@@ -1,0 +1,24 @@
+{
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    public void someAction(    final int x,    final long y){
+    }
+    public int default0SomeAction(){
+      return 0;
+    }
+    public long default1SomeAction(){
+      return 0;
+    }
+    public Object[] choicesSomeAction(    final int x,    final long y){
+      return null;
+    }
+  }
+  Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
+  ObjectActionPeer facetHolderWithParms=createHolderWithParms();
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  try {
+    facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolderWithParms);
+    fail("exception expected");
+  }
+ catch (  org.apache.isis.metamodel.exceptions.ReflectionException expected) {
+  }
+}

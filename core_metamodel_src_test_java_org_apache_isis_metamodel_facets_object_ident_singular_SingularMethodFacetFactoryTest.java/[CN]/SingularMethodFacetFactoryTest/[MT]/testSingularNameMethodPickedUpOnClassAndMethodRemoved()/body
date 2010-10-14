@@ -1,0 +1,10 @@
+{
+  final Method singularNameMethod=findMethod(Customer.class,"singularName");
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacetViaMethod);
+  final NamedFacetViaMethod namedFacetViaMethod=(NamedFacetViaMethod)facet;
+  assertEquals("Some name",namedFacetViaMethod.value());
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(singularNameMethod));
+}

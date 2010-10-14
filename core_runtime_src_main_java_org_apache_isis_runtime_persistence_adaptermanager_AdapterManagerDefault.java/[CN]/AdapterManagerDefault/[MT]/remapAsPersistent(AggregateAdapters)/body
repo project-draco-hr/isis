@@ -1,0 +1,56 @@
+{
+  ObjectAdapter rootAdapter=aggregateAdapters.getRootAdapter();
+  final Oid oid=rootAdapter.getOid();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("remapAsPersistent: " + oid);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("removing root adapter from oid map");
+  }
+  boolean removed=getOidAdapterMap().remove(oid);
+  if (!removed) {
+    LOG.warn("could not remove oid: " + oid);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("removing collection adapter(s) from oid map");
+  }
+  for (  ObjectAdapter collectionAdapter : aggregateAdapters) {
+    Oid collectionOid=collectionAdapter.getOid();
+    removed=getOidAdapterMap().remove(collectionOid);
+    if (!removed) {
+      LOG.warn("could not remove collectionOid: " + collectionOid);
+    }
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("updating the Oid");
+  }
+  getOidGenerator().convertTransientToPersistentOid(oid);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("re-adding into maps; oid is now: " + oid);
+  }
+  getOidAdapterMap().add(oid,rootAdapter);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("re-adding collection adapter(s) to oid map");
+  }
+  for (  ObjectAdapter collectionAdapter : aggregateAdapters) {
+    AggregatedOid previousCollectionOid=(AggregatedOid)collectionAdapter.getOid();
+    getOidAdapterMap().add(previousCollectionOid,collectionAdapter);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("replacing any collection pojos, remapping in pojo map");
+  }
+  for (  OneToManyAssociation otma : aggregateAdapters.getCollections()) {
+    ObjectAdapter collectionAdapter=aggregateAdapters.getCollectionAdapter(otma);
+    Object collectionPojoWrappedByAdapter=collectionAdapter.getObject();
+    Object collectionPojoOnRootPojo=getCollectionPojo(otma,rootAdapter);
+    if (collectionPojoOnRootPojo != collectionPojoWrappedByAdapter) {
+      getPojoAdapterMap().remove(collectionAdapter);
+      collectionAdapter.replacePojo(collectionPojoOnRootPojo);
+      getPojoAdapterMap().add(collectionPojoOnRootPojo,collectionAdapter);
+    }
+  }
+  rootAdapter.changeState(ResolveState.RESOLVED);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("made persistent " + rootAdapter + "; was "+ oid.getPrevious());
+  }
+}

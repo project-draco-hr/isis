@@ -1,0 +1,12 @@
+{
+  for (  FilterSpecification filterSpec : webAppSpec.getFilterSpecifications()) {
+    FilterHolder filterHolder=new FilterHolder(filterSpec.getFilterClass());
+    filterHolder.setInitParameters(filterSpec.getInitParams());
+    servletHandler.addFilter(filterHolder);
+    FilterMapping filterMapping=new FilterMapping();
+    filterMapping.setFilterName(filterHolder.getName());
+    filterMapping.setPathSpecs(filterSpec.getPathSpecs().toArray(new String[]{}));
+    filterMapping.setDispatches(Handler.DEFAULT);
+    servletHandler.addFilterMapping(filterMapping);
+  }
+}

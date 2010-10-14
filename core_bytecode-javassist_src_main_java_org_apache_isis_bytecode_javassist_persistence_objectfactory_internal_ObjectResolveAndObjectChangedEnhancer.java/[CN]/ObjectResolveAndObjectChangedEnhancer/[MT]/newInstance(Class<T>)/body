@@ -1,0 +1,24 @@
+{
+  ProxyFactory proxyFactory=new ProxyFactory();
+  proxyFactory.setSuperclass(cls);
+  proxyFactory.setInterfaces(ArrayUtils.combine(cls.getInterfaces(),new Class<?>[]{JavassistEnhanced.class}));
+  proxyFactory.setFilter(new MethodFilter(){
+    public boolean isHandled(    Method m){
+      return !m.getName().equals("finalize");
+    }
+  }
+);
+  Class<T> proxySubclass=proxyFactory.createClass();
+  try {
+    T newInstance=proxySubclass.newInstance();
+    ProxyObject proxyObject=(ProxyObject)newInstance;
+    proxyObject.setHandler(methodHandler);
+    return newInstance;
+  }
+ catch (  InstantiationException e) {
+    throw new IsisException(e);
+  }
+catch (  IllegalAccessException e) {
+    throw new IsisException(e);
+  }
+}

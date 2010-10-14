@@ -1,0 +1,12 @@
+{
+  identities.remove(oid);
+  Oid previousOid=oid.getPrevious();
+  final ObjectAdapter object=(ObjectAdapter)identities.get(previousOid);
+  if (object == null) {
+    return;
+  }
+  identities.remove(previousOid);
+  final Oid oidFromObject=object.getOid();
+  oidFromObject.copyFrom(oid);
+  identities.put(oidFromObject,object);
+}

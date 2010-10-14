@@ -1,0 +1,10 @@
+{
+  Identifier identifier=identified.getIdentifier();
+  ensureMapsConsistent(ownerAdapter);
+  Assert.assertNotNull(pojo);
+  final Oid aggregatedOid=new AggregatedOid(ownerAdapter.getOid(),identifier);
+  ObjectAdapter aggregatedAdapter=createOrRecreateAdapter(pojo,aggregatedOid);
+  aggregatedAdapter.setTypeOfFacet(identified.getFacet(TypeOfFacet.class));
+  aggregatedAdapter.setOptimisticLock(ownerAdapter.getVersion());
+  return aggregatedAdapter;
+}

@@ -1,0 +1,16 @@
+{
+  When when=null;
+  if (AlwaysImmutable.class.isAssignableFrom(cls)) {
+    when=When.ALWAYS;
+  }
+ else   if (ImmutableOncePersisted.class.isAssignableFrom(cls)) {
+    when=When.ONCE_PERSISTED;
+  }
+ else   if (ImmutableUntilPersisted.class.isAssignableFrom(cls)) {
+    when=When.UNTIL_PERSISTED;
+  }
+ else   if (NeverImmutable.class.isAssignableFrom(cls)) {
+    when=When.NEVER;
+  }
+  return FacetUtil.addFacet(create(when,holder));
+}

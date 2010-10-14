@@ -1,0 +1,13 @@
+{
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(object);
+  final Data[] collData=new Data[facet.size(object)];
+  int i=0;
+  for (  ObjectAdapter ref : facet.iterable(object)) {
+    String resolveStateName=ref.getResolveState().name();
+    String specName=ref.getSpecification().getFullName();
+    Oid oid=ref.getOid();
+    collData[i++]=new Data(oid,resolveStateName,specName);
+  }
+  String elementTypeSpecName=object.getSpecification().getFullName();
+  return new CollectionData(object.getOid(),object.getResolveState(),elementTypeSpecName,collData);
+}

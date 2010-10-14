@@ -1,0 +1,9 @@
+{
+  AuthenticationSession session=request.getSession();
+  String specificationName=request.getSpecificationName();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("request hasInstances of " + specificationName + " for "+ session);
+  }
+  boolean hasInstances=getPersistenceSession().hasInstances(getSpecification(specificationName));
+  return new HasInstancesResponse(hasInstances);
+}

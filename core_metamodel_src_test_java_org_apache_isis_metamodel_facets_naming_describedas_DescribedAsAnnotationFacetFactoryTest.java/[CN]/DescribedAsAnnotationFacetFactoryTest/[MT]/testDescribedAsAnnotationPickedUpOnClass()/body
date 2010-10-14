@@ -1,0 +1,11 @@
+{
+@DescribedAs("some description") class Customer {
+  }
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(DescribedAsFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DescribedAsFacetAbstract);
+  final DescribedAsFacetAbstract describedAsFacetAbstract=(DescribedAsFacetAbstract)facet;
+  assertEquals("some description",describedAsFacetAbstract.value());
+  assertNoMethodsRemoved();
+}

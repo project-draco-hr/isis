@@ -1,0 +1,8 @@
+{
+  final Method actionMethod=findMethod(CustomerStatic.class,"otherAction",new Class[]{int.class,Long.class});
+  final Method protectMethod=findMethod(CustomerStatic.class,"protectOtherAction",new Class[]{int.class,Long.class});
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(CustomerStatic.class,actionMethod,methodRemover,facetHolder);
+  assertNull(facetHolder.getFacet(DisabledFacet.class));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(protectMethod));
+}

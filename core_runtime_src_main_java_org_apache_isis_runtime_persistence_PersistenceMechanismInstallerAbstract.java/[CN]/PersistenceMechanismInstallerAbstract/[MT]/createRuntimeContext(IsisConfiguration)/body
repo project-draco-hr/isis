@@ -1,0 +1,14 @@
+{
+  Properties properties=new Properties();
+  IsisConfiguration applicationConfiguration=configuration.getProperties("application");
+  Enumeration<String> names=applicationConfiguration.propertyNames();
+  while (names.hasMoreElements()) {
+    String key=names.nextElement();
+    String value=applicationConfiguration.getString(key);
+    String newKey=key.substring("application.".length());
+    properties.setProperty(newKey,value);
+  }
+  RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
+  runtimeContext.setProperties(properties);
+  return runtimeContext;
+}

@@ -1,0 +1,12 @@
+{
+  final Method method=findMethodWithOrWithoutParameters(type,CLASS,PROTECT_PREFIX + name,boolean.class,paramTypes);
+  if (method == null) {
+    return;
+  }
+  methodRemover.removeMethod(method);
+  final Boolean protectMethodReturnValue=(Boolean)InvokeUtils.invokeStatic(method);
+  if (!protectMethodReturnValue.booleanValue()) {
+    return;
+  }
+  facets.add(new DisabledFacetAlways(facetHolder));
+}

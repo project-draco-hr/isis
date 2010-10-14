@@ -1,0 +1,16 @@
+{
+  final ObjectAssociation[] fields=getAssociations();
+  if (fields != null && fields.length > 0) {
+    StringBuilder buf=new StringBuilder();
+    for (int i=0; i < fields.length; i++) {
+      final String name=fields[i].getId();
+      if ("id".indexOf(name) == -1) {
+        appendFieldName(buf,name);
+      }
+    }
+    if (buf.length() > 0) {
+      throw new ObjectSpecificationException("Service object " + getFullName() + " should have no fields, but has: "+ buf);
+    }
+  }
+  service=true;
+}

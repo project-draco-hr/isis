@@ -1,0 +1,30 @@
+{
+  final int length=name.length();
+  if (length <= 1) {
+    return name.toUpperCase();
+  }
+  final StringBuffer naturalName=new StringBuffer(length);
+  char previousCharacter;
+  char character=Character.toUpperCase(name.charAt(0));
+  naturalName.append(character);
+  char nextCharacter=name.charAt(1);
+  for (int pos=2; pos < length; pos++) {
+    previousCharacter=character;
+    character=nextCharacter;
+    nextCharacter=name.charAt(pos);
+    if (previousCharacter != NameUtils.SPACE) {
+      if (Character.isUpperCase(character) && !Character.isUpperCase(previousCharacter)) {
+        naturalName.append(NameUtils.SPACE);
+      }
+      if (Character.isUpperCase(character) && Character.isLowerCase(nextCharacter) && Character.isUpperCase(previousCharacter)) {
+        naturalName.append(NameUtils.SPACE);
+      }
+      if (Character.isDigit(character) && !Character.isDigit(previousCharacter)) {
+        naturalName.append(NameUtils.SPACE);
+      }
+    }
+    naturalName.append(character);
+  }
+  naturalName.append(nextCharacter);
+  return naturalName.toString();
+}

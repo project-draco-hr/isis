@@ -1,0 +1,25 @@
+{
+  LOG.info("createPersistenceQueryFor: " + query.getDescription());
+  ObjectSpecification noSpec=specFor(query);
+  if (query instanceof QueryFindAllInstances) {
+    return new PersistenceQueryFindAllInstances(noSpec);
+  }
+  if (query instanceof QueryFindByTitle) {
+    QueryFindByTitle<?> queryByTitle=(QueryFindByTitle<?>)query;
+    String title=queryByTitle.getTitle();
+    return new PersistenceQueryFindByTitle(noSpec,title);
+  }
+  if (query instanceof QueryFindByPattern) {
+    QueryFindByPattern<?> queryByPattern=(QueryFindByPattern<?>)query;
+    Object pattern=queryByPattern.getPattern();
+    ObjectAdapter patternAdapter=getAdapterManager().adapterFor(pattern);
+    return new PersistenceQueryFindByPattern(noSpec,patternAdapter);
+  }
+  if (query instanceof QueryDefault) {
+    QueryDefault<?> queryDefault=(QueryDefault<?>)query;
+    String queryName=queryDefault.getQueryName();
+    Map<String,ObjectAdapter> argumentsAdaptersByParameterName=wrap(queryDefault.getArgumentsByParameterName());
+    return new PersistenceQueryFindUsingApplibQueryDefault(noSpec,queryName,argumentsAdaptersByParameterName,cardinality);
+  }
+  return new PersistenceQueryFindUsingApplibQuerySerializable(noSpec,query,cardinality);
+}

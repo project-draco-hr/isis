@@ -1,0 +1,19 @@
+{
+  if (collectionTypeRegistry.isCollectionType(cls)) {
+    final TypeOfFacet typeOfFacet=holder.getFacet(TypeOfFacet.class);
+    if (typeOfFacet == null) {
+      Class<?> collectionElementType=collectionElementType(cls);
+      holder.addFacet(collectionElementType != Object.class ? new TypeOfFacetInferredFromGenerics(collectionElementType,holder,getSpecificationLoader()) : new TypeOfFacetDefaultToObject(holder,getSpecificationLoader()));
+    }
+ else {
+    }
+    holder.addFacet(new JavaCollectionFacet(holder,getRuntimeContext()));
+    return true;
+  }
+  if (collectionTypeRegistry.isArrayType(cls)) {
+    holder.addFacet(new JavaArrayFacet(holder,getRuntimeContext()));
+    holder.addFacet(new TypeOfFacetInferredFromArray(cls.getComponentType(),holder,getSpecificationLoader()));
+    return true;
+  }
+  return false;
+}

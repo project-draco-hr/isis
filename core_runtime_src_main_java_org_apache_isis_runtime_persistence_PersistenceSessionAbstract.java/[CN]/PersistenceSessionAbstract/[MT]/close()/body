@@ -1,0 +1,15 @@
+{
+  if (getState() == State.CLOSED) {
+    return;
+  }
+  if (LOG.isInfoEnabled()) {
+    LOG.info("closing " + this);
+  }
+  doClose();
+  adapterManager.close();
+  servicesInjector.close();
+  objectFactory.close();
+  adapterFactory.close();
+  oidGenerator.close();
+  setState(State.CLOSED);
+}

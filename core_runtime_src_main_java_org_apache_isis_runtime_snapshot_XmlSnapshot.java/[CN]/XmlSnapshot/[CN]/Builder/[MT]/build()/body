@@ -1,0 +1,13 @@
+{
+  ObjectAdapter adapter=getAdapterManager().adapterFor(snapshottable);
+  XmlSnapshot snapshot=(schema != null) ? new XmlSnapshot(adapter,schema,addOids) : new XmlSnapshot(adapter,addOids);
+  for (  PathAndAnnotation paa : paths) {
+    if (paa.annotation != null) {
+      snapshot.include(paa.path,paa.annotation);
+    }
+ else {
+      snapshot.include(paa.path);
+    }
+  }
+  return snapshot;
+}

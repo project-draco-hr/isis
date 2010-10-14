@@ -1,0 +1,11 @@
+{
+@RegEx(validation="^A.*",caseSensitive=false) class Customer {
+  }
+  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(RegExFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof RegExFacetAnnotation);
+  final RegExFacetAnnotation regExFacet=(RegExFacetAnnotation)facet;
+  assertEquals("^A.*",regExFacet.validation());
+  assertEquals(false,regExFacet.caseSensitive());
+}

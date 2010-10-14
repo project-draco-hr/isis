@@ -1,0 +1,8 @@
+{
+  final String fullMethodName=method.getName();
+  final String capitalizedName=fullMethodName.substring(0,1).toUpperCase() + fullMethodName.substring(1);
+  if (!capitalizedName.startsWith(LOCAL_PREFIX)) {
+    return false;
+  }
+  return FacetUtil.addFacets(new Facet[]{new ExecutedFacetViaNamingConvention(ExecutedFacet.Where.LOCALLY,holder),new NamedFacetInferred(capitalizedName.substring(5),holder)});
+}

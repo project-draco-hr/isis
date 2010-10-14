@@ -1,0 +1,20 @@
+{
+  AuthenticationSession session=request.getSession();
+  String fieldIdentifier=request.getFieldIdentifier();
+  IdentityData targetData=request.getTarget();
+  IdentityData associateData=request.getAssociate();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("request setAssociation " + fieldIdentifier + " on "+ targetData+ " with "+ associateData+ " for "+ session);
+  }
+  final ObjectAdapter targetAdapter=getPersistentObjectAdapter(session,targetData);
+  final ObjectAdapter associate=getPersistentObjectAdapter(session,associateData);
+  final ObjectAssociation association=targetAdapter.getSpecification().getAssociation(fieldIdentifier);
+  ensureAssociationModifiableElseThrowException(session,targetAdapter,association);
+  if (association instanceof OneToOneAssociation) {
+    ((OneToOneAssociation)association).setAssociation(targetAdapter,associate);
+  }
+ else {
+    ((OneToManyAssociation)association).addElement(targetAdapter,associate);
+  }
+  return new SetAssociationResponse(getUpdates());
+}

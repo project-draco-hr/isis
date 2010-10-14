@@ -1,0 +1,16 @@
+{
+class Order {
+  }
+class Customer {
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public Collection<Order> someAction(){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(TypeOfFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TypeOfFacetInferredFromGenerics);
+  final TypeOfFacetInferredFromGenerics typeOfFacetInferredFromGenerics=(TypeOfFacetInferredFromGenerics)facet;
+  assertEquals(Order.class,typeOfFacetInferredFromGenerics.value());
+}

@@ -1,0 +1,12 @@
+{
+  OrderSet fields=introspector.getFields();
+  Enumeration elements=fields.elements();
+  TestSession session=new TestSession();
+  Consent usable=((JavaField)elements.nextElement()).isUsableForSession(session);
+  assertTrue(usable.isVetoed());
+  assertEquals("no edits",usable.getReason());
+  assertEquals(Allow.DEFAULT,((JavaField)elements.nextElement()).isUsableForSession(session));
+  usable=((JavaField)elements.nextElement()).isUsableDeclaratively();
+  assertTrue(usable.isVetoed());
+  assertEquals("Field not editable",usable.getReason());
+}

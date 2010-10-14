@@ -1,0 +1,20 @@
+{
+  final Class<?>[] parameterTypes=getParameterTypesFor(actionMethod);
+  final int numParameters=parameterTypes.length;
+  final JavaObjectActionParamPeer[] actionParams=new JavaObjectActionParamPeer[numParameters];
+  for (int j=0; j < numParameters; j++) {
+    ObjectSpecification paramSpec=getSpecificationLoader().loadSpecification(parameterTypes[j]);
+    if (paramSpec == null) {
+      return null;
+    }
+    actionParams[j]=new JavaObjectActionParamPeer(paramSpec);
+  }
+  final String fullMethodName=actionMethod.getName();
+  final Identifier identifier=Identifier.actionIdentifier(className,fullMethodName,parameterTypes);
+  final JavaObjectActionPeer action=new JavaObjectActionPeer(identifier,actionParams);
+  getFacetProcessor().process(type,actionMethod,new JavaIntrospectorMethodRemover(),action,ObjectFeatureType.ACTION);
+  for (int j=0; j < actionParams.length; j++) {
+    getFacetProcessor().processParams(actionMethod,j,actionParams[j]);
+  }
+  return action;
+}

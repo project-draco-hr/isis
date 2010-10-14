@@ -1,0 +1,30 @@
+{
+  final List<ObjectAdapter> services=getRuntimeContext().getServices();
+  final List<ObjectAction> relatedActions=new ArrayList<ObjectAction>();
+  for (  ObjectAdapter serviceAdapter : services) {
+    final List<ObjectAction> matchingActions=new ArrayList<ObjectAction>();
+    for (    ObjectActionType type : types) {
+      final ObjectAction[] serviceActions=serviceAdapter.getSpecification().getObjectActions(type);
+      for (int j=0; j < serviceActions.length; j++) {
+        final ObjectSpecification returnType=serviceActions[j].getReturnType();
+        if (returnType != null && returnType.isCollection()) {
+          final TypeOfFacet facet=serviceActions[j].getFacet(TypeOfFacet.class);
+          if (facet != null) {
+            final ObjectSpecification elementType=facet.valueSpec();
+            if (elementType.isOfType(this)) {
+              matchingActions.add(serviceActions[j]);
+            }
+          }
+        }
+ else         if (returnType != null && returnType.isOfType(this)) {
+          matchingActions.add(serviceActions[j]);
+        }
+      }
+    }
+    if (matchingActions.size() > 0) {
+      final ObjectActionSet set=new ObjectActionSet("id",serviceAdapter.titleString(),matchingActions,runtimeContext);
+      relatedActions.add(set);
+    }
+  }
+  return (ObjectAction[])relatedActions.toArray(new ObjectAction[relatedActions.size()]);
+}

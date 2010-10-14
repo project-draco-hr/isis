@@ -1,0 +1,17 @@
+{
+  final Parseable annotation=(Parseable)getAnnotation(cls,Parseable.class);
+  if (annotation != null) {
+    final ParseableFacetAnnotation facet=new ParseableFacetAnnotation(cls,getIsisConfiguration(),holder,getRuntimeContext());
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  final String parserName=ParserUtil.parserNameFromConfiguration(cls,getIsisConfiguration());
+  if (!StringUtils.isEmpty(parserName)) {
+    final ParseableFacetFromConfiguration facet=new ParseableFacetFromConfiguration(parserName,holder,getRuntimeContext());
+    if (facet.isValid()) {
+      return facet;
+    }
+  }
+  return null;
+}

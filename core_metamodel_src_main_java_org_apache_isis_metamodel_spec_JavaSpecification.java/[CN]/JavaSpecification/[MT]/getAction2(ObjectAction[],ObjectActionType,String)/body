@@ -1,0 +1,24 @@
+{
+  if (nameParmsIdentityString == null) {
+    return null;
+  }
+  outer:   for (int i=0; i < availableActions.length; i++) {
+    final ObjectAction action=availableActions[i];
+    if (action.getActions().length > 0) {
+      final ObjectAction a=getAction2(action.getActions(),type,nameParmsIdentityString);
+      if (a != null) {
+        return a;
+      }
+    }
+ else {
+      if (!sameActionTypeOrNotSpecified(type,action)) {
+        continue outer;
+      }
+      if (!nameParmsIdentityString.equals(action.getIdentifier().toNameParmsIdentityString())) {
+        continue outer;
+      }
+      return action;
+    }
+  }
+  return null;
+}

@@ -1,0 +1,11 @@
+{
+  SimpleTransport transport=new SimpleTransport(getConfiguration(),input,output);
+  EncodingMarshaller marshaller=new EncodingMarshaller(getConfiguration(),transport);
+  try {
+    marshaller.connect();
+  }
+ catch (  IOException e) {
+    throw new ConnectionException(e);
+  }
+  return new ServerConnectionDefault(serverFacade,marshaller);
+}

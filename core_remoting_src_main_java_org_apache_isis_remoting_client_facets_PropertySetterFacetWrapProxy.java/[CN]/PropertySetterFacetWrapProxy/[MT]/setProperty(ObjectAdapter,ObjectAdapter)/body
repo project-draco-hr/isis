@@ -1,0 +1,32 @@
+{
+  if (targetAdapter.isPersistent()) {
+    final IdentityData targetReference=encoder.encodeIdentityData(targetAdapter);
+    try {
+      ObjectSpecification associatedSpec=associateAdapter.getSpecification();
+      if (associatedSpec.isCollection()) {
+      }
+ else {
+        ObjectData[] updates;
+        if (!associatedSpec.isValueOrIsAggregated()) {
+          final IdentityData associateReference=encoder.encodeIdentityData(associateAdapter);
+          SetAssociationRequest request=new SetAssociationRequest(getAuthenticationSession(),name,targetReference,associateReference);
+          SetAssociationResponse response=serverFacade.setAssociation(request);
+          updates=response.getUpdates();
+        }
+ else {
+          final EncodableObjectData val=encoder.encodeAsValue(associateAdapter);
+          SetValueRequest request=new SetValueRequest(getAuthenticationSession(),name,targetReference,val);
+          SetValueResponse response=serverFacade.setValue(request);
+          updates=response.getUpdates();
+        }
+        encoder.decode(updates);
+      }
+    }
+ catch (    final ConcurrencyException e) {
+      throw ProxyUtil.concurrencyException(e);
+    }
+  }
+ else {
+    underlyingFacet.setProperty(targetAdapter,associateAdapter);
+  }
+}

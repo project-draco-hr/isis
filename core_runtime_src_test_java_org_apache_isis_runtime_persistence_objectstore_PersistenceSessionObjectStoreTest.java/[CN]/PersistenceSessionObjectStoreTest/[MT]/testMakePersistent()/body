@@ -1,0 +1,12 @@
+{
+  testObjectAdapter=system.createTransientTestObject();
+  objectStore.reset();
+  transactionManager.startTransaction();
+  persistenceSession.makePersistent(testObjectAdapter);
+  transactionManager.endTransaction();
+  objectStore.assertAction(0,"startTransaction");
+  objectStore.assertAction(1,"createObject " + testObjectAdapter);
+  objectStore.assertAction(2,"endTransaction");
+  objectStore.assertAction(3,"run CreateObjectCommand " + testObjectAdapter);
+  assertEquals(4,objectStore.getActions().size());
+}

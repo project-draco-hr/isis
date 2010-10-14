@@ -1,0 +1,39 @@
+{
+  final Oid objectsOid=object.getOid();
+  Assert.assertNotNull(objectsOid);
+  if (objectsOid.hasPrevious()) {
+    final Version version=object.getVersion();
+    final String type=data.getType();
+    final ObjectData persistedData=dataFactory.createObjectData(type,objectsOid,true,version);
+    final Data[] allContents=data.getFieldContent();
+    if (allContents != null) {
+      final int contentLength=allContents.length;
+      final Data persistentContents[]=new Data[contentLength];
+      final ObjectAssociation[] fields=getFieldOrder(object.getSpecification());
+      for (int i=0; i < contentLength; i++) {
+        final Data fieldData=allContents[i];
+        if (fieldData instanceof NullData) {
+          persistentContents[i]=null;
+        }
+ else         if (fields[i].isOneToOneAssociation()) {
+          if (fieldData instanceof ObjectData) {
+            final ObjectAdapter fieldReference=fields[i].get(object);
+            persistentContents[i]=encodeMadePersistentGraph((ObjectData)fieldData,fieldReference);
+          }
+ else {
+            persistentContents[i]=null;
+          }
+        }
+ else         if (fields[i].isOneToManyAssociation()) {
+          final ObjectAdapter fieldReference=fields[i].get(object);
+          persistentContents[i]=createMadePersistentCollection((CollectionData)fieldData,fieldReference);
+        }
+      }
+      persistedData.setFieldContent(persistentContents);
+    }
+    return persistedData;
+  }
+ else {
+    return null;
+  }
+}

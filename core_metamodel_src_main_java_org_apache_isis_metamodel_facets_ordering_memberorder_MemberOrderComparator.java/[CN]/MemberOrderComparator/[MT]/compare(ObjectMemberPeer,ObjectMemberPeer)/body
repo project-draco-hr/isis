@@ -1,0 +1,57 @@
+{
+  final MemberOrderFacet m1=getMemberOrder(o1);
+  final MemberOrderFacet m2=getMemberOrder(o2);
+  if (m1 == null && m2 == null) {
+    return fallbackComparator.compare(o1,o2);
+  }
+  if (m1 == null && m2 != null) {
+    return +1;
+  }
+  if (m1 != null && m2 == null) {
+    return -1;
+  }
+  if (ensureInSameGroup && !m1.name().equals(m2.name())) {
+    throw new IllegalArgumentException("Not in same group");
+  }
+  final StringTokenizer tokens1=new StringTokenizer(m1.sequence(),".",false);
+  final String[] components1=new String[tokens1.countTokens()];
+  for (int i=0; tokens1.hasMoreTokens(); i++) {
+    components1[i]=tokens1.nextToken();
+  }
+  final StringTokenizer tokens2=new StringTokenizer(m2.sequence(),".",false);
+  final String[] components2=new String[tokens2.countTokens()];
+  for (int i=0; tokens2.hasMoreTokens(); i++) {
+    components2[i]=tokens2.nextToken();
+  }
+  final int length1=components1.length;
+  final int length2=components2.length;
+  if (length1 == 0 && length2 == 0) {
+    return fallbackComparator.compare(o1,o2);
+  }
+  int n=0;
+  while (true) {
+    final int length=n + 1;
+    if (length1 < length && length2 >= length) {
+      return -1;
+    }
+    if (length2 < length && length1 >= length) {
+      return +1;
+    }
+    if (length1 < length && length2 < length) {
+      return fallbackComparator.compare(o1,o2);
+    }
+    int componentCompare=0;
+    try {
+      final Integer c1=Integer.valueOf(components1[n]);
+      final Integer c2=Integer.valueOf(components2[n]);
+      componentCompare=c1.compareTo(c2);
+    }
+ catch (    final NumberFormatException nfe) {
+      componentCompare=components1[n].compareTo(components2[n]);
+    }
+    if (componentCompare != 0) {
+      return componentCompare;
+    }
+    n++;
+  }
+}

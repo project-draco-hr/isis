@@ -1,0 +1,19 @@
+{
+  ensureThatArg(oid.hasPrevious(),is(true));
+  final Oid previousOid=oid.getPrevious();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("remapping oid: " + oid + " with previous oid of: "+ previousOid);
+  }
+  final ObjectAdapter lookedUpAdapter=oidAdapterMap.getAdapter(previousOid);
+  if (lookedUpAdapter == null) {
+    LOG.warn("could not locate previousOid: " + previousOid);
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("removing previous oid" + previousOid);
+  }
+  oidAdapterMap.remove(previousOid);
+  final Oid lookedUpAdapterOid=lookedUpAdapter.getOid();
+  lookedUpAdapterOid.copyFrom(oid);
+  oidAdapterMap.add(lookedUpAdapterOid,lookedUpAdapter);
+}

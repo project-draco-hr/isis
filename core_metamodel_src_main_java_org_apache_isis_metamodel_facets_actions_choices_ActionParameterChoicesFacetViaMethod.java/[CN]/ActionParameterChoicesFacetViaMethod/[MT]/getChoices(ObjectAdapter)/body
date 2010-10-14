@@ -1,0 +1,13 @@
+{
+  final Object options=ObjectInvokeUtils.invoke(method,owningAdapter);
+  if (options == null) {
+    return new Object[0];
+  }
+  if (options.getClass().isArray()) {
+    return ArrayUtils.getObjectAsObjectArray(options);
+  }
+ else {
+    final ObjectSpecification specification=getSpecificationLoader().loadSpecification(choicesType);
+    return ObjectAdapterUtils.getCollectionAsObjectArray(options,specification,getRuntimeContext());
+  }
+}

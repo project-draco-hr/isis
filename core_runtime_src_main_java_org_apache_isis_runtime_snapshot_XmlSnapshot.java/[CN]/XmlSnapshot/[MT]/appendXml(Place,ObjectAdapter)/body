@@ -1,0 +1,17 @@
+{
+  LOG.debug("appendXml(" + log("parentPlace",parentPlace) + andlog("childObj",childObject)+ ")");
+  final Element parentElement=parentPlace.getXmlElement();
+  final Element parentXsElement=parentPlace.getXsdElement();
+  if (parentElement.getOwnerDocument() != getXmlDocument()) {
+    throw new IllegalArgumentException("parent XML Element must have snapshot's XML document as its owner");
+  }
+  LOG.debug("appendXml(Pl, NO): invoking objectToElement() for " + log("childObj",childObject));
+  final Place childPlace=objectToElement(childObject);
+  Element childElement=childPlace.getXmlElement();
+  final Element childXsElement=childPlace.getXsdElement();
+  LOG.debug("appendXml(Pl, NO): invoking mergeTree of parent with child");
+  childElement=mergeTree(parentElement,childElement);
+  LOG.debug("appendXml(Pl, NO): adding XS Element to schema if required");
+  schema.addXsElementIfNotPresent(parentXsElement,childXsElement);
+  return childElement;
+}

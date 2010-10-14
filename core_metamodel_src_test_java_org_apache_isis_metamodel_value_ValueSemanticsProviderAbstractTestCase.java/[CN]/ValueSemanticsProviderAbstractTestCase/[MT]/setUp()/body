@@ -1,0 +1,20 @@
+{
+  Locale.setDefault(Locale.UK);
+  mockFacetHolder=mockery.mock(FacetHolder.class);
+  mockRuntimeContext=mockery.mock(RuntimeContext.class);
+  mockSpecificationLoader=mockery.mock(SpecificationLoader.class);
+  mockConfiguration=mockery.mock(IsisConfiguration.class);
+  mockery.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString(with(any(String.class)),with(any(String.class)));
+      will(returnArgument(1));
+      allowing(mockConfiguration).getBoolean(with(any(String.class)),with(any(Boolean.class)));
+      will(returnArgument(1));
+      allowing(mockConfiguration).getString("isis.locale");
+      will(returnValue(null));
+      allowing(mockRuntimeContext).injectDependenciesInto(with(any(Object.class)));
+    }
+  }
+);
+  mockAdapter=mockery.mock(ObjectAdapter.class);
+}

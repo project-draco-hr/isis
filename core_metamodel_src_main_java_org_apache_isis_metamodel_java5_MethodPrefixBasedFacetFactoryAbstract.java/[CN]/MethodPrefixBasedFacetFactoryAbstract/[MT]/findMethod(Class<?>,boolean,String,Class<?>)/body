@@ -1,0 +1,26 @@
+{
+  try {
+    final Method[] methods=type.getMethods();
+    for (int i=0; i < methods.length; i++) {
+      final Method method=methods[i];
+      final int modifiers=method.getModifiers();
+      if (!Modifier.isPublic(modifiers)) {
+        continue;
+      }
+      if (Modifier.isStatic(modifiers) != forClass) {
+        continue;
+      }
+      if (!method.getName().equals(name)) {
+        continue;
+      }
+      if (returnType != null && returnType != method.getReturnType()) {
+        continue;
+      }
+      return method;
+    }
+  }
+ catch (  final SecurityException e) {
+    return null;
+  }
+  return null;
+}

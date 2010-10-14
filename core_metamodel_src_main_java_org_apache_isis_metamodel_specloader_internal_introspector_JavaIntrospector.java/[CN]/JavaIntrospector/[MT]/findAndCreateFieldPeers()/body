@@ -1,0 +1,13 @@
+{
+  LOG.debug("  looking for fields for " + type);
+  final Set<Method> propertyOrCollectionCandidates=getFacetProcessor().findPropertyOrCollectionCandidateAccessors(methods,new HashSet<Method>());
+  List<Class<?>> typesToLoad=new ArrayList<Class<?>>();
+  for (  final Method method : propertyOrCollectionCandidates) {
+    getSpecificationTraverser().traverseTypes(method,typesToLoad);
+  }
+  reflector.loadSpecifications(typesToLoad,type);
+  final List<ObjectAssociationPeer> fieldPeers=new ArrayList<ObjectAssociationPeer>();
+  findAndRemoveCollectionAccessorsAndCreateCorrespondingFieldPeers(fieldPeers);
+  findAndRemovePropertyAccessorsAndCreateCorrespondingFieldPeers(fieldPeers);
+  return toArray(fieldPeers);
+}

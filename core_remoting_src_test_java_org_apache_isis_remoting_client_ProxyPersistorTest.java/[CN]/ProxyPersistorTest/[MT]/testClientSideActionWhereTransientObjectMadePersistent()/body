@@ -1,0 +1,29 @@
+{
+  final ObjectAdapter transientObject=system.createTransientTestObject();
+  final TestProxyOid previousOid=(TestProxyOid)transientObject.getOid();
+  final DummyObjectData movieData=new DummyObjectData(previousOid,Movie.class.getName(),true,null);
+  final NullData directorData=new DummyNullValue(Person.class.getName());
+  final DummyEncodeableObjectData nameData=new DummyEncodeableObjectData("Star Wars",String.class.getName());
+  movieData.setFieldContent(new Data[]{directorData,nameData});
+  mockery.checking(new Expectations(){
+{
+      final TestProxyOid newOid=new TestProxyOid(123,true);
+      newOid.setupPrevious(previousOid);
+      final DummyReferenceData updateData=new DummyReferenceData(newOid,"type",new TestProxyVersion(456));
+      one(mockDistribution).executeClientAction(with(any(ExecuteClientActionRequest.class)));
+      will(returnValue(new ExecuteClientActionResponse(new ReferenceData[]{updateData},null,new ObjectData[0])));
+    }
+  }
+);
+  getAdapterManager().adapterFor(transientObject.getObject());
+  mockery.checking(new Expectations(){
+{
+      one(mockEncoder).encodeMakePersistentGraph(with(equalTo(transientObject)),with(any(KnownObjectsRequest.class)));
+      will(returnValue(movieData));
+    }
+  }
+);
+  transactionManager.startTransaction();
+  persistenceSessionProxy.makePersistent(transientObject);
+  transactionManager.endTransaction();
+}

@@ -1,0 +1,17 @@
+{
+class Customer {
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void explorationAnActionWithExplorationPrefix(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"explorationAnActionWithExplorationPrefix");
+  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
+  Facet facet=facetHolder.getFacet(ExplorationFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ExplorationFacet);
+  facet=facetHolder.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacet);
+  final NamedFacet namedFacet=(NamedFacet)facet;
+  assertEquals("An Action With Exploration Prefix",namedFacet.value());
+}

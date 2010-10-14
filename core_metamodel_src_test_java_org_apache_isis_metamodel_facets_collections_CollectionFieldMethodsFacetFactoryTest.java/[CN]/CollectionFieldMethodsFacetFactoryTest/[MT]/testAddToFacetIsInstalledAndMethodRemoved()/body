@@ -1,0 +1,20 @@
+{
+@SuppressWarnings("hiding") class Order {
+  }
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") public Collection<Order> getOrders(){
+      return null;
+    }
+    @SuppressWarnings("unused") public void addToOrders(    final Order o){
+    }
+  }
+  final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
+  final Method addToMethod=findMethod(Customer.class,"addToOrders",new Class[]{Order.class});
+  facetFactory.process(Customer.class,collectionAccessorMethod,methodRemover,facetHolder);
+  final Facet facet=facetHolder.getFacet(CollectionAddToFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CollectionAddToFacetViaMethod);
+  final CollectionAddToFacetViaMethod collectionAddToFacetViaMethod=(CollectionAddToFacetViaMethod)facet;
+  assertEquals(addToMethod,collectionAddToFacetViaMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(addToMethod));
+}

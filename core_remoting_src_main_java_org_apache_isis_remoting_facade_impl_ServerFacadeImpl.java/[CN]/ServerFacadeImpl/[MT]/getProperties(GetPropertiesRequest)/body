@@ -1,0 +1,16 @@
+{
+  final Properties properties=new Properties();
+  properties.put("test-client","true");
+  final IsisConfiguration configuration=IsisContext.getConfiguration();
+  final IsisConfiguration serviceProperties=configuration.getProperties(ConfigurationConstants.ROOT + "services");
+  final Enumeration e=serviceProperties.propertyNames();
+  while (e.hasMoreElements()) {
+    final String name=(String)e.nextElement();
+    properties.put(name,serviceProperties.getString(name));
+  }
+  final String oidGeneratorClass=getPersistenceSession().getOidGenerator().getClass().getName();
+  if (oidGeneratorClass != null) {
+    properties.put(PersistenceConstants.OID_GENERATOR_CLASS_NAME,oidGeneratorClass);
+  }
+  return new GetPropertiesResponse(properties);
+}

@@ -1,0 +1,13 @@
+{
+  if (reqImpl == null) {
+    reqImpl=getConfiguration().getString(key,defaultImpl);
+  }
+  if (reqImpl == null) {
+    return null;
+  }
+  T installer=getInstaller(requiredType,reqImpl);
+  if (installer == null) {
+    throw new InstanceCreationException("Failed to load installer class " + reqImpl + " (of type "+ requiredType.getName());
+  }
+  return installer;
+}

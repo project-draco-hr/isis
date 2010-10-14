@@ -1,0 +1,21 @@
+{
+  Money money=(Money)original;
+  if (money == null || money.getCurrency().equals(LOCAL_CURRENCY_CODE)) {
+    try {
+      final double value=DEFAULT_CURRENCY_FORMAT.parse(entry).doubleValue();
+      money=new Money(value,LOCAL_CURRENCY_CODE);
+      return money;
+    }
+ catch (    final ParseException ignore) {
+    }
+  }
+  try {
+    final double value=DEFAULT_NUMBER_FORMAT.parse(entry).doubleValue();
+    final String currencyCode=money == null ? defaultCurrencyCode : money.getCurrency();
+    money=new Money(value,currencyCode);
+    return money;
+  }
+ catch (  final ParseException ex) {
+    throw new TextEntryParseException("Not a distinguishable money value " + entry,ex);
+  }
+}

@@ -1,0 +1,13 @@
+{
+  super.setUp();
+  javaObject=new JavaActionTestObject();
+  target=system.createAdapterForTransient(javaObject);
+  MemberIdentifierImpl memberIdentifierImpl=new MemberIdentifierImpl("cls","methodName",(ObjectSpecification[])null);
+  javaAction=new JavaAction(memberIdentifierImpl,null,null,new JavaActionParam[0]);
+  assertNotNull(javaAction);
+  Class cls=JavaActionTestObject.class;
+  Method action=cls.getDeclaredMethod("actionMethod",new Class[0]);
+  javaAction.addFacet(new JavaActionInvocationFacet(action,null,javaAction));
+  Method valid=cls.getDeclaredMethod("validMethod",new Class[0]);
+  javaAction.addFacet(new ActionValidMethodFacet(valid,javaAction));
+}
