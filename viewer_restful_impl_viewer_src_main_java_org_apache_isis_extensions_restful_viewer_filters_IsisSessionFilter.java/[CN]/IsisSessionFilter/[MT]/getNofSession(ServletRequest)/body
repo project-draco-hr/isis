@@ -1,0 +1,29 @@
+{
+  final HttpServletRequest httpRequest=(HttpServletRequest)request;
+  final HttpSession httpSession=httpRequest.getSession(true);
+  final AuthenticationManager authenticationManager=(AuthenticationManager)httpSession.getServletContext().getAttribute(AUTHENTICATION_MANAGER_WEBAPP_CONTEXT_KEY);
+  if (authenticationManager == null) {
+    throw new IllegalStateException("No authentication manager configured.");
+  }
+  AuthenticationSession nofSession=null;
+  final DeploymentType deploymentType=IsisContext.getDeploymentType();
+  if (deploymentType.isExploring()) {
+    nofSession=new ExplorationSession();
+  }
+ else {
+    nofSession=(AuthenticationSession)httpSession.getAttribute(NOF_SESSION_REQUEST_KEY);
+    if (nofSession != null) {
+      if (!authenticationManager.isSessionValid(nofSession)) {
+        nofSession=null;
+      }
+    }
+    if (nofSession == null) {
+      final String user=httpRequest.getParameter("user");
+      final String password=httpRequest.getParameter("password");
+      final AuthenticationRequest passwordRequest=new AuthenticationRequestPassword(user,password);
+      nofSession=authenticationManager.authenticate(passwordRequest);
+    }
+  }
+  httpSession.setAttribute(NOF_SESSION_REQUEST_KEY,nofSession);
+  return nofSession;
+}

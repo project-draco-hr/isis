@@ -1,0 +1,13 @@
+{
+  final Element div=xhtmlRenderer.div_p("Facets",HtmlClass.FACETS);
+  final List<Facet> rows=ListUtils.toList(facetHolder.getFacets(FacetFilters.ANY));
+  final List<TableColumn<Facet>> columns=new ArrayList<TableColumn<Facet>>();
+  columns.add(new TableColumnFacetFacetType(pathPrefix,getResourceContext()));
+  columns.add(new TableColumnFacetImplementation(getResourceContext()));
+  columns.add(new TableColumnFacetHiding(getResourceContext()));
+  columns.add(new TableColumnFacetDisabling(getResourceContext()));
+  columns.add(new TableColumnFacetValidating(getResourceContext()));
+  final Element table=xhtmlRenderer.table(columns,rows,HtmlClass.FACETS);
+  div.appendChild(table);
+  return div;
+}

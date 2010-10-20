@@ -1,0 +1,25 @@
+{
+  if (LOG.isInfoEnabled()) {
+    LOG.info("getting from '" + uri + "'");
+  }
+  try {
+    HttpURLConnection connection=createGetConnection(uri);
+    Document document=readDocFromConnectionInputStream(connection);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(document.toXML());
+    }
+    return document;
+  }
+ catch (  ProtocolException e) {
+    throw new RestfulClientException(e);
+  }
+catch (  IOException e) {
+    throw new RestfulClientException(e);
+  }
+catch (  ValidityException e) {
+    throw new RestfulClientException(e);
+  }
+catch (  ParsingException e) {
+    throw new RestfulClientException(e);
+  }
+}

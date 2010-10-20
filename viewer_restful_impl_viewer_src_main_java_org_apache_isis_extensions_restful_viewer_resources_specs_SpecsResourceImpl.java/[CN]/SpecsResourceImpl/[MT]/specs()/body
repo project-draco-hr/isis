@@ -1,0 +1,17 @@
+{
+  init();
+  final XhtmlTemplate xhtml=new XhtmlTemplate("Specifications",getServletRequest());
+  xhtml.appendToBody(asDivNofSession());
+  xhtml.appendToBody(resourcesDiv());
+  final Element div=xhtmlRenderer.div_p("Specifications",HtmlClass.SECTION);
+  final Element ul=xhtmlRenderer.ul(HtmlClass.SPECIFICATIONS);
+  final ObjectSpecification[] allSpecifications=getSpecificationLoader().allSpecifications();
+  for (  final ObjectSpecification spec : sorted(allSpecifications)) {
+    final String specFullName=spec.getFullName();
+    final String uri=MessageFormat.format("{0}/specs/{1}",getServletRequest().getContextPath(),specFullName);
+    ul.appendChild(xhtmlRenderer.li_a(uri,specFullName,"spec","specs",HtmlClass.SPECIFICATION));
+  }
+  div.appendChild(ul);
+  xhtml.appendToBody(div);
+  return xhtml.toXML();
+}

@@ -1,0 +1,35 @@
+{
+  init();
+  final String specAndPropertyAndFacet=specFullName + "/collection/" + collectionId+ "/facet/"+ facetTypeName;
+  final XhtmlTemplate xhtml=new XhtmlTemplate(specAndPropertyAndFacet,getServletRequest());
+  xhtml.appendToBody(asDivNofSession());
+  final ObjectSpecification noSpec=getSpecification(specFullName);
+  final ObjectAssociation collection=noSpec.getAssociation(collectionId);
+  final Element div=xhtmlRenderer.div_p("Owners",null);
+  xhtml.appendToBody(div);
+  final Element ul=xhtmlRenderer.ul(HtmlClass.PROPERTIES);
+  final String specUri=MessageFormat.format("{0}/specs/{1}",getServletRequest().getContextPath(),specFullName);
+  ul.appendChild(xhtmlRenderer.li_a(specUri,specFullName,"owning spec","spec","facet"));
+  final String collectionUri=MessageFormat.format("{0}/specs/{1}/collection/{2}",getServletRequest().getContextPath(),specFullName,collectionId);
+  ul.appendChild(xhtmlRenderer.li_a(collectionUri,collectionId,"owning collection","collection","facet"));
+  div.appendChild(ul);
+  try {
+    xhtml.appendToBody(divFacetElements(facetTypeName,collection));
+  }
+ catch (  final IllegalArgumentException e) {
+    throw new WebApplicationException(responseOfNotFound(e));
+  }
+catch (  final ClassNotFoundException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+catch (  final IntrospectionException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+catch (  final IllegalAccessException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+catch (  final InvocationTargetException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+  return xhtml.toXML();
+}

@@ -1,0 +1,33 @@
+{
+  init();
+  String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
+  String proposedValueOidStr=UrlDecoderUtils.urlDecode(proposedValueEncodedOidStr);
+  final ObjectAdapter nakedObject=getNakedObject(oidStr);
+  if (nakedObject == null) {
+    throw new WebApplicationException(responseOfGone("could not determine object"));
+  }
+  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final OneToManyAssociation collection=(OneToManyAssociation)noSpec.getAssociation(collectionId);
+  ObjectAdapter proposedValueNO=null;
+  proposedValueNO=getNakedObject(proposedValueOidStr);
+  if (proposedValueNO == null) {
+    throw new WebApplicationException(responseOfGone("could not determine proposed value"));
+  }
+  final Consent consent=modification == CollectionModificationType.ADD_TO ? collection.isValidToAdd(nakedObject,proposedValueNO) : collection.isValidToRemove(nakedObject,proposedValueNO);
+  if (consent.isVetoed()) {
+    throw new WebApplicationException(responseOfBadRequest(consent));
+  }
+  final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + collectionId,getServletRequest());
+  xhtml.appendToBody(asDivNofSession());
+  xhtml.appendToBody(resourcesDiv());
+  Element div=asDivTableObjectDetails(nakedObject);
+  xhtml.appendToBody(div);
+  if (modification == CollectionModificationType.ADD_TO) {
+    collection.addElement(nakedObject,proposedValueNO);
+  }
+ else {
+    collection.removeElement(nakedObject,proposedValueNO);
+  }
+  return xhtml.toXML();
+}

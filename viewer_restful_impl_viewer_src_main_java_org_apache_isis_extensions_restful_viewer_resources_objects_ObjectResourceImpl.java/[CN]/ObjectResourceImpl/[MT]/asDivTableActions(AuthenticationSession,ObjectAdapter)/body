@@ -1,0 +1,23 @@
+{
+  final Element div=xhtmlRenderer.div_p("Actions",HtmlClass.ACTIONS);
+  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final List<ObjectAction> actions=new ArrayList<ObjectAction>();
+  for (  final ObjectActionType type : ResourceAbstract.ACTION_TYPES) {
+    final ObjectAction[] actionsForType=ActionUtils.flattened(noSpec.getObjectActions(type));
+    actions.addAll(Arrays.asList(actionsForType));
+  }
+  final List<ObjectAction> rows=ListUtils.toList(actions.toArray(new ObjectAction[0]));
+  final List<TableColumn<ObjectAction>> columns=new ArrayList<TableColumn<ObjectAction>>();
+  columns.add(new TableColumnNakedObjectActionName(noSpec,session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectActionType(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectActionReturnType(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectActionParamCount(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectMemberHidden<ObjectAction>(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectMemberDisabled<ObjectAction>(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectMemberDisabledReason<ObjectAction>(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectActionRealTarget(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectActionInvoke(session,nakedObject,getResourceContext()));
+  final Element table=xhtmlRenderer.table(columns,rows,HtmlClass.FACETS);
+  div.appendChild(table);
+  return div;
+}

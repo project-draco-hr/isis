@@ -1,0 +1,51 @@
+{
+  init();
+  String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  String actionId=UrlDecoderUtils.urlDecode(actionEncodedId);
+  final List<String> argsEncodedArray=InputStreamUtil.getArgs(body);
+  String[] argsEncoded=argsEncodedArray.toArray(new String[]{});
+  final String[] args=urlDecode(argsEncoded);
+  final ObjectAdapter nakedObject=getNakedObject(oidStr);
+  if (nakedObject == null) {
+    throw new WebApplicationException(responseOfGone("could not determine object"));
+  }
+  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final ObjectAction action=getObjectAction(noSpec,actionId);
+  final ObjectActionParameter[] parameters=action.getParameters();
+  final int parameterCount=parameters.length;
+  final int argumentCount=args.length;
+  if (parameterCount > argumentCount) {
+    String reason=MessageFormat.format("provided {0} parameters but {1} arguments",parameterCount,argumentCount);
+    throw new WebApplicationException(responseOfBadRequest(reason));
+  }
+  final ObjectAdapter[] proposedArguments=new ObjectAdapter[parameterCount];
+  for (int i=0; i < parameters.length; i++) {
+    final String proposedArg=args[i];
+    if (proposedArg != null) {
+      final ObjectAdapter argNO=getNakedObject(proposedArg,nakedObject,parameters[i]);
+      if (argNO == null) {
+        throw new WebApplicationException(responseOfGone("could not determine proposed value"));
+      }
+      proposedArguments[i]=argNO;
+    }
+  }
+  final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + actionId,getServletRequest());
+  xhtml.appendToBody(asDivNofSession());
+  Element div=asDivTableObjectDetails(nakedObject);
+  xhtml.appendToBody(div);
+  div=xhtmlRenderer.div_p(actionId,HtmlClass.COLLECTION);
+  xhtml.appendToBody(div);
+  final Consent consent=action.isProposedArgumentSetValid(nakedObject,proposedArguments);
+  if (consent.isVetoed()) {
+    throw new WebApplicationException(responseOfBadRequest(consent));
+  }
+  final ActionInvocationFacet actionInvocationFacet=action.getFacet(ActionInvocationFacet.class);
+  final ObjectAdapter result=actionInvocationFacet.invoke(nakedObject,proposedArguments);
+  if (result == null) {
+  }
+ else {
+    final Object object=result.getObject();
+    xhtml.appendToBody(actionResult(object));
+  }
+  return xhtml.toXML();
+}

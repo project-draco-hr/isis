@@ -1,0 +1,21 @@
+{
+  final Element div=xhtmlRenderer.div_p("Facet Elements",HtmlClass.FACET_ELEMENTS);
+  final Class<? extends Facet> facetType=CastUtils.cast(Class.forName(facetTypeName));
+  final Facet facet=facetHolder.getFacet(facetType);
+  final Class<? extends Facet> facetImplClass=facet.getClass();
+  final BeanInfo beanInfo=java.beans.Introspector.getBeanInfo(facetImplClass);
+  final PropertyDescriptor[] propertyDescriptors=beanInfo.getPropertyDescriptors();
+  final Element dl=xhtmlRenderer.dl(HtmlClass.FACET_ELEMENTS);
+  for (  final PropertyDescriptor descriptor : propertyDescriptors) {
+    final String name=descriptor.getName();
+    final Method readMethod=descriptor.getReadMethod();
+    if (readMethod != null) {
+      final Object value=readMethod.invoke(facet);
+      String ddText=value != null ? value.toString() : "(null)";
+      final DtDd dt_dd=xhtmlRenderer.dt_dd(name,ddText,HtmlClass.FACET_ELEMENT);
+      dt_dd.appendTo(dl);
+    }
+  }
+  div.appendChild(dl);
+  return div;
+}

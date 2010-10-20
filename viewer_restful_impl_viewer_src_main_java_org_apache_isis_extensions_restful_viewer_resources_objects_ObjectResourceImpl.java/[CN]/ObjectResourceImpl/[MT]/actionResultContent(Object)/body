@@ -1,0 +1,14 @@
+{
+  if (result == null) {
+    return xhtmlRenderer.p(null,HtmlClass.ACTION_RESULT);
+  }
+  if (result instanceof Collection<?>) {
+    final Collection<?> collection=(Collection<?>)result;
+    final Element ul=xhtmlRenderer.ul(HtmlClass.ACTION_RESULT);
+    for (    final Object object : collection) {
+      ul.appendChild(toLiAHref(object));
+    }
+    return ul;
+  }
+  return toAHref(result);
+}
