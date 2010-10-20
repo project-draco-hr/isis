@@ -1,0 +1,13 @@
+{
+  final EntityModel entityModel=getEntityModel();
+  if (entityModel instanceof ScalarModel) {
+    ScalarModel scalarModel=(ScalarModel)entityModel;
+    final List<ObjectAdapter> choices=scalarModel.getChoices();
+    if (choices.size() == 0) {
+      return null;
+    }
+    final List<ObjectAdapterMemento> choicesMementos=Lists.newArrayList(Lists.transform(choices,Mementos.fromAdapter()));
+    return Model.ofList(choicesMementos);
+  }
+  return null;
+}

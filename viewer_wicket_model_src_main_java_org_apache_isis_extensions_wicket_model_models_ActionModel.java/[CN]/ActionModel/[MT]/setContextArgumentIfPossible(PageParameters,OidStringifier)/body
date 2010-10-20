@@ -1,0 +1,29 @@
+{
+  String paramContext=PageParameterNames.ACTION_PARAM_CONTEXT.getFrom(pageParameters);
+  if (paramContext == null) {
+    return false;
+  }
+  ObjectAction action=actionMemento.getAction();
+  int parameterCount=action.getParameterCount();
+  Map.Entry<Integer,String> mapEntry=parse(paramContext);
+  Oid oid;
+  int paramNum=mapEntry.getKey();
+  if (paramNum >= parameterCount) {
+    return false;
+  }
+  try {
+    oid=oidStringifier.deString(mapEntry.getValue());
+  }
+ catch (  Exception e) {
+    return false;
+  }
+  ObjectAdapter argumentAdapter=getAdapterManager().getAdapterFor(oid);
+  if (argumentAdapter == null) {
+    return false;
+  }
+  ObjectActionParameter actionParam=action.getParameters()[paramNum];
+  ActionParameterMemento apm=new ActionParameterMemento(actionParam);
+  ScalarModel argumentModel=getArgumentModel(apm);
+  argumentModel.setObject(argumentAdapter);
+  return true;
+}

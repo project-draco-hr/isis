@@ -1,0 +1,15 @@
+{
+  final ObjectAdapter targetAdapter=getModel().getTargetAdapter();
+  ActionModel actionModel=getActionModel();
+  String invalidReasonIfAny=actionModel.getReasonInvalidIfAny();
+  if (invalidReasonIfAny != null) {
+    error(invalidReasonIfAny);
+    return;
+  }
+  ObjectAdapter resultAdapter=actionModel.getObject();
+  if (resultAdapter == null) {
+    resultAdapter=targetAdapter;
+  }
+  ResultType resultType=ResultType.determineFor(resultAdapter);
+  resultType.addResults(this,resultAdapter);
+}

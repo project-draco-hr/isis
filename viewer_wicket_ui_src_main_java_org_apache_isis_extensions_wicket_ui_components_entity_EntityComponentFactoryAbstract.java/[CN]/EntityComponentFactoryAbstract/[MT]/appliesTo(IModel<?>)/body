@@ -1,0 +1,13 @@
+{
+  if (!(model instanceof EntityModel)) {
+    return ApplicationAdvice.DOES_NOT_APPLY;
+  }
+  EntityModel entityModel=(EntityModel)model;
+  ObjectAdapter adapter=entityModel.getObject();
+  if (adapter == null) {
+  }
+  ObjectSpecification specification=entityModel.getTypeOfSpecification();
+  final boolean isObject=specification.isNotCollection();
+  final boolean isValue=specification.containsFacet(ValueFacet.class);
+  return appliesIf(isObject && !isValue);
+}

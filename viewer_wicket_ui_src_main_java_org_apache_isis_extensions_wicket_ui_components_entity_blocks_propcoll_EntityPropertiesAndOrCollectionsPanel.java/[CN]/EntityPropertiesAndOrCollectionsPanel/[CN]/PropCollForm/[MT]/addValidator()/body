@@ -1,0 +1,21 @@
+{
+  add(new AbstractFormValidator(){
+    private static final long serialVersionUID=1L;
+    @Override public FormComponent<?>[] getDependentFormComponents(){
+      return new FormComponent<?>[0];
+    }
+    @Override public void validate(    Form<?> form){
+      EntityModel entityModel=(EntityModel)getModel();
+      ObjectAdapter adapter=entityModel.getObject();
+      ValidateObjectFacet facet=adapter.getSpecification().getFacet(ValidateObjectFacet.class);
+      if (facet == null) {
+        return;
+      }
+      String invalidReasonIfAny=facet.invalidReason(adapter);
+      if (invalidReasonIfAny != null) {
+        Session.get().getFeedbackMessages().add(new FeedbackMessage(form,invalidReasonIfAny,FeedbackMessage.ERROR));
+      }
+    }
+  }
+);
+}

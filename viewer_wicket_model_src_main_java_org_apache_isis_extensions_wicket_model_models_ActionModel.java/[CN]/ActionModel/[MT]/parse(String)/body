@@ -1,0 +1,33 @@
+{
+  Pattern compile=Pattern.compile("([^=]+)=(.+)");
+  Matcher matcher=compile.matcher(paramContext);
+  if (!matcher.matches()) {
+    return null;
+  }
+  final int paramNum;
+  try {
+    paramNum=Integer.parseInt(matcher.group(1));
+  }
+ catch (  Exception e) {
+    return null;
+  }
+  final String oidStr;
+  try {
+    oidStr=matcher.group(2);
+  }
+ catch (  Exception e) {
+    return null;
+  }
+  return new Map.Entry<Integer,String>(){
+    @Override public Integer getKey(){
+      return paramNum;
+    }
+    @Override public String getValue(){
+      return oidStr;
+    }
+    @Override public String setValue(    String value){
+      return null;
+    }
+  }
+;
+}

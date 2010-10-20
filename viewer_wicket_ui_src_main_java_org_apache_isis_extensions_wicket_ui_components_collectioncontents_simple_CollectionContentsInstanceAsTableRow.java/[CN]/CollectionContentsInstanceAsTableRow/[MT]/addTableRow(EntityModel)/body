@@ -1,0 +1,24 @@
+{
+  ObjectAdapter adapter=model.getObject();
+  ObjectSpecification typeOfSpec=model.getTypeOfSpecification();
+  List<? extends ObjectAssociation> propertyList=typeOfSpec.getAssociationList(ObjectAssociationFilters.PROPERTIES);
+  add(new Label("title",adapter.titleString()));
+  RepeatingView propertyValues=new RepeatingView("propertyValue");
+  add(propertyValues);
+  for (  ObjectAssociation property : propertyList) {
+    ObjectAdapter propertyValueAdapter=property.get(adapter);
+    Component component;
+    if (propertyValueAdapter == null) {
+      component=new Label(property.getId(),"(null)");
+    }
+ else {
+      if (propertyValueAdapter.getSpecification().getFacet(ValueFacet.class) == null) {
+        component=new Label(property.getId(),propertyValueAdapter.titleString());
+      }
+ else {
+        component=new Label(property.getId(),propertyValueAdapter.titleString());
+      }
+    }
+    propertyValues.add(component);
+  }
+}

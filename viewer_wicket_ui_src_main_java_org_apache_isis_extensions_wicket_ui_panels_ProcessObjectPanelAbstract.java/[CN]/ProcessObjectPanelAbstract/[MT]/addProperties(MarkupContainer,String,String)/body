@@ -1,0 +1,15 @@
+{
+  EntityModel entityModel=(EntityModel)getModel();
+  ObjectAdapter adapter=entityModel.getObject();
+  ObjectSpecification noSpec=adapter.getSpecification();
+  List<OneToOneAssociation> properties=visibleProperties(adapter,noSpec);
+  RepeatingView rv=new RepeatingView(idProperties);
+  mc.add(rv);
+  List<PropertyMemento> mementos=buildPropertyMementos(properties);
+  for (  PropertyMemento pm : mementos) {
+    WebMarkupContainer container=new WebMarkupContainer(rv.newChildId());
+    rv.add(container);
+    ScalarModel scalarModel=entityModel.getPropertyModel(pm);
+    getComponentFactoryRegistry().addOrReplaceComponent(container,idProperty,ComponentType.SCALAR_NAME_AND_VALUE,scalarModel);
+  }
+}

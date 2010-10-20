@@ -1,0 +1,16 @@
+{
+  super.onBeginRequest();
+  AuthenticatedWebSessionForIsis wicketSession=getWebSession();
+  if (wicketSession == null) {
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("thread usage: " + wicketSession.getThreadUsage());
+  }
+  AuthenticationSession authenticationSession=wicketSession.getAuthenticationSession();
+  if (authenticationSession == null) {
+    return;
+  }
+  getIsisContext().openSessionInstance(authenticationSession);
+  getTransactionManager().startTransaction();
+}

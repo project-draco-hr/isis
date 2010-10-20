@@ -1,0 +1,16 @@
+{
+  final ScalarModel scalarModel=getModel();
+  entityLink.add(new IValidator<ObjectAdapter>(){
+    private static final long serialVersionUID=1L;
+    @Override public void validate(    IValidatable<ObjectAdapter> validatable){
+      ObjectAdapter proposedAdapter=validatable.getValue();
+      String reasonIfAny=scalarModel.validate(proposedAdapter);
+      if (reasonIfAny != null) {
+        ValidationError error=new ValidationError();
+        error.setMessage(reasonIfAny);
+        validatable.error(error);
+      }
+    }
+  }
+);
+}

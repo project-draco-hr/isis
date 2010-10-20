@@ -1,0 +1,32 @@
+{
+  EntityModel entityModel=(EntityModel)getModel();
+  ObjectAdapter adapter=entityModel.getObject();
+  ObjectSpecification noSpec=adapter.getSpecification();
+  List<ObjectAssociation> associations=visibleAssociations(adapter,noSpec);
+  RepeatingView rv=new RepeatingView(ID_PROPERTIES_AND_OR_COLLECTIONS);
+  EvenOrOddCssClassAppenderFactory eo=new EvenOrOddCssClassAppenderFactory();
+  add(rv);
+  @SuppressWarnings("unused") Component component;
+  for (  ObjectAssociation association : associations) {
+    WebMarkupContainer container=new WebMarkupContainer(rv.newChildId());
+    rv.add(container);
+    container.add(eo.nextClass());
+    if (association instanceof OneToOneAssociation) {
+      OneToOneAssociation otoa=(OneToOneAssociation)association;
+      PropertyMemento pm=new PropertyMemento(otoa);
+      ScalarModel scalarModel=entityModel.getPropertyModel(pm);
+      component=getComponentFactoryRegistry().addOrReplaceComponent(container,ID_PROPERTY_OR_COLLECTION,ComponentType.SCALAR_NAME_AND_VALUE,scalarModel);
+    }
+ else {
+      OneToManyAssociation otma=(OneToManyAssociation)association;
+      final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(entityModel,otma);
+      final CollectionPanel collectionPanel=new CollectionPanel(ID_PROPERTY_OR_COLLECTION,entityCollectionModel);
+      container.addOrReplace(collectionPanel);
+      component=getComponentFactoryRegistry().addOrReplaceComponent(container,ID_PROPERTY_OR_COLLECTION,ComponentType.COLLECTION_NAME_AND_CONTENTS,entityCollectionModel);
+    }
+  }
+  WebMarkupContainer container=new WebMarkupContainer(rv.newChildId());
+  rv.add(container);
+  container.add(new Label(ID_PROPERTY_OR_COLLECTION,Model.of(" ")));
+  container.add(eo.nextClass());
+}

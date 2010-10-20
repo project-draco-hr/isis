@@ -1,0 +1,14 @@
+{
+  EntityModel model=getModel();
+  ObjectAdapter adapter=model.getObject();
+  final ObjectAdapterMemento adapterMemento=model.getObjectAdapterMemento();
+  if (adapter != null) {
+    List<ObjectAction> userActions=Arrays.asList(adapter.getSpecification().getObjectActions(ObjectActionType.USER));
+    CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(adapterMemento,getServiceAdapters(),userActions,linkFactory);
+    CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ID_ENTITY_ACTIONS,"Actions");
+    this.addOrReplace(cssMenuPanel);
+  }
+ else {
+    permanentlyHide(ID_ENTITY_ACTIONS);
+  }
+}

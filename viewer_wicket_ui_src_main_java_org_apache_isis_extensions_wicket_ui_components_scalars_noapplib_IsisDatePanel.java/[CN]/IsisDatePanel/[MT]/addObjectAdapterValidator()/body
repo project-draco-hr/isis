@@ -1,0 +1,19 @@
+{
+  final ScalarModel scalarModel=getModel();
+  final TextField<java.util.Date> textField=getTextField();
+  textField.add(new IValidator<java.util.Date>(){
+    private static final long serialVersionUID=1L;
+    @Override public void validate(    IValidatable<java.util.Date> validatable){
+      java.util.Date proposedValue=validatable.getValue();
+      Date proposed=new Date(proposedValue);
+      ObjectAdapter proposedAdapter=adapterFor(proposed);
+      String reasonIfAny=scalarModel.validate(proposedAdapter);
+      if (reasonIfAny != null) {
+        ValidationError error=new ValidationError();
+        error.setMessage(reasonIfAny);
+        validatable.error(error);
+      }
+    }
+  }
+);
+}

@@ -1,0 +1,14 @@
+{
+  if (!(model instanceof EntityCollectionModel)) {
+    return ApplicationAdvice.DOES_NOT_APPLY;
+  }
+  EntityCollectionModel entityCollectionModel=(EntityCollectionModel)model;
+  if (entityCollectionModel.hasSelectionHandler()) {
+    return ApplicationAdvice.DOES_NOT_APPLY;
+  }
+  ObjectSpecification typeOfSpec=entityCollectionModel.getTypeOfSpecification();
+  if (typeOfSpec.getFacet(IconFacet.class) == null) {
+    return ApplicationAdvice.DOES_NOT_APPLY;
+  }
+  return ApplicationAdvice.APPLIES;
+}

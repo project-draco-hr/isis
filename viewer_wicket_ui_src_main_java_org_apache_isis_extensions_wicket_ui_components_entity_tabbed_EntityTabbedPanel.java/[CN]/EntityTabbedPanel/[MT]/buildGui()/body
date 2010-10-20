@@ -1,0 +1,29 @@
+{
+  List<ITab> tabs=new ArrayList<ITab>();
+  tabs.add(new AbstractTab(new Model<String>("Summary")){
+    private static final long serialVersionUID=1L;
+    @Override public Panel getPanel(    String panelId){
+      return new EntitySummaryTab(panelId,getModel());
+    }
+  }
+);
+  tabs.add(new AbstractTab(new Model<String>("Properties")){
+    private static final long serialVersionUID=1L;
+    @Override public Panel getPanel(    String panelId){
+      return new EntityPropertiesTab(panelId,getModel());
+    }
+  }
+);
+  List<OneToManyAssociation> collectionList=getModel().getTypeOfSpecification().getCollectionList();
+  for (  OneToManyAssociation collection : collectionList) {
+    final EntityCollectionModel collectionModel=EntityCollectionModel.createParented(getModel(),collection);
+    tabs.add(new AbstractTab(new Model<String>(collection.getName())){
+      private static final long serialVersionUID=1L;
+      @Override public Panel getPanel(      String panelId){
+        return new EntityCollectionTab(panelId,collectionModel);
+      }
+    }
+);
+  }
+  add(new AjaxTabbedPanel(ID_TABS,tabs));
+}

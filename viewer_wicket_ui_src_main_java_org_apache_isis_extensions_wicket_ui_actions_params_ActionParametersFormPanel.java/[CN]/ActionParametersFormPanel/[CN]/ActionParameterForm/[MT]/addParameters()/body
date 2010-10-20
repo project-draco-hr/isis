@@ -1,0 +1,14 @@
+{
+  ActionModel actionModel=getActionModel();
+  final ObjectAction ObjectAction=actionModel.getActionMemento().getAction();
+  ObjectActionParameter[] parameters=ObjectAction.getParameters();
+  RepeatingView rv=new RepeatingView(ID_ACTION_PARAMETERS);
+  add(rv);
+  List<ActionParameterMemento> mementos=buildParameterMementos(parameters);
+  for (  ActionParameterMemento apm : mementos) {
+    WebMarkupContainer container=new WebMarkupContainer(rv.newChildId());
+    rv.add(container);
+    ScalarModel argumentModel=actionModel.getArgumentModel(apm);
+    getComponentFactoryRegistry().addOrReplaceComponent(container,ComponentType.SCALAR_NAME_AND_VALUE,argumentModel);
+  }
+}

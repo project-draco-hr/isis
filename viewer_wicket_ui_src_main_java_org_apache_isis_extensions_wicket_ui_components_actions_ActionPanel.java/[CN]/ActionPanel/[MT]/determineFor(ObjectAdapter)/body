@@ -1,0 +1,22 @@
+{
+  ObjectSpecification resultSpec=resultAdapter.getSpecification();
+  if (resultSpec.isNotCollection()) {
+    if (resultSpec.getFacet(ValueFacet.class) != null) {
+      return ResultType.VALUE;
+    }
+ else {
+      return ResultType.OBJECT;
+    }
+  }
+ else {
+    List<Object> pojoList=asList(resultAdapter);
+switch (pojoList.size()) {
+case 0:
+      return ResultType.EMPTY;
+case 1:
+    return ResultType.OBJECT;
+default :
+  return ResultType.COLLECTION;
+}
+}
+}

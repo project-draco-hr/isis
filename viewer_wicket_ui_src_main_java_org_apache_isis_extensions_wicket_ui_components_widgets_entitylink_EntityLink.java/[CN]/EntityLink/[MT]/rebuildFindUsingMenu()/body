@@ -1,0 +1,17 @@
+{
+  final EntityModel entityModel=getEntityModel();
+  List<ObjectAction> actions=findServiceActionsFor(entityModel.getTypeOfSpecification());
+  findUsing=new WebMarkupContainer(ID_FIND_USING);
+switch (actions.size()) {
+case 0:
+    permanentlyHide(findUsing,ComponentType.ACTION);
+  break;
+default :
+CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(null,getServiceAdapters(),actions,linkFactory);
+CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ComponentType.ACTION.getWicketId(),"find using...");
+findUsing.addOrReplace(cssMenuPanel);
+actionFindUsingComponent=cssMenuPanel;
+break;
+}
+addOrReplace(findUsing);
+}

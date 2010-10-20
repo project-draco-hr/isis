@@ -1,0 +1,24 @@
+{
+  String name=getModel().getName();
+  Label scalarName=new Label(ID_SCALAR_NAME,name);
+  addOrReplace(scalarName);
+  final ImageValueFacet imageValueFacet=getModel().getTypeOfSpecification().getFacet(ImageValueFacet.class);
+  final ObjectAdapter adapter=getModel().getObject();
+  if (adapter != null) {
+    final java.awt.Image imageValue=imageValueFacet.getImage(adapter);
+    final RenderedDynamicImageResource imageResource=new RenderedDynamicImageResource(imageValue.getWidth(null),imageValue.getHeight(null)){
+      private static final long serialVersionUID=1L;
+      @Override protected boolean render(      Graphics2D graphics){
+        graphics.drawImage(imageValue,0,0,null);
+        return true;
+      }
+    }
+;
+    Image image=new Image(ID_SCALAR_VALUE,imageResource);
+    addOrReplace(image);
+    addOrReplace(new ComponentFeedbackPanel(ID_FEEDBACK,image));
+  }
+ else {
+    permanentlyHide(ID_SCALAR_VALUE,ID_FEEDBACK);
+  }
+}

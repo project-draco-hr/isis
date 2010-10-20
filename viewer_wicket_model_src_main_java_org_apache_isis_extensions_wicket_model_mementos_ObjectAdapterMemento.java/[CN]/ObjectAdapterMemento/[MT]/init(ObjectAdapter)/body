@@ -1,0 +1,20 @@
+{
+  ObjectSpecification specification=specMemento.getSpecification();
+  EncodableFacet encodableFacet=specification.getFacet(EncodableFacet.class);
+  boolean isEncodable=encodableFacet != null;
+  if (isEncodable) {
+    encodableValue=encodableFacet.toEncodedString(adapter);
+    type=Type.ENCODEABLE;
+  }
+ else {
+    Oid oid=adapter.getOid();
+    if (oid.isTransient()) {
+      transientMemento=new Memento(adapter);
+      type=Type.TRANSIENT;
+    }
+ else {
+      persistentOid=oid;
+      type=Type.PERSISTENT;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  ObjectSpecification serviceSpec=serviceAdapterMemento.getObjectAdapter().getSpecification();
+  for (  final ObjectAction noAction : serviceSpec.getObjectActions(ObjectActionType.USER)) {
+    if (noAction.getFacet(NotInRepositoryMenuFacet.class) != null) {
+      continue;
+    }
+    final Builder subMenuItemBuilder=serviceMenuItem.newSubMenuItem(serviceAdapterMemento,noAction,getLinkFactory());
+    if (subMenuItemBuilder != null) {
+      subMenuItemBuilder.build();
+    }
+  }
+}

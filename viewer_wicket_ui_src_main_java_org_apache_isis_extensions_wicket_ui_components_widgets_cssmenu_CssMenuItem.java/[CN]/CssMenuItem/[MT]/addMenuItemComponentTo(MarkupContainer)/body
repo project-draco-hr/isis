@@ -1,0 +1,16 @@
+{
+  Link<?> link=getLink();
+  Label label=new Label(CssMenuItem.ID_MENU_LABEL,Model.of(this.getName()));
+  if (this.isEnabled() && link != null) {
+    markupContainer.add(link);
+    link.add(label);
+    Components.permanentlyHide(markupContainer,CssMenuItem.ID_MENU_LABEL);
+    return link;
+  }
+ else {
+    Components.permanentlyHide(markupContainer,ID_MENU_LINK);
+    label.add(new AttributeModifier("title",true,Model.of(this.getDisabledReason())));
+    markupContainer.add(label);
+    return label;
+  }
+}

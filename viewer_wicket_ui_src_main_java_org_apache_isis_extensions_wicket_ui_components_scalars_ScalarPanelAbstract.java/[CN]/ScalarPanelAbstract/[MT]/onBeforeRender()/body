@@ -1,0 +1,19 @@
+{
+  if (!hasBeenRendered()) {
+    buildGui();
+  }
+  final ScalarModel scalarModel=getModel();
+  if (scalarModel.isViewMode()) {
+    onBeforeRenderWhenViewMode();
+  }
+ else {
+    String disableReasonIfAny=scalarModel.disable();
+    if (disableReasonIfAny != null) {
+      onBeforeRenderWhenDisabled(disableReasonIfAny);
+    }
+ else {
+      onBeforeRenderWhenEnabled();
+    }
+  }
+  super.onBeforeRender();
+}
