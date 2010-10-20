@@ -1,0 +1,10 @@
+{
+  Document servicesDoc=get(combine(getHostUri(),"/services"));
+  prettyPrint(servicesDoc);
+  String employeesServicePath=getAttributeValue(servicesDoc,"//a[@class='nof-service'][text()='Employees']/@href","Unable to find 'Employees' service");
+  Document employeeFindEmployeesDoc=post(combine(getHostUri(),employeesServicePath,"/action/findEmployees(java.lang.String)"),"arg0",name);
+  prettyPrint(employeeFindEmployeesDoc);
+  String employeePath=getAttributeValue(employeeFindEmployeesDoc,"//a[@class='nof-action-result']/@href","No Employee found");
+  Document employeeDoc=get(combine(getHostUri(),employeePath));
+  prettyPrint(employeeDoc);
+}
