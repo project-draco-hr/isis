@@ -1,0 +1,27 @@
+{
+  this.container=container;
+  ClassNameResolver classNameResolver=new ClassNameResolver(){
+    @Override public String resolveClassname(    String classname){
+      for (      Class<?> cls : classes) {
+        String packageName=cls.getPackage().getName();
+        String fqcn=packageName + "." + upperFirst(classname);
+        try {
+          Thread.currentThread().getContextClassLoader().loadClass(fqcn);
+          return fqcn;
+        }
+ catch (        ClassNotFoundException ex) {
+        }
+      }
+      throw new RuntimeException("could not resolve " + classname + "'");
+    }
+  }
+;
+  this.setClassNameResolver(classNameResolver);
+  final NewInstanceResolver instanceResolver=new DefaultNewInstanceResolver(){
+    @SuppressWarnings("unchecked") @Override public Object newInstance(    Class cls,    Map attributes) throws InstantiationException, IllegalAccessException {
+      return container.newTransientInstance(cls);
+    }
+  }
+;
+  this.setNewInstanceResolver(instanceResolver);
+}
