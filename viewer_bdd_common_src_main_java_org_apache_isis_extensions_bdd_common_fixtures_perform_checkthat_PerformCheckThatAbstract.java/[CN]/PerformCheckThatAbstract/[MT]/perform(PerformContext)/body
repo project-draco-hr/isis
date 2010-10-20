@@ -1,0 +1,14 @@
+{
+  CellBinding thatItBinding=performContext.getPeer().getThatItBinding();
+  if (!thatItBinding.isFound()) {
+    CellBinding performBinding=performContext.getPeer().getPerformBinding();
+    throw StoryBoundValueException.current(performBinding,"(require " + Constants.THAT_IT_NAME + "' column)");
+  }
+  StoryCell thatItCell=thatItBinding.getCurrentCell();
+  final String thatIt=thatItCell.getText();
+  final ThatSubcommand thatSubcommand=subcommandByKey.get(thatIt);
+  if (thatSubcommand == null) {
+    throw StoryBoundValueException.current(thatItBinding,"(unknown '" + Constants.THAT_IT_NAME + "' verb)");
+  }
+  result=thatSubcommand.that(performContext);
+}

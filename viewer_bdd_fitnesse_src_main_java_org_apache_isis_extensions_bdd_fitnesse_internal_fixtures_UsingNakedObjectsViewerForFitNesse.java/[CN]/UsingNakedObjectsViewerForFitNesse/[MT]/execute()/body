@@ -1,0 +1,45 @@
+{
+  ObjectAdapter onAdapter=null;
+  try {
+    onAdapter=getPeer().validateOnObject();
+  }
+ catch (  StoryBoundValueException ex) {
+    FitnesseUtil.exception(this,ex);
+    return;
+  }
+  String aliasAs=null;
+  try {
+    aliasAs=getPeer().validateAliasAs();
+  }
+ catch (  StoryBoundValueException ex) {
+    FitnesseUtil.exception(this,ex);
+    return;
+  }
+  Perform performCommand=null;
+  try {
+    performCommand=getPeer().validatePerform();
+  }
+ catch (  StoryBoundValueException ex) {
+    FitnesseUtil.exception(this,ex);
+    return;
+  }
+  ObjectMember nakedObjectMember=null;
+  if (performCommand.requiresMember()) {
+    try {
+      nakedObjectMember=getPeer().validateOnMember(onAdapter);
+    }
+ catch (    StoryBoundValueException ex) {
+      FitnesseUtil.exception(this,ex);
+      return;
+    }
+  }
+  try {
+    List<StoryCell> argumentStoryCells=asValues(argumentCells);
+    getPeer().performCommand(performCommand,onAdapter,nakedObjectMember,argumentStoryCells,aliasAs);
+  }
+ catch (  StoryBoundValueException ex) {
+    FitnesseUtil.exception(this,ex);
+    return;
+  }
+  rightMemberElseOnObjectCell();
+}

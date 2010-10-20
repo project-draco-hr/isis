@@ -1,0 +1,18 @@
+{
+  final List<ObjectAdapter> notFoundAdapters=getPeer().getNotFoundAdapters();
+  if (notFoundAdapters.size() == 0) {
+    return;
+  }
+  final int colSpan=3;
+  Parse lastRow=table.parts.last();
+  for (  final ObjectAdapter notFoundAdapter : notFoundAdapters) {
+    final Parse titleCell=new Parse("td","",null,null);
+    titleCell.addToTag(" colspan=\"" + colSpan + "\"");
+    titleCell.addToBody(notFoundAdapter.titleString() + "<hr");
+    wrong(titleCell);
+    titleCell.addToBody(Fixture.label("(expected)"));
+    final Parse row=new Parse("tr",null,titleCell,null);
+    lastRow.more=row;
+    lastRow=row;
+  }
+}

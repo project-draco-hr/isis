@@ -1,0 +1,24 @@
+{
+  if (commandCall.getElement().isNamed("table")) {
+    Context contextIfAny=context.get();
+    boolean setContext=contextIfAny == null;
+    if (setContext) {
+      context.set(Context.TABLE);
+    }
+    executeTable(commandCall,evaluator,resultRecorder);
+    if (setContext) {
+      context.set(null);
+    }
+  }
+ else {
+    Context contextIfAny=context.get();
+    boolean setContext=contextIfAny == null;
+    if (setContext) {
+      context.set(Context.INLINE);
+    }
+    super.execute(commandCall,evaluator,resultRecorder);
+    if (setContext) {
+      context.set(null);
+    }
+  }
+}

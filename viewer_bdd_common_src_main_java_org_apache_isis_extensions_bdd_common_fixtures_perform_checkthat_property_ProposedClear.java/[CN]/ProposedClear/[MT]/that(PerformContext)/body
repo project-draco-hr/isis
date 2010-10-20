@@ -1,0 +1,10 @@
+{
+  final ObjectAdapter onAdapter=performContext.getOnAdapter();
+  final OneToOneAssociation otoa=(OneToOneAssociation)performContext.getNakedObjectMember();
+  final Consent validityConsent=otoa.isAssociationValid(onAdapter,null);
+  if (!getAssertion().satisfiedBy(validityConsent)) {
+    final CellBinding thatBinding=performContext.getPeer().getThatItBinding();
+    throw StoryBoundValueException.current(thatBinding,getAssertion().getReason(validityConsent));
+  }
+  return null;
+}

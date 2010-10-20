@@ -1,0 +1,10 @@
+{
+  ObjectAdapter onAdapter=getPeer().validateOnObject();
+  String aliasAs=getPeer().validateAliasAs();
+  Perform performCommand=getPeer().validatePerform();
+  ObjectMember nakedObjectMember=null;
+  if (performCommand.requiresMember()) {
+    nakedObjectMember=getPeer().validateOnMember(onAdapter);
+  }
+  getPeer().performCommand(performCommand,onAdapter,nakedObjectMember,asValues(argumentCells),aliasAs);
+}

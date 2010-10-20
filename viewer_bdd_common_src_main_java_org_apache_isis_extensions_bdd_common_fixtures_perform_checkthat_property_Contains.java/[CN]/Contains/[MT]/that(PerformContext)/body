@@ -1,0 +1,32 @@
+{
+  final OneToOneAssociation otoa=(OneToOneAssociation)performContext.getNakedObjectMember();
+  CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
+  final StoryCell arg0Cell=arg0Binding.getCurrentCell();
+  final String expected=arg0Cell.getText();
+  final ObjectAdapter resultAdapter=otoa.get(performContext.getOnAdapter());
+  if (resultAdapter == null) {
+    if (Strings.emptyString(expected)) {
+      return resultAdapter;
+    }
+    throw StoryBoundValueException.current(arg0Binding,"(is null)");
+  }
+  final String resultTitle=resultAdapter.titleString();
+  if (!Strings.emptyString(expected)) {
+    final ObjectAdapter expectedAdapter=performContext.getPeer().getAliasRegistry().getAliased(expected);
+    if (expectedAdapter != null) {
+      if (resultAdapter == expectedAdapter) {
+        return resultAdapter;
+      }
+      throw StoryBoundValueException.current(arg0Binding,resultTitle);
+    }
+    if (!Strings.nullSafeEquals(resultTitle,expected)) {
+      throw StoryBoundValueException.current(arg0Binding,resultTitle);
+    }
+  }
+ else {
+    final String resultAlias=performContext.getPeer().getAliasRegistry().getAlias(resultAdapter);
+    final String resultStr=resultAlias != null ? resultAlias : resultTitle;
+    performContext.getPeer().provideDefault(arg0Cell,resultStr);
+  }
+  return resultAdapter;
+}

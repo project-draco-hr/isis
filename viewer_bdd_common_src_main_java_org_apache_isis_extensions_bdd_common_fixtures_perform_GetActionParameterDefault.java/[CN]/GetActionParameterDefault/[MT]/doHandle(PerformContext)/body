@@ -1,0 +1,20 @@
+{
+  final ObjectAdapter onAdapter=performContext.getOnAdapter();
+  final ObjectMember nakedObjectMember=performContext.getNakedObjectMember();
+  CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
+  final StoryCell arg0Cell=arg0Binding.getCurrentCell();
+  int requestedParamNum=-1;
+  try {
+    requestedParamNum=Integer.valueOf(arg0Cell.getText());
+  }
+ catch (  final NumberFormatException ex) {
+    throw StoryBoundValueException.current(arg0Binding,ex.getMessage());
+  }
+  final ObjectAction noa=(ObjectAction)nakedObjectMember;
+  final int parameterCount=noa.getParameterCount();
+  if (requestedParamNum < 0 || requestedParamNum > parameterCount - 1) {
+    throw StoryBoundValueException.current(arg0Binding,"(must be between 0 and " + (parameterCount - 1) + ")");
+  }
+  final ObjectAdapter[] defaults=noa.getDefaults(onAdapter);
+  result=defaults[requestedParamNum];
+}

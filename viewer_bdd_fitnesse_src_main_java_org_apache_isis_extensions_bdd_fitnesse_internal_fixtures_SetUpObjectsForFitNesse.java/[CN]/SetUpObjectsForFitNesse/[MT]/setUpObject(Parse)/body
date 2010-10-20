@@ -1,0 +1,37 @@
+{
+  final ObjectAdapter adapter=getPeer().createInstance();
+  if (adapter == null) {
+    return;
+  }
+  for (int colNum=0; colNum < getPeer().getProperties().size(); colNum++) {
+    SetUpObjectResult result=getPeer().setUpProperty(adapter,colNum);
+    if (!result.isHandled()) {
+      final Parse cell=FitnesseUtil.cell(row,colNum);
+      if (result.isError()) {
+        FitnesseUtil.exception(this,cell,result.getErrorMessage());
+      }
+ else {
+        right(cell);
+      }
+    }
+  }
+  getPeer().persistIfNecessary(adapter);
+  if (getPeer().getAliasBinding().isFound()) {
+    int aliasColumn=getPeer().getAliasBinding().getColumn();
+    final Parse aliasCell=FitnesseUtil.cell(row,aliasColumn);
+    if (aliasCell != null) {
+      String alias=aliasCell.text();
+      if (Strings.emptyString(alias)) {
+        alias=getPeer().aliasFor(adapter);
+        FitnesseUtil.setBody(aliasCell,Fixture.gray(alias));
+      }
+ else {
+        getPeer().getAliasRegistry().aliasAs(alias,adapter);
+      }
+    }
+  }
+ else {
+    final String alias=getPeer().aliasFor(adapter);
+    appendCell(row,Fixture.gray(alias));
+  }
+}

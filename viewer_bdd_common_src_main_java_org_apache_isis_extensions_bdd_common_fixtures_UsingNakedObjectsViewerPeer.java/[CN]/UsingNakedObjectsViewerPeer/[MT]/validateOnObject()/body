@@ -1,0 +1,18 @@
+{
+  StoryCell onObjectCell=onObjectBinding.getCurrentCell();
+  String onObject=onObjectCell.getText();
+  if (onObject == null) {
+    if (previousOnObject == null) {
+      throw StoryBoundValueException.current(onObjectBinding,"(required)");
+    }
+    onObject=previousOnObject;
+  }
+ else {
+    previousOnObject=onObject;
+  }
+  final ObjectAdapter onAdapter=getAliasRegistry().getAliased(onObject);
+  if (onAdapter == null) {
+    throw StoryBoundValueException.current(onMemberBinding,"(unknown object)");
+  }
+  return onAdapter;
+}

@@ -1,0 +1,14 @@
+{
+  if (!typeBinding.isFound()) {
+    return true;
+  }
+  final ObjectSpecification spec=adapter.getSpecification();
+  final String requiredTypeName=typeBinding.getCurrentCell().getText();
+  final String specFullName=spec.getFullName();
+  if (specFullName.equals(requiredTypeName)) {
+    return true;
+  }
+  final String simpleSpecName=Strings.simpleName(specFullName);
+  final String simpleRequiredType=Strings.simpleName(requiredTypeName);
+  return simpleSpecName.equalsIgnoreCase(simpleRequiredType);
+}

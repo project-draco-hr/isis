@@ -1,0 +1,26 @@
+{
+  Class<?> cssClass=customCssPackage();
+  String customCss=customCss();
+  if (cssClass == null || customCss == null) {
+    return;
+  }
+  InputStream cssInputFile=cssClass.getResourceAsStream(customCss);
+  String cssPackageName=cssClass.getPackage().getName();
+  String cssPackagePath=asPath(cssPackageName);
+  String cssOutputFileName=combine(targetDir(),cssPackagePath,customCss);
+  try {
+    ByteArrayOutputStream baos=new ByteArrayOutputStream();
+    IoUtils.copy(cssInputFile,baos);
+    if (baos.size() > 0) {
+      IoUtils.copy(new ByteArrayInputStream(baos.toByteArray()),new FileOutputStream(cssOutputFileName));
+    }
+  }
+ catch (  IllegalArgumentException e) {
+    System.err.printf("failed to copy custom CSS to '%s'\n",customCss,cssOutputFileName);
+    return;
+  }
+catch (  IOException e) {
+    System.err.printf("failed to copy custom CSS '%s' to '%s'\n",customCss,cssOutputFileName);
+    return;
+  }
+}

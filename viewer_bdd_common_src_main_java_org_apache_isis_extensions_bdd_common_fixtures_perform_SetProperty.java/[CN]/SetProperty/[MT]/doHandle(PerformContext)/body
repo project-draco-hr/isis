@@ -1,0 +1,20 @@
+{
+  final ObjectAdapter onAdapter=performContext.getOnAdapter();
+  final ObjectMember nakedObjectMember=performContext.getNakedObjectMember();
+  final List<StoryCell> argumentCells=performContext.getArgumentCells();
+  final OneToOneAssociation otoa=(OneToOneAssociation)nakedObjectMember;
+  final PropertySetterFacet setterFacet=otoa.getFacet(PropertySetterFacet.class);
+  if (setterFacet == null) {
+    CellBinding onMemberBinding=performContext.getPeer().getOnMemberBinding();
+    throw StoryBoundValueException.current(onMemberBinding,"(cannot set)");
+  }
+  CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
+  final StoryCell arg0Cell=argumentCells.get(0);
+  final ObjectAdapter contextAdapter=otoa.get(onAdapter);
+  final ObjectAdapter toSetAdapter=performContext.getPeer().getAdapter(contextAdapter,otoa.getSpecification(),arg0Binding,arg0Cell);
+  final Consent validConsent=otoa.isAssociationValid(onAdapter,toSetAdapter);
+  if (validConsent.isVetoed()) {
+    throw StoryBoundValueException.current(arg0Binding,validConsent.getReason());
+  }
+  setterFacet.setProperty(onAdapter,toSetAdapter);
+}

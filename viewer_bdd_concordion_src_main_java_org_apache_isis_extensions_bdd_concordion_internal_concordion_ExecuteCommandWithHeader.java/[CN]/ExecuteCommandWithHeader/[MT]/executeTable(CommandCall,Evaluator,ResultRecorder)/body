@@ -1,0 +1,18 @@
+{
+  TableSupport tableSupport=new TableSupport(commandCall);
+  tableRow.set(TableRow.HEADER);
+  Row headerRow=tableSupport.getLastHeaderRow();
+  commandCall.setElement(headerRow.getElement());
+  commandCall.execute(evaluator,resultRecorder);
+  tableRow.set(TableRow.BODY);
+  Row[] detailRows=tableSupport.getDetailRows();
+  for (  Row detailRow : detailRows) {
+    if (detailRow.getCells().length != tableSupport.getColumnCount()) {
+      throw new RuntimeException("The <table> 'execute' command only supports rows with an equal number of columns.");
+    }
+    commandCall.setElement(detailRow.getElement());
+    tableSupport.copyCommandCallsTo(detailRow);
+    commandCall.execute(evaluator,resultRecorder);
+  }
+  tableRow.set(null);
+}
