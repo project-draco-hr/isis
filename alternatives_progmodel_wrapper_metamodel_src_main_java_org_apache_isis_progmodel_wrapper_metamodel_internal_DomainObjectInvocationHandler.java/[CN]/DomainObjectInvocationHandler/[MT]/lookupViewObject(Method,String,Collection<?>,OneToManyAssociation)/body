@@ -1,0 +1,13 @@
+{
+  Collection<?> collectionViewObject=collectionViewObjectsByMethod.get(method);
+  if (collectionViewObject == null) {
+    if (collectionToLookup instanceof WrappedObject) {
+      collectionViewObject=collectionToLookup;
+    }
+ else {
+      collectionViewObject=Proxy.proxy(collectionToLookup,memberName,this,getRuntimeContext(),otma);
+    }
+    collectionViewObjectsByMethod.put(method,collectionViewObject);
+  }
+  return collectionViewObject;
+}

@@ -1,0 +1,13 @@
+{
+  custJsDO.setCustomerNumber(123);
+  custJsDO.setLastName("Smith");
+  custJsDO.setMandatoryAssociation(countryGbrDO);
+  custJsDO.setMandatoryValue("foo");
+  custJsDO.setMaxLengthField("abc");
+  custJsDO.setRegExCaseInsensitiveField("ABCd");
+  custJsDO.setRegExCaseSensitiveField("abcd");
+  assertThat(getDomainObjectContainer().isPersistent(custJsDO),is(true));
+  final WrappedObject<Customer> proxyNewCustomer=asViewObject(custJsVO);
+  proxyNewCustomer.save();
+  assertThat(getDomainObjectContainer().isPersistent(custJsDO),is(true));
+}

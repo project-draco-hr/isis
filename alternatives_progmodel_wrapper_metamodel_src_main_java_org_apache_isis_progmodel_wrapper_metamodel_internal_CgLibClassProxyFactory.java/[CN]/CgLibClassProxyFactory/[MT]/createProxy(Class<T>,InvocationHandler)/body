@@ -1,0 +1,17 @@
+{
+  final MethodInterceptor interceptor=new InvocationHandlerMethodInterceptor(handler);
+  final Enhancer enhancer=new Enhancer();
+  enhancer.setSuperclass(toProxyClass);
+  enhancer.setInterfaces(new Class[]{WrappedObject.class});
+  enhancer.setCallbackType(interceptor.getClass());
+  final Class enhancedClass=enhancer.createClass();
+  Enhancer.registerCallbacks(enhancedClass,new Callback[]{interceptor});
+  Factory factory;
+  try {
+    factory=(Factory)ClassInstantiatorFactoryCE.getInstantiator().newInstance(enhancedClass);
+  }
+ catch (  final InstantiationException e) {
+    throw new RuntimeException("Fail to instantiate mock for " + toProxyClass + " on "+ ClassInstantiatorFactoryCE.getJVM()+ " JVM");
+  }
+  return (T)factory;
+}

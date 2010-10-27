@@ -1,0 +1,23 @@
+{
+  final Customer newCustomer=getDomainObjectContainer().newTransientInstance(Customer.class);
+  newCustomer.setCustomerNumber(123);
+  newCustomer.setLastName("Smith");
+  newCustomer.setMandatoryAssociation(countryGbrDO);
+  newCustomer.setMandatoryValue("foo");
+  newCustomer.setMaxLengthField("abc");
+  newCustomer.setRegExCaseInsensitiveField("ABCd");
+  newCustomer.setRegExCaseSensitiveField("abcd");
+  final Customer newCustomerViewObject=getWrapperFactory().wrap(newCustomer);
+  newCustomer.validate="No shakes";
+  final WrappedObject<Customer> proxyNewCustomer=asViewObject(newCustomerViewObject);
+  try {
+    assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(false));
+    proxyNewCustomer.save();
+    fail("An InvalidImperativelyException should have been thrown");
+  }
+ catch (  final InvalidException ex) {
+    assertThat(ex.getAdvisorClass(),classEqualTo(ValidateObjectFacetViaValidateMethod.class));
+    assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(false));
+    assertThat(ex.getMessage(),equalTo("No shakes"));
+  }
+}
