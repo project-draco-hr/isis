@@ -1,15 +1,15 @@
 {
   getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
-    public void preExecute(){
+    @Override public void preExecute(){
       CallbackUtils.callCallback(adapter,LoadingCallbackFacet.class);
     }
-    public void execute(){
+    @Override public void execute(){
       objectStore.resolveImmediately(adapter);
     }
-    public void onSuccess(){
+    @Override public void onSuccess(){
       CallbackUtils.callCallback(adapter,LoadedCallbackFacet.class);
     }
-    public void onFailure(){
+    @Override public void onFailure(){
     }
   }
 );
