@@ -18,7 +18,10 @@
     adapter.setTypeOfFacet(typeOfFacet);
     return adapter;
   }
- catch (  final InvocationTargetException e) {
+ catch (  final IllegalArgumentException e) {
+    throw e;
+  }
+catch (  final InvocationTargetException e) {
     if (e.getTargetException() instanceof IllegalStateException) {
       throw new ReflectiveActionException("IllegalStateException thrown while executing " + method + " "+ e.getTargetException().getMessage(),e.getTargetException());
     }
