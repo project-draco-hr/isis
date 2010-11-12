@@ -15,12 +15,12 @@
   sql.append(", ");
   elementMapping.appendColumnNames(sql);
   sql.append(" ) values (");
-  idMapping.appendInsertValues(sql,parent);
+  idMapping.appendInsertValues(connector,sql,parent);
   sql.append(", ");
   CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
   for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
     StringBuffer values=new StringBuffer();
-    elementMapping.appendInsertValues(values,element);
+    elementMapping.appendInsertValues(connector,values,element);
     connector.update(sql.toString() + values + ")");
   }
 }

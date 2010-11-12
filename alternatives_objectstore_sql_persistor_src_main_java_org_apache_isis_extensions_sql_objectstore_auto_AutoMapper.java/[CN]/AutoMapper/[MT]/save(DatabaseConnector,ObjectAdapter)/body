@@ -4,12 +4,12 @@
   StringBuffer sql=new StringBuffer();
   sql.append("update " + table + " set ");
   for (  FieldMapping mapping : fieldMappings) {
-    mapping.appendUpdateValues(sql,object);
+    mapping.appendUpdateValues(connector,sql,object);
     sql.append(", ");
   }
-  sql.append(versionMapping.updateAssigment(nextSequence));
+  sql.append(versionMapping.updateAssigment(connector,nextSequence));
   sql.append(", ");
-  titleMapping.appendUpdateAssignment(sql,object);
+  titleMapping.appendUpdateAssignment(connector,sql,object);
   sql.append(" where ");
   idMapping.appendWhereClause(sql,object.getOid());
   sql.append(" and ");

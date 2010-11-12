@@ -3,7 +3,14 @@
   PreparedStatement statement;
   try {
     statement=connection.prepareStatement(sql);
+    if (queryValues.size() > 0) {
+      int i=1;
+      for (      Object value : queryValues) {
+        statement.setObject(i++,value);
+      }
+    }
     int updateCount=statement.executeUpdate();
+    queryValues.clear();
     statement.close();
     return updateCount;
   }

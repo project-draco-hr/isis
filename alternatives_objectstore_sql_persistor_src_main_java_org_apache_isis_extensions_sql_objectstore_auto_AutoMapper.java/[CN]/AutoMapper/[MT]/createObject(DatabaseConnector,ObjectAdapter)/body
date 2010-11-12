@@ -11,12 +11,12 @@
   sql.append(", ");
   sql.append(versionMapping.insertColumns());
   sql.append(") values (");
-  idMapping.appendInsertValues(sql,object);
+  idMapping.appendInsertValues(connector,sql,object);
   sql.append(", ");
-  sql.append(values(object));
-  titleMapping.appendInsertValues(sql,object);
+  sql.append(values(connector,object));
+  titleMapping.appendInsertValues(connector,sql,object);
   sql.append(", ");
-  sql.append(versionMapping.insertValues(version));
+  sql.append(versionMapping.insertValues(connector,version));
   sql.append(") ");
   connector.insert(sql.toString());
   object.setOptimisticLock(version);

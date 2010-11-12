@@ -7,14 +7,14 @@
   sql.append(", ");
   sql.append(versionMapping.insertColumns());
   sql.append(") values (");
-  idMapping.appendInsertValues(sql,parent);
+  idMapping.appendInsertValues(connector,sql,parent);
   sql.append(", ");
   CollectionFacet collectionFacet=field.getFacet(CollectionFacet.class);
   for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
     StringBuffer insert=new StringBuffer(sql);
-    insert.append(values(element));
+    insert.append(values(connector,element));
     SerialNumberVersion version=new SerialNumberVersion(0,"",new Date());
-    insert.append(versionMapping.insertValues(version));
+    insert.append(versionMapping.insertValues(connector,version));
     insert.append(") ");
     connector.insert(insert.toString());
     element.setOptimisticLock(version);

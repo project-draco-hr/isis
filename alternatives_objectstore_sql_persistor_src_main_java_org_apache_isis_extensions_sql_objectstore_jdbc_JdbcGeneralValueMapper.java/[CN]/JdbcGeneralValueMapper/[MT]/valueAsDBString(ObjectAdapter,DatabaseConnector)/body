@@ -1,0 +1,20 @@
+{
+  if (value == null) {
+    connector.addToQueryValues(null);
+  }
+ else {
+    Object o=value.getObject();
+    if (o instanceof Color) {
+      connector.addToQueryValues(((Color)o).intValue());
+    }
+ else     if (o instanceof Percentage) {
+      connector.addToQueryValues(((Percentage)o).floatValue());
+    }
+ else {
+      EncodableFacet facet=value.getSpecification().getFacet(EncodableFacet.class);
+      String encodedString=facet.toEncodedString(value);
+      connector.addToQueryValues(encodedString);
+    }
+  }
+  return "?";
+}
