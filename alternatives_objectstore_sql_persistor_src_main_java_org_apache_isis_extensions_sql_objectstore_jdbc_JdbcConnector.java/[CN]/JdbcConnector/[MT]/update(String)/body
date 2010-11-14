@@ -3,19 +3,16 @@
   PreparedStatement statement;
   try {
     statement=connection.prepareStatement(sql);
-    if (queryValues.size() > 0) {
-      int i=1;
-      for (      Object value : queryValues) {
-        statement.setObject(i++,value);
-      }
-    }
+    addPreparedValues(statement);
     int updateCount=statement.executeUpdate();
-    queryValues.clear();
     statement.close();
     return updateCount;
   }
  catch (  SQLException e) {
     LOG.error("failed to execute " + sql,e);
     throw new SqlObjectStoreException("SQL error",e);
+  }
+ finally {
+    clearPreparedValues();
   }
 }

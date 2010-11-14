@@ -3,9 +3,13 @@
   PreparedStatement statement;
   try {
     statement=connection.prepareStatement(sql);
+    addPreparedValues(statement);
     return new JdbcResults(statement.executeQuery());
   }
  catch (  SQLException e) {
     throw new SqlObjectStoreException(e);
+  }
+ finally {
+    clearPreparedValues();
   }
 }

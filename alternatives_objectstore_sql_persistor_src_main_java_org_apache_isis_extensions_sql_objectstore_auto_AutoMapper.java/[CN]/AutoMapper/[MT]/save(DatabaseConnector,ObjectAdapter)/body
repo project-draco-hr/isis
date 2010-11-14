@@ -11,9 +11,9 @@
   sql.append(", ");
   titleMapping.appendUpdateAssignment(connector,sql,object);
   sql.append(" where ");
-  idMapping.appendWhereClause(sql,object.getOid());
+  idMapping.appendWhereClause(connector,sql,object.getOid());
   sql.append(" and ");
-  sql.append(versionMapping.whereClause((SerialNumberVersion)object.getVersion()));
+  sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)object.getVersion()));
   int updateCount=connector.update(sql.toString());
   if (updateCount == 0) {
     LOG.info("concurrency conflict object " + this + "; no update performed");

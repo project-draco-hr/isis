@@ -7,8 +7,8 @@
   sql.append(Sql.identifier(TABLE_NAME));
   sql.append(" where ");
   sql.append(Sql.identifier(ID_COLUMN));
-  sql.append(" = ");
-  sql.append(Sql.escapeAndQuoteValue(name));
+  sql.append(" = ?");
+  connector.addToQueryValues(name);
   Results results=connector.select(sql.toString());
   if (results.next()) {
     int key=results.getInt(PRIMARYKEY_COLUMN);

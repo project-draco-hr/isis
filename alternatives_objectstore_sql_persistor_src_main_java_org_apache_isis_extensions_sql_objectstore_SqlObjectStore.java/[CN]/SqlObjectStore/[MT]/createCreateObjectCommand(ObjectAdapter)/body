@@ -1,15 +1,15 @@
 {
   return new CreateObjectCommand(){
-    public void execute(    final PersistenceCommandContext context){
+    @Override public void execute(    final PersistenceCommandContext context){
       DatabaseConnector connection=((SqlExecutionContext)context).getConnection();
       LOG.debug("  create object " + object);
       ObjectMapping mapping=objectMappingLookup.getMapping(object,connection);
       mapping.createObject(connection,object);
     }
-    public ObjectAdapter onObject(){
+    @Override public ObjectAdapter onObject(){
       return object;
     }
-    public String toString(){
+    @Override public String toString(){
       return "CreateObjectCommand [object=" + object + "]";
     }
   }
