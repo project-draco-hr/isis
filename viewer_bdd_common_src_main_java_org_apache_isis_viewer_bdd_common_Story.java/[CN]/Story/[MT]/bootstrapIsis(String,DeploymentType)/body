@@ -1,0 +1,17 @@
+{
+  this.configDirectory=configDirectory;
+  this.deploymentType=ensureThatArg(deploymentType,is(anyOf(equalTo(DeploymentType.EXPLORATION),equalTo(DeploymentType.PROTOTYPE))));
+  ConfigurationBuilderFileSystem configurationBuilder=new ConfigurationBuilderFileSystem(getConfigDirectory());
+  configurationBuilder.add(SystemConstants.DEPLOYMENT_TYPE_KEY,deploymentType.name());
+  defaultStoryComponentsInto(configurationBuilder);
+  try {
+    isisSystem=createSystem(deploymentType,configurationBuilder);
+    IsisContext.openSession(new InitialisationSession());
+  }
+ catch (  final RuntimeException e) {
+    if (isisSystem != null) {
+      isisSystem.shutdown();
+    }
+    throw e;
+  }
+}
