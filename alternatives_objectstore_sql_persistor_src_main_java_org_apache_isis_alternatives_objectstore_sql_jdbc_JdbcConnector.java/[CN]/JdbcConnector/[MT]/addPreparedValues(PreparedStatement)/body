@@ -1,8 +1,15 @@
 {
   if (queryValues.size() > 0) {
     int i=1;
-    for (    Object value : queryValues) {
-      statement.setObject(i++,value);
+    try {
+      for (      Object value : queryValues) {
+        statement.setObject(i,value);
+        i++;
+      }
+    }
+ catch (    SQLException e) {
+      LOG.error("Error adding prepared value " + i + " of type "+ queryValues.get(i - 1).getClass().getSimpleName(),e);
+      throw e;
     }
   }
 }
