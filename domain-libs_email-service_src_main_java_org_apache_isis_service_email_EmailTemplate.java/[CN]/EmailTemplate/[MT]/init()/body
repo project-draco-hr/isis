@@ -1,0 +1,18 @@
+{
+  if (ve == null) {
+    ve=new VelocityEngine();
+    try {
+      String root=getContainer().getProperty("webapp.dir");
+      ve.setProperty("runtime.log",root + "/velocity.log");
+      if (loadFromClassPath) {
+        ve.setProperty("resource.loader","class");
+        ve.setProperty("class.resource.loader.class","org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+      }
+      ve.init();
+      context=new VelocityContext();
+    }
+ catch (    Exception e) {
+      throw new ApplicationException(e);
+    }
+  }
+}
