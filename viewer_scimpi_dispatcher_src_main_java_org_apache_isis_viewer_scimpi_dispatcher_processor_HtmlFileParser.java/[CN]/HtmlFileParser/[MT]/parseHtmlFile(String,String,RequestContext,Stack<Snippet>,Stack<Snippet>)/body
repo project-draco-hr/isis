@@ -27,6 +27,18 @@
         TagNode tagNode=(TagNode)node;
         String tagName=tagNode.getTagName().toUpperCase();
         LOG.debug(tagName);
+        Attributes attributes=new Attributes(tagNode,context);
+        int type=0;
+        if (tagNode.isEndTag()) {
+          type=SwfTag.END;
+        }
+ else {
+          type=tagNode.isEmptyXmlTag() ? SwfTag.EMPTY : SwfTag.START;
+        }
+        testForProcessorForTag(lexer,tagName);
+        lineNumbers=lineNumbering(node);
+        SwfTag tag=new SwfTag(tagName,attributes,type,lineNumbers,loadFile.getCanonicalPath());
+        tags.push(tag);
         if (tagName.equals("SWF:IMPORT")) {
           if (!tagNode.isEmptyXmlTag()) {
             throw new ScimpiException("Import tag must be empty");
@@ -37,7 +49,6 @@
           }
           importFile=context.replaceVariables(importFile,true);
           parseHtmlFile(loadPath,importFile,context,tags,tagsForPreviousTemplate);
-          continue;
         }
         if (tagName.equals("SWF:TEMPLATE")) {
           if (!tagNode.isEmptyXmlTag()) {
@@ -52,7 +63,6 @@
             context.getWriter().println("<!-- " + "apply template " + template + " -->");
           }
           tags=new Stack<Snippet>();
-          continue;
         }
         if (tagName.equals("SWF:CONTENT")) {
           if (!tagNode.isEmptyXmlTag()) {
@@ -62,20 +72,7 @@
             context.getWriter().println("<!-- " + "insert content into template -->");
           }
           tags.addAll(tagsForPreviousTemplate);
-          continue;
         }
-        Attributes attributes=new Attributes(tagNode,context);
-        int type=0;
-        if (tagNode.isEndTag()) {
-          type=SwfTag.END;
-        }
- else {
-          type=tagNode.isEmptyXmlTag() ? SwfTag.EMPTY : SwfTag.START;
-        }
-        testForProcessorForTag(lexer,tagName);
-        lineNumbers=lineNumbering(node);
-        SwfTag tag=new SwfTag(tagName,attributes,type,lineNumbers,filePath);
-        tags.push(tag);
       }
  else {
         Snippet snippet=tags.size() == 0 ? null : tags.peek();

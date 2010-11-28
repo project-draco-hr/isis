@@ -2,8 +2,9 @@
   String id=request.getOptionalProperty(OBJECT);
   String fieldName=request.getOptionalProperty(FIELD);
   ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  String titleString;
   if (fieldName == null) {
-    request.appendHtml(object.titleString());
+    titleString=object.titleString();
   }
  else {
     ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
@@ -12,7 +13,12 @@
     }
     ObjectAdapter fieldReference=field.get(object);
     if (fieldReference != null) {
-      request.appendHtml(fieldReference.titleString());
+      titleString=fieldReference.titleString();
+    }
+ else {
+      titleString="";
     }
   }
+  request.appendDebug("    " + titleString);
+  request.appendHtml(titleString);
 }
