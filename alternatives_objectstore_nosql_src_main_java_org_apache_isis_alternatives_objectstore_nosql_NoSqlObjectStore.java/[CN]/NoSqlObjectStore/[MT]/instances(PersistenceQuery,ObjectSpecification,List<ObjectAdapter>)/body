@@ -1,0 +1,18 @@
+{
+  String specificationName=specification.getFullName();
+  Iterator<StateReader> instanceData=database.instancesOf(specificationName);
+  while (instanceData.hasNext()) {
+    StateReader reader=instanceData.next();
+    ObjectAdapter instance=objectReader.load(reader,keyCreator,versionCreator);
+    if (persistenceQuery instanceof PersistenceQueryBuiltIn) {
+      if (!((PersistenceQueryBuiltIn)persistenceQuery).matches(instance)) {
+        continue;
+      }
+    }
+    instances.add(instance);
+  }
+  for (  ObjectSpecification spec : specification.subclasses()) {
+    specificationName=spec.getFullName();
+    instances(persistenceQuery,spec,instances);
+  }
+}
