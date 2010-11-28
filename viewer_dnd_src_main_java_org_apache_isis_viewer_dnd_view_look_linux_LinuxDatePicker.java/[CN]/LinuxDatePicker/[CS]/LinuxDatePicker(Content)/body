@@ -1,0 +1,18 @@
+{
+  super(content);
+  isEditable=content instanceof FieldContent && ((FieldContent)content).isEditable().isAllowed();
+  today=Calendar.getInstance();
+  clearTime(today);
+  date=Calendar.getInstance();
+  ObjectAdapter dateAdapter=((TextParseableContent)getContent()).getAdapter();
+  if (dateAdapter != null) {
+    DateValueFacet facet=dateAdapter.getSpecification().getFacet(DateValueFacet.class);
+    currentDate=Calendar.getInstance();
+    Date dateValue=facet.dateValue(dateAdapter);
+    currentDate.setTime(dateValue);
+    clearTime(currentDate);
+    date.setTime(dateValue);
+  }
+  clearTime(date);
+  date.add(Calendar.DAY_OF_MONTH,-21);
+}
