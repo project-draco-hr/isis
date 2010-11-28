@@ -16,10 +16,12 @@
       String view=context.getParameter(hasResult ? VIEW : VOID);
       int questionMark=view == null ? -1 : view.indexOf("?");
       if (questionMark > -1) {
-        String params=view.substring(questionMark + 1);
-        int equals=params.indexOf("=");
-        context.addVariable(params.substring(0,equals),params.substring(equals + 1),Scope.REQUEST);
-        view=view.substring(0,questionMark);
+        String params[]=view.substring(questionMark + 1).split("&");
+        for (        String param : params) {
+          int equals=param.indexOf("=");
+          context.addVariable(param.substring(0,equals),param.substring(equals + 1),Scope.REQUEST);
+          view=view.substring(0,questionMark);
+        }
       }
       context.setRequestPath(view);
       if (override != null) {

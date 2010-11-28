@@ -1,24 +1,18 @@
 {
-  String name=request.getRequiredProperty(NAME);
-  String defaultId=request.getOptionalProperty(DEFAULT);
-  String objectId=request.getOptionalProperty(OBJECT);
+  disallowSourceAndDefault(request);
+  String sourceObjectId=objectOrResult(request);
+  Class<?> cls=forClass(request);
+  String variableName=request.getRequiredProperty(NAME);
   String scopeName=request.getOptionalProperty(SCOPE);
   Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
-  if (defaultId != null && objectId != null) {
-    throw new ScimpiException("Cannot specify both " + OBJECT + " and "+ DEFAULT+ " for the "+ getName()+ " element");
+  RequestContext context=request.getContext();
+  ObjectAdapter sourceObject=context.getMappedObject(sourceObjectId);
+  boolean isSourceSet=sourceObject != null;
+  boolean isSourceAssignable=isSourceSet && (cls == null || cls.isAssignableFrom(sourceObject.getObject().getClass()));
+  if (isSourceAssignable) {
+    context.addVariable(variableName,sourceObjectId,scope);
   }
-  String className=request.getOptionalProperty(TYPE);
-  Class<?> cls=null;
-  if (className != null) {
-    try {
-      cls=Class.forName(className);
-    }
- catch (    ClassNotFoundException e) {
-      throw new ScimpiException("No class for " + className,e);
-    }
+ else {
+    context.changeScope(variableName,scope);
   }
-  if (objectId == null) {
-    objectId=(String)request.getContext().getVariable(RequestContext.RESULT);
-  }
-  initialize(request,name,objectId,defaultId,cls,scope);
 }

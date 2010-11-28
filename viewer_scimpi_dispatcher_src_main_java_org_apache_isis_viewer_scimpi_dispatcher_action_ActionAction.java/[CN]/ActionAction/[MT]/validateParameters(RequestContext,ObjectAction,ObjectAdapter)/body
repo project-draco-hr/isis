@@ -25,6 +25,10 @@
  else     if (parameters2[i].getSpecification().getFacet(ParseableFacet.class) != null) {
       try {
         ParseableFacet facet=(ParseableFacet)parameters2[i].getSpecification().getFacet(ParseableFacet.class);
+        String message=parameters2[i].isValid(object,newEntry);
+        if (message != null) {
+          consent=new Veto(message);
+        }
         ObjectAdapter entry=facet.parseTextEntry(null,newEntry);
         fieldState.setValue(entry);
       }

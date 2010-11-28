@@ -1,0 +1,10 @@
+{
+  String variableName=request.getRequiredProperty(NAME);
+  String defaultValue=request.getOptionalProperty(VALUE);
+  String scopeName=request.getOptionalProperty(SCOPE);
+  Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
+  RequestContext context=request.getContext();
+  if (context.getVariable(variableName) == null) {
+    context.addVariable(variableName,defaultValue,scope);
+  }
+}
