@@ -4,8 +4,8 @@
   String originalData="org.domain.Class 1026 21 {}";
   fileWriter.write(originalData);
   fileWriter.close();
-  ServerConnection connection=new ServerConnection(inputStream("W\nUorg.domain.Class 1026 21 22 \n{data2}\n"),out);
+  ServerConnection connection=new ServerConnection(IoUtils.asInputStream("W\nUorg.domain.Class 1026 21 22 \n{data2}\n"),out);
   server.process(connection);
-  assertEquals("ok\n",out.toString());
-  assertTrue(file2.length() > originalData.length());
+  assertThat(out.toString(),is(equalTo(lineSeparated("ok\n"))));
+  assertThat(file2.length(),is(greaterThan((long)originalData.length())));
 }

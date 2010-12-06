@@ -1,13 +1,10 @@
 {
-  File file=new File("target/test/org.domain.Class");
-  for (  File f : file.listFiles()) {
-    f.delete();
-  }
-  file.delete();
+  String dir=TARGET_DIRECTORY + FULLY_QUALIFIED_CLASSNAME_2;
+  File file=deleteDirectory(dir);
   Assert.assertFalse(file.exists());
   List<FileContent> files=new ArrayList<FileContent>();
-  files.add(new FileContent('I',"1023","1","2","org.domain.Class","{data1}"));
-  DataWriter writer=new DataWriter(files);
+  files.add(new FileContent('I',"1023","1","2",FULLY_QUALIFIED_CLASSNAME_2,"{data1}"));
+  writer=new DataWriter(files);
   writer.writeData();
   Assert.assertTrue(file.exists());
 }

@@ -6,21 +6,15 @@
   }
   try {
     output=new FileOutputStream(file);
-    output.write(content.type.getBytes("utf-8"));
+    output.write(content.type.getBytes(ENCODING));
     output.write(' ');
-    output.write(content.id.getBytes("utf-8"));
+    output.write(content.id.getBytes(ENCODING));
     output.write(' ');
-    output.write(content.newVersion.getBytes("utf-8"));
+    output.write(content.newVersion.getBytes(ENCODING));
     output.write('\n');
-    output.write(content.data.getBytes("utf-8"));
+    output.write(content.data.getBytes(ENCODING));
   }
   finally {
-    if (output != null) {
-      try {
-        output.close();
-      }
- catch (      IOException e) {
-      }
-    }
+    closeSafely(output);
   }
 }

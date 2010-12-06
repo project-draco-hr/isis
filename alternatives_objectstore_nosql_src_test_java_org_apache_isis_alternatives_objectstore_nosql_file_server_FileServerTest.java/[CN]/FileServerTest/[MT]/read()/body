@@ -3,7 +3,7 @@
   FileWriter fileWriter=new FileWriter(file1);
   fileWriter.write("type 1025 1\n{data1}");
   fileWriter.close();
-  ServerConnection connection=new ServerConnection(inputStream("Rorg.domain.Class 2025"),out);
+  ServerConnection connection=new ServerConnection(IoUtils.asInputStream("Rorg.domain.Class 2025"),out);
   server.process(connection);
-  assertThat("ok\n{data1}\n".toCharArray(),is(equalTo(new String(out.toString()).toCharArray())));
+  assertThat(out.toString(),is(equalTo(lineSeparated("ok\n{data1}\n"))));
 }
