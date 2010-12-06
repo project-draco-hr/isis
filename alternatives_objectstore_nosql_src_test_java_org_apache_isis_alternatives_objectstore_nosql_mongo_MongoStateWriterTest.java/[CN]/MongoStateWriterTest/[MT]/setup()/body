@@ -1,7 +1,13 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  Mongo m=new Mongo();
-  m.dropDatabase("mydb");
-  testDb=m.getDB("mydb");
+  try {
+    Mongo m=new Mongo();
+    m.dropDatabase("mydb");
+    testDb=m.getDB("mydb");
+  }
+ catch (  Exception e) {
+    assumeThat(true,is(false));
+    return;
+  }
   writer=new MongoStateWriter(testDb,SPEC_NAME);
 }
