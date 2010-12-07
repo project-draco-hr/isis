@@ -19,6 +19,19 @@
       }
       throw StoryBoundValueException.current(arg0Binding,resultTitle);
     }
+    DateValueFacet dateValueFacet=resultAdapter.getSpecification().getFacet(DateValueFacet.class);
+    if (dateValueFacet != null) {
+      Date resultDate=dateValueFacet.dateValue(resultAdapter);
+      DateParser dateParser=performContext.getDateParser();
+      Date expectedDate=dateParser.parse(expected);
+      if (expectedDate != null) {
+        if (expectedDate.compareTo(resultDate) == 0) {
+          return resultAdapter;
+        }
+      }
+      String format=dateParser.format(resultDate);
+      throw StoryBoundValueException.current(arg0Binding,format);
+    }
     if (!Strings.nullSafeEquals(resultTitle,expected)) {
       throw StoryBoundValueException.current(arg0Binding,resultTitle);
     }
