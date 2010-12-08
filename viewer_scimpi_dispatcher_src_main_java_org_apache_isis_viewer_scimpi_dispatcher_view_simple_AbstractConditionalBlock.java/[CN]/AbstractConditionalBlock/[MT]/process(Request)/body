@@ -97,6 +97,14 @@
     processTags(object.isPersistent(),request);
     return;
   }
+  String type=request.getOptionalProperty(TYPE);
+  if (type != null) {
+    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    Class<?> cls=forClass(request);
+    boolean hasType=cls == null || cls.isAssignableFrom(object.getObject().getClass());
+    processTags(hasType,request);
+    return;
+  }
   if (request.isPropertySpecified("empty")) {
     if (request.isPropertySet("empty")) {
       String collection=request.getOptionalProperty("empty");
