@@ -1,16 +1,3 @@
 {
-  if (executingInline()) {
-    setUpObjects=new SetUpObjectsForConcordion(getStory().getAliasRegistry(),className,Mode.PERSIST);
-    setUpObjects.executeHeader(alias,propertyValues);
-    return setUpObjects.executeRow(alias,propertyValues);
-  }
- else {
-    if (executingTableHeader()) {
-      setUpObjects=new SetUpObjectsForConcordion(getStory().getAliasRegistry(),className,Mode.PERSIST);
-      return setUpObjects.executeHeader(alias,propertyValues);
-    }
- else {
-      return setUpObjects.executeRow(alias,propertyValues);
-    }
-  }
+  return setUpObjectsVarargsNormalized(StringUtils.normalized(className),StringUtils.normalized(alias),StringUtils.normalized(propertyValues));
 }
