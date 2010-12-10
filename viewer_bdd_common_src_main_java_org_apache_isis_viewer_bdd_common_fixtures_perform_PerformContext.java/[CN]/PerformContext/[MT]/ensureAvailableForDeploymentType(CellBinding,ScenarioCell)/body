@@ -1,0 +1,11 @@
+{
+  DeploymentType deploymentType=this.peer.getDeploymentType();
+  boolean isExploration=objectMember.getFacet(ExplorationFacet.class) != null;
+  if (isExploration && !deploymentType.isExploring()) {
+    throw ScenarioBoundValueException.current(onMemberBinding,"(not running in exploration mode)");
+  }
+  boolean isPrototype=objectMember.getFacet(PrototypeFacet.class) != null;
+  if (isPrototype && !deploymentType.isPrototyping()) {
+    throw ScenarioBoundValueException.current(onMemberBinding,"(not running in prototype mode)");
+  }
+}

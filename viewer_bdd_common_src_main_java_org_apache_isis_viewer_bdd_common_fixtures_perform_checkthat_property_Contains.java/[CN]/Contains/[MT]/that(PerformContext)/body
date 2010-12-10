@@ -1,14 +1,14 @@
 {
   final OneToOneAssociation otoa=(OneToOneAssociation)performContext.getObjectMember();
   CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
-  final StoryCell arg0Cell=arg0Binding.getCurrentCell();
+  final ScenarioCell arg0Cell=arg0Binding.getCurrentCell();
   final String expected=arg0Cell.getText();
   final ObjectAdapter resultAdapter=otoa.get(performContext.getOnAdapter());
   if (resultAdapter == null) {
     if (StringUtils.emptyString(expected)) {
       return resultAdapter;
     }
-    throw StoryBoundValueException.current(arg0Binding,"(is null)");
+    throw ScenarioBoundValueException.current(arg0Binding,"(is null)");
   }
   final String resultTitle=resultAdapter.titleString();
   if (!StringUtils.emptyString(expected)) {
@@ -17,7 +17,7 @@
       if (resultAdapter == expectedAdapter) {
         return resultAdapter;
       }
-      throw StoryBoundValueException.current(arg0Binding,resultTitle);
+      throw ScenarioBoundValueException.current(arg0Binding,resultTitle);
     }
     DateValueFacet dateValueFacet=resultAdapter.getSpecification().getFacet(DateValueFacet.class);
     if (dateValueFacet != null) {
@@ -30,10 +30,10 @@
         }
       }
       String format=dateParser.format(resultDate);
-      throw StoryBoundValueException.current(arg0Binding,format);
+      throw ScenarioBoundValueException.current(arg0Binding,format);
     }
     if (!StringUtils.nullSafeEquals(resultTitle,expected)) {
-      throw StoryBoundValueException.current(arg0Binding,resultTitle);
+      throw ScenarioBoundValueException.current(arg0Binding,resultTitle);
     }
   }
  else {

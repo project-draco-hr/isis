@@ -1,9 +1,9 @@
 {
   CellBinding onMemberBinding=performContext.getPeer().getOnMemberBinding();
-  final StoryCell onMemberCell=onMemberBinding.getCurrentCell();
+  final ScenarioCell onMemberCell=onMemberBinding.getCurrentCell();
   final String reason=type.ensureMemberIsOfType(performContext.getObjectMember());
   if (reason != null) {
-    throw StoryBoundValueException.current(onMemberBinding,reason);
+    throw ScenarioBoundValueException.current(onMemberBinding,reason);
   }
   if (type.representsMember()) {
     if (getMode() == Perform.Mode.TEST) {
@@ -13,7 +13,7 @@
     }
     final int numArgs=performContext.getArgumentCells().size();
     if (numParameters == NumParameters.ONE && numArgs < 1) {
-      throw StoryBoundValueException.current(onMemberBinding,"(need one argument)");
+      throw ScenarioBoundValueException.current(onMemberBinding,"(need one argument)");
     }
   }
   doHandle(performContext);

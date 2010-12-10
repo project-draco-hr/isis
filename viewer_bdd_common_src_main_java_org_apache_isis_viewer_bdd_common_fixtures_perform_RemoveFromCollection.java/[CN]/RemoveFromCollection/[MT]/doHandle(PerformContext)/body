@@ -2,24 +2,24 @@
   final ObjectAdapter onAdapter=performContext.getOnAdapter();
   final ObjectMember nakedObjectMember=performContext.getObjectMember();
   final CellBinding onMemberBinding=performContext.getPeer().getOnMemberBinding();
-  final StoryCell onMemberCell=onMemberBinding.getCurrentCell();
-  final List<StoryCell> argumentCells=performContext.getArgumentCells();
+  final ScenarioCell onMemberCell=onMemberBinding.getCurrentCell();
+  final List<ScenarioCell> argumentCells=performContext.getArgumentCells();
   final OneToManyAssociation otma=(OneToManyAssociation)nakedObjectMember;
   CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
-  final StoryCell arg0Cell=argumentCells.get(0);
+  final ScenarioCell arg0Cell=argumentCells.get(0);
   final String toRemove=arg0Cell.getText();
   final CollectionRemoveFromFacet removeFromFacet=nakedObjectMember.getFacet(CollectionRemoveFromFacet.class);
   if (removeFromFacet == null) {
-    throw StoryBoundValueException.current(onMemberBinding,"(cannot remove from collection)");
+    throw ScenarioBoundValueException.current(onMemberBinding,"(cannot remove from collection)");
   }
   final ObjectAdapter toRemoveAdapter=performContext.getPeer().getAliasRegistry().getAliased(toRemove);
   if (toRemoveAdapter == null) {
-    throw StoryBoundValueException.current(arg0Binding,"(unknown alias)");
+    throw ScenarioBoundValueException.current(arg0Binding,"(unknown alias)");
   }
   otma.createValidateAddInteractionContext(getSession(),InteractionInvocationMethod.BY_USER,onAdapter,toRemoveAdapter);
   final Consent validToRemove=otma.isValidToRemove(onAdapter,toRemoveAdapter);
   if (validToRemove.isVetoed()) {
-    throw StoryBoundValueException.current(onMemberBinding,validToRemove.getReason());
+    throw ScenarioBoundValueException.current(onMemberBinding,validToRemove.getReason());
   }
   removeFromFacet.remove(onAdapter,toRemoveAdapter);
 }

@@ -3,9 +3,9 @@
   final CellBinding thatBinding=performContext.getPeer().getThatItBinding();
   final CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
   if (!arg0Binding.isFound()) {
-    throw StoryBoundValueException.current(thatBinding,"(requires argument)");
+    throw ScenarioBoundValueException.current(thatBinding,"(requires argument)");
   }
-  final StoryCell arg0Cell=arg0Binding.getCurrentCell();
+  final ScenarioCell arg0Cell=arg0Binding.getCurrentCell();
   final ObjectAdapter containedAdapter=performContext.getPeer().getAdapter(null,nakedObjectMember.getSpecification(),arg0Binding,arg0Cell);
   boolean contains=false;
   for (  final ObjectAdapter eachAdapter : collection) {
@@ -15,6 +15,6 @@
     }
   }
   if (!assertion.isSatisfiedBy(contains)) {
-    throw StoryBoundValueException.current(arg0Binding,assertion.getErrorMsgIfNotSatisfied());
+    throw ScenarioBoundValueException.current(arg0Binding,assertion.getErrorMsgIfNotSatisfied());
   }
 }

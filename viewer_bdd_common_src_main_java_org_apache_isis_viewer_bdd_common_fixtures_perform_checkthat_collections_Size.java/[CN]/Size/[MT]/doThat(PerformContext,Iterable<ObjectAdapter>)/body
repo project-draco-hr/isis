@@ -2,25 +2,25 @@
   final CellBinding thatBinding=performContext.getPeer().getThatItBinding();
   final CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
   if (!arg0Binding.isFound()) {
-    throw StoryBoundValueException.current(thatBinding,"(requires argument)");
+    throw ScenarioBoundValueException.current(thatBinding,"(requires argument)");
   }
-  final StoryCell arg0Cell=arg0Binding.getCurrentCell();
+  final ScenarioCell arg0Cell=arg0Binding.getCurrentCell();
   final String expectedSizeStr=arg0Cell.getText();
   final int expectedSize;
   try {
     expectedSize=Integer.parseInt(expectedSizeStr);
   }
  catch (  final NumberFormatException ex) {
-    throw StoryBoundValueException.current(arg0Binding,"(not an integer)");
+    throw ScenarioBoundValueException.current(arg0Binding,"(not an integer)");
   }
   if (expectedSize <= 0) {
-    throw StoryBoundValueException.current(arg0Binding,"(not a positive integer)");
+    throw ScenarioBoundValueException.current(arg0Binding,"(not a positive integer)");
   }
   int actualSize=0;
   for (  @SuppressWarnings("unused") final ObjectAdapter eachObject : collection) {
     actualSize++;
   }
   if (expectedSize != actualSize) {
-    throw StoryBoundValueException.current(arg0Binding,"" + actualSize);
+    throw ScenarioBoundValueException.current(arg0Binding,"" + actualSize);
   }
 }
