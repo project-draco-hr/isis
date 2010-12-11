@@ -9,7 +9,9 @@
       getAdapterManager().removeAdapter(existingAdapterLookedUpByPojo);
     }
     ObjectAdapter existingAdapterLookedUpByOid=getAdapterManager().getAdapterFor(oid);
-    ensureThatState(existingAdapterLookedUpByOid,is(nullValue()),"Already have mapping for " + oid);
+    if (existingAdapterLookedUpByOid != null) {
+      throw new IsisException("A mapping already exists for " + oid + ": "+ existingAdapterLookedUpByOid);
+    }
     ObjectAdapter recreatedAdapter=getHydrator().recreateAdapter(oid,pojo);
     Version version=objectStoreInstances.getVersion(oid);
     recreatedAdapter.setOptimisticLock(version);
