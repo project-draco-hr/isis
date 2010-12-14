@@ -2,7 +2,7 @@
   String id=request.getOptionalProperty(OBJECT);
   String method=request.getOptionalProperty(METHOD + "-visible");
   if (method != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     ObjectAction objectAction=object.getSpecification().getObjectAction(ObjectActionType.USER,method,new ObjectSpecification[0]);
     Consent visible=objectAction.isVisible(IsisContext.getAuthenticationSession(),object);
     processTags(visible.isAllowed(),request);
@@ -10,7 +10,7 @@
   }
   method=request.getOptionalProperty(METHOD + "-usable");
   if (method != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     ObjectAction objectAction=object.getSpecification().getObjectAction(ObjectActionType.USER,method,new ObjectSpecification[0]);
     Consent usable=objectAction.isUsable(IsisContext.getAuthenticationSession(),object);
     processTags(usable.isAllowed(),request);
@@ -18,7 +18,7 @@
   }
   method=request.getOptionalProperty(METHOD + "-exists");
   if (method != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     List<? extends ObjectAction> objectActions=object.getSpecification().getObjectActionList(ObjectActionType.USER);
     boolean methodExists=false;
     for (    ObjectAction objectAssociation : objectActions) {
@@ -32,7 +32,7 @@
   }
   String field=request.getOptionalProperty(FIELD + "-visible");
   if (field != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     ObjectAssociation objectField=object.getSpecification().getAssociation(field);
     Consent visible=objectField.isVisible(IsisContext.getAuthenticationSession(),object);
     processTags(visible.isAllowed(),request);
@@ -40,7 +40,7 @@
   }
   field=request.getOptionalProperty(FIELD + "-exists");
   if (field != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     List<? extends ObjectAssociation> objectFields=object.getSpecification().getAssociationList();
     boolean fieldExists=false;
     for (    ObjectAssociation objectAssociation : objectFields) {
@@ -54,7 +54,7 @@
   }
   field=request.getOptionalProperty(FIELD + "-editable");
   if (field != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     ObjectAssociation objectField=object.getSpecification().getAssociation(field);
     Consent usable=objectField.isUsable(IsisContext.getAuthenticationSession(),object);
     processTags(usable.isAllowed(),request);
@@ -62,7 +62,7 @@
   }
   field=request.getOptionalProperty(FIELD + "-empty");
   if (field != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     ObjectAssociation objectField=object.getSpecification().getAssociation(field);
     IsisContext.getPersistenceSession().resolveField(object,objectField);
     ObjectAdapter fld=objectField.get(object);
@@ -78,7 +78,7 @@
   }
   field=request.getOptionalProperty(FIELD + "-set");
   if (field != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     ObjectAssociation objectField=object.getSpecification().getAssociation(field);
     IsisContext.getPersistenceSession().resolveField(object,objectField);
     ObjectAdapter fld=objectField.get(object);
@@ -99,7 +99,7 @@
   }
   String type=request.getOptionalProperty(TYPE);
   if (type != null) {
-    ObjectAdapter object=(ObjectAdapter)request.getContext().getMappedObjectOrResult(id);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
     Class<?> cls=forClass(request);
     boolean hasType=cls == null || cls.isAssignableFrom(object.getObject().getClass());
     processTags(hasType,request);

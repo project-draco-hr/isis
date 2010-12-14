@@ -1,18 +1,11 @@
 {
-  boolean isLoggedIn=IsisContext.getSession() != null;
+  boolean isLoggedIn=!(IsisContext.getSession().getAuthenticationSession() instanceof UserlessSession);
   request.appendHtml("<div class=\"user\">");
   if (isLoggedIn) {
-    String user=request.getOptionalProperty(NAME);
-    if (user == null) {
-      user=IsisContext.getAuthenticationSession().getUserName();
-    }
-    request.appendHtml("Welcome <span class=\"name\">" + user + "</span>, ");
-    String logoutView=request.getOptionalProperty(LOGOUT_VIEW,DEFAULT_LOGOUT_VIEW);
-    request.appendHtml("<a class=\"link\" href=\"logout.app?view=" + logoutView + "\">Log out</a>");
+    displayUserAndLogoutLink(request);
   }
  else {
-    String loginView=request.getOptionalProperty(LOGIN_VIEW,DEFAULT_LOGIN_VIEW);
-    request.appendHtml("<a div class=\"link\" href=\"" + loginView + "\">Log in</a>");
+    displayLoginForm(request);
   }
   request.appendHtml("</div>");
 }

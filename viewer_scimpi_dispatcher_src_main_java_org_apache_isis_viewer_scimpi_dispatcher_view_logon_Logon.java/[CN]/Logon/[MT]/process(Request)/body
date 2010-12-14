@@ -3,22 +3,8 @@
   if (view == null) {
     view=(String)request.getContext().getVariable("login-path");
   }
-  String error=request.getOptionalProperty(ERRORS,request.getContext().getRequestedFile());
-  List<HiddenInputField> hiddenFields=new ArrayList<HiddenInputField>();
-  hiddenFields.add(new HiddenInputField(ERRORS,error));
-  if (view != null) {
-    hiddenFields.add(new HiddenInputField(VIEW,view));
+  boolean isNotLoggedIn=IsisContext.getSession().getAuthenticationSession() instanceof UserlessSession;
+  if (isNotLoggedIn) {
+    loginForm(request,view);
   }
-  InputField nameField=new InputField("username");
-  nameField.setType(InputField.TEXT);
-  nameField.setLabel("User Name");
-  InputField passwordField=new InputField("password");
-  passwordField.setType(InputField.PASSWORD);
-  passwordField.setLabel("Password");
-  InputField[] fields=new InputField[]{nameField,passwordField};
-  String legend=request.getOptionalProperty(LEGEND);
-  String loginButtonTitle=request.getOptionalProperty(TITLE,"Log in");
-  String className=request.getOptionalProperty(CLASS,"login");
-  String id=request.getOptionalProperty(ID);
-  InputForm.createForm(request,"logon.app",loginButtonTitle,fields,hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]),legend,className,id);
 }

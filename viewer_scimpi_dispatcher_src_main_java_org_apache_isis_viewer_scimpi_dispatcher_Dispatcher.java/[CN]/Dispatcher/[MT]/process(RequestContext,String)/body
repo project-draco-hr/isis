@@ -1,31 +1,42 @@
 {
   try {
-    UserManager.startRequest(context);
-    AuthenticationSession session=context.getSession();
+    AuthenticationSession session=UserManager.startRequest(context);
+    LOG.debug("exsiting session: " + session);
+    LOG.info("processing request " + servletPath);
     IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
-    context.startRequest();
     context.setRequestPath(servletPath);
+    context.startRequest();
     processActions(context,servletPath);
-    boolean stillSameSession=context.getSession() == session;
-    List<String> copyMessages=IsisContext.getMessageBroker().getMessages();
-    List<String> copyWarnings=IsisContext.getMessageBroker().getWarnings();
-    if (stillSameSession) {
-      IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
-    }
-    IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
-    for (    String message : copyMessages) {
-      IsisContext.getMessageBroker().addMessage(message);
-    }
-    for (    String warning : copyWarnings) {
-      IsisContext.getMessageBroker().addWarning(warning);
+    IsisTransactionManager transactionManager=IsisContext.getPersistenceSession().getTransactionManager();
+    if (transactionManager.getTransaction().getState().canFlush()) {
+      transactionManager.flushTransaction();
     }
     processView(context);
-    IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
+    transactionManager=IsisContext.getPersistenceSession().getTransactionManager();
+    if (transactionManager.getTransaction().getState().canCommit()) {
+      IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
+    }
   }
  catch (  Throwable e) {
-    LOG.error("process failed",e);
-    generateErrorPage(e,context);
-    IsisContext.getPersistenceSession().getTransactionManager().abortTransaction();
+    DebugString error=new DebugString();
+    List<String> messages=IsisContext.getMessageBroker().getMessages();
+    for (    String message : messages) {
+      context.getWriter().append("<div class=\"message\">message: " + message + "</div>");
+      error.appendln("message",message);
+    }
+    messages=IsisContext.getMessageBroker().getWarnings();
+    for (    String message : messages) {
+      context.getWriter().append("<div class=\"message\">warning: " + message + "</div>");
+      error.appendln("warning",message);
+    }
+    generateErrorPage(e,context,error);
+    PersistenceSession checkSession=IsisContext.getPersistenceSession();
+    IsisTransactionManager transactionManager=checkSession.getTransactionManager();
+    if (transactionManager.getTransaction().getState().canAbort()) {
+      transactionManager.abortTransaction();
+    }
+    String message="failed while processing " + servletPath;
+    LOG.error(message + "\n" + error+ "\n"+ message,e);
   }
  finally {
     try {

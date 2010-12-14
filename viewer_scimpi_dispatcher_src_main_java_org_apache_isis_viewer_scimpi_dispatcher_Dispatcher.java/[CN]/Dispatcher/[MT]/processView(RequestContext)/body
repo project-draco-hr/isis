@@ -18,14 +18,7 @@
   request.appendDebug("processing " + fullPath);
   try {
     request.processNextTag();
-    List<String> messages=IsisContext.getMessageBroker().getMessages();
-    if (messages.size() > 0) {
-      context.getWriter().println("Ignored messages");
-    }
-    List<String> warnings=IsisContext.getMessageBroker().getWarnings();
-    if (warnings.size() > 0) {
-      context.getWriter().println("Ignored warnings");
-    }
+    noteIfMessagesHaveNotBeenDisplay(context);
     IsisContext.getUpdateNotifier().clear();
   }
  catch (  RuntimeException e) {
@@ -37,7 +30,7 @@
   String page=request.popBuffer();
   context.getWriter().write(page);
   if (context.getDebug() == Debug.PAGE) {
-    DebugView view=new DebugView(context.getWriter());
+    DebugView view=new DebugView(context.getWriter(),new DebugString());
     view.startTable();
     context.append(view);
     view.endTable();

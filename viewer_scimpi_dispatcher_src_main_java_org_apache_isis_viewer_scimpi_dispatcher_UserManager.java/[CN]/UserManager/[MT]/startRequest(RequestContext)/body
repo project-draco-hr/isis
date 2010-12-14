@@ -2,8 +2,12 @@
   AuthenticationSession session=context.getSession();
   if (session == null) {
     session=new UserlessSession();
+    LOG.info("start anonymous request: " + session);
   }
-  LOG.info("start request: " + session);
+ else {
+    LOG.info("start request for: " + session.getUserName());
+  }
   IsisContext.closeSession();
   IsisContext.openSession(session);
+  return session;
 }
