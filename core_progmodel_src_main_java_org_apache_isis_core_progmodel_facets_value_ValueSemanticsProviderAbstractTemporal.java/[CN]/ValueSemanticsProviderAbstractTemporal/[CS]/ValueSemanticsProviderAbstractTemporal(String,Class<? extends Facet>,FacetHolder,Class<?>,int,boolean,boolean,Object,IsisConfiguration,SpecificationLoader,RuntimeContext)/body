@@ -1,18 +1,8 @@
 {
   super(facetType,holder,adaptedClass,typicalLength,immutable,equalByContent,defaultValue,configuration,specificationLoader,runtimeContext);
-  final Map<String,DateFormat> formats=formats();
-  for (  Map.Entry<String,DateFormat> mapEntry : formats.entrySet()) {
-    final DateFormat format=mapEntry.getValue();
-    format.setLenient(false);
-    if (ignoreTimeZone()) {
-      format.setTimeZone(UTC_TIME_ZONE);
-    }
-  }
-  final String defaultFormat=configuration.getString(ConfigurationConstants.ROOT + "value.format." + propertyName,defaultFormat());
-  final String required=defaultFormat.toLowerCase().trim();
-  format=formats.get(required);
-  if (format == null) {
-    setMask(defaultFormat);
-  }
-  encodingFormat=formats.get(ISO_ENCODING_FORMAT);
+  configureFormats();
+  this.formatKey=FORMAT_KEY_PREFIX + propertyName;
+  configuredFormat=getConfiguration().getString(formatKey,defaultFormat());
+  buildFormat(configuredFormat);
+  encodingFormat=formats().get(ISO_ENCODING_FORMAT);
 }
