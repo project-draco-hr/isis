@@ -1,9 +1,9 @@
 {
   LOG.debug("introspecting " + className() + ": actions");
   MethodScope methodScope=MethodScope.OBJECT;
-  final ObjectActionPeer[] actionPeers=findActionMethodsPeers(methodScope);
+  final List<ObjectMemberPeer> actionPeers=findActionMethodsPeers(methodScope);
   String actionOrder;
-  final ActionOrderFacet actionOrderFacet=(ActionOrderFacet)javaSpecification.getFacet(ActionOrderFacet.class);
+  final ActionOrderFacet actionOrderFacet=javaSpecification.getFacet(ActionOrderFacet.class);
   if (actionOrderFacet == null) {
     actionOrder=null;
   }
@@ -15,7 +15,7 @@
   }
   orderedObjectActions=createOrderSet(actionOrder,actionPeers);
   MethodScope methodsScope2=MethodScope.CLASS;
-  final ObjectActionPeer[] findClassActionMethods=findActionMethodsPeers(methodsScope2);
+  final List<ObjectMemberPeer> findClassActionMethods=findActionMethodsPeers(methodsScope2);
   actionOrder=null;
   if (actionOrder == null) {
     actionOrder=invokeSortOrderMethod("classAction");

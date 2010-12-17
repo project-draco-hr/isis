@@ -1,8 +1,8 @@
 {
   LOG.debug("introspecting " + className() + ": properties and collections");
-  final ObjectAssociationPeer[] findFieldMethods=findAndCreateFieldPeers();
+  final List<ObjectMemberPeer> fieldPeers=findAndCreateFieldPeers();
   String fieldOrder;
-  final FieldOrderFacet fieldOrderFacet=(FieldOrderFacet)javaSpecification.getFacet(FieldOrderFacet.class);
+  final FieldOrderFacet fieldOrderFacet=javaSpecification.getFacet(FieldOrderFacet.class);
   if (fieldOrderFacet == null) {
     fieldOrder=null;
   }
@@ -12,5 +12,5 @@
   if (fieldOrder == null) {
     fieldOrder=invokeSortOrderMethod("field");
   }
-  orderedFields=createOrderSet(fieldOrder,findFieldMethods);
+  orderedFields=createOrderSet(fieldOrder,fieldPeers);
 }

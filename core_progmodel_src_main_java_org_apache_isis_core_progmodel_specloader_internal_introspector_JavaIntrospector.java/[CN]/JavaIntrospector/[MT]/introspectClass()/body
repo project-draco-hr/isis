@@ -5,13 +5,13 @@
   }
   final JavaIntrospectorMethodRemover methodRemover=new JavaIntrospectorMethodRemover();
   getFacetProcessor().process(type,methodRemover,javaSpecification);
-  final FacetsFacet facetsFacet=(FacetsFacet)javaSpecification.getFacet(FacetsFacet.class);
+  final FacetsFacet facetsFacet=javaSpecification.getFacet(FacetsFacet.class);
   if (facetsFacet != null) {
     final Class<? extends FacetFactory>[] facetFactories=facetsFacet.facetFactories();
     for (int i=0; i < facetFactories.length; i++) {
       FacetFactory facetFactory=null;
       try {
-        facetFactory=(FacetFactory)facetFactories[i].newInstance();
+        facetFactory=facetFactories[i].newInstance();
       }
  catch (      final InstantiationException e) {
         throw new IsisException(e);
