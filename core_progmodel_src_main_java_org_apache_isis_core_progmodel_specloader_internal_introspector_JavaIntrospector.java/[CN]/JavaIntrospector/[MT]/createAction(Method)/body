@@ -1,18 +1,11 @@
 {
-  final Class<?>[] parameterTypes=getParameterTypesFor(actionMethod);
-  final int numParameters=parameterTypes.length;
-  final JavaObjectActionParamPeer[] actionParams=new JavaObjectActionParamPeer[numParameters];
-  for (int j=0; j < numParameters; j++) {
-    ObjectSpecification paramSpec=getSpecificationLoader().loadSpecification(parameterTypes[j]);
-    if (paramSpec == null) {
-      return null;
-    }
-    actionParams[j]=new JavaObjectActionParamPeer(paramSpec);
+  if (!isAllParamTypesValid(actionMethod)) {
+    return null;
   }
-  final String fullMethodName=actionMethod.getName();
-  final Identifier identifier=Identifier.actionIdentifier(className,fullMethodName,parameterTypes);
-  final JavaObjectActionPeer action=new JavaObjectActionPeer(identifier,actionParams);
+  Class<?> returnType=actionMethod.getReturnType();
+  final JavaObjectActionPeer action=new JavaObjectActionPeer(type,actionMethod,returnType,reflector);
   getFacetProcessor().process(type,actionMethod,new JavaIntrospectorMethodRemover(),action,ObjectFeatureType.ACTION);
+  ObjectActionParamPeer[] actionParams=action.getParameters();
   for (int j=0; j < actionParams.length; j++) {
     getFacetProcessor().processParams(actionMethod,j,actionParams[j]);
   }

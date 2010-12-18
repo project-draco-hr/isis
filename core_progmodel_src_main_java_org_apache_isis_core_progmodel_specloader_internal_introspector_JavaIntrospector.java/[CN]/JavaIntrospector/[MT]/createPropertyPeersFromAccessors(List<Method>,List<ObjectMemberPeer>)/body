@@ -1,18 +1,12 @@
 {
-  for (  final Method accessorMethod : propertyAccessors) {
-    LOG.debug("  identified 1-1 association method " + accessorMethod);
-    final String capitalizedName=NameUtils.javaBaseName(accessorMethod.getName());
-    final String beanName=Introspector.decapitalize(capitalizedName);
-    final Class<?> returnType=accessorMethod.getReturnType();
+  for (  final Method getMethod : propertyAccessors) {
+    LOG.debug("  identified 1-1 association method " + getMethod);
+    final Class<?> returnType=getMethod.getReturnType();
     if (getClassSubstitutor().getClass(returnType) == null) {
       continue;
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("one-to-one association " + capitalizedName + " ->"+ accessorMethod);
-    }
-    final Identifier identifier=Identifier.propertyOrCollectionIdentifier(className,beanName);
-    final JavaOneToOneAssociationPeer associationPeer=new JavaOneToOneAssociationPeer(identifier,returnType,getSpecificationLoader());
-    getFacetProcessor().process(type,accessorMethod,new JavaIntrospectorMethodRemover(),associationPeer,ObjectFeatureType.PROPERTY);
+    final JavaObjectAssociationPeer associationPeer=JavaObjectAssociationPeer.createPropertyPeer(type,getMethod,returnType,getSpecificationLoader());
+    getFacetProcessor().process(type,getMethod,new JavaIntrospectorMethodRemover(),associationPeer,ObjectFeatureType.PROPERTY);
     associationPeerListToAppendto.add(associationPeer);
   }
 }

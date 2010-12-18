@@ -1,19 +1,19 @@
 {
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
-    public void someAction(    final int x,    final long y){
+    @SuppressWarnings("unused") public void someAction(    final int x,    final long y){
     }
-    public int default0SomeAction(){
+    @SuppressWarnings("unused") public int default0SomeAction(){
       return 0;
     }
-    public long default1SomeAction(){
+    @SuppressWarnings("unused") public long default1SomeAction(){
       return 0;
     }
-    public Object[] defaultSomeAction(    final int x,    final long y){
+    @SuppressWarnings("unused") public Object[] defaultSomeAction(    final int x,    final long y){
       return null;
     }
   }
   Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
-  ObjectActionPeer facetHolderWithParms=createHolderWithParms();
+  ObjectActionPeer facetHolderWithParms=new JavaObjectActionPeer(Customer.class,actionMethod,void.class,reflector);
   reflector.setLoadSpecificationStringReturn(voidNoSpec);
   try {
     facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolderWithParms);

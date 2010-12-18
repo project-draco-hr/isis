@@ -1,17 +1,16 @@
 {
   for (  final Method getMethod : collectionAccessors) {
-    LOG.debug("  identified one-many association method " + getMethod);
-    final String capitalizedName=NameUtils.javaBaseName(getMethod.getName());
-    final String collectionNameName=Introspector.decapitalize(capitalizedName);
-    final Identifier identifier=Identifier.propertyOrCollectionIdentifier(className(),collectionNameName);
-    final JavaOneToManyAssociationPeer collection=new JavaOneToManyAssociationPeer(identifier,getSpecificationLoader());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("  identified one-many association method " + getMethod);
+    }
+    final JavaObjectAssociationPeer collection=JavaObjectAssociationPeer.createCollectionPeer(type,getMethod,getSpecificationLoader());
     getFacetProcessor().process(type,getMethod,new JavaIntrospectorMethodRemover(),collection,ObjectFeatureType.COLLECTION);
     Class<?> elementType=Object.class;
     final TypeOfFacet typeOfFacet=collection.getFacet(TypeOfFacet.class);
     if (typeOfFacet != null) {
       elementType=typeOfFacet.value();
     }
-    collection.setElementType(elementType);
+    collection.setType(elementType);
     if (getClassSubstitutor().getClass(elementType) == null) {
       continue;
     }
