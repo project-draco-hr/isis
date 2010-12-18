@@ -4,11 +4,13 @@
   int actionCnt=0;
   while (elements.hasMoreElements()) {
     final Object element=elements.nextElement();
-    if (element instanceof JavaObjectActionPeer) {
-      final JavaObjectActionPeer javaObjectActionPeer=(JavaObjectActionPeer)element;
-      final String actionId=javaObjectActionPeer.getIdentifier().getMemberName();
-      final ObjectAction objectAction=new ObjectActionImpl(actionId,javaObjectActionPeer,getRuntimeContext());
-      actions[actionCnt++]=objectAction;
+    if (element instanceof ObjectMemberPeerImpl) {
+      final ObjectMemberPeerImpl memberPeer=(ObjectMemberPeerImpl)element;
+      if (memberPeer.getFeatureType().isAction()) {
+        final String actionId=memberPeer.getIdentifier().getMemberName();
+        final ObjectAction objectAction=new ObjectActionImpl(actionId,memberPeer,getRuntimeContext());
+        actions[actionCnt++]=objectAction;
+      }
     }
  else     if (element instanceof OrderSet) {
       final OrderSet set=((OrderSet)element);

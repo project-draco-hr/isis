@@ -3,11 +3,11 @@
     return null;
   }
   Class<?> returnType=actionMethod.getReturnType();
-  final JavaObjectActionPeer action=new JavaObjectActionPeer(type,actionMethod,returnType,reflector);
+  final ObjectMemberPeer action=ObjectMemberPeerImpl.createActionPeer(type,actionMethod,returnType,reflector);
   getFacetProcessor().process(type,actionMethod,new JavaIntrospectorMethodRemover(),action,ObjectFeatureType.ACTION);
-  ObjectActionParamPeer[] actionParams=action.getParameters();
-  for (int j=0; j < actionParams.length; j++) {
-    getFacetProcessor().processParams(actionMethod,j,actionParams[j]);
+  List<TypedHolder> actionParams=action.getChildren();
+  for (int j=0; j < actionParams.size(); j++) {
+    getFacetProcessor().processParams(actionMethod,j,actionParams.get(j));
   }
   return action;
 }

@@ -4,10 +4,12 @@
   int actionCnt=0;
   while (elements.hasMoreElements()) {
     final Object element=elements.nextElement();
-    if (element instanceof JavaObjectAssociationPeer) {
-      final JavaObjectAssociationPeer javaObjectAssociationPeer=(JavaObjectAssociationPeer)element;
-      final ObjectAssociation objectAssociation=createObjectField(javaObjectAssociationPeer);
-      fields[actionCnt++]=objectAssociation;
+    if (element instanceof ObjectMemberPeerImpl) {
+      ObjectMemberPeerImpl javaObjectMemberPeer=(ObjectMemberPeerImpl)element;
+      if (javaObjectMemberPeer.getFeatureType().isPropertyOrCollection()) {
+        final ObjectAssociation objectAssociation=createObjectAssociation(javaObjectMemberPeer);
+        fields[actionCnt++]=objectAssociation;
+      }
     }
  else     if (element instanceof OrderSet) {
     }

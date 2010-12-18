@@ -1,15 +1,15 @@
 {
   final List<Facet> facets=new ArrayList<Facet>();
-  if (holder instanceof JavaObjectMemberPeer) {
+  if (holder instanceof ObjectMemberPeerImpl) {
     facets.add(new NamedFacetNone(holder));
     facets.add(new DescribedAsFacetNone(holder));
     facets.add(new HelpFacetNone(holder));
-    JavaObjectMemberPeer objectMemberPeer=(JavaObjectMemberPeer)holder;
-    if (objectMemberPeer.isProperty()) {
+    ObjectMemberPeerImpl objectMemberPeer=(ObjectMemberPeerImpl)holder;
+    if (objectMemberPeer.getFeatureType().isProperty()) {
       facets.add(new MaxLengthFacetUnlimited(holder));
       facets.add(new MultiLineFacetNone(true,holder));
     }
-    if (objectMemberPeer.isAction()) {
+    if (objectMemberPeer.getFeatureType().isAction()) {
       facets.add(new ExecutedFacetAtDefault(holder));
       facets.add(new ActionDefaultsFacetNone(holder));
       facets.add(new ActionChoicesFacetNone(holder));

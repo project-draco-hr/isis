@@ -1,7 +1,8 @@
 {
   FacetHolder facetHolder=getFacetHolder();
-  ObjectActionParamPeer noapp=(ObjectActionParamPeer)facetHolder;
-  ObjectSpecification noSpec=noapp.getSpecification();
+  final SpecificationLoader specificationLoader=getRuntimeContext().getSpecificationLoader();
+  TypedHolder paramPeer=(TypedHolder)facetHolder;
+  ObjectSpecification noSpec=paramPeer.getSpecification(specificationLoader);
   ChoicesFacet choicesFacet=noSpec.getFacet(ChoicesFacet.class);
   if (choicesFacet == null)   return new Object[0];
   return choicesFacet.getChoices(adapter);
