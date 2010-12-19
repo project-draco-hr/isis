@@ -3,7 +3,7 @@
   final int parameterCount=getParameterCount();
   Object[][] parameterChoicesPojos;
   final ActionChoicesFacet facet=getFacet(ActionChoicesFacet.class);
-  ObjectActionParameter[] parameters=getParameters();
+  final List<ObjectActionParameter> parameters=getParameters();
   if (!facet.isNoop()) {
     parameterChoicesPojos=facet.getChoices(realTarget);
     if (parameterChoicesPojos == null) {
@@ -16,7 +16,7 @@
  else {
     parameterChoicesPojos=new Object[parameterCount][];
     for (int i=0; i < parameterCount; i++) {
-      ActionParameterChoicesFacet paramFacet=parameters[i].getFacet(ActionParameterChoicesFacet.class);
+      ActionParameterChoicesFacet paramFacet=parameters.get(i).getFacet(ActionParameterChoicesFacet.class);
       if (paramFacet != null && !paramFacet.isNoop()) {
         parameterChoicesPojos[i]=paramFacet.getChoices(realTarget);
       }
@@ -27,7 +27,7 @@
   }
   final ObjectAdapter[][] parameterChoicesAdapters=new ObjectAdapter[parameterCount][];
   for (int i=0; i < parameterCount; i++) {
-    final ObjectSpecification paramSpec=parameters[i].getSpecification();
+    final ObjectSpecification paramSpec=parameters.get(i).getSpecification();
     if (parameterChoicesPojos[i] != null && parameterChoicesPojos[i].length > 0) {
       ObjectActionParameterAbstract.checkChoicesType(getRuntimeContext(),parameterChoicesPojos[i],paramSpec);
       parameterChoicesAdapters[i]=new ObjectAdapter[parameterChoicesPojos[i].length];

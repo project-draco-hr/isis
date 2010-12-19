@@ -6,9 +6,9 @@
     Object object=getRuntimeContext().instantiate(cls);
     if (creationMode == CreationMode.INITIALIZE) {
       final ObjectAdapter adapter=getRuntimeContext().adapterFor(object);
-      final ObjectAssociation[] fields=adapter.getSpecification().getAssociations();
-      for (int i=0; i < fields.length; i++) {
-        fields[i].toDefault(adapter);
+      final List<ObjectAssociation> fields=adapter.getSpecification().getAssociations();
+      for (int i=0; i < fields.size(); i++) {
+        fields.get(i).toDefault(adapter);
       }
       getRuntimeContext().injectDependenciesInto(object);
       CallbackUtils.callCallback(adapter,CreatedCallbackFacet.class);

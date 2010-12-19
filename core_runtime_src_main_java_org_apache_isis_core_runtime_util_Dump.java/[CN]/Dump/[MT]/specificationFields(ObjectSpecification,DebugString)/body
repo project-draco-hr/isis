@@ -1,26 +1,26 @@
 {
-  final ObjectAssociation[] fields=specification.getAssociations();
+  final List<ObjectAssociation> fields=specification.getAssociations();
   debug.appendln("All");
   debug.indent();
-  for (int i=0; i < fields.length; i++) {
-    debug.appendln((i + 1) + "." + fields[i].getId());
+  for (int i=0; i < fields.size(); i++) {
+    debug.appendln((i + 1) + "." + fields.get(i).getId());
   }
   debug.unindent();
-  final ObjectAssociation[] fields2=specification.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
+  final List<ObjectAssociation> fields2=specification.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
   debug.appendln("Static");
   debug.indent();
-  for (int i=0; i < fields2.length; i++) {
-    debug.appendln((i + 1) + "." + fields2[i].getId());
+  for (int i=0; i < fields2.size(); i++) {
+    debug.appendln((i + 1) + "." + fields2.get(i).getId());
   }
   debug.unindent();
   debug.appendln();
   try {
-    if (fields.length == 0) {
+    if (fields.size() == 0) {
       debug.appendln("none");
     }
  else {
-      for (int i=0; i < fields.length; i++) {
-        final ObjectAssociation field=(ObjectAssociation)fields[i];
+      for (int i=0; i < fields.size(); i++) {
+        final ObjectAssociation field=fields.get(i);
         debug.appendln((i + 1) + "." + field.getId()+ "  ("+ field.getClass().getName()+ ")");
         debug.indent();
         final String description=field.getDescription();

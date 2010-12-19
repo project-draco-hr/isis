@@ -1,0 +1,28 @@
+{
+  for (int i=0; i < fields.size(); i++) {
+    FieldEditState field=editState.getField(fields.get(i).getId());
+    if (field == null) {
+      continue;
+    }
+    String newEntry=field.getEntry();
+    ObjectAdapter originalValue=fields.get(i).get(object);
+    boolean isVisible=fields.get(i).isVisible(IsisContext.getAuthenticationSession(),object).isAllowed();
+    boolean isUsable=fields.get(i).isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
+    boolean bothEmpty=originalValue == null && newEntry.equals("");
+    boolean bothSame=newEntry.equals(originalValue == null ? "" : originalValue.titleString());
+    if ((!isVisible || !isUsable) || bothEmpty || bothSame) {
+      if (fields.get(i).getSpecification().getFacet(ParseableFacet.class) == null) {
+        context.getMappedObject(newEntry);
+      }
+      continue;
+    }
+    if (fields.get(i).getSpecification().containsFacet(ParseableFacet.class)) {
+      ParseableFacet facet=fields.get(i).getSpecification().getFacet(ParseableFacet.class);
+      ObjectAdapter newValue=facet.parseTextEntry(originalValue,newEntry);
+      ((OneToOneAssociation)fields.get(i)).setAssociation(object,newValue);
+    }
+ else {
+      ((OneToOneAssociation)fields.get(i)).setAssociation(object,field.getValue());
+    }
+  }
+}

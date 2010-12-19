@@ -4,7 +4,7 @@
   String field=request.getOptionalProperty(PARAMETER_NUMBER);
   ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
   ObjectAction action=MethodsUtils.findAction(object,methodName);
-  ObjectActionParameter[] parameters=action.getParameters();
+  final List<ObjectActionParameter> parameters=action.getParameters();
   int index;
   if (field == null) {
     index=0;
@@ -12,8 +12,8 @@
  else {
     index=Integer.valueOf(field).intValue() - 1;
   }
-  if (index < 0 || index >= parameters.length) {
-    throw new ScimpiException("Parameter numbers should be between 1 and " + parameters.length + ": "+ index);
+  if (index < 0 || index >= parameters.size()) {
+    throw new ScimpiException("Parameter numbers should be between 1 and " + parameters.size() + ": "+ index);
   }
-  request.appendHtml(parameters[index].getName());
+  request.appendHtml(parameters.get(index).getName());
 }

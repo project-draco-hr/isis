@@ -9,14 +9,14 @@
   request.setBlockContent(tag);
   request.processUtilCloseTag();
   if (object != null) {
-    ObjectAssociation[] fields=tag.includedFields(object.getSpecification().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS));
+    List<ObjectAssociation> fields=tag.includedFields(object.getSpecification().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS));
     LinkedObject[] linkFields=tag.linkedFields(fields);
     String linkAllView=request.getOptionalProperty(LINK);
     if (linkAllView != null) {
       linkAllView=request.getContext().fullUriPath(linkAllView);
       for (int i=0; i < linkFields.length; i++) {
-        boolean isObject=fields[i].isOneToOneAssociation();
-        boolean isNotParseable=!fields[i].getSpecification().containsFacet(ParseableFacet.class);
+        boolean isObject=fields.get(i).isOneToOneAssociation();
+        boolean isNotParseable=!fields.get(i).getSpecification().containsFacet(ParseableFacet.class);
         linkFields[i]=isObject && isNotParseable ? new LinkedObject(linkAllView) : null;
       }
     }

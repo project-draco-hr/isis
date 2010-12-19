@@ -3,7 +3,7 @@
   algorithm=new DefaultPersistAlgorithm();
   object=system.createTransientTestObject();
   final TestProxySpecification spec=system.getSpecification(object);
-  final ObjectAssociation[] fields=new ObjectAssociation[]{new OneToOneAssociationTest(){
+  final List<ObjectAssociation> fields=Arrays.asList((ObjectAssociation)new OneToOneAssociationTest(){
     @Override public void initAssociation(    ObjectAdapter inObject,    ObjectAdapter associate){
     }
     @Override public Consent isAssociationValid(    ObjectAdapter inObject,    ObjectAdapter associate){
@@ -32,7 +32,7 @@
       return FeatureType.PROPERTY;
     }
   }
-};
+);
   spec.setupFields(fields);
   fieldsObject=new TestProxyAdapter();
   fieldsObject.setupResolveState(ResolveState.TRANSIENT);

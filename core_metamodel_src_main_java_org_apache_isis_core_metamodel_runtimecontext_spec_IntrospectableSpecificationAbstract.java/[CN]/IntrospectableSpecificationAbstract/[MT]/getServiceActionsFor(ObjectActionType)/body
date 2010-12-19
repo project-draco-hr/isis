@@ -4,20 +4,20 @@
   for (  ObjectAdapter serviceAdapter : services) {
     final List<ObjectAction> matchingActions=new ArrayList<ObjectAction>();
     for (    ObjectActionType type : types) {
-      final ObjectAction[] serviceActions=serviceAdapter.getSpecification().getObjectActions(type);
-      for (int j=0; j < serviceActions.length; j++) {
-        final ObjectSpecification returnType=serviceActions[j].getReturnType();
+      final List<ObjectAction> serviceActions=serviceAdapter.getSpecification().getObjectActions(type);
+      for (int j=0; j < serviceActions.size(); j++) {
+        final ObjectSpecification returnType=serviceActions.get(j).getReturnType();
         if (returnType != null && returnType.isCollection()) {
-          final TypeOfFacet facet=serviceActions[j].getFacet(TypeOfFacet.class);
+          final TypeOfFacet facet=serviceActions.get(j).getFacet(TypeOfFacet.class);
           if (facet != null) {
             final ObjectSpecification elementType=facet.valueSpec();
             if (elementType.isOfType(this)) {
-              matchingActions.add(serviceActions[j]);
+              matchingActions.add(serviceActions.get(j));
             }
           }
         }
  else         if (returnType != null && returnType.isOfType(this)) {
-          matchingActions.add(serviceActions[j]);
+          matchingActions.add(serviceActions.get(j));
         }
       }
     }
@@ -26,5 +26,5 @@
       relatedActions.add(set);
     }
   }
-  return (ObjectAction[])relatedActions.toArray(new ObjectAction[relatedActions.size()]);
+  return relatedActions;
 }

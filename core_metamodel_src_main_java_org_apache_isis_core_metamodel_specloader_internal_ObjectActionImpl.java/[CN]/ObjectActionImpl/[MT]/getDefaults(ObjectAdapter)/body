@@ -1,7 +1,7 @@
 {
   final ObjectAdapter realTarget=realTarget(target);
   final int parameterCount=getParameterCount();
-  final ObjectActionParameter[] parameters=getParameters();
+  final List<ObjectActionParameter> parameters=getParameters();
   final Object[] parameterDefaultPojos;
   final ActionDefaultsFacet facet=getFacet(ActionDefaultsFacet.class);
   if (!facet.isNoop()) {
@@ -12,7 +12,7 @@
     for (int i=0; i < parameterCount; i++) {
       if (parameterDefaultPojos[i] != null) {
         ObjectSpecification componentSpec=getRuntimeContext().getSpecificationLoader().loadSpecification(parameterDefaultPojos[i].getClass());
-        ObjectSpecification parameterSpec=parameters[i].getSpecification();
+        ObjectSpecification parameterSpec=parameters.get(i).getSpecification();
         if (!componentSpec.isOfType(parameterSpec)) {
           throw new ModelException("Defaults type incompatible with parameter " + (i + 1) + " type; expected "+ parameterSpec.getFullName()+ ", but was "+ componentSpec.getFullName());
         }
@@ -22,7 +22,7 @@
  else {
     parameterDefaultPojos=new Object[parameterCount];
     for (int i=0; i < parameterCount; i++) {
-      ActionParameterDefaultsFacet paramFacet=parameters[i].getFacet(ActionParameterDefaultsFacet.class);
+      ActionParameterDefaultsFacet paramFacet=parameters.get(i).getFacet(ActionParameterDefaultsFacet.class);
       if (paramFacet != null && !paramFacet.isNoop()) {
         parameterDefaultPojos[i]=paramFacet.getDefault(realTarget);
       }
@@ -39,7 +39,7 @@
   }
   if (isContributed() && target != null) {
     for (int i=0; i < parameterCount; i++) {
-      if (target.getSpecification().isOfType(parameters[i].getSpecification())) {
+      if (target.getSpecification().isOfType(parameters.get(i).getSpecification())) {
         parameterDefaultAdapters[i]=target;
       }
     }

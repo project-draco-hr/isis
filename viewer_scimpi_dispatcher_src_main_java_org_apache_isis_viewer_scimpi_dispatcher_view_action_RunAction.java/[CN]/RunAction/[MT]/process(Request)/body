@@ -14,9 +14,9 @@
     throw new ScimpiException("Action is not visible/enabled: " + action.getName());
   }
   if (action.isContributed()) {
-    ObjectActionParameter[] parameterSpecs=action.getParameters();
+    final List<ObjectActionParameter> parameterSpecs=action.getParameters();
     for (int i=0; i < parameters.length; i++) {
-      if (parameters[i] == null && object.getSpecification().isOfType(parameterSpecs[i].getSpecification())) {
+      if (parameters[i] == null && object.getSpecification().isOfType(parameterSpecs.get(i).getSpecification())) {
         parameters[i]=object;
         break;
       }

@@ -15,14 +15,14 @@
     request.processUtilCloseTag();
     ObjectSpecification specification=field == null ? object.getSpecification() : field.getSpecification();
     request.appendHtml(specification.getSingularName() + " (" + specification.getFullName()+ ") \n");
-    ObjectAssociation[] fields=specification.getAssociations();
+    List<ObjectAssociation> fields=specification.getAssociations();
     for (    ObjectAssociation fld : fields) {
       if (!fld.isAlwaysHidden()) {
         request.appendHtml("   " + fld.getId() + " - '"+ fld.getName()+ "' -> "+ fld.getSpecification().getSingularName()+ (fld.isOneToManyAssociation() ? " (collection of)" : "")+ "\n");
       }
     }
     request.appendHtml("   --------------\n");
-    ObjectAction[] actions=specification.getObjectActions(ObjectActionType.USER);
+    List<ObjectAction> actions=specification.getObjectActions(ObjectActionType.USER);
     ;
     for (    ObjectAction action : actions) {
       request.appendHtml("   " + action.getId() + " (");

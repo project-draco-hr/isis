@@ -1,20 +1,20 @@
 {
   final int numberParameters=action.getParameterCount();
   final ObjectAdapter[] parameters=new ObjectAdapter[numberParameters];
-  final ObjectActionParameter[] parameterSpecs=action.getParameters();
+  final List<ObjectActionParameter> parameterSpecs=action.getParameters();
   ObjectAdapter[] defaultValues;
   ObjectAdapter[][] options;
-  defaultValues=new ObjectAdapter[parameterSpecs.length];
-  options=new ObjectAdapter[parameterSpecs.length][];
-  for (int i=0; i < parameterSpecs.length; i++) {
-    defaultValues[i]=parameterSpecs[i].getDefault(target);
-    options[i]=parameterSpecs[i].getChoices(target);
+  defaultValues=new ObjectAdapter[parameterSpecs.size()];
+  options=new ObjectAdapter[parameterSpecs.size()][];
+  for (int i=0; i < parameterSpecs.size(); i++) {
+    defaultValues[i]=parameterSpecs.get(i).getDefault(target);
+    options[i]=parameterSpecs.get(i).getChoices(target);
   }
   if (!hasValues(defaultValues) && !hasValues(options)) {
     defaultValues=action.getDefaults(target);
     options=action.getChoices(target);
   }
-  for (int i=0; i < parameterSpecs.length; i++) {
+  for (int i=0; i < parameterSpecs.size(); i++) {
     if (defaultValues[i] != null) {
       parameters[i]=defaultValues[i];
     }

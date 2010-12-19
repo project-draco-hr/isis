@@ -1,18 +1,18 @@
 {
   if (isService()) {
-    return new ObjectAction[0];
+    return Collections.emptyList();
   }
   final List<ObjectAdapter> services=getRuntimeContext().getServices();
-  final List<ObjectActionSet> serviceActionSets=new ArrayList<ObjectActionSet>();
+  final List<ObjectAction> serviceActionSets=Lists.newArrayList();
   for (  ObjectAdapter serviceAdapter : services) {
     final ObjectSpecification specification=serviceAdapter.getSpecification();
     if (specification == this) {
       continue;
     }
-    final ObjectAction[] serviceActions=specification.getObjectActions(type);
+    final List<ObjectAction> serviceActions=specification.getObjectActions(type);
     final List<ObjectAction> matchingServiceActions=new ArrayList<ObjectAction>();
-    for (int j=0; j < serviceActions.length; j++) {
-      final ObjectAction serviceAction=serviceActions[j];
+    for (int j=0; j < serviceActions.size(); j++) {
+      final ObjectAction serviceAction=serviceActions.get(j);
       if (serviceAction.isAlwaysHidden()) {
         continue;
       }
@@ -21,10 +21,9 @@
       }
     }
     if (matchingServiceActions.size() > 0) {
-      final ObjectAction[] asArray=matchingServiceActions.toArray(new ObjectAction[matchingServiceActions.size()]);
-      final ObjectActionSet objectActionSet=new ObjectActionSet("id",serviceAdapter.titleString(),asArray,runtimeContext);
+      final ObjectActionSet objectActionSet=new ObjectActionSet("id",serviceAdapter.titleString(),matchingServiceActions,runtimeContext);
       serviceActionSets.add(objectActionSet);
     }
   }
-  return serviceActionSets.toArray(new ObjectAction[]{});
+  return serviceActionSets;
 }

@@ -1,13 +1,10 @@
 {
-  final ObjectAssociation[] allFields=getAssociations();
-  final ObjectAssociation[] selectedFields=new ObjectAssociation[allFields.length];
-  int v=0;
-  for (int i=0; i < allFields.length; i++) {
-    if (filter.accept(allFields[i])) {
-      selectedFields[v++]=allFields[i];
+  final List<ObjectAssociation> allFields=getAssociations();
+  final List<ObjectAssociation> selectedFields=Lists.newArrayList();
+  for (int i=0; i < allFields.size(); i++) {
+    if (filter.accept(allFields.get(i))) {
+      selectedFields.add(allFields.get(i));
     }
   }
-  final ObjectAssociation[] fields=new ObjectAssociation[v];
-  System.arraycopy(selectedFields,0,fields,0,v);
-  return fields;
+  return selectedFields;
 }

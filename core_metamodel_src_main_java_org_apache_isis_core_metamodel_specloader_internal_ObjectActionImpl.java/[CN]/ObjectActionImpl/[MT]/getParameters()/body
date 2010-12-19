@@ -1,16 +1,16 @@
 {
   if (this.parameters == null) {
     final int parameterCount=getParameterCount();
-    final ObjectActionParameter[] parameters=new ObjectActionParameter[parameterCount];
+    final List<ObjectActionParameter> parameters=Lists.newArrayList();
     final List<TypedHolder> paramPeers=memberPeer.getChildren();
     for (int i=0; i < parameterCount; i++) {
       TypedHolder paramPeer=paramPeers.get(i);
       final ObjectSpecification specification=paramPeer.getSpecification(getSpecificationLoader());
       if (specification.isParseable()) {
-        parameters[i]=new ObjectActionParameterParseable(i,this,paramPeer);
+        parameters.add(new ObjectActionParameterParseable(i,this,paramPeer));
       }
  else       if (specification.isNotCollection()) {
-        parameters[i]=new OneToOneActionParameterImpl(i,this,paramPeer);
+        parameters.add(new OneToOneActionParameterImpl(i,this,paramPeer));
       }
  else       if (specification.isCollection()) {
         throw new UnknownTypeException("collections not supported as parameters: " + getIdentifier());

@@ -17,15 +17,15 @@
   specificationClasses(view,"Child specifications",spec.subclasses());
   specificationClasses(view,"Implemented interfaces",spec.interfaces());
   speficationFacets(view,spec);
-  ObjectAssociation[] fields=spec.getAssociations();
+  List<ObjectAssociation> fields=spec.getAssociations();
   specificationMembers(view,"Fields",fields);
-  ObjectAction[] userActions=spec.getObjectActions(ObjectActionType.USER);
+  List<ObjectAction> userActions=spec.getObjectActions(ObjectActionType.USER);
   specificationMembers(view,"User Actions",userActions);
   specificationMembers(view,"Exploration Actions",spec.getObjectActions(ObjectActionType.EXPLORATION));
   specificationMembers(view,"Prototype Actions",spec.getObjectActions(ObjectActionType.PROTOTYPE));
   specificationMembers(view,"Debug Actions",spec.getObjectActions(ObjectActionType.DEBUG));
-  for (int i=0; i < fields.length; i++) {
-    ObjectAssociation field=fields[i];
+  for (int i=0; i < fields.size(); i++) {
+    ObjectAssociation field=fields.get(i);
     view.divider("<span id=\"" + field.getId() + "\">Field: "+ field.getName()+ "</span>");
     view.appendRow("ID",field.getIdentifier());
     view.appendRow("Short ID",field.getId());
@@ -35,8 +35,8 @@
     view.appendRow("Flags",(field.isAlwaysHidden() ? "" : "Visible ") + (field.isNotPersisted() ? "Not Persisted" : " ") + (field.isMandatory() ? "Mandatory " : ""));
     speficationFacets(view,field);
   }
-  for (int i=0; i < userActions.length; i++) {
-    ObjectAction action=userActions[i];
+  for (int i=0; i < userActions.size(); i++) {
+    final ObjectAction action=userActions.get(i);
     view.divider("<span id=\"" + action.getId() + "\">Action: "+ action.getName()+ "</span>");
     view.appendRow("ID",action.getIdentifier());
     view.appendRow("Short ID",action.getId());
@@ -47,21 +47,21 @@
     ObjectSpecification returnType=action.getReturnType();
     view.appendRow("Returns",returnType == null ? "VOID" : specificationLink(returnType));
     speficationFacets(view,action);
-    ObjectActionParameter[] parameters=action.getParameters();
+    List<ObjectActionParameter> parameters=action.getParameters();
     StringBuffer buffer=new StringBuffer();
-    if (parameters.length == 0) {
+    if (parameters.size() == 0) {
       buffer.append("none");
     }
  else {
-      ObjectActionParameter[] p=action.getParameters();
-      for (int j=0; j < parameters.length; j++) {
-        buffer.append(p[j].getName());
+      List<ObjectActionParameter> p=action.getParameters();
+      for (int j=0; j < parameters.size(); j++) {
+        buffer.append(p.get(j).getName());
         buffer.append(" (");
-        buffer.append(specificationLink(parameters[j].getSpecification()));
+        buffer.append(specificationLink(parameters.get(j).getSpecification()));
         buffer.append(")<br>");
-        Class<? extends Facet>[] parameterFacets=p[j].getFacetTypes();
+        Class<? extends Facet>[] parameterFacets=p.get(j).getFacetTypes();
         for (int k=0; k < parameterFacets.length; k++) {
-          buffer.append("&nbsp;&nbsp;" + p[j].getFacet(parameterFacets[k]).toString() + "<br>");
+          buffer.append("&nbsp;&nbsp;" + p.get(j).getFacet(parameterFacets[k]).toString() + "<br>");
         }
       }
     }

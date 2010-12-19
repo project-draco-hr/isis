@@ -1,7 +1,6 @@
 {
-  final ObjectAction[] actions=new ObjectAction[order.size()];
+  final List<ObjectAction> actions=Lists.newArrayList();
   final Enumeration<ObjectAction> elements=CastUtils.enumerationOver(order.elements(),ObjectAction.class);
-  int actionCnt=0;
   while (elements.hasMoreElements()) {
     final Object element=elements.nextElement();
     if (element instanceof ObjectMemberPeerImpl) {
@@ -9,21 +8,16 @@
       if (memberPeer.getFeatureType().isAction()) {
         final String actionId=memberPeer.getIdentifier().getMemberName();
         final ObjectAction objectAction=new ObjectActionImpl(actionId,memberPeer,getRuntimeContext());
-        actions[actionCnt++]=objectAction;
+        actions.add(objectAction);
       }
     }
  else     if (element instanceof OrderSet) {
       final OrderSet set=((OrderSet)element);
-      actions[actionCnt++]=new ObjectActionSet("",set.getGroupFullName(),orderActions(set),getRuntimeContext());
+      actions.add(new ObjectActionSet("",set.getGroupFullName(),orderActions(set),getRuntimeContext()));
     }
  else {
       throw new UnknownTypeException(element);
     }
-  }
-  if (actionCnt < actions.length) {
-    final ObjectAction[] actualActions=new ObjectAction[actionCnt];
-    System.arraycopy(actions,0,actualActions,0,actionCnt);
-    return actualActions;
   }
   return actions;
 }

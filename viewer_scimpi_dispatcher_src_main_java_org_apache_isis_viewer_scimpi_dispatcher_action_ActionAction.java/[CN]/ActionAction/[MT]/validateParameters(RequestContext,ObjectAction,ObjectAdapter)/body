@@ -1,6 +1,6 @@
 {
   FormState formState=new FormState();
-  ObjectActionParameter[] parameters2=action.getParameters();
+  List<ObjectActionParameter> parameters2=action.getParameters();
   int parameterCount=action.getParameterCount();
   for (int i=0; i < parameterCount; i++) {
     String fieldName=parameterName(i);
@@ -9,7 +9,7 @@
       newEntry=context.getParameter(fieldName + "-other");
     }
     if (newEntry == null) {
-      ObjectSpecification spec=parameters2[i].getSpecification();
+      ObjectSpecification spec=parameters2.get(i).getSpecification();
       if (spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(boolean.class)) || spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(Boolean.class))) {
         newEntry=FALSE;
       }
@@ -19,13 +19,13 @@
     }
     FieldEditState fieldState=formState.createField(fieldName,newEntry);
     Consent consent=null;
-    if (!parameters2[i].isOptional() && newEntry.equals("")) {
-      consent=new Veto(parameters2[i].getName() + " required");
+    if (!parameters2.get(i).isOptional() && newEntry.equals("")) {
+      consent=new Veto(parameters2.get(i).getName() + " required");
     }
- else     if (parameters2[i].getSpecification().getFacet(ParseableFacet.class) != null) {
+ else     if (parameters2.get(i).getSpecification().getFacet(ParseableFacet.class) != null) {
       try {
-        ParseableFacet facet=(ParseableFacet)parameters2[i].getSpecification().getFacet(ParseableFacet.class);
-        String message=parameters2[i].isValid(object,newEntry);
+        ParseableFacet facet=parameters2.get(i).getSpecification().getFacet(ParseableFacet.class);
+        String message=parameters2.get(i).isValid(object,newEntry);
         if (message != null) {
           consent=new Veto(message);
         }

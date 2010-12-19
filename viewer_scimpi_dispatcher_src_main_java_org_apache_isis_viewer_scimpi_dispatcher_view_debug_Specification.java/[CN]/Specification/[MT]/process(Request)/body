@@ -6,9 +6,9 @@
     ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
     ObjectSpecification specification=object.getSpecification();
     request.appendHtml(specification.getSingularName() + " (" + specification.getFullName()+ ") \n");
-    ObjectAssociation[] fields=specification.getAssociations();
-    for (int i=0; i < fields.length; i++) {
-      request.appendHtml("    " + fields[i].getName() + " ("+ fields[i].getSpecification().getSingularName()+ ") \n");
+    List<ObjectAssociation> fields=specification.getAssociations();
+    for (int i=0; i < fields.size(); i++) {
+      request.appendHtml("    " + fields.get(i).getName() + " ("+ fields.get(i).getSpecification().getSingularName()+ ") \n");
     }
     request.appendHtml("</pre>");
     request.appendHtml("</div>");

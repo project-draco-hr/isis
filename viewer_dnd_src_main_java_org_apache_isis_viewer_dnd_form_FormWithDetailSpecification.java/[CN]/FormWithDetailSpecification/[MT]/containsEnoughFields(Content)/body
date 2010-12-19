@@ -1,10 +1,10 @@
 {
   ObjectSpecification specification=content.getSpecification();
-  ObjectAssociation[] associations=specification.getAssociations(new AbstractFilter<ObjectAssociation>(){
-    public boolean accept(    ObjectAssociation t){
+  List<ObjectAssociation> associations=specification.getAssociations(new AbstractFilter<ObjectAssociation>(){
+    @Override public boolean accept(    ObjectAssociation t){
       return t.isOneToManyAssociation() || (t.isOneToOneAssociation() && !((OneToOneAssociation)t).getSpecification().isParseable());
     }
   }
 );
-  return associations.length >= 1;
+  return associations.size() >= 1;
 }

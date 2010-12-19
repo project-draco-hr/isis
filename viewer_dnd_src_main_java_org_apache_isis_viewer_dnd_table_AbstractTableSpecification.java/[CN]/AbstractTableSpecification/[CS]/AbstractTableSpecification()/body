@@ -1,14 +1,14 @@
 {
   builder=new CollectionElementBuilder(new ViewFactory(){
     TableRowSpecification rowSpecification=new TableRowSpecification();
-    public View createView(    Content content,    Axes axes,    int sequence){
+    @Override public View createView(    Content content,    Axes axes,    int sequence){
       return rowSpecification.createView(content,axes,-1);
     }
   }
 );
   addSubviewDecorator(new TableRowBorder.Factory());
   addViewDecorator(new CompositeViewDecorator(){
-    public View decorate(    View view,    Axes axes){
+    @Override public View decorate(    View view,    Axes axes){
       axes.getAxis(TableAxis.class).setRoot(view);
       return view;
     }

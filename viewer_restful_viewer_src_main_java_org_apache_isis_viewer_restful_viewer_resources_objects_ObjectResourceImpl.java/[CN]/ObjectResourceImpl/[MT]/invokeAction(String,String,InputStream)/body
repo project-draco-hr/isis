@@ -11,18 +11,18 @@
   }
   final ObjectSpecification noSpec=nakedObject.getSpecification();
   final ObjectAction action=getObjectAction(noSpec,actionId);
-  final ObjectActionParameter[] parameters=action.getParameters();
-  final int parameterCount=parameters.length;
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  final int parameterCount=parameters.size();
   final int argumentCount=args.length;
   if (parameterCount > argumentCount) {
     String reason=MessageFormat.format("provided {0} parameters but {1} arguments",parameterCount,argumentCount);
     throw new WebApplicationException(responseOfBadRequest(reason));
   }
   final ObjectAdapter[] proposedArguments=new ObjectAdapter[parameterCount];
-  for (int i=0; i < parameters.length; i++) {
+  for (int i=0; i < parameters.size(); i++) {
     final String proposedArg=args[i];
     if (proposedArg != null) {
-      final ObjectAdapter argNO=getNakedObject(proposedArg,nakedObject,parameters[i]);
+      final ObjectAdapter argNO=getObjectAdapter(proposedArg,nakedObject,parameters.get(i));
       if (argNO == null) {
         throw new WebApplicationException(responseOfGone("could not determine proposed value"));
       }

@@ -7,9 +7,9 @@
   }
   all.addElement(adapter);
   PersistorUtil.start(adapter,ResolveState.RESOLVING);
-  final ObjectAssociation[] fields=adapter.getSpecification().getAssociations();
-  for (int i=0; i < fields.length; i++) {
-    final ObjectAssociation field=fields[i];
+  final List<ObjectAssociation> fields=adapter.getSpecification().getAssociations();
+  for (int i=0; i < fields.size(); i++) {
+    final ObjectAssociation field=fields.get(i);
     if (field.isOneToManyAssociation()) {
       final ObjectAdapter col=field.get(adapter);
       final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(col);

@@ -1,12 +1,12 @@
 {
   final ObjectAdapter object=((ObjectContent)content).getObject();
   if (object != null) {
-    final ObjectAssociation[] fields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),object));
-    for (int i=0; i < fields.length; i++) {
-      if (fields[i].isOneToManyAssociation()) {
+    final List<ObjectAssociation> fields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),object));
+    for (int i=0; i < fields.size(); i++) {
+      if (fields.get(i).isOneToManyAssociation()) {
         return CAN_OPEN;
       }
- else       if (fields[i].isOneToOneAssociation() && !fields[i].getSpecification().isParseable() && fieldContainsReference(object,fields[i])) {
+ else       if (fields.get(i).isOneToOneAssociation() && !fields.get(i).getSpecification().isParseable() && fieldContainsReference(object,fields.get(i))) {
         return CAN_OPEN;
       }
     }

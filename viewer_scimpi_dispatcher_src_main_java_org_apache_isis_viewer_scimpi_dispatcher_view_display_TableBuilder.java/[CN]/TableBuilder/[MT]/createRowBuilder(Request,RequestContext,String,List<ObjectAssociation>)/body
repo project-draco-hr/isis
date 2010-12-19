@@ -1,0 +1,24 @@
+{
+  final String variable=request.getOptionalProperty(ELEMENT_NAME,ELEMENT);
+  final TableBlock block=new TableBlock();
+  request.setBlockContent(block);
+  request.pushNewBuffer();
+  request.processUtilCloseTag();
+  final String headers=request.popBuffer();
+  return new TableContentWriter(){
+    @Override public void writeFooters(    PageWriter writer){
+    }
+    @Override public void writeHeaders(    PageWriter writer){
+      writer.appendHtml(headers);
+    }
+    @Override public void writeElement(    Request request,    RequestContext context,    ObjectAdapter element){
+      context.addVariable(variable,context.mapObject(element,Scope.REQUEST),Scope.REQUEST);
+      RepeatMarker end=request.createMarker();
+      RepeatMarker marker=block.getMarker();
+      marker.repeat();
+      request.processUtilCloseTag();
+      end.repeat();
+    }
+  }
+;
+}

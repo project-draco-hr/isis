@@ -1,0 +1,25 @@
+{
+  actions=inclusionList.includedActions(actions);
+  for (int j=0; j < actions.size(); j++) {
+    ObjectAction action=actions.get(j);
+    if (action instanceof ObjectActionSet) {
+      request.appendHtml("<div class=\"actions\">");
+      writeMethods(request,adapter,action.getActions(),objectId,showForms,inclusionList);
+      request.appendHtml("</div>");
+    }
+ else     if (action.isContributed() && action.getParameterCount() == 1 && adapter.getSpecification().isOfType(action.getParameters().get(0).getSpecification())) {
+      if (objectId != null) {
+        ObjectAdapter target=request.getContext().getMappedObject(objectId);
+        ObjectAdapter realTarget=action.realTarget(target);
+        String realTargetId=request.getContext().mapObject(realTarget,Scope.INTERACTION);
+        writeMethod(request,adapter,new String[]{objectId},action,realTargetId,showForms);
+      }
+ else {
+        request.appendHtml("<div class=\"action\">" + action.getName() + "???</div>");
+      }
+    }
+ else {
+      writeMethod(request,adapter,new String[0],action,objectId,showForms);
+    }
+  }
+}

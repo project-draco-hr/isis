@@ -3,10 +3,10 @@
   debug.indent();
   final int newIndent=indent + 4;
   try {
-    final ObjectAction[] debActions=a.getActions();
-    if (debActions.length > 0) {
-      for (int i=0; i < debActions.length; i++) {
-        actionDetails(debug,debActions[i],newIndent,i);
+    final List<ObjectAction> debActions=a.getActions();
+    if (debActions.size() > 0) {
+      for (int i=0; i < debActions.size(); i++) {
+        actionDetails(debug,debActions.get(i),newIndent,i);
       }
     }
  else {
@@ -28,23 +28,23 @@
       }
       final ObjectSpecification returnType=a.getReturnType();
       debug.appendln("Returns",returnType == null ? "VOID" : returnType.toString());
-      final ObjectActionParameter[] parameters=a.getParameters();
-      if (parameters.length == 0) {
+      final List<ObjectActionParameter> parameters=a.getParameters();
+      if (parameters.size() == 0) {
         debug.appendln("Parameters","none");
       }
  else {
         debug.appendln("Parameters");
         debug.indent();
-        final ObjectActionParameter[] p=a.getParameters();
-        for (int j=0; j < parameters.length; j++) {
-          debug.append(p[j].getName());
+        final List<ObjectActionParameter> p=a.getParameters();
+        for (int j=0; j < parameters.size(); j++) {
+          debug.append(p.get(j).getName());
           debug.append(" (");
-          debug.append(parameters[j].getSpecification().getFullName());
+          debug.append(parameters.get(j).getSpecification().getFullName());
           debug.appendln(")");
           debug.indent();
-          final Class<? extends Facet>[] parameterFacets=p[j].getFacetTypes();
+          final Class<? extends Facet>[] parameterFacets=p.get(j).getFacetTypes();
           for (int i=0; i < parameterFacets.length; i++) {
-            debug.appendln(p[j].getFacet(parameterFacets[i]).toString());
+            debug.appendln(p.get(j).getFacet(parameterFacets[i]).toString());
           }
           debug.unindent();
         }

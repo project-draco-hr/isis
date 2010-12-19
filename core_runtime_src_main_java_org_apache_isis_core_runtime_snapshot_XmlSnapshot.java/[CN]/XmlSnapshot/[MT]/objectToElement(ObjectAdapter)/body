@@ -9,14 +9,14 @@
   topLevelElementWritten=true;
   final Place place=new Place(object,element);
   nofMeta.setAttributesForClass(element,oidOrHashCode(object).toString());
-  final ObjectAssociation[] fields=nos.getAssociations();
+  final List<ObjectAssociation> fields=nos.getAssociations();
   LOG.debug("objectToElement(NO): processing fields");
-  eachField:   for (int i=0; i < fields.length; i++) {
-    final ObjectAssociation field=fields[i];
+  eachField:   for (int i=0; i < fields.size(); i++) {
+    final ObjectAssociation field=fields.get(i);
     final String fieldName=field.getId();
     LOG.debug("objectToElement(NO): " + log("field",fieldName));
     for (int j=0; j < i; j++) {
-      if (fieldName.equals(fields[i].getName())) {
+      if (fieldName.equals(fields.get(i).getName())) {
         LOG.debug("objectToElement(NO): " + log("field",fieldName) + " SKIPPED");
         continue eachField;
       }
