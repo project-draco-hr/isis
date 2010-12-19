@@ -37,10 +37,10 @@
     }
     fields=Collections.emptyList();
     objectActions=Collections.emptyList();
-    interfaces=new ObjectSpecification[0];
+    interfaces=Collections.emptyList();
   }
  else {
-    List<ObjectSpecification> interfaceSpecList=new ArrayList<ObjectSpecification>();
+    List<ObjectSpecification> interfaceSpecList=Lists.newArrayList();
     for (int i=0; i < interfaceNames.length; i++) {
       Class<?> substitutedInterfaceClass=getSubstitutedClass(interfaceNames[i],getClassSubstitutor());
       if (substitutedInterfaceClass != null) {
@@ -49,7 +49,7 @@
         interfacespec.addSubclass(this);
       }
     }
-    interfaces=interfaceSpecList.toArray(new ObjectSpecification[]{});
+    interfaces=interfaceSpecList;
     introspector.introspectPropertiesAndCollections();
     final OrderSet orderedFields=introspector.getFields();
     if (orderedFields != null) {

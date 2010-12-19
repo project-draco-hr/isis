@@ -3,7 +3,7 @@
   String method=request.getOptionalProperty(METHOD + "-visible");
   if (method != null) {
     ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
-    ObjectAction objectAction=object.getSpecification().getObjectAction(ObjectActionType.USER,method,new ObjectSpecification[0]);
+    ObjectAction objectAction=object.getSpecification().getObjectAction(ObjectActionType.USER,method,ObjectSpecification.EMPTY_LIST);
     Consent visible=objectAction.isVisible(IsisContext.getAuthenticationSession(),object);
     processTags(visible.isAllowed(),request);
     return;
@@ -11,7 +11,7 @@
   method=request.getOptionalProperty(METHOD + "-usable");
   if (method != null) {
     ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
-    ObjectAction objectAction=object.getSpecification().getObjectAction(ObjectActionType.USER,method,new ObjectSpecification[0]);
+    ObjectAction objectAction=object.getSpecification().getObjectAction(ObjectActionType.USER,method,ObjectSpecification.EMPTY_LIST);
     Consent usable=objectAction.isUsable(IsisContext.getAuthenticationSession(),object);
     processTags(usable.isAllowed(),request);
     return;
