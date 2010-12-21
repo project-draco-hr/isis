@@ -3,10 +3,10 @@
   final Class<?> returnType=actionMethod.getReturnType();
   final Class<?>[] paramTypes=actionMethod.getParameterTypes();
   final List<Facet> facets=new ArrayList<Facet>();
-  final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
-  final ObjectSpecification returnSpec=getSpecificationLoader().loadSpecification(returnType.getName());
+  final ObjectSpecification typeSpec=getSpecificationLookup().loadSpecification(cls);
+  final ObjectSpecification returnSpec=getSpecificationLookup().loadSpecification(returnType);
   if (returnSpec != null) {
-    facets.add(new ActionInvocationFacetViaMethod(actionMethod,typeSpec,returnSpec,holder,getRuntimeContext()));
+    facets.add(new ActionInvocationFacetViaMethod(actionMethod,typeSpec,returnSpec,holder,getAdapterMap()));
     checkForDebugPrefix(facets,capitalizedName,holder);
     checkForExplorationPrefix(facets,capitalizedName,holder);
     checkForExecutionLocationPrefix(facets,capitalizedName,holder);

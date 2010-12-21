@@ -7,11 +7,11 @@
   final Class<?> returnType=method.getReturnType();
   if (returnType.isArray()) {
     final Class<?> componentType=returnType.getComponentType();
-    FacetUtil.addFacet(new TypeOfFacetInferredFromArray(componentType,holder,getSpecificationLoader()));
+    FacetUtil.addFacet(new TypeOfFacetInferredFromArray(componentType,holder,getSpecificationLookup()));
     return false;
   }
   if (annotation != null) {
-    return FacetUtil.addFacet(new TypeOfFacetViaAnnotation(annotation.value(),holder,getSpecificationLoader()));
+    return FacetUtil.addFacet(new TypeOfFacetViaAnnotation(annotation.value(),holder,getSpecificationLookup()));
   }
   final Type type=method.getGenericReturnType();
   if (!(type instanceof ParameterizedType)) {
@@ -25,7 +25,7 @@
   final Object actualTypeArgument=actualTypeArguments[0];
   if (actualTypeArgument instanceof Class) {
     final Class<?> actualType=(Class<?>)actualTypeArgument;
-    return FacetUtil.addFacet(new TypeOfFacetInferredFromGenerics(actualType,holder,getSpecificationLoader()));
+    return FacetUtil.addFacet(new TypeOfFacetInferredFromGenerics(actualType,holder,getSpecificationLookup()));
   }
   if (actualTypeArgument instanceof TypeVariable) {
     return false;

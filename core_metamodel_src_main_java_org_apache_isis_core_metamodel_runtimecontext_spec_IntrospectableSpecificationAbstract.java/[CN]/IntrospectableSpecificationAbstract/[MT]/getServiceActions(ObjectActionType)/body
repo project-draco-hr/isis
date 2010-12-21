@@ -2,7 +2,7 @@
   if (isService()) {
     return Collections.emptyList();
   }
-  final List<ObjectAdapter> services=getRuntimeContext().getServices();
+  final List<ObjectAdapter> services=getServicesProvider().getServices();
   final List<ObjectAction> serviceActionSets=Lists.newArrayList();
   for (  ObjectAdapter serviceAdapter : services) {
     final ObjectSpecification specification=serviceAdapter.getSpecification();
@@ -21,7 +21,7 @@
       }
     }
     if (matchingServiceActions.size() > 0) {
-      final ObjectActionSet objectActionSet=new ObjectActionSet("id",serviceAdapter.titleString(),matchingServiceActions,runtimeContext);
+      final ObjectActionSet objectActionSet=new ObjectActionSet("id",serviceAdapter.titleString(),matchingServiceActions);
       serviceActionSets.add(objectActionSet);
     }
   }

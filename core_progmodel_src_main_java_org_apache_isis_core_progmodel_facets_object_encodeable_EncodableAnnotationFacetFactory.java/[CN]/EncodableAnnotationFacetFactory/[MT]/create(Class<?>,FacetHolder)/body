@@ -1,14 +1,14 @@
 {
   final Encodable annotation=getAnnotation(cls,Encodable.class);
   if (annotation != null) {
-    final EncodableFacetAnnotation facet=new EncodableFacetAnnotation(cls,getIsisConfiguration(),holder,getRuntimeContext());
+    final EncodableFacetAnnotation facet=new EncodableFacetAnnotation(cls,getIsisConfiguration(),holder,adapterManager,dependencyInjector);
     if (facet.isValid()) {
       return facet;
     }
   }
   final String encoderDecoderName=EncoderDecoderUtil.encoderDecoderNameFromConfiguration(cls,getIsisConfiguration());
   if (!StringUtils.isNullOrEmpty(encoderDecoderName)) {
-    final EncodableFacetFromConfiguration facet=new EncodableFacetFromConfiguration(encoderDecoderName,holder,getRuntimeContext());
+    final EncodableFacetFromConfiguration facet=new EncodableFacetFromConfiguration(encoderDecoderName,holder,adapterManager,dependencyInjector);
     if (facet.isValid()) {
       return facet;
     }

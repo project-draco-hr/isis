@@ -3,14 +3,14 @@
   final ActionParameterChoicesFacet choicesFacet=getFacet(ActionParameterChoicesFacet.class);
   if (choicesFacet != null) {
     Object[] choices=choicesFacet.getChoices(parentAction.realTarget(adapter));
-    checkChoicesType(getRuntimeContext(),choices,getSpecification());
+    checkChoicesType(getSpecificationLookup(),choices,getSpecification());
     for (    Object choice : choices) {
-      parameterChoices.add(getRuntimeContext().adapterFor(choice));
+      parameterChoices.add(getAdapterMap().adapterFor(choice));
     }
   }
   if (parameterChoices.size() == 0 && SpecificationFacets.isBoundedSet(getSpecification())) {
-    QueryFindAllInstances query=new QueryFindAllInstances(getSpecification().getFullName());
-    final List<ObjectAdapter> allInstancesAdapter=getRuntimeContext().allMatchingQuery(query);
+    Query query=new QueryFindAllInstances(getSpecification().getFullName());
+    final List<ObjectAdapter> allInstancesAdapter=getQuerySubmitter().allMatchingQuery(query);
     for (    ObjectAdapter choiceAdapter : allInstancesAdapter) {
       parameterChoices.add(choiceAdapter);
     }

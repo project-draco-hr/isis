@@ -1,4 +1,106 @@
 {
   this.context=context;
   this.services=services;
+  this.authenticationSessionProvider=new AuthenticationSessionProviderAbstract(){
+    @Override public AuthenticationSession getAuthenticationSession(){
+      return context.getAuthenticationSession();
+    }
+  }
+;
+  this.querySubmitter=new QuerySubmitterAbstract(){
+    @Override public List<ObjectAdapter> allMatchingQuery(    Query query){
+      return wrap(context.allMatchingQuery(query));
+    }
+    @Override public <T>ObjectAdapter firstMatchingQuery(    Query<T> query){
+      return getAdapterMap().adapterFor(context.firstMatchingQuery(query));
+    }
+  }
+;
+  this.adapterMap=new AdapterMapAbstract(){
+    @Override public ObjectAdapter adapterFor(    Object domainObject){
+      ObjectSpecification domainObjectSpec=getSpecificationLookup().loadSpecification(domainObject.getClass());
+      PersistenceState persistenceState=context.getPersistenceState(domainObject);
+      return new StandaloneAdapter(domainObjectSpec,domainObject,persistenceState);
+    }
+    @Override public ObjectAdapter adapterFor(    Object domainObject,    ObjectAdapter ownerAdapter,    Identified identified){
+      return adapterFor(domainObject);
+    }
+    @Override public ObjectAdapter getAdapterFor(    Object domainObject){
+      return adapterFor(domainObject);
+    }
+  }
+;
+  this.objectInstantiator=new ObjectInstantiatorAbstract(){
+    @Override public Object instantiate(    Class<?> type) throws ObjectInstantiationException {
+      return context.instantiate(type);
+    }
+  }
+;
+  this.objectPersistor=new ObjectPersistorAbstract(){
+    @Override public void makePersistent(    ObjectAdapter adapter){
+      context.makePersistent(adapter.getObject());
+    }
+    @Override public void remove(    ObjectAdapter adapter){
+      context.remove(adapter.getObject());
+    }
+  }
+;
+  this.objectDirtier=new ObjectDirtierAbstract(){
+    @Override public void objectChanged(    ObjectAdapter adapter){
+      context.objectChanged(adapter.getObject());
+    }
+    @Override public void objectChanged(    Object object){
+      context.objectChanged(object);
+    }
+  }
+;
+  this.servicesProvider=new ServicesProviderAbstract(){
+    @Override public List<ObjectAdapter> getServices(){
+      return serviceAdapters;
+    }
+  }
+;
+  this.domainObjectServices=new DomainObjectServicesAbstract(){
+    @Override public ObjectAdapter createTransientInstance(    ObjectSpecification spec){
+      Object domainObject=spec.createObject(CreationMode.INITIALIZE);
+      return adapterMap.adapterFor(domainObject);
+    }
+    @Override public void resolve(    Object parent){
+      context.resolve(parent);
+    }
+    @Override public void resolve(    Object parent,    Object field){
+      context.resolve(parent,field);
+    }
+    @Override public boolean flush(){
+      return context.flush();
+    }
+    @Override public void commit(){
+      context.commit();
+    }
+    @Override public String getProperty(    String name){
+      return RuntimeContextForEmbeddedMetaModel.this.getProperty(name);
+    }
+    @Override public List<String> getPropertyNames(){
+      return RuntimeContextForEmbeddedMetaModel.this.getPropertyNames();
+    }
+    @Override public void informUser(    String message){
+      context.informUser(message);
+    }
+    @Override public void warnUser(    String message){
+      context.warnUser(message);
+    }
+    @Override public void raiseError(    String message){
+      context.raiseError(message);
+    }
+  }
+;
+  this.dependencyInjector=new DependencyInjectorAbstract(){
+    @Override public void injectDependenciesInto(    Object domainObject){
+      if (servicesInjector == null) {
+        throw new IllegalStateException("must setContainer before using this method");
+      }
+      servicesInjector.injectDependencies(domainObject);
+    }
+  }
+;
 }

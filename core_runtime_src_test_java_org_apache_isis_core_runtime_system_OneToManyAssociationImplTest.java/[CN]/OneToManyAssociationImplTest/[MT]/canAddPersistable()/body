@@ -1,0 +1,17 @@
+{
+  context.checking(new Expectations(){
+{
+      one(mockPeer).containsFacet(NotPersistedFacet.class);
+      will(returnValue(false));
+      one(mockOwnerAdapter).isPersistent();
+      will(returnValue(true));
+      one(mockAssociatedAdapter).isTransient();
+      will(returnValue(false));
+      one(mockPeer).getFacet(CollectionAddToFacet.class);
+      will(returnValue(mockCollectionAddToFacet));
+      one(mockCollectionAddToFacet).add(mockOwnerAdapter,mockAssociatedAdapter);
+    }
+  }
+);
+  association.addElement(mockOwnerAdapter,mockAssociatedAdapter);
+}

@@ -11,7 +11,7 @@
     }
     for (int i=0; i < parameterCount; i++) {
       if (parameterDefaultPojos[i] != null) {
-        ObjectSpecification componentSpec=getRuntimeContext().getSpecificationLoader().loadSpecification(parameterDefaultPojos[i].getClass());
+        ObjectSpecification componentSpec=getSpecificationLookup().loadSpecification(parameterDefaultPojos[i].getClass());
         ObjectSpecification parameterSpec=parameters.get(i).getSpecification();
         if (!componentSpec.isOfType(parameterSpec)) {
           throw new ModelException("Defaults type incompatible with parameter " + (i + 1) + " type; expected "+ parameterSpec.getFullName()+ ", but was "+ componentSpec.getFullName());

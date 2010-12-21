@@ -3,19 +3,19 @@
     throw new IllegalArgumentException("An entry must be provided");
   }
   if (getFacetHolder().containsFacet(ValueFacet.class)) {
-    ObjectAdapter entryAdapter=getRuntimeContext().adapterFor(entry);
-    ParseValueContext parseValueContext=new ParseValueContext(getRuntimeContext().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
+    ObjectAdapter entryAdapter=getAdapterMap().adapterFor(entry);
+    ParseValueContext parseValueContext=new ParseValueContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
     validate(parseValueContext);
   }
   Object context=IsisUtils.unwrap(contextAdapter);
-  getRuntimeContext().injectDependenciesInto(parser);
+  getDependencyInjector().injectDependenciesInto(parser);
   @SuppressWarnings("unchecked") final Object parsed=parser.parseTextEntry(context,entry);
   if (parsed == null) {
     return null;
   }
-  ObjectAdapter adapter=getRuntimeContext().adapterFor(parsed);
+  ObjectAdapter adapter=getAdapterMap().adapterFor(parsed);
   ObjectSpecification specification=adapter.getSpecification();
-  ObjectValidityContext validateContext=specification.createValidityInteractionContext(getRuntimeContext().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
+  ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
   validate(validateContext);
   return adapter;
 }

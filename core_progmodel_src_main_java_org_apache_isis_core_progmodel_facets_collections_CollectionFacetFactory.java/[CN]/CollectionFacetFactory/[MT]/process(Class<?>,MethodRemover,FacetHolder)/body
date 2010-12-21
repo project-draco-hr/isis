@@ -3,16 +3,16 @@
     final TypeOfFacet typeOfFacet=holder.getFacet(TypeOfFacet.class);
     if (typeOfFacet == null) {
       Class<?> collectionElementType=collectionElementType(cls);
-      holder.addFacet(collectionElementType != Object.class ? new TypeOfFacetInferredFromGenerics(collectionElementType,holder,getSpecificationLoader()) : new TypeOfFacetDefaultToObject(holder,getSpecificationLoader()));
+      holder.addFacet(collectionElementType != Object.class ? new TypeOfFacetInferredFromGenerics(collectionElementType,holder,getSpecificationLookup()) : new TypeOfFacetDefaultToObject(holder,getSpecificationLookup()));
     }
  else {
     }
-    holder.addFacet(new JavaCollectionFacet(holder,getRuntimeContext()));
+    holder.addFacet(new JavaCollectionFacet(holder,getAdapterMap()));
     return true;
   }
   if (collectionTypeRegistry.isArrayType(cls)) {
-    holder.addFacet(new JavaArrayFacet(holder,getRuntimeContext()));
-    holder.addFacet(new TypeOfFacetInferredFromArray(cls.getComponentType(),holder,getSpecificationLoader()));
+    holder.addFacet(new JavaArrayFacet(holder,getAdapterMap()));
+    holder.addFacet(new TypeOfFacetInferredFromArray(cls.getComponentType(),holder,getSpecificationLookup()));
     return true;
   }
   return false;

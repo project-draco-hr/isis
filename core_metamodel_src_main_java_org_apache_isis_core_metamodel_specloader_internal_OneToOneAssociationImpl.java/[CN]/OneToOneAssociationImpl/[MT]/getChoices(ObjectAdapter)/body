@@ -1,16 +1,16 @@
 {
   final PropertyChoicesFacet propertyChoicesFacet=getFacet(PropertyChoicesFacet.class);
-  final Object[] pojoOptions=propertyChoicesFacet == null ? null : propertyChoicesFacet.getChoices(ownerAdapter,getSpecificationLoader());
+  final Object[] pojoOptions=propertyChoicesFacet == null ? null : propertyChoicesFacet.getChoices(ownerAdapter,getSpecificationLookup());
   if (pojoOptions != null) {
     final ObjectAdapter[] options=new ObjectAdapter[pojoOptions.length];
     for (int i=0; i < options.length; i++) {
-      options[i]=getRuntimeContext().adapterFor(pojoOptions[i]);
+      options[i]=getAdapterMap().adapterFor(pojoOptions[i]);
     }
     return options;
   }
  else   if (SpecificationFacets.isBoundedSet(getSpecification())) {
     QueryFindAllInstances query=new QueryFindAllInstances(getSpecification().getFullName());
-    final List<ObjectAdapter> allInstancesAdapter=getRuntimeContext().allMatchingQuery(query);
+    final List<ObjectAdapter> allInstancesAdapter=getQuerySubmitter().allMatchingQuery(query);
     final ObjectAdapter[] options=new ObjectAdapter[allInstancesAdapter.size()];
     int j=0;
     for (    ObjectAdapter adapter : allInstancesAdapter) {

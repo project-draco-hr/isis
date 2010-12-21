@@ -2,16 +2,21 @@
   PropertiesConfiguration configuration=new PropertiesConfiguration();
   reflector=new JavaReflector(configuration,new TestClassSubstitutor(),new CollectionTypeRegistryDefault(),new SpecificationTraverserDefault(),new ProgrammingModelFacetsJava5(),new HashSet<FacetDecorator>(),new MetaModelValidatorNoop());
   reflector.setRuntimeContext(new RuntimeContextNoRuntime(){
-    @Override public ObjectAdapter adapterFor(    Object pattern){
-      return adapters.get(pattern);
-    }
-    @Override public ObjectAdapter adapterFor(    Object pojo,    ObjectAdapter ownerAdapter,    Identified identified){
-      if (adapters.get(pojo) != null) {
-        return adapters.get(pojo);
-      }
+    @Override public AdapterMap getAdapterMap(){
+      return new AdapterMapDelegator(super.getAdapterMap()){
+        @Override public ObjectAdapter adapterFor(        Object pattern){
+          return adapters.get(pattern);
+        }
+        @Override public ObjectAdapter adapterFor(        Object pojo,        ObjectAdapter ownerAdapter,        Identified identified){
+          if (adapters.get(pojo) != null) {
+            return adapters.get(pojo);
+          }
  else {
-        return factory.createAdapter(pojo,null);
+            return factory.createAdapter(pojo,null);
+          }
+        }
       }
+;
     }
   }
 );

@@ -7,13 +7,13 @@
       final ObjectMemberPeerImpl memberPeer=(ObjectMemberPeerImpl)element;
       if (memberPeer.getFeatureType().isAction()) {
         final String actionId=memberPeer.getIdentifier().getMemberName();
-        final ObjectAction objectAction=new ObjectActionImpl(actionId,memberPeer,getRuntimeContext());
+        final ObjectAction objectAction=new ObjectActionImpl(actionId,memberPeer,getAuthenticationSessionProvider(),getSpecificationLookup(),getAdapterMap(),getServicesProvider(),getQuerySubmitter());
         actions.add(objectAction);
       }
     }
  else     if (element instanceof OrderSet) {
       final OrderSet set=((OrderSet)element);
-      actions.add(new ObjectActionSet("",set.getGroupFullName(),orderActions(set),getRuntimeContext()));
+      actions.add(new ObjectActionSet("",set.getGroupFullName(),orderActions(set)));
     }
  else {
       throw new UnknownTypeException(element);
