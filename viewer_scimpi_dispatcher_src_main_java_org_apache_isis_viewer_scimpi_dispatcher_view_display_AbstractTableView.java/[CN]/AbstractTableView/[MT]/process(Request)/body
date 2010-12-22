@@ -26,6 +26,7 @@
     collection=context.getMappedObjectOrResult(id);
     facet=collection.getTypeOfFacet();
   }
+  String summary=request.getOptionalProperty("summary");
   String rowClassesList=request.getOptionalProperty(ROW_CLASSES,ODD_ROW_CLASS + "|" + EVEN_ROW_CLASS);
   String[] rowClasses=null;
   if (rowClassesList.length() > 0) {
@@ -33,5 +34,5 @@
   }
   List<ObjectAssociation> allFields=facet.valueSpec().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
   TableContentWriter rowBuilder=createRowBuilder(request,context,isFieldEditable ? parentObjectId : null,allFields);
-  write(request,collection,rowBuilder,rowClasses);
+  write(request,collection,summary,rowBuilder,rowClasses);
 }
