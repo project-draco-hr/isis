@@ -1,0 +1,12 @@
+{
+  for (  final Method getMethod : propertyAccessors) {
+    LOG.debug("  identified 1-1 association method " + getMethod);
+    final Class<?> returnType=getMethod.getReturnType();
+    if (getClassSubstitutor().getClass(returnType) == null) {
+      continue;
+    }
+    final FacetedMethod associationPeer=FacetedMethod.createPropertyPeer(introspectedClass,getMethod);
+    getFacetProcessor().process(introspectedClass,getMethod,new JavaIntrospectorMethodRemover(),associationPeer,FeatureType.PROPERTY);
+    associationPeerListToAppendto.add(associationPeer);
+  }
+}

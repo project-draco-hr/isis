@@ -1,0 +1,35 @@
+{
+  if (introspector == null) {
+    throw new ReflectionException("Introspection already taken place, cannot introspect again");
+  }
+  introspector.introspectClass();
+  addNamedFacetAndPluralFacetIfRequired();
+  final Class<?> superclass=getIntrospectedClass().getSuperclass();
+  setSuperclass(superclass);
+  final boolean skipFurtherIntrospection=JavaClassUtils.isJavaClass(getIntrospectedClass()) || isAppLibValue(getIntrospectedClass());
+  if (skipFurtherIntrospection) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("skipping introspection of interfaces, properties, actions and interfaces for " + getFullName() + " (java.xxx or applib value class)");
+    }
+    return;
+  }
+  final Class<?>[] interfaceTypes=getIntrospectedClass().getInterfaces();
+  List<ObjectSpecification> interfaceSpecList=Lists.newArrayList();
+  for (  Class<?> interfaceType : interfaceTypes) {
+    Class<?> substitutedInterfaceType=getClassSubstitutor().getClass(interfaceType);
+    if (substitutedInterfaceType != null) {
+      ObjectSpecification interfaceSpec=getSpecificationLookup().loadSpecification(substitutedInterfaceType);
+      interfaceSpecList.add(interfaceSpec);
+    }
+  }
+  addAsSubclassTo(interfaceSpecList);
+  addInterfaces(interfaceSpecList);
+  introspector.introspectAssociations();
+  final OrderSet associationOrderSet=introspector.getAssociationOrderSet();
+  if (associationOrderSet != null) {
+    addAssociations(asAssociations(associationOrderSet));
+  }
+  introspector.introspectActions();
+  OrderSet actionOrderSet=introspector.getActionOrderSet();
+  addObjectActions(asObjectActions(actionOrderSet));
+}

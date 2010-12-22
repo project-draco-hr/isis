@@ -1,0 +1,13 @@
+{
+  Class<?> candidateClass=candidate.getClass();
+  if (SpecificationLoaderAware.class.isAssignableFrom(candidateClass)) {
+    SpecificationLoaderAware cast=SpecificationLoaderAware.class.cast(candidate);
+    cast.setSpecificationLoader(this);
+  }
+  if (SpecificationLookupAware.class.isAssignableFrom(candidateClass)) {
+    SpecificationLookupAware cast=SpecificationLookupAware.class.cast(candidate);
+    cast.setSpecificationLookup(this);
+  }
+  getClassSubstitutor().injectInto(candidate);
+  getCollectionTypeRegistry().injectInto(candidate);
+}

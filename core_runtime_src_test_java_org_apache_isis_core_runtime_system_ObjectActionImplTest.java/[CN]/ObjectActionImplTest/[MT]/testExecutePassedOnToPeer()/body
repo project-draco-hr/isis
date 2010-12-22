@@ -3,7 +3,7 @@
   target.setupSpecification(new TestSpecification());
   final ObjectAdapter[] parameters=new ObjectAdapter[2];
   final TestProxyAdapter result=new TestProxyAdapter();
-  final ActionInvocationFacet facet=new ActionInvocationFacetAbstract(mockObjectActionPeer){
+  final ActionInvocationFacet facet=new ActionInvocationFacetAbstract(mockFacetedMethod){
     @Override public ObjectAdapter invoke(    ObjectAdapter target,    ObjectAdapter[] parameters){
       return result;
     }
@@ -17,7 +17,7 @@
 ;
   mockery.checking(new Expectations(){
 {
-      exactly(2).of(mockObjectActionPeer).getFacet(ActionInvocationFacet.class);
+      exactly(2).of(mockFacetedMethod).getFacet(ActionInvocationFacet.class);
       will(returnValue(facet));
     }
   }

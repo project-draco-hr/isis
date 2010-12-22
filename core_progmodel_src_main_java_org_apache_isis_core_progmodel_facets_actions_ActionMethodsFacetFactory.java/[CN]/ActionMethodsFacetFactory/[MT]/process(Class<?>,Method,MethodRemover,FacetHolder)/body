@@ -25,15 +25,15 @@
   findAndRemoveDisableForSessionMethod(facets,methodRemover,cls,capitalizedName,UserMemento.class,holder);
   findAndRemoveHideMethod(facets,methodRemover,cls,forClass,capitalizedName,paramTypes,holder);
   findAndRemoveDisableMethod(facets,methodRemover,cls,forClass,capitalizedName,paramTypes,holder);
-  if (holder instanceof ObjectMemberPeer) {
-    final ObjectMemberPeer memberPeer=(ObjectMemberPeer)holder;
+  if (holder instanceof FacetedMethod) {
+    final FacetedMethod memberPeer=(FacetedMethod)holder;
     if (memberPeer.getFeatureType().isAction()) {
-      final List<TypedHolder> children=memberPeer.getChildren();
-      findAndRemoveOptionalForActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,children);
-      findAndRemoveNamesForActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,children);
-      findAndRemoveDescriptionsforActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,children);
-      findAndRemoveChoicesForActionParametersMethod(oldChoicesOrDefaultsMethodsUsed,methodRemover,cls,capitalizedName,paramTypes,children);
-      findAndRemoveDefaultForActionParametersMethod(oldChoicesOrDefaultsMethodsUsed,methodRemover,cls,capitalizedName,paramTypes,children);
+      final List<FacetedMethodParameter> parameters=memberPeer.getParameters();
+      findAndRemoveOptionalForActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,parameters);
+      findAndRemoveNamesForActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,parameters);
+      findAndRemoveDescriptionsforActionParametersMethod(methodRemover,cls,capitalizedName,returnType,paramTypes,parameters);
+      findAndRemoveChoicesForActionParametersMethod(oldChoicesOrDefaultsMethodsUsed,methodRemover,cls,capitalizedName,paramTypes,parameters);
+      findAndRemoveDefaultForActionParametersMethod(oldChoicesOrDefaultsMethodsUsed,methodRemover,cls,capitalizedName,paramTypes,parameters);
     }
   }
   return FacetUtil.addFacets(facets);

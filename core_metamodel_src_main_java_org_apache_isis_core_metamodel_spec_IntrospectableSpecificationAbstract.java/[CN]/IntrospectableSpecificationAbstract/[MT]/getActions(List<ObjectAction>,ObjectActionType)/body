@@ -1,0 +1,21 @@
+{
+  final List<ObjectAction> actions=Lists.newArrayList();
+  for (  final ObjectAction action : availableActions) {
+    final ObjectActionType actionType=action.getType();
+    if (actionType == ObjectActionType.SET) {
+      final ObjectActionSet actionSet=(ObjectActionSet)action;
+      final List<ObjectAction> subActions=actionSet.getActions();
+      for (      final ObjectAction subAction : subActions) {
+        if (sameActionTypeOrNotSpecified(type,subAction)) {
+          actions.add(subAction);
+        }
+      }
+    }
+ else {
+      if (sameActionTypeOrNotSpecified(type,action)) {
+        actions.add(action);
+      }
+    }
+  }
+  return actions;
+}

@@ -1,0 +1,15 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("  looking for fields for " + introspectedClass);
+  }
+  final Set<Method> propertyOrCollectionCandidates=getFacetProcessor().findPropertyOrCollectionCandidateAccessors(methods,new HashSet<Method>());
+  List<Class<?>> typesToLoad=new ArrayList<Class<?>>();
+  for (  final Method method : propertyOrCollectionCandidates) {
+    getSpecificationTraverser().traverseTypes(method,typesToLoad);
+  }
+  reflector.loadSpecifications(typesToLoad,introspectedClass);
+  final List<FacetedMethod> associationPeers=Lists.newArrayList();
+  findAndRemoveCollectionAccessorsAndCreateCorrespondingFieldPeers(associationPeers);
+  findAndRemovePropertyAccessorsAndCreateCorrespondingFieldPeers(associationPeers);
+  return Collections.unmodifiableList(associationPeers);
+}

@@ -1,0 +1,20 @@
+{
+  final List<ObjectAssociation> associations=Lists.newArrayList();
+  for (  Object element : orderSet) {
+    if (element instanceof FacetedMethod) {
+      FacetedMethod facetMethod=(FacetedMethod)element;
+      if (facetMethod.getFeatureType().isCollection()) {
+        associations.add(createCollection(facetMethod));
+      }
+ else       if (facetMethod.getFeatureType().isProperty()) {
+        associations.add(createProperty(facetMethod));
+      }
+    }
+ else     if (element instanceof OrderSet) {
+    }
+ else {
+      throw new UnknownTypeException(element);
+    }
+  }
+  return associations;
+}

@@ -1,13 +1,13 @@
 {
   PropertiesConfiguration configuration=new PropertiesConfiguration();
-  reflector=new JavaReflector(configuration,new TestClassSubstitutor(),new CollectionTypeRegistryDefault(),new SpecificationTraverserDefault(),new ProgrammingModelFacetsJava5(),new HashSet<FacetDecorator>(),new MetaModelValidatorNoop());
+  reflector=new ObjectReflectorDefault(configuration,new TestClassSubstitutor(),new CollectionTypeRegistryDefault(),new SpecificationTraverserDefault(),new ProgrammingModelFacetsJava5(),new HashSet<FacetDecorator>(),new MetaModelValidatorNoop());
   reflector.setRuntimeContext(new RuntimeContextNoRuntime(){
     @Override public AdapterMap getAdapterMap(){
       return new AdapterMapDelegator(super.getAdapterMap()){
         @Override public ObjectAdapter adapterFor(        Object pattern){
           return adapters.get(pattern);
         }
-        @Override public ObjectAdapter adapterFor(        Object pojo,        ObjectAdapter ownerAdapter,        Identified identified){
+        @Override public ObjectAdapter adapterFor(        Object pojo,        ObjectAdapter ownerAdapter,        IdentifiedHolder identifiedHolder){
           if (adapters.get(pojo) != null) {
             return adapters.get(pojo);
           }

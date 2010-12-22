@@ -1,0 +1,10 @@
+{
+  LOG.debug("introspecting " + getClassName() + ": properties and collections");
+  final List<FacetedMethod> associationMethods=findAndCreateAssociationPeers();
+  final FieldOrderFacet fieldOrderFacet=specAsFacetHolder.getFacet(FieldOrderFacet.class);
+  String fieldOrder=fieldOrderFacet == null ? null : fieldOrderFacet.value();
+  if (fieldOrder == null) {
+    fieldOrder=invokeSortOrderMethod("field");
+  }
+  orderedFields=createOrderSet(fieldOrder,associationMethods);
+}

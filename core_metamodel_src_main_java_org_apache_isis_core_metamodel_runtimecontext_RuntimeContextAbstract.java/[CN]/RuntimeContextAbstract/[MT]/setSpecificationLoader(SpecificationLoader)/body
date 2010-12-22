@@ -1,3 +1,11 @@
 {
-  this.specificationLookupDelegator.setDelegate(specificationLoader);
+  this.specificationLookupDelegator.setDelegate(new SpecificationLookup(){
+    @Override public void injectInto(    Object candidate){
+      specificationLoader.injectInto(candidate);
+    }
+    @Override public ObjectSpecification loadSpecification(    Class<?> cls){
+      return specificationLoader.loadSpecification(cls);
+    }
+  }
+);
 }
