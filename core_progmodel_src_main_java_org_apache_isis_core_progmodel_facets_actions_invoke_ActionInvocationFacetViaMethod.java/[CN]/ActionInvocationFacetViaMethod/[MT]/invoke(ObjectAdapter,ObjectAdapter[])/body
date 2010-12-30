@@ -9,14 +9,16 @@
     }
     final Object object=unwrap(inObject);
     final Object result=method.invoke(object,executionParameters);
-    LOG.debug(" action result " + result);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(" action result " + result);
+    }
     if (result == null) {
       return null;
     }
-    final ObjectAdapter adapter=getAdapterMap().adapterFor(result);
+    final ObjectAdapter resultAdapter=getAdapterMap().adapterFor(result);
     final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
-    adapter.setTypeOfFacet(typeOfFacet);
-    return adapter;
+    resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
+    return resultAdapter;
   }
  catch (  final IllegalArgumentException e) {
     throw e;

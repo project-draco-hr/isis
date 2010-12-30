@@ -1,0 +1,48 @@
+{
+  final ObjectAdapter realTarget=realTarget(target);
+  final int parameterCount=getParameterCount();
+  final List<ObjectActionParameter> parameters=getParameters();
+  final Object[] parameterDefaultPojos;
+  final ActionDefaultsFacet facet=getFacet(ActionDefaultsFacet.class);
+  if (!facet.isNoop()) {
+    parameterDefaultPojos=facet.getDefaults(realTarget);
+    if (parameterDefaultPojos.length != parameterCount) {
+      throw new ModelException("Defaults array of incompatible size; expected " + parameterCount + " elements, but was "+ parameterDefaultPojos.length+ " for "+ facet);
+    }
+    for (int i=0; i < parameterCount; i++) {
+      if (parameterDefaultPojos[i] != null) {
+        ObjectSpecification componentSpec=getSpecificationLookup().loadSpecification(parameterDefaultPojos[i].getClass());
+        ObjectSpecification parameterSpec=parameters.get(i).getSpecification();
+        if (!componentSpec.isOfType(parameterSpec)) {
+          throw new ModelException("Defaults type incompatible with parameter " + (i + 1) + " type; expected "+ parameterSpec.getFullIdentifier()+ ", but was "+ componentSpec.getFullIdentifier());
+        }
+      }
+    }
+  }
+ else {
+    parameterDefaultPojos=new Object[parameterCount];
+    for (int i=0; i < parameterCount; i++) {
+      ActionParameterDefaultsFacet paramFacet=parameters.get(i).getFacet(ActionParameterDefaultsFacet.class);
+      if (paramFacet != null && !paramFacet.isNoop()) {
+        parameterDefaultPojos[i]=paramFacet.getDefault(realTarget);
+      }
+ else {
+        parameterDefaultPojos[i]=null;
+      }
+    }
+  }
+  final ObjectAdapter[] parameterDefaultAdapters=new ObjectAdapter[parameterCount];
+  if (parameterDefaultPojos != null) {
+    for (int i=0; i < parameterCount; i++) {
+      parameterDefaultAdapters[i]=adapterFor(parameterDefaultPojos[i]);
+    }
+  }
+  if (isContributed() && target != null) {
+    for (int i=0; i < parameterCount; i++) {
+      if (target.getSpecification().isOfType(parameters.get(i).getSpecification())) {
+        parameterDefaultAdapters[i]=target;
+      }
+    }
+  }
+  return parameterDefaultAdapters;
+}

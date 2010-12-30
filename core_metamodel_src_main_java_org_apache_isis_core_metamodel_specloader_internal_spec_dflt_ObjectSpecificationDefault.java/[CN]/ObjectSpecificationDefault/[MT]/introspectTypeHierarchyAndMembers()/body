@@ -1,0 +1,36 @@
+{
+  if (facetedMethodsBuilder == null) {
+    throw new ReflectionException("Introspection already taken place, cannot introspect again");
+  }
+  facetedMethodsBuilder.introspectClass();
+  addNamedFacetAndPluralFacetIfRequired();
+  final Class<?> superclass=getCorrespondingClass().getSuperclass();
+  setSuperclass(superclass);
+  final boolean skipFurtherIntrospection=JavaClassUtils.isJavaClass(getCorrespondingClass()) || isAppLibValue(getCorrespondingClass());
+  if (skipFurtherIntrospection) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("skipping introspection of interfaces, properties, actions and interfaces for " + getFullIdentifier() + " (java.xxx or applib value class)");
+    }
+    return;
+  }
+  final Class<?>[] interfaceTypes=getCorrespondingClass().getInterfaces();
+  List<ObjectSpecification> interfaceSpecList=Lists.newArrayList();
+  for (  Class<?> interfaceType : interfaceTypes) {
+    Class<?> substitutedInterfaceType=getClassSubstitutor().getClass(interfaceType);
+    if (substitutedInterfaceType != null) {
+      ObjectSpecification interfaceSpec=getSpecificationLookup().loadSpecification(substitutedInterfaceType);
+      interfaceSpecList.add(interfaceSpec);
+    }
+  }
+  addAsSubclassTo(interfaceSpecList);
+  addInterfaces(interfaceSpecList);
+  final List<FacetedMethod> associationFacetedMethods=facetedMethodsBuilder.getAssociationFacetedMethods();
+  final List<FacetedMethod> actionFacetedMethods=facetedMethodsBuilder.getActionFacetedMethods();
+  final OrderSet associationOrderSet=getMemberLayoutArranger().createAssociationOrderSetFor(this,associationFacetedMethods);
+  addAssociations(asAssociations(associationOrderSet));
+  OrderSet actionOrderSet=getMemberLayoutArranger().createActionOrderSetFor(this,actionFacetedMethods);
+  addObjectActions(asObjectActions(actionOrderSet));
+  updateFromFacetValues();
+  facetedMethodsBuilder=null;
+  setIntrospected(true);
+}

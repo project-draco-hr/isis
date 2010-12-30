@@ -1,10 +1,10 @@
 {
   RequestContext context=request.getContext();
-  TypeOfFacet facet;
   ObjectAdapter collection;
   String parentObjectId=null;
   boolean isFieldEditable=false;
   String field=request.getOptionalProperty(FIELD);
+  ObjectSpecification elementSpec;
   if (field != null) {
     String objectId=request.getOptionalProperty(OBJECT);
     ObjectAdapter object=context.getMappedObjectOrResult(objectId);
@@ -16,15 +16,16 @@
       throw new ScimpiException("Field " + objectField.getId() + " is not a collection");
     }
     isFieldEditable=objectField.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
-    IsisContext.getPersistenceSession().resolveField(object,objectField);
+    getPersistenceSession().resolveField(object,objectField);
     collection=objectField.get(object);
-    facet=objectField.getFacet(TypeOfFacet.class);
+    TypeOfFacet facet=objectField.getFacet(TypeOfFacet.class);
+    elementSpec=facet.valueSpec();
     parentObjectId=objectId == null ? context.mapObject(object,Scope.REQUEST) : objectId;
   }
  else {
     String id=request.getOptionalProperty(COLLECTION);
     collection=context.getMappedObjectOrResult(id);
-    facet=collection.getTypeOfFacet();
+    elementSpec=collection.getElementSpecification();
   }
   String summary=request.getOptionalProperty("summary");
   String rowClassesList=request.getOptionalProperty(ROW_CLASSES,ODD_ROW_CLASS + "|" + EVEN_ROW_CLASS);
@@ -32,7 +33,7 @@
   if (rowClassesList.length() > 0) {
     rowClasses=rowClassesList.split("[,|/]");
   }
-  List<ObjectAssociation> allFields=facet.valueSpec().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
+  List<ObjectAssociation> allFields=elementSpec.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
   TableContentWriter rowBuilder=createRowBuilder(request,context,isFieldEditable ? parentObjectId : null,allFields);
   write(request,collection,summary,rowBuilder,rowClasses);
 }

@@ -4,7 +4,8 @@
   Assert.assertNotNull(pojo);
   final Oid aggregatedOid=new AggregatedOid(ownerAdapter.getOid(),identifier);
   ObjectAdapter aggregatedAdapter=createOrRecreateAdapter(pojo,aggregatedOid);
-  aggregatedAdapter.setTypeOfFacet(identifiedHolder.getFacet(TypeOfFacet.class));
+  final TypeOfFacet facet=identifiedHolder.getFacet(TypeOfFacet.class);
+  aggregatedAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(facet));
   aggregatedAdapter.setOptimisticLock(ownerAdapter.getVersion());
   return aggregatedAdapter;
 }

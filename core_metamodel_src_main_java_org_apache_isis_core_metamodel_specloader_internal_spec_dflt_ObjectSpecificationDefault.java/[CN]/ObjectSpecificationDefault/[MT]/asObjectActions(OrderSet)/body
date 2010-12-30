@@ -1,0 +1,22 @@
+{
+  if (orderSet == null) {
+    return null;
+  }
+  final List<ObjectAction> actions=Lists.newArrayList();
+  for (  Object element : orderSet) {
+    if (element instanceof FacetedMethod) {
+      final FacetedMethod facetedMethod=(FacetedMethod)element;
+      if (facetedMethod.getFeatureType().isAction()) {
+        actions.add(createAction(facetedMethod));
+      }
+    }
+ else     if (element instanceof OrderSet) {
+      final OrderSet set=((OrderSet)element);
+      actions.add(createObjectActionSet(set));
+    }
+ else {
+      throw new UnknownTypeException(element);
+    }
+  }
+  return actions;
+}

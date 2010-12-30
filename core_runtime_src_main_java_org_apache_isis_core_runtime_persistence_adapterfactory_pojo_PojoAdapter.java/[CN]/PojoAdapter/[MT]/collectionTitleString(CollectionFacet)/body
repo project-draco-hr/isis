@@ -1,8 +1,7 @@
 {
   final int size=elementsLoaded() ? facet.size(this) : INCOMPLETE_COLLECTION;
-  final TypeOfFacet typeFacet=getTypeOfFacet();
-  final ObjectSpecification elementSpecification=typeFacet == null ? null : typeFacet.valueSpec();
-  if (elementSpecification == null || elementSpecification.getFullName().equals(Object.class.getName())) {
+  final ObjectSpecification elementSpecification=getElementSpecification();
+  if (elementSpecification == null || elementSpecification.getFullIdentifier().equals(Object.class.getName())) {
 switch (size) {
 case -1:
       return "Objects";
@@ -21,7 +20,7 @@ return elementSpecification.getPluralName();
 case 0:
 return "No " + elementSpecification.getPluralName();
 case 1:
-return "1 " + elementSpecification.getName();
+return "1 " + elementSpecification.getSingularName();
 default :
 return size + " " + elementSpecification.getPluralName();
 }

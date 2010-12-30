@@ -4,13 +4,13 @@
   boolean isTransient=adapter.isTransient();
   if (!isTransient && (resolveState.isSerializing() || resolveState.isGhost() || graphDepth <= 0)) {
     Assert.assertNotNull("OID needed for reference",adapter,adapter.getOid());
-    return this.dataFactory.createIdentityData(adapter.getSpecification().getFullName(),adapter.getOid(),adapter.getVersion());
+    return this.dataFactory.createIdentityData(adapter.getSpecification().getFullIdentifier(),adapter.getOid(),adapter.getVersion());
   }
   if (isTransient && knownObjects.containsKey(adapter)) {
     return knownObjects.get(adapter);
   }
   boolean withCompleteData=resolveState == ResolveState.TRANSIENT || resolveState == ResolveState.RESOLVED;
-  final String type=adapter.getSpecification().getFullName();
+  final String type=adapter.getSpecification().getFullIdentifier();
   final Oid oid=adapter.getOid();
   final ObjectData data=this.dataFactory.createObjectData(type,oid,withCompleteData,adapter.getVersion());
   if (isTransient) {
@@ -26,7 +26,7 @@
     final ObjectAdapter field=fields[i].get(adapter);
     if (fields[i].getSpecification().isEncodeable()) {
       if (field == null) {
-        fieldContent[i]=this.dataFactory.createNullData(fields[i].getSpecification().getFullName());
+        fieldContent[i]=this.dataFactory.createNullData(fields[i].getSpecification().getFullIdentifier());
       }
  else {
         fieldContent[i]=serializeEncodeable(field);
@@ -37,7 +37,7 @@
     }
  else     if (fields[i].isOneToOneAssociation()) {
       if (field == null) {
-        fieldContent[i]=!withCompleteData ? null : this.dataFactory.createNullData(fields[i].getSpecification().getFullName());
+        fieldContent[i]=!withCompleteData ? null : this.dataFactory.createNullData(fields[i].getSpecification().getFullIdentifier());
       }
  else {
         fieldContent[i]=serializeObject2(field,graphDepth - 1,knownObjects);

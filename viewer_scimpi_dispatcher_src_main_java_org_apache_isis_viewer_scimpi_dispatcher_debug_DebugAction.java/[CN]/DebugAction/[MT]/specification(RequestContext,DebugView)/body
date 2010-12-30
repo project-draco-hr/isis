@@ -3,12 +3,12 @@
   ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(name);
   DebugString str=new DebugString();
   Dump.specification(spec,str);
-  view.divider(spec.getFullName());
+  view.divider(spec.getFullIdentifier());
   view.appendRow("Hash code","#" + Integer.toHexString(spec.hashCode()));
   view.appendRow("ID",spec.getIdentifier());
-  view.appendRow("Full name",spec.getFullName());
-  view.appendRow("Short name",spec.getShortName());
-  view.appendRow("Singular name",spec.getName());
+  view.appendRow("Full name",spec.getFullIdentifier());
+  view.appendRow("Short name",spec.getShortIdentifier());
+  view.appendRow("Singular name",spec.getSingularName());
   view.appendRow("Plural name",spec.getPluralName());
   view.appendRow("Description",spec.getDescription());
   view.appendRow("Type","?");
@@ -19,11 +19,11 @@
   speficationFacets(view,spec);
   List<ObjectAssociation> fields=spec.getAssociations();
   specificationMembers(view,"Fields",fields);
-  List<ObjectAction> userActions=spec.getObjectActions(ObjectActionType.USER);
+  List<ObjectAction> userActions=spec.getObjectActions(ActionType.USER);
   specificationMembers(view,"User Actions",userActions);
-  specificationMembers(view,"Exploration Actions",spec.getObjectActions(ObjectActionType.EXPLORATION));
-  specificationMembers(view,"Prototype Actions",spec.getObjectActions(ObjectActionType.PROTOTYPE));
-  specificationMembers(view,"Debug Actions",spec.getObjectActions(ObjectActionType.DEBUG));
+  specificationMembers(view,"Exploration Actions",spec.getObjectActions(ActionType.EXPLORATION));
+  specificationMembers(view,"Prototype Actions",spec.getObjectActions(ActionType.PROTOTYPE));
+  specificationMembers(view,"Debug Actions",spec.getObjectActions(ActionType.DEBUG));
   for (int i=0; i < fields.size(); i++) {
     ObjectAssociation field=fields.get(i);
     view.divider("<span id=\"" + field.getId() + "\">Field: "+ field.getName()+ "</span>");

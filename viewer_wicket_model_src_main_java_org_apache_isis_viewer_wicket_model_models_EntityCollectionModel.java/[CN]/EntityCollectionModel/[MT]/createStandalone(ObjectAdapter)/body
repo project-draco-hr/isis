@@ -1,8 +1,8 @@
 {
   Iterable<Object> iterable=EntityCollectionModel.asIterable(collectionAsAdapter);
-  TypeOfFacet typeOfFacet=collectionAsAdapter.getTypeOfFacet();
-  Class<?> cls=typeOfFacet.value();
   Iterable<ObjectAdapterMemento> oidIterable=Iterables.transform(iterable,Mementos.fromPojo());
   List<ObjectAdapterMemento> mementoList=Lists.newArrayList(oidIterable);
-  return new EntityCollectionModel(cls,mementoList);
+  final ObjectSpecification elementSpec=collectionAsAdapter.getElementSpecification();
+  final Class<?> elementType=elementSpec.getCorrespondingClass();
+  return new EntityCollectionModel(elementType,mementoList);
 }

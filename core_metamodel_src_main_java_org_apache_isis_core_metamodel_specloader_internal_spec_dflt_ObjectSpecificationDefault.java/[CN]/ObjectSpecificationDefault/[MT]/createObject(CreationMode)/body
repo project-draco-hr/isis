@@ -1,0 +1,21 @@
+{
+  if (getCorrespondingClass().isArray()) {
+    return Array.newInstance(getCorrespondingClass().getComponentType(),0);
+  }
+  try {
+    Object object=getObjectInstantiator().instantiate(getCorrespondingClass());
+    if (creationMode == CreationMode.INITIALIZE) {
+      final ObjectAdapter adapter=getAdapterMap().adapterFor(object);
+      final List<ObjectAssociation> fields=adapter.getSpecification().getAssociations();
+      for (int i=0; i < fields.size(); i++) {
+        fields.get(i).toDefault(adapter);
+      }
+      getDependencyInjector().injectDependenciesInto(object);
+      CallbackUtils.callCallback(adapter,CreatedCallbackFacet.class);
+    }
+    return object;
+  }
+ catch (  final ObjectInstantiationException e) {
+    throw new IsisException("Failed to create instance of type " + getFullIdentifier(),e);
+  }
+}

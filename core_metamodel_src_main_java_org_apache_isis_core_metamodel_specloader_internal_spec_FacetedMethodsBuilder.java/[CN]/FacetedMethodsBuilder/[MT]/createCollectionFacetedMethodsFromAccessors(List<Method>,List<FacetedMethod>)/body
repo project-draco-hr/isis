@@ -1,0 +1,19 @@
+{
+  for (  final Method accessorMethod : accessorMethods) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("  identified accessor method representing collection: " + accessorMethod);
+    }
+    final FacetedMethod facetedMethod=FacetedMethod.createCollectionFacetedMethod(introspectedClass,accessorMethod);
+    getFacetProcessor().process(introspectedClass,accessorMethod,methodRemover,facetedMethod,FeatureType.COLLECTION);
+    Class<?> elementType=Object.class;
+    final TypeOfFacet typeOfFacet=facetedMethod.getFacet(TypeOfFacet.class);
+    if (typeOfFacet != null) {
+      elementType=typeOfFacet.value();
+    }
+    facetedMethod.setType(elementType);
+    if (getClassSubstitutor().getClass(elementType) == null) {
+      continue;
+    }
+    facetMethodsToAppendto.add(facetedMethod);
+  }
+}

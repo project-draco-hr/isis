@@ -1,3 +1,9 @@
 {
-  return Lists.transform(entityCollectionModel.mementoList,ObjectAdapters.fromMemento());
+  ObjectAdapter adapter=entityCollectionModel.parentObjectAdapterMemento.getObjectAdapter();
+  OneToManyAssociation collection=entityCollectionModel.collectionMemento.getCollection();
+  ObjectAdapter collectionAsAdapter=collection.get(adapter);
+  Iterable<Object> objectList=asIterable(collectionAsAdapter);
+  Iterable<ObjectAdapter> adapterIterable=Iterables.transform(objectList,ObjectAdapters.fromPojo());
+  List<ObjectAdapter> adapterList=Lists.newArrayList(adapterIterable);
+  return adapterList;
 }

@@ -1,8 +1,20 @@
 {
+  final AuthenticationSessionProvider authenticationSessionProvider=getRuntimeContext().getAuthenticationSessionProvider();
+  final SpecificationLookup specificationLookup=getRuntimeContext().getSpecificationLookup();
+  final ServicesProvider servicesProvider=getRuntimeContext().getServicesProvider();
+  final ObjectInstantiator objectInstantiator=getRuntimeContext().getObjectInstantiator();
+  final SpecificationContext specContext=new SpecificationContext(authenticationSessionProvider,servicesProvider,objectInstantiator,specificationLookup);
   if (ObjectList.class.isAssignableFrom(cls)) {
-    return new InstanceCollectionSpecification(this,getRuntimeContext().getAuthenticationSessionProvider(),getRuntimeContext().getServicesProvider(),getRuntimeContext().getObjectInstantiator());
+    return new ObjectSpecificationForObjectList(specContext);
   }
  else {
-    return new JavaSpecification(cls,this,getRuntimeContext().getAuthenticationSessionProvider(),getRuntimeContext().getServicesProvider(),getRuntimeContext().getAdapterMap(),getRuntimeContext().getObjectInstantiator(),getRuntimeContext().getDependencyInjector(),getRuntimeContext().getQuerySubmitter());
+    SpecificationLoader specificationLoader=this;
+    final AdapterMap adapterMap=getRuntimeContext().getAdapterMap();
+    final ObjectMemberContext objectMemberContext=new ObjectMemberContext(authenticationSessionProvider,specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter());
+    final IntrospectionContext introspectionContext=new IntrospectionContext(getClassSubstitutor(),getMemberLayoutArranger());
+    final DependencyInjector dependencyInjector=getRuntimeContext().getDependencyInjector();
+    final CreateObjectContext createObjectContext=new CreateObjectContext(adapterMap,dependencyInjector);
+    final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(specificationLoader,classSubstitutor,specificationTraverser,facetProcessor);
+    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,introspectionContext,specContext,objectMemberContext,createObjectContext);
   }
 }
