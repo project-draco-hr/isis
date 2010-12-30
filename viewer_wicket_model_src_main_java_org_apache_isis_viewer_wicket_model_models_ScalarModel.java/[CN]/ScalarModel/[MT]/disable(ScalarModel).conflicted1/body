@@ -1,3 +1,12 @@
 {
-  return null;
+  ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter();
+  OneToOneAssociation property=scalarModel.getPropertyMemento().getProperty();
+  try {
+    AuthenticationSession session=scalarModel.getAuthenticationSession();
+    Consent usable=property.isUsable(session,parentAdapter);
+    return usable.isAllowed() ? null : usable.getReason();
+  }
+ catch (  Exception ex) {
+    return ex.getLocalizedMessage();
+  }
 }
