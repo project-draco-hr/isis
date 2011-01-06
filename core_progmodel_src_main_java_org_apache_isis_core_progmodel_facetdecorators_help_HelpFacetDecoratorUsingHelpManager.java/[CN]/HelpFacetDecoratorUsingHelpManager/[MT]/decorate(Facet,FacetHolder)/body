@@ -1,0 +1,15 @@
+{
+  if (!(requiredHolder instanceof IdentifiedHolder)) {
+    return null;
+  }
+  IdentifiedHolder identifiedHolder=(IdentifiedHolder)requiredHolder;
+  final Identifier identifier=identifiedHolder.getIdentifier();
+  if (facet.facetType() == HelpFacet.class) {
+    final String lookupHelp=helpManager.help(identifier);
+    if (lookupHelp != null) {
+      HelpFacetLookedUpViaHelpManager decoratingFacet=new HelpFacetLookedUpViaHelpManager(lookupHelp,facet.getFacetHolder());
+      return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+    }
+  }
+  return facet;
+}
