@@ -33,7 +33,7 @@
   options.add(new UserActionAbstract("Diagnostics...",ActionType.DEBUG){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       final InfoDebugFrame f=new InfoDebugFrame();
-      DebugInfo info=new DebugInfo(){
+      DebuggableWithTitle info=new DebuggableWithTitle(){
         public void debugData(        DebugString debug){
           ByteArrayOutputStream out2=new ByteArrayOutputStream();
           PrintStream out=new PrintStream(out2);
@@ -53,7 +53,7 @@
   options.add(new UserActionAbstract("Debug system...",ActionType.DEBUG){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       final InfoDebugFrame f=new InfoDebugFrame();
-      final DebugInfo[] contextInfo=IsisContext.debugSystem();
+      final DebuggableWithTitle[] contextInfo=IsisContext.debugSystem();
       f.setInfo(contextInfo);
       f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
     }
@@ -62,7 +62,7 @@
   options.add(new UserActionAbstract("Debug session...",ActionType.DEBUG){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       final InfoDebugFrame f=new InfoDebugFrame();
-      final DebugInfo[] contextInfo=IsisContext.debugSession();
+      final DebuggableWithTitle[] contextInfo=IsisContext.debugSession();
       f.setInfo(contextInfo);
       f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
     }
@@ -71,7 +71,7 @@
   options.add(new UserActionAbstract("Debug viewer...",ActionType.DEBUG){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       final InfoDebugFrame f=new InfoDebugFrame();
-      f.setInfo(new DebugInfo[]{Toolkit.getViewFactory(),viewer.updateNotifier});
+      f.setInfo(new DebuggableWithTitle[]{Toolkit.getViewFactory(),viewer.updateNotifier});
       f.show(at.getX() + 50,workspace.getBounds().getY() + 6);
     }
   }

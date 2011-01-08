@@ -1,11 +1,11 @@
 {
   final String[] configuredClassNames=configuration.getList(ReflectorConstants.CLASS_SUBSTITUTOR_CLASS_NAME_LIST);
   if (configuredClassNames == null || configuredClassNames.length == 0) {
-    return InstanceFactory.createInstance(ReflectorConstants.CLASS_SUBSTITUTOR_CLASS_NAME_DEFAULT,ClassSubstitutor.class);
+    return InstanceUtil.createInstance(ReflectorConstants.CLASS_SUBSTITUTOR_CLASS_NAME_DEFAULT,ClassSubstitutor.class);
   }
   List<ClassSubstitutor> substitutors=Lists.newArrayList();
   for (  String className : configuredClassNames) {
-    ClassSubstitutor substitutor=InstanceFactory.createInstance(className,ClassSubstitutor.class);
+    ClassSubstitutor substitutor=InstanceUtil.createInstance(className,ClassSubstitutor.class);
     substitutors.add(substitutor);
   }
   return substitutors.size() == 1 ? substitutors.get(0) : new ClassSubstitutorComposite(substitutors);

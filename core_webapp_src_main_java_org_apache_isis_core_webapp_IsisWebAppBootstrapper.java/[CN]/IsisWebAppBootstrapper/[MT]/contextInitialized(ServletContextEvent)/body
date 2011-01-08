@@ -4,15 +4,15 @@
     String webappDir=servletContext.getRealPath("/");
     String webInfDir=servletContext.getRealPath("/WEB-INF");
     loggingConfigurer.configureLogging(webInfDir,new String[0]);
-    final ConfigurationBuilder configurationBuilder=new ConfigurationBuilderResourceStreams(new ResourceStreamSourceServletContext(servletContext),new ResourceStreamSourceContextLoaderClassPath());
-    primeConfigurationBuilder(configurationBuilder,servletContext);
-    final DeploymentType deploymentType=determineDeploymentType(configurationBuilder,servletContext);
-    addConfigurationResourcesForWebApps(configurationBuilder);
-    addConfigurationResourcesForDeploymentType(configurationBuilder,deploymentType);
-    configurationBuilder.add(WebAppConstants.WEB_APP_DIR,webappDir);
-    configurationBuilder.add(SystemConstants.NOSPLASH_KEY,"true");
+    final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(new ResourceStreamSourceServletContext(servletContext),new ResourceStreamSourceContextLoaderClassPath());
+    primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
+    final DeploymentType deploymentType=determineDeploymentType(isisConfigurationBuilder,servletContext);
+    addConfigurationResourcesForWebApps(isisConfigurationBuilder);
+    addConfigurationResourcesForDeploymentType(isisConfigurationBuilder,deploymentType);
+    isisConfigurationBuilder.add(WebAppConstants.WEB_APP_DIR,webappDir);
+    isisConfigurationBuilder.add(SystemConstants.NOSPLASH_KEY,"true");
     InstallerLookup installerLookup=new InstallerLookupDefault(getClass());
-    injector=createGuiceInjector(configurationBuilder,deploymentType,installerLookup);
+    injector=createGuiceInjector(isisConfigurationBuilder,deploymentType,installerLookup);
     IsisSystem system=injector.getInstance(IsisSystem.class);
     servletContext.setAttribute(WebAppConstants.ISIS_SYSTEM_KEY,system);
   }

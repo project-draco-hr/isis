@@ -3,7 +3,7 @@
   String value=request.getOptionalProperty("value");
   if (type != null) {
     if (type.equals("system")) {
-      DebugInfo[] debug=IsisContext.debugSystem();
+      DebuggableWithTitle[] debug=IsisContext.debugSystem();
       request.appendHtml("<h2>System</h2>");
       for (int i=0; i < debug.length; i++) {
         DebugString str=new DebugString();
@@ -48,9 +48,9 @@
     String id=request.getOptionalProperty("object");
     if (id != null) {
       ObjectAdapter object=context.getMappedObject(id);
-      if (object instanceof DebugInfo) {
+      if (object instanceof DebuggableWithTitle) {
         DebugString debug=new DebugString();
-        ((DebugInfo)object).debugData(debug);
+        ((DebuggableWithTitle)object).debugData(debug);
         request.appendHtml("<pre class=\"debug\">" + debug + "</pre>");
       }
  else {

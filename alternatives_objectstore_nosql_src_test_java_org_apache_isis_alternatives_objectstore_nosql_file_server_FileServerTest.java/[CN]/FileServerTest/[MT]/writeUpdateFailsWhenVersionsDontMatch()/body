@@ -4,7 +4,7 @@
   String originalData="org.domain.Class 1026 21\n{datax}";
   fileWriter.write(originalData);
   fileWriter.close();
-  ServerConnection connection=new ServerConnection(IoUtils.asInputStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n"),out);
+  ServerConnection connection=new ServerConnection(IoUtils.asUtf8ByteStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n"),out);
   server.process(connection);
   assertThat(out.toString(),is(equalTo(lineSeparated("error\n{datax}\n"))));
 }

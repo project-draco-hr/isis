@@ -5,7 +5,7 @@
   file2.delete();
   assertFalse(file1.exists());
   assertFalse(file2.exists());
-  InputStream in=IoUtils.asInputStream("W\nIorg.domain.Class 1025 null 1  \n{data1}\n\nIorg.domain.Class 1026 null 1\n{data2}\n");
+  InputStream in=IoUtils.asUtf8ByteStream("W\nIorg.domain.Class 1025 null 1  \n{data1}\n\nIorg.domain.Class 1026 null 1\n{data2}\n");
   ServerConnection connection=new ServerConnection(in,out);
   server.process(connection);
   assertThat(out.toString(),is(equalTo(lineSeparated("ok\n"))));
