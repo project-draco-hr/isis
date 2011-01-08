@@ -21,11 +21,13 @@
  else {
       String errorSegment=fld.getErrorText() == null ? "" : "<span class=\"error\">" + fld.getErrorText() + "</span>";
       String fieldSegment=createField(fld);
+      String helpSegment=HelpLink.createHelpSegment(fld.getDescription(),fld.getHelpReference());
       String title=fld.getDescription().equals("") ? "" : " title=\"" + fld.getDescription() + "\"";
-      request.appendHtml("  <div class=\"field\"><label" + title + ">"+ fld.getLabel()+ ":</label>"+ fieldSegment+ errorSegment+ "</div>\n");
+      request.appendHtml("  <div class=\"field\"><label" + title + ">"+ fld.getLabel()+ ":</label>"+ fieldSegment+ errorSegment+ helpSegment+ "</div>\n");
     }
   }
   Errors.append(request,null);
   request.appendHtml("  <input class=\"button\" type=\"submit\" value=\"" + buttonTitle + "\" name=\"execute\" />\n");
+  HelpLink.append(request,helpReference,description);
   request.appendHtml("</form>\n");
 }
