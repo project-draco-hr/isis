@@ -9,13 +9,24 @@
   }
   Object context=AdapterUtils.unwrap(contextAdapter);
   getDependencyInjector().injectDependenciesInto(parser);
-  final Object parsed=parser.parseTextEntry(context,entry);
-  if (parsed == null) {
-    return null;
+  try {
+    final Object parsed=parser.parseTextEntry(context,entry);
+    if (parsed == null) {
+      return null;
+    }
+    ObjectAdapter adapter=getAdapterMap().adapterFor(parsed);
+    ObjectSpecification specification=adapter.getSpecification();
+    ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
+    validate(validateContext);
+    return adapter;
   }
-  ObjectAdapter adapter=getAdapterMap().adapterFor(parsed);
-  ObjectSpecification specification=adapter.getSpecification();
-  ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
-  validate(validateContext);
-  return adapter;
+ catch (  NumberFormatException e) {
+    throw new TextEntryParseException(e.getMessage(),e);
+  }
+catch (  IllegalFormatException e) {
+    throw new TextEntryParseException(e.getMessage(),e);
+  }
+catch (  ParsingException e) {
+    throw new TextEntryParseException(e.getMessage(),e);
+  }
 }
