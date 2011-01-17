@@ -7,9 +7,9 @@
   }
   final Method deleteMethod=findMethod(Customer.class,"deleting");
   final Method removeMethod=findMethod(Customer.class,"removing");
-  removeFacetFactory.process(Customer.class,methodRemover,facetHolder);
-  deleteFacetFactory.process(Customer.class,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(RemovingCallbackFacet.class);
+  removeFacetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  deleteFacetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(RemovingCallbackFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof RemovingCallbackFacetViaMethod);
   final RemovingCallbackFacetViaMethod removingCallbackFacetViaMethod=(RemovingCallbackFacetViaMethod)facet;

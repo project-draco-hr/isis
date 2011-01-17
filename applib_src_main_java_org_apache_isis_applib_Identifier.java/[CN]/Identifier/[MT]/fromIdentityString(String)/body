@@ -1,0 +1,28 @@
+{
+  if (asString == null) {
+    throw new IllegalArgumentException("expected: non-null identity string");
+  }
+  final int indexOfHash=asString.indexOf("#");
+  final int indexOfOpenBracket=asString.indexOf("(");
+  final int indexOfCloseBracket=asString.indexOf(")");
+  final String className=asString.substring(0,indexOfHash == -1 ? asString.length() : indexOfHash);
+  if (indexOfHash == -1 || indexOfHash == (asString.length() - 1)) {
+    return classIdentifier(className);
+  }
+  String name=null;
+  if (indexOfOpenBracket == -1) {
+    name=asString.substring(indexOfHash + 1);
+    return propertyOrCollectionIdentifier(className,name);
+  }
+  List<String> parmList=new ArrayList<String>();
+  name=asString.substring(indexOfHash + 1,indexOfOpenBracket);
+  final String allParms=asString.substring(indexOfOpenBracket + 1,indexOfCloseBracket).trim();
+  if (allParms.length() > 0) {
+    final StringTokenizer tokens=new StringTokenizer(allParms,",",false);
+    for (int i=0; tokens.hasMoreTokens(); i++) {
+      String nextParam=tokens.nextToken();
+      parmList.add(nextParam);
+    }
+  }
+  return actionIdentifier(className,name,parmList);
+}

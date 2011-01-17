@@ -5,8 +5,8 @@
     }
   }
   final Method iconNameMethod=findMethod(Customer.class,"iconName");
-  facetFactory.process(Customer.class,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(IconFacet.class);
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(IconFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof IconFacetViaMethod);
   assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(iconNameMethod));

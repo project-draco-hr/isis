@@ -7,8 +7,8 @@ class Customer {
     }
   }
   final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
-  facetFactory.process(Customer.class,collectionAccessorMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(TypeOfFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TypeOfFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof TypeOfFacetInferredFromArray);
   final TypeOfFacetInferredFromArray typeOfFacetInferredFromArray=(TypeOfFacetInferredFromArray)facet;

@@ -1,14 +1,16 @@
 {
+  ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void explorationDebugAnActionWithExplorationAndDebugPrefix(){
+    @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void explorationDebugAnActionWithExplorationAndDebugPrefix(){
     }
   }
   final Method method=findMethod(Customer.class,"explorationDebugAnActionWithExplorationAndDebugPrefix");
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
-  Facet facet=facetHolder.getFacet(ExplorationFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  Facet facet=facetedMethod.getFacet(ExplorationFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof ExplorationFacet);
-  facet=facetHolder.getFacet(DebugFacet.class);
+  facet=facetedMethod.getFacet(DebugFacet.class);
   assertNull(facet);
 }

@@ -1,8 +1,10 @@
 {
+  NamedFacetViaNameMethodFacetFactory facetFactory=new NamedFacetViaNameMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
   final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOrders");
   final Method nameMethod=findMethod(CustomerStatic.class,"nameOrders");
-  facetFactory.process(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(NamedFacet.class);
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NamedFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof NamedFacetViaMethod);
   final NamedFacetViaMethod namedFacet=(NamedFacetViaMethod)facet;

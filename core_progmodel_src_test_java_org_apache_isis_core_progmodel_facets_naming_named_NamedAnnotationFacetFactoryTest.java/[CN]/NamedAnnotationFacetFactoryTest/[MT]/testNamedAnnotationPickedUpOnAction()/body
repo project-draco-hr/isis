@@ -4,8 +4,8 @@
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(NamedFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NamedFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof NamedFacetAbstract);
   final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;

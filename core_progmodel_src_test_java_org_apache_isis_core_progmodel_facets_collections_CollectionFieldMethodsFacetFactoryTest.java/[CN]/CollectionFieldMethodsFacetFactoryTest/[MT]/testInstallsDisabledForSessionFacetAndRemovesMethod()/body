@@ -1,8 +1,10 @@
 {
+  DisabledFacetViaDisableForSessionMethodFacetFactory facetFactory=new DisabledFacetViaDisableForSessionMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
   final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOrders");
   final Method disableMethod=findMethod(CustomerStatic.class,"disableOrders",new Class[]{UserMemento.class});
-  facetFactory.process(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(DisableForSessionFacet.class);
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(DisableForSessionFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof DisableForSessionFacetViaMethod);
   final DisableForSessionFacetViaMethod disableForSessionFacetViaMethod=(DisableForSessionFacetViaMethod)facet;

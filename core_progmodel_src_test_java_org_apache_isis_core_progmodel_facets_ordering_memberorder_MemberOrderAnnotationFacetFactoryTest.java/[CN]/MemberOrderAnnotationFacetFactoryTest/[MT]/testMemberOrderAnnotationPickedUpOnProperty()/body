@@ -5,8 +5,8 @@
     }
   }
   final Method method=findMethod(Customer.class,"getFirstName");
-  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(MemberOrderFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MemberOrderFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof MemberOrderFacetAnnotation);
   final MemberOrderFacetAnnotation memberOrderFacetAnnotation=(MemberOrderFacetAnnotation)facet;

@@ -4,8 +4,8 @@
     }
   }
   final Method method=findMethod(Customer.class,"loaded");
-  facetFactory.process(Customer.class,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(LoadedCallbackFacet.class);
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(LoadedCallbackFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof LoadedCallbackFacetViaMethod);
   final LoadedCallbackFacetViaMethod loadedCallbackFacetViaMethod=(LoadedCallbackFacetViaMethod)facet;

@@ -4,8 +4,8 @@
     }
   }
   final Method method=findMethod(Customer.class,"saving");
-  facetFactory.process(Customer.class,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(PersistingCallbackFacet.class);
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PersistingCallbackFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof PersistingCallbackFacetViaMethod);
   final PersistingCallbackFacetViaMethod savingCallbackFacetViaMethod=(PersistingCallbackFacetViaMethod)facet;

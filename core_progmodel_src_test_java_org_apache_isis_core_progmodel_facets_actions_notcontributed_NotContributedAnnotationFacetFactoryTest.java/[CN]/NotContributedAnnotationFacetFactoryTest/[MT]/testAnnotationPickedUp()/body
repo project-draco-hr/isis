@@ -4,8 +4,8 @@
     }
   }
   final Method actionMethod=findMethod(CustomerRepository.class,"someAction");
-  facetFactory.process(CustomerRepository.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(NotContributedFacet.class);
+  facetFactory.process(new ProcessMethodContext(CustomerRepository.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotContributedFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof NotContributedFacetAbstract);
   assertNoMethodsRemoved();

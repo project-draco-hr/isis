@@ -1,18 +1,20 @@
 {
+  CollectionAccessorFacetFactory facetFactory=new CollectionAccessorFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
 @SuppressWarnings("hiding") class Order {
   }
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
-    public Collection<Order> getOrders(){
+    @SuppressWarnings("unused") public Collection<Order> getOrders(){
       return null;
     }
   }
 class CustomerEx extends Customer {
   }
   final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
-  facetFactory.process(CustomerEx.class,collectionAccessorMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(PropertyAccessorFacet.class);
+  facetFactory.process(new ProcessMethodContext(CustomerEx.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PropertyOrCollectionAccessorFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof PropertyAccessorFacetViaAccessor);
-  final PropertyAccessorFacetViaAccessor collectionAccessorFacetViaMethod=(PropertyAccessorFacetViaAccessor)facet;
+  assertTrue(facet instanceof PropertyOrCollectionAccessorFacetViaAccessor);
+  final PropertyOrCollectionAccessorFacetViaAccessor collectionAccessorFacetViaMethod=(PropertyOrCollectionAccessorFacetViaAccessor)facet;
   assertEquals(collectionAccessorMethod,collectionAccessorFacetViaMethod.getMethods().get(0));
 }

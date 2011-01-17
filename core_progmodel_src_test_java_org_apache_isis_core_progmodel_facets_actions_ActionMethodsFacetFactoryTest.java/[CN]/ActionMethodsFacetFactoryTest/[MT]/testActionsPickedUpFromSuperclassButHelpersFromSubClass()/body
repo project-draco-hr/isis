@@ -1,4 +1,13 @@
 {
+  ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+  ActionParameterChoicesFacetFactory facetFactoryForChoices=new ActionParameterChoicesFacetFactory();
+  facetFactoryForChoices.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+  DisabledFacetViaDisableMethodFacetFactory facetFactoryForDisable=new DisabledFacetViaDisableMethodFacetFactory();
+  facetFactoryForDisable.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
     @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(    final int x,    final long y){
     }
@@ -21,9 +30,11 @@ class CustomerEx extends Customer {
   Method choices0Method=findMethod(CustomerEx.class,"choices0SomeAction",new Class[]{});
   Method choices1Method=findMethod(CustomerEx.class,"choices1SomeAction",new Class[]{});
   Method disableMethod=findMethod(CustomerEx.class,"disableSomeAction",new Class[]{});
-  FacetedMethod facetHolderWithParms=FacetedMethod.createActionPeer(CustomerEx.class,actionMethod);
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(CustomerEx.class,actionMethod,methodRemover,facetHolderWithParms);
+  FacetedMethod facetHolderWithParms=FacetedMethod.createActionFacetedMethod(CustomerEx.class,actionMethod);
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(CustomerEx.class,actionMethod,methodRemover,facetHolderWithParms);
+  facetFactory.process(processMethodContext);
+  facetFactoryForChoices.process(processMethodContext);
+  facetFactoryForDisable.process(processMethodContext);
   final Facet facet0=facetHolderWithParms.getFacet(ActionInvocationFacet.class);
   assertNotNull(facet0);
   final Facet facet1=facetHolderWithParms.getParameters().get(0).getFacet(ActionParameterChoicesFacet.class);

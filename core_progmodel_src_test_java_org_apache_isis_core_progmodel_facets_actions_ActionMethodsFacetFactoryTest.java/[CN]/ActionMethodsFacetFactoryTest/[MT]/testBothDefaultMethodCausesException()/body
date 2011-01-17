@@ -1,4 +1,10 @@
 {
+  ActionDefaultsFacetFactory facetFactory=new ActionDefaultsFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+  ActionParameterDefaultsFacetFactory facetFactoryForParams=new ActionParameterDefaultsFacetFactory();
+  facetFactoryForParams.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
     @SuppressWarnings("unused") public void someAction(    final int x,    final long y){
     }
@@ -8,15 +14,16 @@
     @SuppressWarnings("unused") public long default1SomeAction(){
       return 0;
     }
-    @SuppressWarnings("unused") public Object[] defaultSomeAction(    final int x,    final long y){
+    @SuppressWarnings("unused") public Object[] defaultSomeAction(){
       return null;
     }
   }
   Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
-  FacetedMethod facetHolderWithParms=FacetedMethod.createActionPeer(Customer.class,actionMethod);
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
+  FacetedMethod facetHolderWithParms=FacetedMethod.createActionFacetedMethod(Customer.class,actionMethod);
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetHolderWithParms);
+  facetFactory.process(processMethodContext);
   try {
-    facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolderWithParms);
+    facetFactoryForParams.process(processMethodContext);
     fail("exception expected");
   }
  catch (  org.apache.isis.core.metamodel.exceptions.MetaModelException expected) {

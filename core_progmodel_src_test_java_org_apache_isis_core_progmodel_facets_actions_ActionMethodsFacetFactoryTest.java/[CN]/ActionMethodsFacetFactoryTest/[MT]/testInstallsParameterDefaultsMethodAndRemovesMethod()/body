@@ -1,4 +1,7 @@
 {
+  ActionParameterDefaultsFacetFactory facetFactory=new ActionParameterDefaultsFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
     @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(    final int x,    final long y){
     }
@@ -12,9 +15,8 @@ class Customer {
   Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
   Method default0Method=findMethod(Customer.class,"default0SomeAction",new Class[]{});
   Method default1Method=findMethod(Customer.class,"default1SomeAction",new Class[]{});
-  FacetedMethod facetHolderWithParms=FacetedMethod.createActionPeer(Customer.class,actionMethod);
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolderWithParms);
+  FacetedMethod facetHolderWithParms=FacetedMethod.createActionFacetedMethod(Customer.class,actionMethod);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetHolderWithParms));
   final Facet facet0=facetHolderWithParms.getParameters().get(0).getFacet(ActionParameterDefaultsFacet.class);
   assertNotNull(facet0);
   assertTrue(facet0 instanceof ActionParameterDefaultsFacetViaMethod);

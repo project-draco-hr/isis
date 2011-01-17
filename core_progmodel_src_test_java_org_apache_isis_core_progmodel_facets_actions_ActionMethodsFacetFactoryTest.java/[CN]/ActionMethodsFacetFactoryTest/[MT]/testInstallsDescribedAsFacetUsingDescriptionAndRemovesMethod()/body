@@ -1,9 +1,11 @@
 {
+  DescribedAsFacetViaDescriptionMethodFacetFactory facetFactory=new DescribedAsFacetViaDescriptionMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
   final Method actionMethod=findMethod(CustomerStatic.class,"someAction",new Class[]{int.class,Long.class});
   final Method descriptionMethod=findMethod(CustomerStatic.class,"descriptionSomeAction");
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(CustomerStatic.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(DescribedAsFacet.class);
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(DescribedAsFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof DescribedAsFacetAbstract);
   final DescribedAsFacetAbstract describedAsFacetAbstract=(DescribedAsFacetAbstract)facet;

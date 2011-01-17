@@ -5,8 +5,8 @@
     }
   }
   final Method method=findMethod(Customer.class,"isDirty");
-  facetFactory.process(Customer.class,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(IsDirtyObjectFacet.class);
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(IsDirtyObjectFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof IsDirtyObjectFacetViaMethod);
   final IsDirtyObjectFacetViaMethod isDirtyFacet=(IsDirtyObjectFacetViaMethod)facet;

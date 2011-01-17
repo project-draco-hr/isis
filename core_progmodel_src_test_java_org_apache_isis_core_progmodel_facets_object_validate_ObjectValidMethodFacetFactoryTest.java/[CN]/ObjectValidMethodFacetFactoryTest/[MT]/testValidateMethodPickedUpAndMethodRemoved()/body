@@ -5,7 +5,8 @@
     }
   }
   final Method validateMethod=findMethod(Customer.class,"validate");
-  facetFactory.process(Customer.class,methodRemover,facetHolder);
+  final ProcessClassContext processClassContext=new ProcessClassContext(Customer.class,methodRemover,facetHolder);
+  facetFactory.process(processClassContext);
   final Facet facet=facetHolder.getFacet(ValidateObjectFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof ValidateObjectFacetViaValidateMethod);

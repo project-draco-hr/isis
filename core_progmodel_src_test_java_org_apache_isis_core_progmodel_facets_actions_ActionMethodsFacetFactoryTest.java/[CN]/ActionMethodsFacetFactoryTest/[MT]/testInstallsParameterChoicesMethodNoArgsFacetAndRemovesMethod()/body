@@ -1,4 +1,6 @@
 {
+  ActionChoicesFacetFactory facetFactory=new ActionChoicesFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
 class Customer {
     @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(    final int x,    final Long y){
     }
@@ -8,9 +10,9 @@ class Customer {
   }
   final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,Long.class});
   final Method choicesMethod=findMethod(Customer.class,"choicesSomeAction",new Class[]{});
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(ActionChoicesFacet.class);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionChoicesFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof ActionChoicesFacetViaMethod);
   final ActionChoicesFacetViaMethod actionChoicesFacetViaMethod=(ActionChoicesFacetViaMethod)facet;

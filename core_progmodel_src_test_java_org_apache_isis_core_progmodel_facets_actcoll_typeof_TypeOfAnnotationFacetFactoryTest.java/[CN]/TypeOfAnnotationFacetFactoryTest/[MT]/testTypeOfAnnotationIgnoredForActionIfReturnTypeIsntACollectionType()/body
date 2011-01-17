@@ -7,7 +7,7 @@ class Customer {
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  assertNull(facetHolder.getFacet(TypeOfFacet.class));
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  assertNull(facetedMethod.getFacet(TypeOfFacet.class));
   assertNoMethodsRemoved();
 }

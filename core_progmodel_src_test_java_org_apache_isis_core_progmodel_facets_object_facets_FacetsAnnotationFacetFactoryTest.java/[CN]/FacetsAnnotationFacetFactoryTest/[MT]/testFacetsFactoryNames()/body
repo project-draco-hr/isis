@@ -1,8 +1,8 @@
 {
 @Facets(facetFactoryNames={"org.apache.isis.core.progmodel.facets.object.facets.FacetsAnnotationFacetFactoryTest$CustomerFacetFactory","org.apache.isis.core.progmodel.facets.object.facets.FacetsAnnotationFacetFactoryTest$CustomerNotAFacetFactory"}) class Customer {
   }
-  facetFactory.process(Customer.class,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(FacetsFacet.class);
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(FacetsFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof FacetsFacetAnnotation);
   final FacetsFacetAnnotation facetsFacet=(FacetsFacetAnnotation)facet;

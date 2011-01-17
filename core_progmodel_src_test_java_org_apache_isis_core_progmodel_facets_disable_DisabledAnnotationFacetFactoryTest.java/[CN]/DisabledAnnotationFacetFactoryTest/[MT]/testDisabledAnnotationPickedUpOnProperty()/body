@@ -5,8 +5,8 @@
     }
   }
   final Method actionMethod=findMethod(Customer.class,"getNumberOfOrders");
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(DisabledFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(DisabledFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof DisabledFacetAbstract);
   assertNoMethodsRemoved();

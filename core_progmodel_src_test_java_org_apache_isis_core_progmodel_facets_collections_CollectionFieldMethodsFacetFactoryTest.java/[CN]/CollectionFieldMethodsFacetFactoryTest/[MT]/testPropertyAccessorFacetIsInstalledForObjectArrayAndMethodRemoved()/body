@@ -1,15 +1,17 @@
 {
+  CollectionAccessorFacetFactory facetFactory=new CollectionAccessorFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
-    public Object[] getOrders(){
+    @SuppressWarnings("unused") public Object[] getOrders(){
       return null;
     }
   }
   final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
-  facetFactory.process(Customer.class,collectionAccessorMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(PropertyAccessorFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PropertyOrCollectionAccessorFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof PropertyAccessorFacetViaAccessor);
-  final PropertyAccessorFacetViaAccessor propertyAccessorFacetViaAccessor=(PropertyAccessorFacetViaAccessor)facet;
-  assertEquals(collectionAccessorMethod,propertyAccessorFacetViaAccessor.getMethods().get(0));
+  assertTrue(facet instanceof PropertyOrCollectionAccessorFacetViaAccessor);
+  final PropertyOrCollectionAccessorFacetViaAccessor propertyOrCollectionAccessorFacetViaAccessor=(PropertyOrCollectionAccessorFacetViaAccessor)facet;
+  assertEquals(collectionAccessorMethod,propertyOrCollectionAccessorFacetViaAccessor.getMethods().get(0));
   assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(collectionAccessorMethod));
 }

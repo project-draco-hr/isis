@@ -1,4 +1,7 @@
 {
+  ActionValidationFacetViaValidateMethodFacetFactory facetFactory=new ActionValidationFacetViaValidateMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
     @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(    final int x,    final int y){
     }
@@ -8,9 +11,8 @@ class Customer {
   }
   final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,int.class});
   final Method validateMethod=findMethod(Customer.class,"validateSomeAction",new Class[]{int.class,int.class});
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(ActionValidationFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionValidationFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof ActionValidationFacetViaMethod);
   final ActionValidationFacetViaMethod actionValidationFacetViaMethod=(ActionValidationFacetViaMethod)facet;

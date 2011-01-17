@@ -1,0 +1,21 @@
+{
+  PropertyDefaultFacetFactory facetFactory=new PropertyDefaultFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
+    @SuppressWarnings("unused") public String getFirstName(){
+      return null;
+    }
+    @SuppressWarnings("unused") public String defaultFirstName(){
+      return null;
+    }
+  }
+  final Method propertyAccessorMethod=findMethod(Customer.class,"getFirstName");
+  final Method propertyDefaultMethod=findMethod(Customer.class,"defaultFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,propertyAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PropertyDefaultFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PropertyDefaultFacetViaMethod);
+  final PropertyDefaultFacetViaMethod propertyDefaultFacet=(PropertyDefaultFacetViaMethod)facet;
+  assertEquals(propertyDefaultMethod,propertyDefaultFacet.getMethods().get(0));
+  assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(propertyDefaultMethod));
+}

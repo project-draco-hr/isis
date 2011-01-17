@@ -1,12 +1,14 @@
 {
+  ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
     @SuppressWarnings("unused") @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") public void someAction(){
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
-  reflector.setLoadSpecificationStringReturn(voidNoSpec);
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(ActionInvocationFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionInvocationFacet.class);
   final ActionInvocationFacetViaMethod actionInvocationFacetViaMethod=(ActionInvocationFacetViaMethod)facet;
-  assertEquals(voidNoSpec,actionInvocationFacetViaMethod.getReturnType());
+  assertEquals(voidSpec,actionInvocationFacetViaMethod.getReturnType());
 }

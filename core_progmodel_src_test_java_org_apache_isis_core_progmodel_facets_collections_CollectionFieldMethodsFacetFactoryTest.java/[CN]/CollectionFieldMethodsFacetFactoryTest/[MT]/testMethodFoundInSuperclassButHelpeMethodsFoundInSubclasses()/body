@@ -1,4 +1,8 @@
 {
+  CollectionAccessorFacetFactory facetFactoryForAccessor=new CollectionAccessorFacetFactory();
+  facetFactoryForAccessor.setSpecificationLookup(reflector);
+  CollectionAddRemoveAndValidateFacetFactory facetFactoryForHelpers=new CollectionAddRemoveAndValidateFacetFactory();
+  facetFactoryForHelpers.setSpecificationLookup(reflector);
 @SuppressWarnings("hiding") class Order {
   }
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
@@ -16,14 +20,15 @@
   final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
   final Method removeFromMethod=findMethod(CustomerEx.class,"removeFromOrders",new Class[]{Order.class});
   final Method validateRemoveFromMethod=findMethod(CustomerEx.class,"validateRemoveFromOrders",new Class[]{Order.class});
-  facetFactory.process(CustomerEx.class,collectionAccessorMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(CollectionRemoveFromFacet.class);
+  facetFactoryForAccessor.process(new ProcessMethodContext(CustomerEx.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  facetFactoryForHelpers.process(new ProcessMethodContext(CustomerEx.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CollectionRemoveFromFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof CollectionRemoveFromFacetViaMethod);
   final CollectionRemoveFromFacetViaMethod collectionRemoveFromFacetViaMethod=(CollectionRemoveFromFacetViaMethod)facet;
   assertEquals(removeFromMethod,collectionRemoveFromFacetViaMethod.getMethods().get(0));
   assertTrue(methodRemover.getRemoveMethodMethodCalls().contains(removeFromMethod));
-  final Facet facet1=facetHolder.getFacet(CollectionValidateRemoveFromFacet.class);
+  final Facet facet1=facetedMethod.getFacet(CollectionValidateRemoveFromFacet.class);
   assertNotNull(facet1);
   assertTrue(facet1 instanceof CollectionValidateRemoveFromFacetViaMethod);
   final CollectionValidateRemoveFromFacetViaMethod collectionValidateRemoveFromFacetViaMethod=(CollectionValidateRemoveFromFacetViaMethod)facet1;

@@ -7,8 +7,8 @@ class Order {
     }
   }
   final Method method=findMethod(Customer.class,"getOrders");
-  facetFactory.process(Customer.class,method,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(NotPersistedFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotPersistedFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof NotPersistedFacetAnnotation);
   assertNoMethodsRemoved();

@@ -7,8 +7,8 @@ class Customer {
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
-  facetFactory.process(Customer.class,actionMethod,methodRemover,facetHolder);
-  final Facet facet=facetHolder.getFacet(TypeOfFacet.class);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TypeOfFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof TypeOfFacetInferredFromGenerics);
   final TypeOfFacetInferredFromGenerics typeOfFacetInferredFromGenerics=(TypeOfFacetInferredFromGenerics)facet;
