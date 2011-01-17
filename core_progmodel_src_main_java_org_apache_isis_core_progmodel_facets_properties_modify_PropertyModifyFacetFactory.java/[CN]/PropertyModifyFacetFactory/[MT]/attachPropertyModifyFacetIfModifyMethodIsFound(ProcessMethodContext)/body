@@ -1,0 +1,14 @@
+{
+  final Method getMethod=processMethodContext.getMethod();
+  final String capitalizedName=NameUtils.javaBaseName(getMethod.getName());
+  final Class<?> returnType=getMethod.getReturnType();
+  final Class<?>[] paramTypes=new Class[]{returnType};
+  Class<?> cls=processMethodContext.getCls();
+  final Method modifyMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.MODIFY_PREFIX + capitalizedName,void.class,paramTypes);
+  if (modifyMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(modifyMethod);
+  final FacetHolder property=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new PropertySetterFacetViaModifyMethod(modifyMethod,property));
+}

@@ -1,0 +1,14 @@
+{
+  Class<?> cls=processMethodContext.getCls();
+  final Method actionMethod=processMethodContext.getMethod();
+  final String capitalizedName=NameUtils.capitalizeName(actionMethod.getName());
+  final Class<?>[] paramTypes=actionMethod.getParameterTypes();
+  final MethodScope onClass=MethodScope.scopeFor(actionMethod);
+  final Method validateMethod=MethodFinderUtils.findMethod(cls,onClass,MethodPrefixConstants.VALIDATE_PREFIX + capitalizedName,String.class,paramTypes);
+  if (validateMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(validateMethod);
+  final FacetHolder facetedMethod=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new ActionValidationFacetViaMethod(validateMethod,facetedMethod));
+}

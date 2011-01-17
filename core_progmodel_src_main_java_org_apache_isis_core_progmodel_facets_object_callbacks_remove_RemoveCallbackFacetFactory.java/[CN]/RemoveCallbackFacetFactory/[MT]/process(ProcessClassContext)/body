@@ -1,0 +1,31 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final List<Facet> facets=new ArrayList<Facet>();
+  final List<Method> methods=new ArrayList<Method>();
+  Method method=null;
+  method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,REMOVING_PREFIX,void.class,NO_PARAMETERS_TYPES);
+  if (method != null) {
+    methods.add(method);
+    RemovingCallbackFacet facet=facetHolder.getFacet(RemovingCallbackFacet.class);
+    if (facet == null) {
+      facets.add(new RemovingCallbackFacetViaMethod(method,facetHolder));
+    }
+ else {
+      facet.addMethod(method);
+    }
+  }
+  method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,REMOVED_PREFIX,void.class,NO_PARAMETERS_TYPES);
+  if (method != null) {
+    methods.add(method);
+    RemovedCallbackFacet facet=facetHolder.getFacet(RemovedCallbackFacet.class);
+    if (facet == null) {
+      facets.add(new RemovedCallbackFacetViaMethod(method,facetHolder));
+    }
+ else {
+      facet.addMethod(method);
+    }
+  }
+  processClassContext.removeMethods(methods);
+  FacetUtil.addFacets(facets);
+}

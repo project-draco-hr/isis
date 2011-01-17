@@ -1,0 +1,13 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final String capitalizedName=NameUtils.javaBaseNameStripAccessorPrefixIfRequired(method.getName());
+  Class<?> cls=processMethodContext.getCls();
+  final Method nameMethod=MethodFinderUtils.findMethod(cls,MethodScope.CLASS,MethodPrefixConstants.NAME_PREFIX + capitalizedName,String.class,new Class[0]);
+  if (nameMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(nameMethod);
+  String name=invokeNameMethod(nameMethod);
+  final FacetHolder facetHolder=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new NamedFacetViaMethod(name,nameMethod,facetHolder));
+}

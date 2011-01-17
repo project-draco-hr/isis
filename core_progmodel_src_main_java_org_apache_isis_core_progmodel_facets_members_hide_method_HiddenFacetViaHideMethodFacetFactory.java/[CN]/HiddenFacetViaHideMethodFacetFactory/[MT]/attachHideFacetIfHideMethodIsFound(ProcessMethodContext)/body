@@ -1,0 +1,12 @@
+{
+  final Method getMethod=processMethodContext.getMethod();
+  final String capitalizedName=NameUtils.javaBaseNameStripAccessorPrefixIfRequired(getMethod.getName());
+  Class<?> cls=processMethodContext.getCls();
+  Method hideMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.HIDE_PREFIX + capitalizedName,boolean.class,new Class[]{});
+  if (hideMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(hideMethod);
+  final FacetHolder facetedMethod=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new HideForContextFacetViaMethod(hideMethod,facetedMethod));
+}

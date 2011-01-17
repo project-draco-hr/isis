@@ -1,0 +1,15 @@
+{
+  final Method accessorMethod=processMethodContext.getMethod();
+  final String capitalizedName=NameUtils.javaBaseName(accessorMethod.getName());
+  Class<?> cls=processMethodContext.getCls();
+  final Method addToMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.ADD_TO_PREFIX + capitalizedName,void.class);
+  processMethodContext.removeMethod(addToMethod);
+  final Method removeFromMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.REMOVE_FROM_PREFIX + capitalizedName,void.class);
+  processMethodContext.removeMethod(removeFromMethod);
+  final FacetHolder collection=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(createAddToFacet(addToMethod,accessorMethod,collection));
+  FacetUtil.addFacet(createRemoveFromFacet(removeFromMethod,accessorMethod,collection));
+  final Class<?> addToType=((addToMethod == null || addToMethod.getParameterTypes().length != 1) ? null : addToMethod.getParameterTypes()[0]);
+  final Class<?> removeFromType=((removeFromMethod == null || removeFromMethod.getParameterTypes().length != 1) ? null : removeFromMethod.getParameterTypes()[0]);
+  return inferTypeOfIfPossible(accessorMethod,addToType,removeFromType,collection);
+}
