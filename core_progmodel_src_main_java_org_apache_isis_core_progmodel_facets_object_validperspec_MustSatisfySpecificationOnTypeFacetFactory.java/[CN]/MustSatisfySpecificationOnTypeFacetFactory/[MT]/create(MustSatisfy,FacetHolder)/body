@@ -1,0 +1,14 @@
+{
+  if (annotation == null) {
+    return null;
+  }
+  Class<?>[] values=annotation.value();
+  List<Specification> specifications=new ArrayList<Specification>();
+  for (  Class<?> value : values) {
+    Specification specification=newSpecificationElseNull(value);
+    if (specification != null) {
+      specifications.add(specification);
+    }
+  }
+  return specifications.size() > 0 ? new MustSatisfySpecificationOnTypeFacet(specifications,holder) : null;
+}

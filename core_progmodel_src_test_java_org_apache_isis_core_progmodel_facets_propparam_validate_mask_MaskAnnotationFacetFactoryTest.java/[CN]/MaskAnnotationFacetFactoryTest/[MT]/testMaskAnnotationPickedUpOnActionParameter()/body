@@ -1,4 +1,6 @@
 {
+  MaskAnnotationForParameterFacetFactory facetFactory=new MaskAnnotationForParameterFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
     @SuppressWarnings("unused") public void someAction(    @Mask("###") final String foo){
     }
@@ -7,7 +9,7 @@
   facetFactory.processParams(new ProcessParameterContext(method,0,facetedMethodParameter));
   final Facet facet=facetedMethodParameter.getFacet(MaskFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof MaskFacetAnnotation);
-  final MaskFacetAnnotation maskFacet=(MaskFacetAnnotation)facet;
+  assertTrue(facet instanceof MaskFacetAnnotationForParameter);
+  final MaskFacetAnnotationForParameter maskFacet=(MaskFacetAnnotationForParameter)facet;
   assertEquals("###",maskFacet.value());
 }

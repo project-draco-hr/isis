@@ -1,4 +1,5 @@
 {
+  TypicalLengthAnnotationOnPropertyFacetFactory facetFactory=new TypicalLengthAnnotationOnPropertyFacetFactory();
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
     @SuppressWarnings("unused") @TypicalLength(30) public String getFirstName(){
       return null;
@@ -8,7 +9,7 @@
   facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(TypicalLengthFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof TypicalLengthFacetAnnotation);
-  final TypicalLengthFacetAnnotation typicalLengthFacetAnnotation=(TypicalLengthFacetAnnotation)facet;
+  assertTrue(facet instanceof TypicalLengthFacetAnnotationOnProperty);
+  final TypicalLengthFacetAnnotationOnProperty typicalLengthFacetAnnotation=(TypicalLengthFacetAnnotationOnProperty)facet;
   assertEquals(30,typicalLengthFacetAnnotation.value());
 }

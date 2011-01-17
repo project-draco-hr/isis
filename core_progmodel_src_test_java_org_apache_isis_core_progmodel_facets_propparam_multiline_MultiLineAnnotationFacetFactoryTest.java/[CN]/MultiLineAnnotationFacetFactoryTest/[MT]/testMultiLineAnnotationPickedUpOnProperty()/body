@@ -1,4 +1,5 @@
 {
+  MultiLineAnnotationOnPropertyFacetFactory facetFactory=new MultiLineAnnotationOnPropertyFacetFactory();
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS") class Customer {
     @SuppressWarnings("unused") @MultiLine(numberOfLines=12,preventWrapping=true) public String getFirstName(){
       return null;
@@ -8,8 +9,8 @@
   facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(MultiLineFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof MultiLineFacetAnnotation);
-  final MultiLineFacetAnnotation multiLineFacetAnnotation=(MultiLineFacetAnnotation)facet;
+  assertTrue(facet instanceof MultiLineFacetAnnotationOnProperty);
+  final MultiLineFacetAnnotationOnProperty multiLineFacetAnnotation=(MultiLineFacetAnnotationOnProperty)facet;
   assertEquals(12,multiLineFacetAnnotation.numberOfLines());
   assertEquals(true,multiLineFacetAnnotation.preventWrapping());
 }
