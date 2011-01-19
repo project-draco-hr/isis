@@ -1,9 +1,11 @@
 {
   try {
     OutputStream whiteListOutputResource=resourceStreamSource.writeResource(whiteListResourceName);
-    if (whiteListOutputResource == null && !printedWarning) {
-      LOG.warn("unable to write out authorisation details");
-      printedWarning=true;
+    if (whiteListOutputResource == null) {
+      if (!printedWarning) {
+        LOG.warn("unable to write out authorisation details");
+        printedWarning=true;
+      }
       return;
     }
     if (LOG.isDebugEnabled() && !printedDebug) {
