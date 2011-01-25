@@ -11,6 +11,8 @@
   String scope=request.getOptionalProperty(SCOPE);
   String className=request.getOptionalProperty(CLASS,"edit");
   String id=request.getOptionalProperty(ID);
+  Locale locale=null;
+  TimeZone timeZone=null;
   final ObjectAdapter object=context.getMappedObjectOrResult(objectId);
   String actualObjectId=context.mapObject(object,Scope.INTERACTION);
   String version=context.mapVersion(object);
@@ -32,7 +34,7 @@
   FormState entryState=(FormState)context.getVariable(ENTRY_FIELDS);
   initializeFields(context,object,formFields,entryState,!hideNonEditableFields);
   setDefaults(context,object,formFields,entryState);
-  copyFieldContent(context,object,formFields);
+  copyFieldContent(context,object,formFields,locale,timeZone);
   overrideWithHtml(context,containedBlock,formFields);
   if (entryState != null && entryState.isForForm(actualObjectId)) {
     copyEntryState(context,object,formFields,entryState);

@@ -1,21 +1,20 @@
 {
-  requestContext.setStatus(500);
-  requestContext.setContentType("text/html");
-  PrintWriter writer=requestContext.getWriter();
-  DebugView errorView=new DebugView(writer,error);
-  errorView.header();
-  errorView.startTable();
+  ByteArrayOutputStream out=new ByteArrayOutputStream();
+  writeErrorContent(requestContext,exception,error,new PrintWriter(out),false);
+  PrintWriter writer;
   try {
-    errorView.exception(exception);
-    requestContext.append(errorView);
+    String ref=Long.toString(System.currentTimeMillis(),36).toUpperCase();
+    requestContext.addVariable("_error-ref",ref,Scope.INTERACTION);
+    String directory=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.error-snapshots",".");
+    writer=new PrintWriter(new File(directory,"error_" + ref + ".html"));
+    writeErrorContent(requestContext,exception,error,writer,true);
   }
- catch (  RuntimeException e) {
-    errorView.exception(e);
+ catch (  FileNotFoundException e) {
+    LOG.error("Failed to archive error page",e);
   }
-  errorView.divider("Processing");
-  errorView.appendDebugTrace(requestContext.getDebugTrace());
-  errorView.endTable();
-  errorView.footer();
-  writer.close();
+  String replace="\\$\\{";
+  String withReplacement="\\$&#x7B;";
+  requestContext.addVariable("_error-message",exception.getMessage().replaceAll(replace,withReplacement),Scope.INTERACTION);
+  requestContext.addVariable("_error-details",out.toString().replaceAll(replace,withReplacement),Scope.INTERACTION);
   requestContext.clearTransientVariables();
 }

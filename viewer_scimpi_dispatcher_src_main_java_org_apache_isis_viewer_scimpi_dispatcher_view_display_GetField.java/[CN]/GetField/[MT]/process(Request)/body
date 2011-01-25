@@ -9,8 +9,9 @@
   if (field == null) {
     throw new ScimpiException("No field " + fieldName + " in "+ object.getSpecification().getFullIdentifier());
   }
-  if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
-    throw new ForbiddenException("Field " + fieldName + " in "+ object+ " is not visible");
+  AuthenticationSession session=IsisContext.getAuthenticationSession();
+  if (field.isVisible(session,object).isVetoed()) {
+    throw new ForbiddenException("Field '" + fieldName + "' in "+ object.getSpecification().getFullIdentifier()+ " is not visible for "+ session.getUserName()+ " "+ session.getRoles());
   }
   String pattern=request.getOptionalProperty("decimal-format");
   Format format=null;

@@ -1,8 +1,8 @@
 {
+  LOG.info("processing request " + servletPath);
   try {
     AuthenticationSession session=UserManager.startRequest(context);
     LOG.debug("exsiting session: " + session);
-    LOG.info("processing request " + servletPath);
     IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
     context.setRequestPath(servletPath);
     context.startRequest();
@@ -16,13 +16,15 @@
     if (transactionManager.getTransaction().getState().canCommit()) {
       IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
     }
+    context.endRequest();
+    UserManager.endRequest(context.getSession());
   }
  catch (  Throwable e) {
     LOG.error(e.getMessage(),e);
     DebugString error=new DebugString();
     List<String> messages=IsisContext.getMessageBroker().getMessages();
     for (    String message : messages) {
-      context.getWriter().append("<div class=\"message\">message: " + message + "</div>");
+      context.getWriter().append("<div class=\"messaEge\">message: " + message + "</div>");
       error.appendln("message",message);
     }
     messages=IsisContext.getMessageBroker().getWarnings();
@@ -38,19 +40,27 @@
     }
     String message="failed while processing " + servletPath;
     LOG.error(message + "\n" + error+ "\n"+ message,e);
-  }
- finally {
-    try {
-      context.endRequest();
-    }
- catch (    Exception e) {
-      LOG.error("endRequest call failed",e);
-    }
     try {
       UserManager.endRequest(context.getSession());
     }
- catch (    Exception e) {
-      LOG.error("endRequest call failed",e);
+ catch (    Exception e1) {
+      LOG.error("endRequest call failed",e1);
+    }
+    Throwable ex;
+    if (e instanceof TagProcessingException) {
+      ex=e.getCause();
+    }
+ else {
+      ex=e;
+    }
+    if (ex instanceof ForbiddenException) {
+      context.raiseError(403);
+    }
+ else     if (ex instanceof ScimpiNotFoundException) {
+      context.raiseError(404);
+    }
+ else {
+      context.raiseError(500);
     }
   }
 }
