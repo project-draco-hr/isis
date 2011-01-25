@@ -3,7 +3,9 @@
     return;
   }
   final StringTokenizer tokens=new StringTokenizer(line.trim(),":",false);
-  Assert.assertTrue(tokens.countTokens() == 2);
+  if (tokens.countTokens() != 2) {
+    throw new IsisConfigurationException("Invalid line: " + line);
+  }
   final String token1=tokens.nextToken();
   final String token2=tokens.nextToken();
   final Identifier identifier=memberFromString(token1.trim());
