@@ -9,19 +9,34 @@
   String variable=request.getOptionalProperty(RESULT_NAME);
   String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
   String scope=request.getOptionalProperty(SCOPE);
-  String className=request.getOptionalProperty(CLASS,"edit");
+  String className=request.getOptionalProperty(CLASS,"edit full");
   String id=request.getOptionalProperty(ID);
-  Locale locale=null;
-  TimeZone timeZone=null;
   final ObjectAdapter object=context.getMappedObjectOrResult(objectId);
   String actualObjectId=context.mapObject(object,Scope.INTERACTION);
   String version=context.mapVersion(object);
-  EditFieldBlock containedBlock=new EditFieldBlock(){
+  final FormState entryState=(FormState)context.getVariable(ENTRY_FIELDS);
+  FormFieldBlock containedBlock=new FormFieldBlock(){
     @Override public boolean isVisible(    String name){
       ObjectAssociation fld=object.getSpecification().getAssociation(name);
       boolean isVisible=fld.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed();
       boolean isUseable=fld.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
       return isVisible && isUseable;
+    }
+    public ObjectAdapter getCurrent(    String name){
+      ObjectAdapter value=null;
+      if (entryState != null) {
+        FieldEditState field2=entryState.getField(name);
+        value=field2.getValue();
+      }
+      if (value == null) {
+        ObjectAssociation fld=object.getSpecification().getAssociation(name);
+        value=fld.get(object);
+      }
+      return value;
+    }
+    public boolean isNullable(    String name){
+      ObjectAssociation fld=object.getSpecification().getAssociation(name);
+      return !fld.isMandatory();
     }
   }
 ;
@@ -31,16 +46,15 @@
   List<ObjectAssociation> fields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object));
   fields=containedBlock.includedFields(fields);
   InputField[] formFields=createFields(fields);
-  FormState entryState=(FormState)context.getVariable(ENTRY_FIELDS);
   initializeFields(context,object,formFields,entryState,!hideNonEditableFields);
   setDefaults(context,object,formFields,entryState);
-  copyFieldContent(context,object,formFields,locale,timeZone);
+  copyFieldContent(context,object,formFields);
   overrideWithHtml(context,containedBlock,formFields);
   if (entryState != null && entryState.isForForm(actualObjectId)) {
     copyEntryState(context,object,formFields,entryState);
   }
   String errorView=context.fullFilePath(forwardErrorTo == null ? context.getResourceFile() : forwardErrorTo);
   HiddenInputField[] hiddenFields=new HiddenInputField[]{new HiddenInputField(OBJECT,actualObjectId),new HiddenInputField(VERSION,version),forwardEditedTo == null ? null : new HiddenInputField(VIEW,context.fullFilePath(forwardEditedTo)),new HiddenInputField(ERRORS,errorView),variable == null ? null : new HiddenInputField(RESULT_NAME,variable),resultOverride == null ? null : new HiddenInputField(RESULT_OVERRIDE,resultOverride),scope == null ? null : new HiddenInputField(SCOPE,scope)};
-  InputForm.createForm(request,EditAction.ACTION + ".app",buttonTitle,formFields,hiddenFields,formTitle,null,null,className,id);
+  HtmlFormBuilder.createForm(request,EditAction.ACTION + ".app",hiddenFields,formFields,className,id,formTitle,null,null,buttonTitle);
   request.popBlockContent();
 }
