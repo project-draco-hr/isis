@@ -20,11 +20,11 @@
     UserManager.endRequest(context.getSession());
   }
  catch (  Throwable e) {
-    LOG.error(e.getMessage(),e);
+    LOG.debug(e.getMessage(),e);
     DebugString error=new DebugString();
     List<String> messages=IsisContext.getMessageBroker().getMessages();
     for (    String message : messages) {
-      context.getWriter().append("<div class=\"messaEge\">message: " + message + "</div>");
+      context.getWriter().append("<div class=\"message\">message: " + message + "</div>");
       error.appendln("message",message);
     }
     messages=IsisContext.getMessageBroker().getWarnings();
@@ -39,7 +39,7 @@
       transactionManager.abortTransaction();
     }
     String message="failed while processing " + servletPath;
-    LOG.error(message + "\n" + error+ "\n"+ message,e);
+    LOG.error(message + "\n" + error+ "\n"+ message);
     try {
       UserManager.endRequest(context.getSession());
     }
@@ -54,6 +54,9 @@
       ex=e;
     }
     if (ex instanceof ForbiddenException) {
+      context.addVariable("_security_error",ex.getMessage(),Scope.REQUEST);
+      context.addVariable("_security_identifier",((ForbiddenException)ex).getIdentifier(),Scope.REQUEST);
+      context.addVariable("_security_roles",((ForbiddenException)ex).getRoles(),Scope.REQUEST);
       context.raiseError(403);
     }
  else     if (ex instanceof ScimpiNotFoundException) {

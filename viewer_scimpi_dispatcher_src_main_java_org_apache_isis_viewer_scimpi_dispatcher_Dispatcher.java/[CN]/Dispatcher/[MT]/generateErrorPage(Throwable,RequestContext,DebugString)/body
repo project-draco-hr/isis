@@ -7,15 +7,15 @@
     requestContext.addVariable("_error-ref",ref,Scope.INTERACTION);
     String directory=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.error-snapshots",".");
     writer=new PrintWriter(new File(directory,"error_" + ref + ".html"));
-    writeErrorContent(requestContext,exception,error,writer,true);
+    writeErrorContent(requestContext,exception,new DebugString(),writer,true);
   }
  catch (  FileNotFoundException e) {
     LOG.error("Failed to archive error page",e);
   }
-  String replace="\\$\\{";
-  String withReplacement="\\$&#x7B;";
+  String replace="";
+  String withReplacement="";
   String message=exception.getMessage();
-  requestContext.addVariable("_error-message",message == null ? "" : message.replaceAll(replace,withReplacement),Scope.INTERACTION);
-  requestContext.addVariable("_error-details",out.toString().replaceAll(replace,withReplacement),Scope.INTERACTION);
+  requestContext.addVariable("_error-message",message == null ? "" : message.replaceAll(replace,withReplacement),Scope.REQUEST);
+  requestContext.addVariable("_error-details",out.toString().replaceAll(replace,withReplacement),Scope.REQUEST);
   requestContext.clearTransientVariables();
 }

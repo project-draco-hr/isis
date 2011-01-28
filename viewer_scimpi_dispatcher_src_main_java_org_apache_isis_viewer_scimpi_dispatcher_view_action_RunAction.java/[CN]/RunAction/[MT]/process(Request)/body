@@ -11,7 +11,7 @@
   request.processUtilCloseTag();
   ObjectAdapter[] parameters=parameterBlock.getParameters(request);
   if (!MethodsUtils.isVisibleAndUsable(object,action)) {
-    throw new ScimpiException("Action '" + action.getId() + "' is not visible/enabled in "+ action.getOnType().getFullIdentifier()+ ", for "+ IsisContext.getSession().getAuthenticationSession().getRoles());
+    throw new ForbiddenException(action,ForbiddenException.VISIBLE_AND_USABLE);
   }
   if (action.isContributed()) {
     final List<ObjectActionParameter> parameterSpecs=action.getParameters();

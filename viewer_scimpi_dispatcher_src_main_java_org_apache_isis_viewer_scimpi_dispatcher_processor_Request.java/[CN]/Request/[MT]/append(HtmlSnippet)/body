@@ -1,0 +1,18 @@
+{
+  String html=snippet.getHtml();
+  try {
+    if (snippet.isContainsVariable()) {
+      html=context.replaceVariables(html);
+    }
+    appendHtml(html);
+  }
+ catch (  TagProcessingException e) {
+    throw e;
+  }
+catch (  RuntimeException e) {
+    String replace="<";
+    String withReplacement="&lt;";
+    html=html.replaceAll(replace,withReplacement);
+    throw new TagProcessingException("Error while processing html block at " + snippet.errorAt() + " - "+ e.getMessage(),html,e);
+  }
+}

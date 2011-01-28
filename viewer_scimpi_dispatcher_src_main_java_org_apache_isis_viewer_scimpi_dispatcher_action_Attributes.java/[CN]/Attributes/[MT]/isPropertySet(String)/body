@@ -1,4 +1,9 @@
 {
   String attribute=tagNode.getAttribute(name);
-  return attribute != null && !context.replaceVariables(attribute,false).equals("");
+  int end=attribute.length() - 1;
+  int pos=attribute.indexOf(':');
+  end=pos == -1 ? end : pos;
+  String variabelName=attribute.substring(2,end);
+  Object value=context.getVariable(variabelName);
+  return value != null;
 }
