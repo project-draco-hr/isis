@@ -1,21 +1,10 @@
 {
   super(configuration);
   this.resourceStreamSource=getConfiguration().getResourceStreamSource();
+  this.learn=getConfiguration().getBoolean(FileAuthorizationConstants.LEARN,FileAuthorizationConstants.LEARN_DEFAULT);
   whiteListResourceName=getConfiguration().getString(FileAuthorizationConstants.WHITELIST_RESOURCE_KEY,FileAuthorizationConstants.WHITELIST_RESOURCE_DEFAULT);
   Assert.assertTrue(whiteListResourceName.length() > 0);
-  whiteListInputResource=resourceStreamSource.readResource(whiteListResourceName);
-  this.learn=getConfiguration().getBoolean(FileAuthorizationConstants.LEARN,FileAuthorizationConstants.LEARN_DEFAULT);
-  if (whiteListInputResource == null) {
-    throw new IsisException("Cannot read whitelist authorization file: " + whiteListResourceName);
-  }
   blackListResourceName=getConfiguration().getString(FileAuthorizationConstants.BLACKLIST_RESOURCE,FileAuthorizationConstants.BLACKLIST_RESOURCE_DEFAULT);
-  if (blackListResourceName.length() > 0) {
-    this.blackListInputResource=resourceStreamSource.readResource(blackListResourceName);
-    if (blackListInputResource == null) {
-      throw new IsisException("Cannot read blacklist authorization file: " + blackListResourceName);
-    }
-  }
- else {
-    blackListInputResource=null;
-  }
+  findResources();
+  BeanServer.getInstance().register("FileAuthorizor",this);
 }
