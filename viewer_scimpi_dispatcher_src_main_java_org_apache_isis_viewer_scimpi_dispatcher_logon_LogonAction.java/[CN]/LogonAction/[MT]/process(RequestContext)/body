@@ -1,9 +1,10 @@
 {
-  String password=context.getParameter("password");
   String username=context.getParameter("username");
+  String password=context.getParameter("password");
   AuthenticationSession session=UserManager.authenticate(new AuthenticationRequestPassword(username,password));
   String view;
   if (session == null) {
+    context.addVariable("login-failure","Failed to login. Check the username and ensure that your password was entered correctly",Scope.INTERACTION);
     view=context.getParameter("error");
   }
  else {
