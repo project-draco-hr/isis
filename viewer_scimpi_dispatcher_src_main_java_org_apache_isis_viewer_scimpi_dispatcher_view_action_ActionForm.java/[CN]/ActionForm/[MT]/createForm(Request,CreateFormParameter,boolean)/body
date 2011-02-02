@@ -43,7 +43,7 @@
   containedBlock.hideExcludedParameters(formFields);
   containedBlock.setUpValues(formFields);
   initializeFields(context,object,action,formFields);
-  setDefaults(context,object,action,formFields,entryState);
+  setDefaults(context,object,action,formFields,entryState,parameterObject.showIcon);
   if (entryState != null && entryState.isForForm(objectId + ":" + parameterObject.methodName)) {
     copyEntryState(context,object,action,formFields,entryState);
   }
@@ -55,6 +55,13 @@
  else {
     formTitle=parameterObject.formTitle;
   }
-  HtmlFormBuilder.createForm(request,ActionAction.ACTION + ".app",hiddenFields,formFields,parameterObject.className,parameterObject.id,formTitle,action.getDescription(),action.getHelp(),parameterObject.buttonTitle);
+  String buttonTitle=parameterObject.buttonTitle;
+  if (buttonTitle == null) {
+    buttonTitle=action.getName();
+  }
+ else   if (buttonTitle.equals("")) {
+    buttonTitle="Ok";
+  }
+  HtmlFormBuilder.createForm(request,ActionAction.ACTION + ".app",hiddenFields,formFields,parameterObject.className,parameterObject.id,formTitle,action.getDescription(),action.getHelp(),buttonTitle);
   request.popBlockContent();
 }

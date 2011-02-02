@@ -3,7 +3,12 @@
   for (int i=0; i < fields.length; i++) {
     InputField field=fields[i];
     ObjectActionParameter param=parameters.get(i);
-    ObjectAdapter[] optionsForParameter=action.getChoices(object)[i];
-    FieldFactory.initializeField(context,object,param,optionsForParameter,!param.isOptional(),true,field);
+    if (action.isContributed() && i == 0) {
+      fields[i].setHidden(true);
+    }
+ else {
+      ObjectAdapter[] optionsForParameter=action.getChoices(object)[i];
+      FieldFactory.initializeField(context,object,param,optionsForParameter,!param.isOptional(),field);
+    }
   }
 }
