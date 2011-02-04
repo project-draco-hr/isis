@@ -26,6 +26,7 @@
     Consent consent=null;
     if (field.isMandatory() && newEntry.equals("")) {
       consent=new Veto(field.getName() + " required");
+      formState.setError("Not all fields have been set");
     }
  else     if (field.getSpecification().containsFacet(ParseableFacet.class)) {
       try {
@@ -37,6 +38,7 @@
       }
  catch (      TextEntryParseException e) {
         consent=new Veto(e.getMessage());
+        formState.setError("Not all fields have been entered correctly");
       }
     }
  else {
@@ -49,6 +51,7 @@
     }
     if (consent.isVetoed()) {
       fieldState.setError(consent.getReason());
+      formState.setError("Not all fields have been entered correctly");
     }
   }
   return formState;
