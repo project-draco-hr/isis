@@ -21,6 +21,7 @@
     Consent consent=null;
     if (!parameters2.get(i).isOptional() && newEntry.equals("")) {
       consent=new Veto(parameters2.get(i).getName() + " required");
+      formState.setError("Not all fields have been set");
     }
  else     if (parameters2.get(i).getSpecification().getFacet(ParseableFacet.class) != null) {
       try {
@@ -28,12 +29,14 @@
         String message=parameters2.get(i).isValid(object,newEntry);
         if (message != null) {
           consent=new Veto(message);
+          formState.setError("Not all fields are valid");
         }
         ObjectAdapter entry=facet.parseTextEntry(null,newEntry);
         fieldState.setValue(entry);
       }
  catch (      TextEntryParseException e) {
         consent=new Veto(e.getMessage());
+        formState.setError("Not all fields are valid");
       }
     }
  else {

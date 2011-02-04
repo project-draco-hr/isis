@@ -25,7 +25,7 @@
   String objectId=context.mapObject(object,Scope.INTERACTION);
   String errorView=context.fullFilePath(parameterObject.forwardErrorTo == null ? context.getResourceFile() : parameterObject.forwardErrorTo);
   String voidView=context.fullFilePath(parameterObject.forwardVoidTo == null ? context.getResourceFile() : parameterObject.forwardVoidTo);
-  HiddenInputField[] hiddenFields=new HiddenInputField[]{new HiddenInputField(OBJECT,objectId),new HiddenInputField(VERSION,version),new HiddenInputField(METHOD,parameterObject.methodName),parameterObject.forwardResultTo == null ? null : new HiddenInputField(VIEW,context.fullFilePath(parameterObject.forwardResultTo)),new HiddenInputField(VOID,voidView),new HiddenInputField(ERRORS,errorView),parameterObject.scope == null ? null : new HiddenInputField(SCOPE,parameterObject.scope),parameterObject.resultOverride == null ? null : new HiddenInputField(RESULT_OVERRIDE,parameterObject.resultOverride),parameterObject.resultName == null ? null : new HiddenInputField(RESULT_NAME,parameterObject.resultName),parameterObject.resultName == null ? null : new HiddenInputField(RequestContext.RESULT,(String)request.getContext().getVariable(RequestContext.RESULT))};
+  HiddenInputField[] hiddenFields=new HiddenInputField[]{new HiddenInputField(OBJECT,objectId),new HiddenInputField(VERSION,version),new HiddenInputField(METHOD,parameterObject.methodName),parameterObject.forwardResultTo == null ? null : new HiddenInputField(VIEW,context.fullFilePath(parameterObject.forwardResultTo)),new HiddenInputField(VOID,voidView),new HiddenInputField(ERRORS,errorView),parameterObject.completionMessage == null ? null : new HiddenInputField(MESSAGE,parameterObject.completionMessage),parameterObject.scope == null ? null : new HiddenInputField(SCOPE,parameterObject.scope),parameterObject.resultOverride == null ? null : new HiddenInputField(RESULT_OVERRIDE,parameterObject.resultOverride),parameterObject.resultName == null ? null : new HiddenInputField(RESULT_NAME,parameterObject.resultName),parameterObject.resultName == null ? null : new HiddenInputField(RequestContext.RESULT,(String)request.getContext().getVariable(RequestContext.RESULT))};
   FormFieldBlock containedBlock=new FormFieldBlock(){
     public boolean isNullable(    String name){
       int index=Integer.parseInt(name.substring(5)) - 1;
@@ -44,8 +44,10 @@
   containedBlock.setUpValues(formFields);
   initializeFields(context,object,action,formFields);
   setDefaults(context,object,action,formFields,entryState,parameterObject.showIcon);
+  String errors=null;
   if (entryState != null && entryState.isForForm(objectId + ":" + parameterObject.methodName)) {
     copyEntryState(context,object,action,formFields,entryState);
+    errors=entryState.getError();
   }
   overrideWithHtml(context,containedBlock,formFields);
   String formTitle;
@@ -62,6 +64,6 @@
  else   if (buttonTitle.equals("")) {
     buttonTitle="Ok";
   }
-  HtmlFormBuilder.createForm(request,ActionAction.ACTION + ".app",hiddenFields,formFields,parameterObject.className,parameterObject.id,formTitle,action.getDescription(),action.getHelp(),buttonTitle);
+  HtmlFormBuilder.createForm(request,ActionAction.ACTION + ".app",hiddenFields,formFields,parameterObject.className,parameterObject.id,formTitle,action.getDescription(),action.getHelp(),buttonTitle,errors);
   request.popBlockContent();
 }

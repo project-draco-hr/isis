@@ -1,0 +1,16 @@
+{
+  text=text == null || text.trim().equals("") ? action.getName() : text;
+  String parameterSegment="";
+  String[] parameters=parameterBlock.getParameters();
+  for (int i=0; i < parameters.length; i++) {
+    parameterSegment+="&param" + i + "="+ parameters[i];
+  }
+  String interactionParamters=context.encodedInteractionParameters();
+  String forwardResultSegment=forwardResultTo == null ? "" : "&amp;" + VIEW + "="+ context.fullFilePath(forwardResultTo);
+  String voidView=context.fullFilePath(forwardVoidTo == null ? context.getResourceFile() : forwardVoidTo);
+  String forwardVoidSegment="&amp;" + VOID + "="+ voidView;
+  request.appendHtml("<a href=\"action.app?" + OBJECT + "="+ objectId+ "&amp;"+ VERSION+ "="+ version+ "&amp;"+ METHOD+ "="+ method+ forwardResultSegment+ forwardVoidSegment+ resultNameSegment+ parameterSegment+ scopeSegment+ confirmSegment+ messageSegment+ interactionParamters+ "\">");
+  request.appendHtml(text);
+  request.appendHtml("</a>");
+  HelpLink.append(request,action.getDescription(),action.getHelp());
+}

@@ -10,7 +10,9 @@
   String scope=request.getOptionalProperty(SCOPE);
   String scopeSegment=scope == null ? "" : "&amp;" + SCOPE + "="+ scope;
   String confirm=request.getOptionalProperty(CONFIRM);
+  String completionMessage=request.getOptionalProperty(MESSAGE);
   String confirmSegment=confirm == null ? "" : "&amp;" + CONFIRM + "="+ URLEncoder.encode(confirm);
+  String messageSegment=completionMessage == null ? "" : "&amp;" + MESSAGE + "="+ URLEncoder.encode(completionMessage);
   RequestContext context=request.getContext();
   ObjectAdapter object=MethodsUtils.findObject(context,objectId);
   String version=context.mapVersion(object);
@@ -21,7 +23,7 @@
   request.processUtilCloseTag();
   String text=request.popBuffer();
   if (MethodsUtils.isVisibleAndUsable(object,action)) {
-    writeLink(request,objectId,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,scopeSegment,confirmSegment,context,action,parameterBlock,text);
+    writeLink(request,objectId,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,scopeSegment,confirmSegment,messageSegment,context,action,parameterBlock,text);
   }
   request.popBlockContent();
 }

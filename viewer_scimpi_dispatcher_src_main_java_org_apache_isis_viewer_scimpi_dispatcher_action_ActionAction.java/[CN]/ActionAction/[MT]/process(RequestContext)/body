@@ -4,6 +4,7 @@
   String methodName=context.getParameter(METHOD);
   String override=context.getParameter(RESULT_OVERRIDE);
   String resultName=context.getParameter(RESULT_NAME);
+  String message=context.getParameter(MESSAGE);
   resultName=resultName == null ? RequestContext.RESULT : resultName;
   FormState entryState=null;
   try {
@@ -24,6 +25,10 @@
         }
       }
       context.setRequestPath(view);
+      if (message != null) {
+        MessageBroker messageBroker=IsisContext.getMessageBroker();
+        messageBroker.addMessage(message);
+      }
       if (override != null) {
         context.addVariable(resultName,override,Scope.REQUEST);
       }
@@ -39,11 +44,10 @@
         context.addVariable(resultName,override,Scope.REQUEST);
       }
       final String error=entryState.getError();
-      if (error != null) {
-        context.addVariable(RequestContext.ERROR,error,Scope.REQUEST);
-      }
       String view=context.getParameter(ERRORS);
       context.setRequestPath(view,Dispatcher.ACTION);
+      MessageBroker messageBroker=IsisContext.getMessageBroker();
+      messageBroker.addMessage(error);
     }
   }
  catch (  ConcurrencyException e) {

@@ -25,5 +25,6 @@
   String loginButtonTitle=request.getOptionalProperty(BUTTON_TITLE,"Log in");
   String className=request.getOptionalProperty(CLASS,"action login full");
   String id=request.getOptionalProperty(ID);
-  HtmlFormBuilder.createForm(request,"logon.app",hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]),fields,className,id,formTitle,null,null,loginButtonTitle);
+  FormState entryState=(FormState)request.getContext().getVariable(ENTRY_FIELDS);
+  HtmlFormBuilder.createForm(request,"logon.app",hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]),fields,className,id,formTitle,null,null,loginButtonTitle,entryState == null ? null : entryState.getError());
 }

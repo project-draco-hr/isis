@@ -10,6 +10,7 @@
   String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
   String idName=request.getOptionalProperty(ID,methodName);
   String className=request.getOptionalProperty(CLASS);
+  String completionMessage=request.getOptionalProperty(MESSAGE);
   ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
   String version=request.getContext().mapVersion(object);
   ObjectAction action=MethodsUtils.findAction(object,methodName);
@@ -34,7 +35,7 @@
     i++;
   }
   if (MethodsUtils.isVisibleAndUsable(object,action) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
-    write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,resultOverride,idName,className);
+    write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
   }
   request.popBlockContent();
 }
