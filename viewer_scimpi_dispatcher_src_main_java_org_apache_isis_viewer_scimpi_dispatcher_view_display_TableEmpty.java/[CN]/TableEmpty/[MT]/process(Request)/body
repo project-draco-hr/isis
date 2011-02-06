@@ -1,0 +1,18 @@
+{
+  TableBlock tableBlock=(TableBlock)request.getBlockContent();
+  ObjectAdapter collection=tableBlock.getCollection();
+  CollectionFacet facet=collection.getSpecification().getFacet(CollectionFacet.class);
+  if (facet.size(collection) == 0) {
+    String className=request.getOptionalProperty(CLASS);
+    className=className == null ? "" : " class=\"" + className + "\"";
+    request.appendHtml("<tr" + className + ">");
+    request.pushNewBuffer();
+    request.processUtilCloseTag();
+    String buffer=request.popBuffer();
+    request.appendHtml(buffer);
+    request.appendHtml("</td>");
+  }
+ else {
+    request.skipUntilClose();
+  }
+}
