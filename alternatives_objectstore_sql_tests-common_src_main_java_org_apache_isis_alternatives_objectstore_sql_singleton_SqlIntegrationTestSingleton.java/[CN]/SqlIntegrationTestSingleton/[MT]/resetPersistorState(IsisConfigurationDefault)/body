@@ -1,5 +1,5 @@
 {
-  String jdbcClassName=IsisConfigurationDefault.getString("isis.persistence.sql.jdbc.driver");
+  String jdbcClassName=IsisConfigurationDefault.getString(SqlObjectStore.BASE_NAME + ".jdbc.driver");
   if (jdbcClassName == null) {
     c=null;
     s=null;
@@ -8,7 +8,7 @@
   Class<Driver> driverClass=(Class<Driver>)Class.forName(jdbcClassName);
   Driver driver=driverClass.newInstance();
   DriverManager.registerDriver(driver);
-  c=DriverManager.getConnection(IsisConfigurationDefault.getString("isis.persistence.sql.jdbc.connection"),IsisConfigurationDefault.getString("isis.persistence.sql.jdbc.user"),IsisConfigurationDefault.getString("isis.persistence.sql.jdbc.password"));
+  c=DriverManager.getConnection(IsisConfigurationDefault.getString(SqlObjectStore.BASE_NAME + ".jdbc.connection"),IsisConfigurationDefault.getString(SqlObjectStore.BASE_NAME + ".jdbc.user"),IsisConfigurationDefault.getString(SqlObjectStore.BASE_NAME + ".jdbc.password"));
   s=c.createStatement();
   dropTable("no_services");
 }
