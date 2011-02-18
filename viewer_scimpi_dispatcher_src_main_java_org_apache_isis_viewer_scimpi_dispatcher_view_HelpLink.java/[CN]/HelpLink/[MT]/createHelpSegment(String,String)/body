@@ -1,10 +1,22 @@
 {
+  if (site == null) {
+    site=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.help-site","/help/");
+  }
+  if (suffix == null) {
+    suffix=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.help-suffix","shtml");
+    if (suffix == null || suffix.equals("")) {
+      suffix="";
+    }
+ else {
+      suffix="." + suffix;
+    }
+  }
   if (helpReference == null || helpReference.equals("No help available")) {
     return "";
   }
  else {
     String elementClass="help-link";
-    String link="help/" + helpReference + ".shtml";
+    String link=site + helpReference + suffix;
     String linkText="Help";
     String target="scimpi-help";
     return "<a class=\"" + elementClass + "\" href=\""+ link+ "\" target=\""+ target+ "\" title=\""+ description+ "\">"+ linkText+ "</a>";
