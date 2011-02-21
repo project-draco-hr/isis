@@ -1,7 +1,7 @@
 {
   DatabaseConnector db=connectionPool.acquire();
   try {
-    String tableName=Sql.identifier(TABLE_NAME);
+    String tableName=Sql.tableIdentifier(TABLE_NAME);
     String numberColumn=Sql.identifier(NUMBER_COLUMN);
     if (!db.hasTable(tableName)) {
       lastId=1;
@@ -16,7 +16,7 @@
       }
       Results rs=db.select("select " + numberColumn + " from "+ tableName);
       rs.next();
-      newBatchAt=rs.getLong(numberColumn);
+      newBatchAt=rs.getLong(NUMBER_COLUMN);
       lastId=newBatchAt - BATCH_SIZE;
       LOG.debug("New ID batch created, from " + lastId + " to "+ newBatchAt);
       rs.close();

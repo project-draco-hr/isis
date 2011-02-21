@@ -2,7 +2,7 @@
   IsisConfiguration configParameters=IsisContext.getConfiguration();
   table=configParameters.getString(parameterBase + "table");
   if (table == null) {
-    String name=className.substring(className.lastIndexOf('.') + 1).toUpperCase();
+    String name="isis_" + className.substring(className.lastIndexOf('.') + 1).toUpperCase();
     table=Sql.sqlName(name);
   }
   dbCreatesId=configParameters.getBoolean(parameterBase + "db-ids",false);
@@ -11,6 +11,6 @@
   }
  else {
   }
-  table=Sql.identifier(table);
+  table=Sql.tableIdentifier(table);
   LOG.info("table mapping: " + table + " ("+ columnList()+ ")");
 }
