@@ -1,7 +1,7 @@
 {
+  String BASE=SqlObjectStore.BASE_NAME + ".jdbc.";
+  IsisConfiguration params=IsisContext.getConfiguration().getProperties(BASE);
   try {
-    IsisConfiguration params=IsisContext.getConfiguration();
-    String BASE=SqlObjectStore.BASE_NAME + ".jdbc.";
     String driver=params.getString(BASE + "driver");
     String url=params.getString(BASE + "connection");
     String user=params.getString(BASE + "user");
@@ -34,4 +34,7 @@
 catch (  ClassNotFoundException e) {
     throw new SqlObjectStoreException("Could not find database driver",e);
   }
+  String BASE_DATATYPE=SqlObjectStore.BASE_NAME + ".datatypes.";
+  IsisConfiguration dataTypes=IsisContext.getConfiguration().getProperties(BASE_DATATYPE);
+  populateSqlDataTypes(dataTypes,BASE_DATATYPE);
 }
