@@ -1,6 +1,6 @@
 {
   try {
-    ResultSet set=connection.getMetaData().getTables(null,null,tableName,null);
+    final ResultSet set=connection.getMetaData().getTables(null,null,tableName,null);
     if (set.next()) {
       LOG.debug("Found " + set.getString("TABLE_NAME"));
       set.close();
@@ -11,7 +11,7 @@
       return false;
     }
   }
- catch (  SQLException e) {
+ catch (  final SQLException e) {
     throw new SqlObjectStoreException(e);
   }
 }
