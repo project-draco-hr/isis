@@ -52,6 +52,16 @@
     @Override public ObjectAdapter createTransientInstance(    ObjectSpecification spec){
       return getPersistenceSession().createInstance(spec);
     }
+    public ObjectAdapter createAggregatedInstance(    ObjectSpecification spec,    ObjectAdapter parent){
+      AggregatedOid oid=new AggregatedOid(parent.getOid(),"*UNKNOWN*");
+      ObjectAdapter adapter=getPersistenceSession().recreateAdapter(oid,spec);
+      if (adapter.getResolveState().isGhost()) {
+        ResolveState resolveState=ResolveState.RESOLVING;
+        adapter.changeState(resolveState);
+        adapter.changeState(resolveState.getEndState());
+      }
+      return adapter;
+    }
     @Override public void resolve(    Object parent){
       new DomainObjectContainerResolve().resolve(parent);
     }
