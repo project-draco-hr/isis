@@ -1,15 +1,15 @@
 {
   final Customer newCustomer=getDomainObjectContainer().newTransientInstance(Customer.class);
   assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(false));
-  final Customer newCustomerViewObject=getWrapperFactory().wrap(newCustomer);
-  newCustomerViewObject.setCustomerNumber(123);
-  newCustomerViewObject.setLastName("Smith");
-  newCustomerViewObject.setMandatoryAssociation(countryGbrDO);
-  newCustomerViewObject.setMandatoryValue("foo");
-  newCustomerViewObject.setMaxLengthField("abc");
-  newCustomerViewObject.setRegExCaseInsensitiveField("ABCd");
-  newCustomerViewObject.setRegExCaseSensitiveField("abcd");
-  final WrapperObject<Customer> proxyNewCustomer=asViewObject(newCustomerViewObject);
+  final Customer newCustomerVO=getWrapperFactory().wrap(newCustomer);
+  newCustomerVO.setCustomerNumber(123);
+  newCustomerVO.setLastName("Smith");
+  newCustomerVO.setMandatoryAssociation(countryGbrDO);
+  newCustomerVO.setMandatoryValue("foo");
+  newCustomerVO.setMaxLengthField("abc");
+  newCustomerVO.setRegExCaseInsensitiveField("ABCd");
+  newCustomerVO.setRegExCaseSensitiveField("abcd");
+  final WrapperObject proxyNewCustomer=asWrapperObject(newCustomerVO);
   proxyNewCustomer.save();
   assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(true));
 }

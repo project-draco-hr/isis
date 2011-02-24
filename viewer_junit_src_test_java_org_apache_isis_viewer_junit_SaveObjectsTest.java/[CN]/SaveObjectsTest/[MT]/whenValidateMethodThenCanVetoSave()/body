@@ -7,12 +7,12 @@
   newCustomer.setMaxLengthField("abc");
   newCustomer.setRegExCaseInsensitiveField("ABCd");
   newCustomer.setRegExCaseSensitiveField("abcd");
-  final Customer newCustomerViewObject=getWrapperFactory().wrap(newCustomer);
+  final Customer newCustomerWO=getWrapperFactory().wrap(newCustomer);
   newCustomer.validate="No shakes";
-  final WrapperObject<Customer> proxyNewCustomer=asViewObject(newCustomerViewObject);
+  final WrapperObject newCustomerWrapper=asWrapperObject(newCustomerWO);
   try {
     assertThat(getDomainObjectContainer().isPersistent(newCustomer),is(false));
-    proxyNewCustomer.save();
+    newCustomerWrapper.save();
     fail("An InvalidImperativelyException should have been thrown");
   }
  catch (  final InvalidException ex) {

@@ -2,7 +2,8 @@
   super.init();
   getResourceSettings().setParentFolderPlaceholder("$up$");
   DeploymentType deploymentType=determineDeploymentType();
-  final IsisModule isisModule=new IsisModule(deploymentType);
+  IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
+  final IsisModule isisModule=new IsisModule(deploymentType,isisConfigurationBuilder);
   final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
   injector.injectMembers(this);
   initWicketComponentInjection(injector);

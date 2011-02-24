@@ -52,7 +52,7 @@
     @Override public ObjectAdapter createTransientInstance(    ObjectSpecification spec){
       return getPersistenceSession().createInstance(spec);
     }
-    public ObjectAdapter createAggregatedInstance(    ObjectSpecification spec,    ObjectAdapter parent){
+    @Override public ObjectAdapter createAggregatedInstance(    ObjectSpecification spec,    ObjectAdapter parent){
       AggregatedOid oid=new AggregatedOid(parent.getOid(),"*UNKNOWN*");
       ObjectAdapter adapter=getPersistenceSession().recreateAdapter(oid,spec);
       if (adapter.getResolveState().isGhost()) {
