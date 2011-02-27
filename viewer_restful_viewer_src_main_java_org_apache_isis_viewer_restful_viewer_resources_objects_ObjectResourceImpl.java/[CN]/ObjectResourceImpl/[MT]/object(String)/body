@@ -9,13 +9,15 @@
   final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString(),getServletRequest(),javascriptFile,Constants.NOF_REST_SUPPORT_JS);
   xhtml.appendToBody(asDivNofSession());
   xhtml.appendToBody(resourcesDiv());
-  final Element div=asDivTableObjectDetails(nakedObject);
-  xhtml.appendToBody(div);
+  final Element objectDiv=div(HtmlClass.OBJECT);
+  xhtml.appendToBody(objectDiv);
+  final Element objectSpecsDiv=asDivTableObjectDetails(nakedObject);
+  xhtml.appendToDiv(objectDiv,objectSpecsDiv);
   final Element propertiesTableEl=asDivTableProperties(getSession(),nakedObject);
-  xhtml.appendToBody(propertiesTableEl);
+  xhtml.appendToDiv(objectDiv,propertiesTableEl);
   final Element collectionsDivEl=asDivTableCollections(getSession(),nakedObject);
-  xhtml.appendToBody(collectionsDivEl);
+  xhtml.appendToDiv(objectDiv,collectionsDivEl);
   final Element actionsDivEl=asDivTableActions(getSession(),nakedObject);
-  xhtml.appendToBody(actionsDivEl);
+  xhtml.appendToDiv(objectDiv,actionsDivEl);
   return xhtml.toXML();
 }

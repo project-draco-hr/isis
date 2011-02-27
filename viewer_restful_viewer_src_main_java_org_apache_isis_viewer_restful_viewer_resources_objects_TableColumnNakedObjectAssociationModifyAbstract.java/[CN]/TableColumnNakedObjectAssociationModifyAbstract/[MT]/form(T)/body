@@ -2,6 +2,7 @@
   final String associationId=association.getId();
   final String formName=getFormNamePrefix() + associationId;
   final Element form=xhtmlRenderer.form(formName,getHtmlClassAttribute());
+  form.addAttribute(new Attribute("class",associationId));
   final String inputFieldName="proposedValue";
   if (inputField) {
     final Element inputValue=new Element("input");
@@ -16,5 +17,6 @@
   final String url=MessageFormat.format("{0}/object/{1}",servletContextName,getOidStr());
   inputButton.addAttribute(new Attribute("onclick",invokeJavascript(url,associationId,inputFieldName)));
   form.appendChild(inputButton);
+  form.addAttribute(new Attribute("action",url));
   return form;
 }
