@@ -10,6 +10,7 @@
   String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
   String idName=request.getOptionalProperty(ID,methodName);
   String className=request.getOptionalProperty(CLASS);
+  boolean showMessage=request.isRequested(SHOW_MESSAGE,false);
   String completionMessage=request.getOptionalProperty(MESSAGE);
   ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
   String version=request.getContext().mapVersion(object);
@@ -36,6 +37,15 @@
   }
   if (MethodsUtils.isVisibleAndUsable(object,action) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
     write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
+  }
+  if (showMessage) {
+    Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+    if (usable.isVetoed()) {
+      String notUsable=MethodsUtils.isUsable(object,action);
+      if (notUsable != null) {
+        request.appendHtml("<div class=\"" + className + "-message\" >"+ notUsable+ "</div>");
+      }
+    }
   }
   request.popBlockContent();
 }

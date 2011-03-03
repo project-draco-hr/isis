@@ -4,6 +4,11 @@
   if (param instanceof ObjectMember) {
     field.setHelpReference(((ObjectMember)param).getHelp());
   }
+ else {
+    HelpFacet helpFacet=param.getFacet(HelpFacet.class);
+    String value=helpFacet.value();
+    field.setHelpReference(value);
+  }
   field.setRequired(isRequired);
   field.setHidden(false);
   if (param.getSpecification().getFacet(ParseableFacet.class) != null) {
