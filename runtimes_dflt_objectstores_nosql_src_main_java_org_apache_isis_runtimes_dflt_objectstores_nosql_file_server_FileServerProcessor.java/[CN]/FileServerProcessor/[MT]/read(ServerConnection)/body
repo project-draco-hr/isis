@@ -6,7 +6,7 @@
     id=connection.getRequest();
     DataReader reader=findInstance(type,id,connection);
     if (reader == null) {
-      connection.error(Util.FILE_NOT_FOUND + " for " + type+ " & "+ id);
+      connection.notFound(Util.FILE_NOT_FOUND + " for " + type+ "/"+ id);
     }
  else {
       connection.ok();
@@ -14,10 +14,7 @@
     }
     locks.release(id,getTransactionId());
   }
- catch (  FileNotFoundException e) {
-    throw new NoSqlStoreException(e.getMessage(),e);
-  }
-catch (  IOException e) {
-    throw new NoSqlStoreException(Util.READ_ERROR + " for " + type+ " & "+ id,e);
+ catch (  IOException e) {
+    throw new NoSqlStoreException(Util.READ_ERROR + " for " + type+ "/"+ id,e);
   }
 }
