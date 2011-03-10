@@ -4,7 +4,12 @@
     String classSection="class=\"" + (className == null ? "field" : className) + "\"";
     request.appendHtml("<span " + classSection + ">");
     if (field.isOneToOneAssociation()) {
-      IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)fieldReference);
+      try {
+        IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)fieldReference);
+      }
+ catch (      ObjectNotFoundException e) {
+        request.appendHtml(e.getMessage() + "</span>");
+      }
     }
     if (!field.getSpecification().containsFacet(ParseableFacet.class) && showIcon) {
       request.appendHtml("<img class=\"small-icon\" src=\"" + request.getContext().imagePath(fieldReference) + "\" alt=\""+ field.getSpecification().getShortIdentifier()+ "\"/>");

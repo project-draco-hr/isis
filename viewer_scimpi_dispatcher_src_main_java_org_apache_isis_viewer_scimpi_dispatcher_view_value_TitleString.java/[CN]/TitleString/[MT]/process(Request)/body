@@ -1,6 +1,7 @@
 {
   String id=request.getOptionalProperty(OBJECT);
   String fieldName=request.getOptionalProperty(FIELD);
+  int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
   ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
   String titleString;
   if (fieldName == null) {
@@ -20,5 +21,5 @@
     }
   }
   request.appendDebug("    " + titleString);
-  request.appendHtml(titleString);
+  request.appendTruncated(titleString,truncateTo);
 }

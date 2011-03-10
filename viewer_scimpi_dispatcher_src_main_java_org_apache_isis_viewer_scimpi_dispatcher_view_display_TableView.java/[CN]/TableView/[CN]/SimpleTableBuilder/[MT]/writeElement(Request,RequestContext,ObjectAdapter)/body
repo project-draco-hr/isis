@@ -19,7 +19,7 @@
       request.appendHtml("<td>");
       ObjectAdapter field=fields.get(i).get(element);
       if (field != null) {
-        if (!fields.get(i).getSpecification().containsFacet(ParseableFacet.class)) {
+        if (showIcons && !fields.get(i).getSpecification().containsFacet(ParseableFacet.class)) {
           request.appendHtml("<img class=\"" + "small-icon" + "\" src=\"" + request.getContext().imagePath(field) + "\" alt=\""+ fields.get(i).getSpecification().getShortIdentifier()+ "\"/>");
         }
         if (linkRow != null) {
@@ -31,7 +31,12 @@
           request.appendHtml("<a href=\"" + linkedFields[i].getForwardView() + "?"+ linkedFields[i].getVariable()+ "="+ id+ "\">");
           context.mapObject(fieldObject,RequestContext.scope(linkedFields[i].getScope()));
         }
-        request.appendHtml(field.titleString());
+        try {
+          request.appendHtml(field.titleString());
+        }
+ catch (        ObjectNotFoundException e) {
+          request.appendHtml(e.getMessage());
+        }
         if (linkRow != null || linkedFields[i] != null) {
           request.appendHtml("</a>");
         }
