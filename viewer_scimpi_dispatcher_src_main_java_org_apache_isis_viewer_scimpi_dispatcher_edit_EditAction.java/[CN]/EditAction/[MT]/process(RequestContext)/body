@@ -7,7 +7,8 @@
     String override=context.getParameter(RESULT_OVERRIDE);
     String message=context.getParameter(MESSAGE);
     ObjectAdapter adapter=context.getMappedObject(objectId);
-    List<ObjectAssociation> fields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
+    AuthenticationSession session=IsisContext.getAuthenticationSession();
+    List<ObjectAssociation> fields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,adapter));
     FormState entryState=validateObject(context,adapter,fields);
     Version adapterVersion=adapter.getVersion();
     Version formVersion=context.getVersion(version);
