@@ -1,0 +1,25 @@
+{
+  String action=request.getOptionalProperty("action","display");
+  Crumbs crumbs=getCrumbs(request);
+  if (action.equals("display") && crumbs != null) {
+    write(crumbs,request);
+  }
+ else   if (action.equals("link")) {
+    String name=request.getRequiredProperty(NAME);
+    String link=request.getRequiredProperty(LINK);
+    crumbs.add(name,link);
+  }
+ else   if (action.equals("object")) {
+    String id=request.getOptionalProperty(OBJECT);
+    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
+    String name=object.titleString();
+    String link=request.getRequiredProperty(LINK);
+    link+="?_result=" + id;
+    crumbs.add(name,link);
+  }
+ else   if (action.equals("return")) {
+  }
+ else   if (action.equals("clear")) {
+    crumbs.clear();
+  }
+}

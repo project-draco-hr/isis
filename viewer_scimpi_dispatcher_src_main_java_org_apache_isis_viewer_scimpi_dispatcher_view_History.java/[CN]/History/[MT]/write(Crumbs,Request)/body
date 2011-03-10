@@ -1,0 +1,26 @@
+{
+  if (crumbs.isEmpty()) {
+    return;
+  }
+  request.appendHtml("<div id=\"history\">");
+  int i=0;
+  final int length=crumbs.size();
+  for (  Crumb crumb : crumbs.iterator()) {
+    String link=crumb.link;
+    if (i > 0) {
+      request.appendHtml("<span class=\"separator\"> | </span>");
+    }
+    if (i == length - 1 || link == null) {
+      request.appendHtml("<span class=\"disabled\">");
+      request.appendHtml(crumb.name);
+      request.appendHtml("</span>");
+    }
+ else {
+      request.appendHtml("<a class=\"linked\" href=\"" + link + "\">");
+      request.appendHtml(crumb.name);
+      request.appendHtml("</a>");
+    }
+    i++;
+  }
+  request.appendHtml("</div>");
+}
