@@ -1,0 +1,13 @@
+{
+  if (debugLevel == null) {
+    String property=System.getProperties().getProperty("debug");
+    if (property != null) {
+      debugLevel=DebugLevel.valueOf(property);
+    }
+    if (debugLevel == null) {
+      debugLevel=DebugLevel.OFF;
+    }
+  }
+  boolean allowDebug=debugLevel == DebugLevel.ON || (debugLevel == DebugLevel.SYSADMIN_ONLY && getSession().getRoles().contains("sysadmin"));
+  return !allowDebug;
+}

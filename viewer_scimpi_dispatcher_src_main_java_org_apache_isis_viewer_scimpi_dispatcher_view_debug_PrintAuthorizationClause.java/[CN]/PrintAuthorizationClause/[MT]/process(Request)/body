@@ -1,6 +1,10 @@
 {
-  Identifier identifier=(Identifier)request.getContext().getVariable("_security_identifier");
-  List<String> roles=(List<String>)request.getContext().getVariable("_security_roles");
+  RequestContext context=request.getContext();
+  if (context.isDebugDisabled()) {
+    return;
+  }
+  Identifier identifier=(Identifier)context.getVariable("_security_identifier");
+  List<String> roles=(List<String>)context.getVariable("_security_roles");
   StringBuffer roleList=new StringBuffer();
   for (  String role : roles) {
     if (roleList.length() > 0) {
