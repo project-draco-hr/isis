@@ -1,30 +1,22 @@
 {
-  Object message=request.getContext().getVariable("login-failure");
-  if (message != null) {
-    request.appendHtml("<p class=\"login-failure\">" + message + "</p>");
-  }
   String error=request.getOptionalProperty(ERRORS,request.getContext().getRequestedFile());
   List<HiddenInputField> hiddenFields=new ArrayList<HiddenInputField>();
   hiddenFields.add(new HiddenInputField(ERRORS,error));
   if (view != null) {
     hiddenFields.add(new HiddenInputField(VIEW,view));
   }
-  InputField nameField=new InputField("username");
-  nameField.setType(InputField.TEXT);
+  FormState entryState=(FormState)request.getContext().getVariable(ENTRY_FIELDS);
+  InputField nameField=createdField("username","User Name",InputField.TEXT,entryState);
   String width=request.getOptionalProperty("width");
   if (width != null) {
     int w=Integer.valueOf(width).intValue();
     nameField.setWidth(w);
   }
-  nameField.setLabel("User Name");
-  InputField passwordField=new InputField("password");
-  passwordField.setType(InputField.PASSWORD);
-  passwordField.setLabel("Password");
+  InputField passwordField=createdField("password","Password",InputField.PASSWORD,entryState);
   InputField[] fields=new InputField[]{nameField,passwordField};
   String formTitle=request.getOptionalProperty(FORM_TITLE);
   String loginButtonTitle=request.getOptionalProperty(BUTTON_TITLE,"Log in");
   String className=request.getOptionalProperty(CLASS,"action login full");
   String id=request.getOptionalProperty(ID);
-  FormState entryState=(FormState)request.getContext().getVariable(ENTRY_FIELDS);
   HtmlFormBuilder.createForm(request,"logon.app",hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]),fields,className,id,formTitle,null,null,loginButtonTitle,entryState == null ? null : entryState.getError());
 }
