@@ -1,4 +1,5 @@
 {
+  if (value == null)   return null;
   Object o=value.getObject();
   if (o instanceof Money) {
     return ((Money)o).floatValue();
@@ -16,6 +17,13 @@
     return o;
   }
  else {
-    return null;
+    if (columnType().contains("CHAR")) {
+      EncodableFacet facet=value.getSpecification().getFacet(EncodableFacet.class);
+      String encodedString=facet.toEncodedString(value);
+      return encodedString;
+    }
+ else {
+      return o;
+    }
   }
 }
