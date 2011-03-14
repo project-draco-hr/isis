@@ -1,5 +1,11 @@
 {
   SqlDataClass sqlDataClass=SqlIntegrationTestSingleton.getPerson();
-  Logger.getRootLogger().log(Level.INFO,sqlDataClass.getDate());
-  assertTrue(applibDate.toString() + " is not equal to " + sqlDataClass.getDate().toString(),applibDate.isEqualTo(sqlDataClass.getDate()));
+  LOG.log(Level.INFO,"Test: testDate()");
+  LOG.log(Level.INFO,"sqlDataClass.getDate() as String: " + sqlDataClass.getDate());
+  LOG.log(Level.INFO,"applibDate.dateValue() as String: " + applibDate);
+  LOG.log(Level.INFO,"sqlDataClass.getDate().getTime() as Long: " + sqlDataClass.getDate().dateValue().getTime());
+  LOG.log(Level.INFO,"applibDate.dateValue() as Long: " + applibDate.dateValue().getTime());
+  if (!applibDate.isEqualTo(sqlDataClass.getDate())) {
+    fail(applibDate.toString() + " is not equal to " + sqlDataClass.getDate().toString());
+  }
 }

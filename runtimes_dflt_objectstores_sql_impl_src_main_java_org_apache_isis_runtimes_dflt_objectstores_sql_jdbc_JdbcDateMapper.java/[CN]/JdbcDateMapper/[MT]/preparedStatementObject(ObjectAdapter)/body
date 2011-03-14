@@ -1,11 +1,13 @@
 {
-  java.sql.Date date;
-  if (value.getObject() instanceof java.sql.Date) {
-    date=(java.sql.Date)value.getObject();
+  Object o=value.getObject();
+  if (o instanceof java.sql.Date) {
+    return (java.sql.Date)value.getObject();
+  }
+ else   if (o instanceof Date) {
+    Date asDate=(Date)value.getObject();
+    return new java.sql.Date(asDate.dateValue().getTime());
   }
  else {
-    Date asDate=(Date)value.getObject();
-    date=new java.sql.Date(asDate.dateValue().getTime());
+    throw new IsisApplicationException("Unimplemented JdbcDateMapper instance type: " + value.getClass().toString());
   }
-  return date;
 }
