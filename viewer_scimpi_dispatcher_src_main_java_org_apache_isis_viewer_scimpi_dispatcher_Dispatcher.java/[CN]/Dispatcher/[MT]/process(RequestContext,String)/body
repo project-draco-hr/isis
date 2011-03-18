@@ -6,7 +6,10 @@
     IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
     context.setRequestPath(servletPath);
     context.startRequest();
-    processActions(context,servletPath);
+    String loginName=IsisContext.getAuthenticationSession().getUserName();
+    boolean userLoggedIn=loginName != null && !loginName.equals("__web_default");
+    boolean allowActions=userLoggedIn;
+    processActions(context,allowActions,servletPath);
     IsisTransactionManager transactionManager=IsisContext.getPersistenceSession().getTransactionManager();
     if (transactionManager.getTransaction().getState().canFlush()) {
       transactionManager.flushTransaction();
@@ -18,6 +21,7 @@
     }
     context.endRequest();
     UserManager.endRequest(context.getSession());
+    context.isInternalRequest();
   }
  catch (  ScimpiNotFoundException e) {
     LOG.info("invalid page request " + e.getMessage());
@@ -32,6 +36,7 @@
   }
 catch (  Throwable e) {
     LOG.debug(e.getMessage(),e);
+    LOG.info("testing");
     DebugString error=new DebugString();
     if (IsisContext.getCurrentTransaction() != null) {
       List<String> messages=IsisContext.getMessageBroker().getMessages();

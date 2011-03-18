@@ -1,5 +1,10 @@
 {
   if (actionName.endsWith(COMMAND_ROOT)) {
+    if (!allowAction && !actionName.endsWith(context.getContextPath() + "/logon.app")) {
+      IsisContext.getMessageBroker().addWarning("You are not currently logged in! Please log in so you can continue.");
+      context.setRequestPath("/login.shtml");
+      return;
+    }
     int pos=actionName.lastIndexOf('/');
     Action action=actions.get(actionName.substring(pos,actionName.length() - COMMAND_ROOT.length()));
     if (action == null) {
@@ -9,7 +14,7 @@
     action.process(context);
     String fowardTo=context.forwardTo();
     if (fowardTo != null) {
-      processActions(context,fowardTo);
+      processActions(context,true,fowardTo);
     }
   }
 }
