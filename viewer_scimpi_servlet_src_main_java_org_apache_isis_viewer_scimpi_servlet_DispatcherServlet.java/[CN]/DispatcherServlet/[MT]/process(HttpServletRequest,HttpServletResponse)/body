@@ -1,12 +1,12 @@
 {
   try {
-    ServletRequestContext context=null;
+    ServletRequestContext context=new ServletRequestContext();
     HttpSession httpSession=request.getSession(false);
     if (httpSession != null) {
-      context=(ServletRequestContext)httpSession.getAttribute("scimpi-context");
-    }
-    if (context == null || !context.isValid()) {
-      context=new ServletRequestContext();
+      HashMap<String,Object> data=(HashMap<String,Object>)httpSession.getAttribute("scimpi-context");
+      if (data != null) {
+        context.setSessionData(data);
+      }
     }
     context.startRequest(request,response,getServletContext());
     dispatcher.process(context,request.getServletPath());
