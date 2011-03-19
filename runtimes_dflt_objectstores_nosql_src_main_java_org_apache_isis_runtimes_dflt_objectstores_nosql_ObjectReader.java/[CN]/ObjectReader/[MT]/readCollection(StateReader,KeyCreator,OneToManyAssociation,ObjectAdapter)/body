@@ -3,11 +3,11 @@
   CollectionFacet facet=collection.getSpecification().getFacet(CollectionFacet.class);
   if (association.getSpecification().isAggregated()) {
     List<StateReader> readers=reader.readCollection(association.getId());
-    String id=association.getId();
     ObjectAdapter[] elements=new ObjectAdapter[readers.size()];
     int i=0;
     for (    StateReader elementReader : readers) {
-      AggregatedOid oid=new AggregatedOid(object.getOid(),id,i);
+      String id=elementReader.readId();
+      AggregatedOid oid=new AggregatedOid(object.getOid(),id);
       elements[i++]=restoreAggregatedObject(elementReader,oid,keyCreator);
     }
     facet.init(collection,elements);

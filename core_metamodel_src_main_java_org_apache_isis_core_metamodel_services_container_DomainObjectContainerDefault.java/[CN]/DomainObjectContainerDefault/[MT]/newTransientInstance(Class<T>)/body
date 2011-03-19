@@ -1,5 +1,10 @@
 {
   final ObjectSpecification spec=getSpecificationLookup().loadSpecification(ofClass);
-  final ObjectAdapter adapter=doCreateTransientInstance(spec);
-  return (T)adapter.getObject();
+  if (spec.isAggregated()) {
+    return newAggregatedInstance(this,ofClass);
+  }
+ else {
+    final ObjectAdapter adapter=doCreateTransientInstance(spec);
+    return (T)adapter.getObject();
+  }
 }

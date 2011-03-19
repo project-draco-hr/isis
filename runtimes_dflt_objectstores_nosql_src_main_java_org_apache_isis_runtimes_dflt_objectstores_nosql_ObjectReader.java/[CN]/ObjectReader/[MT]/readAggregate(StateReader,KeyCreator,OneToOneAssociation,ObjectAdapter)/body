@@ -2,7 +2,8 @@
   String id=association.getId();
   StateReader aggregateReader=reader.readAggregate(id);
   if (aggregateReader != null) {
-    AggregatedOid oid=new AggregatedOid(object.getOid(),id);
+    String id2=aggregateReader.readId();
+    AggregatedOid oid=new AggregatedOid(object.getOid(),id2);
     ObjectAdapter fieldObject=restoreAggregatedObject(aggregateReader,oid,keyCreator);
     association.initAssociation(object,fieldObject);
   }

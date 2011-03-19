@@ -1,5 +1,8 @@
 {
   final ObjectAdapter adapter=getAdapterMap().getAdapterFor(transientObject);
+  if (adapter.isAggregated()) {
+    return;
+  }
   if (isPersistent(transientObject)) {
     throw new PersistFailedException("Object already persistent: " + adapter);
   }
