@@ -18,12 +18,27 @@
     if (parentObject instanceof ObjectAdapter) {
       IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)parentObject);
     }
-    ObjectAssociation association=parentObject.getSpecification().getAssociation(idParts[2]);
-    ObjectAdapter aggregatedAdapter=association.get(parentObject);
-    if (idParts.length == 4) {
-      CollectionFacet collectionFacet=aggregatedAdapter.getSpecification().getFacet(CollectionFacet.class);
-      List<ObjectAdapter> collection=new ArrayList<ObjectAdapter>(collectionFacet.collection(aggregatedAdapter));
-      aggregatedAdapter=collection.get(Integer.valueOf(idParts[3]));
+    AggregatedOid aggregatedOid=new AggregatedOid(parentObject.getOid(),idParts[2]);
+    ObjectAdapter aggregatedAdapter=null;
+    outer:     for (    ObjectAssociation association : parentObject.getSpecification().getAssociations()) {
+      if (association.getSpecification().isAggregated()) {
+        if (association.isOneToManyAssociation()) {
+          ObjectAdapter coll=association.get(parentObject);
+          CollectionFacet facet=coll.getSpecification().getFacet(CollectionFacet.class);
+          for (          ObjectAdapter element : facet.iterable(coll)) {
+            if (element.getOid().equals(aggregatedOid)) {
+              aggregatedAdapter=element;
+              break outer;
+            }
+          }
+        }
+ else {
+          if (association.get(parentObject).getOid().equals(aggregatedOid)) {
+            aggregatedAdapter=association.get(parentObject);
+            break;
+          }
+        }
+      }
     }
     return aggregatedAdapter;
   }
