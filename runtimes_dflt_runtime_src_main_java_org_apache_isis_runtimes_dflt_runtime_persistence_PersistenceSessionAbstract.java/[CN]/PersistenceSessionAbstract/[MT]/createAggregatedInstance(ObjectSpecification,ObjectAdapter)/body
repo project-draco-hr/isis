@@ -1,0 +1,10 @@
+{
+  LOG.debug("creating aggregated instance of " + specification);
+  final Object pojo=specification.createAggregatedObject(parent,CreationMode.INITIALIZE);
+  ObjectAdapter adapter=getAdapterManager().adapterFor(pojo);
+  if (adapter.getResolveState().isGhost()) {
+    adapter.changeState(ResolveState.RESOLVING);
+  }
+  adapter.changeState(ResolveState.RESOLVED);
+  return adapter;
+}

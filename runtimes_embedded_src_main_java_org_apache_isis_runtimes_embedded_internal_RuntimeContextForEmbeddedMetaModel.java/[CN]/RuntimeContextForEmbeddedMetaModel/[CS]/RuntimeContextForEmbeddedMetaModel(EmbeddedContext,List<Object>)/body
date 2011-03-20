@@ -1,5 +1,4 @@
 {
-  this.context=context;
   this.services=services;
   this.authenticationSessionProvider=new AuthenticationSessionProviderAbstract(){
     @Override public AuthenticationSession getAuthenticationSession(){
@@ -23,6 +22,9 @@
       return new StandaloneAdapter(domainObjectSpec,domainObject,persistenceState);
     }
     @Override public ObjectAdapter adapterFor(    Object domainObject,    ObjectAdapter ownerAdapter,    IdentifiedHolder identifiedHolder){
+      return adapterFor(domainObject);
+    }
+    @Override public ObjectAdapter adapterForAggregated(    Object domainObject,    ObjectAdapter parent){
       return adapterFor(domainObject);
     }
     @Override public ObjectAdapter getAdapterFor(    Object domainObject){

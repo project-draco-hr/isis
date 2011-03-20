@@ -1,0 +1,10 @@
+{
+  final ObjectAdapter adapter=getAdapterFor(pojo);
+  if (adapter != null) {
+    return adapter;
+  }
+  String id=getOidGenerator().createAggregateId(pojo);
+  final Oid aggregatedOid=new AggregatedOid(parent.getOid(),id);
+  AggregateAdapters aggregatedAdapter=createOrRecreateRootAdapter(pojo,aggregatedOid);
+  return map(aggregatedAdapter);
+}
