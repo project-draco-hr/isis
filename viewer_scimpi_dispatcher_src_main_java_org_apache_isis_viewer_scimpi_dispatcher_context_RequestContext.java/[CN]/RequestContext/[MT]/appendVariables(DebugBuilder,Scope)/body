@@ -1,0 +1,24 @@
+{
+  Map<String,Object> map=variables.get(scope);
+  Iterator<String> names=new TreeSet(map.keySet()).iterator();
+  if (names.hasNext()) {
+    content.appendTitle(scope.toString());
+    while (names.hasNext()) {
+      String name=names.next();
+      try {
+        Object object=map.get(name);
+        String details="";
+        if (object instanceof String) {
+          ObjectAdapter mappedObject=mappedObject((String)object);
+          if (mappedObject != null) {
+            details=mappedObject.toString();
+          }
+        }
+        content.appendln(name,object + "  " + details);
+      }
+ catch (      Exception e) {
+        content.appendln(name,map.get(name));
+      }
+    }
+  }
+}

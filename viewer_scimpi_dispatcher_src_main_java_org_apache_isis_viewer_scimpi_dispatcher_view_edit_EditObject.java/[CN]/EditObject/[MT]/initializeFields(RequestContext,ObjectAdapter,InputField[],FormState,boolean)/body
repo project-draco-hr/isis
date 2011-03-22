@@ -4,19 +4,17 @@
     ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
     InputField formField=formFields[i];
     AuthenticationSession session=IsisContext.getAuthenticationSession();
-    if (field.isVisible(session,object).isAllowed() && (includeUnusableFields || field.isUsable(session,object).isAllowed())) {
-      ObjectAdapter[] options=field.getChoices(object);
-      FieldFactory.initializeField(context,object,field,options,field.isMandatory(),formField);
-      Consent usable=field.isUsable(session,object);
-      boolean isEditable=true;
-      isEditable=isEditable && usable.isAllowed();
-      if (usable.isVetoed()) {
-        formField.setDescription(usable.getReason());
-      }
-      formField.setEditable(isEditable);
+    Consent usable=field.isUsable(session,object);
+    ObjectAdapter[] options=field.getChoices(object);
+    FieldFactory.initializeField(context,object,field,options,field.isMandatory(),formField);
+    boolean isEditable=usable.isAllowed();
+    if (!isEditable) {
+      formField.setDescription(usable.getReason());
     }
- else {
-      formFields[i].setHidden(true);
+    formField.setEditable(isEditable);
+    boolean notVisible=field.isVisible(session,object).isVetoed() || (!includeUnusableFields && usable.isAllowed());
+    if (notVisible) {
+      formField.setHidden(true);
     }
   }
 }

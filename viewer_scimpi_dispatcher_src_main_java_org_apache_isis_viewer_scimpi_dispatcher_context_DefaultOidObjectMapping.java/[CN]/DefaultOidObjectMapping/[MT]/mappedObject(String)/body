@@ -6,7 +6,12 @@
       mapping=requestTransients.get(id);
     }
     if (mapping == null) {
-      return null;
+      String[] split=id.split("@");
+      ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
+      Object pojo=spec.createObject(CreationMode.NO_INITIALIZE);
+      String oidData=split[1];
+      SerialOid oid=SerialOid.createTransient(Long.valueOf(oidData,16).longValue());
+      return IsisContext.getPersistenceSession().recreateAdapter(oid,pojo);
     }
     ObjectAdapter mappedTransientObject=mapping.getObject();
     LOG.debug("retrieved " + mappedTransientObject.getOid() + " for "+ id);

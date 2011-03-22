@@ -1,0 +1,59 @@
+{
+  view.appendTitle("Request");
+  view.appendln("Auth type",request.getAuthType());
+  view.appendln("Character encoding",request.getCharacterEncoding());
+  view.appendln("Class",request.getClass());
+  view.appendln("Content type",request.getContentType());
+  view.appendln("Context path",getContextPath());
+  view.appendln("Locale",request.getLocale());
+  view.appendln("Method",request.getMethod());
+  view.appendln("Path info",request.getPathInfo());
+  view.appendln("Path translated",request.getPathTranslated());
+  view.appendln("Protocol",request.getProtocol());
+  view.appendln("Query string",request.getQueryString());
+  view.appendln("Remote host",request.getRemoteHost());
+  view.appendln("Remote user",request.getRemoteUser());
+  view.appendln("Real path",servletContext.getRealPath("/"));
+  view.appendln("Scheme",request.getScheme());
+  view.appendln("Server name",request.getServerName());
+  view.appendln("Servlet path",request.getServletPath());
+  view.appendln("Session",request.getSession());
+  view.appendln("Session ID",request.getRequestedSessionId());
+  view.appendln("URI",request.getRequestURI());
+  view.appendln("URL",request.getRequestURL());
+  view.appendln("User principle",request.getUserPrincipal());
+  view.appendTitle("Cookies");
+  Cookie[] cookies=request.getCookies();
+  for (int i=0; i < cookies.length; i++) {
+    view.appendln(cookies[i].getName(),cookies[i].getValue());
+  }
+  Enumeration attributeNames=request.getAttributeNames();
+  if (attributeNames.hasMoreElements()) {
+    view.appendTitle("Attributes");
+    while (attributeNames.hasMoreElements()) {
+      String name=(String)attributeNames.nextElement();
+      view.appendln(name,request.getAttribute(name));
+    }
+  }
+  view.appendTitle("Headers");
+  Enumeration headerNames=request.getHeaderNames();
+  while (headerNames.hasMoreElements()) {
+    String name=(String)headerNames.nextElement();
+    view.appendln(name,request.getHeader(name));
+  }
+  view.appendTitle("Parameters");
+  Enumeration parameterNames=request.getParameterNames();
+  while (parameterNames.hasMoreElements()) {
+    String name=(String)parameterNames.nextElement();
+    view.appendln(name,request.getParameter(name));
+  }
+  view.appendTitle("Servlet Context");
+  ServletContext context=getServletContext();
+  view.appendln("Name",context.getServletContextName());
+  view.appendln("Server Info",context.getServerInfo());
+  view.appendln("Version",context.getMajorVersion() + "." + context.getMinorVersion());
+  view.appendln("Attributes",getAttributes(context));
+  view.appendln("Init parameters",getParameters(context));
+  view.appendln("Real path",context.getRealPath("/"));
+  super.append(view);
+}

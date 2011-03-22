@@ -1,0 +1,21 @@
+{
+  view.appendTitle("User");
+  AuthenticationSession session=getSession();
+  view.appendln("Session",session);
+  if (session != null) {
+    view.appendln("Name",session.getUserName());
+    view.appendln("Roles",session.getRoles());
+  }
+  view.appendTitle("context");
+  view.appendln("Parent request path",requestedParentPath);
+  view.appendln("Requested file",requestedFile);
+  view.appendln("Parent resource path",resourceParentPath);
+  view.appendln("Resource file",resourceFile);
+  append(view,Scope.GLOBAL);
+  append(view,Scope.SESSION);
+  append(view,Scope.INTERACTION);
+  append(view,Scope.REQUEST);
+  view.endSection();
+  view.startSection("Object Mapping");
+  objectMapping.append(view);
+}

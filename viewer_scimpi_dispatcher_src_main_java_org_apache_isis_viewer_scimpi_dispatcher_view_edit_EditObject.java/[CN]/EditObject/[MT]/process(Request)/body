@@ -59,7 +59,37 @@
     errors=entryState.getError();
   }
   String errorView=context.fullFilePath(forwardErrorTo == null ? context.getResourceFile() : forwardErrorTo);
-  HiddenInputField[] hiddenFields=new HiddenInputField[]{new HiddenInputField(OBJECT,actualObjectId),new HiddenInputField(VERSION,version),completionMessage == null ? null : new HiddenInputField(MESSAGE,completionMessage),forwardEditedTo == null ? null : new HiddenInputField(VIEW,context.fullFilePath(forwardEditedTo)),new HiddenInputField(ERRORS,errorView),variable == null ? null : new HiddenInputField(RESULT_NAME,variable),resultOverride == null ? null : new HiddenInputField(RESULT_OVERRIDE,resultOverride),scope == null ? null : new HiddenInputField(SCOPE,scope)};
+  List<HiddenInputField> hiddenFields=new ArrayList<HiddenInputField>();
+  hiddenFields.add(new HiddenInputField(OBJECT,actualObjectId));
+  hiddenFields.add(new HiddenInputField(VERSION,version));
+  hiddenFields.add(completionMessage == null ? null : new HiddenInputField(MESSAGE,completionMessage));
+  hiddenFields.add(forwardEditedTo == null ? null : new HiddenInputField(VIEW,context.fullFilePath(forwardEditedTo)));
+  hiddenFields.add(new HiddenInputField(ERRORS,errorView));
+  hiddenFields.add(variable == null ? null : new HiddenInputField(RESULT_NAME,variable));
+  hiddenFields.add(resultOverride == null ? null : new HiddenInputField(RESULT_OVERRIDE,resultOverride));
+  hiddenFields.add(scope == null ? null : new HiddenInputField(SCOPE,scope));
+  if (object.isTransient()) {
+    List<ObjectAssociation> fields2=object.getSpecification().getAssociations();
+    for (int i=0; i < fields2.size(); i++) {
+      ObjectAssociation field=fields2.get(i);
+      if (!fields.contains(field)) {
+        String fieldId=field.getId();
+        String value=getValue(context,field.get(object));
+        hiddenFields.add(new HiddenInputField(fieldId,value));
+      }
+    }
+  }
+ else {
+    List<ObjectAssociation> fields2=object.getSpecification().getAssociations();
+    for (int i=0; i < fields2.size(); i++) {
+      ObjectAssociation field=fields2.get(i);
+      if (!fields.contains(field) && field.getSpecification().containsFacet(BooleanValueFacet.class)) {
+        String fieldId=field.getId();
+        String value=getValue(context,field.get(object));
+        hiddenFields.add(new HiddenInputField(fieldId,value));
+      }
+    }
+  }
   if (formTitle == null) {
     formTitle=specification.getSingularName();
   }
@@ -69,6 +99,7 @@
  else   if (buttonTitle.equals("")) {
     buttonTitle="Save";
   }
-  HtmlFormBuilder.createForm(request,EditAction.ACTION + ".app",hiddenFields,formFields,className,id,formTitle,null,null,buttonTitle,errors);
+  HiddenInputField[] hiddenFieldArray=hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]);
+  HtmlFormBuilder.createForm(request,EditAction.ACTION + ".app",hiddenFieldArray,formFields,className,id,formTitle,null,null,buttonTitle,errors);
   request.popBlockContent();
 }

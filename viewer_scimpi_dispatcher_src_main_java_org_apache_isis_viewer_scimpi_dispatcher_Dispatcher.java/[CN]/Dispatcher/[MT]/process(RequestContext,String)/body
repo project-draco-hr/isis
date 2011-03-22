@@ -1,84 +1,83 @@
 {
   LOG.info("processing request " + servletPath);
+  AuthenticationSession session=UserManager.startRequest(context);
+  LOG.debug("exsiting session: " + session);
+  IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
+  context.setRequestPath(servletPath);
+  context.startRequest();
   try {
-    AuthenticationSession session=UserManager.startRequest(context);
-    LOG.debug("exsiting session: " + session);
-    IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
-    context.setRequestPath(servletPath);
-    context.startRequest();
-    String loginName=IsisContext.getAuthenticationSession().getUserName();
-    boolean userLoggedIn=loginName != null && !loginName.equals("__web_default");
-    boolean allowActions=userLoggedIn;
-    processActions(context,allowActions,servletPath);
-    IsisTransactionManager transactionManager=IsisContext.getPersistenceSession().getTransactionManager();
-    if (transactionManager.getTransaction().getState().canFlush()) {
-      transactionManager.flushTransaction();
-    }
-    processView(context);
-    transactionManager=IsisContext.getPersistenceSession().getTransactionManager();
-    if (transactionManager.getTransaction().getState().canCommit()) {
-      IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
-    }
-    context.endRequest();
-    UserManager.endRequest(context.getSession());
-    context.isInternalRequest();
+    processActions(context,false,servletPath);
+    processTheView(context);
   }
  catch (  ScimpiNotFoundException e) {
-    LOG.info("invalid page request " + e.getMessage());
+    if (context.isInternalRequest()) {
+      LOG.error("invalid page request (from within application): " + e.getMessage());
+    }
+ else {
+      LOG.info("invalid page request (from outside application): " + e.getMessage());
+    }
     try {
-      UserManager.endRequest(context.getSession());
+      IsisContext.getMessageBroker().addWarning("Failed to find page....");
+      context.setRequestPath("/index.shtml");
+      processTheView(context);
     }
- catch (    Exception e1) {
-      LOG.error("endRequest call failed",e1);
+ catch (    IOException e1) {
+      throw new ScimpiException(e);
     }
-    context.addVariable("_error-message",e.getHtmlMessage(),Scope.REQUEST);
-    context.raiseError(404);
+  }
+catch (  NotLoggedInException e) {
+    IsisContext.getMessageBroker().addWarning("You are not currently logged in! Please log in so you can continue.");
+    context.setRequestPath("/login.shtml");
+    try {
+      processTheView(context);
+    }
+ catch (    IOException e1) {
+      throw new ScimpiException(e);
+    }
   }
 catch (  Throwable e) {
     LOG.debug(e.getMessage(),e);
     LOG.info("testing");
     DebugString error=new DebugString();
-    if (IsisContext.getCurrentTransaction() != null) {
-      List<String> messages=IsisContext.getMessageBroker().getMessages();
-      for (      String message : messages) {
-        context.getWriter().append("<div class=\"message\">message: " + message + "</div>");
-        error.appendln("message",message);
-      }
-      messages=IsisContext.getMessageBroker().getWarnings();
-      for (      String message : messages) {
-        context.getWriter().append("<div class=\"message\">warning: " + message + "</div>");
-        error.appendln("warning",message);
-      }
-    }
     generateErrorPage(e,context,error);
+    String message="failed while processing " + servletPath;
+    LOG.error(message + "\n" + error+ "\n"+ message);
     PersistenceSession checkSession=IsisContext.getPersistenceSession();
     IsisTransactionManager transactionManager=checkSession.getTransactionManager();
     if (transactionManager.getTransaction() != null && transactionManager.getTransaction().getState().canAbort()) {
       transactionManager.abortTransaction();
+      transactionManager.startTransaction();
     }
-    String message="failed while processing " + servletPath;
-    LOG.error(message + "\n" + error+ "\n"+ message);
+    Throwable ex=e instanceof TagProcessingException ? e.getCause() : e;
+    if (ex instanceof ForbiddenException) {
+      context.addVariable("_security_error",ex.getMessage(),Scope.REQUEST);
+      context.addVariable("_security_identifier",((ForbiddenException)ex).getIdentifier(),Scope.REQUEST);
+      context.addVariable("_security_roles",((ForbiddenException)ex).getRoles(),Scope.REQUEST);
+      IsisContext.getMessageBroker().addWarning("You did not have the right permissions to perform this.....");
+      context.setRequestPath("/index.shtml");
+      try {
+        processTheView(context);
+      }
+ catch (      IOException e1) {
+        throw new ScimpiException(e);
+      }
+    }
+ else {
+      context.setRequestPath("/error/server_500.shtml");
+      try {
+        processTheView(context);
+      }
+ catch (      IOException e1) {
+        throw new ScimpiException(e);
+      }
+    }
+  }
+ finally {
     try {
       UserManager.endRequest(context.getSession());
     }
  catch (    Exception e1) {
       LOG.error("endRequest call failed",e1);
-    }
-    Throwable ex;
-    if (e instanceof TagProcessingException) {
-      ex=e.getCause();
-    }
- else {
-      ex=e;
-    }
-    if (ex instanceof ForbiddenException) {
-      context.addVariable("_security_error",ex.getMessage(),Scope.REQUEST);
-      context.addVariable("_security_identifier",((ForbiddenException)ex).getIdentifier(),Scope.REQUEST);
-      context.addVariable("_security_roles",((ForbiddenException)ex).getRoles(),Scope.REQUEST);
-      context.raiseError(403);
-    }
- else {
-      context.raiseError(500);
     }
   }
 }

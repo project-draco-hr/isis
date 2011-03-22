@@ -2,42 +2,29 @@
   if (request.getContext().isDebugDisabled()) {
     return;
   }
-  String type=request.getOptionalProperty("type");
-  String value=request.getOptionalProperty("value");
+  String type=request.getOptionalProperty(TYPE);
   boolean alwaysShow=request.isRequested("force",false);
   if (type != null) {
     if (type.equals("system")) {
-      DebuggableWithTitle[] debug=IsisContext.debugSystem();
-      request.appendHtml("<h2>System</h2>");
-      for (int i=0; i < debug.length; i++) {
-        DebugString str=new DebugString();
-        debug[i].debugData(str);
-        request.appendHtml("<h4>" + debug[i].debugTitle() + "</h4>");
-        request.appendHtml("<pre class=\"debug\">" + str + "</pre>");
-      }
+      displaySystem(request);
     }
- else     if (type.equals("list-specifications")) {
-      Collection<ObjectSpecification> allSpecifications=getSpecificationLoader().allSpecifications();
-      final List<String> fullIdentifierList=Lists.newArrayList(Collections2.transform(allSpecifications,ObjectSpecification.FUNCTION_FULLY_QUALIFIED_CLASS_NAME));
-      Collections.sort(fullIdentifierList);
-      request.appendHtml("<h2>Specifications</h2><ol>");
-      for (      String fullIdentifier : fullIdentifierList) {
-        request.appendHtml("<li><a href=\"specification.shtml?spec=" + fullIdentifier + "\">"+ fullIdentifier+ "</a></p>");
-      }
-      request.appendHtml("</ol>");
+ else     if (type.equals("variables")) {
+      displayVariables(request);
     }
- else     if (type.equals("list-objects")) {
-      request.appendHtml("<h2>Objects</h2><ol>");
-      request.getContext().append(request,"variables");
+ else     if (type.equals("dispatcher")) {
+      displayDispatcher(request);
+    }
+ else     if (type.equals("context")) {
+      displayContext(request);
+    }
+ else     if (type.equals("specifications")) {
+      listSpecifications(request);
     }
  else     if (type.equals("specification")) {
-      ObjectSpecification spec=getSpecificationLoader().loadSpecification(value);
-      DebugString str=new DebugString();
-      Dump.specification(spec,str);
-      request.appendHtml("<h2>" + spec.getFullIdentifier() + "</h2>");
-      request.appendHtml("<pre class=\"debug\">" + str + "</pre>");
+      specification(request);
     }
  else     if (type.equals("object")) {
+      String value=request.getOptionalProperty(VALUE);
       RequestContext context=request.getContext();
       ObjectAdapter object=context.getMappedObject(value);
       DebugString str=new DebugString();
@@ -66,14 +53,11 @@
       Object object=context.getVariable(variable);
       request.appendHtml(variable + " => " + (object == null ? "null" : object.toString()));
     }
-    if (value != null) {
-      request.appendHtml(value);
-    }
     String list=request.getOptionalProperty("list");
     if (list != null) {
-      request.appendHtml("<pre class=\"debug\">");
-      context.append(request,list);
-      request.appendHtml("</pre>");
+      DebugString debug=new DebugString();
+      context.append(debug,list);
+      request.appendHtml(debug.toString());
     }
     String uri=request.getOptionalProperty("uri");
     if (uri != null) {

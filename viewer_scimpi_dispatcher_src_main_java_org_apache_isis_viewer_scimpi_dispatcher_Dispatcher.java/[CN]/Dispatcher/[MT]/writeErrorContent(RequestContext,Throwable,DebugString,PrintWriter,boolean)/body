@@ -1,22 +1,15 @@
 {
-  DebugView errorView=new DebugView(writer,error);
-  if (includeHeader) {
-    errorView.header();
-  }
-  errorView.startTable();
+  DebugBuilder errorView=new DebugTee(error,new DebugWriter(writer,includeHeader));
   try {
-    errorView.exception(exception);
+    errorView.appendException(exception);
     requestContext.append(errorView);
   }
  catch (  RuntimeException e) {
     errorView.appendln("NOTE - an exception occurred while dumping an exception!");
-    errorView.exception(e);
+    errorView.appendException(e);
   }
-  errorView.divider("Processing");
-  errorView.appendDebugTrace(requestContext.getDebugTrace());
-  errorView.endTable();
-  if (includeHeader) {
-    errorView.footer();
-  }
+  errorView.appendTitle("Processing");
+  errorView.appendln(requestContext.getDebugTrace());
+  errorView.close();
   writer.close();
 }

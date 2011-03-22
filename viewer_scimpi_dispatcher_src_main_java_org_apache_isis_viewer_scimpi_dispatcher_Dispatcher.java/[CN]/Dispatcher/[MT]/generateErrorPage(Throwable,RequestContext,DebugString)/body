@@ -1,4 +1,16 @@
 {
+  if (IsisContext.getCurrentTransaction() != null) {
+    List<String> messages=IsisContext.getMessageBroker().getMessages();
+    for (    String message : messages) {
+      requestContext.getWriter().append("<div class=\"message\">message: " + message + "</div>");
+      error.appendln("message",message);
+    }
+    messages=IsisContext.getMessageBroker().getWarnings();
+    for (    String message : messages) {
+      requestContext.getWriter().append("<div class=\"message\">warning: " + message + "</div>");
+      error.appendln("warning",message);
+    }
+  }
   ByteArrayOutputStream out=new ByteArrayOutputStream();
   writeErrorContent(requestContext,exception,error,new PrintWriter(out),false);
   PrintWriter writer;

@@ -11,6 +11,10 @@
     ObjectAdapter object=MethodsUtils.findObject(context,objectId);
     ObjectAction action=MethodsUtils.findAction(object,methodName);
     entryState=validateParameters(context,action,object);
+    AuthenticationSession session=context.getSession();
+    if (session == null && action.isUsable(new UserlessSession(),object).isVetoed()) {
+      throw new NotLoggedInException();
+    }
     object.checkLock(context.getVersion(version));
     if (entryState.isValid()) {
       boolean hasResult=invokeMethod(context,resultName,object,action,entryState);

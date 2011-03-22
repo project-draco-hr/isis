@@ -28,11 +28,10 @@
     throw e;
   }
   String page=request.popBuffer();
-  context.getWriter().write(page);
+  PrintWriter writer=context.getWriter();
+  writer.write(page);
   if (context.getDebug() == Debug.PAGE) {
-    DebugView view=new DebugView(context.getWriter(),new DebugString());
-    view.startTable();
+    DebugWriter view=new DebugWriter(writer,false);
     context.append(view);
-    view.endTable();
   }
 }
