@@ -12,8 +12,10 @@
       formField.setDescription(usable.getReason());
     }
     formField.setEditable(isEditable);
-    boolean notVisible=field.isVisible(session,object).isVetoed() || (!includeUnusableFields && usable.isAllowed());
-    if (notVisible) {
+    boolean hiddenField=field.isVisible(session,object).isVetoed();
+    boolean unusable=usable.isVetoed();
+    boolean hideAsUnusable=unusable && !includeUnusableFields;
+    if (hiddenField || hideAsUnusable) {
       formField.setHidden(true);
     }
   }
