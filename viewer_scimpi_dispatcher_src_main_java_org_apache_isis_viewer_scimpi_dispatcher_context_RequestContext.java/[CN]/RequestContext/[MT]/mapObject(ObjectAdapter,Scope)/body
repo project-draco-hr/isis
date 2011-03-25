@@ -1,9 +1,12 @@
 {
-  if (object.getOid() != null) {
-    return objectMapping.mapObject(object,scope);
-  }
- else   if (object.getResolveState().isValue()) {
+  if (object.getResolveState().isValue()) {
     return object.titleString();
+  }
+ else   if (scope == Scope.INTERACTION && object.isTransient()) {
+    return objectMapping.encodedObject(object);
+  }
+ else   if (object.getOid() != null) {
+    return objectMapping.mapObject(object,scope);
   }
  else {
     collection=object;

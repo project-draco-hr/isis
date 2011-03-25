@@ -1,0 +1,20 @@
+{
+  byte[] oidBytes;
+  try {
+    int x=data.indexOf('|');
+    String id=data.substring(0,x);
+    String objectData=data.substring(x + 1);
+    String state=URLDecoder.decode(objectData,"UTF-8");
+    ObjectAdapter object=mappedObject(id);
+    Memento memento=new Memento(object);
+    oidBytes=state.getBytes();
+    final ByteArrayInputStream bais=new ByteArrayInputStream(oidBytes);
+    final DataInputStreamExtended inputImpl=new DataInputStreamExtended(bais);
+    memento.restore(inputImpl);
+    memento.recreateObject();
+    return object;
+  }
+ catch (  IOException ex) {
+    throw new IsisException("Failed to read object",ex);
+  }
+}
