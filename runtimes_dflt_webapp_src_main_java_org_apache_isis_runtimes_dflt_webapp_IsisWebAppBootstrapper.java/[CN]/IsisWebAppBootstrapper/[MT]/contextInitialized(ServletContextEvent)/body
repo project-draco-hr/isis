@@ -4,7 +4,7 @@
     String webappDir=servletContext.getRealPath("/");
     String webInfDir=servletContext.getRealPath("/WEB-INF");
     loggingConfigurer.configureLogging(webInfDir,new String[0]);
-    final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(new ResourceStreamSourceServletContext(servletContext),new ResourceStreamSourceContextLoaderClassPath());
+    final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(new ResourceStreamSourceForWebInf(servletContext),new ResourceStreamSourceContextLoaderClassPath());
     primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
     final DeploymentType deploymentType=determineDeploymentType(isisConfigurationBuilder,servletContext);
     addConfigurationResourcesForWebApps(isisConfigurationBuilder);

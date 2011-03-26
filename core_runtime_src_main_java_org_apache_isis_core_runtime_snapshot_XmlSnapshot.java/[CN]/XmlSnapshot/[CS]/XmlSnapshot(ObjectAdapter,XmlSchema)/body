@@ -1,0 +1,23 @@
+{
+  LOG.debug(".ctor(" + log("rootObj",rootAdapter) + andlog("schema",schema)+ andlog("addOids","" + true)+ ")");
+  this.isisMetaModel=new IsisMetaModel();
+  this.xsMeta=new XsMetaModel();
+  this.schema=schema;
+  final DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
+  dbf.setNamespaceAware(true);
+  DocumentBuilder db;
+  try {
+    db=dbf.newDocumentBuilder();
+    this.xmlDocument=db.newDocument();
+    this.xsdDocument=db.newDocument();
+    xsdElement=xsMeta.createXsSchemaElement(xsdDocument);
+    this.rootPlace=appendXml(rootAdapter);
+  }
+ catch (  final ParserConfigurationException e) {
+    LOG.error("unable to build snapshot",e);
+    throw new IsisException(e);
+  }
+  for (  String path : getPathsFor(rootAdapter.getObject())) {
+    include(path);
+  }
+}
