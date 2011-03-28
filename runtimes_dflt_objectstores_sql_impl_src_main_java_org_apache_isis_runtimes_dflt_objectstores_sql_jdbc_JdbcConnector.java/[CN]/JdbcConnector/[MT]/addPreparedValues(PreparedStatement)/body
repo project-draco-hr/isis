@@ -3,7 +3,20 @@
     int i=1;
     try {
       for (      final Object value : queryValues) {
-        statement.setObject(i,value);
+        if (value instanceof LocalDate) {
+          try {
+            statement.setObject(i,value,java.sql.Types.DATE);
+          }
+ catch (          SQLException e) {
+            LocalDate localDate=(LocalDate)value;
+            int millisOffset=-DateTimeZone.getDefault().getOffset(null);
+            final Date javaDate=localDate.toDateTimeAtStartOfDay(DateTimeZone.forOffsetMillis(millisOffset)).toDate();
+            statement.setObject(i,javaDate,java.sql.Types.DATE);
+          }
+        }
+ else {
+          statement.setObject(i,value);
+        }
         i++;
       }
     }
