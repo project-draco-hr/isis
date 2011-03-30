@@ -1,0 +1,14 @@
+{
+  String name=request.getOptionalProperty(VALUE);
+  ObjectSpecification spec=getSpecificationLoader().loadSpecification(name);
+  request.appendHtml("<h1>Specification Graph - " + spec.getFullIdentifier() + "</h1>");
+  request.appendHtml("<p><a href=\"./debug.shtml?type=specification&value=" + spec.getFullIdentifier() + "\">Full Specification</a></p>");
+  request.appendHtml("<pre>");
+  DebugBuilder debug=new DebugString();
+  debug.appendln(spec.getFullIdentifier());
+  debug.indent();
+  specificationGraph(spec,debug,new ArrayList<ObjectSpecification>());
+  debug.unindent();
+  request.appendHtml(debug.toString());
+  request.appendHtml("</pre>");
+}
