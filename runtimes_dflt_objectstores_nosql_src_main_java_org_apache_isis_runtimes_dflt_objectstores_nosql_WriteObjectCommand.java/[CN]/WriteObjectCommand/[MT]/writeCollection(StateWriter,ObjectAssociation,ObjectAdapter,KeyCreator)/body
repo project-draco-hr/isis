@@ -13,6 +13,9 @@
  else {
     String refs="";
     for (    ObjectAdapter element : collectionFacet.iterable(collection)) {
+      if (element.isAggregated()) {
+        throw new DomainModelException("Can't store an aggregated object within a collection that is not exoected aggregates: " + element + " ("+ collection+ ")");
+      }
       refs+=keyCreator.reference(element) + "|";
     }
     if (refs.length() > 0) {
