@@ -1,22 +1,23 @@
 {
   java.util.Date javaDateValue;
   String columnName=Sql.sqlFieldName(field.getId());
-  String encodedValue=(String)rs.getString(columnName);
-  javaDateValue=rs.getDate(columnName);
+  javaDateValue=rs.getJavaDateOnly(columnName);
   ObjectAdapter restoredValue;
   if (javaDateValue == null) {
     restoredValue=null;
   }
  else {
-    if (field.getSpecification().getFullIdentifier() == "java.sql.Date") {
+    final Class<?> correspondingClass=field.getSpecification().getCorrespondingClass();
+    if (correspondingClass == java.util.Date.class || correspondingClass == java.sql.Date.class) {
       restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(javaDateValue);
     }
- else     if (field.getSpecification().getFullIdentifier() == Date.class.getCanonicalName()) {
-      Date newDateValue=new Date(javaDateValue.getTime());
-      restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(newDateValue);
+ else     if (correspondingClass == Date.class) {
+      Date dateValue;
+      dateValue=new Date(javaDateValue);
+      restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(dateValue);
     }
  else {
-      throw new ApplicationException("Unhandled date type: " + field.getSpecification().getFullIdentifier());
+      throw new PersistFailedException("Unhandled date type: " + correspondingClass.getCanonicalName());
     }
   }
   ((OneToOneAssociation)field).initAssociation(object,restoredValue);
