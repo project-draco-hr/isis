@@ -2,7 +2,7 @@
   SerialNumberVersion version=(SerialNumberVersion)object.getVersion();
   long nextSequence=version.getSequence() + 1;
   StringBuffer sql=new StringBuffer();
-  sql.append("update " + table + " set ");
+  sql.append("UPDATE " + table + " SET ");
   for (  FieldMapping mapping : fieldMappings) {
     mapping.appendUpdateValues(connector,sql,object);
     sql.append(", ");
@@ -10,9 +10,9 @@
   sql.append(versionMapping.updateAssigment(connector,nextSequence));
   sql.append(", ");
   titleMapping.appendUpdateAssignment(connector,sql,object);
-  sql.append(" where ");
+  sql.append(" WHERE ");
   idMapping.appendWhereClause(connector,sql,object.getOid());
-  sql.append(" and ");
+  sql.append(" AND ");
   sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)object.getVersion()));
   int updateCount=connector.update(sql.toString());
   if (updateCount == 0) {
