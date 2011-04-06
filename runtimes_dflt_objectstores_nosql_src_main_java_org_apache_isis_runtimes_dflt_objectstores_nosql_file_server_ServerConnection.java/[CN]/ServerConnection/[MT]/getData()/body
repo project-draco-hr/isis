@@ -2,7 +2,15 @@
   try {
     StringBuffer buffer=new StringBuffer();
     String line;
-    while ((line=reader.readLine()) != null && line.length() != 0) {
+    while (true) {
+      line=reader.readLine();
+      if (line == null) {
+        logFailure();
+        throw new RemotingException("stream ended prematurely while reading data, aborting request");
+      }
+      if (line.length() == 0) {
+        break;
+      }
       buffer.append(line);
       buffer.append('\n');
     }
