@@ -1,0 +1,44 @@
+{
+  if (savedObject.contains(object)) {
+    return null;
+  }
+  savedObject.add(object);
+  JSONObject data=new JSONObject();
+  ObjectSpecification specification=object.getSpecification();
+  data.put("_class",specification.getFullIdentifier());
+  data.put("_id",encodedOid(object.getOid()));
+  for (  ObjectAssociation association : specification.getAssociations()) {
+    ObjectAdapter fieldValue=association.get(object);
+    String fieldName=association.getId();
+    if (fieldValue == null) {
+      data.put(fieldName,(Object)null);
+    }
+ else     if (association.getSpecification().isEncodeable()) {
+      EncodableFacet encodeableFacet=fieldValue.getSpecification().getFacet(EncodableFacet.class);
+      data.put(fieldName,encodeableFacet.toEncodedString(fieldValue));
+    }
+ else     if (association instanceof OneToManyAssociation) {
+      List<JSONObject> collection=new ArrayList<JSONObject>();
+      CollectionFacet facet=fieldValue.getSpecification().getFacet(CollectionFacet.class);
+      for (      ObjectAdapter element : facet.iterable(fieldValue)) {
+        collection.add(saveData(element,savedObject));
+      }
+      data.put(fieldName,collection);
+    }
+ else {
+      if (fieldValue.isTransient()) {
+        JSONObject saveData=saveData(fieldValue,savedObject);
+        if (saveData == null) {
+          data.put(fieldName,mapObject(fieldValue,Scope.INTERACTION));
+        }
+ else {
+          data.put(fieldName,saveData);
+        }
+      }
+ else {
+        data.put(fieldName,mapObject(fieldValue,Scope.INTERACTION));
+      }
+    }
+  }
+  return data;
+}

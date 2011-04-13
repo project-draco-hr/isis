@@ -1,14 +1,10 @@
 {
-  Memento memento=new Memento(object);
-  final ByteArrayOutputStream baos=new ByteArrayOutputStream();
-  final DataOutputStreamExtended outputImpl=new DataOutputStreamExtended(baos);
   try {
-    memento.encodedData(outputImpl);
-    final byte[] byteArray=baos.toByteArray();
-    String data=new String(byteArray);
-    return "D" + mapObject(object,Scope.INTERACTION) + "|"+ URLEncoder.encode(data,"UTF-8");
+    List<ObjectAdapter> savedObject=new ArrayList<ObjectAdapter>();
+    JSONObject data=saveData(object,savedObject);
+    return "D" + StringEscapeUtils.escapeHtml(data.toString(4));
   }
- catch (  IOException e) {
-    throw new IsisException("Failed to write object",e);
+ catch (  JSONException e) {
+    throw new ScimpiException(e);
   }
 }

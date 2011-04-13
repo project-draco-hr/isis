@@ -1,0 +1,38 @@
+{
+  String cls=(String)jsonObject.get("_class");
+  String oid=jsonObject.getString("_id");
+  ObjectAdapter object=mappedObject("T" + cls + "@"+ oid);
+  ObjectSpecification specification=object.getSpecification();
+  for (  ObjectAssociation association : specification.getAssociations()) {
+    String fieldName=association.getId();
+    Object fieldValue=jsonObject.has(fieldName) ? jsonObject.get(fieldName) : null;
+    if (association.getSpecification().isEncodeable()) {
+      if (fieldValue == null) {
+        ((OneToOneAssociation)association).initAssociation(object,null);
+      }
+ else {
+        EncodableFacet encodeableFacet=association.getSpecification().getFacet(EncodableFacet.class);
+        ObjectAdapter fromEncodedString=encodeableFacet.fromEncodedString((String)fieldValue);
+        ((OneToOneAssociation)association).initAssociation(object,fromEncodedString);
+      }
+    }
+ else     if (association instanceof OneToManyAssociation) {
+    }
+ else {
+      if (fieldValue == null) {
+        ((OneToOneAssociation)association).initAssociation(object,null);
+      }
+ else {
+        if (fieldValue instanceof JSONObject) {
+          ObjectAdapter fieldObject=readObject((JSONObject)fieldValue);
+          ((OneToOneAssociation)association).initAssociation(object,fieldObject);
+        }
+ else {
+          ObjectAdapter field=mappedObject((String)fieldValue);
+          ((OneToOneAssociation)association).initAssociation(object,field);
+        }
+      }
+    }
+  }
+  return object;
+}

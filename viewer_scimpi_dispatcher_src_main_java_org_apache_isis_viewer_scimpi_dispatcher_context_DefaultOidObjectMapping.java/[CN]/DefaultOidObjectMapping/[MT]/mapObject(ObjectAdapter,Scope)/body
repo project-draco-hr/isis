@@ -1,46 +1,30 @@
 {
   ObjectAdapter object=inObject;
-  try {
-    Oid oid=object.getOid();
-    if (oidType == null) {
-      oidType=oid.getClass();
+  Oid oid=object.getOid();
+  if (oidType == null) {
+    oidType=oid.getClass();
+  }
+  String encodedOid;
+  if (oid instanceof AggregatedOid) {
+    AggregatedOid aoid=(AggregatedOid)oid;
+    Oid parentOid=aoid.getParentOid();
+    object=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(parentOid);
+  }
+  encodedOid=encodedOid(oid);
+  boolean isTransient=object.isTransient();
+  String id=(isTransient ? "T" : "P") + object.getSpecification().getFullIdentifier() + "@"+ encodedOid;
+  LOG.debug("encoded " + oid + " as "+ id+ " ~ "+ encodedOid);
+  if (isTransient) {
+    TransientObjectMapping mapping=new TransientObjectMapping((ObjectAdapter)inObject);
+    if (scope == Scope.REQUEST) {
+      requestTransients.put(id,mapping);
     }
-    String encodedOid;
-    if (oid instanceof AggregatedOid) {
-      AggregatedOid aoid=(AggregatedOid)oid;
-      Oid parentOid=aoid.getParentOid();
-      String fieldName=aoid.getId();
-      int element=-1;
-      object=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(parentOid);
-      encodedOid=Long.toString(((SerialOid)parentOid).getSerialNo(),16) + "@" + fieldName+ (element == -1 ? "" : "@" + element);
-    }
- else     if (oid instanceof SerialOid) {
-      encodedOid=Long.toString(((SerialOid)oid).getSerialNo(),16);
+ else     if (scope == Scope.INTERACTION || scope == Scope.SESSION) {
+      sessionTransients.put(id,mapping);
     }
  else {
-      ByteArrayOutputStream output=new ByteArrayOutputStream();
-      DataOutputExtended outputStream=new DataOutputStreamExtended(output);
-      oid.encode(outputStream);
-      encodedOid=IsisContext.getPersistenceSession().getOidGenerator().getOidStringifier().enString(oid);
+      throw new ScimpiException("Can't hold globally transient object");
     }
-    boolean isTransient=object.isTransient();
-    String id=(isTransient ? "T" : "P") + object.getSpecification().getFullIdentifier() + "@"+ encodedOid;
-    LOG.debug("encoded " + oid + " as "+ id+ " ~ "+ encodedOid);
-    if (isTransient) {
-      TransientObjectMapping mapping=new TransientObjectMapping((ObjectAdapter)inObject);
-      if (scope == Scope.REQUEST) {
-        requestTransients.put(id,mapping);
-      }
- else       if (scope == Scope.INTERACTION || scope == Scope.SESSION) {
-        sessionTransients.put(id,mapping);
-      }
- else {
-        throw new ScimpiException("Can't hold globally transient object");
-      }
-    }
-    return id;
   }
- catch (  IOException e) {
-    throw new IsisException(e);
-  }
+  return id;
 }
