@@ -6,7 +6,22 @@
   JSONObject data=new JSONObject();
   ObjectSpecification specification=object.getSpecification();
   data.put("_class",specification.getFullIdentifier());
-  data.put("_id",encodedOid(object.getOid()));
+  Oid oid=object.getOid();
+  String encodedOid;
+  if (oid instanceof AggregatedOid) {
+    AggregatedOid aoid=(AggregatedOid)oid;
+    Oid parentOid=aoid.getParentOid();
+    object=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(parentOid);
+    String aggregatedId=aoid.getId();
+    encodedOid=Long.toString(((SerialOid)parentOid).getSerialNo(),16) + "@" + aggregatedId;
+  }
+ else   if (oid instanceof SerialOid) {
+    encodedOid=Long.toString(((SerialOid)oid).getSerialNo(),16);
+  }
+ else {
+    throw new ScimpiException("Unsupportred OID type " + oid);
+  }
+  data.put("_id",encodedOid);
   for (  ObjectAssociation association : specification.getAssociations()) {
     ObjectAdapter fieldValue=association.get(object);
     String fieldName=association.getId();
@@ -21,13 +36,13 @@
       List<JSONObject> collection=new ArrayList<JSONObject>();
       CollectionFacet facet=fieldValue.getSpecification().getFacet(CollectionFacet.class);
       for (      ObjectAdapter element : facet.iterable(fieldValue)) {
-        collection.add(saveData(element,savedObject));
+        collection.add(encodeTransientData(element,savedObject));
       }
       data.put(fieldName,collection);
     }
  else {
-      if (fieldValue.isTransient()) {
-        JSONObject saveData=saveData(fieldValue,savedObject);
+      if (fieldValue.isTransient() || fieldValue.isAggregated()) {
+        JSONObject saveData=encodeTransientData(fieldValue,savedObject);
         if (saveData == null) {
           data.put(fieldName,mapObject(fieldValue,Scope.INTERACTION));
         }

@@ -1,8 +1,17 @@
 {
-  String cls=(String)jsonObject.get("_class");
-  String oid=jsonObject.getString("_id");
-  ObjectAdapter object=mappedObject("T" + cls + "@"+ oid);
-  ObjectSpecification specification=object.getSpecification();
+  String cls=jsonObject.getString("_class");
+  String id=jsonObject.getString("_id");
+  ObjectAdapter object;
+  ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(cls);
+  if (specification.isAggregated() && !specification.isCollection()) {
+    String[] split=id.split("@");
+    SerialOid parentOid=SerialOid.createTransient(Long.parseLong(split[0],16));
+    AggregatedOid oid=new AggregatedOid(parentOid,split[1]);
+    object=IsisContext.getPersistenceSession().recreateAdapter(oid,specification);
+  }
+ else {
+    object=mappedObject("T" + cls + "@"+ id);
+  }
   for (  ObjectAssociation association : specification.getAssociations()) {
     String fieldName=association.getId();
     Object fieldValue=jsonObject.has(fieldName) ? jsonObject.get(fieldName) : null;
@@ -17,6 +26,10 @@
       }
     }
  else     if (association instanceof OneToManyAssociation) {
+      List<JSONObject> collection=new ArrayList<JSONObject>();
+      if (!collection.isEmpty()) {
+        throw new ScimpiException("Unexpected association for transient object " + association);
+      }
     }
  else {
       if (fieldValue == null) {
@@ -24,7 +37,7 @@
       }
  else {
         if (fieldValue instanceof JSONObject) {
-          ObjectAdapter fieldObject=readObject((JSONObject)fieldValue);
+          ObjectAdapter fieldObject=restoreTransientObject((JSONObject)fieldValue);
           ((OneToOneAssociation)association).initAssociation(object,fieldObject);
         }
  else {
