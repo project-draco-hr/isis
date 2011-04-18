@@ -1,8 +1,8 @@
 {
   final InteractionResult result=new InteractionResult(context.createInteractionEvent());
-  final Facet[] facets=facetHolder.getFacets(FacetFilters.isA(DisablingInteractionAdvisor.class));
-  for (int i=0; i < facets.length; i++) {
-    final DisablingInteractionAdvisor advisor=(DisablingInteractionAdvisor)facets[i];
+  final List<Facet> facets=facetHolder.getFacets(FacetFilters.isA(DisablingInteractionAdvisor.class));
+  for (  final Facet facet : facets) {
+    final DisablingInteractionAdvisor advisor=(DisablingInteractionAdvisor)facet;
     final String disables=advisor.disables(context);
     result.advise(disables,advisor);
   }
