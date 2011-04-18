@@ -17,7 +17,7 @@
       LOG.info("invalid page request (from outside application): " + e.getMessage());
     }
     try {
-      IsisContext.getMessageBroker().addWarning("Failed to find page....");
+      IsisContext.getMessageBroker().addWarning("Failed to find page " + servletPath + ". Please navigate from here");
       context.setRequestPath("/index.shtml");
       processTheView(context);
     }
@@ -32,7 +32,7 @@ catch (  NotLoggedInException e) {
       processTheView(context);
     }
  catch (    IOException e1) {
-      throw new ScimpiException(e);
+      throw new ScimpiException(e1);
     }
   }
 catch (  Throwable e) {
@@ -63,7 +63,8 @@ catch (  Throwable e) {
       }
     }
  else {
-      context.setRequestPath("/error/server_500.shtml");
+      IsisContext.getMessageBroker().addWarning("There was a error while processing this request....");
+      context.setRequestPath("/index.shtml");
       try {
         processTheView(context);
       }
