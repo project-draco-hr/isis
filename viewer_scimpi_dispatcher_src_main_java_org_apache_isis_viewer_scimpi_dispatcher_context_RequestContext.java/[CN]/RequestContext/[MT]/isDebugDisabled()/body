@@ -1,13 +1,13 @@
 {
-  if (debugLevel == null) {
-    String property=System.getProperties().getProperty("debug");
+  if (debugMode == null) {
+    String property=System.getProperties().getProperty("debug-mode");
     if (property != null) {
-      debugLevel=DebugLevel.valueOf(property);
+      debugMode=DebugMode.valueOf(property);
     }
-    if (debugLevel == null) {
-      debugLevel=DebugLevel.OFF;
+    if (debugMode == null) {
+      debugMode=DebugMode.ON;
     }
   }
-  boolean allowDebug=debugLevel == DebugLevel.ON || (debugLevel == DebugLevel.SYSADMIN_ONLY && getSession().getRoles().contains("sysadmin"));
+  boolean allowDebug=debugMode == DebugMode.ON || (debugMode == DebugMode.SYSADMIN_ONLY && getSession().getRoles().contains("sysadmin"));
   return !allowDebug;
 }

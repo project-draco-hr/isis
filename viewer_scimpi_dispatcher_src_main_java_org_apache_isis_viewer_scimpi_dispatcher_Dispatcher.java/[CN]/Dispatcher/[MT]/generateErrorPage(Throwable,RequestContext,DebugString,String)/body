@@ -15,10 +15,9 @@
   writeErrorContent(requestContext,exception,error,new PrintWriter(out),false);
   PrintWriter writer;
   try {
-    String ref=Long.toString(System.currentTimeMillis(),36).toUpperCase();
-    requestContext.addVariable("_error-ref",ref,Scope.INTERACTION);
+    requestContext.addVariable("_error-ref",errorRef,Scope.INTERACTION);
     String directory=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.error-snapshots",".");
-    writer=new PrintWriter(new File(directory,"error_" + ref + ".html"));
+    writer=new PrintWriter(new File(directory,"error_" + errorRef + ".html"));
     writeErrorContent(requestContext,exception,new DebugString(),writer,true);
   }
  catch (  FileNotFoundException e) {

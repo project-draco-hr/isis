@@ -36,12 +36,13 @@ catch (  NotLoggedInException e) {
     }
   }
 catch (  Throwable e) {
+    String errorRef=Long.toString(System.currentTimeMillis(),36).toUpperCase();
+    LOG.info("error " + errorRef);
     LOG.debug(e.getMessage(),e);
-    LOG.info("testing");
     DebugString error=new DebugString();
-    generateErrorPage(e,context,error);
+    generateErrorPage(e,context,error,errorRef);
     String message="failed while processing " + servletPath;
-    LOG.error(message + "\n" + error+ "\n"+ message);
+    LOG.error(message + " (#" + errorRef+ ")\n"+ error+ "\n"+ message);
     PersistenceSession checkSession=IsisContext.getPersistenceSession();
     IsisTransactionManager transactionManager=checkSession.getTransactionManager();
     if (transactionManager.getTransaction() != null && transactionManager.getTransaction().getState().canAbort()) {
@@ -53,7 +54,7 @@ catch (  Throwable e) {
       context.addVariable("_security_error",ex.getMessage(),Scope.REQUEST);
       context.addVariable("_security_identifier",((ForbiddenException)ex).getIdentifier(),Scope.REQUEST);
       context.addVariable("_security_roles",((ForbiddenException)ex).getRoles(),Scope.REQUEST);
-      IsisContext.getMessageBroker().addWarning("You did not have the right permissions to perform this.....");
+      IsisContext.getMessageBroker().addWarning("You did not have the right permissions to perform this (#" + errorRef + ")");
       context.setRequestPath("/index.shtml");
       try {
         processTheView(context);
@@ -63,7 +64,7 @@ catch (  Throwable e) {
       }
     }
  else {
-      IsisContext.getMessageBroker().addWarning("There was a error while processing this request....");
+      IsisContext.getMessageBroker().addWarning("There was a error while processing this request (#" + errorRef + ")");
       context.setRequestPath("/index.shtml");
       try {
         processTheView(context);
