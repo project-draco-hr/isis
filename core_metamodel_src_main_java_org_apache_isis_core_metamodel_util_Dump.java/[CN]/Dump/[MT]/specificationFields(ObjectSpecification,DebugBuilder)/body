@@ -1,64 +1,64 @@
 {
   final List<ObjectAssociation> fields=specification.getAssociations();
-  debug.appendln("All");
-  debug.indent();
+  debugBuilder.appendln("All");
+  debugBuilder.indent();
   for (int i=0; i < fields.size(); i++) {
-    debug.appendln((i + 1) + "." + fields.get(i).getId());
+    debugBuilder.appendln((i + 1) + "." + fields.get(i).getId());
   }
-  debug.unindent();
+  debugBuilder.unindent();
   final List<ObjectAssociation> fields2=specification.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
-  debug.appendln("Static");
-  debug.indent();
+  debugBuilder.appendln("Static");
+  debugBuilder.indent();
   for (int i=0; i < fields2.size(); i++) {
-    debug.appendln((i + 1) + "." + fields2.get(i).getId());
+    debugBuilder.appendln((i + 1) + "." + fields2.get(i).getId());
   }
-  debug.unindent();
-  debug.appendln();
+  debugBuilder.unindent();
+  debugBuilder.appendln();
   try {
     if (fields.size() == 0) {
-      debug.appendln("none");
+      debugBuilder.appendln("none");
     }
  else {
       for (int i=0; i < fields.size(); i++) {
         final ObjectAssociation field=fields.get(i);
-        debug.appendln((i + 1) + "." + field.getId()+ "  ("+ field.getClass().getName()+ ")");
-        debug.indent();
+        debugBuilder.appendln((i + 1) + "." + field.getId()+ "  ("+ field.getClass().getName()+ ")");
+        debugBuilder.indent();
         final String description=field.getDescription();
         if (description != null && !description.equals("")) {
-          debug.appendln("Description",description);
+          debugBuilder.appendln("Description",description);
         }
         final String help=field.getHelp();
         if (help != null && !help.equals("")) {
-          debug.appendln("Help",help.substring(0,Math.min(30,help.length())) + (help.length() > 30 ? "..." : ""));
+          debugBuilder.appendln("Help",help.substring(0,Math.min(30,help.length())) + (help.length() > 30 ? "..." : ""));
         }
-        debug.appendln("ID",field.getIdentifier());
-        debug.appendln("Short ID",field.getId());
-        debug.appendln("Name",field.getName());
+        debugBuilder.appendln("ID",field.getIdentifier());
+        debugBuilder.appendln("Short ID",field.getId());
+        debugBuilder.appendln("Name",field.getName());
         final String type=field.isOneToManyAssociation() ? "Collection" : field.isOneToOneAssociation() ? "Object" : "Unknown";
-        debug.appendln("Type",type);
-        debug.appendln("Has identity",!field.getSpecification().isCollectionOrIsAggregated());
-        debug.appendln("Spec",field.getSpecification().getFullIdentifier());
-        debug.appendln("Flags",(field.isAlwaysHidden() ? "" : "Visible ") + (field.isNotPersisted() ? "Not Persisted " : " ") + (field.isMandatory() ? "Mandatory " : ""));
+        debugBuilder.appendln("Type",type);
+        debugBuilder.appendln("Has identity",!field.getSpecification().isCollectionOrIsAggregated());
+        debugBuilder.appendln("Spec",field.getSpecification().getFullIdentifier());
+        debugBuilder.appendln("Flags",(field.isAlwaysHidden() ? "" : "Visible ") + (field.isNotPersisted() ? "Not Persisted " : " ") + (field.isMandatory() ? "Mandatory " : ""));
         final Class<? extends Facet>[] facets=field.getFacetTypes();
         if (facets.length > 0) {
-          debug.appendln("Facets");
-          debug.indent();
+          debugBuilder.appendln("Facets");
+          debugBuilder.indent();
           boolean none=true;
           for (int j=0; j < facets.length; j++) {
-            debug.appendln(field.getFacet(facets[j]).toString());
+            debugBuilder.appendln(field.getFacet(facets[j]).toString());
             none=false;
           }
           if (none) {
-            debug.appendln("none");
+            debugBuilder.appendln("none");
           }
-          debug.unindent();
+          debugBuilder.unindent();
         }
-        debug.appendln(field.debugData());
-        debug.unindent();
+        debugBuilder.appendln(field.debugData());
+        debugBuilder.unindent();
       }
     }
   }
  catch (  final RuntimeException e) {
-    debug.appendException(e);
+    debugBuilder.appendException(e);
   }
 }

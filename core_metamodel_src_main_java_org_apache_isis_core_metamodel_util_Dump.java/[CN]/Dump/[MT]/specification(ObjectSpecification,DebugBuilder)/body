@@ -1,59 +1,59 @@
 {
   try {
-    debug.appendTitle(specification.getClass().getName());
-    debug.appendAsHexln("Hash code",specification.hashCode());
-    debug.appendln("ID",specification.getIdentifier());
-    debug.appendln("Full Name",specification.getFullIdentifier());
-    debug.appendln("Short Name",specification.getShortIdentifier());
-    debug.appendln("Singular Name",specification.getSingularName());
-    debug.appendln("Plural Name",specification.getPluralName());
-    debug.appendln("Description",specification.getDescription());
-    debug.blankLine();
-    debug.appendln("Features",featureList(specification));
-    debug.appendln("Type",specification.isCollection() ? "Collection" : "Object");
+    debugBuilder.appendTitle(specification.getClass().getName());
+    debugBuilder.appendAsHexln("Hash code",specification.hashCode());
+    debugBuilder.appendln("ID",specification.getIdentifier());
+    debugBuilder.appendln("Full Name",specification.getFullIdentifier());
+    debugBuilder.appendln("Short Name",specification.getShortIdentifier());
+    debugBuilder.appendln("Singular Name",specification.getSingularName());
+    debugBuilder.appendln("Plural Name",specification.getPluralName());
+    debugBuilder.appendln("Description",specification.getDescription());
+    debugBuilder.blankLine();
+    debugBuilder.appendln("Features",featureList(specification));
+    debugBuilder.appendln("Type",specification.isCollection() ? "Collection" : "Object");
     if (specification.superclass() != null) {
-      debug.appendln("Superclass",specification.superclass().getFullIdentifier());
+      debugBuilder.appendln("Superclass",specification.superclass().getFullIdentifier());
     }
-    debug.appendln("Interfaces",specificationNames(specification.interfaces()));
-    debug.appendln("Subclasses",specificationNames(specification.subclasses()));
-    debug.blankLine();
-    debug.appendln("Service",specification.isService());
-    debug.appendln("Encodable",specification.isEncodeable());
-    debug.appendln("Parseable",specification.isParseable());
-    debug.appendln("Aggregated",specification.isValueOrIsAggregated());
+    debugBuilder.appendln("Interfaces",specificationNames(specification.interfaces()));
+    debugBuilder.appendln("Subclasses",specificationNames(specification.subclasses()));
+    debugBuilder.blankLine();
+    debugBuilder.appendln("Service",specification.isService());
+    debugBuilder.appendln("Encodable",specification.isEncodeable());
+    debugBuilder.appendln("Parseable",specification.isParseable());
+    debugBuilder.appendln("Aggregated",specification.isValueOrIsAggregated());
   }
  catch (  final RuntimeException e) {
-    debug.appendException(e);
+    debugBuilder.appendException(e);
   }
   if (specification instanceof DebuggableWithTitle) {
-    ((DebuggableWithTitle)specification).debugData(debug);
+    ((DebuggableWithTitle)specification).debugData(debugBuilder);
   }
-  debug.blankLine();
-  debug.appendln("Facets");
+  debugBuilder.blankLine();
+  debugBuilder.appendln("Facets");
   final Class<? extends Facet>[] facetTypes=specification.getFacetTypes();
-  debug.indent();
+  debugBuilder.indent();
   if (facetTypes.length == 0) {
-    debug.appendln("none");
+    debugBuilder.appendln("none");
   }
  else {
     for (int i=0; i < facetTypes.length; i++) {
       final Class<? extends Facet> type=facetTypes[i];
       final Facet facet=specification.getFacet(type);
-      debug.appendln(facet.toString());
+      debugBuilder.appendln(facet.toString());
     }
   }
-  debug.unindent();
-  debug.blankLine();
-  debug.appendln("Fields");
-  debug.indent();
-  specificationFields(specification,debug);
-  debug.unindent();
-  debug.appendln("Object Actions");
-  debug.indent();
-  specificationActionMethods(specification,debug);
-  debug.unindent();
-  debug.appendln("Related Service Actions");
-  debug.indent();
-  specificationServiceMethods(specification,debug);
-  debug.unindent();
+  debugBuilder.unindent();
+  debugBuilder.blankLine();
+  debugBuilder.appendln("Fields");
+  debugBuilder.indent();
+  specificationFields(specification,debugBuilder);
+  debugBuilder.unindent();
+  debugBuilder.appendln("Object Actions");
+  debugBuilder.indent();
+  specificationActionMethods(specification,debugBuilder);
+  debugBuilder.unindent();
+  debugBuilder.appendln("Related Service Actions");
+  debugBuilder.indent();
+  specificationServiceMethods(specification,debugBuilder);
+  debugBuilder.unindent();
 }
