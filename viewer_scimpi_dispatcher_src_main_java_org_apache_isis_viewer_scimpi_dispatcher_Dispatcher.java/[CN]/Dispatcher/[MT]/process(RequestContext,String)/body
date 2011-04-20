@@ -65,12 +65,24 @@ catch (  Throwable e) {
     }
  else {
       IsisContext.getMessageBroker().addWarning("There was a error while processing this request (#" + errorRef + ")");
+      context.clearVariables(Scope.REQUEST);
       context.setRequestPath("/index.shtml");
       try {
         processTheView(context);
       }
- catch (      IOException e1) {
-        throw new ScimpiException(e);
+ catch (      TagProcessingException e1) {
+        IsisContext.getMessageBroker().addWarning("There was a error while processing this request (#" + errorRef + ")");
+        context.clearVariables(Scope.REQUEST);
+        context.setRequestPath("/error.shtml");
+        try {
+          processTheView(context);
+        }
+ catch (        IOException e2) {
+          throw new ScimpiException(e2);
+        }
+      }
+catch (      IOException e1) {
+        throw new ScimpiException(e1);
       }
     }
   }
