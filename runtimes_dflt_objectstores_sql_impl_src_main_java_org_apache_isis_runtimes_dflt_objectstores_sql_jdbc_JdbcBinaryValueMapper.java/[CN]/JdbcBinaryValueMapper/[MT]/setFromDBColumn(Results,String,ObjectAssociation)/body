@@ -1,0 +1,30 @@
+{
+  ObjectAdapter restoredValue;
+  Class<?> correspondingClass=field.getSpecification().getCorrespondingClass();
+  Object resultObject=results.getObject(columnName);
+  if (resultObject.getClass() != correspondingClass) {
+    if (checkIfIsClass(correspondingClass,Integer.class,int.class)) {
+      resultObject=results.getInt(columnName);
+    }
+ else     if (checkIfIsClass(correspondingClass,Double.class,double.class)) {
+      resultObject=results.getDouble(columnName);
+    }
+ else     if (checkIfIsClass(correspondingClass,Float.class,float.class)) {
+      resultObject=results.getFloat(columnName);
+    }
+ else     if (checkIfIsClass(correspondingClass,short.class,Short.class)) {
+      resultObject=results.getShort(columnName);
+    }
+ else     if (checkIfIsClass(correspondingClass,long.class,Long.class)) {
+      resultObject=results.getLong(columnName);
+    }
+ else     if (checkIfIsClass(correspondingClass,boolean.class,Boolean.class)) {
+      resultObject=results.getBoolean(columnName);
+    }
+ else {
+      throw new IsisApplicationException("Unhandled type: " + correspondingClass.getCanonicalName());
+    }
+  }
+  restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(resultObject);
+  return restoredValue;
+}
