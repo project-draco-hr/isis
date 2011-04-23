@@ -1,0 +1,11 @@
+{
+  final Identifier identifier=Identifier.propertyOrCollectionIdentifier("cls","fld2");
+  final HelpManagerUsingFiles manager=new HelpManagerUsingFiles(new IsisConfigurationDefault()){
+    @Override protected BufferedReader getReader() throws FileNotFoundException {
+      throw new FileNotFoundException("not found");
+    }
+  }
+;
+  final String s=manager.getHelpText(identifier);
+  assertEquals("Failure opening help file: not found",s);
+}

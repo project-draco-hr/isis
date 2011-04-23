@@ -1,33 +1,17 @@
 {
-  if (!(requiredHolder instanceof IdentifiedHolder)) {
+  if (!(facetHolder instanceof IdentifiedHolder)) {
     return null;
   }
-  IdentifiedHolder identifiedHolder=(IdentifiedHolder)requiredHolder;
-  final Identifier identifier=identifiedHolder.getIdentifier();
+  IdentifiedHolder identifiedHolder=(IdentifiedHolder)facetHolder;
   final Class<?> facetType=facet.facetType();
   if (facetType == NamedFacet.class) {
-    final String i18nName=i18nManager.getName(identifier);
-    if (i18nName == null) {
-      return null;
-    }
-    NamedFacetWrapI18n decoratingFacet=new NamedFacetWrapI18n(i18nName,facet.getFacetHolder());
-    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+    return decorateWithNamedFacet(facet,identifiedHolder);
   }
   if (facetType == DescribedAsFacet.class) {
-    final String i18nDescription=i18nManager.getDescription(identifier);
-    if (i18nDescription == null) {
-      return null;
-    }
-    DescribedAsFacetWrapI18n decoratingFacet=new DescribedAsFacetWrapI18n(i18nDescription,facet.getFacetHolder());
-    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+    return decorateWithDescribedAsFacet(facet,identifiedHolder);
   }
   if (facetType == HelpFacet.class) {
-    final String i18nHelp=i18nManager.getHelp(identifier);
-    if (i18nHelp == null) {
-      return null;
-    }
-    HelpFacetWrapI18n decoratingFacet=new HelpFacetWrapI18n(i18nHelp,facet.getFacetHolder());
-    return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
+    return decorateWithHelpFacet(facet,identifiedHolder);
   }
-  return facet;
+  return null;
 }

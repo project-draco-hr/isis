@@ -1,15 +1,10 @@
 {
-  if (!(requiredHolder instanceof IdentifiedHolder)) {
+  if (facet.facetType() != HelpFacet.class) {
+    return facet;
+  }
+  if (!(facetHolder instanceof IdentifiedHolder)) {
     return null;
   }
-  IdentifiedHolder identifiedHolder=(IdentifiedHolder)requiredHolder;
-  final Identifier identifier=identifiedHolder.getIdentifier();
-  if (facet.facetType() == HelpFacet.class) {
-    final String lookupHelp=helpManager.help(identifier);
-    if (lookupHelp != null) {
-      HelpFacetLookedUpViaHelpManager decoratingFacet=new HelpFacetLookedUpViaHelpManager(lookupHelp,facet.getFacetHolder());
-      return replaceFacetWithDecoratingFacet(facet,decoratingFacet,requiredHolder);
-    }
-  }
-  return facet;
+  IdentifiedHolder identifiedHolder=(IdentifiedHolder)facetHolder;
+  return decorateWithHelpFacet(facet,identifiedHolder);
 }

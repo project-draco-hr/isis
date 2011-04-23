@@ -1,11 +1,11 @@
 {
-  StringBuilder sb=new StringBuilder();
-  final String form=identifier.isPropertyOrCollection() ? PROPERTY : ACTION;
-  sb=sb.append(identifier.getClassName()).append(".").append(form);
-  final String memberName=identifier.getMemberName();
-  if (!StringUtils.isNullOrEmpty(memberName)) {
-    sb.append(".").append(memberName);
+  final List<String> keys=Lists.newArrayList();
+  if (identifier.isPropertyOrCollection()) {
+    keys.add(buildMemberTypeKey(identifier,textType,MEMBER_TYPE_PROPERTY));
+    keys.add(buildMemberTypeKey(identifier,textType,MEMBER_TYPE_COLLECTION));
   }
-  sb.append(".").append(textType);
-  return sb.toString();
+ else {
+    keys.add(buildMemberTypeKey(identifier,textType,MEMBER_TYPE_ACTION));
+  }
+  return keys;
 }
