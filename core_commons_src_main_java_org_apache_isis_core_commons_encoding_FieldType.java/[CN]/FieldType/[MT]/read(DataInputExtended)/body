@@ -1,10 +1,10 @@
 {
-  DataInputStream inputStream=input.getDataInputStream();
-  byte fieldTypeIdxAndNullability=inputStream.readByte();
-  boolean isNull=fieldTypeIdxAndNullability >= NULL_BIT;
-  byte fieldTypeIdx=(byte)(fieldTypeIdxAndNullability - (isNull ? NULL_BIT : 0));
+  final DataInputStream inputStream=input.getDataInputStream();
+  final byte fieldTypeIdxAndNullability=inputStream.readByte();
+  final boolean isNull=fieldTypeIdxAndNullability >= NULL_BIT;
+  final byte fieldTypeIdx=(byte)(fieldTypeIdxAndNullability - (isNull ? NULL_BIT : 0));
   try {
-    FieldType<?> fieldType=FieldType.get(fieldTypeIdx);
+    final FieldType<?> fieldType=FieldType.get(fieldTypeIdx);
     if (fieldType.checksStream() && fieldType != this) {
       throw new IllegalStateException("Mismatch in stream: expected " + this + " but got "+ fieldType);
     }
