@@ -4,13 +4,13 @@
   }
   final Method actionMethod=processMethodContext.getMethod();
   final String capitalizedName=NameUtils.capitalizeName(actionMethod.getName());
-  Class<?> cls=processMethodContext.getCls();
-  Method namesMethod=MethodFinderUtils.findMethod(cls,MethodScope.CLASS,MethodPrefixConstants.NAME_PREFIX + capitalizedName,String[].class,new Class[0]);
+  final Class<?> cls=processMethodContext.getCls();
+  final Method namesMethod=MethodFinderUtils.findMethod(cls,MethodScope.CLASS,MethodPrefixConstants.NAME_PREFIX + capitalizedName,String[].class,new Class[0]);
   if (namesMethod == null) {
     return;
   }
   try {
-    String[] names=invokeNamesMethod(namesMethod,parameters.size());
+    final String[] names=invokeNamesMethod(namesMethod,parameters.size());
     for (int i=0; i < names.length; i++) {
       FacetUtil.addFacet(new NamedFacetViaMethod(names[i],namesMethod,parameters.get(i)));
     }

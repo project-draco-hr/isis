@@ -1,5 +1,5 @@
 {
-  Class<?> type=processMethodContext.getCls();
+  final Class<?> type=processMethodContext.getCls();
   final Method method=processMethodContext.getMethod();
   final String capitalizedName=NameUtils.javaBaseNameStripAccessorPrefixIfRequired(method.getName());
   final Method alwaysHideMethod=MethodFinderUtils.findMethod(type,MethodScope.CLASS,MethodPrefixConstants.ALWAYS_HIDE_PREFIX + capitalizedName,boolean.class,new Class[]{});
@@ -7,7 +7,7 @@
     return;
   }
   processMethodContext.removeMethod(alwaysHideMethod);
-  Boolean alwaysHideMethodReturnValue=invokeAlwaysHideMethod(alwaysHideMethod);
+  final Boolean alwaysHideMethodReturnValue=invokeAlwaysHideMethod(alwaysHideMethod);
   if (!alwaysHideMethodReturnValue.booleanValue()) {
     return;
   }

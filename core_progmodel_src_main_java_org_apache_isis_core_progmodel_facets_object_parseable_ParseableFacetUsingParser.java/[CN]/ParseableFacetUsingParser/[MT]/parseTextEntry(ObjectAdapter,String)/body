@@ -3,30 +3,30 @@
     throw new IllegalArgumentException("An entry must be provided");
   }
   if (getFacetHolder().containsFacet(ValueFacet.class)) {
-    ObjectAdapter entryAdapter=getAdapterMap().adapterFor(entry);
-    ParseValueContext parseValueContext=new ParseValueContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
+    final ObjectAdapter entryAdapter=getAdapterMap().adapterFor(entry);
+    final ParseValueContext parseValueContext=new ParseValueContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
     validate(parseValueContext);
   }
-  Object context=AdapterUtils.unwrap(contextAdapter);
+  final Object context=AdapterUtils.unwrap(contextAdapter);
   getDependencyInjector().injectDependenciesInto(parser);
   try {
     final Object parsed=parser.parseTextEntry(context,entry);
     if (parsed == null) {
       return null;
     }
-    ObjectAdapter adapter=getAdapterMap().adapterFor(parsed);
-    ObjectSpecification specification=adapter.getSpecification();
-    ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
+    final ObjectAdapter adapter=getAdapterMap().adapterFor(parsed);
+    final ObjectSpecification specification=adapter.getSpecification();
+    final ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
     validate(validateContext);
     return adapter;
   }
- catch (  NumberFormatException e) {
+ catch (  final NumberFormatException e) {
     throw new TextEntryParseException(e.getMessage(),e);
   }
-catch (  IllegalFormatException e) {
+catch (  final IllegalFormatException e) {
     throw new TextEntryParseException(e.getMessage(),e);
   }
-catch (  ParsingException e) {
+catch (  final ParsingException e) {
     throw new TextEntryParseException(e.getMessage(),e);
   }
 }
