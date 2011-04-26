@@ -1,12 +1,12 @@
 {
-  Filter<ObjectAssociation> noop=Filters.anyOfType(ObjectAssociation.class);
+  final Filter<ObjectAssociation> noop=Filters.anyOfType(ObjectAssociation.class);
   final List<ObjectAssociation> fields=getAssociations(noop);
   for (int i=0; i < fields.size(); i++) {
     final ObjectAssociation field=fields.get(i);
     final List<Facet> facets=field.getFacets(ImperativeFacet.FILTER);
     for (    final Facet facet : facets) {
       final ImperativeFacet imperativeFacet=ImperativeFacetUtils.getImperativeFacet(facet);
-      for (      Method imperativeFacetMethod : imperativeFacet.getMethods()) {
+      for (      final Method imperativeFacetMethod : imperativeFacet.getMethods()) {
         membersByMethod.put(imperativeFacetMethod,field);
       }
     }

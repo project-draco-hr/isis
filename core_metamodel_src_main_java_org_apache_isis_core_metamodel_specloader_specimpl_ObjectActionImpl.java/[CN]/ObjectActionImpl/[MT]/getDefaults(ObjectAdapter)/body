@@ -11,8 +11,8 @@
     }
     for (int i=0; i < parameterCount; i++) {
       if (parameterDefaultPojos[i] != null) {
-        ObjectSpecification componentSpec=getSpecificationLookup().loadSpecification(parameterDefaultPojos[i].getClass());
-        ObjectSpecification parameterSpec=parameters.get(i).getSpecification();
+        final ObjectSpecification componentSpec=getSpecificationLookup().loadSpecification(parameterDefaultPojos[i].getClass());
+        final ObjectSpecification parameterSpec=parameters.get(i).getSpecification();
         if (!componentSpec.isOfType(parameterSpec)) {
           throw new DomainModelException("Defaults type incompatible with parameter " + (i + 1) + " type; expected "+ parameterSpec.getFullIdentifier()+ ", but was "+ componentSpec.getFullIdentifier());
         }
@@ -22,7 +22,7 @@
  else {
     parameterDefaultPojos=new Object[parameterCount];
     for (int i=0; i < parameterCount; i++) {
-      ActionParameterDefaultsFacet paramFacet=parameters.get(i).getFacet(ActionParameterDefaultsFacet.class);
+      final ActionParameterDefaultsFacet paramFacet=parameters.get(i).getFacet(ActionParameterDefaultsFacet.class);
       if (paramFacet != null && !paramFacet.isNoop()) {
         parameterDefaultPojos[i]=paramFacet.getDefault(realTarget);
       }
