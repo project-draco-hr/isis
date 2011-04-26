@@ -1,7 +1,7 @@
 {
   final AuthenticationRequestPassword passwordRequest=(AuthenticationRequestPassword)request;
   final String username=passwordRequest.getName();
-  if (username == null || username.equals("")) {
+  if (Strings.isNullOrEmpty(username)) {
     return false;
   }
   final String password=passwordRequest.getPassword();
@@ -27,6 +27,7 @@
       }
       return isPasswordValidForUser(request,password,line);
     }
+    return false;
   }
  catch (  final IOException e) {
     throw new IsisException("Failed to read password file: " + FileAuthenticationConstants.PASSWORDS_FILE + " from "+ resourceStreamSource.getName());
@@ -34,5 +35,4 @@
  finally {
     IoUtils.closeSafely(reader);
   }
-  return false;
 }
