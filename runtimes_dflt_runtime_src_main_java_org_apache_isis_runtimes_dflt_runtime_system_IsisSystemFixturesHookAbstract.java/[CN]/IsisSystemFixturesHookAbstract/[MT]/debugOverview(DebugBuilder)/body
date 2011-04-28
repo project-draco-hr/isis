@@ -1,0 +1,33 @@
+{
+  try {
+    debug.appendln(AboutIsis.getFrameworkName());
+    debug.appendln(AboutIsis.getFrameworkVersion());
+    if (AboutIsis.getApplicationName() != null) {
+      debug.appendln("application: " + AboutIsis.getApplicationName());
+    }
+    if (AboutIsis.getApplicationVersion() != null) {
+      debug.appendln("version" + AboutIsis.getApplicationVersion());
+    }
+    final String user=System.getProperty("user.name");
+    final String system=System.getProperty("os.name") + " (" + System.getProperty("os.arch")+ ") "+ System.getProperty("os.version");
+    final String java=System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version");
+    debug.appendln("user: " + user);
+    debug.appendln("os: " + system);
+    debug.appendln("java: " + java);
+    debug.appendln("working directory: " + new File(".").getAbsolutePath());
+    debug.appendTitle("System Installer");
+    appendFixturesInstallerDebug(debug);
+    debug.appendTitle("System Components");
+    debug.appendln("Authentication manager",IsisContext.getAuthenticationManager().getClass().getName());
+    debug.appendln("Configuration",getConfiguration().getClass().getName());
+    final DebuggableWithTitle[] inf=IsisContext.debugSystem();
+    for (int i=0; i < inf.length; i++) {
+      if (inf[i] != null) {
+        inf[i].debugData(debug);
+      }
+    }
+  }
+ catch (  RuntimeException e) {
+    debug.appendException(e);
+  }
+}
