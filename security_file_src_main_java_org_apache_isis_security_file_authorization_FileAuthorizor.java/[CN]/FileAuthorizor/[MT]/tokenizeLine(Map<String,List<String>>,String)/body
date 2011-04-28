@@ -2,14 +2,30 @@
   if (line.trim().startsWith("#") || line.trim().length() == 0) {
     return;
   }
-  final StringTokenizer tokens=new StringTokenizer(line.trim(),":",false);
-  if (tokens.countTokens() != 2) {
-    throw new IsisConfigurationException("Invalid line: " + line);
+  int pos=line.trim().indexOf(">");
+  if (pos == -1) {
+    final StringTokenizer tokens=new StringTokenizer(line.trim(),":",false);
+    if (tokens.countTokens() != 2) {
+      throw new IsisConfigurationException("Invalid line: " + line);
+    }
+    final String token1=tokens.nextToken();
+    final String token2=tokens.nextToken();
+    final Identifier identifier=memberFromString(token1.trim());
+    final List<String> roles=tokenizeRoles(token2);
+    String identityString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARAMETERS);
+    map.put(identityString,roles);
   }
-  final String token1=tokens.nextToken();
-  final String token2=tokens.nextToken();
-  final Identifier identifier=memberFromString(token1.trim());
-  final List<String> roles=tokenizeRoles(token2);
-  String identityString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARAMETERS);
-  map.put(identityString,roles);
+ else {
+    Map<String,List<String>> newRules=new HashMap<String,List<String>>();
+    for (    String name : map.keySet()) {
+      String originalName=line.trim().substring(0,pos);
+      String redirectedName=line.trim().substring(pos + 1);
+      if (name.startsWith(redirectedName)) {
+        String id=originalName + name.substring(redirectedName.length());
+        List<String> roles=map.get(name);
+        newRules.put(id,roles);
+      }
+    }
+    map.putAll(newRules);
+  }
 }
