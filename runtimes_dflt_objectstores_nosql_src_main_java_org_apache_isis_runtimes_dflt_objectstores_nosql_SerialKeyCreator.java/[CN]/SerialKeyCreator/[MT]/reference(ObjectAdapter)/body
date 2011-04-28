@@ -1,3 +1,8 @@
 {
-  return object.getSpecification().getFullIdentifier() + "@" + key(object.getOid());
+  try {
+    return object.getSpecification().getFullIdentifier() + "@" + key(object.getOid());
+  }
+ catch (  NoSqlStoreException e) {
+    throw new NoSqlStoreException("Failed to create refence for " + object,e);
+  }
 }
