@@ -39,10 +39,7 @@ catch (  Throwable e) {
     String errorRef=Long.toString(System.currentTimeMillis(),36).toUpperCase();
     LOG.info("error " + errorRef);
     LOG.debug(e.getMessage(),e);
-    DebugString error=new DebugString();
-    generateErrorPage(e,context,error,errorRef);
-    String message="failed while processing " + servletPath;
-    LOG.error(message + " (#" + errorRef+ ")\n"+ error+ "\n"+ message);
+    prepareErrorDetails(e,context,errorRef,servletPath);
     PersistenceSession checkSession=IsisContext.getPersistenceSession();
     IsisTransactionManager transactionManager=checkSession.getTransactionManager();
     if (transactionManager.getTransaction() != null && transactionManager.getTransaction().getState().canAbort()) {
@@ -51,11 +48,14 @@ catch (  Throwable e) {
     }
     Throwable ex=e instanceof TagProcessingException ? e.getCause() : e;
     if (ex instanceof ForbiddenException) {
-      context.addVariable("_security_error",ex.getMessage(),Scope.REQUEST);
-      context.addVariable("_security_identifier",((ForbiddenException)ex).getIdentifier(),Scope.REQUEST);
-      context.addVariable("_security_roles",((ForbiddenException)ex).getRoles(),Scope.REQUEST);
-      IsisContext.getMessageBroker().addWarning("You did not have the right permissions to perform this (#" + errorRef + ")");
+      context.addVariable("_security-context",((TagProcessingException)e).getContext(),Scope.ERROR);
+      context.addVariable("_security-error",ex.getMessage(),Scope.ERROR);
+      context.addVariable("_security-identifier",((ForbiddenException)ex).getIdentifier(),Scope.ERROR);
+      context.addVariable("_security-roles",((ForbiddenException)ex).getRoles(),Scope.ERROR);
+      IsisContext.getMessageBroker().addWarning("You don't have the right permissions to perform this (#" + errorRef + ")"+ "<span class=\"debug-link\" onclick=\"$('#security-dump').toggle()\" > ...</span>");
+      context.clearVariables(Scope.REQUEST);
       context.setRequestPath("/index.shtml");
+      context.setRequestPath("/error/security_403.shtml");
       try {
         processTheView(context);
       }
@@ -64,17 +64,20 @@ catch (  Throwable e) {
       }
     }
  else {
-      IsisContext.getMessageBroker().addWarning("There was a error while processing this request (#" + errorRef + ")");
+      String message="There was a error while processing this request (#" + errorRef + ")"+ "<span class=\"debug-link\" onclick=\"$('#error-dump').toggle()\" > ...</span>";
+      IsisContext.getMessageBroker().addWarning(message);
       context.clearVariables(Scope.REQUEST);
       context.setRequestPath("/index.shtml");
       try {
+        context.reset();
         processTheView(context);
       }
  catch (      TagProcessingException e1) {
-        IsisContext.getMessageBroker().addWarning("There was a error while processing this request (#" + errorRef + ")");
+        IsisContext.getMessageBroker().addWarning(message);
         context.clearVariables(Scope.REQUEST);
         context.setRequestPath("/error.shtml");
         try {
+          context.reset();
           processTheView(context);
         }
  catch (        IOException e2) {

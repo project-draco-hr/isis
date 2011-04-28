@@ -3,11 +3,21 @@
   if (field == null) {
     throw new ScimpiException("No field " + fieldName + " in "+ adapter.getSpecification().getFullIdentifier());
   }
+  if (!field.isOneToManyAssociation()) {
+    throw new ScimpiException("Field " + fieldName + " not a collection, in "+ adapter.getSpecification().getFullIdentifier());
+  }
   if (field.isVisible(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
     throw new ForbiddenException(field,ForbiddenException.VISIBLE);
   }
   IsisContext.getPersistenceSession().resolveField(adapter,field);
-  if (field.isUsable(IsisContext.getAuthenticationSession(),adapter).isAllowed()) {
+  Consent usable=field.isUsable(IsisContext.getAuthenticationSession(),adapter);
+  if (usable.isAllowed()) {
+    usable=((OneToManyAssociation)field).isValidToRemove(adapter,element);
+  }
+  if (usable.isVetoed()) {
+    request.appendHtml("<span class=\"veto\">" + usable.getReason() + "</span>");
+  }
+ else {
     if (valid(request,adapter)) {
       String classSegment=" class=\"" + cssClass + "\"";
       String objectId=request.getContext().mapObject(adapter,Scope.INTERACTION);
