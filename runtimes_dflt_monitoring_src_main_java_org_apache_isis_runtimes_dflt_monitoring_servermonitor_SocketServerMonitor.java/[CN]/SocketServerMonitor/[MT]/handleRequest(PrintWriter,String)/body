@@ -1,0 +1,17 @@
+{
+  String query=URLDecoder.decode(request,"UTF-8");
+  if (query.equalsIgnoreCase("bye")) {
+    writer.println("Disconnecting...");
+    return false;
+  }
+ else   if (query.equalsIgnoreCase("shutdown")) {
+    writer.println("Shutting down system...");
+    system.shutdown();
+    exitSystem();
+    return false;
+  }
+  monitor.writeTextPage(query,writer);
+  writer.print("shutdown bye]\n#");
+  writer.flush();
+  return true;
+}
