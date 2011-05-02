@@ -2,7 +2,7 @@
   if (line.trim().startsWith("#") || line.trim().length() == 0) {
     return;
   }
-  int pos=line.trim().indexOf(">");
+  final int pos=line.trim().indexOf(">");
   if (pos == -1) {
     final StringTokenizer tokens=new StringTokenizer(line.trim(),":",false);
     if (tokens.countTokens() != 2) {
@@ -12,17 +12,17 @@
     final String token2=tokens.nextToken();
     final Identifier identifier=memberFromString(token1.trim());
     final List<String> roles=tokenizeRoles(token2);
-    String identityString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARAMETERS);
+    final String identityString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARAMETERS);
     map.put(identityString,roles);
   }
  else {
-    Map<String,List<String>> newRules=new HashMap<String,List<String>>();
-    for (    String name : map.keySet()) {
-      String originalName=line.trim().substring(0,pos);
-      String redirectedName=line.trim().substring(pos + 1);
+    final Map<String,List<String>> newRules=new HashMap<String,List<String>>();
+    for (    final String name : map.keySet()) {
+      final String originalName=line.trim().substring(0,pos);
+      final String redirectedName=line.trim().substring(pos + 1);
       if (name.startsWith(redirectedName)) {
-        String id=originalName + name.substring(redirectedName.length());
-        List<String> roles=map.get(name);
+        final String id=originalName + name.substring(redirectedName.length());
+        final List<String> roles=map.get(name);
         newRules.put(id,roles);
       }
     }
