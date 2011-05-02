@@ -1,13 +1,13 @@
 {
   AuthenticationSession authSession=new AuthenticationSessionLookupStrategyDefault().lookup(request,response);
   if (authSession != null) {
-    boolean sessionValid=IsisContext.getAuthenticationManager().isSessionValid(authSession);
+    final boolean sessionValid=IsisContext.getAuthenticationManager().isSessionValid(authSession);
     if (sessionValid) {
       loggedIn(response,authSession.getUserName());
       return;
     }
   }
-  String user=request.getParameter("username");
+  final String user=request.getParameter("username");
   final String password=request.getParameter("password");
   if (user == null && !IsisContext.getDeploymentType().isExploring()) {
     prompt(response,"","","");

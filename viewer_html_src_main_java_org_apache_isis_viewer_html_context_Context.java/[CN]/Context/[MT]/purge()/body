@@ -3,9 +3,9 @@
   clearMessagesAndWarnings();
   final Map newCollectionMap=new HashMap();
   final Map newObjectMap=new HashMap();
-  Iterator<HistoryEntry> elements=history.elements();
+  final Iterator<HistoryEntry> elements=history.elements();
   while (elements.hasNext()) {
-    HistoryEntry entry=elements.next();
+    final HistoryEntry entry=elements.next();
     if (entry.type == HistoryEntry.OBJECT) {
       final Object item=objectMap.get(entry.id);
       newObjectMap.put(entry.id,item);
@@ -13,7 +13,7 @@
       ((ObjectMapping)item).updateVersion();
     }
  else     if (entry.type == HistoryEntry.COLLECTION) {
-      final CollectionMapping coll=(CollectionMapping)collectionMap.get(entry.id);
+      final CollectionMapping coll=collectionMap.get(entry.id);
       newCollectionMap.put(entry.id,coll);
       LOG.debug("copied collection map for " + coll);
       final Enumeration e1=coll.elements();
