@@ -6,7 +6,7 @@
   final String name="uid=" + username + ", "+ ldapDn;
   final NamingEnumeration<SearchResult> answer=authContext.search(name,LdapAuthenticationConstants.FILTER,controls);
   while (answer.hasMore()) {
-    final SearchResult result=(SearchResult)answer.nextElement();
+    final SearchResult result=answer.nextElement();
     final String roleName=(String)result.getAttributes().get("cn").get(0);
     roles.add(roleName);
     LOG.debug("Adding role: " + roleName);
