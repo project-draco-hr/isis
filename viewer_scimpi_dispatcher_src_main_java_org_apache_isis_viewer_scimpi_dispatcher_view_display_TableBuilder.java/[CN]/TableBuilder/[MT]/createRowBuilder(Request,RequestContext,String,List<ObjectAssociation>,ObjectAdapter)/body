@@ -8,18 +8,18 @@
   request.processUtilCloseTag();
   final String headers=request.popBuffer();
   return new TableContentWriter(){
-    @Override public void writeFooters(    PageWriter writer){
+    @Override public void writeFooters(    final PageWriter writer){
     }
-    @Override public void writeHeaders(    PageWriter writer){
-      String headerSegment=headerClass == null ? "" : (" class=\"" + headerClass + "\"");
+    @Override public void writeHeaders(    final PageWriter writer){
+      final String headerSegment=headerClass == null ? "" : (" class=\"" + headerClass + "\"");
       writer.appendHtml("<thead" + headerSegment + ">");
       writer.appendHtml(headers);
       writer.appendHtml("</thead>");
     }
-    @Override public void writeElement(    Request request,    RequestContext context,    ObjectAdapter element){
+    @Override public void writeElement(    final Request request,    final RequestContext context,    final ObjectAdapter element){
       context.addVariable(variable,context.mapObject(element,Scope.REQUEST),Scope.REQUEST);
-      RepeatMarker end=request.createMarker();
-      RepeatMarker marker=block.getMarker();
+      final RepeatMarker end=request.createMarker();
+      final RepeatMarker marker=block.getMarker();
       marker.repeat();
       request.processUtilCloseTag();
       end.repeat();

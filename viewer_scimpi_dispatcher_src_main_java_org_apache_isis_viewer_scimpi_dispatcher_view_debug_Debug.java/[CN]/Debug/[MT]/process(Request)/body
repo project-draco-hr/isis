@@ -2,8 +2,8 @@
   if (request.getContext().isDebugDisabled()) {
     return;
   }
-  String type=request.getOptionalProperty(TYPE);
-  boolean alwaysShow=request.isRequested("force",false);
+  final String type=request.getOptionalProperty(TYPE);
+  final boolean alwaysShow=request.isRequested("force",false);
   if (type != null) {
     if (type.equals("system")) {
       displaySystem(request);
@@ -33,10 +33,10 @@
       objectGraph(request);
     }
  else     if (type.equals("object")) {
-      String value=request.getOptionalProperty(VALUE);
-      RequestContext context=request.getContext();
-      ObjectAdapter object=context.getMappedObject(value);
-      DebugString str=new DebugString();
+      final String value=request.getOptionalProperty(VALUE);
+      final RequestContext context=request.getContext();
+      final ObjectAdapter object=context.getMappedObject(value);
+      final DebugString str=new DebugString();
       Dump.adapter(object,str);
       Dump.graph(object,IsisContext.getAuthenticationSession(),str);
       request.appendHtml("<h2>" + object.getSpecification().getFullIdentifier() + "</h2>");
@@ -44,12 +44,12 @@
     }
   }
   if (alwaysShow || request.getContext().getDebug() == RequestContext.Debug.ON) {
-    RequestContext context=request.getContext();
-    String id=request.getOptionalProperty("object");
+    final RequestContext context=request.getContext();
+    final String id=request.getOptionalProperty("object");
     if (id != null) {
-      ObjectAdapter object=context.getMappedObject(id);
+      final ObjectAdapter object=context.getMappedObject(id);
       if (object instanceof DebuggableWithTitle) {
-        DebugString debug=new DebugString();
+        final DebugString debug=new DebugString();
         ((DebuggableWithTitle)object).debugData(debug);
         request.appendHtml("<pre class=\"debug\">" + debug + "</pre>");
       }
@@ -57,18 +57,18 @@
         request.appendHtml(object.toString());
       }
     }
-    String variable=request.getOptionalProperty("variable");
+    final String variable=request.getOptionalProperty("variable");
     if (variable != null) {
-      Object object=context.getVariable(variable);
+      final Object object=context.getVariable(variable);
       request.appendHtml(variable + " => " + (object == null ? "null" : object.toString()));
     }
-    String list=request.getOptionalProperty("list");
+    final String list=request.getOptionalProperty("list");
     if (list != null) {
-      DebugString debug=new DebugString();
+      final DebugString debug=new DebugString();
       context.append(debug,list);
       request.appendHtml(debug.toString());
     }
-    String uri=request.getOptionalProperty("uri");
+    final String uri=request.getOptionalProperty("uri");
     if (uri != null) {
       request.appendHtml("<pre class=\"debug\">");
       request.appendHtml(context.getUri());

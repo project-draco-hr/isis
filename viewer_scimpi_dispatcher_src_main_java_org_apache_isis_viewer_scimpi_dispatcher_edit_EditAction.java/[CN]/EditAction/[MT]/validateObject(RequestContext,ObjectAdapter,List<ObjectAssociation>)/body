@@ -1,8 +1,8 @@
 {
-  FormState formState=new FormState();
+  final FormState formState=new FormState();
   for (int i=0; i < fields.size(); i++) {
-    ObjectAssociation field=fields.get(i);
-    String fieldId=field.getId();
+    final ObjectAssociation field=fields.get(i);
+    final String fieldId=field.getId();
     String newEntry=context.getParameter(fieldId);
     if (fields.get(i).isOneToManyAssociation()) {
       continue;
@@ -17,7 +17,7 @@
       newEntry=context.getParameter(fieldId + "-other");
     }
     if (newEntry == null) {
-      ObjectSpecification spec=field.getSpecification();
+      final ObjectSpecification spec=field.getSpecification();
       if (spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(boolean.class)) || spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(Boolean.class))) {
         newEntry=FALSE;
       }
@@ -25,7 +25,7 @@
         continue;
       }
     }
-    FieldEditState fieldState=formState.createField(fieldId,newEntry);
+    final FieldEditState fieldState=formState.createField(fieldId,newEntry);
     Consent consent=null;
     if (field.isMandatory() && (newEntry.equals("") || newEntry.equals("NULL"))) {
       consent=new Veto(field.getName() + " required");
@@ -33,18 +33,18 @@
     }
  else     if (field.getSpecification().containsFacet(ParseableFacet.class)) {
       try {
-        ParseableFacet facet=field.getSpecification().getFacet(ParseableFacet.class);
-        ObjectAdapter originalValue=field.get(object);
-        ObjectAdapter newValue=facet.parseTextEntry(originalValue,newEntry);
+        final ParseableFacet facet=field.getSpecification().getFacet(ParseableFacet.class);
+        final ObjectAdapter originalValue=field.get(object);
+        final ObjectAdapter newValue=facet.parseTextEntry(originalValue,newEntry);
         consent=((OneToOneAssociation)field).isAssociationValid(object,newValue);
         fieldState.setValue(newValue);
       }
- catch (      TextEntryParseException e) {
+ catch (      final TextEntryParseException e) {
         consent=new Veto(e.getMessage());
       }
     }
  else {
-      ObjectAdapter associate=newEntry.equals("null") ? null : context.getMappedObject(newEntry);
+      final ObjectAdapter associate=newEntry.equals("null") ? null : context.getMappedObject(newEntry);
       if (associate != null) {
         IsisContext.getPersistenceSession().resolveImmediately(associate);
       }

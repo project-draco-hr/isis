@@ -1,14 +1,14 @@
 {
   text=text == null || text.trim().equals("") ? action.getName() : text;
   String parameterSegment="";
-  String[] parameters=parameterBlock.getParameters();
+  final String[] parameters=parameterBlock.getParameters();
   for (int i=0; i < parameters.length; i++) {
     parameterSegment+="&param" + i + "="+ parameters[i];
   }
-  String interactionParamters=context.encodedInteractionParameters();
-  String forwardResultSegment=forwardResultTo == null ? "" : "&amp;" + "_" + VIEW + "="+ context.fullFilePath(forwardResultTo);
-  String voidView=context.fullFilePath(forwardVoidTo == null ? context.getResourceFile() : forwardVoidTo);
-  String forwardVoidSegment="&amp;" + "_" + VOID + "="+ voidView;
+  final String interactionParamters=context.encodedInteractionParameters();
+  final String forwardResultSegment=forwardResultTo == null ? "" : "&amp;" + "_" + VIEW + "="+ context.fullFilePath(forwardResultTo);
+  final String voidView=context.fullFilePath(forwardVoidTo == null ? context.getResourceFile() : forwardVoidTo);
+  final String forwardVoidSegment="&amp;" + "_" + VOID + "="+ voidView;
   request.appendHtml("<a href=\"action.app?" + "_" + OBJECT + "="+ objectId+ "&amp;"+ "_"+ VERSION+ "="+ version+ "&amp;"+ "_"+ METHOD+ "="+ method+ forwardResultSegment+ forwardVoidSegment+ resultNameSegment+ parameterSegment+ scopeSegment+ confirmSegment+ messageSegment+ interactionParamters+ "\">");
   request.appendHtml(text);
   request.appendHtml("</a>");

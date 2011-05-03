@@ -1,15 +1,15 @@
 {
-  String id=request.getOptionalProperty(OBJECT);
-  String fieldName=request.getRequiredProperty(FIELD);
-  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  final String id=request.getOptionalProperty(OBJECT);
+  final String fieldName=request.getRequiredProperty(FIELD);
+  final ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
   if (object == null) {
     throw new ScimpiException("No object to get field for: " + fieldName + " - "+ id);
   }
-  ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+  final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
   if (field == null) {
     throw new ScimpiException("No field " + fieldName + " in "+ object.getSpecification().getFullIdentifier());
   }
-  AuthenticationSession session=IsisContext.getAuthenticationSession();
+  final AuthenticationSession session=IsisContext.getAuthenticationSession();
   if (field.isVisible(session,object).isVetoed()) {
     throw new ForbiddenException(field,ForbiddenException.VISIBLE);
   }
@@ -22,8 +22,8 @@
   if (pattern != null) {
     format=new SimpleDateFormat(pattern);
   }
-  String name=request.getOptionalProperty(RESULT_NAME,fieldName);
-  String scopeName=request.getOptionalProperty(SCOPE);
-  Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
+  final String name=request.getOptionalProperty(RESULT_NAME,fieldName);
+  final String scopeName=request.getOptionalProperty(SCOPE);
+  final Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
   process(request,object,field,format,name,scope);
 }

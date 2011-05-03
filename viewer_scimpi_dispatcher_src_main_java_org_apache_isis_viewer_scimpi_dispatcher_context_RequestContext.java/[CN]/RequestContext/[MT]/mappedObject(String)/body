@@ -8,31 +8,31 @@
   if (id.startsWith("D")) {
     return objectMapping.mappedTransientObject(id.substring(1));
   }
-  String[] idParts=id.split("@");
+  final String[] idParts=id.split("@");
   if (idParts.length == 2) {
-    ObjectAdapter mappedObject=objectMapping.mappedObject(id);
+    final ObjectAdapter mappedObject=objectMapping.mappedObject(id);
     if (mappedObject instanceof ObjectAdapter) {
-      IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)mappedObject);
+      IsisContext.getPersistenceSession().resolveImmediately(mappedObject);
     }
     return mappedObject;
   }
  else {
-    ObjectAdapter parentObject=objectMapping.mappedObject(idParts[0] + "@" + idParts[1]);
+    final ObjectAdapter parentObject=objectMapping.mappedObject(idParts[0] + "@" + idParts[1]);
     if (parentObject instanceof ObjectAdapter) {
-      IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)parentObject);
+      IsisContext.getPersistenceSession().resolveImmediately(parentObject);
     }
-    AggregatedOid aggregatedOid=new AggregatedOid(parentObject.getOid(),idParts[2]);
+    final AggregatedOid aggregatedOid=new AggregatedOid(parentObject.getOid(),idParts[2]);
     ObjectAdapter aggregatedAdapter=null;
-    outer:     for (    ObjectAssociation association : parentObject.getSpecification().getAssociations()) {
+    outer:     for (    final ObjectAssociation association : parentObject.getSpecification().getAssociations()) {
       if (association.getSpecification().isAggregated()) {
-        ObjectAdapter objectAdapter=association.get(parentObject);
+        final ObjectAdapter objectAdapter=association.get(parentObject);
         if (objectAdapter == null) {
           continue;
         }
         if (association.isOneToManyAssociation()) {
-          ObjectAdapter coll=objectAdapter;
-          CollectionFacet facet=coll.getSpecification().getFacet(CollectionFacet.class);
-          for (          ObjectAdapter element : facet.iterable(coll)) {
+          final ObjectAdapter coll=objectAdapter;
+          final CollectionFacet facet=coll.getSpecification().getFacet(CollectionFacet.class);
+          for (          final ObjectAdapter element : facet.iterable(coll)) {
             if (element.getOid().equals(aggregatedOid)) {
               aggregatedAdapter=element;
               break outer;

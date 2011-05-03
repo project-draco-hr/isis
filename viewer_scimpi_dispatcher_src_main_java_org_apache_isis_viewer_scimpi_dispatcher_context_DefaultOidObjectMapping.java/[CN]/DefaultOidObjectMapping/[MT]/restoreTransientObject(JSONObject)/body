@@ -1,32 +1,32 @@
 {
-  String cls=jsonObject.getString("_class");
-  String id=jsonObject.getString("_id");
+  final String cls=jsonObject.getString("_class");
+  final String id=jsonObject.getString("_id");
   ObjectAdapter object;
-  ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(cls);
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(cls);
   if (specification.isAggregated() && !specification.isCollection()) {
-    String[] split=id.split("@");
-    SerialOid parentOid=SerialOid.createTransient(Long.parseLong(split[0],16));
-    AggregatedOid oid=new AggregatedOid(parentOid,split[1]);
+    final String[] split=id.split("@");
+    final SerialOid parentOid=SerialOid.createTransient(Long.parseLong(split[0],16));
+    final AggregatedOid oid=new AggregatedOid(parentOid,split[1]);
     object=IsisContext.getPersistenceSession().recreateAdapter(oid,specification);
   }
  else {
     object=mappedObject("T" + cls + "@"+ id);
   }
-  for (  ObjectAssociation association : specification.getAssociations()) {
-    String fieldName=association.getId();
-    Object fieldValue=jsonObject.has(fieldName) ? jsonObject.get(fieldName) : null;
+  for (  final ObjectAssociation association : specification.getAssociations()) {
+    final String fieldName=association.getId();
+    final Object fieldValue=jsonObject.has(fieldName) ? jsonObject.get(fieldName) : null;
     if (association.getSpecification().isEncodeable()) {
       if (fieldValue == null) {
         ((OneToOneAssociation)association).initAssociation(object,null);
       }
  else {
-        EncodableFacet encodeableFacet=association.getSpecification().getFacet(EncodableFacet.class);
-        ObjectAdapter fromEncodedString=encodeableFacet.fromEncodedString((String)fieldValue);
+        final EncodableFacet encodeableFacet=association.getSpecification().getFacet(EncodableFacet.class);
+        final ObjectAdapter fromEncodedString=encodeableFacet.fromEncodedString((String)fieldValue);
         ((OneToOneAssociation)association).initAssociation(object,fromEncodedString);
       }
     }
  else     if (association instanceof OneToManyAssociation) {
-      List<JSONObject> collection=new ArrayList<JSONObject>();
+      final List<JSONObject> collection=new ArrayList<JSONObject>();
       if (!collection.isEmpty()) {
         throw new ScimpiException("Unexpected association for transient object " + association);
       }
@@ -37,11 +37,11 @@
       }
  else {
         if (fieldValue instanceof JSONObject) {
-          ObjectAdapter fieldObject=restoreTransientObject((JSONObject)fieldValue);
+          final ObjectAdapter fieldObject=restoreTransientObject((JSONObject)fieldValue);
           ((OneToOneAssociation)association).initAssociation(object,fieldObject);
         }
  else {
-          ObjectAdapter field=mappedObject((String)fieldValue);
+          final ObjectAdapter field=mappedObject((String)fieldValue);
           ((OneToOneAssociation)association).initAssociation(object,field);
         }
       }

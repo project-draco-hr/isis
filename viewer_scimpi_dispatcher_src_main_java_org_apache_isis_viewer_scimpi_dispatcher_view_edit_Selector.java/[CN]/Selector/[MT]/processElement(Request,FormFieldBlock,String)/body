@@ -1,25 +1,25 @@
 {
-  String type=request.getOptionalProperty(TYPE,"dropdown");
+  final String type=request.getOptionalProperty(TYPE,"dropdown");
   if (!request.isPropertySpecified(METHOD) && request.isPropertySpecified(COLLECTION)) {
-    String id=request.getRequiredProperty(COLLECTION,Request.NO_VARIABLE_CHECKING);
-    String selector=showSelectionList(request,id,block.getCurrent(field),block.isNullable(field),type);
+    final String id=request.getRequiredProperty(COLLECTION,Request.NO_VARIABLE_CHECKING);
+    final String selector=showSelectionList(request,id,block.getCurrent(field),block.isNullable(field),type);
     block.replaceContent(field,selector);
   }
  else {
-    String objectId=request.getOptionalProperty(OBJECT);
-    String methodName=request.getRequiredProperty(METHOD);
-    ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
-    ObjectAction action=MethodsUtils.findAction(object,methodName);
+    final String objectId=request.getOptionalProperty(OBJECT);
+    final String methodName=request.getRequiredProperty(METHOD);
+    final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
+    final ObjectAction action=MethodsUtils.findAction(object,methodName);
     if (action.getParameterCount() == 0) {
-      ObjectAdapter collection=action.execute(object,new ObjectAdapter[0]);
-      String selector=showSelectionList(request,collection,block.getCurrent(field),block.isNullable(field),type);
+      final ObjectAdapter collection=action.execute(object,new ObjectAdapter[0]);
+      final String selector=showSelectionList(request,collection,block.getCurrent(field),block.isNullable(field),type);
       block.replaceContent(field,selector);
     }
  else {
-      String id="selector_options";
-      String id2=(String)request.getContext().getVariable(id);
-      String selector=showSelectionList(request,id2,block.getCurrent(field),block.isNullable(field),type);
-      CreateFormParameter parameters=new CreateFormParameter();
+      final String id="selector_options";
+      final String id2=(String)request.getContext().getVariable(id);
+      final String selector=showSelectionList(request,id2,block.getCurrent(field),block.isNullable(field),type);
+      final CreateFormParameter parameters=new CreateFormParameter();
       parameters.objectId=objectId;
       parameters.methodName=methodName;
       parameters.buttonTitle=request.getOptionalProperty(BUTTON_TITLE,"Search");

@@ -1,20 +1,19 @@
 {
-  for (int i=0; i < formFields.length; i++) {
-    String fieldId=formFields[i].getName();
-    ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
-    InputField formField=formFields[i];
-    AuthenticationSession session=IsisContext.getAuthenticationSession();
-    Consent usable=field.isUsable(session,object);
-    ObjectAdapter[] options=field.getChoices(object);
+  for (  final InputField formField : formFields) {
+    final String fieldId=formField.getName();
+    final ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
+    final AuthenticationSession session=IsisContext.getAuthenticationSession();
+    final Consent usable=field.isUsable(session,object);
+    final ObjectAdapter[] options=field.getChoices(object);
     FieldFactory.initializeField(context,object,field,options,field.isMandatory(),formField);
-    boolean isEditable=usable.isAllowed();
+    final boolean isEditable=usable.isAllowed();
     if (!isEditable) {
       formField.setDescription(usable.getReason());
     }
     formField.setEditable(isEditable);
-    boolean hiddenField=field.isVisible(session,object).isVetoed();
-    boolean unusable=usable.isVetoed();
-    boolean hideAsUnusable=unusable && !includeUnusableFields;
+    final boolean hiddenField=field.isVisible(session,object).isVetoed();
+    final boolean unusable=usable.isVetoed();
+    final boolean hideAsUnusable=unusable && !includeUnusableFields;
     if (hiddenField || hideAsUnusable) {
       formField.setHidden(true);
     }

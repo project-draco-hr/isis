@@ -5,8 +5,8 @@
     field.setHelpReference(((ObjectMember)param).getHelp());
   }
  else {
-    HelpFacet helpFacet=param.getFacet(HelpFacet.class);
-    String value=helpFacet.value();
+    final HelpFacet helpFacet=param.getFacet(HelpFacet.class);
+    final String value=helpFacet.value();
     field.setHelpReference(value);
   }
   field.setRequired(isRequired);
@@ -14,17 +14,17 @@
   if (param.getSpecification().getFacet(ParseableFacet.class) != null) {
     final int maxLength=param.getFacet(MaxLengthFacet.class).value();
     field.setMaxLength(maxLength);
-    TypicalLengthFacet typicalLengthFacet=param.getFacet(TypicalLengthFacet.class);
+    final TypicalLengthFacet typicalLengthFacet=param.getFacet(TypicalLengthFacet.class);
     if (typicalLengthFacet.isDerived() && maxLength > 0) {
       field.setWidth(maxLength);
     }
  else {
       field.setWidth(typicalLengthFacet.value());
     }
-    MultiLineFacet multiLineFacet=param.getFacet(MultiLineFacet.class);
+    final MultiLineFacet multiLineFacet=param.getFacet(MultiLineFacet.class);
     field.setHeight(multiLineFacet.numberOfLines());
     field.setWrapped(!multiLineFacet.preventWrapping());
-    ObjectSpecification spec=param.getSpecification();
+    final ObjectSpecification spec=param.getSpecification();
     if (spec.containsFacet(BooleanValueFacet.class)) {
       field.setType(InputField.CHECKBOX);
     }
@@ -39,11 +39,11 @@
     field.setType(InputField.REFERENCE);
   }
   if (optionsForParameter != null) {
-    int noOptions=optionsForParameter.length;
-    String[] optionValues=new String[noOptions];
-    String[] optionTitles=new String[noOptions];
+    final int noOptions=optionsForParameter.length;
+    final String[] optionValues=new String[noOptions];
+    final String[] optionTitles=new String[noOptions];
     for (int j=0; j < optionsForParameter.length; j++) {
-      int i=j;
+      final int i=j;
       optionValues[i]=getValue(context,optionsForParameter[j]);
       optionTitles[i]=optionsForParameter[j].titleString();
     }

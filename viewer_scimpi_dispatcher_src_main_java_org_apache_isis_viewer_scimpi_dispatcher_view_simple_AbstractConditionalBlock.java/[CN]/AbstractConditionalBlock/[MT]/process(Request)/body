@@ -1,19 +1,19 @@
 {
-  String id=request.getOptionalProperty(OBJECT);
+  final String id=request.getOptionalProperty(OBJECT);
   boolean checkMade=false;
   boolean allConditionsMet=true;
-  String[] propertyNames=request.getAttributes().getPropertyNames(new String[]{"object","collection"});
-  for (  String propertyName : propertyNames) {
+  final String[] propertyNames=request.getAttributes().getPropertyNames(new String[]{"object","collection"});
+  for (  final String propertyName : propertyNames) {
     boolean result;
     if (propertyName.equals("set")) {
       result=request.isPropertySet("set");
     }
  else {
-      Test test=tests.get(propertyName);
+      final Test test=tests.get(propertyName);
       if (test == null) {
         throw new ScimpiException("No such test: " + propertyName);
       }
-      String attributeValue=request.getOptionalProperty(propertyName,false);
+      final String attributeValue=request.getOptionalProperty(propertyName,false);
       result=test.test(request,attributeValue,id);
       if (test.negateResult) {
         result=!result;
@@ -22,18 +22,18 @@
     checkMade=true;
     allConditionsMet&=result;
   }
-  String persistent=request.getOptionalProperty("persistent");
+  final String persistent=request.getOptionalProperty("persistent");
   if (persistent != null) {
-    ObjectAdapter object=request.getContext().getMappedObjectOrResult(persistent);
+    final ObjectAdapter object=request.getContext().getMappedObjectOrResult(persistent);
     checkMade=true;
     allConditionsMet&=object.isPersistent();
   }
   if (request.isPropertySpecified("empty")) {
     if (request.isPropertySet("empty")) {
-      String collection=request.getOptionalProperty("empty");
+      final String collection=request.getOptionalProperty("empty");
       if (collection != null) {
-        ObjectAdapter object=request.getContext().getMappedObjectOrResult(collection);
-        CollectionFacet facet=object.getSpecification().getFacet(CollectionFacet.class);
+        final ObjectAdapter object=request.getContext().getMappedObjectOrResult(collection);
+        final CollectionFacet facet=object.getSpecification().getFacet(CollectionFacet.class);
         checkMade=true;
         allConditionsMet&=facet.size(object) == 0;
       }
@@ -44,7 +44,7 @@
     }
   }
   if (request.isPropertySpecified("set")) {
-    boolean valuePresent=request.isPropertySet("set");
+    final boolean valuePresent=request.isPropertySet("set");
     checkMade=true;
     allConditionsMet&=valuePresent;
   }

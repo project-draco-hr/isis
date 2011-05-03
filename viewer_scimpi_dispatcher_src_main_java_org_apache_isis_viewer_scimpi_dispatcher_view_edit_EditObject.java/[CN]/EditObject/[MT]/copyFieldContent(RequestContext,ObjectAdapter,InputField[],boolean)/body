@@ -1,30 +1,29 @@
 {
-  for (int i=0; i < formFields.length; i++) {
-    String fieldName=formFields[i].getName();
-    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
-    InputField inputField=formFields[i];
+  for (  final InputField inputField : formFields) {
+    final String fieldName=inputField.getName();
+    final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
     if (field.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed()) {
       IsisContext.getPersistenceSession().resolveField(object,field);
-      ObjectAdapter fieldValue=field.get(object);
+      final ObjectAdapter fieldValue=field.get(object);
       if (inputField.isEditable()) {
-        String value=getValue(context,fieldValue);
+        final String value=getValue(context,fieldValue);
         if (!value.equals("") || inputField.getValue() == null) {
           inputField.setValue(value);
         }
       }
  else {
-        String entry=getValue(context,fieldValue);
+        final String entry=getValue(context,fieldValue);
         inputField.setHtml(entry);
         inputField.setType(InputField.HTML);
       }
       if (field.getSpecification().getFacet(ParseableFacet.class) == null) {
         if (fieldValue != null) {
-          String iconSegment=showIcon ? "<img class=\"small-icon\" src=\"" + context.imagePath(field.getSpecification()) + "\" alt=\""+ field.getSpecification().getShortIdentifier()+ "\"/>" : "";
-          String entry=iconSegment + fieldValue.titleString();
+          final String iconSegment=showIcon ? "<img class=\"small-icon\" src=\"" + context.imagePath(field.getSpecification()) + "\" alt=\""+ field.getSpecification().getShortIdentifier()+ "\"/>" : "";
+          final String entry=iconSegment + fieldValue.titleString();
           inputField.setHtml(entry);
         }
  else {
-          String entry="<em>none specified</em>";
+          final String entry="<em>none specified</em>";
           inputField.setHtml(entry);
         }
       }

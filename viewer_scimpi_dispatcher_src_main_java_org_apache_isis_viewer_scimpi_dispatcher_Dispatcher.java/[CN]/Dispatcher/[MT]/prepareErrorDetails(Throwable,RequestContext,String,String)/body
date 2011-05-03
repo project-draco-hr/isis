@@ -1,25 +1,25 @@
 {
-  DebugString debugText=new DebugString();
-  DebugHtmlString debugHtml=new DebugHtmlString();
-  DebugBuilder debug=new DebugTee(debugText,debugHtml);
+  final DebugString debugText=new DebugString();
+  final DebugHtmlString debugHtml=new DebugHtmlString();
+  final DebugBuilder debug=new DebugTee(debugText,debugHtml);
   try {
     debug.startSection("Exception");
     debug.appendException(exception);
     debug.endSection();
   }
- catch (  RuntimeException e) {
+ catch (  final RuntimeException e) {
     debug.appendln("NOTE - an exception occurred while dumping an exception!");
     debug.appendException(e);
   }
   if (IsisContext.getCurrentTransaction() != null) {
-    List<String> messages=IsisContext.getMessageBroker().getMessages();
-    List<String> warnings=IsisContext.getMessageBroker().getWarnings();
+    final List<String> messages=IsisContext.getMessageBroker().getMessages();
+    final List<String> warnings=IsisContext.getMessageBroker().getWarnings();
     if (messages.size() > 0 || messages.size() > 0) {
       debug.startSection("Warnings/Messages");
-      for (      String message : messages) {
+      for (      final String message : messages) {
         debug.appendln("message",message);
       }
-      for (      String message : warnings) {
+      for (      final String message : warnings) {
         debug.appendln("warning",message);
       }
     }
@@ -31,23 +31,23 @@
   debug.close();
   PrintWriter writer;
   try {
-    String directory=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.error-snapshots",".");
+    final String directory=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.error-snapshots",".");
     writer=new PrintWriter(new File(directory,"error_" + errorRef + ".html"));
-    DebugWriter writer2=new DebugWriter(writer,true);
+    final DebugWriter writer2=new DebugWriter(writer,true);
     writer2.concat(debugHtml);
     writer2.close();
     writer.close();
   }
- catch (  FileNotFoundException e) {
+ catch (  final FileNotFoundException e) {
     LOG.error("Failed to archive error page",e);
   }
-  String replace="";
-  String withReplacement="";
-  String message=exception.getMessage();
+  final String replace="";
+  final String withReplacement="";
+  final String message=exception.getMessage();
   requestContext.addVariable("_error-message",message == null ? "" : message.replaceAll(replace,withReplacement),Scope.ERROR);
   requestContext.addVariable("_error-details",debugHtml.toString().replaceAll(replace,withReplacement),Scope.ERROR);
   requestContext.addVariable("_error-ref",errorRef,Scope.ERROR);
   requestContext.clearTransientVariables();
-  String msg="failed during request for " + servletPath;
+  final String msg="failed during request for " + servletPath;
   LOG.error(msg + " (#" + errorRef+ ")\n"+ message+ "\n"+ debugText+ "\n"+ msg);
 }

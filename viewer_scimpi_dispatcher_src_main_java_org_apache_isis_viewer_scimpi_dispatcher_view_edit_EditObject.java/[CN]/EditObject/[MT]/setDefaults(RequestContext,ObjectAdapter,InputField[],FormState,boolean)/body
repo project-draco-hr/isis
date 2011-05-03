@@ -1,23 +1,23 @@
 {
-  for (int i=0; i < formFields.length; i++) {
-    String fieldId=formFields[i].getName();
-    ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
-    ObjectAdapter defaultValue=field.getDefault(object);
+  for (  final InputField formField : formFields) {
+    final String fieldId=formField.getName();
+    final ObjectAssociation field=object.getSpecification().getAssociation(fieldId);
+    final ObjectAdapter defaultValue=field.getDefault(object);
     if (defaultValue == null) {
       continue;
     }
-    String title=defaultValue.titleString();
+    final String title=defaultValue.titleString();
     if (field.getSpecification().containsFacet(ParseableFacet.class)) {
-      formFields[i].setValue(title);
+      formField.setValue(title);
     }
  else     if (field.isOneToOneAssociation()) {
-      ObjectSpecification objectSpecification=field.getSpecification();
+      final ObjectSpecification objectSpecification=field.getSpecification();
       if (defaultValue != null) {
-        String iconSegment=showIcon ? "<img class=\"small-icon\" src=\"" + context.imagePath(objectSpecification) + "\" alt=\""+ objectSpecification.getShortIdentifier()+ "\"/>" : "";
-        String html=iconSegment + title;
-        formFields[i].setHtml(html);
-        String value=defaultValue == null ? null : context.mapObject(defaultValue,Scope.INTERACTION);
-        formFields[i].setValue(value);
+        final String iconSegment=showIcon ? "<img class=\"small-icon\" src=\"" + context.imagePath(objectSpecification) + "\" alt=\""+ objectSpecification.getShortIdentifier()+ "\"/>" : "";
+        final String html=iconSegment + title;
+        formField.setHtml(html);
+        final String value=defaultValue == null ? null : context.mapObject(defaultValue,Scope.INTERACTION);
+        formField.setValue(value);
       }
     }
   }

@@ -1,55 +1,55 @@
 {
-  RequestContext context=request.getContext();
-  String objectId=request.getOptionalProperty(OBJECT);
-  String forwardEditedTo=request.getOptionalProperty(VIEW);
-  String forwardErrorTo=request.getOptionalProperty(ERRORS);
-  boolean hideNonEditableFields=request.isRequested(HIDE_UNEDITABLE,false);
-  boolean showIcon=request.isRequested(SHOW_ICON,true);
+  final RequestContext context=request.getContext();
+  final String objectId=request.getOptionalProperty(OBJECT);
+  final String forwardEditedTo=request.getOptionalProperty(VIEW);
+  final String forwardErrorTo=request.getOptionalProperty(ERRORS);
+  final boolean hideNonEditableFields=request.isRequested(HIDE_UNEDITABLE,false);
+  final boolean showIcon=request.isRequested(SHOW_ICON,true);
   String buttonTitle=request.getOptionalProperty(BUTTON_TITLE);
   String formTitle=request.getOptionalProperty(FORM_TITLE);
-  String formId=request.getOptionalProperty(FORM_ID,request.nextFormId());
-  String variable=request.getOptionalProperty(RESULT_NAME);
-  String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
-  String scope=request.getOptionalProperty(SCOPE);
-  String className=request.getOptionalProperty(CLASS,"edit full");
-  String id=request.getOptionalProperty(ID);
-  String completionMessage=request.getOptionalProperty(MESSAGE);
+  final String formId=request.getOptionalProperty(FORM_ID,request.nextFormId());
+  final String variable=request.getOptionalProperty(RESULT_NAME);
+  final String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
+  final String scope=request.getOptionalProperty(SCOPE);
+  final String className=request.getOptionalProperty(CLASS,"edit full");
+  final String id=request.getOptionalProperty(ID);
+  final String completionMessage=request.getOptionalProperty(MESSAGE);
   final ObjectAdapter object=context.getMappedObjectOrResult(objectId);
-  String actualObjectId=context.mapObject(object,Scope.INTERACTION);
-  String version=context.mapVersion(object);
+  final String actualObjectId=context.mapObject(object,Scope.INTERACTION);
+  final String version=context.mapVersion(object);
   final FormState entryState=(FormState)context.getVariable(ENTRY_FIELDS);
   final ObjectSpecification specification=object.getSpecification();
-  FormFieldBlock containedBlock=new FormFieldBlock(){
-    @Override public boolean isVisible(    String name){
-      ObjectAssociation fld=specification.getAssociation(name);
-      boolean isVisible=fld.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed();
-      boolean isUseable=fld.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
+  final FormFieldBlock containedBlock=new FormFieldBlock(){
+    @Override public boolean isVisible(    final String name){
+      final ObjectAssociation fld=specification.getAssociation(name);
+      final boolean isVisible=fld.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed();
+      final boolean isUseable=fld.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
       return isVisible && isUseable;
     }
-    public ObjectAdapter getCurrent(    String name){
+    @Override public ObjectAdapter getCurrent(    final String name){
       ObjectAdapter value=null;
       if (entryState != null) {
-        FieldEditState field2=entryState.getField(name);
+        final FieldEditState field2=entryState.getField(name);
         value=field2.getValue();
       }
       if (value == null) {
-        ObjectAssociation fld=specification.getAssociation(name);
+        final ObjectAssociation fld=specification.getAssociation(name);
         value=fld.get(object);
       }
       return value;
     }
-    public boolean isNullable(    String name){
-      ObjectAssociation fld=specification.getAssociation(name);
+    @Override public boolean isNullable(    final String name){
+      final ObjectAssociation fld=specification.getAssociation(name);
       return !fld.isMandatory();
     }
   }
 ;
   request.setBlockContent(containedBlock);
   request.processUtilCloseTag();
-  AuthenticationSession session=IsisContext.getAuthenticationSession();
+  final AuthenticationSession session=IsisContext.getAuthenticationSession();
   List<ObjectAssociation> viewFields=specification.getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object));
   viewFields=containedBlock.includedFields(viewFields);
-  InputField[] formFields=createFields(viewFields);
+  final InputField[] formFields=createFields(viewFields);
   initializeFields(context,object,formFields,entryState,!hideNonEditableFields);
   setDefaults(context,object,formFields,entryState,showIcon);
   copyFieldContent(context,object,formFields,showIcon);
@@ -59,8 +59,8 @@
     copyEntryState(context,object,formFields,entryState);
     errors=entryState.getError();
   }
-  String errorView=context.fullFilePath(forwardErrorTo == null ? context.getResourceFile() : forwardErrorTo);
-  List<HiddenInputField> hiddenFields=new ArrayList<HiddenInputField>();
+  final String errorView=context.fullFilePath(forwardErrorTo == null ? context.getResourceFile() : forwardErrorTo);
+  final List<HiddenInputField> hiddenFields=new ArrayList<HiddenInputField>();
   hiddenFields.add(new HiddenInputField("_" + OBJECT,actualObjectId));
   hiddenFields.add(new HiddenInputField("_" + VERSION,version));
   hiddenFields.add(new HiddenInputField("_" + FORM_ID,formId));
@@ -71,12 +71,12 @@
   hiddenFields.add(resultOverride == null ? null : new HiddenInputField("_" + RESULT_OVERRIDE,resultOverride));
   hiddenFields.add(scope == null ? null : new HiddenInputField("_" + SCOPE,scope));
   if (!object.isTransient()) {
-    List<ObjectAssociation> fields2=object.getSpecification().getAssociations();
+    final List<ObjectAssociation> fields2=object.getSpecification().getAssociations();
     for (int i=0; i < fields2.size(); i++) {
-      ObjectAssociation field=fields2.get(i);
+      final ObjectAssociation field=fields2.get(i);
       if (!viewFields.contains(field) && field.getSpecification().containsFacet(BooleanValueFacet.class)) {
-        String fieldId=field.getId();
-        String value=getValue(context,field.get(object));
+        final String fieldId=field.getId();
+        final String value=getValue(context,field.get(object));
         hiddenFields.add(new HiddenInputField(fieldId,value));
       }
     }
@@ -90,7 +90,7 @@
  else   if (buttonTitle.equals("")) {
     buttonTitle="Save";
   }
-  HiddenInputField[] hiddenFieldArray=hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]);
+  final HiddenInputField[] hiddenFieldArray=hiddenFields.toArray(new HiddenInputField[hiddenFields.size()]);
   HtmlFormBuilder.createForm(request,EditAction.ACTION + ".app",hiddenFieldArray,formFields,className,id,formTitle,null,null,buttonTitle,errors);
   request.popBlockContent();
 }

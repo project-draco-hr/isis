@@ -1,15 +1,15 @@
 {
   ObjectAdapter object=inObject;
-  Oid oid=object.getOid();
+  final Oid oid=object.getOid();
   if (oidType == null) {
     oidType=oid.getClass();
   }
   String encodedOid;
   if (oid instanceof AggregatedOid) {
-    AggregatedOid aoid=(AggregatedOid)oid;
-    Oid parentOid=aoid.getParentOid();
+    final AggregatedOid aoid=(AggregatedOid)oid;
+    final Oid parentOid=aoid.getParentOid();
     object=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(parentOid);
-    String aggregatedId=aoid.getId();
+    final String aggregatedId=aoid.getId();
     encodedOid=Long.toString(((SerialOid)parentOid).getSerialNo(),16) + "@" + aggregatedId;
   }
  else   if (oid instanceof SerialOid) {
@@ -18,11 +18,11 @@
  else {
     encodedOid=IsisContext.getPersistenceSession().getOidGenerator().getOidStringifier().enString(oid);
   }
-  boolean isTransient=object.isTransient();
-  String transferableId=(isTransient ? "T" : "P") + object.getSpecification().getFullIdentifier() + "@"+ encodedOid;
+  final boolean isTransient=object.isTransient();
+  final String transferableId=(isTransient ? "T" : "P") + object.getSpecification().getFullIdentifier() + "@"+ encodedOid;
   LOG.debug("encoded " + oid + " as "+ transferableId+ " ~ "+ encodedOid);
   if (inObject.isTransient()) {
-    TransientObjectMapping mapping=new TransientObjectMapping(inObject);
+    final TransientObjectMapping mapping=new TransientObjectMapping(inObject);
     if (scope == Scope.REQUEST) {
       requestTransients.put(transferableId,mapping);
     }

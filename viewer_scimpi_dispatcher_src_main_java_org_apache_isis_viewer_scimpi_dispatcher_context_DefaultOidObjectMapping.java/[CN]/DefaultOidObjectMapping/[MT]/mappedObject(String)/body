@@ -1,27 +1,27 @@
 {
-  char type=id.charAt(0);
+  final char type=id.charAt(0);
   if ((type == 'T')) {
     TransientObjectMapping mapping=sessionTransients.get(id);
     if (mapping == null) {
       mapping=requestTransients.get(id);
     }
     if (mapping == null) {
-      String[] split=id.split("@");
-      ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
-      Object pojo=spec.createObject(CreationMode.NO_INITIALIZE);
-      String oidData=split[1];
-      SerialOid oid=SerialOid.createTransient(Long.valueOf(oidData,16).longValue());
+      final String[] split=id.split("@");
+      final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
+      final Object pojo=spec.createObject(CreationMode.NO_INITIALIZE);
+      final String oidData=split[1];
+      final SerialOid oid=SerialOid.createTransient(Long.valueOf(oidData,16).longValue());
       return IsisContext.getPersistenceSession().recreateAdapter(oid,pojo);
     }
-    ObjectAdapter mappedTransientObject=mapping.getObject();
+    final ObjectAdapter mappedTransientObject=mapping.getObject();
     LOG.debug("retrieved " + mappedTransientObject.getOid() + " for "+ id);
     return mappedTransientObject;
   }
  else {
-    String[] split=id.split("@");
-    ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
+    final String[] split=id.split("@");
+    final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
     try {
-      String oidData=split[1];
+      final String oidData=split[1];
       LOG.debug("decoding " + oidData);
       ObjectAdapter loadObject;
       Oid oid;
@@ -29,7 +29,7 @@
         oidType=IsisContext.getPersistenceSession().getServices().get(0).getOid().getClass();
       }
       if (split.length > 2) {
-        SerialOid parentOid=SerialOid.createPersistent(Long.parseLong(oidData,16));
+        final SerialOid parentOid=SerialOid.createPersistent(Long.parseLong(oidData,16));
         oid=new AggregatedOid(parentOid,split[2]);
         IsisContext.getPersistenceSession().loadObject(parentOid,spec);
         loadObject=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(oid);
@@ -44,7 +44,7 @@
       }
       return loadObject;
     }
- catch (    SecurityException e) {
+ catch (    final SecurityException e) {
       throw new IsisException(e);
     }
   }

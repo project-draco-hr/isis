@@ -1,16 +1,16 @@
 {
-  String className=request.getOptionalProperty(CLASS);
-  String id=request.getOptionalProperty(OBJECT);
-  String fieldName=request.getRequiredProperty(FIELD);
-  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
-  ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+  final String className=request.getOptionalProperty(CLASS);
+  final String id=request.getOptionalProperty(OBJECT);
+  final String fieldName=request.getRequiredProperty(FIELD);
+  final ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
   if (field == null) {
     throw new ScimpiException("No field " + fieldName + " in "+ object.getSpecification().getFullIdentifier());
   }
   if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
     throw new ForbiddenException(field,ForbiddenException.VISIBLE);
   }
-  boolean isIconShowing=request.isRequested(SHOW_ICON,true);
-  int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
-  write(request,(ObjectAdapter)object,field,null,className,isIconShowing,truncateTo);
+  final boolean isIconShowing=request.isRequested(SHOW_ICON,true);
+  final int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
+  write(request,object,field,null,className,isIconShowing,truncateTo);
 }

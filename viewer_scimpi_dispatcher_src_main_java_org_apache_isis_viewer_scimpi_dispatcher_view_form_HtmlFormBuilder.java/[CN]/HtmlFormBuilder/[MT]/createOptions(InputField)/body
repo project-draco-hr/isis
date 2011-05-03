@@ -1,13 +1,13 @@
 {
-  StringBuffer str=new StringBuffer();
-  String disabled=field.isEditable() ? "" : " disabled=\"disabled\"";
+  final StringBuffer str=new StringBuffer();
+  final String disabled=field.isEditable() ? "" : " disabled=\"disabled\"";
   str.append("\n  <select name=\"" + field.getName() + "\""+ disabled+ ">\n");
-  String[] options=field.getOptionsText();
-  String[] ids=field.getOptionValues();
-  int length=options.length;
+  final String[] options=field.getOptionsText();
+  final String[] ids=field.getOptionValues();
+  final int length=options.length;
   boolean offerOther=false;
   for (int i=0; i < length; i++) {
-    String selectedSegment=field.getValue() == null || ids[i].equals(field.getValue()) ? " selected=\"selected\"" : "";
+    final String selectedSegment=field.getValue() == null || ids[i].equals(field.getValue()) ? " selected=\"selected\"" : "";
     if (field.getType() == InputField.TEXT && options[i].equals("__other")) {
       offerOther=true;
     }
@@ -16,7 +16,7 @@
     }
   }
   if (!field.isRequired() || length == 0) {
-    String selectedSegment=field.getValue() == null || field.getValue().equals("") ? " selected=\"selected\"" : "";
+    final String selectedSegment=field.getValue() == null || field.getValue().equals("") ? " selected=\"selected\"" : "";
     str.append("    <option value=\"null\"" + selectedSegment + "></option>\n");
   }
   if (offerOther) {
@@ -24,8 +24,8 @@
   }
   str.append("  </select>");
   if (field.getType() == InputField.TEXT) {
-    String lengthSegment=field.getWidth() == 0 ? "" : " size=\"" + field.getWidth() + "\"";
-    String hideSegment=" style=\"display: none;\" ";
+    final String lengthSegment=field.getWidth() == 0 ? "" : " size=\"" + field.getWidth() + "\"";
+    final String hideSegment=" style=\"display: none;\" ";
     str.append("  <input type=\"text\" name=\"" + field.getName() + "-other\""+ hideSegment+ lengthSegment+ disabled+ " />");
   }
   if (field.isRequired() && length == 0) {

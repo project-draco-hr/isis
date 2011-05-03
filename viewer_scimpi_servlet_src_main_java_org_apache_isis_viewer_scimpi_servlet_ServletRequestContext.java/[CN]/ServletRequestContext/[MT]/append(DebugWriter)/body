@@ -23,32 +23,32 @@
   view.appendln("URL",request.getRequestURL());
   view.appendln("User principle",request.getUserPrincipal());
   view.appendTitle("Cookies");
-  Cookie[] cookies=request.getCookies();
-  for (int i=0; i < cookies.length; i++) {
-    view.appendln(cookies[i].getName(),cookies[i].getValue());
+  final Cookie[] cookies=request.getCookies();
+  for (  final Cookie cookie : cookies) {
+    view.appendln(cookie.getName(),cookie.getValue());
   }
-  Enumeration attributeNames=request.getAttributeNames();
+  final Enumeration attributeNames=request.getAttributeNames();
   if (attributeNames.hasMoreElements()) {
     view.appendTitle("Attributes");
     while (attributeNames.hasMoreElements()) {
-      String name=(String)attributeNames.nextElement();
+      final String name=(String)attributeNames.nextElement();
       view.appendln(name,request.getAttribute(name));
     }
   }
   view.appendTitle("Headers");
-  Enumeration headerNames=request.getHeaderNames();
+  final Enumeration headerNames=request.getHeaderNames();
   while (headerNames.hasMoreElements()) {
-    String name=(String)headerNames.nextElement();
+    final String name=(String)headerNames.nextElement();
     view.appendln(name,request.getHeader(name));
   }
   view.appendTitle("Parameters");
-  Enumeration parameterNames=request.getParameterNames();
+  final Enumeration parameterNames=request.getParameterNames();
   while (parameterNames.hasMoreElements()) {
-    String name=(String)parameterNames.nextElement();
+    final String name=(String)parameterNames.nextElement();
     view.appendln(name,request.getParameter(name));
   }
   view.appendTitle("Servlet Context");
-  ServletContext context=getServletContext();
+  final ServletContext context=getServletContext();
   view.appendln("Name",context.getServletContextName());
   view.appendln("Server Info",context.getServerInfo());
   view.appendln("Version",context.getMajorVersion() + "." + context.getMinorVersion());

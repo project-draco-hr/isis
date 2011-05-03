@@ -1,37 +1,37 @@
 {
-  String objectId=context.getParameter("_" + OBJECT);
-  String version=context.getParameter("_" + VERSION);
-  String formId=context.getParameter("_" + FORM_ID);
-  String methodName=context.getParameter("_" + METHOD);
-  String override=context.getParameter("_" + RESULT_OVERRIDE);
+  final String objectId=context.getParameter("_" + OBJECT);
+  final String version=context.getParameter("_" + VERSION);
+  final String formId=context.getParameter("_" + FORM_ID);
+  final String methodName=context.getParameter("_" + METHOD);
+  final String override=context.getParameter("_" + RESULT_OVERRIDE);
   String resultName=context.getParameter("_" + RESULT_NAME);
-  String message=context.getParameter("_" + MESSAGE);
+  final String message=context.getParameter("_" + MESSAGE);
   resultName=resultName == null ? RequestContext.RESULT : resultName;
   FormState entryState=null;
   try {
-    ObjectAdapter object=MethodsUtils.findObject(context,objectId);
-    ObjectAction action=MethodsUtils.findAction(object,methodName);
+    final ObjectAdapter object=MethodsUtils.findObject(context,objectId);
+    final ObjectAction action=MethodsUtils.findAction(object,methodName);
     entryState=validateParameters(context,action,object);
-    AuthenticationSession session=context.getSession();
+    final AuthenticationSession session=context.getSession();
     if (session == null && action.isUsable(new UserlessSession(),object).isVetoed()) {
       throw new NotLoggedInException();
     }
     object.checkLock(context.getVersion(version));
     if (entryState.isValid()) {
-      boolean hasResult=invokeMethod(context,resultName,object,action,entryState);
+      final boolean hasResult=invokeMethod(context,resultName,object,action,entryState);
       String view=context.getParameter(hasResult ? "_" + VIEW : "_" + VOID);
-      int questionMark=view == null ? -1 : view.indexOf("?");
+      final int questionMark=view == null ? -1 : view.indexOf("?");
       if (questionMark > -1) {
-        String params[]=view.substring(questionMark + 1).split("&");
-        for (        String param : params) {
-          int equals=param.indexOf("=");
+        final String params[]=view.substring(questionMark + 1).split("&");
+        for (        final String param : params) {
+          final int equals=param.indexOf("=");
           context.addVariable(param.substring(0,equals),param.substring(equals + 1),Scope.REQUEST);
           view=view.substring(0,questionMark);
         }
       }
       context.setRequestPath(view);
       if (message != null) {
-        MessageBroker messageBroker=IsisContext.getMessageBroker();
+        final MessageBroker messageBroker=IsisContext.getMessageBroker();
         messageBroker.addMessage(message);
       }
       if (override != null) {
@@ -49,13 +49,13 @@
         context.addVariable(resultName,override,Scope.REQUEST);
       }
       final String error=entryState.getError();
-      String view=context.getParameter("_" + ERRORS);
+      final String view=context.getParameter("_" + ERRORS);
       context.setRequestPath(view,Dispatcher.ACTION);
-      MessageBroker messageBroker=IsisContext.getMessageBroker();
+      final MessageBroker messageBroker=IsisContext.getMessageBroker();
       messageBroker.addWarning(error);
     }
   }
- catch (  ConcurrencyException e) {
+ catch (  final ConcurrencyException e) {
     IsisContext.getMessageBroker().addMessage(e.getMessage());
     entryState.setForm(formId);
     context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
@@ -67,10 +67,10 @@
     if (error != null) {
       context.addVariable(RequestContext.ERROR,error,Scope.REQUEST);
     }
-    String view=context.getParameter("_" + ERRORS);
+    final String view=context.getParameter("_" + ERRORS);
     context.setRequestPath(view,Dispatcher.ACTION);
   }
-catch (  RuntimeException e) {
+catch (  final RuntimeException e) {
     IsisContext.getMessageBroker().getMessages();
     IsisContext.getMessageBroker().getWarnings();
     IsisContext.getUpdateNotifier().clear();

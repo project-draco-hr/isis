@@ -1,15 +1,15 @@
 {
-  FormState formState=new FormState();
-  List<ObjectActionParameter> parameters2=action.getParameters();
-  int parameterCount=action.getParameterCount();
+  final FormState formState=new FormState();
+  final List<ObjectActionParameter> parameters2=action.getParameters();
+  final int parameterCount=action.getParameterCount();
   for (int i=0; i < parameterCount; i++) {
-    String fieldName=parameterName(i);
+    final String fieldName=parameterName(i);
     String newEntry=context.getParameter(fieldName);
     if (newEntry != null && newEntry.equals("-OTHER-")) {
       newEntry=context.getParameter(fieldName + "-other");
     }
     if (newEntry == null) {
-      ObjectSpecification spec=parameters2.get(i).getSpecification();
+      final ObjectSpecification spec=parameters2.get(i).getSpecification();
       if (spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(boolean.class)) || spec.isOfType(IsisContext.getSpecificationLoader().loadSpecification(Boolean.class))) {
         newEntry=FALSE;
       }
@@ -17,7 +17,7 @@
         newEntry="";
       }
     }
-    FieldEditState fieldState=formState.createField(fieldName,newEntry);
+    final FieldEditState fieldState=formState.createField(fieldName,newEntry);
     Consent consent=null;
     if (!parameters2.get(i).isOptional() && newEntry.equals("")) {
       consent=new Veto(parameters2.get(i).getName() + " required");
@@ -25,16 +25,16 @@
     }
  else     if (parameters2.get(i).getSpecification().getFacet(ParseableFacet.class) != null) {
       try {
-        ParseableFacet facet=parameters2.get(i).getSpecification().getFacet(ParseableFacet.class);
-        String message=parameters2.get(i).isValid(object,newEntry);
+        final ParseableFacet facet=parameters2.get(i).getSpecification().getFacet(ParseableFacet.class);
+        final String message=parameters2.get(i).isValid(object,newEntry);
         if (message != null) {
           consent=new Veto(message);
           formState.setError("Not all fields are valid");
         }
-        ObjectAdapter entry=facet.parseTextEntry(null,newEntry);
+        final ObjectAdapter entry=facet.parseTextEntry(null,newEntry);
         fieldState.setValue(entry);
       }
- catch (      TextEntryParseException e) {
+ catch (      final TextEntryParseException e) {
         consent=new Veto(e.getMessage());
         formState.setError("Not all fields are valid");
       }
@@ -47,8 +47,8 @@
     }
   }
   if (formState.isValid()) {
-    ObjectAdapter[] parameters=getParameters(action,formState);
-    Consent consent=action.isProposedArgumentSetValid(object,parameters);
+    final ObjectAdapter[] parameters=getParameters(action,formState);
+    final Consent consent=action.isProposedArgumentSetValid(object,parameters);
     if (consent != null && consent.isVetoed()) {
       formState.setError(consent.getReason());
     }

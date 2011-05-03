@@ -6,14 +6,14 @@
   }
   int row=1;
   for (int i=0; i < fields.size(); i++) {
-    ObjectAssociation field=fields.get(i);
+    final ObjectAssociation field=fields.get(i);
     if (ignoreField(field)) {
       continue;
     }
     if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
       continue;
     }
-    String description=field.getDescription().equals("") ? "" : "title=\"" + field.getDescription() + "\"";
+    final String description=field.getDescription().equals("") ? "" : "title=\"" + field.getDescription() + "\"";
     String cls;
     if (row++ % 2 == 1) {
       cls=" class=\"field " + (oddRowClass == null ? ODD_ROW_CLASS : oddRowClass) + "\"";
@@ -22,7 +22,7 @@
       cls=" class=\"field " + (evenRowClass == null ? EVEN_ROW_CLASS : evenRowClass) + "\"";
     }
     request.appendHtml("<div " + cls + description+ "><span class=\"label\">"+ field.getName()+ ":</span>");
-    LinkedObject linkedObject=linkFields[i];
+    final LinkedObject linkedObject=linkFields[i];
     addField(request,object,field,linkedObject,showIcons);
     HelpLink.append(request,field.getDescription(),field.getHelp());
     request.appendHtml("</div>");

@@ -1,16 +1,16 @@
 {
-  SwfTag tag=getTag();
+  final SwfTag tag=getTag();
   if (tag.getType() == SwfTag.EMPTY) {
     return;
   }
   while (index < snippets.size() - 1) {
     index++;
-    Snippet snippet=snippets.get(index);
+    final Snippet snippet=snippets.get(index);
     if (snippet instanceof HtmlSnippet) {
       append((HtmlSnippet)snippet);
     }
  else {
-      SwfTag nextTag=(SwfTag)snippet;
+      final SwfTag nextTag=(SwfTag)snippet;
       if (tag.getName().equals(nextTag.getName())) {
         if (nextTag.getType() == SwfTag.START) {
         }
@@ -18,11 +18,11 @@
           return;
         }
       }
-      String name=nextTag.getName();
+      final String name=nextTag.getName();
       if (nextTag.getType() == SwfTag.END && !tag.getName().equals(name)) {
         throw new TagProcessingException("Expected " + nextTag.getName().toLowerCase() + " tag but found "+ tag.getName().toLowerCase()+ " tag at "+ nextTag.errorAt(),tag.toString());
       }
-      ElementProcessor processor=processors.getFor(name);
+      final ElementProcessor processor=processors.getFor(name);
       process(nextTag,processor);
     }
   }

@@ -1,13 +1,13 @@
 {
-  String id=request.getOptionalProperty(OBJECT);
-  String fieldName=request.getOptionalProperty(FIELD);
-  int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
-  boolean isIconShowing=request.isRequested(SHOW_ICON,true);
+  final String id=request.getOptionalProperty(OBJECT);
+  final String fieldName=request.getOptionalProperty(FIELD);
+  final int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
+  final boolean isIconShowing=request.isRequested(SHOW_ICON,true);
   String className=request.getOptionalProperty(CLASS);
   className=className == null ? "title-icon" : className;
   ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
   if (fieldName != null) {
-    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+    final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
     if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
       throw new ForbiddenException(field,ForbiddenException.VISIBLE);
     }
@@ -17,7 +17,7 @@
     request.appendHtml("<span class=\"object\">");
     IsisContext.getPersistenceSession().resolveImmediately(object);
     if (isIconShowing) {
-      String iconPath=request.getContext().imagePath(object);
+      final String iconPath=request.getContext().imagePath(object);
       request.appendHtml("<img class=\"" + className + "\" src=\""+ iconPath+ "\" />");
     }
     request.appendTruncated(object.titleString(),truncateTo);

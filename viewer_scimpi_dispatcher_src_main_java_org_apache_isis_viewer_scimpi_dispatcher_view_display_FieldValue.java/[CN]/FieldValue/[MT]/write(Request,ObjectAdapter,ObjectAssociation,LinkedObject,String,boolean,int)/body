@@ -1,13 +1,13 @@
 {
-  ObjectAdapter fieldReference=field.get(object);
+  final ObjectAdapter fieldReference=field.get(object);
   if (fieldReference != null) {
-    String classSection="class=\"" + (className == null ? "field" : className) + "\"";
+    final String classSection="class=\"" + (className == null ? "field" : className) + "\"";
     request.appendHtml("<span " + classSection + ">");
     if (field.isOneToOneAssociation()) {
       try {
-        IsisContext.getPersistenceSession().resolveImmediately((ObjectAdapter)fieldReference);
+        IsisContext.getPersistenceSession().resolveImmediately(fieldReference);
       }
- catch (      ObjectNotFoundException e) {
+ catch (      final ObjectNotFoundException e) {
         request.appendHtml(e.getMessage() + "</span>");
       }
     }
@@ -15,19 +15,19 @@
       request.appendHtml("<img class=\"small-icon\" src=\"" + request.getContext().imagePath(fieldReference) + "\" alt=\""+ field.getSpecification().getShortIdentifier()+ "\"/>");
     }
     if (linkedField != null) {
-      String id=request.getContext().mapObject((ObjectAdapter)fieldReference,linkedField.getScope(),Scope.INTERACTION);
+      final String id=request.getContext().mapObject(fieldReference,linkedField.getScope(),Scope.INTERACTION);
       request.appendHtml("<a href=\"" + linkedField.getForwardView() + "?"+ linkedField.getVariable()+ "="+ id+ request.getContext().encodedInteractionParameters()+ "\">");
     }
     String value=fieldReference == null ? "" : fieldReference.titleString();
     if (truncateTo > 0 && value.length() > truncateTo) {
       value=value.substring(0,truncateTo) + "...";
     }
-    ObjectSpecification spec=field.getSpecification();
-    BooleanValueFacet facet=(BooleanValueFacet)spec.getFacet(BooleanValueFacet.class);
+    final ObjectSpecification spec=field.getSpecification();
+    final BooleanValueFacet facet=spec.getFacet(BooleanValueFacet.class);
     if (facet != null) {
-      boolean flag=facet.isSet(fieldReference);
-      String valueSegment=flag ? " checked=\"checked\"" : "";
-      String disabled=" disabled=\"disabled\"";
+      final boolean flag=facet.isSet(fieldReference);
+      final String valueSegment=flag ? " checked=\"checked\"" : "";
+      final String disabled=" disabled=\"disabled\"";
       value="<input type=\"checkbox\"" + valueSegment + disabled+ " />";
     }
     request.appendHtml(value);

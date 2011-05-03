@@ -1,33 +1,33 @@
 {
   try {
     Document document;
-    SAXReader reader=new SAXReader();
+    final SAXReader reader=new SAXReader();
     document=reader.read(file);
-    Element root=document.getRootElement();
-    for (Iterator i=root.elementIterator(); i.hasNext(); ) {
-      Element element=(Element)i.next();
+    final Element root=document.getRootElement();
+    for (final Iterator i=root.elementIterator(); i.hasNext(); ) {
+      final Element element=(Element)i.next();
       if (element.getName().equals("actions")) {
-        for (Iterator actions=element.elementIterator("action"); actions.hasNext(); ) {
-          Element action=(Element)actions.next();
-          String className=action.getText();
-          Action instance=(Action)InstanceUtil.createInstance(className);
+        for (final Iterator actions=element.elementIterator("action"); actions.hasNext(); ) {
+          final Element action=(Element)actions.next();
+          final String className=action.getText();
+          final Action instance=(Action)InstanceUtil.createInstance(className);
           addAction(instance);
         }
       }
       if (element.getName().equals("processors")) {
-        for (Iterator processors=element.elementIterator("processor"); processors.hasNext(); ) {
-          Element processor=(Element)processors.next();
-          String className=processor.getText();
-          ElementProcessor instance=(ElementProcessor)InstanceUtil.createInstance(className);
+        for (final Iterator processors=element.elementIterator("processor"); processors.hasNext(); ) {
+          final Element processor=(Element)processors.next();
+          final String className=processor.getText();
+          final ElementProcessor instance=(ElementProcessor)InstanceUtil.createInstance(className);
           this.processors.addElementProcessor(instance);
         }
       }
     }
   }
- catch (  MalformedURLException e) {
+ catch (  final MalformedURLException e) {
     throw new IsisException(e);
   }
-catch (  DocumentException e) {
+catch (  final DocumentException e) {
     throw new IsisException(e);
   }
 }

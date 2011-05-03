@@ -1,12 +1,12 @@
 {
   ObjectAdapter object;
-  object=(ObjectAdapter)obj;
-  Mapping mapping=createMapping(object);
+  object=obj;
+  final Mapping mapping=createMapping(object);
   boolean changeScope=false;
-  for (  Scope s : scopedMappings.keySet()) {
-    Map<String,Mapping> map=scopedMappings.get(s);
+  for (  final Scope s : scopedMappings.keySet()) {
+    final Map<String,Mapping> map=scopedMappings.get(s);
     if (map.containsValue(mapping)) {
-      String id=findMapping(map,mapping);
+      final String id=findMapping(map,mapping);
       if (changeScope) {
         map.remove(id);
         scopedMappings.get(scope).put(id,mapping);
@@ -17,8 +17,8 @@
       changeScope=true;
     }
   }
-  Map<String,Mapping> map=scopedMappings.get(scope);
-  String id=obj.getSpecification().getShortIdentifier() + "@" + nextId();
+  final Map<String,Mapping> map=scopedMappings.get(scope);
+  final String id=obj.getSpecification().getShortIdentifier() + "@" + nextId();
   map.put(id,mapping);
   return id;
 }

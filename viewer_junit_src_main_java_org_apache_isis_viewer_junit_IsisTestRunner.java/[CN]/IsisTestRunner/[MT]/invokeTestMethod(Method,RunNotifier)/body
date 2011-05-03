@@ -2,9 +2,9 @@
   final TestClass testClass=getTestClass();
   final String configDirIfAny=getConfigDir(testClass.getJavaClass());
   final Description description=methodDescription(method);
-  IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderDefault(configDirIfAny);
+  final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderDefault(configDirIfAny);
   isisConfigurationBuilder.add(SystemConstants.NOSPLASH_KEY,"" + true);
-  InstallerLookupDefault installerLookup=new InstallerLookupDefault(getClass());
+  final InstallerLookupDefault installerLookup=new InstallerLookupDefault(getClass());
   isisConfigurationBuilder.injectInto(installerLookup);
   installerLookup.init();
   IsisSystemUsingInstallersWithinJunit system=null;
@@ -24,7 +24,7 @@
     session=IsisContext.getAuthenticationManager().authenticate(request);
     IsisContext.openSession(session);
     getTransactionManager().startTransaction();
-    Object test=createTest();
+    final Object test=createTest();
     getServicesInjector().injectDependencies(test);
     final TestMethod testMethod=wrapMethod(method);
     new MethodRoadie(test,testMethod,notifier,description).run();

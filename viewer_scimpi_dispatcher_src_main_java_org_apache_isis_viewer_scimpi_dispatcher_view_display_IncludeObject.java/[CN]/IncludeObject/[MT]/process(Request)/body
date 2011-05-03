@@ -1,10 +1,10 @@
 {
-  String path=request.getOptionalProperty("file");
+  final String path=request.getOptionalProperty("file");
   String id=request.getOptionalProperty(OBJECT);
-  String fieldName=request.getOptionalProperty(FIELD);
+  final String fieldName=request.getOptionalProperty(FIELD);
   ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
   if (fieldName != null) {
-    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+    final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
     if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
       throw new ForbiddenException(field,ForbiddenException.VISIBLE);
     }

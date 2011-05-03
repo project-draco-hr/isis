@@ -1,18 +1,18 @@
 {
-  String id=request.getOptionalProperty(OBJECT);
-  String fieldName=request.getOptionalProperty(FIELD);
-  int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
-  ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  final String id=request.getOptionalProperty(OBJECT);
+  final String fieldName=request.getOptionalProperty(FIELD);
+  final int truncateTo=Integer.valueOf(request.getOptionalProperty(TRUNCATE,"0")).intValue();
+  final ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
   String titleString;
   if (fieldName == null) {
     titleString=object.titleString();
   }
  else {
-    ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+    final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
     if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
       throw new ForbiddenException(field,ForbiddenException.VISIBLE);
     }
-    ObjectAdapter fieldReference=field.get(object);
+    final ObjectAdapter fieldReference=field.get(object);
     if (fieldReference != null) {
       titleString=fieldReference.titleString();
     }

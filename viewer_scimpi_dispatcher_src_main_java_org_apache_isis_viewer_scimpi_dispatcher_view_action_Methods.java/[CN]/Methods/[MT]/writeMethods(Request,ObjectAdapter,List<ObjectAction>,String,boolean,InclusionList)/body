@@ -1,7 +1,7 @@
 {
   actions=inclusionList.includedActions(actions);
   for (int j=0; j < actions.size(); j++) {
-    ObjectAction action=actions.get(j);
+    final ObjectAction action=actions.get(j);
     if (action instanceof ObjectActionSet) {
       request.appendHtml("<div class=\"actions\">");
       writeMethods(request,adapter,action.getActions(),objectId,showForms,inclusionList);
@@ -9,9 +9,9 @@
     }
  else     if (action.isContributed() && action.getParameterCount() == 1 && adapter.getSpecification().isOfType(action.getParameters().get(0).getSpecification())) {
       if (objectId != null) {
-        ObjectAdapter target=request.getContext().getMappedObject(objectId);
-        ObjectAdapter realTarget=action.realTarget(target);
-        String realTargetId=request.getContext().mapObject(realTarget,Scope.INTERACTION);
+        final ObjectAdapter target=request.getContext().getMappedObject(objectId);
+        final ObjectAdapter realTarget=action.realTarget(target);
+        final String realTargetId=request.getContext().mapObject(realTarget,Scope.INTERACTION);
         writeMethod(request,adapter,new String[]{objectId},action,realTargetId,showForms);
       }
  else {

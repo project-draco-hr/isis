@@ -1,6 +1,6 @@
 {
   LOG.info("processing request " + servletPath);
-  AuthenticationSession session=UserManager.startRequest(context);
+  final AuthenticationSession session=UserManager.startRequest(context);
   LOG.debug("exsiting session: " + session);
   IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
   context.setRequestPath(servletPath);
@@ -9,7 +9,7 @@
     processActions(context,false,servletPath);
     processTheView(context);
   }
- catch (  ScimpiNotFoundException e) {
+ catch (  final ScimpiNotFoundException e) {
     if (context.isInternalRequest()) {
       LOG.error("invalid page request (from within application): " + e.getMessage());
     }
@@ -21,32 +21,32 @@
       context.setRequestPath("/index.shtml");
       processTheView(context);
     }
- catch (    IOException e1) {
+ catch (    final IOException e1) {
       throw new ScimpiException(e);
     }
   }
-catch (  NotLoggedInException e) {
+catch (  final NotLoggedInException e) {
     IsisContext.getMessageBroker().addWarning("You are not currently logged in! Please log in so you can continue.");
     context.setRequestPath("/login.shtml");
     try {
       processTheView(context);
     }
- catch (    IOException e1) {
+ catch (    final IOException e1) {
       throw new ScimpiException(e1);
     }
   }
-catch (  Throwable e) {
-    String errorRef=Long.toString(System.currentTimeMillis(),36).toUpperCase();
+catch (  final Throwable e) {
+    final String errorRef=Long.toString(System.currentTimeMillis(),36).toUpperCase();
     LOG.info("error " + errorRef);
     LOG.debug(e.getMessage(),e);
     prepareErrorDetails(e,context,errorRef,servletPath);
-    PersistenceSession checkSession=IsisContext.getPersistenceSession();
-    IsisTransactionManager transactionManager=checkSession.getTransactionManager();
+    final PersistenceSession checkSession=IsisContext.getPersistenceSession();
+    final IsisTransactionManager transactionManager=checkSession.getTransactionManager();
     if (transactionManager.getTransaction() != null && transactionManager.getTransaction().getState().canAbort()) {
       transactionManager.abortTransaction();
       transactionManager.startTransaction();
     }
-    Throwable ex=e instanceof TagProcessingException ? e.getCause() : e;
+    final Throwable ex=e instanceof TagProcessingException ? e.getCause() : e;
     if (ex instanceof ForbiddenException) {
       context.addVariable("_security-context",((TagProcessingException)e).getContext(),Scope.ERROR);
       context.addVariable("_security-error",ex.getMessage(),Scope.ERROR);
@@ -59,12 +59,12 @@ catch (  Throwable e) {
       try {
         processTheView(context);
       }
- catch (      IOException e1) {
+ catch (      final IOException e1) {
         throw new ScimpiException(e);
       }
     }
  else {
-      String message="There was a error while processing this request (#" + errorRef + ")"+ "<span class=\"debug-link\" onclick=\"$('#error-dump').toggle()\" > ...</span>";
+      final String message="There was a error while processing this request (#" + errorRef + ")"+ "<span class=\"debug-link\" onclick=\"$('#error-dump').toggle()\" > ...</span>";
       IsisContext.getMessageBroker().addWarning(message);
       context.clearVariables(Scope.REQUEST);
       context.setRequestPath("/index.shtml");
@@ -72,7 +72,7 @@ catch (  Throwable e) {
         context.reset();
         processTheView(context);
       }
- catch (      TagProcessingException e1) {
+ catch (      final TagProcessingException e1) {
         IsisContext.getMessageBroker().addWarning(message);
         context.clearVariables(Scope.REQUEST);
         context.setRequestPath("/error.shtml");
@@ -80,11 +80,11 @@ catch (  Throwable e) {
           context.reset();
           processTheView(context);
         }
- catch (        IOException e2) {
+ catch (        final IOException e2) {
           throw new ScimpiException(e2);
         }
       }
-catch (      IOException e1) {
+catch (      final IOException e1) {
         throw new ScimpiException(e1);
       }
     }
@@ -93,7 +93,7 @@ catch (      IOException e1) {
     try {
       UserManager.endRequest(context.getSession());
     }
- catch (    Exception e1) {
+ catch (    final Exception e1) {
       LOG.error("endRequest call failed",e1);
     }
   }

@@ -13,9 +13,9 @@
   specificationClasses(view,"Child specifications",spec.subclasses());
   specificationClasses(view,"Implemented interfaces",spec.interfaces());
   speficationFacets(view,spec);
-  List<ObjectAssociation> fields=spec.getAssociations();
+  final List<ObjectAssociation> fields=spec.getAssociations();
   specificationMembers(view,"Fields",fields);
-  List<ObjectAction> userActions=spec.getObjectActions(ActionType.USER);
+  final List<ObjectAction> userActions=spec.getObjectActions(ActionType.USER);
   specificationMembers(view,"User Actions",userActions);
   specificationMembers(view,"Exploration Actions",spec.getObjectActions(ActionType.EXPLORATION));
   specificationMembers(view,"Prototype Actions",spec.getObjectActions(ActionType.PROTOTYPE));
@@ -23,7 +23,7 @@
   view.endSection();
   view.startSection("Fields");
   for (int i=0; i < fields.size(); i++) {
-    ObjectAssociation field=fields.get(i);
+    final ObjectAssociation field=fields.get(i);
     view.appendTitle("<span id=\"" + field.getId() + "\"><em>Field:</em> "+ field.getId()+ "</span>");
     view.appendln("ID",field.getIdentifier());
     view.appendln("Short ID",field.getId());
@@ -44,16 +44,16 @@
     view.appendln("Specification",specificationLink(action.getSpecification()));
     view.appendln("Target",action.getTarget());
     view.appendln("On type",specificationLink(action.getOnType()));
-    ObjectSpecification returnType=action.getReturnType();
+    final ObjectSpecification returnType=action.getReturnType();
     view.appendln("Returns",returnType == null ? "VOID" : specificationLink(returnType));
     speficationFacets(view,action);
-    List<ObjectActionParameter> parameters=action.getParameters();
+    final List<ObjectActionParameter> parameters=action.getParameters();
     if (parameters.size() == 0) {
       view.appendln("Parameters","none");
     }
  else {
-      StringBuffer buffer=new StringBuffer();
-      List<ObjectActionParameter> p=action.getParameters();
+      final StringBuffer buffer=new StringBuffer();
+      final List<ObjectActionParameter> p=action.getParameters();
       for (int j=0; j < parameters.size(); j++) {
         buffer.append(p.get(j).getName());
         buffer.append(" (");
@@ -61,9 +61,9 @@
         buffer.append(")");
         view.appendln("Parameters",buffer.toString());
         view.indent();
-        Class<? extends Facet>[] parameterFacets=p.get(j).getFacetTypes();
-        for (int k=0; k < parameterFacets.length; k++) {
-          view.append(p.get(j).getFacet(parameterFacets[k]).toString());
+        final Class<? extends Facet>[] parameterFacets=p.get(j).getFacetTypes();
+        for (        final Class<? extends Facet> parameterFacet : parameterFacets) {
+          view.append(p.get(j).getFacet(parameterFacet).toString());
         }
         view.unindent();
       }

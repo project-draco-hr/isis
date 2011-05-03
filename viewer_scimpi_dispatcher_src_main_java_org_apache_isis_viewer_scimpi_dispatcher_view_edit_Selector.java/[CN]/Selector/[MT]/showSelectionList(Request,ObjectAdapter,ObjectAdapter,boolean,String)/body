@@ -1,6 +1,6 @@
 {
-  String field=request.getRequiredProperty(FIELD);
-  CollectionFacet facet=(CollectionFacet)collection.getSpecification().getFacet(CollectionFacet.class);
+  final String field=request.getRequiredProperty(FIELD);
+  final CollectionFacet facet=collection.getSpecification().getFacet(CollectionFacet.class);
   if (facet.size(collection) == 1 && !allowNotSet) {
     return onlyItem(request,field,collection,facet);
   }
@@ -8,7 +8,7 @@
     return radioButtonList(request,field,allowNotSet,collection,selectedItem,facet);
   }
  else   if (type.equals("list")) {
-    String size=request.getOptionalProperty("size","5");
+    final String size=request.getOptionalProperty("size","5");
     return dropdownList(request,field,allowNotSet,collection,selectedItem,size,facet);
   }
  else   if (type.equals("dropdown")) {

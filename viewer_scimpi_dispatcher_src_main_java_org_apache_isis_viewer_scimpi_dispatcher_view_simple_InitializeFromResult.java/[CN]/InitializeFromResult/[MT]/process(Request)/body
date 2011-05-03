@@ -1,15 +1,15 @@
 {
   disallowSourceAndDefault(request);
-  String sourceObjectId=objectOrResult(request);
-  Class<?> cls=forClass(request);
-  String variableName=request.getRequiredProperty(NAME);
-  String defaultObjectId=request.getOptionalProperty(DEFAULT);
-  String scopeName=request.getOptionalProperty(SCOPE);
-  Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
-  RequestContext context=request.getContext();
-  ObjectAdapter sourceObject=context.getMappedObject(sourceObjectId);
-  boolean isSourceSet=sourceObject != null;
-  boolean isSourceAssignable=isSourceSet && (cls == null || cls.isAssignableFrom(sourceObject.getObject().getClass()));
+  final String sourceObjectId=objectOrResult(request);
+  final Class<?> cls=forClass(request);
+  final String variableName=request.getRequiredProperty(NAME);
+  final String defaultObjectId=request.getOptionalProperty(DEFAULT);
+  final String scopeName=request.getOptionalProperty(SCOPE);
+  final Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
+  final RequestContext context=request.getContext();
+  final ObjectAdapter sourceObject=context.getMappedObject(sourceObjectId);
+  final boolean isSourceSet=sourceObject != null;
+  final boolean isSourceAssignable=isSourceSet && (cls == null || cls.isAssignableFrom(sourceObject.getObject().getClass()));
   if (isSourceAssignable) {
     request.appendDebug("     " + variableName + " set to "+ sourceObjectId+ " ("+ scope+ ")");
     context.addVariable(variableName,sourceObjectId,scope);

@@ -1,5 +1,5 @@
 {
-  ObjectAssociation field=adapter.getSpecification().getAssociation(fieldName);
+  final ObjectAssociation field=adapter.getSpecification().getAssociation(fieldName);
   if (field == null) {
     throw new ScimpiException("No field " + fieldName + " in "+ adapter.getSpecification().getFullIdentifier());
   }
@@ -19,10 +19,10 @@
   }
  else {
     if (valid(request,adapter)) {
-      String classSegment=" class=\"" + cssClass + "\"";
-      String objectId=request.getContext().mapObject(adapter,Scope.INTERACTION);
-      String elementId=request.getContext().mapObject(element,Scope.INTERACTION);
-      String action=RemoveAction.ACTION + Dispatcher.COMMAND_ROOT;
+      final String classSegment=" class=\"" + cssClass + "\"";
+      final String objectId=request.getContext().mapObject(adapter,Scope.INTERACTION);
+      final String elementId=request.getContext().mapObject(element,Scope.INTERACTION);
+      final String action=RemoveAction.ACTION + Dispatcher.COMMAND_ROOT;
       request.appendHtml("<form" + classSegment + " method=\"post\" action=\""+ action+ "\" >");
       request.appendHtml("<input type=\"hidden\" name=\"" + OBJECT + "\" value=\""+ objectId+ "\" />");
       request.appendHtml("<input type=\"hidden\" name=\"" + FIELD + "\" value=\""+ fieldName+ "\" />");

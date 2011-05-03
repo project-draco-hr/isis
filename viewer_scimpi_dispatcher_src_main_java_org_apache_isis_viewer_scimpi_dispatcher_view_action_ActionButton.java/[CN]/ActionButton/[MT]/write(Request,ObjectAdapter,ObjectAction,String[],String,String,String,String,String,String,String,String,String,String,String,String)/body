@@ -1,17 +1,17 @@
 {
-  RequestContext context=request.getContext();
+  final RequestContext context=request.getContext();
   buttonTitle=buttonTitle != null ? buttonTitle : action.getName();
   if (action.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
     LOG.info("action not visible " + action.getName());
     return;
   }
-  Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+  final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
   if (usable.isVetoed()) {
     LOG.info("action not available: " + usable.getReason());
     return;
   }
-  String idSegment=idName == null ? "" : ("id=\"" + idName + "\" ");
-  String classSegment="class=\"" + (className == null ? "action in-line" : className) + "\"";
+  final String idSegment=idName == null ? "" : ("id=\"" + idName + "\" ");
+  final String classSegment="class=\"" + (className == null ? "action in-line" : className) + "\"";
   request.appendHtml("\n<form " + idSegment + classSegment+ " action=\"action.app\" method=\"post\">\n");
   if (objectId == null) {
     request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + OBJECT + "\" value=\""+ context.getVariable(RequestContext.RESULT)+ "\" />\n");

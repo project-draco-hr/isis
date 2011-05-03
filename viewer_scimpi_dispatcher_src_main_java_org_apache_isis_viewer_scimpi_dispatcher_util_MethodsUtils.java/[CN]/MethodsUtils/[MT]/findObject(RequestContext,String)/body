@@ -3,12 +3,12 @@
     objectId=context.getStringVariable(RequestContext.RESULT);
   }
   if (objectId != null && objectId.startsWith(SERVICE_PREFIX)) {
-    String serviceId=objectId.substring(SERVICE_PREFIX.length());
-    List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
-    for (    ObjectAdapter serviceAdapter : serviceAdapters) {
-      Object service=serviceAdapter.getObject();
+    final String serviceId=objectId.substring(SERVICE_PREFIX.length());
+    final List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+    for (    final ObjectAdapter serviceAdapter : serviceAdapters) {
+      final Object service=serviceAdapter.getObject();
       if (ServiceUtil.id(service).equals(serviceId.trim())) {
-        ObjectAdapter adapter=getAdapterManager().getAdapterFor(service);
+        final ObjectAdapter adapter=getAdapterManager().getAdapterFor(service);
         return adapter;
       }
     }

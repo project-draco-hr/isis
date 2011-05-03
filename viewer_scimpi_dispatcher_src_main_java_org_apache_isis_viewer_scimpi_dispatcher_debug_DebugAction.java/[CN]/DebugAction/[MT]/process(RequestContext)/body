@@ -2,7 +2,7 @@
   if (context.isDebugDisabled()) {
     throw new ForbiddenException("Can't access debug action when debug is disabled");
   }
-  String action=context.getParameter("action");
+  final String action=context.getParameter("action");
   if ("list-i18n".equals(action)) {
     i18n(context,null);
   }
@@ -10,12 +10,12 @@
     authorization(context,null);
   }
  else   if (context.getParameter("mode") != null) {
-    boolean isDebugOn=context.getParameter("mode").equals("debug");
+    final boolean isDebugOn=context.getParameter("mode").equals("debug");
     context.addVariable("debug-on",isDebugOn,Scope.SESSION);
     context.setRequestPath("/debug/debug.shtml");
   }
  else {
-    DebugWriter view=new DebugWriter(context.getWriter(),true);
+    final DebugWriter view=new DebugWriter(context.getWriter(),true);
     view.appendln("<div class=\"links\">");
     view.appendln("<a href=\"debug.app?action=system\">System</a>");
     view.appendln(" | <a href=\"debug.app?action=specifications\">List specifications</a>");

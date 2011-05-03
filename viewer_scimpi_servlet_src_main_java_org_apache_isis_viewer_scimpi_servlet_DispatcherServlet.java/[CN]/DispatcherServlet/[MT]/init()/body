@@ -2,13 +2,13 @@
   super.init();
   ImageLookup.setImageDirectory(getServletContext(),"images");
   dispatcher=new Dispatcher();
-  Enumeration initParameterNames=getInitParameterNames();
+  final Enumeration initParameterNames=getInitParameterNames();
   while (initParameterNames.hasMoreElements()) {
-    String name=(String)initParameterNames.nextElement();
-    String value=getInitParameter(name);
+    final String name=(String)initParameterNames.nextElement();
+    final String value=getInitParameter(name);
     dispatcher.addParameter(name,value);
   }
-  String dir=getServletContext().getRealPath("/WEB-INF");
+  final String dir=getServletContext().getRealPath("/WEB-INF");
   dispatcher.init(dir);
   new UserManager(IsisContext.getAuthenticationManager());
 }

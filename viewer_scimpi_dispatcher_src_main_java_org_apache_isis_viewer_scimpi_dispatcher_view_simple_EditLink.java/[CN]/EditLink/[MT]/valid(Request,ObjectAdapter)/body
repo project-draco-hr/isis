@@ -1,9 +1,9 @@
 {
-  ObjectSpecification specification=adapter.getSpecification();
-  AuthenticationSession session=IsisContext.getAuthenticationSession();
-  List<ObjectAssociation> visibleFields=specification.getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,adapter));
-  ImmutableFacet facet=specification.getFacet(ImmutableFacet.class);
-  boolean isImmutable=facet != null && facet.value() == org.apache.isis.core.metamodel.facets.When.ALWAYS;
-  boolean isImmutableOncePersisted=facet != null && facet.value() == org.apache.isis.core.metamodel.facets.When.ONCE_PERSISTED && adapter.isPersistent();
+  final ObjectSpecification specification=adapter.getSpecification();
+  final AuthenticationSession session=IsisContext.getAuthenticationSession();
+  final List<ObjectAssociation> visibleFields=specification.getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,adapter));
+  final ImmutableFacet facet=specification.getFacet(ImmutableFacet.class);
+  final boolean isImmutable=facet != null && facet.value() == org.apache.isis.core.metamodel.facets.When.ALWAYS;
+  final boolean isImmutableOncePersisted=facet != null && facet.value() == org.apache.isis.core.metamodel.facets.When.ONCE_PERSISTED && adapter.isPersistent();
   return visibleFields.size() > 0 && !isImmutable && !isImmutableOncePersisted;
 }

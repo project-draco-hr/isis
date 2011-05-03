@@ -5,28 +5,26 @@
     classSegment=" class=\"title\"";
     request.appendHtml("<div" + classSegment + ">"+ formTitle+ "</div>\n");
   }
-  String cls="errors";
+  final String cls="errors";
   if (errors != null) {
     request.appendHtml("<div class=\"" + cls + "\">"+ errors+ "</div>");
   }
-  for (int i=0; i < hiddenFields.length; i++) {
-    HiddenInputField hiddenField=hiddenFields[i];
+  for (  final HiddenInputField hiddenField : hiddenFields) {
     if (hiddenField == null) {
       continue;
     }
     request.appendHtml("  <input type=\"hidden\" name=\"" + hiddenField.getName() + "\" value=\""+ hiddenField.getValue()+ "\" />\n");
   }
   request.appendHtml(request.getContext().interactionFields());
-  for (int i=0; i < fields.length; i++) {
-    InputField fld=fields[i];
+  for (  final InputField fld : fields) {
     if (fld.isHidden()) {
       request.appendHtml("  <input type=\"hidden\" name=\"" + fld.getName() + "\" value=\""+ fld.getValue()+ "\" />\n");
     }
  else {
-      String errorSegment=fld.getErrorText() == null ? "" : "<span class=\"error\">" + fld.getErrorText() + "</span>";
-      String fieldSegment=createField(fld);
-      String helpSegment=HelpLink.createHelpSegment(fld.getDescription(),fld.getHelpReference());
-      String title=fld.getDescription().equals("") ? "" : " title=\"" + fld.getDescription() + "\"";
+      final String errorSegment=fld.getErrorText() == null ? "" : "<span class=\"error\">" + fld.getErrorText() + "</span>";
+      final String fieldSegment=createField(fld);
+      final String helpSegment=HelpLink.createHelpSegment(fld.getDescription(),fld.getHelpReference());
+      final String title=fld.getDescription().equals("") ? "" : " title=\"" + fld.getDescription() + "\"";
       request.appendHtml("  <div class=\"field\"><label" + title + ">"+ fld.getLabel()+ ":</label>"+ fieldSegment+ errorSegment+ helpSegment+ "</div>\n");
     }
   }

@@ -5,25 +5,25 @@
   setAuthorizationInstaller(getInstallerLookup().injectDependenciesInto(new NoopAuthorizationManagerInstaller()));
   setPersistenceMechanismInstaller(getInstallerLookup().injectDependenciesInto(new InMemoryPersistenceMechanismInstallerWithinJunit()));
   setUserProfileStoreInstaller(getInstallerLookup().injectDependenciesInto(new InMemoryUserProfileStoreInstaller()));
-  FixtureInstallerAnnotatedClass fixtureInstaller=new FixtureInstallerAnnotatedClass();
+  final FixtureInstallerAnnotatedClass fixtureInstaller=new FixtureInstallerAnnotatedClass();
   try {
     fixtureInstaller.addFixturesAnnotatedOn(this.testClass.getJavaClass());
   }
- catch (  InstantiationException e) {
+ catch (  final InstantiationException e) {
     throw new IsisException(e);
   }
-catch (  IllegalAccessException e) {
+catch (  final IllegalAccessException e) {
     throw new IsisException(e);
   }
   setFixtureInstaller(fixtureInstaller);
-  ServicesInstallerAnnotatedClass servicesInstaller=new ServicesInstallerAnnotatedClass();
+  final ServicesInstallerAnnotatedClass servicesInstaller=new ServicesInstallerAnnotatedClass();
   try {
     servicesInstaller.addServicesAnnotatedOn(this.testClass.getJavaClass());
   }
- catch (  InstantiationException e) {
+ catch (  final InstantiationException e) {
     throw new IsisException(e);
   }
-catch (  IllegalAccessException e) {
+catch (  final IllegalAccessException e) {
     throw new IsisException(e);
   }
   setServicesInstaller(servicesInstaller);

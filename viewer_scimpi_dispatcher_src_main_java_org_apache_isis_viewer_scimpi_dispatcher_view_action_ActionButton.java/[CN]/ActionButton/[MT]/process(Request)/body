@@ -1,33 +1,33 @@
 {
-  String objectId=request.getOptionalProperty(OBJECT);
-  String methodName=request.getRequiredProperty(METHOD);
-  String forwardResultTo=request.getOptionalProperty(VIEW);
-  String forwardVoidTo=request.getOptionalProperty(VOID);
-  String forwardErrorTo=request.getOptionalProperty(ERRORS);
-  String variable=request.getOptionalProperty(RESULT_NAME);
-  String scope=request.getOptionalProperty(SCOPE);
-  String buttonTitle=request.getOptionalProperty(BUTTON_TITLE);
-  String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
-  String idName=request.getOptionalProperty(ID,methodName);
-  String className=request.getOptionalProperty(CLASS);
-  boolean showMessage=request.isRequested(SHOW_MESSAGE,false);
-  String completionMessage=request.getOptionalProperty(MESSAGE);
-  ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
-  String version=request.getContext().mapVersion(object);
-  ObjectAction action=MethodsUtils.findAction(object,methodName);
-  ActionContent parameterBlock=new ActionContent(action);
+  final String objectId=request.getOptionalProperty(OBJECT);
+  final String methodName=request.getRequiredProperty(METHOD);
+  final String forwardResultTo=request.getOptionalProperty(VIEW);
+  final String forwardVoidTo=request.getOptionalProperty(VOID);
+  final String forwardErrorTo=request.getOptionalProperty(ERRORS);
+  final String variable=request.getOptionalProperty(RESULT_NAME);
+  final String scope=request.getOptionalProperty(SCOPE);
+  final String buttonTitle=request.getOptionalProperty(BUTTON_TITLE);
+  final String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
+  final String idName=request.getOptionalProperty(ID,methodName);
+  final String className=request.getOptionalProperty(CLASS);
+  final boolean showMessage=request.isRequested(SHOW_MESSAGE,false);
+  final String completionMessage=request.getOptionalProperty(MESSAGE);
+  final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
+  final String version=request.getContext().mapVersion(object);
+  final ObjectAction action=MethodsUtils.findAction(object,methodName);
+  final ActionContent parameterBlock=new ActionContent(action);
   request.setBlockContent(parameterBlock);
   request.processUtilCloseTag();
-  String[] parameters=parameterBlock.getParameters();
-  ObjectAdapter[] objectParameters=new ObjectAdapter[parameters.length];
+  final String[] parameters=parameterBlock.getParameters();
+  final ObjectAdapter[] objectParameters=new ObjectAdapter[parameters.length];
   int i=0;
-  for (  ObjectActionParameter spec : action.getParameters()) {
-    ObjectSpecification typ=spec.getSpecification();
+  for (  final ObjectActionParameter spec : action.getParameters()) {
+    final ObjectSpecification typ=spec.getSpecification();
     if (parameters[i] == null) {
       objectParameters[i]=null;
     }
  else     if (typ.getFacet(ParseableFacet.class) != null) {
-      ParseableFacet facet=(ParseableFacet)typ.getFacet(ParseableFacet.class);
+      final ParseableFacet facet=typ.getFacet(ParseableFacet.class);
       objectParameters[i]=facet.parseTextEntry(null,parameters[i]);
     }
  else {
@@ -39,9 +39,9 @@
     write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
   }
   if (showMessage) {
-    Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+    final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
     if (usable.isVetoed()) {
-      String notUsable=MethodsUtils.isUsable(object,action);
+      final String notUsable=MethodsUtils.isUsable(object,action);
       if (notUsable != null) {
         request.appendHtml("<div class=\"" + className + "-message\" >"+ notUsable+ "</div>");
       }
