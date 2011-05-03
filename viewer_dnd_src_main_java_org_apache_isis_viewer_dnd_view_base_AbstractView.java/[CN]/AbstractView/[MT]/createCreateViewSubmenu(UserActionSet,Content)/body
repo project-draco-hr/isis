@@ -1,8 +1,8 @@
 {
-  ViewRequirement requirements=new ViewRequirement(content,ViewRequirement.OPEN);
+  final ViewRequirement requirements=new ViewRequirement(content,ViewRequirement.OPEN);
   final Enumeration possibleViews=Toolkit.getViewFactory().availableDesigns(requirements);
   if (possibleViews.hasMoreElements()) {
-    UserActionSet submenu=options.addNewActionSet("Create view from");
+    final UserActionSet submenu=options.addNewActionSet("Create view from");
     while (possibleViews.hasMoreElements()) {
       final ViewSpecification specification=(ViewSpecification)possibleViews.nextElement();
       final UserActionAbstract viewAs=new UserActionAbstract(specification.getName(),ActionType.USER){
@@ -11,10 +11,10 @@
           try {
             newSpec=specification.getClass().newInstance();
           }
- catch (          InstantiationException e) {
+ catch (          final InstantiationException e) {
             throw new ViewerException(e);
           }
-catch (          IllegalAccessException e) {
+catch (          final IllegalAccessException e) {
             throw new ViewerException(e);
           }
           Content content=view.getContent();

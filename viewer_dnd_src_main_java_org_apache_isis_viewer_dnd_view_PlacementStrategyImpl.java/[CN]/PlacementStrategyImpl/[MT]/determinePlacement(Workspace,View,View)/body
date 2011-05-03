@@ -2,12 +2,12 @@
   if (relativeToView == null) {
     return new Location();
   }
-  Size workspaceSize=workspace.getSize();
-  View rootView=rootView(workspace,relativeToView);
-  Location rootViewLocation=rootView.getLocation();
-  Size rootViewSize=rootView.getSize();
-  Location newLocation=new Location(rootViewLocation);
-  Size requiredSize=newView.getView().getRequiredSize(Size.createMax());
+  final Size workspaceSize=workspace.getSize();
+  final View rootView=rootView(workspace,relativeToView);
+  final Location rootViewLocation=rootView.getLocation();
+  final Size rootViewSize=rootView.getSize();
+  final Location newLocation=new Location(rootViewLocation);
+  final Size requiredSize=newView.getView().getRequiredSize(Size.createMax());
   if (rootViewLocation.getX() + rootViewSize.getWidth() + PADDING+ requiredSize.getWidth() < workspaceSize.getWidth()) {
     newLocation.add(rootViewSize.getWidth() + PADDING,0);
   }
@@ -23,11 +23,11 @@
  else {
     newLocation.add(PADDING * 6,PADDING * 6);
   }
-  int maxSpaceToLeft=workspaceSize.getWidth() - requiredSize.getWidth();
-  int maxSpaceAbove=workspaceSize.getHeight() - requiredSize.getHeight();
+  final int maxSpaceToLeft=workspaceSize.getWidth() - requiredSize.getWidth();
+  final int maxSpaceAbove=workspaceSize.getHeight() - requiredSize.getHeight();
   ensureWidth(newLocation,maxSpaceToLeft);
   ensureHeight(newLocation,maxSpaceAbove);
-  Location firstAttempt=new Location(newLocation);
+  final Location firstAttempt=new Location(newLocation);
   while (workspace.subviewFor(newLocation) != null && workspace.subviewFor(newLocation).getLocation().equals(newLocation)) {
     newLocation.add(PADDING * 4,PADDING * 4);
     ensureWidth(newLocation,maxSpaceToLeft);

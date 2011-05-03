@@ -1,7 +1,7 @@
 {
   builder=new ViewBuilder(){
     ViewBuilder objectBuilder=new ObjectFieldBuilder(new ViewFactory(){
-      public View createView(      Content content,      Axes axes,      int sequence){
+      @Override public View createView(      final Content content,      final Axes axes,      final int sequence){
         if (content.isTextParseable() || content.getAdapter() == null) {
           return null;
         }
@@ -16,32 +16,32 @@
 );
     ViewBuilder collectiontBuilder=new CollectionElementBuilder(new IconElementFactory());
 {
-      Factory decorator=new ExpandableViewBorder.Factory(null,TreeNodeSpecification.this,null);
+      final Factory decorator=new ExpandableViewBorder.Factory(null,TreeNodeSpecification.this,null);
       objectBuilder.addSubviewDecorator(decorator);
       collectiontBuilder.addSubviewDecorator(decorator);
     }
-    public void addSubviewDecorator(    SubviewDecorator decorator){
+    @Override public void addSubviewDecorator(    final SubviewDecorator decorator){
     }
-    public void build(    View view,    Axes axes){
+    @Override public void build(    final View view,    final Axes axes){
 synchronized (view) {
         (view.getContent().isCollection() ? collectiontBuilder : objectBuilder).build(view,axes);
       }
     }
-    public void createAxes(    Axes axes,    Content content){
+    @Override public void createAxes(    final Axes axes,    final Content content){
     }
-    public boolean isOpen(){
+    @Override public boolean isOpen(){
       return false;
     }
-    public boolean isReplaceable(){
+    @Override public boolean isReplaceable(){
       return true;
     }
-    public boolean isSubView(){
+    @Override public boolean isSubView(){
       return true;
     }
-    public boolean canDragView(){
+    @Override public boolean canDragView(){
       return true;
     }
-    public void viewMenuOptions(    UserActionSet options,    View view){
+    @Override public void viewMenuOptions(    final UserActionSet options,    final View view){
     }
   }
 ;

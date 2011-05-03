@@ -1,13 +1,13 @@
 {
-  Content content=requirement.getContent();
-  ObjectSpecification specification=content.getSpecification();
-  boolean isValue=specification != null && specification.containsFacet(ValueFacet.class);
+  final Content content=requirement.getContent();
+  final ObjectSpecification specification=content.getSpecification();
+  final boolean isValue=specification != null && specification.containsFacet(ValueFacet.class);
   if (content.isObject() && !isValue && content.getAdapter() == null) {
     return getEmptyFieldSpecification();
   }
  else {
     if (specification != null) {
-      Options viewOptions=Properties.getDefaultViewOptions(specification);
+      final Options viewOptions=Properties.getDefaultViewOptions(specification);
       String spec=viewOptions.getString("spec");
       if (spec == null) {
         if (content instanceof ObjectContent && requirement.isObject() && requirement.isClosed()) {
@@ -21,13 +21,13 @@
         }
       }
       if (spec != null) {
-        ViewSpecification lookSpec=lookupSpecByName(spec);
+        final ViewSpecification lookSpec=lookupSpecByName(spec);
         if (lookSpec != null && lookSpec.canDisplay(requirement)) {
           return lookSpec;
         }
       }
     }
-    for (    ViewSpecification viewSpecification : viewSpecifications) {
+    for (    final ViewSpecification viewSpecification : viewSpecifications) {
       if (viewSpecification.canDisplay(requirement)) {
         return viewSpecification;
       }

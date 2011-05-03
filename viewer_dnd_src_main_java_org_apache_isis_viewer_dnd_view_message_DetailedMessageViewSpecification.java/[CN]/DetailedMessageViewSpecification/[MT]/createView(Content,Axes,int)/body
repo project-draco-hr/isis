@@ -1,20 +1,20 @@
 {
   final ButtonAction actions[]=new ButtonAction[]{new AbstractButtonAction("Print..."){
-    public void execute(    final Workspace workspace,    final View view,    final Location at){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       DebugOutput.print("Print exception",extract(view));
     }
   }
 ,new AbstractButtonAction("Save..."){
-    public void execute(    final Workspace workspace,    final View view,    final Location at){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       DebugOutput.saveToFile("Save exception","Exception",extract(view));
     }
   }
 ,new AbstractButtonAction("Copy"){
-    public void execute(    final Workspace workspace,    final View view,    final Location at){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       DebugOutput.saveToClipboard(extract(view));
     }
   }
 ,new CancelAction()};
-  DetailedMessageView messageView=new DetailedMessageView(content,this);
+  final DetailedMessageView messageView=new DetailedMessageView(content,this);
   return new ButtonBorder(actions,new ScrollBorder(messageView));
 }

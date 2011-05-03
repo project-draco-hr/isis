@@ -1,6 +1,6 @@
 {
-  int x=click.getLocation().getX();
-  int y=click.getLocation().getY();
+  final int x=click.getLocation().getX();
+  final int y=click.getLocation().getY();
   if (y >= CONTROL_HORIZONTAL_INSET + CONTROL_HORIZONTAL_SPACING && y <= CONTROL_HORIZONTAL_INSET + (2 * CONTROL_HORIZONTAL_SPACING)) {
     if (x <= CONTROL_VERTICAL_INSET + (3 * CONTROL_VERTICAL_SPACING) && x >= CONTROL_VERTICAL_INSET + (2 * CONTROL_VERTICAL_SPACING)) {
       today.add(Calendar.YEAR,-10);
@@ -28,13 +28,13 @@
     return;
   }
   if (isEditable) {
-    Location location=click.getLocation();
-    Date selectedDate=getSelectedDate(location);
+    final Location location=click.getLocation();
+    final Date selectedDate=getSelectedDate(location);
     if (selectedDate != null) {
       date.setTime(selectedDate);
-      Content content=getContent();
-      DateValueFacet facet=content.getSpecification().getFacet(DateValueFacet.class);
-      ObjectAdapter value=facet.createValue(date.getTime());
+      final Content content=getContent();
+      final DateValueFacet facet=content.getSpecification().getFacet(DateValueFacet.class);
+      final ObjectAdapter value=facet.createValue(date.getTime());
       ((TextParseableContent)content).parseTextEntry(value.titleString());
       ((TextParseableContent)content).entryComplete();
       getView().refresh();

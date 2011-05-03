@@ -1,15 +1,15 @@
 {
-  ObjectAdapter listAdapter=getScenario().getAliasRegistry().getAliased(StringUtils.normalized(listAlias));
+  final ObjectAdapter listAdapter=getScenario().getAliasRegistry().getAliased(StringUtils.normalized(listAlias));
   if (listAdapter == null) {
     return Collections.emptyList();
   }
-  CollectionFacet facet=listAdapter.getSpecification().getFacet(CollectionFacet.class);
+  final CollectionFacet facet=listAdapter.getSpecification().getFacet(CollectionFacet.class);
   if (facet == null) {
     return Collections.emptyList();
   }
-  Iterable<ObjectAdapter> objectAdapters=facet.iterable(listAdapter);
+  final Iterable<ObjectAdapter> objectAdapters=facet.iterable(listAdapter);
   return Iterables.transform(objectAdapters,new Function<ObjectAdapter,Object>(){
-    @Override public Object apply(    ObjectAdapter from){
+    @Override public Object apply(    final ObjectAdapter from){
       return from.getObject();
     }
   }

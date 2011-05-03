@@ -26,10 +26,10 @@
   if (getContent() instanceof RootObject || getContent() instanceof RootCollection) {
     options.add(new UserActionAbstract("Use as default view for " + getContent().getSpecification().getSingularName(),ActionType.USER){
       @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
-        Options viewOptions=Properties.getViewConfigurationOptions(getSpecification());
+        final Options viewOptions=Properties.getViewConfigurationOptions(getSpecification());
         getView().saveOptions(viewOptions);
-        ObjectSpecification specification=content.getSpecification();
-        Options settingsOptions=Properties.getDefaultViewOptions(specification);
+        final ObjectSpecification specification=content.getSpecification();
+        final Options settingsOptions=Properties.getDefaultViewOptions(specification);
         settingsOptions.addOption("spec",getSpecification().getName());
       }
     }
@@ -37,7 +37,7 @@
   }
   options.add(new UserActionAbstract("Save specification",ActionType.USER){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
-      Options viewOptions=Properties.getViewConfigurationOptions(getSpecification());
+      final Options viewOptions=Properties.getViewConfigurationOptions(getSpecification());
       getView().saveOptions(viewOptions);
       Toolkit.getViewFactory().addSpecification(getSpecification());
     }

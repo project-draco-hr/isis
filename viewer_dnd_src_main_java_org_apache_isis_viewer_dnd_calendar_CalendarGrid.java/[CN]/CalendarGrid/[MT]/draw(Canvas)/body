@@ -1,14 +1,14 @@
 {
   super.draw(canvas);
-  boolean hasHeader=cellLayout.header(0) != null;
-  int topInset=0 + (acrossThenDown && hasHeader ? 30 : 0);
-  int leftInset=!acrossThenDown && hasHeader ? 50 : 0;
-  int width=getSize().getWidth();
-  int height=getSize().getHeight();
-  int columnWidth=(width - leftInset) / columns;
-  int rowHeight=(height - topInset) / rows;
+  final boolean hasHeader=cellLayout.header(0) != null;
+  final int topInset=0 + (acrossThenDown && hasHeader ? 30 : 0);
+  final int leftInset=!acrossThenDown && hasHeader ? 50 : 0;
+  final int width=getSize().getWidth();
+  final int height=getSize().getHeight();
+  final int columnWidth=(width - leftInset) / columns;
+  final int rowHeight=(height - topInset) / rows;
   for (int row=0; row < rows; row++) {
-    int y=topInset + row * rowHeight;
+    final int y=topInset + row * rowHeight;
     if (!acrossThenDown && hasHeader) {
       canvas.drawText(cellLayout.header(row),0,y + 20,CalendarConstants.textColor,CalendarConstants.style);
     }
@@ -16,7 +16,7 @@
   }
   canvas.drawLine(leftInset,topInset + height - 1,width,topInset + height - 1,CalendarConstants.lineColor);
   for (int column=0; column < columns; column++) {
-    int x=leftInset + column * columnWidth;
+    final int x=leftInset + column * columnWidth;
     if (acrossThenDown && hasHeader) {
       canvas.drawText(cellLayout.header(column),x,topInset - 5,CalendarConstants.textColor,CalendarConstants.style);
     }
@@ -24,10 +24,10 @@
   }
   canvas.drawLine(width - 1,topInset,width - 1,height,CalendarConstants.lineColor);
   for (int row=0; row < rows; row++) {
-    int y=topInset + row * rowHeight + CalendarConstants.style.getAscent() + 2;
+    final int y=topInset + row * rowHeight + CalendarConstants.style.getAscent() + 2;
     for (int column=0; column < columns; column++) {
-      int x=leftInset + column * columnWidth + 2;
-      int cell=acrossThenDown ? row * columns + column : column * rows + row;
+      final int x=leftInset + column * columnWidth + 2;
+      final int cell=acrossThenDown ? row * columns + column : column * rows + row;
       canvas.drawText(cellLayout.title(cell),x,y,CalendarConstants.textColor,CalendarConstants.style);
     }
   }

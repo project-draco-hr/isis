@@ -3,8 +3,7 @@
   options.add(new UserActionAbstract("Close all"){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       final View views[]=getWindowViews();
-      for (int i=0; i < views.length; i++) {
-        final View v=views[i];
+      for (      final View v : views) {
         v.dispose();
       }
       markDamaged();
@@ -33,10 +32,10 @@
   options.add(new UserActionAbstract("Services..."){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
       final List<Object> services=IsisContext.getServices();
-      ObjectAdapter[] serviceObjects=new ObjectAdapter[services.size()];
+      final ObjectAdapter[] serviceObjects=new ObjectAdapter[services.size()];
       int i=0;
-      for (      Object object : services) {
-        AdapterManager adapterManager=IsisContext.getPersistenceSession().getAdapterManager();
+      for (      final Object object : services) {
+        final AdapterManager adapterManager=IsisContext.getPersistenceSession().getAdapterManager();
         serviceObjects[i++]=adapterManager.adapterFor(object);
       }
       final ObjectSpecification spec=getSpecificationLoader().loadSpecification(Object.class);
@@ -49,7 +48,7 @@
   menuForChangingUsers(options);
   options.add(new UserActionAbstract("Save User Profile",ActionType.USER){
     @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
-      Feedback feedbackManager=getFeedbackManager();
+      final Feedback feedbackManager=getFeedbackManager();
       feedbackManager.showBusyState(ApplicationWorkspace.this);
       getViewManager().saveOpenObjects();
       feedbackManager.addMessage("Profile saved");
