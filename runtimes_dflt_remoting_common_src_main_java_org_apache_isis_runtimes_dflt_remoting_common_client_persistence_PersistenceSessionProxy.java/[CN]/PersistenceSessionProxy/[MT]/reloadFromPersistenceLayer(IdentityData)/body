@@ -1,8 +1,8 @@
 {
   getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
-    public void execute(){
-      ResolveObjectRequest request=new ResolveObjectRequest(getAuthenticationSession(),identityData);
-      ResolveObjectResponse response=serverFacade.resolveImmediately(request);
+    @Override public void execute(){
+      final ResolveObjectRequest request=new ResolveObjectRequest(getAuthenticationSession(),identityData);
+      final ResolveObjectResponse response=serverFacade.resolveImmediately(request);
       final ObjectData update=response.getObjectData();
       encoderDecoder.decode(update);
     }

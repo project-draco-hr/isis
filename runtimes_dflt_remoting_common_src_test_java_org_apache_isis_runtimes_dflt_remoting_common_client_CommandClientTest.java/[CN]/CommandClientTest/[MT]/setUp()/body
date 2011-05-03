@@ -2,14 +2,14 @@
   super.setUp();
   control=MockControl.createControl(ServerFacade.class);
   serverFacade=(ServerFacade)control.getMock();
-  ClientConnection connection=new ClientConnection(){
-    public ResponseEnvelope executeRemotely(    final Request request){
+  final ClientConnection connection=new ClientConnection(){
+    @Override public ResponseEnvelope executeRemotely(    final Request request){
       request.execute(serverFacade);
       return new ResponseEnvelope(request);
     }
-    public void init(){
+    @Override public void init(){
     }
-    public void shutdown(){
+    @Override public void shutdown(){
     }
   }
 ;

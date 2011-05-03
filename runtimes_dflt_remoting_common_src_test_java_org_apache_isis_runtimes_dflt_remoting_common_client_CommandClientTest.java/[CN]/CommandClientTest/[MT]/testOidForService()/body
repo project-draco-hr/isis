@@ -1,10 +1,10 @@
 {
-  OidForServiceRequest request=new OidForServiceRequest(session,"domain.Service");
+  final OidForServiceRequest request=new OidForServiceRequest(session,"domain.Service");
   serverFacade.oidForService(request);
   final IdentityData data=new DummyIdentityData();
   control.setReturnValue(new OidForServiceResponse(data));
   control.replay();
-  OidForServiceResponse response=serverFacadeProxy.oidForService(request);
+  final OidForServiceResponse response=serverFacadeProxy.oidForService(request);
   final IdentityData ret=response.getOidData();
   control.verify();
   assertEquals(data,ret);

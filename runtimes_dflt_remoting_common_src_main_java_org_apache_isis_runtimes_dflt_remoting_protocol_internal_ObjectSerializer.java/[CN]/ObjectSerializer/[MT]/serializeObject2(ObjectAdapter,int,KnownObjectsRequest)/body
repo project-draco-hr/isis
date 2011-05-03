@@ -1,7 +1,7 @@
 {
   Assert.assertNotNull(adapter);
   final ResolveState resolveState=adapter.getResolveState();
-  boolean isTransient=adapter.isTransient();
+  final boolean isTransient=adapter.isTransient();
   if (!isTransient && (resolveState.isSerializing() || resolveState.isGhost() || graphDepth <= 0)) {
     Assert.assertNotNull("OID needed for reference",adapter,adapter.getOid());
     return this.dataFactory.createIdentityData(adapter.getSpecification().getFullIdentifier(),adapter.getOid(),adapter.getVersion());
@@ -9,7 +9,7 @@
   if (isTransient && knownObjects.containsKey(adapter)) {
     return knownObjects.get(adapter);
   }
-  boolean withCompleteData=resolveState == ResolveState.TRANSIENT || resolveState == ResolveState.RESOLVED;
+  final boolean withCompleteData=resolveState == ResolveState.TRANSIENT || resolveState == ResolveState.RESOLVED;
   final String type=adapter.getSpecification().getFullIdentifier();
   final Oid oid=adapter.getOid();
   final ObjectData data=this.dataFactory.createObjectData(type,oid,withCompleteData,adapter.getVersion());

@@ -7,7 +7,7 @@
 switch (eventTypes[i]) {
 case ClientTransactionEvent.ADD:
       final ReferenceData update=persistedUpdates[i];
-    Oid updatedOid=update.getOid();
+    final Oid updatedOid=update.getOid();
   adapterManager.remapUpdated(updatedOid);
 final ObjectAdapter adapter=adapterManager.getAdapterFor(updatedOid);
 adapter.changeState(ResolveState.RESOLVED);
@@ -20,11 +20,11 @@ break;
 }
 }
 final ObjectData[] updates=results.getUpdates();
-for (int i=0; i < updates.length; i++) {
+for (final ObjectData update : updates) {
 if (LOG.isDebugEnabled()) {
-LOG.debug("update " + updates[i].getOid());
+LOG.debug("update " + update.getOid());
 }
-encoder.decode(updates[i]);
+encoder.decode(update);
 }
 for (int i=0; i < numberOfEvents; i++) {
 switch (eventTypes[i]) {

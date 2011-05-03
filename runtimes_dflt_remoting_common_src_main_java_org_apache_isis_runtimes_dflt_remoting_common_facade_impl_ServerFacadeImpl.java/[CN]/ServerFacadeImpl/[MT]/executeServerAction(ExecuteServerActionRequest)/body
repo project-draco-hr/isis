@@ -1,14 +1,14 @@
 {
-  AuthenticationSession session=request.getSession();
-  ActionType actionType=request.getActionType();
-  String actionIdentifier=request.getActionIdentifier();
-  ReferenceData targetData=request.getTarget();
-  Data[] parameterData=request.getParameters();
+  final AuthenticationSession session=request.getSession();
+  final ActionType actionType=request.getActionType();
+  final String actionIdentifier=request.getActionIdentifier();
+  final ReferenceData targetData=request.getTarget();
+  final Data[] parameterData=request.getParameters();
   if (LOG.isDebugEnabled()) {
     LOG.debug("request executeAction " + actionIdentifier + " on "+ targetData+ " for "+ session);
   }
   final KnownObjectsRequest knownObjects=new KnownObjectsRequest();
-  ObjectAdapter targetAdapter=decodeTargetAdapter(session,targetData,knownObjects);
+  final ObjectAdapter targetAdapter=decodeTargetAdapter(session,targetData,knownObjects);
   final ObjectAction action=targetAdapter.getSpecification().getObjectAction(actionType,actionIdentifier);
   final ObjectAdapter[] parameters=decodeParameters(session,parameterData,knownObjects);
   if (action == null) {

@@ -1,9 +1,9 @@
 {
   final IdentityData adapterData=encoderDecoder.encodeIdentityData(adapter);
   getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
-    public void execute(){
-      ResolveObjectRequest request=new ResolveObjectRequest(getAuthenticationSession(),adapterData);
-      ResolveObjectResponse response=serverFacade.resolveImmediately(request);
+    @Override public void execute(){
+      final ResolveObjectRequest request=new ResolveObjectRequest(getAuthenticationSession(),adapterData);
+      final ResolveObjectResponse response=serverFacade.resolveImmediately(request);
       final ObjectData data=response.getObjectData();
       encoderDecoder.decode(data);
     }

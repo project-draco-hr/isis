@@ -1,22 +1,22 @@
 {
   super.setUp();
-  FieldOrderCache fieldOrderCache=null;
+  final FieldOrderCache fieldOrderCache=null;
   deserializer=new ObjectDeserializer(fieldOrderCache);
   final TestProxySpecification specification=system.getSpecification(Vector.class);
   specification.addFacet(new CollectionFacetAbstract(specification){
-    public void init(    final ObjectAdapter collection,    final ObjectAdapter[] initData){
-      for (int i=0; i < initData.length; i++) {
-        collectionOfUnderlying(collection).add(initData[i].getObject());
+    @Override public void init(    final ObjectAdapter collection,    final ObjectAdapter[] initData){
+      for (      final ObjectAdapter element : initData) {
+        collectionOfUnderlying(collection).add(element.getObject());
       }
     }
-    @SuppressWarnings("unchecked") public Collection<ObjectAdapter> collection(    ObjectAdapter collectionAdapter){
-      Collection<Object> collection=collectionOfUnderlying(collectionAdapter);
+    @Override @SuppressWarnings("unchecked") public Collection<ObjectAdapter> collection(    final ObjectAdapter collectionAdapter){
+      final Collection<Object> collection=collectionOfUnderlying(collectionAdapter);
       return CollectionUtils.collect(collection,new ObjectToAdapterTransformer());
     }
-    public ObjectAdapter firstElement(    final ObjectAdapter collection){
+    @Override public ObjectAdapter firstElement(    final ObjectAdapter collection){
       throw new NotYetImplementedException();
     }
-    public int size(    final ObjectAdapter collection){
+    @Override public int size(    final ObjectAdapter collection){
       return collectionOfUnderlying(collection).size();
     }
     @SuppressWarnings("unchecked") private Collection<Object> collectionOfUnderlying(    final ObjectAdapter collectionNO){

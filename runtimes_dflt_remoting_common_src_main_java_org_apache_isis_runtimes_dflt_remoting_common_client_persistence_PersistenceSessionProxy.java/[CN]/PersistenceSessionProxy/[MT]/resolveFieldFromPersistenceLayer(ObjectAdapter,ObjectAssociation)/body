@@ -2,9 +2,9 @@
   final IdentityData adapterData=encoderDecoder.encodeIdentityData(adapter);
   final String fieldId=field.getId();
   getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
-    public void execute(){
-      ResolveFieldRequest request=new ResolveFieldRequest(getAuthenticationSession(),adapterData,fieldId);
-      ResolveFieldResponse response=serverFacade.resolveField(request);
+    @Override public void execute(){
+      final ResolveFieldRequest request=new ResolveFieldRequest(getAuthenticationSession(),adapterData,fieldId);
+      final ResolveFieldResponse response=serverFacade.resolveField(request);
       final Data data=response.getData();
       encoderDecoder.decode(data);
     }

@@ -1,16 +1,16 @@
 {
   final ObjectSpecification noSpec=persistenceQuery.getSpecification();
-  PersistenceQueryBuiltIn builtIn=(PersistenceQueryBuiltIn)persistenceQuery;
+  final PersistenceQueryBuiltIn builtIn=(PersistenceQueryBuiltIn)persistenceQuery;
   final ObjectAdapter collection=cache.get(noSpec);
   if (!collection.getSpecification().isCollection()) {
     return new ObjectAdapter[0];
   }
   final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
   final List<ObjectAdapter> instances=new ArrayList<ObjectAdapter>();
-  for (  ObjectAdapter instance : facet.iterable(collection)) {
+  for (  final ObjectAdapter instance : facet.iterable(collection)) {
     if (builtIn.matches(instance)) {
       instances.add(instance);
     }
   }
-  return (ObjectAdapter[])instances.toArray(new ObjectAdapter[instances.size()]);
+  return instances.toArray(new ObjectAdapter[instances.size()]);
 }

@@ -27,14 +27,14 @@
     @Override public Facet getUnderlyingFacet(){
       return null;
     }
-    @Override public void setUnderlyingFacet(    Facet underlyingFacet){
+    @Override public void setUnderlyingFacet(    final Facet underlyingFacet){
       throw new UnsupportedOperationException();
     }
   }
 );
   IsisContext.getTransactionManager().startTransaction();
-  SetValueRequest request=new SetValueRequest(session,"name",movieData,new DummyEncodeableObjectData("name of movie"));
-  SetValueResponse response=server.setValue(request);
+  final SetValueRequest request=new SetValueRequest(session,"name",movieData,new DummyEncodeableObjectData("name of movie"));
+  final SetValueResponse response=server.setValue(request);
   final ObjectData[] updates=response.getUpdates();
   IsisContext.getTransactionManager().endTransaction();
   nameField.assertField(object,"name of movie");
