@@ -1,25 +1,25 @@
 {
-  HttpSession httpSession=getHttpSession(servletRequest);
+  final HttpSession httpSession=getHttpSession(servletRequest);
   AuthenticationSession authSession=(AuthenticationSession)httpSession.getAttribute(WebAppConstants.HTTP_SESSION_AUTHENTICATION_SESSION_KEY);
   if (authSession != null) {
-    boolean sessionValid=getAuthenticationManager().isSessionValid(authSession);
+    final boolean sessionValid=getAuthenticationManager().isSessionValid(authSession);
     if (sessionValid) {
       return authSession;
     }
   }
-  ServletContext servletContext=getServletContext(servletRequest);
-  IsisSystem system=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
+  final ServletContext servletContext=getServletContext(servletRequest);
+  final IsisSystem system=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
   if (system == null) {
     return null;
   }
-  LogonFixture logonFixture=system.getLogonFixture();
+  final LogonFixture logonFixture=system.getLogonFixture();
   if (system.getDeploymentType().isExploring()) {
     authSession=getAuthenticationManager().authenticate(new AuthenticationRequestExploration(logonFixture));
     if (authSession != null) {
       return authSession;
     }
   }
-  boolean loggedInUsingLogonFixture=httpSession.getAttribute(WebAppConstants.HTTP_SESSION_LOGGED_ON_PREVIOUSLY_USING_LOGON_FIXTURE_KEY) != null;
+  final boolean loggedInUsingLogonFixture=httpSession.getAttribute(WebAppConstants.HTTP_SESSION_LOGGED_ON_PREVIOUSLY_USING_LOGON_FIXTURE_KEY) != null;
   if (logonFixture != null && !loggedInUsingLogonFixture) {
     httpSession.setAttribute(WebAppConstants.HTTP_SESSION_LOGGED_ON_PREVIOUSLY_USING_LOGON_FIXTURE_KEY,true);
     return getAuthenticationManager().authenticate(new AuthenticationRequestLogonFixture(logonFixture));

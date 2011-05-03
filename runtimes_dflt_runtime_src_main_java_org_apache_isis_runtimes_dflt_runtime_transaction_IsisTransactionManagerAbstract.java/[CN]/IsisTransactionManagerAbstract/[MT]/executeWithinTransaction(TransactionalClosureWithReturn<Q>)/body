@@ -1,18 +1,18 @@
 {
-  boolean initiallyInTransaction=inTransaction();
+  final boolean initiallyInTransaction=inTransaction();
   if (!initiallyInTransaction) {
     startTransaction();
   }
   try {
     closure.preExecute();
-    Q retVal=closure.execute();
+    final Q retVal=closure.execute();
     closure.onSuccess();
     if (!initiallyInTransaction) {
       endTransaction();
     }
     return retVal;
   }
- catch (  RuntimeException ex) {
+ catch (  final RuntimeException ex) {
     closure.onFailure();
     if (!initiallyInTransaction) {
       abortTransaction();

@@ -1,7 +1,7 @@
 {
   this.methodHandler=new MethodHandler(){
-    public Object invoke(    final Object proxied,    Method proxyMethod,    Method proxiedMethod,    Object[] args) throws Throwable {
-      boolean ignore=proxyMethod.getDeclaringClass().equals(Object.class);
+    @Override public Object invoke(    final Object proxied,    final Method proxyMethod,    final Method proxiedMethod,    final Object[] args) throws Throwable {
+      final boolean ignore=proxyMethod.getDeclaringClass().equals(Object.class);
       ImperativeFacetFlags flags=null;
       if (!ignore) {
         final ObjectSpecificationDefault targetObjSpec=getJavaSpecificationOfOwningClass(proxiedMethod);
@@ -11,7 +11,7 @@
           objectResolver.resolve(proxied,member.getName());
         }
       }
-      Object proxiedReturn=proxiedMethod.invoke(proxied,args);
+      final Object proxiedReturn=proxiedMethod.invoke(proxied,args);
       if (!ignore && flags.impliesObjectChanged()) {
         objectChanger.objectChanged(proxied);
       }

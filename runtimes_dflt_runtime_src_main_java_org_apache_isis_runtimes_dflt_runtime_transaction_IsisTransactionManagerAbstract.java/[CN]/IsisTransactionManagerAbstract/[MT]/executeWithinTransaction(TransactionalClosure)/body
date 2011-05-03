@@ -1,5 +1,5 @@
 {
-  boolean initiallyInTransaction=inTransaction();
+  final boolean initiallyInTransaction=inTransaction();
   if (!initiallyInTransaction) {
     startTransaction();
   }
@@ -11,13 +11,13 @@
       endTransaction();
     }
   }
- catch (  RuntimeException ex) {
+ catch (  final RuntimeException ex) {
     closure.onFailure();
     if (!initiallyInTransaction) {
       try {
         abortTransaction();
       }
- catch (      Exception e) {
+ catch (      final Exception e) {
         LOG.error("Abort failure after exception",e);
         throw new IsisTransactionManagerException("Abort failure: " + e.getMessage(),ex);
       }

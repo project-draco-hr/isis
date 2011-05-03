@@ -1,8 +1,8 @@
 {
-  Thread thread=Thread.currentThread();
+  final Thread thread=Thread.currentThread();
 synchronized (sessionsByThread) {
     applySessionClosePolicy();
-    IsisSession session=getSessionFactoryInstance().openSession(authenticationSession);
+    final IsisSession session=getSessionFactoryInstance().openSession(authenticationSession);
     LOG.info("  opening session " + session + " (count "+ sessionsByThread.size()+ ") for "+ authenticationSession.getUserName());
     saveSession(thread,session);
     session.open();

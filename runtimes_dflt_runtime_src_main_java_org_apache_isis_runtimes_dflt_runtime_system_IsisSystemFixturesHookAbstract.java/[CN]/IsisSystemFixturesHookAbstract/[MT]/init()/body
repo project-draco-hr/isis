@@ -12,7 +12,7 @@
   timeZoneInitializer.initTimeZone(getConfiguration());
   int splashDelay=SPLASH_DELAY_DEFAULT;
   try {
-    TemplateImageLoader splashLoader=obtainTemplateImageLoader();
+    final TemplateImageLoader splashLoader=obtainTemplateImageLoader();
     splashLoader.init();
     showSplash(splashLoader);
     sessionFactory=doCreateSessionFactory(deploymentType);
@@ -21,7 +21,7 @@
     sessionFactory.init();
     installFixturesIfRequired();
   }
- catch (  IsisSystemException ex) {
+ catch (  final IsisSystemException ex) {
     LOG.error("failed to initialise",ex);
     splashDelay=0;
     throw new RuntimeException(ex);

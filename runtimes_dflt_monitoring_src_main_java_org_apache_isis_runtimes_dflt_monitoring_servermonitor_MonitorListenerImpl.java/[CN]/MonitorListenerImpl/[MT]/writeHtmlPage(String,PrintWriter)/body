@@ -6,9 +6,9 @@
   writer.println("<BODY>");
   writer.println("<h1>" + sectionName + "</h1>");
   final StringBuffer navigation=new StringBuffer("<p>");
-  DebuggableWithTitle[] infos=IsisContext.debugSystem();
+  final DebuggableWithTitle[] infos=IsisContext.debugSystem();
   for (int i=0; i < infos.length; i++) {
-    String name=infos[i].debugTitle();
+    final String name=infos[i].debugTitle();
     appendNavigationLink(navigation,name,i > 0);
   }
   appendNavigationLink(navigation,"Requests",true);
@@ -17,15 +17,15 @@
   writer.println("<pre>");
   if (sectionName.equals("Requests")) {
     int i=1;
-    for (    MonitorEvent event : requests) {
+    for (    final MonitorEvent event : requests) {
       writer.print("<a href=\"monitor?request=" + event.getSerialId() + "\">");
       writer.print(i++ + ". " + event);
       writer.println("</a>");
     }
   }
  else   if (sectionName.startsWith("request=")) {
-    int requestId=Integer.valueOf(sectionName.substring("request=".length())).intValue();
-    for (    MonitorEvent request : requests) {
+    final int requestId=Integer.valueOf(sectionName.substring("request=".length())).intValue();
+    for (    final MonitorEvent request : requests) {
       if (request.getSerialId() == requestId) {
         writer.println(request.getDebug());
         break;
@@ -33,10 +33,10 @@
     }
   }
  else {
-    for (int i=0; i < infos.length; i++) {
-      if (infos[i].debugTitle().equals(sectionName)) {
+    for (    final DebuggableWithTitle info : infos) {
+      if (info.debugTitle().equals(sectionName)) {
         final DebugString debug=new DebugString();
-        infos[i].debugData(debug);
+        info.debugData(debug);
         writer.println(debug.toString());
         break;
       }

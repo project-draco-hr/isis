@@ -1,10 +1,10 @@
 {
-  String connection=getConfiguration().getString(SystemConstants.CLIENT_CONNECTION_KEY);
+  final String connection=getConfiguration().getString(SystemConstants.CLIENT_CONNECTION_KEY);
   if (connection != null) {
     persistenceMechanismInstaller=installerLookup.clientConnectionInstaller(connection);
   }
   if (persistenceMechanismInstaller == null) {
-    String persistenceMechanism=getConfiguration().getString(SystemConstants.OBJECT_PERSISTOR_INSTALLER_KEY);
+    final String persistenceMechanism=getConfiguration().getString(SystemConstants.OBJECT_PERSISTOR_INSTALLER_KEY);
     persistenceMechanismInstaller=installerLookup.persistenceMechanismInstaller(persistenceMechanism,deploymentType);
   }
   ensureThatState(persistenceMechanismInstaller,is(not(nullValue())),"persistor installer has not been injected and could not be looked up");

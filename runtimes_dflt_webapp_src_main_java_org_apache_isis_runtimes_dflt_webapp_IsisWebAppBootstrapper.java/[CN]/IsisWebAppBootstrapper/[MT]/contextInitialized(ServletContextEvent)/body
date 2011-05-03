@@ -1,8 +1,8 @@
 {
   try {
-    ServletContext servletContext=servletContextEvent.getServletContext();
-    String webappDir=servletContext.getRealPath("/");
-    String webInfDir=servletContext.getRealPath("/WEB-INF");
+    final ServletContext servletContext=servletContextEvent.getServletContext();
+    final String webappDir=servletContext.getRealPath("/");
+    final String webInfDir=servletContext.getRealPath("/WEB-INF");
     loggingConfigurer.configureLogging(webInfDir,new String[0]);
     final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(new ResourceStreamSourceForWebInf(servletContext),new ResourceStreamSourceContextLoaderClassPath());
     primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
@@ -12,12 +12,12 @@
     addConfigurationResourcesForViewers(isisConfigurationBuilder,servletContext);
     isisConfigurationBuilder.add(WebAppConstants.WEB_APP_DIR,webappDir);
     isisConfigurationBuilder.add(SystemConstants.NOSPLASH_KEY,"true");
-    InstallerLookup installerLookup=new InstallerLookupDefault(getClass());
+    final InstallerLookup installerLookup=new InstallerLookupDefault(getClass());
     injector=createGuiceInjector(isisConfigurationBuilder,deploymentType,installerLookup);
-    IsisSystem system=injector.getInstance(IsisSystem.class);
+    final IsisSystem system=injector.getInstance(IsisSystem.class);
     servletContext.setAttribute(WebAppConstants.ISIS_SYSTEM_KEY,system);
   }
- catch (  RuntimeException e) {
+ catch (  final RuntimeException e) {
     LOG.error("startup failed",e);
     throw e;
   }

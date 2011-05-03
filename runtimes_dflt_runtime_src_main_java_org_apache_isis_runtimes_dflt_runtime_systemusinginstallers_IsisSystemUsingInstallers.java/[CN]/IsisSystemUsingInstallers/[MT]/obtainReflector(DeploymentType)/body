@@ -1,13 +1,13 @@
 {
   if (reflectorInstaller == null) {
-    String fromCmdLine=getConfiguration().getString(SystemConstants.REFLECTOR_KEY);
+    final String fromCmdLine=getConfiguration().getString(SystemConstants.REFLECTOR_KEY);
     reflectorInstaller=installerLookup.reflectorInstaller(fromCmdLine);
   }
   ensureThatState(reflectorInstaller,is(not(nullValue())),"reflector installer has not been injected and could not be looked up");
   reflectorInstaller.addFacetDecoratorInstaller(installerLookup.getInstaller(TransactionFacetDecoratorInstaller.class));
-  String connection=getConfiguration().getString(SystemConstants.CLIENT_CONNECTION_KEY);
+  final String connection=getConfiguration().getString(SystemConstants.CLIENT_CONNECTION_KEY);
   if (connection != null) {
-    FacetDecoratorInstaller clientConnectionInstaller=installerLookup.clientConnectionInstaller(connection);
+    final FacetDecoratorInstaller clientConnectionInstaller=installerLookup.clientConnectionInstaller(connection);
     reflectorInstaller.addFacetDecoratorInstaller(clientConnectionInstaller);
   }
   return reflectorInstaller.createReflector();
