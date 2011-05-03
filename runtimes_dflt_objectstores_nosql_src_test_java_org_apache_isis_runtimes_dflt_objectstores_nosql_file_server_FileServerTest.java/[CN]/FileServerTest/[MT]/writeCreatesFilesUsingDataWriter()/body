@@ -1,12 +1,12 @@
 {
-  File file1=new File("target/test/org.domain.Class","1025.data");
-  File file2=new File("target/test/org.domain.Class","1026.data");
+  final File file1=new File("target/test/org.domain.Class","1025.data");
+  final File file2=new File("target/test/org.domain.Class","1026.data");
   file1.delete();
   file2.delete();
   assertFalse(file1.exists());
   assertFalse(file2.exists());
-  InputStream in=IoUtils.asUtf8ByteStream("W\nIorg.domain.Class 1025 null 1  \n{data1}\n\nIorg.domain.Class 1026 null 1\n{data2}\n\n\n");
-  ServerConnection connection=new ServerConnection(in,out);
+  final InputStream in=IoUtils.asUtf8ByteStream("W\nIorg.domain.Class 1025 null 1  \n{data1}\n\nIorg.domain.Class 1026 null 1\n{data2}\n\n\n");
+  final ServerConnection connection=new ServerConnection(in,out);
   server.process(connection);
   assertThat(out.toString(),is(equalTo(lineSeparated("ok\n"))));
   assertThat(file1,existsAndNotEmpty());

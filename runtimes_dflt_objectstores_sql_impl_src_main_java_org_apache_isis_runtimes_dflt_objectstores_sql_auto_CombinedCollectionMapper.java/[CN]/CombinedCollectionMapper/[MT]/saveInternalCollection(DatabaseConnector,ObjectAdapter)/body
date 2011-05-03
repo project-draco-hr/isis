@@ -1,5 +1,5 @@
 {
-  ObjectAdapter collection=field.get(parent);
+  final ObjectAdapter collection=field.get(parent);
   LOG.debug("Saving internal collection " + collection);
   StringBuffer sql=new StringBuffer();
   sql.append("update ");
@@ -13,9 +13,9 @@
   sql.append("update ");
   sql.append(table);
   sql.append(" set ");
-  CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
-  for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
-    StringBuffer update=new StringBuffer(sql);
+  final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+  for (  final ObjectAdapter element : collectionFacet.iterable(collection)) {
+    final StringBuffer update=new StringBuffer(sql);
     foreignKeyMapping.appendUpdateValues(connector,update,parent);
     update.append(" where ");
     idMapping.appendWhereClause(connector,update,element.getOid());

@@ -2,17 +2,17 @@
   Logger.getRootLogger().setLevel(Level.OFF);
   testObjects=new TrialObjects();
   try {
-    Mongo m=new Mongo();
+    final Mongo m=new Mongo();
     m.dropDatabase("testdb");
     testDb=m.getDB("testdb");
   }
- catch (  Exception e) {
+ catch (  final Exception e) {
     assumeThat(true,is(false));
     return;
   }
   db=new MongoDb("localhost",0,"testdb",new SerialKeyCreator());
   db.open();
-  ExampleValuePojo pojo=new ExampleValuePojo();
+  final ExampleValuePojo pojo=new ExampleValuePojo();
   pojo.setName("Fred Smith");
   oid=SerialOid.createTransient(3);
   object=testObjects.createAdapter(pojo,oid);

@@ -1,15 +1,15 @@
 {
   fieldMappingLookup.init();
-  String prefix=SqlObjectStore.BASE_NAME + ".mapper.";
-  IsisConfiguration subset=IsisContext.getConfiguration().createSubset(prefix);
-  for (  String className : subset) {
-    String value=subset.getString(className);
+  final String prefix=SqlObjectStore.BASE_NAME + ".mapper.";
+  final IsisConfiguration subset=IsisContext.getConfiguration().createSubset(prefix);
+  for (  final String className : subset) {
+    final String value=subset.getString(className);
     if (value.startsWith("auto.")) {
-      String propertiesBase=SqlObjectStore.BASE_NAME + ".automapper." + value.substring(5)+ ".";
+      final String propertiesBase=SqlObjectStore.BASE_NAME + ".automapper." + value.substring(5)+ ".";
       add(className,objectMappingFactory.createMapper(className,propertiesBase,fieldMappingLookup,this));
     }
  else     if (value.trim().equals("auto")) {
-      String propertiesBase=SqlObjectStore.BASE_NAME + ".automapper.default";
+      final String propertiesBase=SqlObjectStore.BASE_NAME + ".automapper.default";
       add(className,objectMappingFactory.createMapper(className,propertiesBase,fieldMappingLookup,this));
     }
  else {
@@ -17,7 +17,7 @@
       try {
         add(className,InstanceUtil.createInstance(value,ObjectMapping.class));
       }
- catch (      ObjectPersistenceException ex) {
+ catch (      final ObjectPersistenceException ex) {
         throw new InstanceCreationException("Failed to set up mapper for " + className,ex);
       }
     }

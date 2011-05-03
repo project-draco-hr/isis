@@ -1,19 +1,19 @@
 {
-  ClientConnection connection=getConnection();
+  final ClientConnection connection=getConnection();
   PersistenceCommand currentCommand=null;
   try {
     connection.request('W',"");
-    NoSqlCommandContext context=new FileClientCommandContext(connection);
-    for (    PersistenceCommand command : commands) {
+    final NoSqlCommandContext context=new FileClientCommandContext(connection);
+    for (    final PersistenceCommand command : commands) {
       currentCommand=command;
       command.execute(context);
     }
     connection.validateRequest();
   }
- catch (  ConcurrencyException e) {
+ catch (  final ConcurrencyException e) {
     throw e;
   }
-catch (  RuntimeException e) {
+catch (  final RuntimeException e) {
     LOG.error("aborting write, command: " + currentCommand,e);
     abortConnection(connection);
     throw e;

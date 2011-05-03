@@ -1,15 +1,15 @@
 {
-  String className=reader.readObjectType();
-  ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(className);
-  String id=reader.readId();
-  Oid oid=keyCreator.oid(id);
-  ObjectAdapter object=getAdapter(specification,oid);
+  final String className=reader.readObjectType();
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(className);
+  final String id=reader.readId();
+  final Oid oid=keyCreator.oid(id);
+  final ObjectAdapter object=getAdapter(specification,oid);
   if (object.getResolveState().isResolved()) {
     Version version=null;
-    String versionString=reader.readVersion();
+    final String versionString=reader.readVersion();
     if (!versionString.equals("")) {
-      String user=reader.readUser();
-      String time=reader.readTime();
+      final String user=reader.readUser();
+      final String time=reader.readTime();
       version=versionCreator.version(versionString,user,time);
     }
     if (version.different(object.getVersion())) {

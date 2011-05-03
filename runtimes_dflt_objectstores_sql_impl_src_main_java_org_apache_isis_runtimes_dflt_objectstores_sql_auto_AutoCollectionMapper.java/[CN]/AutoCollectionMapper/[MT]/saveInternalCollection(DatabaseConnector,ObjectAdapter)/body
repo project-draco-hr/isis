@@ -1,5 +1,5 @@
 {
-  ObjectAdapter collection=(ObjectAdapter)field.get(parent);
+  final ObjectAdapter collection=field.get(parent);
   LOG.debug("saving internal collection " + collection);
   StringBuffer sql=new StringBuffer();
   sql.append("delete from ");
@@ -17,9 +17,9 @@
   sql.append(" ) values (");
   idMapping.appendInsertValues(connector,sql,parent);
   sql.append(", ");
-  CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
-  for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
-    StringBuffer values=new StringBuffer();
+  final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+  for (  final ObjectAdapter element : collectionFacet.iterable(collection)) {
+    final StringBuffer values=new StringBuffer();
     elementMapping.appendInsertValues(connector,values,element);
     connector.update(sql.toString() + values + ")");
   }

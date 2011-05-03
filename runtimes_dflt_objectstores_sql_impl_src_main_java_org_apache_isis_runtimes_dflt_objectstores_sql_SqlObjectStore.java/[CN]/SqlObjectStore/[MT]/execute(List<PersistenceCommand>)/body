@@ -1,17 +1,17 @@
 {
-  DatabaseConnector connector=connectionPool.acquire();
+  final DatabaseConnector connector=connectionPool.acquire();
   connector.begin();
-  IsisTransactionManager transactionManager=IsisContext.getTransactionManager();
-  MessageBroker messageBroker=IsisContext.getMessageBroker();
-  UpdateNotifier updateNotifier=IsisContext.getUpdateNotifier();
-  SqlExecutionContext context=new SqlExecutionContext(connector,transactionManager,messageBroker,updateNotifier);
+  final IsisTransactionManager transactionManager=IsisContext.getTransactionManager();
+  final MessageBroker messageBroker=IsisContext.getMessageBroker();
+  final UpdateNotifier updateNotifier=IsisContext.getUpdateNotifier();
+  final SqlExecutionContext context=new SqlExecutionContext(connector,transactionManager,messageBroker,updateNotifier);
   try {
-    for (    PersistenceCommand command : commands) {
+    for (    final PersistenceCommand command : commands) {
       command.execute(context);
     }
     connector.commit();
   }
- catch (  IsisException e) {
+ catch (  final IsisException e) {
     LOG.warn("Failure during execution",e);
     connector.rollback();
     throw e;

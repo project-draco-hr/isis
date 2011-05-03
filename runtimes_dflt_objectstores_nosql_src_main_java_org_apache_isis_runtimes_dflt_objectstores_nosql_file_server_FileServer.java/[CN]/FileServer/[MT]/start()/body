@@ -2,36 +2,36 @@
   ServerSocket socket=null;
   try {
     LOG.debug("setting up socket on " + host + ":"+ port);
-    InetAddress address=InetAddress.getByName(host);
+    final InetAddress address=InetAddress.getByName(host);
     socket=new ServerSocket(port,BACKLOG,address);
     socket.setSoTimeout(connectionTimeout);
     LOG.info("listenting on " + socket.getInetAddress().getHostAddress() + " port "+ socket.getLocalPort());
     LOG.debug("listenting on " + socket);
     server.startup();
   }
- catch (  UnknownHostException e) {
+ catch (  final UnknownHostException e) {
     LOG.error("Unknown host " + host,e);
     System.exit(0);
   }
-catch (  IOException e) {
+catch (  final IOException e) {
     LOG.error("start failure - networking  not set up for " + host,e);
     System.exit(0);
   }
-catch (  RuntimeException e) {
+catch (  final RuntimeException e) {
     LOG.error("start failure",e);
     System.exit(0);
   }
-  boolean awaitConnections=true;
+  final boolean awaitConnections=true;
   do {
     try {
-      Socket connection=socket.accept();
+      final Socket connection=socket.accept();
       LOG.info("connection from " + connection);
       connection.setSoTimeout(readTimeout);
       connection(connection);
     }
- catch (    SocketTimeoutException expected) {
+ catch (    final SocketTimeoutException expected) {
     }
-catch (    IOException e) {
+catch (    final IOException e) {
       LOG.error("networking problem",e);
     }
   }

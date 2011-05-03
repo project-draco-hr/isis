@@ -1,9 +1,9 @@
 {
   String specificationName=specification.getFullIdentifier();
-  Iterator<StateReader> instanceData=database.instancesOf(specificationName);
+  final Iterator<StateReader> instanceData=database.instancesOf(specificationName);
   while (instanceData.hasNext()) {
-    StateReader reader=instanceData.next();
-    ObjectAdapter instance=objectReader.load(reader,keyCreator,versionCreator);
+    final StateReader reader=instanceData.next();
+    final ObjectAdapter instance=objectReader.load(reader,keyCreator,versionCreator);
     if (persistenceQuery instanceof PersistenceQueryBuiltIn) {
       if (!((PersistenceQueryBuiltIn)persistenceQuery).matches(instance)) {
         continue;
@@ -11,7 +11,7 @@
     }
     instances.add(instance);
   }
-  for (  ObjectSpecification spec : specification.subclasses()) {
+  for (  final ObjectSpecification spec : specification.subclasses()) {
     specificationName=spec.getFullIdentifier();
     instances(persistenceQuery,spec,instances);
   }

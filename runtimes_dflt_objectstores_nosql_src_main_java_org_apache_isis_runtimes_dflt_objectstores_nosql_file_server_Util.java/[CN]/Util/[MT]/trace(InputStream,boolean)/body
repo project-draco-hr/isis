@@ -1,38 +1,38 @@
 {
   return !isOn ? inputStream : new InputStream(){
     StringBuffer log=new StringBuffer();
-    public int read() throws IOException {
-      int b=inputStream.read();
+    @Override public int read() throws IOException {
+      final int b=inputStream.read();
       log(b);
       return b;
     }
-    private void log(    int b){
+    private void log(    final int b){
       log.append(b < 32 ? ("<" + b + ">"+ (char)b) : (char)b);
     }
-    public int read(    byte[] b) throws IOException {
-      int read=inputStream.read(b);
+    @Override public int read(    final byte[] b) throws IOException {
+      final int read=inputStream.read(b);
       for (int i=0; i < read; i++) {
         log(b[i]);
       }
       return read;
     }
-    public int read(    byte[] b,    int off,    int len) throws IOException {
-      int read=inputStream.read(b,off,len);
+    @Override public int read(    final byte[] b,    final int off,    final int len) throws IOException {
+      final int read=inputStream.read(b,off,len);
       for (int i=0; i < read; i++) {
         log(b[off + i]);
       }
       return read;
     }
-    public int available() throws IOException {
+    @Override public int available() throws IOException {
       return inputStream.available();
     }
-    public long skip(    long n) throws IOException {
+    @Override public long skip(    final long n) throws IOException {
       return inputStream.skip(n);
     }
-    public void close() throws IOException {
+    @Override public void close() throws IOException {
       inputStream.close();
     }
-    public String toString(){
+    @Override public String toString(){
       return "in#" + Long.toHexString(hashCode()) + " "+ log;
     }
   }

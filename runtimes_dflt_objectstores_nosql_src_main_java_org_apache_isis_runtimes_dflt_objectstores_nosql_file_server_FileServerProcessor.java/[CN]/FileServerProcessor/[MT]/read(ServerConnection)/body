@@ -5,7 +5,7 @@
     connection.endCommand();
     type=connection.getRequest();
     id=connection.getRequest();
-    DataReader reader=findInstance(type,id,connection);
+    final DataReader reader=findInstance(type,id,connection);
     if (reader == null) {
       connection.notFound(Util.FILE_NOT_FOUND + " for " + type+ "/"+ id);
     }
@@ -14,7 +14,7 @@
       readInstance(reader,connection);
     }
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     throw new NoSqlStoreException(Util.READ_ERROR + " for " + type+ "/"+ id,e);
   }
  finally {

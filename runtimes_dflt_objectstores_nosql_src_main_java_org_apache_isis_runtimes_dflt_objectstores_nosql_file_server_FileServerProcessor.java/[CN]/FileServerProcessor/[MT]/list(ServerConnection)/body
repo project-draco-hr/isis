@@ -1,18 +1,18 @@
 {
   try {
     connection.endCommand();
-    String type=connection.getRequest();
+    final String type=connection.getRequest();
     int limit=connection.getRequestAsInt();
     if (limit == 0) {
       limit=Integer.MAX_VALUE;
     }
-    File[] listFiles=listFiles(type);
+    final File[] listFiles=listFiles(type);
     if (listFiles != null) {
       connection.ok();
-      for (      File file : listFiles) {
-        String fileName=file.getName();
-        String id=fileName.substring(0,fileName.length() - 5);
-        DataReader reader=findInstance(type,id,connection);
+      for (      final File file : listFiles) {
+        final String fileName=file.getName();
+        final String id=fileName.substring(0,fileName.length() - 5);
+        final DataReader reader=findInstance(type,id,connection);
         readInstance(reader,connection);
         locks.release(id,getTransactionId());
         connection.endBlock();
@@ -26,7 +26,7 @@
       connection.response("");
     }
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     throw new NoSqlStoreException(Util.READ_ERROR,e);
   }
 }

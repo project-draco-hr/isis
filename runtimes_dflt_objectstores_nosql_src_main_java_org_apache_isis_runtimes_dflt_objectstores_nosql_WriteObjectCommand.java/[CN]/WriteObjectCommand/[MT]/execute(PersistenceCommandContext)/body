@@ -1,15 +1,15 @@
 {
-  String specName=object.getSpecification().getFullIdentifier();
-  StateWriter writer=((NoSqlCommandContext)context).createStateWriter(specName);
-  String key=keyCreator.key(object.getOid());
+  final String specName=object.getSpecification().getFullIdentifier();
+  final StateWriter writer=((NoSqlCommandContext)context).createStateWriter(specName);
+  final String key=keyCreator.key(object.getOid());
   writer.writeId(key);
   writeFields(writer,specName,object);
   final String user=IsisContext.getAuthenticationSession().getUserName();
-  Version currentVersion=object.getVersion();
-  Version newVersion=isUpdate ? versionCreator.nextVersion(currentVersion) : versionCreator.newVersion(user);
+  final Version currentVersion=object.getVersion();
+  final Version newVersion=isUpdate ? versionCreator.nextVersion(currentVersion) : versionCreator.newVersion(user);
   object.setOptimisticLock(newVersion);
   if (newVersion != null) {
-    String version=currentVersion == null ? null : versionCreator.versionString(currentVersion);
+    final String version=currentVersion == null ? null : versionCreator.versionString(currentVersion);
     writer.writeVersion(version,versionCreator.versionString(newVersion));
     writer.writeUser(newVersion.getUser());
     writer.writeTime(versionCreator.timeString(newVersion));

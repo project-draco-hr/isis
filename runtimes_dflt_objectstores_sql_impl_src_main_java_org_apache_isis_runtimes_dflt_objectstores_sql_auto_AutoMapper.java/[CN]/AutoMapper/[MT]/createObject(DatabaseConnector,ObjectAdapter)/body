@@ -1,11 +1,11 @@
 {
-  int versionSequence=1;
-  SerialNumberVersion version=createVersion(versionSequence);
-  StringBuffer sql=new StringBuffer();
+  final int versionSequence=1;
+  final SerialNumberVersion version=createVersion(versionSequence);
+  final StringBuffer sql=new StringBuffer();
   sql.append("insert into " + table + " (");
   idMapping.appendColumnNames(sql);
   sql.append(", ");
-  String columnList=columnList();
+  final String columnList=columnList();
   if (columnList.length() > 0) {
     sql.append(columnList);
     sql.append(", ");
@@ -23,7 +23,7 @@
   sql.append(") ");
   connector.insert(sql.toString());
   object.setOptimisticLock(version);
-  for (int i=0; i < collectionMappers.length; i++) {
-    collectionMappers[i].saveInternalCollection(connector,object);
+  for (  final CollectionMapper collectionMapper : collectionMappers) {
+    collectionMapper.saveInternalCollection(connector,object);
   }
 }

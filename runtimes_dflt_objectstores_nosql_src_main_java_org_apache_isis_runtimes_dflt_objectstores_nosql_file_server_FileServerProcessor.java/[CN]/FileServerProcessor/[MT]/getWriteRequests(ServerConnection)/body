@@ -1,13 +1,13 @@
 {
-  ArrayList<FileContent> files=new ArrayList<FileContent>();
+  final ArrayList<FileContent> files=new ArrayList<FileContent>();
   while (connection.readWriteHeaders()) {
-    char command=connection.getCommand();
-    String type=connection.getRequest();
-    String id=connection.getRequest();
-    String currentVersion=connection.getRequest();
-    String newVersion=connection.getRequest();
+    final char command=connection.getCommand();
+    final String type=connection.getRequest();
+    final String id=connection.getRequest();
+    final String currentVersion=connection.getRequest();
+    final String newVersion=connection.getRequest();
     LOG.debug("write for " + type + "@"+ id+ " v."+ newVersion);
-    String buf=connection.getData();
+    final String buf=connection.getData();
     files.add(new FileContent(command,id,currentVersion,newVersion,type,buf));
   }
   return files;

@@ -1,5 +1,5 @@
 {
-  ClientConnection connection=getConnection();
+  final ClientConnection connection=getConnection();
   List<StateReader> instances;
   try {
     instances=new ArrayList<StateReader>();
@@ -7,11 +7,11 @@
     connection.validateRequest();
     String data;
     while ((data=connection.getResponseData()).length() > 0) {
-      JsonStateReader reader=new JsonStateReader(data);
+      final JsonStateReader reader=new JsonStateReader(data);
       instances.add(reader);
     }
   }
- catch (  RuntimeException e) {
+ catch (  final RuntimeException e) {
     LOG.error("aborting instancesOf",e);
     abortConnection(connection);
     throw e;

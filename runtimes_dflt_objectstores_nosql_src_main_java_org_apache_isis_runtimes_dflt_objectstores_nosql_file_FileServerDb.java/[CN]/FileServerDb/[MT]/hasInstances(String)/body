@@ -1,12 +1,12 @@
 {
-  ClientConnection connection=getConnection();
+  final ClientConnection connection=getConnection();
   boolean hasInstances;
   try {
     connection.request('I',specificationName);
     connection.validateRequest();
     hasInstances=connection.getResponseAsBoolean();
   }
- catch (  RuntimeException e) {
+ catch (  final RuntimeException e) {
     LOG.error("aborting hasInstances",e);
     abortConnection(connection);
     throw e;

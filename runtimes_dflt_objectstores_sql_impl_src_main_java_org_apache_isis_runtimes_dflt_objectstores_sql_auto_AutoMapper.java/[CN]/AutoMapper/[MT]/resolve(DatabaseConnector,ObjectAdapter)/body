@@ -1,18 +1,18 @@
 {
   LOG.debug("loading data from SQL " + table + " for "+ object);
-  StringBuffer sql=new StringBuffer();
+  final StringBuffer sql=new StringBuffer();
   sql.append("select ");
   sql.append(columnList());
   sql.append(",");
   sql.append(versionMapping.appendSelectColumns());
   sql.append(" from " + table + " WHERE ");
   idMapping.appendWhereClause(connector,sql,object.getOid());
-  Results rs=connector.select(sql.toString());
+  final Results rs=connector.select(sql.toString());
   if (rs.next()) {
     loadFields(object,rs);
     rs.close();
-    for (int i=0; i < collectionMappers.length; i++) {
-      collectionMappers[i].loadInternalCollection(connector,object);
+    for (    final CollectionMapper collectionMapper : collectionMappers) {
+      collectionMapper.loadInternalCollection(connector,object);
     }
   }
  else {

@@ -1,5 +1,5 @@
 {
-  List<? extends ObjectAssociation> fields=specification.getAssociations();
+  final List<? extends ObjectAssociation> fields=specification.getAssociations();
   int simpleFieldCount=0;
   int collectionFieldCount=0;
   for (int i=0; i < fields.size(); i++) {
@@ -13,24 +13,24 @@
       simpleFieldCount++;
     }
   }
-  ObjectAssociation[] oneToOneProperties=new ObjectAssociation[simpleFieldCount];
-  ObjectAssociation[] oneToManyProperties=new ObjectAssociation[collectionFieldCount];
+  final ObjectAssociation[] oneToOneProperties=new ObjectAssociation[simpleFieldCount];
+  final ObjectAssociation[] oneToManyProperties=new ObjectAssociation[collectionFieldCount];
   collectionMappers=new CollectionMapper[collectionFieldCount];
-  IsisConfiguration subset=IsisContext.getConfiguration().createSubset(parameterBase + ".mapper.");
+  final IsisConfiguration subset=IsisContext.getConfiguration().createSubset(parameterBase + ".mapper.");
   for (int i=0, simpleFieldNo=0, collectionFieldNo=0; i < fields.size(); i++) {
-    ObjectAssociation field=fields.get(i);
+    final ObjectAssociation field=fields.get(i);
     if (field.isNotPersisted()) {
       continue;
     }
  else     if (field.isOneToManyAssociation()) {
       oneToManyProperties[collectionFieldNo]=field;
-      String type=subset.getString(field.getId());
+      final String type=subset.getString(field.getId());
       if (type == null || type.equals("association-table")) {
         collectionMappers[collectionFieldNo]=new MultiColumnCombinedCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup);
       }
  else       if (type.equals("fk-table")) {
-        String property=parameterBase + field.getId() + ".element-type";
-        String elementType=configParameters.getString(property);
+        final String property=parameterBase + field.getId() + ".element-type";
+        final String elementType=configParameters.getString(property);
         if (elementType == null) {
           throw new SqlObjectStoreException("Expected property " + property);
         }
@@ -49,9 +49,8 @@
       simpleFieldNo++;
     }
   }
-  for (int f=0; f < oneToOneProperties.length; f++) {
-    ObjectAssociation field=oneToOneProperties[f];
-    FieldMapping mapping=lookup.createMapping(field);
+  for (  final ObjectAssociation field : oneToOneProperties) {
+    final FieldMapping mapping=lookup.createMapping(field);
     fieldMappings.add(mapping);
     fieldMappingLookup.put(field,mapping);
   }

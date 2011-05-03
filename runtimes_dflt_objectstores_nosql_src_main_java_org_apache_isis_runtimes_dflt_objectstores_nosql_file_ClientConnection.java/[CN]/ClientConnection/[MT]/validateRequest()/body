@@ -2,17 +2,17 @@
   writer.println();
   writer.flush();
   getReponseHeader();
-  String status=readNext();
+  final String status=readNext();
   if (status.equals("error")) {
-    String message=getResponseData();
+    final String message=getResponseData();
     throw new RemotingException(message);
   }
  else   if (status.equals("not-found")) {
-    String message=getResponseData();
+    final String message=getResponseData();
     throw new ObjectNotFoundException(message);
   }
  else   if (status.equals("concurrency")) {
-    String data=getResponseData();
+    final String data=getResponseData();
     if (data.startsWith("{")) {
       throw new ConcurrencyException(data,(Throwable)null);
     }

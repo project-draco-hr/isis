@@ -1,10 +1,10 @@
 {
-  IsisConfigurationDefault configuration=new IsisConfigurationDefault();
+  final IsisConfigurationDefault configuration=new IsisConfigurationDefault();
   final AdapterMapAbstract adapterMap=new AdapterMapAbstract(){
-    @Override public ObjectAdapter getAdapterFor(    Object pojo){
+    @Override public ObjectAdapter getAdapterFor(    final Object pojo){
       throw new UnsupportedOperationException();
     }
-    @Override public ObjectAdapter adapterFor(    Object pojo,    ObjectAdapter ownerAdapter,    IdentifiedHolder identifiedHolder){
+    @Override public ObjectAdapter adapterFor(    final Object pojo,    final ObjectAdapter ownerAdapter,    final IdentifiedHolder identifiedHolder){
       if (adapters.get(pojo) != null) {
         return adapters.get(pojo);
       }
@@ -12,7 +12,7 @@
         return factory.createAdapter(pojo,null);
       }
     }
-    @Override public ObjectAdapter adapterForAggregated(    Object pojo,    ObjectAdapter parent){
+    @Override public ObjectAdapter adapterForAggregated(    final Object pojo,    final ObjectAdapter parent){
       if (adapters.get(pojo) != null) {
         return adapters.get(pojo);
       }
@@ -20,7 +20,7 @@
         return factory.createAdapter(pojo,null);
       }
     }
-    @Override public ObjectAdapter adapterFor(    Object pattern){
+    @Override public ObjectAdapter adapterFor(    final Object pattern){
       return adapters.get(pattern);
     }
   }
@@ -34,9 +34,9 @@
 );
   reflector.init();
   factory=new AdapterFactoryAbstract(){
-    @Override public ObjectAdapter createAdapter(    Object pojo,    Oid oid){
-      ObjectSpecification specification=reflector.loadSpecification(pojo.getClass());
-      ResolveState state=oid == null ? ResolveState.VALUE : oid.isTransient() ? ResolveState.TRANSIENT : ResolveState.GHOST;
+    @Override public ObjectAdapter createAdapter(    final Object pojo,    final Oid oid){
+      final ObjectSpecification specification=reflector.loadSpecification(pojo.getClass());
+      final ResolveState state=oid == null ? ResolveState.VALUE : oid.isTransient() ? ResolveState.TRANSIENT : ResolveState.GHOST;
       final TestProxyAdapter objectAdapter=new TestProxyAdapter();
       objectAdapter.setupResolveState(state);
       objectAdapter.setupObject(pojo);

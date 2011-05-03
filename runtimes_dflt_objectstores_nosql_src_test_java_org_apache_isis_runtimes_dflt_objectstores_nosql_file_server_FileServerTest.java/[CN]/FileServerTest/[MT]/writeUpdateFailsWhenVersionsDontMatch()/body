@@ -1,10 +1,10 @@
 {
-  File file2=new File("target/test/org.domain.Class","1026.data");
-  FileWriter fileWriter=new FileWriter(file2);
-  String originalData="org.domain.Class 1026 21\n{datax}\n\n\n***";
+  final File file2=new File("target/test/org.domain.Class","1026.data");
+  final FileWriter fileWriter=new FileWriter(file2);
+  final String originalData="org.domain.Class 1026 21\n{datax}\n\n\n***";
   fileWriter.write(originalData);
   fileWriter.close();
-  ServerConnection connection=new ServerConnection(IoUtils.asUtf8ByteStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n\n\n"),out);
+  final ServerConnection connection=new ServerConnection(IoUtils.asUtf8ByteStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n\n\n"),out);
   server.process(connection);
   assertThat(out.toString(),is(equalTo(lineSeparated("error\nmismatch between FileContent version (19) and DataReader version (21)\n"))));
 }

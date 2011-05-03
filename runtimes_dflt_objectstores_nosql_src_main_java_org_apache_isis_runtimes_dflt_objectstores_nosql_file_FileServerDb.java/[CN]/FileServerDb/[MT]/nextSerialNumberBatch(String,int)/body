@@ -1,12 +1,12 @@
 {
-  ClientConnection connection=getConnection();
+  final ClientConnection connection=getConnection();
   long serialNumber;
   try {
     connection.request('N',name + " " + Integer.toString(batchSize));
     connection.validateRequest();
     serialNumber=connection.getResponseAsLong();
   }
- catch (  RuntimeException e) {
+ catch (  final RuntimeException e) {
     LOG.error("aborting nextSerialNumberBatch",e);
     abortConnection(connection);
     throw e;

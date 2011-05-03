@@ -1,20 +1,20 @@
 {
   PropertyConfigurator.configure("config/logging.properties");
   try {
-    CompositeConfiguration config=new CompositeConfiguration();
+    final CompositeConfiguration config=new CompositeConfiguration();
     config.addConfiguration(new SystemConfiguration());
     config.addConfiguration(new PropertiesConfiguration("config/server.properties"));
     host=config.getString("fileserver.host",DEFAULT_HOST);
     port=config.getInt("fileserver.port",DEFAULT_PORT);
-    String data=config.getString("fileserver.data");
-    String services=config.getString("fileserver.services");
-    String logs=config.getString("fileserver.logs");
+    final String data=config.getString("fileserver.data");
+    final String services=config.getString("fileserver.services");
+    final String logs=config.getString("fileserver.logs");
     connectionTimeout=config.getInt("fileserver.connection.timeout",5000);
     readTimeout=config.getInt("fileserver.read.timeout",5000);
     Util.setDirectory(data,services,logs);
     server=new FileServerProcessor();
   }
- catch (  ConfigurationException e) {
+ catch (  final ConfigurationException e) {
     LOG.error("configuration failure",e);
     System.out.println(e.getMessage());
     System.exit(0);

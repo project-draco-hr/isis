@@ -1,12 +1,12 @@
 {
   try {
-    InputStream input=connection.getInputStream();
-    OutputStream output=connection.getOutputStream();
-    ServerConnection pipe=new ServerConnection(input,output);
+    final InputStream input=connection.getInputStream();
+    final OutputStream output=connection.getOutputStream();
+    final ServerConnection pipe=new ServerConnection(input,output);
     server.process(pipe);
     pipe.logComplete();
   }
- catch (  NoSqlStoreException e) {
+ catch (  final NoSqlStoreException e) {
     if (e.getCause() instanceof SocketTimeoutException) {
       LOG.error("read timed out after " + (readTimeout / 1000.0) + " seconds",e);
     }
@@ -14,17 +14,17 @@
       LOG.error("file server failure",e);
     }
   }
-catch (  IOException e) {
+catch (  final IOException e) {
     LOG.error("networking failure",e);
   }
-catch (  RuntimeException e) {
+catch (  final RuntimeException e) {
     LOG.error("request failure",e);
   }
  finally {
     try {
       connection.close();
     }
- catch (    IOException e) {
+ catch (    final IOException e) {
       LOG.warn("failure to close connection",e);
     }
   }

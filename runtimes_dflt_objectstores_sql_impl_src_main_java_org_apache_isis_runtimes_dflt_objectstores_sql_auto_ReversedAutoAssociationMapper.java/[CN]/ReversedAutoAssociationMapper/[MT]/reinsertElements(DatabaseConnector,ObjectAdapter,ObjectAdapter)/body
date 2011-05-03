@@ -1,9 +1,9 @@
 {
-  StringBuffer sql=new StringBuffer();
+  final StringBuffer sql=new StringBuffer();
   sql.append("insert into " + table + " (");
   idMapping.appendColumnNames(sql);
   sql.append(", ");
-  String columnList=columnList();
+  final String columnList=columnList();
   if (columnList.length() > 0) {
     sql.append(columnList);
     sql.append(", ");
@@ -12,11 +12,11 @@
   sql.append(") values (");
   idMapping.appendInsertValues(connector,sql,parent);
   sql.append(", ");
-  CollectionFacet collectionFacet=field.getFacet(CollectionFacet.class);
-  for (  ObjectAdapter element : collectionFacet.iterable(collection)) {
-    StringBuffer insert=new StringBuffer(sql);
+  final CollectionFacet collectionFacet=field.getFacet(CollectionFacet.class);
+  for (  final ObjectAdapter element : collectionFacet.iterable(collection)) {
+    final StringBuffer insert=new StringBuffer(sql);
     insert.append(values(connector,element));
-    SerialNumberVersion version=new SerialNumberVersion(0,"",new Date());
+    final SerialNumberVersion version=new SerialNumberVersion(0,"",new Date());
     insert.append(versionMapping.insertValues(connector,version));
     insert.append(") ");
     connector.insert(insert.toString());

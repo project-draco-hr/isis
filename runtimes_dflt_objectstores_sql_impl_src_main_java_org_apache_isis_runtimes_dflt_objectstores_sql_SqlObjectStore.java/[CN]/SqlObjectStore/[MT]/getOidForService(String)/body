@@ -1,6 +1,6 @@
 {
-  DatabaseConnector connector=connectionPool.acquire();
-  StringBuffer sql=new StringBuffer();
+  final DatabaseConnector connector=connectionPool.acquire();
+  final StringBuffer sql=new StringBuffer();
   sql.append("select ");
   sql.append(Sql.identifier(PRIMARYKEY_COLUMN));
   sql.append(" from ");
@@ -9,9 +9,9 @@
   sql.append(Sql.identifier(ID_COLUMN));
   sql.append(" = ?");
   connector.addToQueryValues(name);
-  Results results=connector.select(sql.toString());
+  final Results results=connector.select(sql.toString());
   if (results.next()) {
-    int key=results.getInt(PRIMARYKEY_COLUMN);
+    final int key=results.getInt(PRIMARYKEY_COLUMN);
     connectionPool.release(connector);
     return SqlOid.createPersistent(name,new IntegerPrimaryKey(key));
   }

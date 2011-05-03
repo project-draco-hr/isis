@@ -1,32 +1,32 @@
 {
   return !isOn ? outputStream : new OutputStream(){
     StringBuffer log=new StringBuffer();
-    public void write(    int b) throws IOException {
+    @Override public void write(    final int b) throws IOException {
       log(b);
       outputStream.write(b);
     }
-    private void log(    int b){
+    private void log(    final int b){
       log.append(b < 32 ? ("<" + b + ">"+ (char)b) : (char)b);
     }
-    public void write(    byte[] b) throws IOException {
-      for (int i=0; i < b.length; i++) {
-        log(b[i]);
+    @Override public void write(    final byte[] b) throws IOException {
+      for (      final byte element : b) {
+        log(element);
       }
       outputStream.write(b);
     }
-    public void write(    byte[] b,    int off,    int len) throws IOException {
+    @Override public void write(    final byte[] b,    final int off,    final int len) throws IOException {
       for (int i=0; i < len; i++) {
         log(b[off + i]);
       }
       outputStream.write(b,off,len);
     }
-    public void flush() throws IOException {
+    @Override public void flush() throws IOException {
       outputStream.flush();
     }
-    public void close() throws IOException {
+    @Override public void close() throws IOException {
       outputStream.close();
     }
-    public String toString(){
+    @Override public String toString(){
       return "out#" + Long.toHexString(hashCode()) + " "+ log;
     }
   }
