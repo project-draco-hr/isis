@@ -2,10 +2,10 @@
   if (form.hasError()) {
     return false;
   }
-  ObjectAdapter object=getEntityModel().getObject();
-  Memento snapshotToRollbackToIfInvalid=new Memento(object);
+  final ObjectAdapter object=getEntityModel().getObject();
+  final Memento snapshotToRollbackToIfInvalid=new Memento(object);
   getEntityModel().apply();
-  String invalidReasonIfAny=getEntityModel().getReasonInvalidIfAny();
+  final String invalidReasonIfAny=getEntityModel().getReasonInvalidIfAny();
   if (invalidReasonIfAny != null) {
     form.error(invalidReasonIfAny);
     snapshotToRollbackToIfInvalid.recreateObject();

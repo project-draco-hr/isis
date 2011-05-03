@@ -1,29 +1,29 @@
 {
-  String paramContext=PageParameterNames.ACTION_PARAM_CONTEXT.getFrom(pageParameters);
+  final String paramContext=PageParameterNames.ACTION_PARAM_CONTEXT.getFrom(pageParameters);
   if (paramContext == null) {
     return false;
   }
-  ObjectAction action=actionMemento.getAction();
-  int parameterCount=action.getParameterCount();
-  Map.Entry<Integer,String> mapEntry=parse(paramContext);
+  final ObjectAction action=actionMemento.getAction();
+  final int parameterCount=action.getParameterCount();
+  final Map.Entry<Integer,String> mapEntry=parse(paramContext);
   Oid oid;
-  int paramNum=mapEntry.getKey();
+  final int paramNum=mapEntry.getKey();
   if (paramNum >= parameterCount) {
     return false;
   }
   try {
     oid=oidStringifier.deString(mapEntry.getValue());
   }
- catch (  Exception e) {
+ catch (  final Exception e) {
     return false;
   }
-  ObjectAdapter argumentAdapter=getAdapterManager().getAdapterFor(oid);
+  final ObjectAdapter argumentAdapter=getAdapterManager().getAdapterFor(oid);
   if (argumentAdapter == null) {
     return false;
   }
-  ObjectActionParameter actionParam=action.getParameters().get(paramNum);
-  ActionParameterMemento apm=new ActionParameterMemento(actionParam);
-  ScalarModel argumentModel=getArgumentModel(apm);
+  final ObjectActionParameter actionParam=action.getParameters().get(paramNum);
+  final ActionParameterMemento apm=new ActionParameterMemento(actionParam);
+  final ScalarModel argumentModel=getArgumentModel(apm);
   argumentModel.setObject(argumentAdapter);
   return true;
 }

@@ -1,8 +1,8 @@
 {
   init();
-  String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
-  String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
-  String proposedValueOidStr=UrlDecoderUtils.urlDecode(proposedValueEncodedOidStr);
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
+  final String proposedValueOidStr=UrlDecoderUtils.urlDecode(proposedValueEncodedOidStr);
   final ObjectAdapter nakedObject=getNakedObject(oidStr);
   if (nakedObject == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
@@ -21,7 +21,7 @@
   final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + collectionId,getServletRequest());
   xhtml.appendToBody(asDivNofSession());
   xhtml.appendToBody(resourcesDiv());
-  Element div=asDivTableObjectDetails(nakedObject);
+  final Element div=asDivTableObjectDetails(nakedObject);
   xhtml.appendToBody(div);
   if (modification == CollectionModificationType.ADD_TO) {
     collection.addElement(nakedObject,proposedValueNO);

@@ -1,11 +1,11 @@
 {
   init();
-  String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
   final ObjectAdapter nakedObject=getNakedObject(oidStr);
   if (nakedObject == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
   }
-  String javascriptFile=isJavascriptDebug() ? Constants.XMLHTTP_REQUEST_SRC_JS : Constants.XMLHTTP_REQUEST_JS;
+  final String javascriptFile=isJavascriptDebug() ? Constants.XMLHTTP_REQUEST_SRC_JS : Constants.XMLHTTP_REQUEST_JS;
   final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString(),getServletRequest(),javascriptFile,Constants.NOF_REST_SUPPORT_JS);
   xhtml.appendToBody(asDivNofSession());
   xhtml.appendToBody(resourcesDiv());

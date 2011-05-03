@@ -4,21 +4,21 @@
     LOG.info(asString(formArgumentsByParameter));
   }
   try {
-    Map<String,String> encodedMap=urlEncode(formArgumentsByParameter);
+    final Map<String,String> encodedMap=urlEncode(formArgumentsByParameter);
     if (LOG.isTraceEnabled()) {
       LOG.trace(asString(encodedMap));
     }
-    HttpURLConnection connection=createPostConnection(uri);
+    final HttpURLConnection connection=createPostConnection(uri);
     writeMapToConnectionOutputStream(encodedMap,connection);
     return readDocFromConnectionInputStream(connection);
   }
- catch (  IOException e) {
+ catch (  final IOException e) {
     throw new RestfulClientException(e);
   }
-catch (  ValidityException e) {
+catch (  final ValidityException e) {
     throw new RestfulClientException(e);
   }
-catch (  ParsingException e) {
+catch (  final ParsingException e) {
     throw new RestfulClientException(e);
   }
 }

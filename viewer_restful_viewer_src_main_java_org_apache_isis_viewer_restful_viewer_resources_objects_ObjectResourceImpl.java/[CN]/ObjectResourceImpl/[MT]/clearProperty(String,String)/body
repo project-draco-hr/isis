@@ -1,7 +1,7 @@
 {
   init();
-  String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
-  String propertyId=UrlDecoderUtils.urlDecode(propertyEncodedId);
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final String propertyId=UrlDecoderUtils.urlDecode(propertyEncodedId);
   final ObjectAdapter nakedObject=getNakedObject(oidStr);
   if (nakedObject == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
@@ -15,7 +15,7 @@
   final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + propertyId,getServletRequest());
   xhtml.appendToBody(asDivNofSession());
   xhtml.appendToBody(resourcesDiv());
-  Element div=asDivTableObjectDetails(nakedObject);
+  final Element div=asDivTableObjectDetails(nakedObject);
   xhtml.appendToBody(div);
   property.clearAssociation(nakedObject);
   return xhtml.toXML();

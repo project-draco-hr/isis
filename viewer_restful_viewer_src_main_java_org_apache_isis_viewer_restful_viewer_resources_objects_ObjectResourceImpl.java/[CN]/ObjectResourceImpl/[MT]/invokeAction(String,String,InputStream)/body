@@ -1,9 +1,9 @@
 {
   init();
-  String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
-  String actionId=UrlDecoderUtils.urlDecode(actionEncodedId);
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final String actionId=UrlDecoderUtils.urlDecode(actionEncodedId);
   final List<String> argsEncodedArray=InputStreamUtil.getArgs(body);
-  String[] argsEncoded=argsEncodedArray.toArray(new String[]{});
+  final String[] argsEncoded=argsEncodedArray.toArray(new String[]{});
   final String[] args=urlDecode(argsEncoded);
   final ObjectAdapter nakedObject=getNakedObject(oidStr);
   if (nakedObject == null) {
@@ -15,7 +15,7 @@
   final int parameterCount=parameters.size();
   final int argumentCount=args.length;
   if (parameterCount > argumentCount) {
-    String reason=MessageFormat.format("provided {0} parameters but {1} arguments",parameterCount,argumentCount);
+    final String reason=MessageFormat.format("provided {0} parameters but {1} arguments",parameterCount,argumentCount);
     throw new WebApplicationException(responseOfBadRequest(reason));
   }
   final ObjectAdapter[] proposedArguments=new ObjectAdapter[parameterCount];
