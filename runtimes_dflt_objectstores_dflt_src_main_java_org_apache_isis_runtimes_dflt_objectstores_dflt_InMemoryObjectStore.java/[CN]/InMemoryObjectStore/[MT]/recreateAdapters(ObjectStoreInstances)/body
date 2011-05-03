@@ -1,19 +1,19 @@
 {
-  for (  Oid oid : objectStoreInstances.getOids()) {
+  for (  final Oid oid : objectStoreInstances.getOids()) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("recreating adapter: oid=" + oid);
     }
-    Object pojo=objectStoreInstances.getPojo(oid);
-    ObjectAdapter existingAdapterLookedUpByPojo=getAdapterManager().getAdapterFor(pojo);
+    final Object pojo=objectStoreInstances.getPojo(oid);
+    final ObjectAdapter existingAdapterLookedUpByPojo=getAdapterManager().getAdapterFor(pojo);
     if (existingAdapterLookedUpByPojo != null) {
       getAdapterManager().removeAdapter(existingAdapterLookedUpByPojo);
     }
-    ObjectAdapter existingAdapterLookedUpByOid=getAdapterManager().getAdapterFor(oid);
+    final ObjectAdapter existingAdapterLookedUpByOid=getAdapterManager().getAdapterFor(oid);
     if (existingAdapterLookedUpByOid != null) {
       throw new IsisException("A mapping already exists for " + oid + ": "+ existingAdapterLookedUpByOid);
     }
-    ObjectAdapter recreatedAdapter=getHydrator().recreateAdapter(oid,pojo);
-    Version version=objectStoreInstances.getVersion(oid);
+    final ObjectAdapter recreatedAdapter=getHydrator().recreateAdapter(oid,pojo);
+    final Version version=objectStoreInstances.getVersion(oid);
     recreatedAdapter.setOptimisticLock(version);
   }
 }
