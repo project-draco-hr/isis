@@ -1,0 +1,24 @@
+{
+  if (debugMode != null) {
+    throw new ScimpiException("Debug mode is already set up!");
+  }
+  String debugUserEntry=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.debug.users","");
+  String[] users=debugUserEntry.split("\\|");
+  for (  String name : users) {
+    debugUsers.add(name.trim());
+  }
+  String debugModeEntry=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.debug.mode");
+  if (debugModeEntry != null) {
+    try {
+      debugMode=DebugMode.valueOf(debugModeEntry.toUpperCase());
+      LOG.info("Debug mode set to " + debugMode);
+    }
+ catch (    IllegalArgumentException e) {
+      LOG.error("Invalid debug mode - " + debugModeEntry + " - mode set to OFF");
+      debugMode=DebugMode.OFF;
+    }
+  }
+ else {
+    debugMode=DebugMode.OFF;
+  }
+}

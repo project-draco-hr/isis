@@ -1,13 +1,3 @@
 {
-  if (debugMode == null) {
-    final String property=System.getProperties().getProperty("debug-mode");
-    if (property != null) {
-      debugMode=DebugMode.valueOf(property);
-    }
-    if (debugMode == null) {
-      debugMode=DebugMode.ON;
-    }
-  }
-  final boolean allowDebug=debugMode == DebugMode.ON || (debugMode == DebugMode.SYSADMIN_ONLY && getSession().getRoles().contains("sysadmin"));
-  return !allowDebug;
+  return !debugUsers.isDebugEnabled(getSession());
 }

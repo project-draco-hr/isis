@@ -1,0 +1,18 @@
+{
+  if (context.isDebugDisabled()) {
+    throw new ForbiddenException("Can't access debug action when debug is disabled");
+  }
+  String method=context.getParameter(METHOD);
+  String name=context.getParameter(NAME);
+  String view=context.getParameter(VIEW);
+  if (method != null && method.equals("add")) {
+    debugUsers.add(name);
+  }
+ else   if (method != null && method.equals("remove")) {
+    debugUsers.remove(name);
+  }
+ else {
+    throw new ScimpiException("Invalid debug-user action");
+  }
+  context.setRequestPath(view);
+}

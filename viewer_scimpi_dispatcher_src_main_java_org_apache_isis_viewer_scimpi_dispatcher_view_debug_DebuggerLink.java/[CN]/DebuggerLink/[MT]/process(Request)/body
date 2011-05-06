@@ -1,5 +1,6 @@
 {
   if (request.getContext().isDebugDisabled()) {
+    request.skipUntilClose();
     return;
   }
   final RequestContext context=request.getContext();
@@ -9,5 +10,7 @@
   if (result != null) {
     request.appendHtml(" <a href=\"/debug/object.shtml?_result=" + result + "\" target=\"debug\"  title=\"debug instance\">...</a>");
   }
+  request.appendHtml(" <span class=\"debug-link\" onclick=\"$('#page-debug').toggle()\" alt=\"show/hide debug details\">...</span>");
   request.appendHtml("</div>");
+  request.processUtilCloseTag();
 }

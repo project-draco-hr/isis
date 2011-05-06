@@ -1,6 +1,8 @@
 {
   super.init();
   ImageLookup.setImageDirectory(getServletContext(),"images");
+  debugUsers=new DebugUsers();
+  debugUsers.initialize();
   dispatcher=new Dispatcher();
   final Enumeration initParameterNames=getInitParameterNames();
   while (initParameterNames.hasMoreElements()) {
@@ -9,6 +11,6 @@
     dispatcher.addParameter(name,value);
   }
   final String dir=getServletContext().getRealPath("/WEB-INF");
-  dispatcher.init(dir);
+  dispatcher.init(dir,debugUsers);
   new UserManager(IsisContext.getAuthenticationManager());
 }
