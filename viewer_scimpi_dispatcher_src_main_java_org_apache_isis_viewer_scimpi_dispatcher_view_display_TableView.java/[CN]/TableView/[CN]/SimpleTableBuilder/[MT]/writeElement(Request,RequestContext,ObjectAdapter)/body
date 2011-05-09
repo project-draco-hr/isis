@@ -4,15 +4,21 @@
   String result="";
   result=context.encodedInteractionParameters();
   if (fields.size() == 0) {
+    request.appendHtml("<td>");
     if (linkRow != null) {
-      request.appendHtml("<td><a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">"+ element.titleString()+ "</a></td>");
+      request.appendHtml("<td><a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">");
+      request.appendAsHtmlEncoded(element.titleString());
+      request.appendHtml("</a>");
     }
  else {
-      request.appendHtml("<td>" + element.titleString() + "</td>");
+      request.appendAsHtmlEncoded(element.titleString());
     }
+    request.appendHtml("</td>");
   }
  else {
-    request.appendHtml("<td>" + element.titleString() + "</td>");
+    request.appendHtml("<td>");
+    request.appendAsHtmlEncoded(element.titleString());
+    request.appendHtml("</td>");
     for (int i=0; i < fields.size(); i++) {
       if (fields.get(i).isOneToManyAssociation()) {
         continue;
@@ -33,10 +39,10 @@
           context.mapObject(fieldObject,RequestContext.scope(linkedFields[i].getScope()));
         }
         try {
-          request.appendHtml(field.titleString());
+          request.appendAsHtmlEncoded(field.titleString());
         }
  catch (        final ObjectNotFoundException e) {
-          request.appendHtml(e.getMessage());
+          request.appendAsHtmlEncoded(e.getMessage());
         }
         if (linkRow != null || linkedFields[i] != null) {
           request.appendHtml("</a>");

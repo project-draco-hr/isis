@@ -26,9 +26,11 @@
       }
     }
  else     if (association instanceof OneToManyAssociation) {
-      final List<JSONObject> collection=new ArrayList<JSONObject>();
-      if (!collection.isEmpty()) {
-        throw new ScimpiException("Unexpected association for transient object " + association);
+      final JSONArray collection=(JSONArray)fieldValue;
+      for (int i=0; i < collection.length(); i++) {
+        JSONObject jsonElement=(JSONObject)collection.get(i);
+        ObjectAdapter objectToAdd=restoreTransientObject(jsonElement);
+        ((OneToManyAssociation)association).addElement(object,objectToAdd);
       }
     }
  else {
