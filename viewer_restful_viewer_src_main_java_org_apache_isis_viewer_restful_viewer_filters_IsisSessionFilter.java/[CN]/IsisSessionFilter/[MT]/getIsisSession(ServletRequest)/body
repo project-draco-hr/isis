@@ -5,25 +5,25 @@
   if (authenticationManager == null) {
     throw new IllegalStateException("No authentication manager configured.");
   }
-  AuthenticationSession nofSession=null;
+  AuthenticationSession isisAuthSession=null;
   final DeploymentType deploymentType=IsisContext.getDeploymentType();
   if (deploymentType.isExploring()) {
-    nofSession=new ExplorationSession();
+    isisAuthSession=new ExplorationSession();
   }
  else {
-    nofSession=(AuthenticationSession)httpSession.getAttribute(NOF_SESSION_REQUEST_KEY);
-    if (nofSession != null) {
-      if (!authenticationManager.isSessionValid(nofSession)) {
-        nofSession=null;
+    isisAuthSession=(AuthenticationSession)httpSession.getAttribute(ISIS_SESSION_REQUEST_KEY);
+    if (isisAuthSession != null) {
+      if (!authenticationManager.isSessionValid(isisAuthSession)) {
+        isisAuthSession=null;
       }
     }
-    if (nofSession == null) {
+    if (isisAuthSession == null) {
       final String user=httpRequest.getParameter("user");
       final String password=httpRequest.getParameter("password");
       final AuthenticationRequest passwordRequest=new AuthenticationRequestPassword(user,password);
-      nofSession=authenticationManager.authenticate(passwordRequest);
+      isisAuthSession=authenticationManager.authenticate(passwordRequest);
     }
   }
-  httpSession.setAttribute(NOF_SESSION_REQUEST_KEY,nofSession);
-  return nofSession;
+  httpSession.setAttribute(ISIS_SESSION_REQUEST_KEY,isisAuthSession);
+  return isisAuthSession;
 }
