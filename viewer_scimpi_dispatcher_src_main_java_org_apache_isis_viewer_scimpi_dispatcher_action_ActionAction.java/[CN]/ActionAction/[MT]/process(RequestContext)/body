@@ -13,7 +13,7 @@
     final ObjectAction action=MethodsUtils.findAction(object,methodName);
     entryState=validateParameters(context,action,object);
     final AuthenticationSession session=context.getSession();
-    if (session == null && action.isUsable(new UserlessSession(),object).isVetoed()) {
+    if (session == null && action.isUsable(new AnonymousSession(),object).isVetoed()) {
       throw new NotLoggedInException();
     }
     object.checkLock(context.getVersion(version));
