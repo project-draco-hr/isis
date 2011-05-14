@@ -4,7 +4,12 @@
     final VersionCreator versionCreator=createVersionCreator();
     final NoSqlDataDatabase db=createNoSqlDatabase(configuration);
     final NoSqlOidGenerator oidGenerator=createOidGenerator(db);
-    objectStore=new NoSqlObjectStore(db,oidGenerator,keyCreator,versionCreator);
+    DataEncrypter writingDataEncrypter=new Rot13Encryption();
+    Map<String,DataEncrypter> availableDataEncrypters=new HashMap<String,DataEncrypter>();
+    availableDataEncrypters.put(writingDataEncrypter.getType(),writingDataEncrypter);
+    DataEncrypter passThoughEncrypter=new NoEncryption();
+    availableDataEncrypters.put(passThoughEncrypter.getType(),passThoughEncrypter);
+    objectStore=new NoSqlObjectStore(db,oidGenerator,keyCreator,versionCreator,writingDataEncrypter,availableDataEncrypters);
   }
   return objectStore;
 }

@@ -2,6 +2,8 @@
   setupObject1();
   context.checking(new Expectations(){
 {
+      one(reader1).readEncrytionType();
+      will(returnValue("etc1"));
       one(reader1).readVersion();
       will(returnValue("3"));
       one(reader1).readUser();
@@ -14,7 +16,7 @@
 );
   final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(ExampleValuePojo.class);
   final ObjectAdapter readObject=IsisContext.getPersistenceSession().recreateAdapter(SerialOid.createPersistent(4),specification);
-  objectReader.update(reader1,keyCreator,versionCreator,readObject);
+  objectReader.update(reader1,keyCreator,versionCreator,dataEncrypter,readObject);
   final ExampleValuePojo pojo=(ExampleValuePojo)readObject.getObject();
   assertEquals("Fred Smith",pojo.getName());
   assertEquals(34,pojo.getSize());

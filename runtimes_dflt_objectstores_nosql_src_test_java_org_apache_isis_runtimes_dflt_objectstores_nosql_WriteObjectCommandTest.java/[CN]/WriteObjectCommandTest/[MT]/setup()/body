@@ -27,7 +27,6 @@
   commandContext=context.mock(NoSqlCommandContext.class);
   keyCreator=context.mock(KeyCreator.class);
   versionCreator=context.mock(VersionCreator.class);
-  ;
   final Version version=new SerialNumberVersion(2,"username",null);
   context.checking(new Expectations(){
 {
@@ -40,4 +39,16 @@
     }
   }
 );
+  dataEncrypter=new DataEncrypter(){
+    public String getType(){
+      return "etc1";
+    }
+    public String encrypt(    String plainText){
+      return "ENC" + plainText;
+    }
+    public String decrypt(    String encryptedText){
+      throw new UnexpectedCallException();
+    }
+  }
+;
 }

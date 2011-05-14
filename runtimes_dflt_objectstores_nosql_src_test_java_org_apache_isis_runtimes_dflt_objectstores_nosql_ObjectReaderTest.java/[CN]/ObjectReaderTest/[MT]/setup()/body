@@ -6,5 +6,18 @@
   objectReader=new ObjectReader();
   keyCreator=context.mock(KeyCreator.class);
   versionCreator=context.mock(VersionCreator.class);
-  ;
+  dataEncrypter=new HashMap<String,DataEncrypter>();
+  DataEncrypter dataEncrypter1=new DataEncrypter(){
+    public String getType(){
+      return "etc1";
+    }
+    public String encrypt(    String plainText){
+      throw new UnexpectedCallException();
+    }
+    public String decrypt(    String encryptedText){
+      return encryptedText.substring(3);
+    }
+  }
+;
+  dataEncrypter.put(dataEncrypter1.getType(),dataEncrypter1);
 }

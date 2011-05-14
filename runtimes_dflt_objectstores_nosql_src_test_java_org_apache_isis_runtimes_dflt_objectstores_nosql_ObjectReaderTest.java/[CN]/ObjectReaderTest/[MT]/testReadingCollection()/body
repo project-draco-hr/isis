@@ -7,6 +7,8 @@
       will(returnValue(ExampleCollectionPojo.class.getName()));
       one(reader2).readId();
       will(returnValue("5"));
+      one(reader2).readEncrytionType();
+      will(returnValue("etc1"));
       one(reader2).readVersion();
       will(returnValue("3"));
       one(reader2).readUser();
@@ -32,7 +34,7 @@
     }
   }
 );
-  final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator);
+  final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator,dataEncrypter);
   assertEquals(SerialOid.createPersistent(5),readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
   final ExampleCollectionPojo pojo=(ExampleCollectionPojo)readObject.getObject();

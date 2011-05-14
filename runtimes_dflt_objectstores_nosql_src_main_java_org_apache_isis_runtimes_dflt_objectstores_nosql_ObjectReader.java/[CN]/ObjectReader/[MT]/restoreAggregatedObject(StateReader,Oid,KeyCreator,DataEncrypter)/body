@@ -1,0 +1,12 @@
+{
+  final String objectType=aggregateReader.readObjectType();
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(objectType);
+  final ObjectAdapter fieldObject=getAdapter(specification,oid);
+  if (fieldObject.getResolveState().isGhost()) {
+    final ResolveState resolveState=ResolveState.RESOLVING;
+    fieldObject.changeState(resolveState);
+    readFields(aggregateReader,fieldObject,keyCreator,dataEncrypter);
+    fieldObject.changeState(resolveState.getEndState());
+  }
+  return fieldObject;
+}
