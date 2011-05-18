@@ -12,10 +12,9 @@
       for (      final File file : listFiles) {
         final String fileName=file.getName();
         final String id=fileName.substring(0,fileName.length() - 5);
-        final DataReader reader=findInstance(type,id,connection);
+        final DataFileReader reader=findInstance(type,id,connection);
         readInstance(reader,connection);
         locks.release(id,getTransactionId());
-        connection.endBlock();
         if (limit-- < 0) {
           break;
         }
