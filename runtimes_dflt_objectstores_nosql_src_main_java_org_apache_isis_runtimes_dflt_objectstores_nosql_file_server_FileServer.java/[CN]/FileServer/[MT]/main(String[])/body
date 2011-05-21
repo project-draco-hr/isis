@@ -1,7 +1,7 @@
 {
   final Options options=new Options();
   options.addOption("h","help",false,"Show this help");
-  options.addOption("m","mode",true,"mode: normal | recovery | secondary");
+  options.addOption("m","mode",true,"mode: normal | secondary | recovery | archive");
   CommandLineParser parser=new BasicParser();
   CommandLine cmd=parser.parse(options,args);
   if (cmd.hasOption('h')) {
@@ -12,6 +12,10 @@
   if ("recovery".equals(mode)) {
     final FileServer fileServer=new FileServer();
     fileServer.startRecovery(cmd.getArgList());
+  }
+ else   if ("archive".equals(mode)) {
+    final FileServer fileServer=new FileServer();
+    fileServer.startArchive(cmd.getArgList());
   }
  else   if ("secondary".equals(mode)) {
     final FileServer fileServer=new FileServer();

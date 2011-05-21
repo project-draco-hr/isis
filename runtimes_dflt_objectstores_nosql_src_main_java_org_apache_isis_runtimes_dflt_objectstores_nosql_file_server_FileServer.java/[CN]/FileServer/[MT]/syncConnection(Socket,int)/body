@@ -6,7 +6,8 @@
     if (input.readByte() != INIT) {
       return;
     }
-    long lastId=lastRecoveryFile();
+    LogRange logFileRange=Util.logFileRange();
+    long lastId=logFileRange.noLogFile() ? -1 : logFileRange.getLast();
     output.writeLong(lastId);
     do {
       if (input.readByte() != RECOVERY_LOG) {
@@ -14,7 +15,7 @@
       }
       crc32.reset();
       long logId=input.readLong();
-      File file=Util.logFile(logId);
+      File file=Util.tmpLogFile(logId);
       LOG.info("syncing recovery file: " + file.getName());
       BufferedOutputStream fileOutput=new BufferedOutputStream(new FileOutputStream(file));
       byte[] buffer=new byte[8092];
@@ -30,6 +31,8 @@
         throw new NoSqlStoreException("Checksum didn't match during download of " + file.getName());
       }
       recover(file);
+      File renameTo=Util.logFile(logId);
+      file.renameTo(renameTo);
     }
  while (true);
   }

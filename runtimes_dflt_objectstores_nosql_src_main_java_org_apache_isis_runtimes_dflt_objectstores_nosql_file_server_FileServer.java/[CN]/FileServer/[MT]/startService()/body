@@ -11,10 +11,13 @@
     socket.setSoTimeout(connectionTimeout);
     LOG.info("listenting on " + socket.getInetAddress().getHostAddress() + " port "+ socket.getLocalPort());
     LOG.debug("listenting on " + socket);
-    long lastRecoveryFile=lastRecoveryFile();
-    File file=Util.logFile(lastRecoveryFile);
-    LOG.info("replaying last recovery file: " + file.getAbsolutePath());
-    recover(file);
+    LogRange logFileRange=Util.logFileRange();
+    if (!logFileRange.noLogFile()) {
+      long lastRecoveryFile=logFileRange.getLast();
+      File file=Util.logFile(lastRecoveryFile);
+      LOG.info("replaying last recovery file: " + file.getAbsolutePath());
+      recover(file);
+    }
     server.startup();
   }
  catch (  final UnknownHostException e) {
