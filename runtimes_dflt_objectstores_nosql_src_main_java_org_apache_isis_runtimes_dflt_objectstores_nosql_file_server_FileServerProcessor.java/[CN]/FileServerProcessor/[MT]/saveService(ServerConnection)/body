@@ -2,23 +2,7 @@
   connection.endCommand();
   final String name=connection.getRequest();
   final String key=connection.getRequest();
-  FileOutputStream fileOut=null;
-  final File file=Util.serviceFile(name);
-  try {
-    fileOut=new FileOutputStream(file);
-    fileOut.write(name.getBytes("utf-8"));
-    fileOut.write(' ');
-    fileOut.write(key.getBytes("utf-8"));
-  }
-  finally {
-    if (fileOut != null) {
-      try {
-        fileOut.close();
-      }
- catch (      final IOException e) {
-        throw new NoSqlStoreException(e);
-      }
-    }
-  }
+  logger.logServiceEntry(key,name);
+  saveService(key,name);
   connection.ok();
 }

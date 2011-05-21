@@ -1,0 +1,84 @@
+{
+  String syncHost=config.getString("fileserver.sync-host",DEFAULT_HOST);
+  int syncPort=config.getInt("fileserver.sync-port",DEFAULT_SYNC_PORT);
+  int connectionTimeout=config.getInt("fileserver.connection.timeout",5000);
+  LOG.info("preparing to sync to secondary server on " + syncHost + " port "+ syncPort);
+  final InetAddress address;
+  try {
+    address=InetAddress.getByName(syncHost);
+  }
+ catch (  final UnknownHostException e) {
+    LOG.error("Unknown host " + syncHost,e);
+    System.exit(0);
+    return;
+  }
+  while (awaitConnections) {
+    Socket socket=null;
+    try {
+      socket=new Socket(address,syncPort);
+      LOG.info("sync connected to " + socket.getInetAddress().getHostAddress() + " port "+ socket.getLocalPort());
+      CRC32 crc32=new CRC32();
+      DataOutput output=new DataOutputStream(new CheckedOutputStream(socket.getOutputStream(),crc32));
+      DataInput input=new DataInputStream(socket.getInputStream());
+      output.writeByte(INIT);
+      long logId=input.readLong();
+      do {
+        long nextLogId=logId + 1;
+        File file=Util.logFile(nextLogId);
+        if (file.exists() && server.getLogger().isWritten(nextLogId)) {
+          logId++;
+          output.writeByte(RECOVERY_LOG);
+          crc32.reset();
+          output.writeLong(logId);
+          LOG.info("sending recovery file: " + file.getName());
+          BufferedInputStream fileInput=new BufferedInputStream(new FileInputStream(file));
+          byte[] buffer=new byte[8092];
+          int read;
+          while ((read=fileInput.read(buffer)) > 0) {
+            output.writeInt(read);
+            output.write(buffer,0,read);
+          }
+          output.writeInt(0);
+          output.writeLong(crc32.getValue());
+        }
+        try {
+          Thread.sleep(300);
+        }
+ catch (        InterruptedException ignore) {
+        }
+        while (isQuiescent) {
+          try {
+            Thread.sleep(300);
+          }
+ catch (          InterruptedException ignore) {
+          }
+        }
+      }
+ while (awaitConnections);
+    }
+ catch (    final ConnectException e) {
+      LOG.warn("not yet connected to secondary server at " + syncHost + " port "+ syncPort);
+      try {
+        Thread.sleep(connectionTimeout);
+      }
+ catch (      InterruptedException ignore) {
+      }
+    }
+catch (    final IOException e) {
+      LOG.error("start failure - networking not set up for " + syncHost,e);
+      try {
+        Thread.sleep(300);
+      }
+ catch (      InterruptedException ignore) {
+      }
+    }
+catch (    final RuntimeException e) {
+      LOG.error("start failure",e);
+      try {
+        Thread.sleep(300);
+      }
+ catch (      InterruptedException ignore) {
+      }
+    }
+  }
+}

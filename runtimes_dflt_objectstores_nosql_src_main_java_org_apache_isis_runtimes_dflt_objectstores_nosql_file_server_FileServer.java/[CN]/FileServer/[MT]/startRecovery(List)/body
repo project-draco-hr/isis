@@ -1,0 +1,32 @@
+{
+  LOG.info("starting recovery");
+  long lastId=lastRecoveryFile();
+  if (lastId < 0) {
+    System.err.println("No recovery files found");
+    System.exit(0);
+  }
+  LOG.info("last log file is " + Util.logFile(lastId).getName());
+  long startId=lastId;
+  long endId=lastId;
+  int size=list.size();
+  if (size > 0) {
+    startId=Long.valueOf((String)list.get(0));
+    if (size > 1) {
+      endId=Long.valueOf((String)list.get(1));
+    }
+  }
+  if (startId > lastId || endId > lastId) {
+    System.err.println("File IDs invalid: they must be less than or equal to " + lastId);
+    System.exit(0);
+  }
+  if (startId > endId) {
+    System.err.println("File IDs invalid: start must be before the end");
+    System.exit(0);
+  }
+  Util.ensureDirectoryExists();
+  for (long id=startId; id <= endId; id++) {
+    File file=Util.logFile(id);
+    LOG.info("recovering data from " + file.getName());
+    recover(file);
+  }
+}

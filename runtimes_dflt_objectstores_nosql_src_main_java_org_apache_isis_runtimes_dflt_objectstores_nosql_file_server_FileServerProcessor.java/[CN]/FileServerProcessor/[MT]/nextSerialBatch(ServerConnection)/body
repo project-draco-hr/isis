@@ -14,9 +14,8 @@
     reader.close();
     LOG.info("New ID batch allocated, from " + nextId);
   }
-  final FileOutputStream fileOutput=new FileOutputStream(file);
   final long newBatchAt=nextId + batchSize;
-  fileOutput.write(Long.toString(newBatchAt).getBytes("utf-8"));
-  fileOutput.close();
+  logger.logNextSerialBatch(name,newBatchAt);
+  saveNextBatch(file,newBatchAt);
   connection.response(nextId);
 }

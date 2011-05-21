@@ -1,0 +1,12 @@
+{
+  try {
+    SecretKeySpec key=new SecretKeySpec(specKey,AES);
+    Cipher cipher=Cipher.getInstance("AES/ECB/PKCS7Padding");
+    cipher.init(Cipher.DECRYPT_MODE,key);
+    byte[] decrypted=cipher.doFinal(encryptedText.getBytes());
+    return new String(decrypted);
+  }
+ catch (  Exception e) {
+    throw new NoSqlStoreException(e);
+  }
+}
