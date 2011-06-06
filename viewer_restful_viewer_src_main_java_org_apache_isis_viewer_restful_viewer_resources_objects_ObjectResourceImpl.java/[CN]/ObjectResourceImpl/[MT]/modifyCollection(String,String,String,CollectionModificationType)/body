@@ -3,31 +3,31 @@
   final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
   final String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
   final String proposedValueOidStr=UrlDecoderUtils.urlDecode(proposedValueEncodedOidStr);
-  final ObjectAdapter nakedObject=getNakedObject(oidStr);
-  if (nakedObject == null) {
+  final ObjectAdapter objectAdapter=getNakedObject(oidStr);
+  if (objectAdapter == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
   }
-  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final ObjectSpecification noSpec=objectAdapter.getSpecification();
   final OneToManyAssociation collection=(OneToManyAssociation)noSpec.getAssociation(collectionId);
   ObjectAdapter proposedValueNO=null;
   proposedValueNO=getNakedObject(proposedValueOidStr);
   if (proposedValueNO == null) {
     throw new WebApplicationException(responseOfGone("could not determine proposed value"));
   }
-  final Consent consent=modification == CollectionModificationType.ADD_TO ? collection.isValidToAdd(nakedObject,proposedValueNO) : collection.isValidToRemove(nakedObject,proposedValueNO);
+  final Consent consent=modification == CollectionModificationType.ADD_TO ? collection.isValidToAdd(objectAdapter,proposedValueNO) : collection.isValidToRemove(objectAdapter,proposedValueNO);
   if (consent.isVetoed()) {
     throw new WebApplicationException(responseOfBadRequest(consent));
   }
-  final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + collectionId,getServletRequest());
+  final XhtmlTemplate xhtml=new XhtmlTemplate(objectAdapter.titleString() + "." + collectionId,getServletRequest());
   xhtml.appendToBody(asDivIsisSession());
   xhtml.appendToBody(resourcesDiv());
-  final Element div=asDivTableObjectDetails(nakedObject);
+  final Element div=asDivTableObjectDetails(objectAdapter);
   xhtml.appendToBody(div);
   if (modification == CollectionModificationType.ADD_TO) {
-    collection.addElement(nakedObject,proposedValueNO);
+    collection.addElement(objectAdapter,proposedValueNO);
   }
  else {
-    collection.removeElement(nakedObject,proposedValueNO);
+    collection.removeElement(objectAdapter,proposedValueNO);
   }
   return xhtml.toXML();
 }

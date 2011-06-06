@@ -2,25 +2,25 @@
   init();
   final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
   final String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
-  final ObjectAdapter nakedObject=getNakedObject(oidStr);
-  if (nakedObject == null) {
+  final ObjectAdapter objectAdapter=getNakedObject(oidStr);
+  if (objectAdapter == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
   }
-  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final ObjectSpecification noSpec=objectAdapter.getSpecification();
   final ObjectAssociation association=noSpec.getAssociation(collectionId);
   if (!association.isOneToManyAssociation()) {
     throw new WebApplicationException(responseOfBadRequest("Not a collection"));
   }
-  final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + collectionId,getServletRequest());
+  final XhtmlTemplate xhtml=new XhtmlTemplate(objectAdapter.titleString() + "." + collectionId,getServletRequest());
   xhtml.appendToBody(asDivIsisSession());
   xhtml.appendToBody(resourcesDiv());
-  Element div=asDivTableObjectDetails(nakedObject);
+  Element div=asDivTableObjectDetails(objectAdapter);
   xhtml.appendToBody(div);
   final OneToManyAssociation collection=(OneToManyAssociation)association;
   div=xhtmlRenderer.div_p(collectionId,HtmlClass.COLLECTION);
   final Element ul=xhtmlRenderer.ul(HtmlClass.COLLECTION);
   div.appendChild(ul);
-  final ObjectAdapter collectionObj=collection.get(nakedObject);
+  final ObjectAdapter collectionObj=collection.get(objectAdapter);
   final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collectionObj);
   for (final Iterator<ObjectAdapter> iter=facet.iterator(collectionObj); iter.hasNext(); ) {
     final ObjectAdapter associatedNO=iter.next();

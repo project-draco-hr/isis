@@ -6,7 +6,9 @@
     final HttpURLConnection connection=createGetConnection(uri);
     final Document document=readDocFromConnectionInputStream(connection);
     if (LOG.isTraceEnabled()) {
-      LOG.trace(document.toXML());
+      StringWriter sw=new StringWriter();
+      new XMLOutputter().output(document,sw);
+      LOG.trace(sw.toString());
     }
     return document;
   }
@@ -16,10 +18,7 @@
 catch (  final IOException e) {
     throw new RestfulClientException(e);
   }
-catch (  final ValidityException e) {
-    throw new RestfulClientException(e);
-  }
-catch (  final ParsingException e) {
+catch (  JDOMException e) {
     throw new RestfulClientException(e);
   }
 }

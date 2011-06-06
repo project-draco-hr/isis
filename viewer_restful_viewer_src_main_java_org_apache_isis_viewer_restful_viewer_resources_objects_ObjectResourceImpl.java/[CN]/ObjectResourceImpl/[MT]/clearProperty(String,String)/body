@@ -2,21 +2,21 @@
   init();
   final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
   final String propertyId=UrlDecoderUtils.urlDecode(propertyEncodedId);
-  final ObjectAdapter nakedObject=getNakedObject(oidStr);
-  if (nakedObject == null) {
+  final ObjectAdapter objectAdapter=getNakedObject(oidStr);
+  if (objectAdapter == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
   }
-  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final ObjectSpecification noSpec=objectAdapter.getSpecification();
   final OneToOneAssociation property=(OneToOneAssociation)noSpec.getAssociation(propertyId);
-  final Consent consent=property.isAssociationValid(nakedObject,null);
+  final Consent consent=property.isAssociationValid(objectAdapter,null);
   if (consent.isVetoed()) {
     throw new WebApplicationException(responseOfBadRequest(consent));
   }
-  final XhtmlTemplate xhtml=new XhtmlTemplate(nakedObject.titleString() + "." + propertyId,getServletRequest());
+  final XhtmlTemplate xhtml=new XhtmlTemplate(objectAdapter.titleString() + "." + propertyId,getServletRequest());
   xhtml.appendToBody(asDivIsisSession());
   xhtml.appendToBody(resourcesDiv());
-  final Element div=asDivTableObjectDetails(nakedObject);
+  final Element div=asDivTableObjectDetails(objectAdapter);
   xhtml.appendToBody(div);
-  property.clearAssociation(nakedObject);
+  property.clearAssociation(objectAdapter);
   return xhtml.toXML();
 }
