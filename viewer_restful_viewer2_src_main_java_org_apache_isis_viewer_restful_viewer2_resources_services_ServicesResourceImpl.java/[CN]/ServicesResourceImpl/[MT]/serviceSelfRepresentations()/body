@@ -1,0 +1,6 @@
+{
+  final List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+  RepContext representationContext=getResourceContext().repContext();
+  Function<ObjectAdapter,SelfRep> objectSelfRepresentation=Functions.compose(DomainObjectRep.selfOf(),DomainObjectRep.fromAdapter(representationContext));
+  return Lists.newArrayList(Collections2.transform(serviceAdapters,objectSelfRepresentation));
+}

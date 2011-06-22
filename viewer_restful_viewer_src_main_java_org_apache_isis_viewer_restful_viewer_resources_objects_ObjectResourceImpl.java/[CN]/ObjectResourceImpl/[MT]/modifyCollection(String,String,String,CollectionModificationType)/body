@@ -3,14 +3,14 @@
   final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
   final String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
   final String proposedValueOidStr=UrlDecoderUtils.urlDecode(proposedValueEncodedOidStr);
-  final ObjectAdapter objectAdapter=getNakedObject(oidStr);
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   if (objectAdapter == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
   }
   final ObjectSpecification noSpec=objectAdapter.getSpecification();
   final OneToManyAssociation collection=(OneToManyAssociation)noSpec.getAssociation(collectionId);
   ObjectAdapter proposedValueNO=null;
-  proposedValueNO=getNakedObject(proposedValueOidStr);
+  proposedValueNO=getObjectAdapter(proposedValueOidStr);
   if (proposedValueNO == null) {
     throw new WebApplicationException(responseOfGone("could not determine proposed value"));
   }

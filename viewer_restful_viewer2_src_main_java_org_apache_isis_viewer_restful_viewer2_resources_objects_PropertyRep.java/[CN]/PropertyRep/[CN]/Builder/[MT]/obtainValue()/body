@@ -1,0 +1,18 @@
+{
+  ObjectAdapter valueAdapter=otoa.get(objectAdapter);
+  if (valueAdapter == null) {
+    return null;
+  }
+  ObjectSpecification otoaSpec=otoa.getSpecification();
+  ValueFacet valueFacet=otoaSpec.getFacet(ValueFacet.class);
+  if (valueFacet != null) {
+    EncodableFacet encodableFacet=otoaSpec.getFacet(EncodableFacet.class);
+    return encodableFacet.toEncodedString(valueAdapter);
+  }
+  TitleFacet titleFacet=otoaSpec.getFacet(TitleFacet.class);
+  if (titleFacet == null) {
+    titleFacet=otoaSpec.getFacet(TitleFacet.class);
+  }
+  String title=titleFacet.title(valueAdapter,getLocalization());
+  return LinkRep.newBuilder(repContext,"value",urlFor(valueAdapter)).withTitle(title).build();
+}
