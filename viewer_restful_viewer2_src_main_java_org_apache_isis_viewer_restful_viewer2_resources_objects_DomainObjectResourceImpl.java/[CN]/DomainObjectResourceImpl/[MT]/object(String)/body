@@ -5,16 +5,16 @@
   if (objectAdapter == null) {
     throw new WebApplicationException(responseOfGone("could not determine object"));
   }
-  Builder builder=DomainObjectRep.newBuilder(getResourceContext().repContext(),objectAdapter);
+  DomainObjectRepBuilder builder=DomainObjectRepBuilder.newBuilder(getResourceContext().repContext(),objectAdapter);
   List<ObjectAssociation> properties=objectAdapter.getSpecification().getAssociations(ObjectAssociationFilters.PROPERTIES);
   for (  ObjectAssociation otoa : properties) {
     Consent visibility=otoa.isVisible(getSession(),objectAdapter);
     if (visibility.isAllowed()) {
       String id=otoa.getId();
-      PropertyRep propertyRep=PropertyRep.newBuilder(getResourceContext().repContext(id),objectAdapter,(OneToOneAssociation)otoa).build();
+      Representation propertyRep=PropertyRepBuilder.newBuilder(getResourceContext().repContext(id),objectAdapter,(OneToOneAssociation)otoa).build();
       builder.withProperty(id,propertyRep);
     }
   }
-  DomainObjectRep representation=builder.build();
+  Representation representation=builder.build();
   return asJson(representation);
 }

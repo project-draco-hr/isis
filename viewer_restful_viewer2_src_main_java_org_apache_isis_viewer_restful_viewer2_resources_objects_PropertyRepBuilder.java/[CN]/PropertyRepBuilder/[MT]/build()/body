@@ -1,0 +1,16 @@
+{
+  if (addSelf()) {
+    Representation selfLink=LinkRepBuilder.newBuilder(repContext,"link",urlFor(objectAdapter,otoa)).build();
+    selfLink.put("method",HttpMethod.GET);
+    Representation selfRep=MemberSelfRepBuilder.newBuilder(repContext,objectAdapter,otoa).build();
+    representation.put("self",selfRep);
+  }
+  Representation type=LinkRepBuilder.newTypeBuilder(repContext,"type",otoa.getSpecification()).build();
+  representation.put("type",type);
+  representation.put("value",obtainValue());
+  Consent usability=otoa.isUsable(getSession(),objectAdapter);
+  representation.put("disabledReason",usability.getReason());
+  Representation detailsLink=LinkRepBuilder.newBuilder(repContext,"details",urlFor(objectAdapter,otoa)).build();
+  representation.put("details",detailsLink);
+  return representation;
+}
