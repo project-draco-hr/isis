@@ -1,0 +1,14 @@
+{
+  init();
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  ObjectAssociation association=objectAdapter.getSpecification().getAssociation(propertyId);
+  if (association == null || !association.isOneToOneAssociation()) {
+    throwPropertyNotFoundException(propertyId);
+  }
+  OneToOneAssociation property=(OneToOneAssociation)association;
+  PropertyRepBuilder builder=PropertyRepBuilder.newBuilder(getResourceContext().repContext(),objectAdapter,property);
+  if (!builder.isMemberVisible()) {
+    throwPropertyNotFoundException(propertyId);
+  }
+  return jsonRepresentionFrom(builder);
+}

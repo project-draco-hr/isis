@@ -1,0 +1,17 @@
+{
+  final Element div=xhtmlRenderer.div_p("Collections",HtmlClass.COLLECTIONS);
+  final ObjectSpecification noSpec=nakedObject.getSpecification();
+  final List<OneToManyAssociation> rows=noSpec.getCollections();
+  final List<TableColumn<OneToManyAssociation>> columns=new ArrayList<TableColumn<OneToManyAssociation>>();
+  columns.add(new TableColumnOneToManyAssociationName(noSpec,session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectAssociationType<OneToManyAssociation>(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectMemberHidden<OneToManyAssociation>(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnNakedObjectMemberDisabled<OneToManyAssociation>(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnOneToManyAssociationAccess(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnOneToManyAssociationAddTo(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnOneToManyAssociationRemoveFrom(session,nakedObject,getResourceContext()));
+  columns.add(new TableColumnOneToManyAssociationInvalidReason(session,nakedObject,getResourceContext()));
+  final Element table=xhtmlRenderer.table(columns,rows,HtmlClass.FACETS);
+  div.appendChild(table);
+  return div;
+}

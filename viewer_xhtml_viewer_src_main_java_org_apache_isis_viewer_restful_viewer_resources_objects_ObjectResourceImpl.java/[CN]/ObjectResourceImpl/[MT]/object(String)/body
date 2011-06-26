@@ -1,0 +1,23 @@
+{
+  init();
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  if (objectAdapter == null) {
+    throw new WebApplicationException(responseOfGone("could not determine object"));
+  }
+  final String javascriptFile=isJavascriptDebug() ? Constants.JQUERY_SRC_JS : Constants.JQUERY_MIN_JS;
+  final XhtmlTemplate xhtml=new XhtmlTemplate(objectAdapter.titleString(),getServletRequest(),javascriptFile,Constants.ISIS_REST_SUPPORT_JS);
+  xhtml.appendToBody(asDivIsisSession());
+  xhtml.appendToBody(resourcesDiv());
+  final Element objectDiv=div(HtmlClass.OBJECT);
+  xhtml.appendToBody(objectDiv);
+  final Element objectSpecsDiv=asDivTableObjectDetails(objectAdapter);
+  xhtml.appendToDiv(objectDiv,objectSpecsDiv);
+  final Element propertiesTableEl=asDivTableProperties(getSession(),objectAdapter);
+  xhtml.appendToDiv(objectDiv,propertiesTableEl);
+  final Element collectionsDivEl=asDivTableCollections(getSession(),objectAdapter);
+  xhtml.appendToDiv(objectDiv,collectionsDivEl);
+  final Element actionsDivEl=asDivTableActions(getSession(),objectAdapter);
+  xhtml.appendToDiv(objectDiv,actionsDivEl);
+  return xhtml.toXML();
+}

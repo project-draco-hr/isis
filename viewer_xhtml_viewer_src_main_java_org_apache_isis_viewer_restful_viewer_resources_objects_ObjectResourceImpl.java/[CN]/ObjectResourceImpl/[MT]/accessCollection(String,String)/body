@@ -1,0 +1,31 @@
+{
+  init();
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final String collectionId=UrlDecoderUtils.urlDecode(collectionEncodedId);
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  if (objectAdapter == null) {
+    throw new WebApplicationException(responseOfGone("could not determine object"));
+  }
+  final ObjectSpecification noSpec=objectAdapter.getSpecification();
+  final ObjectAssociation association=noSpec.getAssociation(collectionId);
+  if (!association.isOneToManyAssociation()) {
+    throw new WebApplicationException(responseOfBadRequest("Not a collection"));
+  }
+  final XhtmlTemplate xhtml=new XhtmlTemplate(objectAdapter.titleString() + "." + collectionId,getServletRequest());
+  xhtml.appendToBody(asDivIsisSession());
+  xhtml.appendToBody(resourcesDiv());
+  Element div=asDivTableObjectDetails(objectAdapter);
+  xhtml.appendToBody(div);
+  final OneToManyAssociation collection=(OneToManyAssociation)association;
+  div=xhtmlRenderer.div_p(collectionId,HtmlClass.COLLECTION);
+  final Element ul=xhtmlRenderer.ul(HtmlClass.COLLECTION);
+  div.appendChild(ul);
+  final ObjectAdapter collectionObj=collection.get(objectAdapter);
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collectionObj);
+  for (final Iterator<ObjectAdapter> iter=facet.iterator(collectionObj); iter.hasNext(); ) {
+    final ObjectAdapter associatedNO=iter.next();
+    ul.appendChild(toLiAHref(associatedNO));
+  }
+  xhtml.appendToBody(div);
+  return xhtml.toXML();
+}

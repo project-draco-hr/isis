@@ -1,0 +1,28 @@
+{
+  init();
+  final String specAndFacet=specFullName + "/facet/" + facetTypeName;
+  final XhtmlTemplate xhtml=new XhtmlTemplate(specAndFacet,getServletRequest());
+  xhtml.appendToBody(asDivIsisSession());
+  final ObjectSpecification noSpec=getSpecification(specFullName);
+  final String uri=MessageFormat.format("{0}/specs/{1}",getServletRequest().getContextPath(),specFullName);
+  xhtml.appendToBody(xhtmlRenderer.aHref(uri,"owning spec","spec","facet",HtmlClass.SPECIFICATION));
+  try {
+    xhtml.appendToBody(divFacetElements(facetTypeName,noSpec));
+  }
+ catch (  final IllegalArgumentException e) {
+    throw new WebApplicationException(responseOfNotFound(e));
+  }
+catch (  final ClassNotFoundException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+catch (  final IntrospectionException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+catch (  final IllegalAccessException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+catch (  final InvocationTargetException e) {
+    throw new WebApplicationException(responseOfInternalServerError(e));
+  }
+  return xhtml.toXML();
+}

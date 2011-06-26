@@ -1,0 +1,14 @@
+{
+  final AuthenticationSession session=super.lookup(servletRequest,servletResponse);
+  if (session != null) {
+    return session;
+  }
+  final HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
+  final String user=httpServletRequest.getParameter("user");
+  final String password=httpServletRequest.getParameter("password");
+  if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(password)) {
+    return null;
+  }
+  final AuthenticationRequestPassword request=new AuthenticationRequestPassword(user,password);
+  return IsisContext.getAuthenticationManager().authenticate(request);
+}

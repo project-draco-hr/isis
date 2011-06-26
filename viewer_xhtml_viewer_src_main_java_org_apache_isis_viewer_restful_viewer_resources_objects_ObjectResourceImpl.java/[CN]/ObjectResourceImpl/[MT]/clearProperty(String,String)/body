@@ -1,0 +1,22 @@
+{
+  init();
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final String propertyId=UrlDecoderUtils.urlDecode(propertyEncodedId);
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  if (objectAdapter == null) {
+    throw new WebApplicationException(responseOfGone("could not determine object"));
+  }
+  final ObjectSpecification noSpec=objectAdapter.getSpecification();
+  final OneToOneAssociation property=(OneToOneAssociation)noSpec.getAssociation(propertyId);
+  final Consent consent=property.isAssociationValid(objectAdapter,null);
+  if (consent.isVetoed()) {
+    throw new WebApplicationException(responseOfBadRequest(consent));
+  }
+  final XhtmlTemplate xhtml=new XhtmlTemplate(objectAdapter.titleString() + "." + propertyId,getServletRequest());
+  xhtml.appendToBody(asDivIsisSession());
+  xhtml.appendToBody(resourcesDiv());
+  final Element div=asDivTableObjectDetails(objectAdapter);
+  xhtml.appendToBody(div);
+  property.clearAssociation(objectAdapter);
+  return xhtml.toXML();
+}
