@@ -1,0 +1,9 @@
+{
+  final FormFieldBlock block=(FormFieldBlock)request.getBlockContent();
+  final String field=request.getRequiredProperty(FIELD);
+  final String value=request.getRequiredProperty(VALUE);
+  final boolean isHidden=request.isRequested(HIDDEN,true);
+  block.exclude(field);
+  final String content="reference <input type=\"" + (isHidden ? "hidden" : "text") + "\" disabled=\"disabled\" name=\""+ field+ "\" value=\""+ value+ "\" />";
+  block.replaceContent(field,content);
+}

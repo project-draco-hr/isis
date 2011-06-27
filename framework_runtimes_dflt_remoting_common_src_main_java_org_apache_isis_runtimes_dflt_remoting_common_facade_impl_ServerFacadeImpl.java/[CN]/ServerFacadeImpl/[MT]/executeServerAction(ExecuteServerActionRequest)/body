@@ -1,0 +1,37 @@
+{
+  final AuthenticationSession session=request.getSession();
+  final ActionType actionType=request.getActionType();
+  final String actionIdentifier=request.getActionIdentifier();
+  final ReferenceData targetData=request.getTarget();
+  final Data[] parameterData=request.getParameters();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("request executeAction " + actionIdentifier + " on "+ targetData+ " for "+ session);
+  }
+  final KnownObjectsRequest knownObjects=new KnownObjectsRequest();
+  final ObjectAdapter targetAdapter=decodeTargetAdapter(session,targetData,knownObjects);
+  final ObjectAction action=targetAdapter.getSpecification().getObjectAction(actionType,actionIdentifier);
+  final ObjectAdapter[] parameters=decodeParameters(session,parameterData,knownObjects);
+  if (action == null) {
+    throw new IsisRemoteException("Could not find method " + actionIdentifier);
+  }
+  final ObjectAdapter resultAdapter=action.execute(targetAdapter,parameters);
+  ObjectData persistedTargetData;
+  if (targetData == null) {
+    persistedTargetData=null;
+  }
+ else   if (targetData instanceof ObjectData) {
+    persistedTargetData=encoderDecoder.encodeMadePersistentGraph((ObjectData)targetData,targetAdapter);
+  }
+ else {
+    persistedTargetData=null;
+  }
+  final ObjectData[] persistedParameterData=new ObjectData[parameterData.length];
+  for (int i=0; i < persistedParameterData.length; i++) {
+    if (action.getParameters().get(i).getSpecification().isNotCollection() && parameterData[i] instanceof ObjectData) {
+      persistedParameterData[i]=encoderDecoder.encodeMadePersistentGraph((ObjectData)parameterData[i],parameters[i]);
+    }
+  }
+  final List<String> messages=getMessageBroker().getMessages();
+  final List<String> warnings=getMessageBroker().getWarnings();
+  return encoderDecoder.encodeServerActionResult(resultAdapter,getUpdates(),getDisposed(),persistedTargetData,persistedParameterData,messages.toArray(new String[0]),warnings.toArray(new String[0]));
+}

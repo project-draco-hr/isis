@@ -1,0 +1,20 @@
+{
+  final String line=textContent.getText(0);
+  if (line != null) {
+    final int maxWidth=getMaxFieldWidth();
+    final int leftLimit=offset + LIMIT;
+    final int rightLimit=offset + maxWidth - LIMIT;
+    if (cursor.getCharacter() > line.length()) {
+      cursor.end();
+    }
+    final int cursorPosition=style.stringWidth(line.substring(0,cursor.getCharacter()));
+    if (cursorPosition > rightLimit) {
+      offset=offset + (cursorPosition - rightLimit);
+      offset=Math.min(style.stringWidth(line),offset);
+    }
+ else     if (cursorPosition < leftLimit) {
+      offset=offset - (leftLimit - cursorPosition);
+      offset=Math.max(0,offset);
+    }
+  }
+}

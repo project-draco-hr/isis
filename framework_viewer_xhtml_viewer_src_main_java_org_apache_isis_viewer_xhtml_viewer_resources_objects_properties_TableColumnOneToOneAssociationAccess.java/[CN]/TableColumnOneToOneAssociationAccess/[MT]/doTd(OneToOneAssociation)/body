@@ -1,0 +1,20 @@
+{
+  if (!property.isVisible(getSession(),getNakedObject()).isAllowed()) {
+    return xhtmlRenderer.p(null,HtmlClass.PROPERTY);
+  }
+  final ObjectAdapter propertyValue=property.get(getNakedObject());
+  if (propertyValue == null) {
+    return xhtmlRenderer.p(null,HtmlClass.PROPERTY);
+  }
+  ParseableFacet parseable=property.getFacet(ParseableFacet.class);
+  if (parseable == null) {
+    final ObjectSpecification propertySpec=property.getSpecification();
+    parseable=propertySpec.getFacet(ParseableFacet.class);
+  }
+  if (parseable != null) {
+    return doTdForParseable(propertyValue);
+  }
+ else {
+    return doTdForNonParseable(propertyValue);
+  }
+}

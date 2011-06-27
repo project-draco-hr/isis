@@ -1,0 +1,11 @@
+{
+  getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
+    @Override public void execute(){
+      final ResolveObjectRequest request=new ResolveObjectRequest(getAuthenticationSession(),identityData);
+      final ResolveObjectResponse response=serverFacade.resolveImmediately(request);
+      final ObjectData update=response.getObjectData();
+      encoderDecoder.decode(update);
+    }
+  }
+);
+}

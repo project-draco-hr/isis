@@ -1,0 +1,21 @@
+{
+  final PageType pageType=PageType.SIGN_IN;
+  final Class<WebPage> expectedPageClass=WebPage.class;
+  final PageClassRegistry mockPageClassRegistry=context.mock(PageClassRegistry.class);
+  application=new IsisWicketApplication(){
+    private static final long serialVersionUID=1L;
+    @Override public PageClassRegistry getPageClassRegistry(){
+      return mockPageClassRegistry;
+    }
+  }
+;
+  context.checking(new Expectations(){
+{
+      one(mockPageClassRegistry).getPageClass(pageType);
+      will(returnValue(expectedPageClass));
+    }
+  }
+);
+  final Class<? extends Page> pageClass=application.getSignInPageClass();
+  assertThat(expectedPageClass.isAssignableFrom(pageClass),is(true));
+}

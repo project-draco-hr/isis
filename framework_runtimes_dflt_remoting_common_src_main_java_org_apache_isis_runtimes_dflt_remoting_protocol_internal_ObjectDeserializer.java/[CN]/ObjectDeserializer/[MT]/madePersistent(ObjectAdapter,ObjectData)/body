@@ -1,0 +1,43 @@
+{
+  if (adapterData == null) {
+    return;
+  }
+  if (adapter.isTransient() && adapter.getSpecification().persistability() != Persistability.TRANSIENT) {
+    getAdapterManager().getAdapterFor(adapterData.getOid());
+    adapter.setOptimisticLock(adapterData.getVersion());
+    adapter.changeState(ResolveState.RESOLVED);
+  }
+  final Data[] fieldData=adapterData.getFieldContent();
+  if (fieldData == null) {
+    return;
+  }
+  final ObjectAssociation[] fields=fieldOrderCache.getFields(adapter.getSpecification());
+  for (int i=0; i < fieldData.length; i++) {
+    if (fieldData[i] == null) {
+      continue;
+    }
+    if (fields[i].isOneToOneAssociation()) {
+      final ObjectAdapter field=((OneToOneAssociation)fields[i]).get(adapter);
+      final ObjectData fieldContent=(ObjectData)adapterData.getFieldContent()[i];
+      if (field != null) {
+        madePersistent(field,fieldContent);
+      }
+    }
+ else     if (fields[i].isOneToManyAssociation()) {
+      final CollectionData collectionData=(CollectionData)adapterData.getFieldContent()[i];
+      final ObjectAdapter collectionAdapter=fields[i].get(adapter);
+      if (!collectionAdapter.isPersistent()) {
+        collectionAdapter.changeState(ResolveState.RESOLVED);
+      }
+      final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collectionAdapter);
+      final Enumeration elements=facet.elements(collectionAdapter);
+      for (int j=0; j < collectionData.getElements().length; j++) {
+        final ObjectAdapter element=(ObjectAdapter)elements.nextElement();
+        if (collectionData.getElements()[j] instanceof ObjectData) {
+          final ObjectData elementData=(ObjectData)collectionData.getElements()[j];
+          madePersistent(element,elementData);
+        }
+      }
+    }
+  }
+}

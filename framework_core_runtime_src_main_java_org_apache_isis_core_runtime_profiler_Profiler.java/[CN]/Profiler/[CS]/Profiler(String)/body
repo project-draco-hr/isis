@@ -1,0 +1,16 @@
+{
+  this.name=name;
+synchronized (Profiler.class) {
+    this.id=nextId++;
+  }
+  final Thread t=Thread.currentThread();
+  final String thread=(String)threads.get(t);
+  if (thread != null) {
+    this.thread=thread;
+  }
+ else {
+    this.thread="t" + nextThread++;
+    threads.put(t,this.thread);
+  }
+  memory=memory();
+}

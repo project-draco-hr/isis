@@ -1,0 +1,11 @@
+{
+  object=parse(entryText);
+  final String reason=parameter.isValid(object,AdapterUtils.unwrap(object));
+  if (reason != null) {
+    throw new InvalidEntryException(reason);
+  }
+ else   if (!parameter.isOptional() && object == null) {
+    throw new InvalidEntryException("Mandatory parameter cannot be empty");
+  }
+  invocation.setParameter(index,object);
+}

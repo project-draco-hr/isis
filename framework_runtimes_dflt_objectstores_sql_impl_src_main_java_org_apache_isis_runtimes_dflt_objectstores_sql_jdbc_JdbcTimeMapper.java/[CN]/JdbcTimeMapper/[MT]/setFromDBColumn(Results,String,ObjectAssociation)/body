@@ -1,0 +1,12 @@
+{
+  ObjectAdapter restoredValue;
+  final Class<?> correspondingClass=field.getSpecification().getCorrespondingClass();
+  if (correspondingClass == Time.class) {
+    final Time timeValue=results.getTime(columnName);
+    restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(timeValue);
+  }
+ else {
+    throw new PersistFailedException("Unhandled time type: " + correspondingClass.getCanonicalName());
+  }
+  return restoredValue;
+}

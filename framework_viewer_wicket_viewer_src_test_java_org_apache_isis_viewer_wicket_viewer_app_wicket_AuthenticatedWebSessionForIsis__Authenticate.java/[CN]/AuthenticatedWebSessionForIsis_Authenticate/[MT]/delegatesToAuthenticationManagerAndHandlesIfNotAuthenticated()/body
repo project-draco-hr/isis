@@ -1,0 +1,19 @@
+{
+  final AuthenticationManager mockAuthMgr=context.mock(AuthenticationManager.class);
+  context.checking(new Expectations(){
+{
+      one(mockAuthMgr).authenticate(with(any(AuthenticationRequest.class)));
+      will(returnValue(null));
+    }
+  }
+);
+  webSession=new AuthenticatedWebSessionForIsis(stubRequest){
+    private static final long serialVersionUID=1L;
+    @Override protected AuthenticationManager getAuthenticationManager(){
+      return mockAuthMgr;
+    }
+  }
+;
+  assertThat(webSession.authenticate("jsmith","secret"),is(false));
+  assertThat(webSession.getAuthenticationSession(),is(nullValue()));
+}

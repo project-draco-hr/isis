@@ -1,0 +1,18 @@
+{
+  super.setUp();
+  control=MockControl.createControl(ServerFacade.class);
+  serverFacade=(ServerFacade)control.getMock();
+  final ClientConnection connection=new ClientConnection(){
+    @Override public ResponseEnvelope executeRemotely(    final Request request){
+      request.execute(serverFacade);
+      return new ResponseEnvelope(request);
+    }
+    @Override public void init(){
+    }
+    @Override public void shutdown(){
+    }
+  }
+;
+  serverFacadeProxy=new ServerFacadeProxy(connection);
+  session=new TestProxySession();
+}

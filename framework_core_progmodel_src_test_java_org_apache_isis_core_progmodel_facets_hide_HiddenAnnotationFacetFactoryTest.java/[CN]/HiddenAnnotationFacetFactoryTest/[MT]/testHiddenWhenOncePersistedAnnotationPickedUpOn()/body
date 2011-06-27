@@ -1,0 +1,11 @@
+{
+class Customer {
+    @Hidden(When.ONCE_PERSISTED) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(HiddenFacet.class);
+  final HiddenFacetAbstract hiddenFacetAbstract=(HiddenFacetAbstract)facet;
+  assertEquals(org.apache.isis.core.metamodel.facets.When.ONCE_PERSISTED,hiddenFacetAbstract.value());
+}

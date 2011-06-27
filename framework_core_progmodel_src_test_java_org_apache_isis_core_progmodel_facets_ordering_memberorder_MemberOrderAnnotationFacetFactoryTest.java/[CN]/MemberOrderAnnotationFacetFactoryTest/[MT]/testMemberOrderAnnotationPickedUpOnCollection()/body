@@ -1,0 +1,19 @@
+{
+class Order {
+  }
+class Customer {
+    @SuppressWarnings("unused") @MemberOrder(sequence="2") public Collection<Order> getOrders(){
+      return null;
+    }
+    public void addToOrders(    final Order o){
+    }
+  }
+  final Method method=findMethod(Customer.class,"getOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MemberOrderFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MemberOrderFacetAnnotation);
+  final MemberOrderFacetAnnotation memberOrderFacetAnnotation=(MemberOrderFacetAnnotation)facet;
+  assertEquals("2",memberOrderFacetAnnotation.sequence());
+  assertNoMethodsRemoved();
+}

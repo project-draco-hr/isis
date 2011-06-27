@@ -1,0 +1,10 @@
+{
+  Content content=view.getContent();
+  if (content.getAdapter() != null && !(content instanceof FieldContent)) {
+    content=Toolkit.getContentFactory().createRootContent(content.getAdapter());
+  }
+  final View newView=specification.createView(content,view.getViewAxes(),-1);
+  LOG.debug("open view " + newView);
+  workspace.addWindow(newView,new Placement(view));
+  workspace.markDamaged();
+}

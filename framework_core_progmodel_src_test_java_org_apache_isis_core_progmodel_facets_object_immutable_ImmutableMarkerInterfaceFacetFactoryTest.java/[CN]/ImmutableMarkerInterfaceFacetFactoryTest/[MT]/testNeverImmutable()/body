@@ -1,0 +1,11 @@
+{
+class Customer implements NeverImmutable {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ImmutableFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ImmutableFacetMarkerInterface);
+  final ImmutableFacetMarkerInterface immutableFacetMarkerInterface=(ImmutableFacetMarkerInterface)facet;
+  assertEquals(org.apache.isis.core.metamodel.facets.When.NEVER,immutableFacetMarkerInterface.value());
+  assertNoMethodsRemoved();
+}

@@ -1,0 +1,19 @@
+{
+  getFeedbackManager().showDefaultCursor();
+  final ViewResizeOutline outline=((ViewResizeOutline)drag.getOverlay());
+  if (outline != null) {
+    resizing=false;
+    onBorder=0;
+    if (requiredDirection == ResizeDrag.RIGHT || requiredDirection == ResizeDrag.BOTTOM_RIGHT) {
+      width=outline.getSize().getWidth();
+    }
+    if (requiredDirection == ResizeDrag.BOTTOM || requiredDirection == ResizeDrag.BOTTOM_RIGHT) {
+      height=outline.getSize().getHeight();
+    }
+    LOG.debug("resizing view " + width + ","+ height);
+    invalidateLayout();
+  }
+ else {
+    super.dragTo(drag);
+  }
+}

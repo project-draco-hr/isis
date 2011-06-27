@@ -1,0 +1,19 @@
+{
+  final File file=new File(TARGET_DIRECTORY + FULLY_QUALIFIED_CLASSNAME + "/1030.data");
+  file.mkdirs();
+  file.createNewFile();
+  Assert.assertTrue(file.exists());
+  final List<FileContent> files=new ArrayList<FileContent>();
+  files.add(new FileContent('I',"1023","1","2",FULLY_QUALIFIED_CLASSNAME,"{data1}"));
+  files.add(new FileContent('U',"1024","21","22",FULLY_QUALIFIED_CLASSNAME,"{data2}"));
+  files.add(new FileContent('D',"1030","66","",FULLY_QUALIFIED_CLASSNAME,""));
+  final DataFileWriter writer=new DataFileWriter(files);
+  writer.writeData();
+  BufferedReader reader=new BufferedReader(new FileReader(TARGET_DIRECTORY + FULLY_QUALIFIED_CLASSNAME + "/1023.data"));
+  Assert.assertEquals("org.domain.Class 1023 2",reader.readLine());
+  Assert.assertEquals("{data1}",reader.readLine());
+  reader=new BufferedReader(new FileReader(TARGET_DIRECTORY + FULLY_QUALIFIED_CLASSNAME + "/1024.data"));
+  Assert.assertEquals(FULLY_QUALIFIED_CLASSNAME + " 1024 22",reader.readLine());
+  Assert.assertEquals("{data2}",reader.readLine());
+  Assert.assertFalse("file still exists",file.exists());
+}

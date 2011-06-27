@@ -1,0 +1,18 @@
+{
+  if (authenticationManager == null) {
+    final IsisConfiguration configuration=IsisContext.getConfiguration();
+    final AuthenticationManagerStandard authenticationManager=new AuthenticationManagerStandard(configuration);
+    authenticationManager.addAuthenticator(new AuthenticatorAbstract(configuration){
+      @Override public boolean canAuthenticate(      final AuthenticationRequest request){
+        return true;
+      }
+      @Override public boolean isValid(      final AuthenticationRequest request){
+        return true;
+      }
+    }
+);
+    authenticationManager.init();
+    this.authenticationManager=authenticationManager;
+  }
+  return authenticationManager;
+}

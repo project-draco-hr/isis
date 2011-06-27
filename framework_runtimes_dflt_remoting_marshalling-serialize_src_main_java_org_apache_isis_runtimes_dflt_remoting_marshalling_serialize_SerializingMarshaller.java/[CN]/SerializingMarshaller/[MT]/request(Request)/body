@@ -1,0 +1,24 @@
+{
+  try {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("sending request" + request);
+    }
+    final Serializable serializableRequest=asSerializable(request);
+    try {
+      output.writeObject(serializableRequest);
+    }
+ catch (    final SocketException e) {
+      reconnect();
+      output.writeObject(serializableRequest);
+    }
+    output.flush();
+    final Object object=input.readObject();
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("response received: " + object);
+    }
+    return object;
+  }
+ catch (  final ClassNotFoundException e) {
+    throw new ConnectionException("Failed request",e);
+  }
+}

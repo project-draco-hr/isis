@@ -1,0 +1,19 @@
+{
+  final ExecuteServerActionResponse results=null;
+  mockery.checking(new Expectations(){
+{
+      one(mockEncoder).encodeServerActionResult(with(equalTo(adapter)),with(equalTo(new ObjectData[0])),with(equalTo(new ReferenceData[0])),with(nullValue(ObjectData.class)),with(equalTo(new ObjectData[0])),with(equalTo(new String[]{"message 1","message 2"})),with(equalTo(new String[]{"warning 1","warning 2"})));
+      will(returnValue(null));
+    }
+  }
+);
+  IsisContext.getTransactionManager().startTransaction();
+  IsisContext.getMessageBroker().addMessage("message 1");
+  IsisContext.getMessageBroker().addMessage("message 2");
+  IsisContext.getMessageBroker().addWarning("warning 1");
+  IsisContext.getMessageBroker().addWarning("warning 2");
+  final ExecuteServerActionRequest request=new ExecuteServerActionRequest(new TestProxySession(),ActionType.USER,"action()",targetData,parameterData);
+  final ExecuteServerActionResponse result=server.executeServerAction(request);
+  IsisContext.getTransactionManager().endTransaction();
+  assertEquals(results,result);
+}

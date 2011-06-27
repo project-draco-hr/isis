@@ -1,0 +1,13 @@
+{
+  mockery.checking(new Expectations(){
+{
+      one(mockTargetObjectAdapter).getObject();
+      will(returnValue(domainObjectWithCustomValidation));
+      one(mockProposedObjectAdapter).getObject();
+      will(returnValue("1234-5678-9012"));
+    }
+  }
+);
+  final String reason=facet.invalidates(mockContext);
+  assertThat(reason,is(nullValue()));
+}

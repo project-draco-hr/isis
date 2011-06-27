@@ -1,0 +1,100 @@
+{
+  LOG.debug("processing request " + servletPath);
+  final AuthenticationSession session=UserManager.startRequest(context);
+  LOG.debug("exsiting session: " + session);
+  IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
+  context.setRequestPath(servletPath);
+  context.startRequest();
+  try {
+    processActions(context,false,servletPath);
+    processTheView(context);
+  }
+ catch (  final ScimpiNotFoundException e) {
+    if (context.isInternalRequest()) {
+      LOG.error("invalid page request (from within application): " + e.getMessage());
+    }
+ else {
+      LOG.info("invalid page request (from outside application): " + e.getMessage());
+    }
+    try {
+      IsisContext.getMessageBroker().addWarning("Failed to find page " + servletPath + ". Please navigate from here");
+      context.setRequestPath("/index.shtml");
+      processTheView(context);
+    }
+ catch (    final IOException e1) {
+      throw new ScimpiException(e);
+    }
+  }
+catch (  final NotLoggedInException e) {
+    IsisContext.getMessageBroker().addWarning("You are not currently logged in! Please log in so you can continue.");
+    context.setRequestPath("/login.shtml");
+    try {
+      processTheView(context);
+    }
+ catch (    final IOException e1) {
+      throw new ScimpiException(e1);
+    }
+  }
+catch (  final Throwable e) {
+    final String errorRef=Long.toString(System.currentTimeMillis(),36).toUpperCase();
+    LOG.info("error " + errorRef);
+    LOG.debug(e.getMessage(),e);
+    prepareErrorDetails(e,context,errorRef,servletPath);
+    final PersistenceSession checkSession=IsisContext.getPersistenceSession();
+    final IsisTransactionManager transactionManager=checkSession.getTransactionManager();
+    if (transactionManager.getTransaction() != null && transactionManager.getTransaction().getState().canAbort()) {
+      transactionManager.abortTransaction();
+      transactionManager.startTransaction();
+    }
+    final Throwable ex=e instanceof TagProcessingException ? e.getCause() : e;
+    if (ex instanceof ForbiddenException) {
+      context.addVariable("_security-context",((TagProcessingException)e).getContext(),Scope.ERROR);
+      context.addVariable("_security-error",ex.getMessage(),Scope.ERROR);
+      context.addVariable("_security-identifier",((ForbiddenException)ex).getIdentifier(),Scope.ERROR);
+      context.addVariable("_security-roles",((ForbiddenException)ex).getRoles(),Scope.ERROR);
+      IsisContext.getMessageBroker().addWarning("You don't have the right permissions to perform this (#" + errorRef + ")"+ "<span class=\"debug-link\" onclick=\"$('#security-dump').toggle()\" > ...</span>");
+      context.clearVariables(Scope.REQUEST);
+      context.setRequestPath("/index.shtml");
+      context.setRequestPath("/error/security_403.shtml");
+      try {
+        processTheView(context);
+      }
+ catch (      final IOException e1) {
+        throw new ScimpiException(e);
+      }
+    }
+ else {
+      final String message="There was a error while processing this request (#" + errorRef + ")"+ "<span class=\"debug-link\" onclick=\"$('#error-dump').toggle()\" > ...</span>";
+      IsisContext.getMessageBroker().addWarning(message);
+      context.clearVariables(Scope.REQUEST);
+      context.setRequestPath("/index.shtml");
+      try {
+        context.reset();
+        processTheView(context);
+      }
+ catch (      final TagProcessingException e1) {
+        IsisContext.getMessageBroker().addWarning(message);
+        context.clearVariables(Scope.REQUEST);
+        context.setRequestPath("/error.shtml");
+        try {
+          context.reset();
+          processTheView(context);
+        }
+ catch (        final IOException e2) {
+          throw new ScimpiException(e2);
+        }
+      }
+catch (      final IOException e1) {
+        throw new ScimpiException(e1);
+      }
+    }
+  }
+ finally {
+    try {
+      UserManager.endRequest(context.getSession());
+    }
+ catch (    final Exception e1) {
+      LOG.error("endRequest call failed",e1);
+    }
+  }
+}

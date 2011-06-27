@@ -1,0 +1,28 @@
+{
+  if (cls == null) {
+    return null;
+  }
+  final T annotation=cls.getAnnotation(annotationClass);
+  if (annotation != null) {
+    return annotation;
+  }
+  final Class<?> superclass=cls.getSuperclass();
+  if (superclass != null) {
+    try {
+      final T annotationFromSuperclass=getAnnotation(superclass,annotationClass);
+      if (annotationFromSuperclass != null) {
+        return annotationFromSuperclass;
+      }
+    }
+ catch (    final SecurityException e) {
+    }
+  }
+  final Class<?>[] interfaces=cls.getInterfaces();
+  for (  final Class<?> iface : interfaces) {
+    final T annotationFromInterface=getAnnotation(iface,annotationClass);
+    if (annotationFromInterface != null) {
+      return annotationFromInterface;
+    }
+  }
+  return null;
+}

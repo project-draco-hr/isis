@@ -1,0 +1,24 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  TestToolkit.createInstance();
+  view=new CompositeView(new NullContent(),null){
+    @Override protected void buildNewView(){
+      newBuildCount++;
+    }
+    @Override protected void buildModifiedView(){
+      modifiedBuildCount++;
+    }
+    @Override protected void buildView(){
+    }
+    @Override protected void doLayout(    final Size maximumSize){
+      layoutCount++;
+    }
+    @Override public Size requiredSize(    final Size availableSpace){
+      return null;
+    }
+  }
+;
+  view.setSize(new Size(100,200));
+  component1=new DummyView();
+  component1.setupRequiredSize(new Size(100,20));
+}

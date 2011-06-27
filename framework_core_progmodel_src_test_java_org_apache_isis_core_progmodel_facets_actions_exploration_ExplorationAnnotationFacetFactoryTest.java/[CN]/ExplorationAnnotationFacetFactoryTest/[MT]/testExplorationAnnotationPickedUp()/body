@@ -1,0 +1,12 @@
+{
+class Customer {
+    @SuppressWarnings("unused") @Exploration public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ExplorationFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ExplorationFacetAbstract);
+  assertNoMethodsRemoved();
+}

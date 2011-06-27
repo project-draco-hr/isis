@@ -1,0 +1,15 @@
+{
+  final ObjectActionParameter parameter=scalarModel.getParameterMemento().getActionParameter();
+  ParseableFacet parseableFacet=parameter.getFacet(ParseableFacet.class);
+  if (parseableFacet == null) {
+    parseableFacet=parameter.getSpecification().getFacet(ParseableFacet.class);
+  }
+  try {
+    final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter();
+    final String invalidReasonIfAny=parameter.isValid(parentAdapter,proposedPojoAsStr);
+    return invalidReasonIfAny;
+  }
+ catch (  final Exception ex) {
+    return ex.getLocalizedMessage();
+  }
+}

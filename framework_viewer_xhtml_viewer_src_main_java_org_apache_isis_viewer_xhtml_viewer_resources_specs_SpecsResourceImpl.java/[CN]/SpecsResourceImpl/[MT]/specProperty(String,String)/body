@@ -1,0 +1,16 @@
+{
+  init();
+  final String specAndProperty=specFullName + "/property/" + propertyName;
+  final XhtmlTemplate xhtml=new XhtmlTemplate(specAndProperty,getServletRequest());
+  xhtml.appendToBody(asDivIsisSession());
+  final Element div=xhtmlRenderer.div_p("Owners",null);
+  xhtml.appendToBody(div);
+  final Element ul=xhtmlRenderer.ul(HtmlClass.SPECIFICATION);
+  final String uri=MessageFormat.format("{0}/specs/{1}",getServletRequest().getContextPath(),specFullName);
+  ul.appendChild(xhtmlRenderer.aHref(uri,"owning spec","spec","property",HtmlClass.SPECIFICATION));
+  div.appendChild(ul);
+  final ObjectSpecification noSpec=getSpecification(specFullName);
+  final ObjectAssociation property=noSpec.getAssociation(propertyName);
+  xhtml.appendToBody(asDivTableFacets(property,propertyName));
+  return xhtml.toXML();
+}

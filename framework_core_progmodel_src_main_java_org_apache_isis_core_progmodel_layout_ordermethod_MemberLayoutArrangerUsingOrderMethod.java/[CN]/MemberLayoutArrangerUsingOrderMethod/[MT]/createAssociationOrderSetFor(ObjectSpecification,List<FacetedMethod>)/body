@@ -1,0 +1,11 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("MemberLayoutArrangerUsingOrderMethod: createAssociationOrderSetFor " + spec.getFullIdentifier());
+  }
+  final FieldOrderFacet fieldOrderFacet=spec.getFacet(FieldOrderFacet.class);
+  String fieldOrder=fieldOrderFacet == null ? null : fieldOrderFacet.value();
+  if (fieldOrder == null) {
+    fieldOrder=invokeSortOrderMethod(spec,FIELD_PREFIX);
+  }
+  return createOrderSet(fieldOrder,associationMethods);
+}

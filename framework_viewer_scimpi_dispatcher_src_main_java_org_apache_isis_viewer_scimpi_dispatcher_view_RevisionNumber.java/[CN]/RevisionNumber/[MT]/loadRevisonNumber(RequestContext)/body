@@ -1,0 +1,19 @@
+{
+  BufferedReader reader;
+  try {
+    String file=FILE;
+    file=context.findFile(FILE);
+    reader=new BufferedReader(new InputStreamReader(context.openStream(file)));
+    String line;
+    while ((line=reader.readLine()) != null) {
+      if (line.startsWith(MARKER)) {
+        revision=line.substring(MARKER.length());
+        break;
+      }
+    }
+    reader.close();
+  }
+ catch (  final IOException e) {
+    throw new ScimpiException(e);
+  }
+}

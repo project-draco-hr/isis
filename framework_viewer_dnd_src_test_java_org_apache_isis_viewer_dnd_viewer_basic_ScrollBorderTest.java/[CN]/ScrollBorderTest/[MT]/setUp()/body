@@ -1,0 +1,26 @@
+{
+  LogManager.getRootLogger().setLevel(Level.OFF);
+  servicesList=Collections.emptyList();
+  mockTemplateImageLoader=mockery.mock(TemplateImageLoader.class);
+  mockSpecificationLoader=mockery.mock(SpecificationLoader.class);
+  mockUserProfileLoader=mockery.mock(UserProfileLoader.class);
+  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
+  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  mockAuthorizationManager=mockery.mock(AuthorizationManager.class);
+  mockery.checking(new Expectations(){
+{
+      ignoring(mockTemplateImageLoader);
+      ignoring(mockSpecificationLoader);
+      ignoring(mockUserProfileLoader);
+      ignoring(mockPersistenceSessionFactory);
+      ignoring(mockAuthenticationManager);
+      ignoring(mockAuthorizationManager);
+    }
+  }
+);
+  TestToolkit.createInstance();
+  final IsisConfigurationDefault configuration=new IsisConfigurationDefault();
+  final IsisSessionFactory sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList);
+  sessionFactory.init();
+  IsisContextStatic.createRelaxedInstance(sessionFactory);
+}

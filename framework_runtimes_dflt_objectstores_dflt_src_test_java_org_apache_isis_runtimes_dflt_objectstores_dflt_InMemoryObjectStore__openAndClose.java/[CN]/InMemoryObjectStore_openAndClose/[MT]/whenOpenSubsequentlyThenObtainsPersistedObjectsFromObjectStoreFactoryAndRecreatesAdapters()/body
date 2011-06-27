@@ -1,0 +1,13 @@
+{
+  neverInteractsDirectlyWithPersistenceSession();
+  context.checking(new Expectations(){
+{
+      one(mockInMemoryPersistenceSessionFactory).getPersistedObjects();
+      will(returnValue(mockObjectStorePersistedObjects));
+    }
+  }
+);
+  assertThat(recreatedAdapters,is(false));
+  objectStore.open();
+  assertThat(recreatedAdapters,is(true));
+}

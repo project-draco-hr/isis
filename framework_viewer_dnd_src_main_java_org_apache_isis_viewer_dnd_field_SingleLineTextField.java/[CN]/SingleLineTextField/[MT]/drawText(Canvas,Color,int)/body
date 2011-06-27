@@ -1,0 +1,21 @@
+{
+  final String[] lines=textContent.getDisplayLines();
+  if (lines.length > 1) {
+    throw new IsisException("Single line text field should contain a string that contains no line breaks; contains " + lines.length);
+  }
+  final String chars=lines[0];
+  if (chars == null) {
+    throw new IsisException();
+  }
+  if (chars.endsWith("\n")) {
+    throw new RuntimeException();
+  }
+  final int baseline=getBaseline();
+  if (hasFocus() && canChangeValue().isAllowed()) {
+    final int at=Math.min(cursor.getCharacter(),chars.length());
+    final int pos=style.stringWidth(chars.substring(0,at)) - offset + HPADDING;
+    canvas.drawLine(pos,(baseline + style.getDescent()),pos,baseline - style.getAscent(),Toolkit.getColor(ColorsAndFonts.COLOR_TEXT_CURSOR));
+  }
+  final String line=hasFocus() ? chars : TextUtils.limitText(chars,style,width);
+  canvas.drawText(line,HPADDING - offset,baseline,textColor,style);
+}

@@ -1,0 +1,15 @@
+{
+  LOG.info("server shutting down");
+  final ServletContext servletContext=ev.getServletContext();
+  try {
+    final IsisSystem system=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
+    if (system != null) {
+      LOG.info("calling system shutdown");
+      system.shutdown();
+    }
+  }
+  finally {
+    servletContext.removeAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
+    LOG.info("server shut down");
+  }
+}

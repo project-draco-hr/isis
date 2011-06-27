@@ -1,0 +1,10 @@
+{
+  IsisContext.getPersistenceSession().makePersistent(target);
+  final ExecuteServerActionRequest request=new ExecuteServerActionRequest(IsisContext.getAuthenticationSession(),ActionType.USER,identifierString,targetData,parameterData);
+  mockDistribution.executeServerAction(request);
+  final ExecuteServerActionResponse result=new ExecuteServerActionResponse(new DummyNullValue("type"),new ObjectData[0],new ReferenceData[0],null,new ObjectData[2],new String[0],new String[0]);
+  expectLastCall().andReturn(result);
+  replay(mockObjectActionPeer,mockEncoder,mockDistribution);
+  proxy.invoke(target,parameters);
+  verify(mockObjectActionPeer,mockEncoder,mockDistribution);
+}

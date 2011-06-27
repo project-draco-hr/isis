@@ -1,0 +1,17 @@
+{
+  PropertyAccessorFacetFactory facetFactory=new PropertyAccessorFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") public String getFirstName(){
+      return null;
+    }
+  }
+  final Method propertyAccessorMethod=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,propertyAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PropertyOrCollectionAccessorFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PropertyAccessorFacetViaAccessor);
+  final PropertyAccessorFacetViaAccessor propertyAccessorFacetViaAccessor=(PropertyAccessorFacetViaAccessor)facet;
+  assertEquals(propertyAccessorMethod,propertyAccessorFacetViaAccessor.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(propertyAccessorMethod));
+}

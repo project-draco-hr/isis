@@ -1,0 +1,21 @@
+{
+  final ActionType actionType=request.getActionType();
+  final String actionIdentifier=request.getActionIdentifier();
+  final ReferenceData target=request.getTarget();
+  final Data[] parameters=request.getParameters();
+  log("execute action " + actionIdentifier + "/"+ actionType+ indentedNewLine()+ "target: "+ dump(target)+ indentedNewLine()+ "parameters: "+ dump(parameters));
+  ExecuteServerActionResponse result;
+  try {
+    result=decorated.executeServerAction(request);
+    log("  <-- returns: " + dump(result.getReturn()));
+    log("  <-- persisted target: " + dump(result.getPersistedTarget()));
+    log("  <-- persisted parameters: " + dump(result.getPersistedParameters()));
+    log("  <-- updates: " + dump(result.getUpdates()));
+    log("  <-- disposed: " + dump(result.getDisposed()));
+  }
+ catch (  final RuntimeException e) {
+    log("  <-- exception: " + e.getClass().getName() + " "+ e.getMessage());
+    throw e;
+  }
+  return result;
+}

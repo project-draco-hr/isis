@@ -1,0 +1,16 @@
+{
+  final View subview=subviewFor(drag.getLocation());
+  if (subview != null) {
+    drag.subtract(subview.getLocation());
+    return subview.dragStart(drag);
+  }
+ else {
+    if (drag.isCtrl()) {
+      final View dragOverlay=new DragViewOutline(getView());
+      return new ViewDragImpl(this,new Offset(drag.getLocation()),dragOverlay);
+    }
+ else {
+      return Toolkit.getViewFactory().createDragContentOutline(this,drag.getLocation());
+    }
+  }
+}

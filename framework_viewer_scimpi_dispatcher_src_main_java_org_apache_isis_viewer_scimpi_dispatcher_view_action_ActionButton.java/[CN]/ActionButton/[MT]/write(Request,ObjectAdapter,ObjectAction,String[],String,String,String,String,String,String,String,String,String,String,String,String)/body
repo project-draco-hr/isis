@@ -1,0 +1,57 @@
+{
+  final RequestContext context=request.getContext();
+  buttonTitle=buttonTitle != null ? buttonTitle : action.getName();
+  if (action.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+    LOG.info("action not visible " + action.getName());
+    return;
+  }
+  final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+  if (usable.isVetoed()) {
+    LOG.info("action not available: " + usable.getReason());
+    return;
+  }
+  final String idSegment=idName == null ? "" : ("id=\"" + idName + "\" ");
+  final String classSegment="class=\"" + (className == null ? "action in-line" : className) + "\"";
+  request.appendHtml("\n<form " + idSegment + classSegment+ " action=\"action.app\" method=\"post\">\n");
+  if (objectId == null) {
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + OBJECT + "\" value=\""+ context.getVariable(RequestContext.RESULT)+ "\" />\n");
+  }
+ else {
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + OBJECT + "\" value=\""+ objectId+ "\" />\n");
+  }
+  request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + VERSION + "\" value=\""+ version+ "\" />\n");
+  if (scope != null) {
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + SCOPE + "\" value=\""+ scope+ "\" />\n");
+  }
+  request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + METHOD + "\" value=\""+ action.getId()+ "\" />\n");
+  if (forwardResultTo != null) {
+    forwardResultTo=context.fullFilePath(forwardResultTo);
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + VIEW + "\" value=\""+ forwardResultTo+ "\" />\n");
+  }
+  if (forwardErrorTo == null) {
+    forwardErrorTo=request.getContext().getResourceFile();
+  }
+  forwardErrorTo=context.fullFilePath(forwardErrorTo);
+  request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + ERRORS + "\" value=\""+ forwardErrorTo+ "\" />\n");
+  if (forwardVoidTo == null) {
+    forwardVoidTo=request.getContext().getResourceFile();
+  }
+  forwardVoidTo=context.fullFilePath(forwardVoidTo);
+  request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + VOID + "\" value=\""+ forwardVoidTo+ "\" />\n");
+  if (variable != null) {
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + RESULT_NAME + "\" value=\""+ variable+ "\" />\n");
+  }
+  if (resultOverride != null) {
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + RESULT_OVERRIDE + "\" value=\""+ resultOverride+ "\" />\n");
+  }
+  if (completionMessage != null) {
+    request.appendHtml("  <input type=\"hidden\" name=\"" + "_" + MESSAGE + "\" value=\""+ completionMessage+ "\" />\n");
+  }
+  for (int i=0; i < parameters.length; i++) {
+    request.appendHtml("  <input type=\"hidden\" name=\"param" + (i + 1) + "\" value=\""+ parameters[i]+ "\" />\n");
+  }
+  request.appendHtml(request.getContext().interactionFields());
+  request.appendHtml("  <input class=\"button\" type=\"submit\" value=\"" + buttonTitle + "\" name=\"execute\" title=\""+ action.getDescription()+ "\" />");
+  HelpLink.append(request,action.getDescription(),action.getHelp());
+  request.appendHtml("\n</form>\n");
+}

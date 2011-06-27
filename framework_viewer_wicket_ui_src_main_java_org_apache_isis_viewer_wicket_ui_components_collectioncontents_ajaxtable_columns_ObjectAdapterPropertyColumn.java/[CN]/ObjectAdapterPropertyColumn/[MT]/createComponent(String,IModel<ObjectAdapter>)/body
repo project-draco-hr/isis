@@ -1,0 +1,15 @@
+{
+  final ObjectAdapter adapter=rowModel.getObject();
+  final EntityModel model=new EntityModel(adapter);
+  final OneToOneAssociation property=(OneToOneAssociation)adapter.getSpecification().getAssociation(propertyExpression);
+  final PropertyMemento pm=new PropertyMemento(property);
+  final ScalarModel scalarModel=model.getPropertyModel(pm);
+  final ComponentFactory componentFactory=findComponentFactory(ComponentType.SCALAR_NAME_AND_VALUE,scalarModel);
+  final Component component=componentFactory.createComponent(id,scalarModel);
+  if (component instanceof ScalarPanelAbstract) {
+    final ScalarPanelAbstract scalarPanel=(ScalarPanelAbstract)component;
+    scalarPanel.setFormat(Format.COMPACT);
+    scalarModel.toViewMode();
+  }
+  return component;
+}

@@ -1,0 +1,28 @@
+{
+  final Collection<ObjectSpecification> allSpecifications=getSpecificationLoader().allSpecifications();
+  final List<ObjectSpecification> specs=Lists.newArrayList(allSpecifications);
+  Collections.sort(specs,new Comparator<ObjectSpecification>(){
+    @Override public int compare(    final ObjectSpecification o1,    final ObjectSpecification o2){
+      return o1.getShortIdentifier().compareTo(o2.getShortIdentifier());
+    }
+  }
+);
+  final Function<ObjectSpecification,String> className=ObjectSpecification.FUNCTION_FULLY_QUALIFIED_CLASS_NAME;
+  final List<String> fullIdentifierList=Lists.newArrayList(Collections2.transform(specs,className));
+  for (  final String fullIdentifier : fullIdentifierList) {
+    final ObjectSpecification spec=getSpecificationLoader().loadSpecification(fullIdentifier);
+    if (spec.getAssociations().size() == 0 && spec.getObjectActionsAll().size() == 0) {
+      continue;
+    }
+    final String name=spec.getIdentifier().toClassIdentityString();
+    context.getWriter().append("# " + spec.getShortIdentifier() + "\n");
+    context.getWriter().append("" + name + ":roles\n");
+    for (    final ObjectAssociation assoc : spec.getAssociations()) {
+      context.getWriter().append("#" + name + "#"+ assoc.getId()+ ":roles\n");
+    }
+    for (    final ObjectAction action : spec.getObjectActionsAll()) {
+      context.getWriter().append("#" + name + "#"+ action.getId()+ "():roles\n");
+    }
+    context.getWriter().append("\n");
+  }
+}

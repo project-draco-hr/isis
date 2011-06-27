@@ -1,0 +1,40 @@
+{
+  try {
+    if (drag == null) {
+      spy.reset();
+      viewer.translate(me);
+      final Location location=createLocation(me.getPoint());
+      spy.setLocationInViewer(location);
+      final View overView=viewer.identifyView(new Location(location),true);
+      spy.setOver(overView);
+      spy.addAction("moved " + location);
+      if (overView != null) {
+        if (overView != identifiedView) {
+          if (identifiedView != null) {
+            spy.addAction("exited " + identifiedView);
+            identifiedView.exited();
+          }
+          if (overView != null) {
+            spy.addAction("entered " + overView);
+            overView.entered();
+          }
+          redraw();
+          feedbackManager.showBusyState(overView);
+        }
+        identifiedView=overView;
+        spy.addTrace("--> mouse moved");
+        viewer.mouseMoved(location);
+        spy.addTrace(overView," mouse location",location);
+        if ((me.getModifiers() & InputEvent.ALT_MASK) > 0 && overView.getContent() != null) {
+          final ObjectAdapter object=overView.getContent().getAdapter();
+          final ViewAreaType area=overView.viewAreaType(location);
+          feedbackManager.setViewDetail("Over " + location + " ["+ area+ "] "+ object);
+        }
+        redraw();
+      }
+    }
+  }
+ catch (  final Exception e) {
+    interactionException("mouseMoved",e);
+  }
+}

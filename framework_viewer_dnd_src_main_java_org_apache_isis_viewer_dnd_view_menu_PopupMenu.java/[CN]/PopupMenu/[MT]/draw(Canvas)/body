@@ -1,0 +1,42 @@
+{
+  final Size coreSize=getSize();
+  final int width=coreSize.getWidth();
+  final int height=coreSize.getHeight();
+  canvas.drawSolidRectangle(0,0,width,height,backgroundColor);
+  canvas.draw3DRectangle(0,0,width,height,backgroundColor,true);
+  final int itemHeight=style().getLineHeight() + VPADDING;
+  int baseLine=style().getAscent() + getPadding().getTop() + 1;
+  final int left=getPadding().getLeft();
+  for (int i=0; i < items.length; i++) {
+    if (items[i].isBlank) {
+      final int y=baseLine - (style().getAscent() / 2);
+      canvas.drawLine(1,y,width - 2,y,backgroundColor.brighter());
+      canvas.drawLine(1,y - 1,width - 2,y - 1,backgroundColor.darker());
+    }
+ else {
+      Color color;
+      if (items[i].isDisabled || items[i].action == null) {
+        color=disabledColor();
+      }
+ else       if (getOption() == i) {
+        final int top=getPadding().getTop() + i * itemHeight;
+        final int depth=style().getLineHeight() + 2;
+        canvas.drawSolidRectangle(2,top,width - 4,depth,backgroundColor.darker());
+        canvas.draw3DRectangle(2,top,width - 4,depth + 1,backgroundColor.brighter(),false);
+        color=reversedColor();
+      }
+ else {
+        color=normalColor();
+      }
+      canvas.drawText(items[i].name,left,baseLine,color,style());
+      if (items[i].action instanceof UserActionSet) {
+        Shape arrow;
+        arrow=new Shape(0,0);
+        arrow.addVector(4,4);
+        arrow.addVector(-4,4);
+        canvas.drawSolidShape(arrow,width - 10,baseLine - 8,color);
+      }
+    }
+    baseLine+=itemHeight;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  IsisContext.getPersistenceSession().makePersistent(target);
+  final ObjectAdapter object=system.createPersistentTestObject();
+  final ExecuteServerActionRequest request=new ExecuteServerActionRequest(IsisContext.getAuthenticationSession(),ActionType.USER,identifierString,targetData,parameterData);
+  mockDistribution.executeServerAction(request);
+  final ReferenceData[] disposedReferenceData=new ReferenceData[]{new DummyReferenceData(object.getOid(),object.getSpecification().getFullIdentifier(),null)};
+  final ExecuteServerActionResponse result=new ExecuteServerActionResponse(new DummyNullValue("type"),new ObjectData[0],disposedReferenceData,null,new ObjectData[2],new String[0],new String[0]);
+  expectLastCall().andReturn(result);
+  replay(mockObjectActionPeer,mockEncoder,mockDistribution);
+  proxy.invoke(target,parameters);
+  verify(mockObjectActionPeer,mockEncoder,mockDistribution);
+  final List<ObjectAdapter> allDisposedObjects=IsisContext.getUpdateNotifier().getDisposedObjects();
+  assertEquals(false,allDisposedObjects.isEmpty());
+  assertEquals(object,allDisposedObjects.get(0));
+  assertEquals(true,allDisposedObjects.isEmpty());
+}

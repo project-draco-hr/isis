@@ -1,0 +1,57 @@
+{
+  final String id=request.getOptionalProperty(OBJECT);
+  boolean checkMade=false;
+  boolean allConditionsMet=true;
+  final String[] propertyNames=request.getAttributes().getPropertyNames(new String[]{"object","collection"});
+  for (  final String propertyName : propertyNames) {
+    boolean result;
+    if (propertyName.equals("set")) {
+      result=request.isPropertySet("set");
+    }
+ else {
+      final Test test=tests.get(propertyName);
+      if (test == null) {
+        throw new ScimpiException("No such test: " + propertyName);
+      }
+      final String attributeValue=request.getOptionalProperty(propertyName,false);
+      result=test.test(request,attributeValue,id);
+      if (test.negateResult) {
+        result=!result;
+      }
+    }
+    checkMade=true;
+    allConditionsMet&=result;
+  }
+  final String persistent=request.getOptionalProperty("persistent");
+  if (persistent != null) {
+    final ObjectAdapter object=request.getContext().getMappedObjectOrResult(persistent);
+    checkMade=true;
+    allConditionsMet&=object.isPersistent();
+  }
+  if (request.isPropertySpecified("empty")) {
+    if (request.isPropertySet("empty")) {
+      final String collection=request.getOptionalProperty("empty");
+      if (collection != null) {
+        final ObjectAdapter object=request.getContext().getMappedObjectOrResult(collection);
+        final CollectionFacet facet=object.getSpecification().getFacet(CollectionFacet.class);
+        checkMade=true;
+        allConditionsMet&=facet.size(object) == 0;
+      }
+    }
+ else {
+      checkMade=true;
+      allConditionsMet&=true;
+    }
+  }
+  if (request.isPropertySpecified("set")) {
+    final boolean valuePresent=request.isPropertySet("set");
+    checkMade=true;
+    allConditionsMet&=valuePresent;
+  }
+  if (checkMade) {
+    processTags(allConditionsMet,request);
+  }
+ else {
+    throw new ScimpiException("No condition in " + getName());
+  }
+}

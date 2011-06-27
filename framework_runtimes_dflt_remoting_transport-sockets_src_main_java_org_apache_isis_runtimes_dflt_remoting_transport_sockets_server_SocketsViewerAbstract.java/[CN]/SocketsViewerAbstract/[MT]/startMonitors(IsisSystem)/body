@@ -1,0 +1,22 @@
+{
+  if (system.getDeploymentType().shouldMonitor()) {
+    final Runnable serverMonitorRunnable=new Runnable(){
+      @Override public void run(){
+        final SocketServerMonitor serverMonitor=new SocketServerMonitor();
+        serverMonitor.setTarget(system);
+        serverMonitor.listen();
+      }
+    }
+;
+    Threads.startThread(serverMonitorRunnable,"Monitor-1");
+    final Runnable httpServerMonitorRunnable=new Runnable(){
+      @Override public void run(){
+        final HttpServerMonitor httpServerMonitor=new HttpServerMonitor();
+        httpServerMonitor.setTarget(system);
+        httpServerMonitor.listen();
+      }
+    }
+;
+    Threads.startThread(httpServerMonitorRunnable,"Monitor-2");
+  }
+}

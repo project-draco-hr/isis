@@ -1,0 +1,15 @@
+{
+  final AuthenticationRequest request=determineRequestIfPossible();
+  AuthenticationSession session=getAuthenticationManager().authenticate(request);
+  clearAuthenticationRequestViaArgs();
+  if (session == null) {
+    session=loginDialogPrompt(request);
+  }
+  if (session == null) {
+    return false;
+  }
+ else {
+    IsisContext.openSession(session);
+    return true;
+  }
+}

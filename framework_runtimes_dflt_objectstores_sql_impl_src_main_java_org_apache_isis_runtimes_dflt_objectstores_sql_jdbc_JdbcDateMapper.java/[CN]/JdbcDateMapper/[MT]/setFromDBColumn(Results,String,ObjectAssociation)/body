@@ -1,0 +1,17 @@
+{
+  ObjectAdapter restoredValue;
+  final java.util.Date javaDateValue=results.getJavaDateOnly(columnName);
+  final Class<?> correspondingClass=field.getSpecification().getCorrespondingClass();
+  if (correspondingClass == java.util.Date.class || correspondingClass == java.sql.Date.class) {
+    restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(javaDateValue);
+  }
+ else   if (correspondingClass == Date.class) {
+    Date dateValue;
+    dateValue=new Date(javaDateValue);
+    restoredValue=IsisContext.getPersistenceSession().getAdapterManager().adapterFor(dateValue);
+  }
+ else {
+    throw new PersistFailedException("Unhandled date type: " + correspondingClass.getCanonicalName());
+  }
+  return restoredValue;
+}

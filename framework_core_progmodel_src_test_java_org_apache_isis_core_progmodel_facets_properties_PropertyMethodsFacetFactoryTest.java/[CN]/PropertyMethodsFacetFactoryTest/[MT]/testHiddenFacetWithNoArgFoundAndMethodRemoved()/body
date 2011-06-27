@@ -1,0 +1,21 @@
+{
+  HiddenFacetViaHideMethodFacetFactory facetFactory=new HiddenFacetViaHideMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") public String getFirstName(){
+      return null;
+    }
+    @SuppressWarnings("unused") public boolean hideFirstName(){
+      return true;
+    }
+  }
+  final Method propertyAccessorMethod=findMethod(Customer.class,"getFirstName");
+  final Method propertyHideMethod=findMethod(Customer.class,"hideFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,propertyAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(HideForContextFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HideForContextFacetViaMethod);
+  final HideForContextFacetViaMethod hideForContextFacet=(HideForContextFacetViaMethod)facet;
+  assertEquals(propertyHideMethod,hideForContextFacet.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(propertyHideMethod));
+}

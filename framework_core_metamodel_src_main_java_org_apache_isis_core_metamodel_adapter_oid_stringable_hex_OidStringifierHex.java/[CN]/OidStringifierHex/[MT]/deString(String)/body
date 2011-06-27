@@ -1,0 +1,16 @@
+{
+  final char[] oidCharArray=oidStr.toCharArray();
+  byte[] oidBytes;
+  try {
+    oidBytes=Hex.decodeHex(oidCharArray);
+    final ByteArrayInputStream bais=new ByteArrayInputStream(oidBytes);
+    final DataInputStreamExtended inputImpl=new DataInputStreamExtended(bais);
+    return inputImpl.readEncodable(Oid.class);
+  }
+ catch (  final IOException ex) {
+    throw new IsisException("Failed to read object",ex);
+  }
+catch (  final DecoderException ex) {
+    throw new IsisException("Failed to hex decode object",ex);
+  }
+}

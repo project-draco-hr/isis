@@ -1,0 +1,20 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public void saved(){
+    }
+    @SuppressWarnings("unused") public void persisted(){
+    }
+  }
+  final Method saveMethod=findMethod(Customer.class,"saved");
+  final Method persistMethod=findMethod(Customer.class,"persisted");
+  saveFacetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  persistFacetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PersistedCallbackFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PersistedCallbackFacetViaMethod);
+  final PersistedCallbackFacetViaMethod persistedCallbackFacetViaMethod=(PersistedCallbackFacetViaMethod)facet;
+  List<Method> methods=persistedCallbackFacetViaMethod.getMethods();
+  assertTrue(methods.contains(saveMethod));
+  assertTrue(methods.contains(persistMethod));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(saveMethod));
+}

@@ -1,0 +1,10 @@
+{
+  final String id=request.getOptionalProperty(VALUE);
+  final ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  request.appendHtml("<h1>Object Graph - " + object + "</h1>");
+  request.appendHtml("<pre>");
+  final DebugBuilder debug=new DebugString();
+  Dump.graph(object,null,debug);
+  request.appendHtml(debug.toString());
+  request.appendHtml("</pre>");
+}

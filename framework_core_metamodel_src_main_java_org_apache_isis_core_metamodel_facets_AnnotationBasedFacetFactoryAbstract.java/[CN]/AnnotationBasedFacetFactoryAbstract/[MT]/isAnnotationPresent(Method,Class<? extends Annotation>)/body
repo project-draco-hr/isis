@@ -1,0 +1,33 @@
+{
+  if (method == null) {
+    return false;
+  }
+  final boolean present=method.isAnnotationPresent(annotationClass);
+  if (present) {
+    return true;
+  }
+  final Class<?> methodDeclaringClass=method.getDeclaringClass();
+  final Class<?> superclass=methodDeclaringClass.getSuperclass();
+  if (superclass != null) {
+    try {
+      final Method parentClassMethod=superclass.getMethod(method.getName(),method.getParameterTypes());
+      return isAnnotationPresent(parentClassMethod,annotationClass);
+    }
+ catch (    final SecurityException e) {
+    }
+catch (    final NoSuchMethodException e) {
+    }
+  }
+  final Class<?>[] interfaces=methodDeclaringClass.getInterfaces();
+  for (  final Class<?> iface : interfaces) {
+    try {
+      final Method ifaceMethod=iface.getMethod(method.getName(),method.getParameterTypes());
+      return isAnnotationPresent(ifaceMethod,annotationClass);
+    }
+ catch (    final SecurityException e) {
+    }
+catch (    final NoSuchMethodException e) {
+    }
+  }
+  return false;
+}

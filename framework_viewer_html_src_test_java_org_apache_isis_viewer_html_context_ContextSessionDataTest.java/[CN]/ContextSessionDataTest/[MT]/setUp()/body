@@ -1,0 +1,12 @@
+{
+  super.setUp();
+  originalAdapter=system.createTransientTestObject(new TestPojo());
+  oid=originalAdapter.getOid();
+  final Context context=new Context(null);
+  context.mapObject(originalAdapter);
+  assertNotNull("loader still has the object",getAdapterManager().getAdapterFor(oid));
+  system.resetLoader();
+  assertNull("loader no longer has the object",getAdapterManager().getAdapterFor(oid));
+  context.restoreAllObjectsToLoader();
+  restoredAdapter=getAdapterManager().getAdapterFor(oid);
+}

@@ -1,0 +1,11 @@
+{
+  for (  final ServletSpecification servletSpec : webAppSpec.getServletSpecifications()) {
+    final ServletHolder servletHolder=new ServletHolder(servletSpec.getServletClass());
+    servletHolder.setInitParameters(servletSpec.getInitParams());
+    servletHandler.addServlet(servletHolder);
+    final ServletMapping servletMapping=new ServletMapping();
+    servletMapping.setServletName(servletHolder.getName());
+    servletMapping.setPathSpecs(servletSpec.getPathSpecs().toArray(new String[]{}));
+    servletHandler.addServletMapping(servletMapping);
+  }
+}

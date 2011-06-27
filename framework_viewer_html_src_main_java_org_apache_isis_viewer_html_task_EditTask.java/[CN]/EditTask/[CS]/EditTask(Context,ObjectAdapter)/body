@@ -1,0 +1,36 @@
+{
+  super(context,"Edit","",object,size(object));
+  final List<ObjectAssociation> allFields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(IsisContext.getAuthenticationSession(),object));
+  fields=new ObjectAssociation[names.length];
+  for (int i=0, j=0; j < allFields.size(); j++) {
+    final ObjectAssociation fld=allFields.get(j);
+    fields[i]=fld;
+    names[i]=fld.getName();
+    descriptions[i]=fld.getDescription();
+    final Consent usableByUser=fld.isUsable(IsisContext.getAuthenticationSession(),object);
+    if (usableByUser.isVetoed()) {
+      descriptions[i]=usableByUser.getReason();
+    }
+    fieldSpecifications[i]=fld.getSpecification();
+    initialState[i]=fld.get(object);
+    if (skipField(object,fld)) {
+      readOnly[i]=true;
+    }
+ else {
+      readOnly[i]=false;
+      optional[i]=!fld.isMandatory();
+      if (fieldSpecifications[i].isParseable()) {
+        final MultiLineFacet multilineFacet=fld.getFacet(MultiLineFacet.class);
+        noLines[i]=multilineFacet.numberOfLines();
+        wraps[i]=!multilineFacet.preventWrapping();
+        final MaxLengthFacet maxLengthFacet=fld.getFacet(MaxLengthFacet.class);
+        maxLength[i]=maxLengthFacet.value();
+        final TypicalLengthFacet typicalLengthFacet=fld.getFacet(TypicalLengthFacet.class);
+        typicalLength[i]=typicalLengthFacet.value();
+      }
+    }
+    i++;
+  }
+  final boolean isNew=object.getResolveState() == ResolveState.TRANSIENT;
+  newType=isNew ? getTarget(context).getSpecification().getSingularName() : null;
+}

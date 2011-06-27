@@ -1,0 +1,51 @@
+{
+  final SkylarkViewFactory viewFactory=(SkylarkViewFactory)Toolkit.getViewFactory();
+  LOG.debug("setting up default views (provided by the framework)");
+  viewFactory.addSpecification(loadSpecification("field.image",ImageField.Specification.class));
+  viewFactory.addSpecification(loadSpecification("field.color",ColorField.Specification.class));
+  viewFactory.addSpecification(loadSpecification("field.password",PasswordFieldSpecification.class));
+  viewFactory.addSpecification(loadSpecification("field.wrappedtext",WrappedTextFieldSpecification.class));
+  viewFactory.addSpecification(loadSpecification("field.checkbox",CheckboxField.Specification.class));
+  viewFactory.addSpecification(loadSpecification("field.date",DateFieldSpecification.class));
+  viewFactory.addSpecification(loadSpecification("field.text",TextFieldSpecification.class));
+  viewFactory.addSpecification(new RootWorkspaceSpecification());
+  viewFactory.addSpecification(new InnerWorkspaceSpecification());
+  if (IsisContext.getConfiguration().getBoolean(SPECIFICATION_BASE + "defaults",true)) {
+    viewFactory.addSpecification(new FieldOfSpecification());
+    viewFactory.addSpecification(new InternalListSpecification());
+    viewFactory.addSpecification(new SimpleListSpecification());
+    viewFactory.addSpecification(new GridSpecification());
+    viewFactory.addSpecification(new CalendarSpecification());
+    viewFactory.addSpecification(new ListWithDetailSpecification());
+    viewFactory.addSpecification(new HistogramSpecification());
+    viewFactory.addSpecification(new TreeWithDetailSpecification());
+    viewFactory.addSpecification(new FormSpecification());
+    viewFactory.addSpecification(new FormWithTableSpecification());
+    viewFactory.addSpecification(new WindowTableSpecification());
+    viewFactory.addSpecification(new ExpandableFormSpecification());
+    viewFactory.addSpecification(new InternalFormSpecification());
+    viewFactory.addSpecification(new TwoPartViewSpecification());
+    viewFactory.addSpecification(new FormWithDetailSpecification());
+    viewFactory.addSpecification(new SummaryFormSpecification());
+    viewFactory.addSpecification(new TreeSpecification());
+    viewFactory.addDesignSpecification(new GridListSpecification());
+    viewFactory.addDesignSpecification(new ConfigurableObjectViewSpecification());
+    viewFactory.addDesignSpecification(new PanelViewSpecification());
+    viewFactory.addDesignSpecification(new NewViewSpecification());
+  }
+  viewFactory.addSpecification(new MessageDialogSpecification());
+  viewFactory.addSpecification(new DetailedMessageViewSpecification());
+  viewFactory.addEmptyFieldSpecification(loadSpecification("field.empty",EmptyField.Specification.class));
+  viewFactory.addSpecification(loadSpecification("icon.object",RootIconSpecification.class));
+  viewFactory.addSpecification(loadSpecification("icon.subview",SubviewIconSpecification.class));
+  viewFactory.addSpecification(loadSpecification("icon.collection",ExpandableListSpecification.class));
+  viewFactory.addSpecification(new LargeIconSpecification());
+  viewFactory.addSpecification(loadSpecification("icon.service",ServiceIconSpecification.class));
+  viewFactory.setDragContentSpecification(loadSpecification("drag-content",DragContentSpecification.class));
+  final ViewSpecification[] specifications=CollectionTreeNodeSpecification.create();
+  viewFactory.addSpecification(specifications[0]);
+  viewFactory.addSpecification(specifications[1]);
+  viewFactory.addSpecification(new TreeNodeSpecification());
+  installSpecsFromConfiguration(viewFactory);
+  viewFactory.loadUserViewSpecifications();
+}

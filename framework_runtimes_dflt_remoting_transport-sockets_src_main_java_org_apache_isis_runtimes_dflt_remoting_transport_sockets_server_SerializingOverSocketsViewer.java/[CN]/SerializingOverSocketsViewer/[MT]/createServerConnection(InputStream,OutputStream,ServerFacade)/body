@@ -1,0 +1,11 @@
+{
+  final SimpleTransport transport=new SimpleTransport(getConfiguration(),input,output);
+  final SerializingMarshaller serverMarshaller=new SerializingMarshaller(getConfiguration(),transport);
+  try {
+    serverMarshaller.connect();
+  }
+ catch (  final IOException e) {
+    throw new ConnectionException(e);
+  }
+  return new ServerConnectionDefault(serverFacade,serverMarshaller);
+}

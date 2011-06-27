@@ -1,0 +1,10 @@
+{
+  final Identifier actionIdentifier=action.getIdentifier();
+  final String actionId=actionIdentifier.toNameParmsIdentityString();
+  final String formName="action-" + actionId;
+  final String uri=MessageFormat.format("{0}/object/{1}/action/{2}",resourceContext.getHttpServletRequest().getContextPath(),getOidStrRealTarget(action),actionId);
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  final Element div=xhtmlRenderer.div(HtmlClass.ACTION);
+  div.appendChild(renderForm(formName,uri,parameters));
+  return div;
+}

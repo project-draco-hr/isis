@@ -1,0 +1,11 @@
+{
+  return getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturnAbstract<ObjectAdapter>(){
+    @Override public ObjectAdapter execute(){
+      final GetObjectRequest request=new GetObjectRequest(null,oid,specHint.getFullIdentifier());
+      final GetObjectResponse response=serverFacade.getObject(request);
+      final ObjectData data=response.getObjectData();
+      return encoderDecoder.decode(data);
+    }
+  }
+);
+}

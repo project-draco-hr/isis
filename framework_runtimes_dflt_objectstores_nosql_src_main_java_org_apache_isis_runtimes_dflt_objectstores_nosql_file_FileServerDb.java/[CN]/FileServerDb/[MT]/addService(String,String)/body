@@ -1,0 +1,13 @@
+{
+  final ClientConnection connection=getConnection();
+  try {
+    connection.request('T',name + " " + key);
+    connection.validateRequest();
+  }
+ catch (  final RuntimeException e) {
+    LOG.error("aborting addService",e);
+    abortConnection(connection);
+    throw e;
+  }
+  returnConnection(connection);
+}

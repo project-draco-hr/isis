@@ -1,0 +1,9 @@
+{
+  final InteractionResult result=new InteractionResult(context.createInteractionEvent());
+  final List<Facet> facets=facetHolder.getFacets(FacetFilters.isA(HidingInteractionAdvisor.class));
+  for (  final Facet facet : facets) {
+    final HidingInteractionAdvisor advisor=(HidingInteractionAdvisor)facet;
+    result.advise(advisor.hides(context),advisor);
+  }
+  return result;
+}

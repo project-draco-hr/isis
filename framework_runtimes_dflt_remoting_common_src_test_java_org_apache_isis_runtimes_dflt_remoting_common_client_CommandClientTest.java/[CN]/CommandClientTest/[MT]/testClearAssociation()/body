@@ -1,0 +1,13 @@
+{
+  final DummyIdentityData target=new DummyIdentityData(new TestProxyOid(1),"class 1",null);
+  final DummyIdentityData associate=new DummyIdentityData(new TestProxyOid(2),"class 2",null);
+  final ClearAssociationRequest request=new ClearAssociationRequest(session,"fieldname",target,associate);
+  serverFacade.clearAssociation(request);
+  final ObjectData[] data=new ObjectData[2];
+  control.setReturnValue(new ClearAssociationResponse(data));
+  control.replay();
+  final ClearAssociationResponse response=serverFacadeProxy.clearAssociation(request);
+  final ObjectData[] ret=response.getUpdates();
+  control.verify();
+  assertEquals(data,ret);
+}

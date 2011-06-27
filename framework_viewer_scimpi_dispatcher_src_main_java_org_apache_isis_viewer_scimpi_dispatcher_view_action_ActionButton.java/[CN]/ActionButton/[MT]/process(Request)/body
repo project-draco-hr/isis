@@ -1,0 +1,68 @@
+{
+  final String objectId=request.getOptionalProperty(OBJECT);
+  final String methodName=request.getRequiredProperty(METHOD);
+  final String forwardResultTo=request.getOptionalProperty(VIEW);
+  final String forwardVoidTo=request.getOptionalProperty(VOID);
+  final String forwardErrorTo=request.getOptionalProperty(ERRORS);
+  final String variable=request.getOptionalProperty(RESULT_NAME);
+  final String scope=request.getOptionalProperty(SCOPE);
+  final String buttonTitle=request.getOptionalProperty(BUTTON_TITLE);
+  final String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
+  final String idName=request.getOptionalProperty(ID,methodName);
+  String className=request.getOptionalProperty(CLASS);
+  final boolean showMessage=request.isRequested(SHOW_MESSAGE,false);
+  final String completionMessage=request.getOptionalProperty(MESSAGE);
+  final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
+  final String version=request.getContext().mapVersion(object);
+  final ObjectAction action=MethodsUtils.findAction(object,methodName);
+  final ActionContent parameterBlock=new ActionContent(action);
+  request.setBlockContent(parameterBlock);
+  request.processUtilCloseTag();
+  final String[] parameters=parameterBlock.getParameters();
+  final ObjectAdapter[] objectParameters=new ObjectAdapter[parameters.length];
+  int i=0;
+  for (  final ObjectActionParameter spec : action.getParameters()) {
+    final ObjectSpecification typ=spec.getSpecification();
+    if (parameters[i] == null) {
+      objectParameters[i]=null;
+    }
+ else     if (typ.getFacet(ParseableFacet.class) != null) {
+      final ParseableFacet facet=typ.getFacet(ParseableFacet.class);
+      objectParameters[i]=facet.parseTextEntry(null,parameters[i]);
+    }
+ else {
+      objectParameters[i]=MethodsUtils.findObject(request.getContext(),parameters[i]);
+    }
+    i++;
+  }
+  if (MethodsUtils.isVisibleAndUsable(object,action) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
+    write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
+  }
+  if (showMessage) {
+    final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+    if (usable.isVetoed()) {
+      String notUsable=usable.getReason();
+      if (notUsable != null) {
+        if (className == null) {
+          className="access";
+        }
+        request.appendHtml("<div class=\"" + className + "-message\" >");
+        request.appendAsHtmlEncoded(notUsable);
+        request.appendHtml("</div>");
+      }
+    }
+ else {
+      Consent valid=action.isProposedArgumentSetValid(object,objectParameters);
+      String notValid=valid.getReason();
+      if (notValid != null) {
+        if (className == null) {
+          className="access";
+        }
+        request.appendHtml("<div class=\"" + className + "-message\" >");
+        request.appendAsHtmlEncoded(notValid);
+        request.appendHtml("</div>");
+      }
+    }
+  }
+  request.popBlockContent();
+}

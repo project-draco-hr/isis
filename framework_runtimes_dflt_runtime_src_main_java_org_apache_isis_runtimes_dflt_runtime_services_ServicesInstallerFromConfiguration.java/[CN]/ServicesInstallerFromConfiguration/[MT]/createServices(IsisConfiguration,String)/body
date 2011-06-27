@@ -1,0 +1,24 @@
+{
+  final String root=ConfigurationConstants.ROOT + (group == null ? "" : group.toLowerCase() + ".");
+  String servicePrefix=configuration.getString(root + SERVICES_PREFIX);
+  if (group != null && servicePrefix == null) {
+    servicePrefix=configuration.getString(ConfigurationConstants.ROOT + SERVICES_PREFIX);
+  }
+  final String prefix=servicePrefix(servicePrefix);
+  final String serviceList=configuration.getString(root + SERVICES);
+  List<Object> list;
+  if (serviceList != null) {
+    list=createServices(prefix,serviceList);
+  }
+ else {
+    list=new ArrayList<Object>();
+  }
+  if (configuration.getBoolean(root + EXPLORATION_OBJECTS)) {
+    final DeploymentType deploymentType=DeploymentType.lookup(configuration.getString(SystemConstants.DEPLOYMENT_TYPE_KEY));
+    if (deploymentType.isExploring()) {
+      list.add(new ObjectFixtureService());
+    }
+  }
+  final Object[] array=list.toArray(new Object[list.size()]);
+  return array;
+}

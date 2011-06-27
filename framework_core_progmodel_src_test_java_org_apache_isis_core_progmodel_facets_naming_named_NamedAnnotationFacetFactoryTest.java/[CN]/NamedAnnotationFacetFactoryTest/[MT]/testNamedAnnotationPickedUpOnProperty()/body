@@ -1,0 +1,17 @@
+{
+  NamedAnnotationOnMemberFacetFactory facetFactory=new NamedAnnotationOnMemberFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") @Named("some name") public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"getNumberOfOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacetAbstract);
+  final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;
+  assertEquals("some name",namedFacetAbstract.value());
+  assertNoMethodsRemoved();
+}

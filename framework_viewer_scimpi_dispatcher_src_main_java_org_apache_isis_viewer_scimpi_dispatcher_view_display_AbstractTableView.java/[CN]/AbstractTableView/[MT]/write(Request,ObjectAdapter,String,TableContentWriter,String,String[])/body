@@ -1,0 +1,26 @@
+{
+  final RequestContext context=request.getContext();
+  final String summarySegment=" summary=\"" + summary + "\"";
+  final String classSegment=tableClass == null ? "" : (" class=\"" + tableClass + "\"");
+  request.appendHtml("<table" + classSegment + summarySegment+ ">");
+  rowBuilder.writeHeaders(request);
+  rowBuilder.writeFooters(request);
+  request.appendHtml("<tbody>");
+  final CollectionFacet facet=collection.getSpecification().getFacet(CollectionFacet.class);
+  final Iterator<ObjectAdapter> iterator=facet.iterator(collection);
+  int row=1;
+  while (iterator.hasNext()) {
+    final ObjectAdapter element=iterator.next();
+    context.addVariable("row","" + (row),Scope.REQUEST);
+    String cls="";
+    if (rowClasses != null) {
+      cls=" class=\"" + rowClasses[row % rowClasses.length] + "\"";
+    }
+    request.appendHtml("<tr" + cls + ">");
+    rowBuilder.writeElement(request,context,element);
+    request.appendHtml("</tr>");
+    row++;
+  }
+  request.appendHtml("</tbody>");
+  request.appendHtml("</table>");
+}

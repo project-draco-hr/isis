@@ -1,0 +1,19 @@
+{
+  final StringBuffer buffer=new StringBuffer();
+  if (members.size() == 0) {
+    buffer.append("none");
+  }
+ else {
+    for (int i=0; i < members.size(); i++) {
+      final ObjectMember member=members.get(i);
+      buffer.append("<a href=\"#" + members.get(i).getId() + "\">"+ member.getId()+ "</a>   <small>");
+      buffer.append(member.isAlwaysHidden() ? "" : "Visible ");
+      if (member.isPropertyOrCollection()) {
+        buffer.append(((ObjectAssociation)member).isNotPersisted() ? "Not-Persisted " : " ");
+        buffer.append(((ObjectAssociation)member).isMandatory() ? "Mandatory " : "");
+      }
+      buffer.append("</small></a><br>");
+    }
+  }
+  view.appendln(label,buffer.toString());
+}

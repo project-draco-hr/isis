@@ -1,0 +1,15 @@
+{
+  if (isService()) {
+    return Collections.emptyList();
+  }
+  List<ObjectAction> contributedActionSets=contributedActionSetsByType.get(actionType);
+  if (contributedActionSets == null) {
+    contributedActionSets=Lists.newArrayList();
+    final List<ObjectAdapter> services=getServicesProvider().getServices();
+    for (    final ObjectAdapter serviceAdapter : services) {
+      addContributedActionsIfAny(serviceAdapter,actionType,contributedActionSets);
+    }
+    contributedActionSetsByType.put(actionType,contributedActionSets);
+  }
+  return contributedActionSets;
+}

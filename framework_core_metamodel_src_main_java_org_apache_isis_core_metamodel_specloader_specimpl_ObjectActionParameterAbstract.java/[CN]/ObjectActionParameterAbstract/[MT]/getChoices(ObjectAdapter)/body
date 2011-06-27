@@ -1,0 +1,19 @@
+{
+  final List<ObjectAdapter> parameterChoices=new ArrayList<ObjectAdapter>();
+  final ActionParameterChoicesFacet choicesFacet=getFacet(ActionParameterChoicesFacet.class);
+  if (choicesFacet != null) {
+    final Object[] choices=choicesFacet.getChoices(parentAction.realTarget(adapter));
+    checkChoicesType(getSpecificationLookup(),choices,getSpecification());
+    for (    final Object choice : choices) {
+      parameterChoices.add(getAdapterMap().adapterFor(choice));
+    }
+  }
+  if (parameterChoices.size() == 0 && BoundedFacetUtils.isBoundedSet(getSpecification())) {
+    final Query query=new QueryFindAllInstances(getSpecification().getFullIdentifier());
+    final List<ObjectAdapter> allInstancesAdapter=getQuerySubmitter().allMatchingQuery(query);
+    for (    final ObjectAdapter choiceAdapter : allInstancesAdapter) {
+      parameterChoices.add(choiceAdapter);
+    }
+  }
+  return parameterChoices.toArray(new ObjectAdapter[0]);
+}

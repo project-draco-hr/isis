@@ -1,0 +1,10 @@
+{
+  if (objectAsSerializable != null) {
+    return IsisContext.getPersistenceSession().getAdapterManager().adapterFor(objectAsSerializable);
+  }
+ else {
+    final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(getClassName());
+    final EncodableFacet encodeableFacet=spec.getFacet(EncodableFacet.class);
+    return encodeableFacet.fromEncodedString(objectAsEncodedString);
+  }
+}

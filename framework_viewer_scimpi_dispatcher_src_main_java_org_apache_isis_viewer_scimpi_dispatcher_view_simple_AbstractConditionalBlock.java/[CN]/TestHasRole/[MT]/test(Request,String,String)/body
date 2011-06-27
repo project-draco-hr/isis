@@ -1,0 +1,13 @@
+{
+  final String[] requiredRoles=attributeName.split("\\|");
+  final AuthenticationSession session=IsisContext.getSession().getAuthenticationSession();
+  final List<String> sessionRoles=session.getRoles();
+  for (  final String sessionRole : sessionRoles) {
+    for (    final String requiredRole : requiredRoles) {
+      if (requiredRole.trim().equals(sessionRole)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

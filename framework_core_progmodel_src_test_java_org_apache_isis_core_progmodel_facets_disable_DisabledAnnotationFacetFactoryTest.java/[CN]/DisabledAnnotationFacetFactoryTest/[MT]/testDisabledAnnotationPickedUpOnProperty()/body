@@ -1,0 +1,13 @@
+{
+class Customer {
+    @Disabled public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"getNumberOfOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(DisabledFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DisabledFacetAbstract);
+  assertNoMethodsRemoved();
+}

@@ -1,0 +1,21 @@
+{
+  if (LOG.isInfoEnabled()) {
+    LOG.info("posting form arguments to '" + uri + "'");
+    LOG.info(asString(formArgumentsByParameter));
+  }
+  try {
+    final Map<String,String> encodedMap=urlEncode(formArgumentsByParameter);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(asString(encodedMap));
+    }
+    final HttpURLConnection connection=createPostConnection(uri);
+    writeMapToConnectionOutputStream(encodedMap,connection);
+    return readDocFromConnectionInputStream(connection);
+  }
+ catch (  final IOException e) {
+    throw new RestfulClientException(e);
+  }
+catch (  JDOMException e) {
+    throw new RestfulClientException(e);
+  }
+}

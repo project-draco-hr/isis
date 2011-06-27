@@ -1,0 +1,22 @@
+{
+  final StringBuffer str=new StringBuffer();
+  final Iterator<?> it=SessionAccess.getSessions().iterator();
+  while (it.hasNext()) {
+    final HttpSession session=(HttpSession)it.next();
+    final String id=session.getId();
+    str.append(id);
+    str.append(" \t");
+    final long creationTime=session.getCreationTime();
+    str.append(new Date(creationTime));
+    str.append(" \t");
+    final long lastAccessedTime=session.getLastAccessedTime();
+    str.append(new Date(lastAccessedTime));
+    str.append(" \t");
+    final AuthenticationSession nofSession=(AuthenticationSession)session.getAttribute("NOF_SESSION_ATTRIBUTE");
+    if (nofSession != null) {
+      str.append(nofSession.getUserName());
+    }
+    str.append("\n");
+  }
+  return str.toString();
+}

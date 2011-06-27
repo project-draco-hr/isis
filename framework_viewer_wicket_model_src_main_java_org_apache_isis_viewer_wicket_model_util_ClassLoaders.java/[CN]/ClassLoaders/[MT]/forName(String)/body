@@ -1,0 +1,12 @@
+{
+  final Class<?> primitiveCls=primitives.get(fullName);
+  if (primitiveCls != null) {
+    return primitiveCls;
+  }
+  try {
+    return Thread.currentThread().getContextClassLoader().loadClass(fullName);
+  }
+ catch (  final ClassNotFoundException e) {
+    throw new RuntimeException(e);
+  }
+}

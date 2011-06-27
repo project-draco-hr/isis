@@ -1,0 +1,17 @@
+{
+  b.appendln("Content",getContent() == null ? "none" : getContent());
+  b.appendln("Required size ",getRequiredSize(Size.createMax()));
+  b.appendln("Bounds",getBounds());
+  b.appendln("Baseline",getBaseline());
+  b.appendln("Location",getAbsoluteLocation());
+  final View views[]=getSubviews();
+  b.indent();
+  for (  final View subview : views) {
+    b.appendln();
+    final ViewSpecification spec=subview.getSpecification();
+    b.appendln(spec == null ? "none" : spec.getName().toUpperCase());
+    b.appendln("View",subview);
+    subview.debugStructure(b);
+  }
+  b.unindent();
+}

@@ -1,0 +1,20 @@
+{
+  final ActionModel actionModel=panel.getActionModel();
+  final ActionModel.SingleResultsMode singleResultsMode=actionModel.getSingleResultsMode();
+  if (singleResultsMode == ActionModel.SingleResultsMode.REDIRECT) {
+    panel.setResponsePage(new EntityPage(actualAdapter));
+  }
+ else   if (singleResultsMode == ActionModel.SingleResultsMode.SELECT) {
+    actionModel.getSelectionHandler().onSelected(panel,actualAdapter);
+  }
+ else   if (singleResultsMode == ActionModel.SingleResultsMode.INLINE) {
+    final ComponentType componentType=ComponentType.ENTITY;
+    panel.hideAllBut(componentType);
+    panel.addOrReplace(componentType,new EntityModel(actualAdapter));
+  }
+ else {
+    final ComponentType componentType=ComponentType.ENTITY_LINK;
+    panel.hideAllBut(componentType);
+    panel.addOrReplace(componentType,new EntityModel(actualAdapter));
+  }
+}

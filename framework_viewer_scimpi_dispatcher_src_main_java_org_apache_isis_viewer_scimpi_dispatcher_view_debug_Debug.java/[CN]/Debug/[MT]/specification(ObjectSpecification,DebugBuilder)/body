@@ -1,0 +1,72 @@
+{
+  view.startSection("Summary");
+  view.appendln("Hash code","#" + Integer.toHexString(spec.hashCode()));
+  view.appendln("ID",spec.getIdentifier());
+  view.appendln("Full name",spec.getFullIdentifier());
+  view.appendln("Short name",spec.getShortIdentifier());
+  view.appendln("Singular name",spec.getSingularName());
+  view.appendln("Plural name",spec.getPluralName());
+  view.appendln("Description",spec.getDescription());
+  view.appendln("Type","?");
+  view.appendln("Value/aggregated",String.valueOf(!spec.isValueOrIsAggregated()));
+  view.appendln("Parent specification",specificationLink(spec.superclass()));
+  specificationClasses(view,"Child specifications",spec.subclasses());
+  specificationClasses(view,"Implemented interfaces",spec.interfaces());
+  speficationFacets(view,spec);
+  final List<ObjectAssociation> fields=spec.getAssociations();
+  specificationMembers(view,"Fields",fields);
+  final List<ObjectAction> userActions=spec.getObjectActions(ActionType.USER);
+  specificationMembers(view,"User Actions",userActions);
+  specificationMembers(view,"Exploration Actions",spec.getObjectActions(ActionType.EXPLORATION));
+  specificationMembers(view,"Prototype Actions",spec.getObjectActions(ActionType.PROTOTYPE));
+  specificationMembers(view,"Debug Actions",spec.getObjectActions(ActionType.DEBUG));
+  view.endSection();
+  view.startSection("Fields");
+  for (int i=0; i < fields.size(); i++) {
+    final ObjectAssociation field=fields.get(i);
+    view.appendTitle("<span id=\"" + field.getId() + "\"><em>Field:</em> "+ field.getId()+ "</span>");
+    view.appendln("ID",field.getIdentifier());
+    view.appendln("Short ID",field.getId());
+    view.appendln("Name",field.getName());
+    view.appendln("Specification",specificationLink(field.getSpecification()));
+    view.appendln("Type",field.isOneToManyAssociation() ? "Collection" : field.isOneToOneAssociation() ? "Object" : "Unknown");
+    view.appendln("Flags",(field.isAlwaysHidden() ? "" : "Visible ") + (field.isNotPersisted() ? "Not-Persisted " : " ") + (field.isMandatory() ? "Mandatory " : ""));
+    speficationFacets(view,field);
+  }
+  view.endSection();
+  view.startSection("Actions");
+  for (int i=0; i < userActions.size(); i++) {
+    final ObjectAction action=userActions.get(i);
+    view.appendTitle("<span id=\"" + action.getId() + "\"><em>Action:</em> "+ action.getId()+ "</span>");
+    view.appendln("ID",action.getIdentifier());
+    view.appendln("Short ID",action.getId());
+    view.appendln("Name",action.getName());
+    view.appendln("Specification",specificationLink(action.getSpecification()));
+    view.appendln("Target",action.getTarget());
+    view.appendln("On type",specificationLink(action.getOnType()));
+    final ObjectSpecification returnType=action.getReturnType();
+    view.appendln("Returns",returnType == null ? "VOID" : specificationLink(returnType));
+    speficationFacets(view,action);
+    final List<ObjectActionParameter> parameters=action.getParameters();
+    if (parameters.size() == 0) {
+      view.appendln("Parameters","none");
+    }
+ else {
+      final StringBuffer buffer=new StringBuffer();
+      final List<ObjectActionParameter> p=action.getParameters();
+      for (int j=0; j < parameters.size(); j++) {
+        buffer.append(p.get(j).getName());
+        buffer.append(" (");
+        buffer.append(specificationLink(parameters.get(j).getSpecification()));
+        buffer.append(")");
+        view.appendln("Parameters",buffer.toString());
+        view.indent();
+        final Class<? extends Facet>[] parameterFacets=p.get(j).getFacetTypes();
+        for (        final Class<? extends Facet> parameterFacet : parameterFacets) {
+          view.append(p.get(j).getFacet(parameterFacet).toString());
+        }
+        view.unindent();
+      }
+    }
+  }
+}

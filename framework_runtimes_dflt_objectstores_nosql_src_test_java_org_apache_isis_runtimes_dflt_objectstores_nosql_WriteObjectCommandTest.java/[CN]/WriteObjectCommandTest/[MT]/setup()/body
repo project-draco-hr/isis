@@ -1,0 +1,56 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  final TestProxySystemII system=new TestProxySystemII();
+  system.init();
+  testObjects=new TrialObjects();
+  final ExampleValuePojo pojo1=new ExampleValuePojo();
+  pojo1.setName("Fred Smith");
+  pojo1.setSize(108);
+  SerialOid oid=SerialOid.createPersistent(3);
+  object1=testObjects.createAdapter(pojo1,oid);
+  specification=object1.getSpecification();
+  final ExampleValuePojo pojo2=new ExampleValuePojo();
+  pojo2.setName("John Brown");
+  oid=SerialOid.createPersistent(4);
+  object2=testObjects.createAdapter(pojo2,oid);
+  final ExampleReferencePojo pojo3=new ExampleReferencePojo();
+  pojo3.setReference1(pojo1);
+  oid=SerialOid.createPersistent(5);
+  object3=testObjects.createAdapter(pojo3,oid);
+  final ExampleCollectionPojo pojo4=new ExampleCollectionPojo();
+  pojo4.getHomogenousCollection().add(pojo1);
+  pojo4.getHomogenousCollection().add(pojo2);
+  oid=SerialOid.createPersistent(6);
+  object4=testObjects.createAdapter(pojo4,oid);
+  context=new Mockery();
+  writer=context.mock(StateWriter.class);
+  commandContext=context.mock(NoSqlCommandContext.class);
+  keyCreator=context.mock(KeyCreator.class);
+  versionCreator=context.mock(VersionCreator.class);
+  final Version version=new SerialNumberVersion(2,"username",null);
+  context.checking(new Expectations(){
+{
+      one(versionCreator).newVersion("tester");
+      will(returnValue(version));
+      one(versionCreator).versionString(version);
+      will(returnValue("2"));
+      one(versionCreator).timeString(version);
+      will(returnValue("1057"));
+    }
+  }
+);
+  dataEncrypter=new DataEncryption(){
+    public String getType(){
+      return "etc1";
+    }
+    public void init(    IsisConfiguration configuration){
+    }
+    public String encrypt(    String plainText){
+      return "ENC" + plainText;
+    }
+    public String decrypt(    String encryptedText){
+      throw new UnexpectedCallException();
+    }
+  }
+;
+}

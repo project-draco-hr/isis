@@ -1,0 +1,51 @@
+{
+  final char type=id.charAt(0);
+  if ((type == 'T')) {
+    TransientObjectMapping mapping=sessionTransients.get(id);
+    if (mapping == null) {
+      mapping=requestTransients.get(id);
+    }
+    if (mapping == null) {
+      final String[] split=id.split("@");
+      final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
+      final Object pojo=spec.createObject(CreationMode.NO_INITIALIZE);
+      final String oidData=split[1];
+      final SerialOid oid=SerialOid.createTransient(Long.valueOf(oidData,16).longValue());
+      return IsisContext.getPersistenceSession().recreateAdapter(oid,pojo);
+    }
+    final ObjectAdapter mappedTransientObject=mapping.getObject();
+    LOG.debug("retrieved " + mappedTransientObject.getOid() + " for "+ id);
+    return mappedTransientObject;
+  }
+ else {
+    final String[] split=id.split("@");
+    final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(split[0].substring(1));
+    try {
+      final String oidData=split[1];
+      LOG.debug("decoding " + oidData);
+      ObjectAdapter loadObject;
+      Oid oid;
+      if (oidType == null) {
+        oidType=IsisContext.getPersistenceSession().getServices().get(0).getOid().getClass();
+      }
+      if (split.length > 2) {
+        final SerialOid parentOid=SerialOid.createPersistent(Long.parseLong(oidData,16));
+        oid=new AggregatedOid(parentOid,split[2]);
+        IsisContext.getPersistenceSession().loadObject(parentOid,spec);
+        loadObject=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(oid);
+      }
+ else       if (oidType.isAssignableFrom(SerialOid.class)) {
+        oid=SerialOid.createPersistent(Long.parseLong(oidData,16));
+        loadObject=IsisContext.getPersistenceSession().loadObject(oid,spec);
+      }
+ else {
+        oid=IsisContext.getPersistenceSession().getOidGenerator().getOidStringifier().deString(oidData);
+        loadObject=IsisContext.getPersistenceSession().loadObject(oid,spec);
+      }
+      return loadObject;
+    }
+ catch (    final SecurityException e) {
+      throw new IsisException(e);
+    }
+  }
+}

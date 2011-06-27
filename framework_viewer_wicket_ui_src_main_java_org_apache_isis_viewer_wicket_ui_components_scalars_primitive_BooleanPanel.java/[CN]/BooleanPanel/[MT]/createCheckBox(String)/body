@@ -1,0 +1,17 @@
+{
+  final CheckBox checkBox=new CheckBox(id,new Model<Boolean>(){
+    private static final long serialVersionUID=1L;
+    @Override public Boolean getObject(){
+      final ObjectAdapter adapter=getModel().getObject();
+      return (Boolean)adapter.getObject();
+    }
+    @Override public void setObject(    final Boolean object){
+      final ObjectAdapter adapter=getPersistenceSession().getAdapterManager().adapterFor(object);
+      getModel().setObject(adapter);
+    }
+  }
+);
+  checkBox.setOutputMarkupId(true);
+  checkBox.setEnabled(false);
+  return checkBox;
+}

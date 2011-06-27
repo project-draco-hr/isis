@@ -1,0 +1,17 @@
+{
+  super.setUp();
+  mockFacetedMethod=mockery.mock(FacetedMethod.class);
+  mockAuthenticationSessionProvider=mockery.mock(AuthenticationSessionProvider.class);
+  mockSpecificationLookup=mockery.mock(SpecificationLookup.class);
+  mockAdapterManager=mockery.mock(AdapterMap.class);
+  mockServicesProvider=mockery.mock(ServicesProvider.class);
+  mockQuerySubmitter=mockery.mock(QuerySubmitter.class);
+  mockery.checking(new Expectations(){
+{
+      one(mockFacetedMethod).getIdentifier();
+      will(returnValue(Identifier.actionIdentifier("Customer","reduceheadcount")));
+    }
+  }
+);
+  action=new ObjectActionImpl(mockFacetedMethod,new ObjectMemberContext(mockAuthenticationSessionProvider,mockSpecificationLookup,mockAdapterManager,mockQuerySubmitter),mockServicesProvider);
+}

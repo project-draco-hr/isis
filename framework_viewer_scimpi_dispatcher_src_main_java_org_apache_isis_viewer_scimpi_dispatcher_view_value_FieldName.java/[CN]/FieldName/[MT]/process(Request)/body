@@ -1,0 +1,13 @@
+{
+  final String id=request.getOptionalProperty(OBJECT);
+  final String fieldName=request.getRequiredProperty(FIELD);
+  final ObjectAdapter object=request.getContext().getMappedObjectOrResult(id);
+  final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
+  if (field == null) {
+    throw new ScimpiException("No field " + fieldName + " in "+ object.getSpecification().getFullIdentifier());
+  }
+  if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+    throw new ForbiddenException(field,ForbiddenException.VISIBLE);
+  }
+  request.appendAsHtmlEncoded(field.getName());
+}

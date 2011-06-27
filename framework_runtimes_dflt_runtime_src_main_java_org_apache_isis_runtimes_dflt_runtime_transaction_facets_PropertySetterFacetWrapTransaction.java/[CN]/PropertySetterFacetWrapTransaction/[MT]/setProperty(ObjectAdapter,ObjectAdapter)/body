@@ -1,0 +1,13 @@
+{
+  if (adapter.isTransient()) {
+    underlyingFacet.setProperty(adapter,referencedAdapter);
+  }
+ else {
+    getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
+      @Override public void execute(){
+        underlyingFacet.setProperty(adapter,referencedAdapter);
+      }
+    }
+);
+  }
+}

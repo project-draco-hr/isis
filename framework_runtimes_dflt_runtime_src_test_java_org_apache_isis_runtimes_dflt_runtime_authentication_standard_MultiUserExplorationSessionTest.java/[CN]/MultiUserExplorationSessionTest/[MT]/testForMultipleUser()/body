@@ -1,0 +1,13 @@
+{
+  mockery.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString(ExplorationAuthenticatorConstants.NAKEDOBJECTS_USERS);
+      will(returnValue("fred, sven:admin|sales|marketing, bob:sales, dick"));
+    }
+  }
+);
+  authenticator=new ExplorationAuthenticator(mockConfiguration);
+  final AuthenticationSession authSession=authenticator.authenticate(new AuthenticationRequestExploration(),"");
+  assertThat(authSession,is(MultiUserExplorationSession.class));
+  assertThat(authSession.getUserName(),is(equalTo("fred")));
+}

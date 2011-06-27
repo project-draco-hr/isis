@@ -1,0 +1,21 @@
+{
+  ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") public void localAnActionWithLocalPrefix(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"localAnActionWithLocalPrefix");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  Facet facet=facetedMethod.getFacet(ExecutedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ExecutedFacet);
+  final ExecutedFacet executedFacet=(ExecutedFacet)facet;
+  assertEquals(ExecutedFacet.Where.LOCALLY,executedFacet.value());
+  facet=facetedMethod.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacet);
+  final NamedFacet namedFacet=(NamedFacet)facet;
+  assertEquals("An Action With Local Prefix",namedFacet.value());
+}

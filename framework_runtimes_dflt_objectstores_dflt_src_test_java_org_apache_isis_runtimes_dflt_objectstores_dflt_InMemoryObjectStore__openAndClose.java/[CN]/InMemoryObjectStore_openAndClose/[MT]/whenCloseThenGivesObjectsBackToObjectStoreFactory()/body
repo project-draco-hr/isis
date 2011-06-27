@@ -1,0 +1,12 @@
+{
+  neverInteractsDirectlyWithPersistenceSession();
+  whenOpenSubsequentlyThenObtainsPersistedObjectsFromObjectStoreFactoryAndRecreatesAdapters();
+  context.checking(new Expectations(){
+{
+      one(mockInMemoryPersistenceSessionFactory).attach(with(mockPersistenceSession),with(mockObjectStorePersistedObjects));
+      never(mockPersistenceSession);
+    }
+  }
+);
+  objectStore.close();
+}

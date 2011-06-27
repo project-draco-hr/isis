@@ -1,0 +1,18 @@
+{
+  CollectionClearFacetFactory facetFactory=new CollectionClearFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+@SuppressWarnings({"hiding","unused"}) class Order {
+  }
+class Customer {
+    @SuppressWarnings({"rawtypes","unused"}) public Collection getOrders(){
+      return null;
+    }
+  }
+  final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CollectionClearFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CollectionClearFacetViaAccessor);
+  final CollectionClearFacetViaAccessor collectionClearFacetViaAccessor=(CollectionClearFacetViaAccessor)facet;
+  assertEquals(collectionAccessorMethod,collectionClearFacetViaAccessor.getMethods().get(0));
+}

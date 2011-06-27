@@ -1,0 +1,17 @@
+{
+  if (knownObjects.containsKey(data)) {
+    return knownObjects.get(data);
+  }
+  final Oid oid=data.getOid();
+  ObjectAdapter adapter=getAdapterManager().getAdapterFor(oid);
+  if (adapter != null) {
+    updateLoadedObject(adapter,data,knownObjects);
+  }
+ else   if (oid.isTransient()) {
+    adapter=deserializeTransient(data,knownObjects);
+  }
+ else {
+    adapter=deserializePersistentObject(data,oid,knownObjects);
+  }
+  return adapter;
+}

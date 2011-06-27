@@ -1,0 +1,16 @@
+{
+  super(content,specification);
+  this.showLines=showLines;
+  int typicalLength=content.getTypicalLineLength();
+  typicalLength=typicalLength == 0 ? TEXT_WIDTH : typicalLength / content.getNoLines();
+  setTextWidth(typicalLength);
+  this.maxLength=content.getMaximumLength();
+  this.useEmptyLines=useEmptyLines;
+  textContent=new TextContent(this,1,wrapStyle,this.useEmptyLines);
+  cursor=new CursorPosition(textContent,0,0);
+  selection=new TextSelection(textContent);
+  final ObjectAdapter value=getValue();
+  textContent.setText(value == null ? "" : titleString(value));
+  cursor.home();
+  isSaved=true;
+}

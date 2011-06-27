@@ -1,0 +1,11 @@
+{
+  custJsDO.hidePlaceOrder=true;
+  try {
+    custJsWO.placeOrder(product355DO,3);
+    fail("Should have thrown exception");
+  }
+ catch (  final HiddenException ex) {
+    assertThat(ex.getAdvisorClass(),classEqualTo(HideForContextFacetViaMethod.class));
+    assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("Place Order"));
+  }
+}

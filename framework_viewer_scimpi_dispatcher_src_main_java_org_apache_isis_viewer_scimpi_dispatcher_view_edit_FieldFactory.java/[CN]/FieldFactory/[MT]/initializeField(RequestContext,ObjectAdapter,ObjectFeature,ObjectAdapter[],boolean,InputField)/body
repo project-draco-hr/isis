@@ -1,0 +1,52 @@
+{
+  field.setLabel(param.getName());
+  field.setDescription(param.getDescription());
+  if (param instanceof ObjectMember) {
+    field.setHelpReference(((ObjectMember)param).getHelp());
+  }
+ else {
+    final HelpFacet helpFacet=param.getFacet(HelpFacet.class);
+    final String value=helpFacet.value();
+    field.setHelpReference(value);
+  }
+  field.setRequired(isRequired);
+  field.setHidden(false);
+  if (param.getSpecification().getFacet(ParseableFacet.class) != null) {
+    final int maxLength=param.getFacet(MaxLengthFacet.class).value();
+    field.setMaxLength(maxLength);
+    final TypicalLengthFacet typicalLengthFacet=param.getFacet(TypicalLengthFacet.class);
+    if (typicalLengthFacet.isDerived() && maxLength > 0) {
+      field.setWidth(maxLength);
+    }
+ else {
+      field.setWidth(typicalLengthFacet.value());
+    }
+    final MultiLineFacet multiLineFacet=param.getFacet(MultiLineFacet.class);
+    field.setHeight(multiLineFacet.numberOfLines());
+    field.setWrapped(!multiLineFacet.preventWrapping());
+    final ObjectSpecification spec=param.getSpecification();
+    if (spec.containsFacet(BooleanValueFacet.class)) {
+      field.setType(InputField.CHECKBOX);
+    }
+ else     if (spec.containsFacet(PasswordValueFacet.class)) {
+      field.setType(InputField.PASSWORD);
+    }
+ else {
+      field.setType(InputField.TEXT);
+    }
+  }
+ else {
+    field.setType(InputField.REFERENCE);
+  }
+  if (optionsForParameter != null) {
+    final int noOptions=optionsForParameter.length;
+    final String[] optionValues=new String[noOptions];
+    final String[] optionTitles=new String[noOptions];
+    for (int j=0; j < optionsForParameter.length; j++) {
+      final int i=j;
+      optionValues[i]=getValue(context,optionsForParameter[j]);
+      optionTitles[i]=optionsForParameter[j].titleString();
+    }
+    field.setOptions(optionTitles,optionValues);
+  }
+}

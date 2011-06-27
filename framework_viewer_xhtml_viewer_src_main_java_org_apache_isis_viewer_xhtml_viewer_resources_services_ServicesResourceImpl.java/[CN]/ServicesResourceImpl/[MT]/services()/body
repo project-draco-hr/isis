@@ -1,0 +1,16 @@
+{
+  init();
+  final XhtmlTemplate xhtml=new XhtmlTemplate("Services",getServletRequest());
+  xhtml.appendToBody(asDivIsisSession());
+  xhtml.appendToBody(resourcesDiv());
+  final Element div=xhtmlRenderer.div_p("Services",HtmlClass.SECTION);
+  final Element ul=xhtmlRenderer.ul(HtmlClass.SERVICES);
+  final List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+  for (  final ObjectAdapter serviceAdapter : serviceAdapters) {
+    final String uri=MessageFormat.format("{0}/object/{1}",getServletRequest().getContextPath(),getOidStr(serviceAdapter));
+    ul.appendChild(xhtmlRenderer.li_a(uri,serviceAdapter.titleString(),"object","services",HtmlClass.SERVICE));
+  }
+  div.appendChild(ul);
+  xhtml.appendToBody(div);
+  return xhtml.toXML();
+}

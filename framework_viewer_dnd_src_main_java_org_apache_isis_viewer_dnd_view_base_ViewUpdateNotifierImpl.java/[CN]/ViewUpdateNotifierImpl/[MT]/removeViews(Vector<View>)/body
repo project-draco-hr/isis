@@ -1,0 +1,33 @@
+{
+  final View[] viewsArray=new View[views.size()];
+  views.copyInto(viewsArray);
+  final View[] viewsOnWorkspace=viewsArray[0].getWorkspace().getSubviews();
+  for (  final View element : viewsArray) {
+    final View view=element.getView();
+    for (    final View element2 : viewsOnWorkspace) {
+      if (view == element2) {
+        LOG.debug("   (root removed) " + view);
+        view.getView().dispose();
+        break;
+      }
+    }
+    for (    final View element2 : viewsOnWorkspace) {
+      if (element2.getContent() instanceof RootCollection) {
+        final View[] subviewsOfRootView=element2.getSubviews();
+        for (        final View element3 : subviewsOfRootView) {
+          if (element3 == view) {
+            LOG.debug("   (element removed) " + view);
+            view.getView().dispose();
+          }
+        }
+      }
+    }
+    for (    final View element2 : viewsOnWorkspace) {
+      if (element2.contains(view)) {
+        LOG.debug("   (invalidated) " + view);
+        final View parent=view.getParent();
+        parent.invalidateContent();
+      }
+    }
+  }
+}

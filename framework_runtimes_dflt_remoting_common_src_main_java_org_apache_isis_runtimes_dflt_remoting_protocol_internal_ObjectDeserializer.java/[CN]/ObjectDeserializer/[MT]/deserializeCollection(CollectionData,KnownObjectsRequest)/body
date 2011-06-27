@@ -1,0 +1,28 @@
+{
+  final String collectionType=data.getType();
+  final ObjectSpecification collectionSpecification=getSpecificationLoader().loadSpecification(collectionType);
+  final ObjectAdapter collection=getPersistenceSession().createInstance(collectionSpecification);
+  if (data.getElements() == null) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("restoring empty collection");
+    }
+    return collection;
+  }
+ else {
+    final ReferenceData[] elements=data.getElements();
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("restoring collection " + elements.length + " elements");
+    }
+    final ObjectAdapter[] initData=new ObjectAdapter[elements.length];
+    for (int i=0; i < elements.length; i++) {
+      final ObjectAdapter element=deserializeObject(elements[i],knownObjects);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("restoring collection element :" + element);
+      }
+      initData[i]=element;
+    }
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+    facet.init(collection,initData);
+    return collection;
+  }
+}

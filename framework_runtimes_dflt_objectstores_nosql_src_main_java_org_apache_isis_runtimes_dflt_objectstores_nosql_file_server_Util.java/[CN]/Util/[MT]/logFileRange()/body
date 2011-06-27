@@ -1,0 +1,17 @@
+{
+  LogRange logRange=new LogRange();
+  File[] listFiles=logDirectory.listFiles();
+  if (listFiles != null) {
+    for (    File file : listFiles) {
+      String name=file.getName();
+      String substring=name.substring(8,name.length() - 4);
+      try {
+        long sequence=Long.parseLong(substring);
+        logRange.add(sequence);
+      }
+ catch (      NumberFormatException ignore) {
+      }
+    }
+  }
+  return logRange;
+}

@@ -1,0 +1,16 @@
+{
+  if (layoutInvalid) {
+    getFeedbackManager().setBusy(this,null);
+    markDamaged();
+    ensureBuilt();
+    final Size maximumSize=getSize();
+    doLayout(maximumSize);
+    layoutInvalid=false;
+    for (    final View view : getSubviews()) {
+      view.layout();
+    }
+    markDamaged();
+    getFeedbackManager().clearBusy(this);
+    layoutCount++;
+  }
+}

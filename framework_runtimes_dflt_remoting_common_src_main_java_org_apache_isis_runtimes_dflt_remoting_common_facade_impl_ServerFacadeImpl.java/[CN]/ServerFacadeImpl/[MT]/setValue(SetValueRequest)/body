@@ -1,0 +1,18 @@
+{
+  final AuthenticationSession session=request.getSession();
+  final String fieldIdentifier=request.getFieldIdentifier();
+  final IdentityData targetIdentityData=request.getTarget();
+  final EncodableObjectData encodeableObjectData=request.getValue();
+  Assert.assertNotNull(encodeableObjectData);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("request setValue " + fieldIdentifier + " on "+ targetIdentityData+ " with "+ encodeableObjectData+ " for "+ session);
+  }
+  final ObjectAdapter targetAdapter=getPersistentObjectAdapter(session,targetIdentityData);
+  final OneToOneAssociation association=(OneToOneAssociation)targetAdapter.getSpecification().getAssociation(fieldIdentifier);
+  ensureAssociationModifiableElseThrowException(session,targetAdapter,association);
+  final String encodedObject=encodeableObjectData.getEncodedObjectData();
+  final ObjectSpecification specification=association.getSpecification();
+  final ObjectAdapter adapter=restoreLeafObject(encodedObject,specification);
+  association.setAssociation(targetAdapter,adapter);
+  return new SetValueResponse(getUpdates());
+}

@@ -1,0 +1,17 @@
+{
+  mockery.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString(ExplorationAuthenticatorConstants.NAKEDOBJECTS_USERS);
+      will(returnValue("fred, sven:admin|sales|marketing, bob:sales, dick"));
+    }
+  }
+);
+  authenticator=new ExplorationAuthenticator(mockConfiguration);
+  this.session=(MultiUserExplorationSession)authenticator.authenticate(new AuthenticationRequestExploration(),"");
+  session.setCurrentSession("sven");
+  final List<String> roles=session.getRoles();
+  Assert.assertEquals(3,roles.size());
+  Assert.assertEquals("admin",roles.get(0));
+  Assert.assertEquals("sales",roles.get(1));
+  Assert.assertEquals("marketing",roles.get(2));
+}

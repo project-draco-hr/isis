@@ -1,0 +1,16 @@
+{
+  super(null,adapter.getResolveState().name(),adapter.getSpecification().getFullIdentifier());
+  final Object object=adapter.getObject();
+  if (object instanceof Serializable) {
+    this.objectAsSerializable=(Serializable)object;
+    initialized();
+    return;
+  }
+  final EncodableFacet encodeableFacet=adapter.getSpecification().getFacet(EncodableFacet.class);
+  if (encodeableFacet != null) {
+    this.objectAsEncodedString=encodeableFacet.toEncodedString(adapter);
+    initialized();
+    return;
+  }
+  throw new IllegalArgumentException("Object wrapped by standalone adapter is not serializable and its specificatoin does not have an EncodeableFacet");
+}

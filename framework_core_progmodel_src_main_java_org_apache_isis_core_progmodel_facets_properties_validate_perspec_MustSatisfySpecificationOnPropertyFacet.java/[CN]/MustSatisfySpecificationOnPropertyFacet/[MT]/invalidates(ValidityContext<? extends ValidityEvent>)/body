@@ -1,0 +1,13 @@
+{
+  if (!(validityContext instanceof ProposedHolder)) {
+    return null;
+  }
+  final ProposedHolder proposedHolder=(ProposedHolder)validityContext;
+  final ObjectAdapter targetNO=proposedHolder.getProposed();
+  final Object targetObject=targetNO.getObject();
+  final ReasonBuffer buf=new ReasonBuffer();
+  for (  final Specification specification : specifications) {
+    buf.append(specification.satisfies(targetObject));
+  }
+  return buf.getReason();
+}

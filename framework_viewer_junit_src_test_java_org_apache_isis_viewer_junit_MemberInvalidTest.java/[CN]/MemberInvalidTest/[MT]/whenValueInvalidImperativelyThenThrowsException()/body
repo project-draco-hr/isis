@@ -1,0 +1,16 @@
+{
+  final String[] values=new String[]{"Dick",null};
+  for (  final String value : values) {
+    custJsDO.validateFirstNameExpectedArg=value;
+    custJsDO.validateFirstName="bad first name";
+    try {
+      custJsWO.setFirstName(value);
+      fail("Should have thrown exception");
+    }
+ catch (    final InvalidException ex) {
+      assertThat(ex.getAdvisorClass(),classEqualTo(PropertyValidateFacetViaMethod.class));
+      assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("First Name"));
+      assertThat(ex.getMessage(),equalTo("bad first name"));
+    }
+  }
+}

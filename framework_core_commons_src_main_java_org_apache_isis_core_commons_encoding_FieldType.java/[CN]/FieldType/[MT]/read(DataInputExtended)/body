@@ -1,0 +1,26 @@
+{
+  final DataInputStream inputStream=input.getDataInputStream();
+  final byte fieldTypeIdxAndNullability=inputStream.readByte();
+  final boolean isNull=fieldTypeIdxAndNullability >= NULL_BIT;
+  final byte fieldTypeIdx=(byte)(fieldTypeIdxAndNullability - (isNull ? NULL_BIT : 0));
+  try {
+    final FieldType<?> fieldType=FieldType.get(fieldTypeIdx);
+    if (fieldType == null || (fieldType.checksStream() && fieldType != this)) {
+      throw new IllegalStateException("Mismatch in stream: expected " + this + " but got "+ fieldType+ " ("+ fieldTypeIdx+ ")");
+    }
+    if (isNull && LOG.isDebugEnabled()) {
+      log(this,new StringBuilder().append("(null)"));
+    }
+    if (isNull) {
+      return null;
+    }
+ else {
+      return doRead(input);
+    }
+  }
+  finally {
+    if (isNull && LOG.isDebugEnabled()) {
+      unlog(this);
+    }
+  }
+}

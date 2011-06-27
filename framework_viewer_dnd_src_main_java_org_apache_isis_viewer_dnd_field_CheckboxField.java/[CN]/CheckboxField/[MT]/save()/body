@@ -1,0 +1,13 @@
+{
+  final BooleanValueFacet booleanValueFacet=getContent().getSpecification().getFacet(BooleanValueFacet.class);
+  final ObjectAdapter adapter=getContent().getAdapter();
+  if (adapter == null) {
+    ((TextParseableContent)getContent()).parseTextEntry("true");
+  }
+ else {
+    booleanValueFacet.toggle(adapter);
+  }
+  markDamaged();
+  ((TextParseableContent)getContent()).entryComplete();
+  getParent().invalidateContent();
+}

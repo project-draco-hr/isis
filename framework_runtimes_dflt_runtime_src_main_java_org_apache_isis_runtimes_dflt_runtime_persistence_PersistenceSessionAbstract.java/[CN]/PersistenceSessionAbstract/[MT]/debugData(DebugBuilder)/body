@@ -1,0 +1,20 @@
+{
+  debug.appendTitle(getClass().getName());
+  debug.appendln("container",servicesInjector);
+  debug.appendln();
+  adapterManager.debugData(debug);
+  debug.appendln();
+  debug.appendln("manually dirtiable support (isDirty flag)?",dirtiableSupport);
+  debug.appendTitle("OID Generator");
+  oidGenerator.debugData(debug);
+  debug.appendln();
+  debug.appendTitle("Services");
+  for (  final Object service : servicesInjector.getRegisteredServices()) {
+    final String id=ServiceUtil.id(service);
+    final String serviceClassName=service.getClass().getName();
+    final Oid oidForService=getOidForService(id);
+    final String serviceId=id + (id.equals(serviceClassName) ? "" : " (" + serviceClassName + ")");
+    debug.appendln(oidForService != null ? oidForService.toString() : "[NULL]",serviceId);
+  }
+  debug.appendln();
+}

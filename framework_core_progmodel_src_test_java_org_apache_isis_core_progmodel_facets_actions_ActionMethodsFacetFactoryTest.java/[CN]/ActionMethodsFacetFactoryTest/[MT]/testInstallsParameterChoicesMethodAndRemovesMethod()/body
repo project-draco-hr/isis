@@ -1,0 +1,32 @@
+{
+  ActionParameterChoicesFacetFactory facetFactory=new ActionParameterChoicesFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    final int x,    final long y){
+    }
+    @SuppressWarnings("unused") public List<Integer> choices0SomeAction(){
+      return Collections.emptyList();
+    }
+    @SuppressWarnings("unused") public List<Long> choices1SomeAction(){
+      return Collections.emptyList();
+    }
+  }
+  Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
+  Method choices0Method=findMethod(Customer.class,"choices0SomeAction",new Class[]{});
+  Method choices1Method=findMethod(Customer.class,"choices1SomeAction",new Class[]{});
+  FacetedMethod facetHolderWithParms=FacetedMethod.createActionFacetedMethod(Customer.class,actionMethod);
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetHolderWithParms));
+  final Facet facet0=facetHolderWithParms.getParameters().get(0).getFacet(ActionParameterChoicesFacet.class);
+  assertNotNull(facet0);
+  assertTrue(facet0 instanceof ActionParameterChoicesFacetViaMethod);
+  final ActionParameterChoicesFacetViaMethod actionChoicesFacetViaMethod0=(ActionParameterChoicesFacetViaMethod)facet0;
+  assertEquals(choices0Method,actionChoicesFacetViaMethod0.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(choices0Method));
+  final Facet facet1=facetHolderWithParms.getParameters().get(1).getFacet(ActionParameterChoicesFacet.class);
+  assertNotNull(facet1);
+  assertTrue(facet1 instanceof ActionParameterChoicesFacetViaMethod);
+  final ActionParameterChoicesFacetViaMethod actionChoicesFacetViaMethod1=(ActionParameterChoicesFacetViaMethod)facet1;
+  assertEquals(choices1Method,actionChoicesFacetViaMethod1.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(choices1Method));
+}

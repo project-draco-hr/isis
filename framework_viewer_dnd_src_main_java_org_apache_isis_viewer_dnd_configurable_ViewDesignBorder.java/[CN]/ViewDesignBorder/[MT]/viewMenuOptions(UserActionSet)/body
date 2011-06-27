@@ -1,0 +1,15 @@
+{
+  super.viewMenuOptions(menuOptions);
+  final List<ObjectAssociation> associations=getContent().getSpecification().getAssociations();
+  for (  final ObjectAssociation objectAssociation : associations) {
+    final ObjectAssociation f=objectAssociation;
+    final UserActionAbstract action=new UserActionAbstract("Add field " + objectAssociation.getName()){
+      @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
+        final NewObjectField field=new NewObjectField(f);
+        getNewObjectView().addField(field);
+      }
+    }
+;
+    menuOptions.add(action);
+  }
+}

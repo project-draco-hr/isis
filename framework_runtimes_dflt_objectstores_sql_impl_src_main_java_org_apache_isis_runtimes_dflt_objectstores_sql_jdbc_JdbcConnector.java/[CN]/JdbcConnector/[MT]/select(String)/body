@@ -1,0 +1,15 @@
+{
+  LOG.debug("SQL: " + sql);
+  PreparedStatement statement;
+  try {
+    statement=connection.prepareStatement(sql);
+    addPreparedValues(statement);
+    return new JdbcResults(statement.executeQuery());
+  }
+ catch (  final SQLException e) {
+    throw new SqlObjectStoreException(e);
+  }
+ finally {
+    clearPreparedValues();
+  }
+}

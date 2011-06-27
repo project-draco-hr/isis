@@ -1,0 +1,16 @@
+{
+  return new TypeSafeMatcher<List<?>>(){
+    @Override public boolean matchesSafely(    final List<?> list){
+      for (      final Object o : list) {
+        if (elementMatcher.matches(o)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    @Override public void describeTo(    final Description description){
+      description.appendText("contains element that ").appendDescriptionOf(elementMatcher);
+    }
+  }
+;
+}

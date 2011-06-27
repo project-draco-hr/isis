@@ -1,0 +1,20 @@
+{
+  final RequestContext context=request.getContext();
+  if (context.isDebugDisabled()) {
+    return;
+  }
+  if (request.isRequested("always") || context.getDebug() == RequestContext.Debug.ON) {
+    request.appendHtml("<div class=\"debug\">");
+    request.appendHtml("<pre>");
+    final String id=request.getOptionalProperty("object");
+    final ObjectAdapter object=context.getMappedObjectOrResult(id);
+    final ObjectSpecification specification=object.getSpecification();
+    request.appendHtml(specification.getSingularName() + " (" + specification.getFullIdentifier()+ ") \n");
+    final List<ObjectAssociation> fields=specification.getAssociations();
+    for (int i=0; i < fields.size(); i++) {
+      request.appendHtml("    " + fields.get(i).getName() + " ("+ fields.get(i).getSpecification().getSingularName()+ ") \n");
+    }
+    request.appendHtml("</pre>");
+    request.appendHtml("</div>");
+  }
+}

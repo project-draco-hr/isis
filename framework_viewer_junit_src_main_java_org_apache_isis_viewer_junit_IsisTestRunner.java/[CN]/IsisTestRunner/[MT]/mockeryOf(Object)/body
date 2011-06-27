@@ -1,0 +1,15 @@
+{
+  if (mockeryField == null) {
+    return null;
+  }
+  try {
+    final Mockery mockery=(Mockery)mockeryField.get(test);
+    if (mockery == null) {
+      throw new IllegalStateException(String.format("Mockery named '%s' is null",mockeryField.getName()));
+    }
+    return mockery;
+  }
+ catch (  final IllegalAccessException e) {
+    throw new IllegalStateException(String.format("cannot get value of field %s",mockeryField.getName()),e);
+  }
+}

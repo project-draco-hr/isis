@@ -1,0 +1,14 @@
+{
+  try {
+    final Class<?> type=object.getClass();
+    try {
+      return (String)type.getMethod("toPlainString",(Class[])null).invoke(object,(Object[])null);
+    }
+ catch (    final NoSuchMethodException nsm) {
+      return (String)type.getMethod("toString",(Class[])null).invoke(object,(Object[])null);
+    }
+  }
+ catch (  final Exception e) {
+    throw new IsisException(e);
+  }
+}

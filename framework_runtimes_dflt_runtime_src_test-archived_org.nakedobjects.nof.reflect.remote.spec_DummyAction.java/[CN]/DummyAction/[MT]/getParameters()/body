@@ -1,0 +1,25 @@
+{
+  if (parameters == null) {
+    parameters=new ObjectActionParameter[getParameterCount()];
+    ObjectSpecification[] parameterTypes=getParameterTypes();
+    String[] parameterNames=getParameterNames();
+    String[] parameterDescriptions=getParameterDescriptions();
+    boolean[] optionalParameters=getOptionalParameters();
+    int[] parameterNoLines=getParameterNoLines();
+    boolean[] canParametersWrap=canParametersWrap();
+    int[] parameterMaxLengths=getParameterMaxLengths();
+    int[] parameterTypicalLengths=getParameterTypicalLengths();
+    for (int i=0; i < getParameterCount(); i++) {
+      if (parameterTypes[i].getType() == ObjectSpecification.VALUE) {
+        parameters[i]=new DefaultValueActionParameter(i,this,null,parameterTypes[i],parameterNames[i],parameterDescriptions[i],optionalParameters[i],parameterTypicalLengths[i],parameterMaxLengths[i],parameterNoLines[i],canParametersWrap[i]);
+      }
+ else       if (parameterTypes[i].getType() == ObjectSpecification.OBJECT) {
+        parameters[i]=new DefaultOneToOneActionParameter(i,this,null,parameterTypes[i],parameterNames[i],parameterDescriptions[i],optionalParameters[i]);
+      }
+ else       if (parameterTypes[i].getType() == ObjectSpecification.COLLECTION) {
+        parameters[i]=null;
+      }
+    }
+  }
+  return parameters;
+}

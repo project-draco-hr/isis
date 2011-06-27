@@ -1,0 +1,29 @@
+{
+  final int x=left;
+  final int width=s.getWidth();
+  final int height=s.getHeight();
+  final Color titleBarBackgroundColor=hasFocus ? Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY3) : Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3);
+  final Color titleBarTextColor=hasFocus ? Toolkit.getColor(ColorsAndFonts.COLOR_BLACK) : Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1);
+  final Color borderColor=hasFocus ? Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY1) : Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1);
+  canvas.drawRectangle(1,0,width - 2,height,borderColor);
+  canvas.drawRectangle(0,1,width,height - 2,borderColor);
+  for (int i=2; i < left; i++) {
+    canvas.drawRectangle(i,i,width - 2 * i,height - 2 * i,borderColor);
+  }
+  if (state.isActive()) {
+    final Image busyImage=ImageFactory.getInstance().loadIcon("busy",16,null);
+    canvas.drawImage(busyImage,width - right - 16- 4,top + 4);
+  }
+  canvas.drawSolidRectangle(left,LINE_THICKNESS,width - left - right,titlebarHeight,titleBarBackgroundColor);
+  final int y=LINE_THICKNESS + titlebarHeight - 1;
+  canvas.drawLine(x,y,width - right - 1,y,borderColor);
+  final int controlWidth=View.HPADDING + (WindowControl.WIDTH + View.HPADDING) * controls.length;
+  final String text=TextUtils.limitText(title,TITLE_STYLE,width - controlWidth - LINE_THICKNESS * 2 - 2);
+  canvas.drawText(text,x + View.HPADDING,baseline,titleBarTextColor,TITLE_STYLE);
+  final Color white=Toolkit.getColor(ColorsAndFonts.COLOR_WHITE);
+  final int hatchX=View.HPADDING + TITLE_STYLE.stringWidth(title) + 10;
+  final int hatchWidth=controls[0].getLocation().getX() - hatchX - 10;
+  final int hatchY=LINE_THICKNESS + 2;
+  final int hatchHeight=titlebarHeight - 6;
+  DrawingUtil.drawHatching(canvas,hatchX,hatchY,hatchWidth,hatchHeight,borderColor,white);
+}

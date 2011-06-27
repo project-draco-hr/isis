@@ -1,0 +1,25 @@
+{
+  final int noContentLines=getNoLinesOfContent();
+  final int lastLine=noContentLines - 1;
+  int displayToLine=Math.min(displayFromLine + availableDisplayLines,noContentLines);
+  if (noContentLines <= availableDisplayLines) {
+    displayFromLine=0;
+  }
+ else {
+    if (line >= displayToLine) {
+      displayToLine=line + 3;
+      displayToLine=Math.min(displayToLine,lastLine);
+      displayFromLine=displayToLine - availableDisplayLines + 1;
+      displayFromLine=Math.max(displayFromLine,0);
+    }
+    if (line < displayFromLine) {
+      displayFromLine=line;
+      displayToLine=(displayFromLine + availableDisplayLines) - 1;
+      if (displayToLine >= noContentLines) {
+        displayToLine=lastLine;
+        displayFromLine=Math.max(0,displayToLine - availableDisplayLines);
+      }
+    }
+  }
+  LOG.debug("display line " + line + " "+ displayFromLine+ "~"+ displayToLine);
+}

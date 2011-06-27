@@ -1,0 +1,14 @@
+{
+  if (getAliasResultAsBinding() == null) {
+    return null;
+  }
+  final ScenarioCell aliasCell=aliasResultAsBinding.getCurrentCell();
+  if (aliasCell == null) {
+    return null;
+  }
+  final String aliasAs=aliasCell.getText();
+  if (getAliasRegistry().getAliased(aliasAs) != null) {
+    throw ScenarioBoundValueException.current(aliasResultAsBinding,"(already used)");
+  }
+  return aliasAs;
+}

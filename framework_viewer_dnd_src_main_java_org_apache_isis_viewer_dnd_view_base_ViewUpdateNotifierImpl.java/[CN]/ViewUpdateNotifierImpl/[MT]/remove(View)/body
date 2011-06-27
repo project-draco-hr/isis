@@ -1,0 +1,32 @@
+{
+  final Content content=view.getContent();
+  if (content == null || !content.isObject()) {
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("removing " + content + " for "+ view);
+  }
+  final ObjectAdapter object=((ObjectContent)content).getObject();
+  if (object != null) {
+    if (!viewListByAdapter.containsKey(object)) {
+      throw new IsisException("Tried to remove a non-existant view " + view + " from observers for "+ object);
+    }
+    Vector<View> viewsToNotify;
+    viewsToNotify=viewListByAdapter.get(object);
+    final Enumeration<View> e=viewsToNotify.elements();
+    while (e.hasMoreElements()) {
+      final View v=e.nextElement();
+      if (view == v.getView()) {
+        viewsToNotify.remove(v);
+        LOG.debug("removed " + view + " from observers for "+ object);
+        break;
+      }
+    }
+    if (viewsToNotify.size() == 0) {
+      viewListByAdapter.remove(object);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("removed observer list for " + object);
+      }
+    }
+  }
+}

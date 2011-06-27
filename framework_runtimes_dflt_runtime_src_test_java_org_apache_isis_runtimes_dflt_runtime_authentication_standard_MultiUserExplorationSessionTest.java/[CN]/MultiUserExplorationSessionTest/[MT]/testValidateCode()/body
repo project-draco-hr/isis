@@ -1,0 +1,12 @@
+{
+  mockery.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString(ExplorationAuthenticatorConstants.NAKEDOBJECTS_USERS);
+      will(returnValue("fred, sven:admin|sales|marketing, bob:sales, dick"));
+    }
+  }
+);
+  authenticator=new ExplorationAuthenticator(mockConfiguration);
+  final AuthenticationSession session=authenticator.authenticate(new AuthenticationRequestExploration(),"xxx");
+  Assert.assertEquals("xxx",session.getValidationCode());
+}

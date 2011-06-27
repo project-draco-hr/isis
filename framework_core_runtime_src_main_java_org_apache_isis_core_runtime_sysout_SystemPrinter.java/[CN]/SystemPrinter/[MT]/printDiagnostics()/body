@@ -1,0 +1,70 @@
+{
+  print("------- Apache Isis diagnostics report -------");
+  printVersion();
+  printBlock("System properties");
+  final Properties properties=System.getProperties();
+  final Enumeration<?> propertyNames=properties.propertyNames();
+  while (propertyNames.hasMoreElements()) {
+    final String name=(String)propertyNames.nextElement();
+    final String property=properties.getProperty(name);
+    final StringBuilder buf=new StringBuilder();
+    if (name.endsWith(".path") || name.endsWith(".dirs")) {
+      String[] split=property.split(":");
+      buf.append(split[0]);
+      for (int i=1; i < split.length; i++) {
+        buf.append("\n\t\t" + split[i]);
+      }
+    }
+    print(name + "= " + buf.toString());
+  }
+  File file=new File("../lib");
+  if (file.isDirectory()) {
+    final String[] files=file.list(new FilenameFilter(){
+      @Override public boolean accept(      File dir,      String name){
+        return name.endsWith(".jar");
+      }
+    }
+);
+    printBlock("Libs");
+    for (int i=0; i < files.length; i++) {
+      print(files[i]);
+    }
+  }
+  printBlock("Locale information");
+  print("Default locale: " + Locale.getDefault());
+  print("Default timezone: " + TimeZone.getDefault());
+  file=new File("config");
+  if (file.isDirectory()) {
+    final String[] files=file.list(new FilenameFilter(){
+      @Override public boolean accept(      File dir,      String name){
+        return new File(dir,name).isFile();
+      }
+    }
+);
+    printBlock("Config files");
+    for (int i=0; i < files.length; i++) {
+      print(files[i]);
+    }
+    for (int i=0; i < files.length; i++) {
+      print("");
+      print("--------------------------------------------------------------------------------------------------------");
+      print(files[i]);
+      print("");
+      LineNumberReader fileInputStream=null;
+      try {
+        fileInputStream=new LineNumberReader(new FileReader(new File(file,files[i])));
+        String line;
+        while ((line=fileInputStream.readLine()) != null) {
+          print(fileInputStream.getLineNumber() + "  " + line);
+        }
+      }
+ catch (      Exception e) {
+        throw new IsisException(e);
+      }
+ finally {
+        IoUtils.closeSafely(fileInputStream);
+      }
+      print("");
+    }
+  }
+}

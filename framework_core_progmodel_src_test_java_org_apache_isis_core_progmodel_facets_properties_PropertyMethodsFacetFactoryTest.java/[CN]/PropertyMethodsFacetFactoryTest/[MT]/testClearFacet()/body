@@ -1,0 +1,20 @@
+{
+  PropertySetAndClearFacetFactory facetFactory=new PropertySetAndClearFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") public String getFirstName(){
+      return null;
+    }
+    @SuppressWarnings("unused") public void clearFirstName(){
+    }
+  }
+  final Method propertyAccessorMethod=findMethod(Customer.class,"getFirstName");
+  final Method propertyClearMethod=findMethod(Customer.class,"clearFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,propertyAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PropertyClearFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PropertyClearFacetViaClearMethod);
+  final PropertyClearFacetViaClearMethod propertyClearFacet=(PropertyClearFacetViaClearMethod)facet;
+  assertEquals(propertyClearMethod,propertyClearFacet.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(propertyClearMethod));
+}

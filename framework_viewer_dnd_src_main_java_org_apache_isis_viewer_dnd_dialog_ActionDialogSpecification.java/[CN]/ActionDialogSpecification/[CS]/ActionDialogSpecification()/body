@@ -1,0 +1,13 @@
+{
+  builder=new ActionFieldBuilder(new DialogFormSubviews());
+  addSubviewDecorator(new ParametersLabelDecorator());
+  addViewDecorator(new CompositeViewDecorator(){
+    @Override public View decorate(    final View view,    final Axes axes){
+      final ButtonAction[] actions=new ButtonAction[]{new ExecuteAndCloseAction(),new CancelAction()};
+      final ButtonBorder buttonBorder=new ButtonBorder(actions,new IconBorder(view,Toolkit.getText(ColorsAndFonts.TEXT_TITLE_SMALL)));
+      buttonBorder.setFocusManager(new ActionDialogFocusManager(buttonBorder));
+      return buttonBorder;
+    }
+  }
+);
+}

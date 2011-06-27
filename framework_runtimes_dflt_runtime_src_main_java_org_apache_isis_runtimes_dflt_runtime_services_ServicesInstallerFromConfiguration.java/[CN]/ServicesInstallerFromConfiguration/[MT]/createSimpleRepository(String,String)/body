@@ -1,0 +1,10 @@
+{
+  final int pos=name.indexOf(DELIMITER);
+  final String type=name.substring(0,pos);
+  if (!"repository".equals(type)) {
+    throw new InitialisationException(String.format("Unknown service type '%s'",type));
+  }
+  final String className=prefix + name.substring(pos + 1);
+  final Class<?> underlying=loadClass(className);
+  return new SimpleRepository(underlying);
+}

@@ -1,0 +1,20 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public void deleted(){
+    }
+    @SuppressWarnings("unused") public void removed(){
+    }
+  }
+  final Method removeMethod=findMethod(Customer.class,"removed");
+  final Method deleteMethod=findMethod(Customer.class,"deleted");
+  removeFacetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  deleteFacetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(RemovedCallbackFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof RemovedCallbackFacetViaMethod);
+  final RemovedCallbackFacetViaMethod removedCallbackFacetViaMethod=(RemovedCallbackFacetViaMethod)facet;
+  List<Method> methods=removedCallbackFacetViaMethod.getMethods();
+  assertTrue(methods.contains(removeMethod));
+  assertTrue(methods.contains(deleteMethod));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(removeMethod));
+}

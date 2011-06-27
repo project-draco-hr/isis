@@ -1,0 +1,36 @@
+{
+  int idx=-1;
+  method:   for (int i=0; i < methods.size(); i++) {
+    if (methods.get(i) == null) {
+      continue;
+    }
+    final Method method=methods.get(i);
+    final int modifiers=method.getModifiers();
+    if (!Modifier.isPublic(modifiers)) {
+      continue;
+    }
+    if (!inScope(methodScope,method)) {
+      continue;
+    }
+    if (!method.getName().equals(name)) {
+      continue;
+    }
+    if (returnType != null && returnType != method.getReturnType()) {
+      continue;
+    }
+    if (paramTypes != null) {
+      final Class<?>[] parameterTypes=method.getParameterTypes();
+      if (paramTypes.length != parameterTypes.length) {
+        continue;
+      }
+      for (int c=0; c < paramTypes.length; c++) {
+        if ((paramTypes[c] != null) && (paramTypes[c] != parameterTypes[c])) {
+          continue method;
+        }
+      }
+    }
+    idx=i;
+    break;
+  }
+  return idx;
+}

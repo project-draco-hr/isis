@@ -1,0 +1,17 @@
+{
+  final DBCollection instances=db.getCollection(specificationName);
+  final DBCursor cursor=instances.find();
+  LOG.info("searching for instances of: " + specificationName);
+  return new Iterator<StateReader>(){
+    @Override public boolean hasNext(){
+      return cursor.hasNext();
+    }
+    @Override public StateReader next(){
+      return new MongoStateReader(cursor.next());
+    }
+    @Override public void remove(){
+      throw new NoSqlStoreException("Can't remove elements");
+    }
+  }
+;
+}

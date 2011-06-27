@@ -1,0 +1,12 @@
+{
+  final AliasRegistry newAliasesRegistry=new AliasRegistryDefault();
+  for (  final Map.Entry<String,ObjectAdapter> aliasAdapter : aliasesRegistry) {
+    final String alias=aliasAdapter.getKey();
+    final ObjectAdapter oldAdapter=aliasAdapter.getValue();
+    if (oldAdapter.getOid() instanceof AggregatedOid) {
+      continue;
+    }
+    newAliasesRegistry.aliasAs(alias,getAdapterManager().adapterFor(oldAdapter.getObject()));
+  }
+  return newAliasesRegistry;
+}

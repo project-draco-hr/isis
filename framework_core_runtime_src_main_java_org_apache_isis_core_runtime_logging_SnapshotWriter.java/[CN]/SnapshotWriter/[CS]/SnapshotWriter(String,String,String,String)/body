@@ -1,0 +1,14 @@
+{
+  final File dir=new File(directoryPath == null || directoryPath.length() == 0 ? "." : directoryPath);
+  if (!dir.exists()) {
+    @SuppressWarnings("unused") boolean created=dir.mkdirs();
+  }
+  final File indexFile=new File(dir,"index.txt");
+  final Date date=new Date();
+  final File logFile=new File(dir,baseFileName + FORMAT.format(date) + "."+ fileExtension);
+  final RandomAccessFile index=new RandomAccessFile(indexFile,"rw");
+  index.seek(index.length());
+  index.writeBytes(logFile.getName() + ": " + message+ "\n");
+  index.close();
+  os=new PrintStream(new FileOutputStream(logFile));
+}

@@ -1,0 +1,17 @@
+{
+  mockery.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString(ExplorationAuthenticatorConstants.NAKEDOBJECTS_USERS);
+      will(returnValue("fred, sven:admin|sales|marketing, bob:sales, dick"));
+    }
+  }
+);
+  authenticator=new ExplorationAuthenticator(mockConfiguration);
+  this.session=(MultiUserExplorationSession)authenticator.authenticate(new AuthenticationRequestExploration(),"");
+  final Set<String> availableSessions=session.getUserNames();
+  Assert.assertEquals(4,availableSessions.size());
+  Assert.assertTrue(availableSessions.contains("fred"));
+  Assert.assertTrue(availableSessions.contains("sven"));
+  Assert.assertTrue(availableSessions.contains("bob"));
+  Assert.assertTrue(availableSessions.contains("dick"));
+}

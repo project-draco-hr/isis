@@ -1,0 +1,22 @@
+{
+  super.draw(canvas);
+  Color color;
+  if (colorField == null) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY3);
+  }
+ else {
+    ObjectAdapter object=((ObjectContent)getContent()).getObject();
+    org.apache.isis.application.value.Color fieldColor=(org.apache.isis.application.value.Color)object.getField(colorField);
+    color=new Color((fieldColor).intValue());
+  }
+  Size size=getSize();
+  int width=size.getWidth() - 1;
+  int height=size.getHeight() - 1;
+  canvas.drawSolidRectangle(0,0,width,height,color);
+  canvas.drawRectangle(0,0,width,height,Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY2));
+  int x=0;
+  int baseline=icon.getBaseline();
+  icon.draw(canvas,x,baseline);
+  x+=icon.getSize().getWidth();
+  text.draw(canvas,x,baseline);
+}

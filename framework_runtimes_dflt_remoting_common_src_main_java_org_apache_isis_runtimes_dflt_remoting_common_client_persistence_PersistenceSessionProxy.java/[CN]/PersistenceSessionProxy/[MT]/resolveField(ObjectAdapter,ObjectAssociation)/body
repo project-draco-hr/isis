@@ -1,0 +1,16 @@
+{
+  if (field.getSpecification().isCollectionOrIsAggregated()) {
+    return;
+  }
+  final ObjectAdapter referenceAdapter=field.get(adapter);
+  if (referenceAdapter != null && referenceAdapter.getResolveState().isResolved()) {
+    return;
+  }
+  if (referenceAdapter == null || !referenceAdapter.isPersistent()) {
+    return;
+  }
+  if (LOG.isInfoEnabled()) {
+    LOG.info("resolveField on server: " + adapter + "/"+ field.getId());
+  }
+  resolveFieldFromPersistenceLayer(adapter,field);
+}

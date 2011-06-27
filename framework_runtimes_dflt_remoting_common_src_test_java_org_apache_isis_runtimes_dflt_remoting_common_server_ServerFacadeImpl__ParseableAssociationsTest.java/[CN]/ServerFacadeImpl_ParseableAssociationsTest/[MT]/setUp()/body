@@ -1,0 +1,12 @@
+{
+  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  mockObjectEncoder=mockery.mock(ObjectEncoderDecoder.class);
+  server=new ServerFacadeImpl(mockAuthenticationManager);
+  server.setEncoder(mockObjectEncoder);
+  server.init();
+  object=system.createPersistentTestObject();
+  final TestProxySpecification spec=(TestProxySpecification)object.getSpecification();
+  nameField=new TestProxyAssociation("name",system.getSpecification(String.class));
+  spec.setupFields(Arrays.asList((ObjectAssociation)nameField));
+  movieData=new DummyReferenceData(object.getOid(),"none",new TestProxyVersion(1));
+}

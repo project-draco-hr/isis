@@ -1,0 +1,26 @@
+{
+  if (state == null) {
+    return null;
+  }
+  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(state.getClassName());
+  ObjectAdapter object;
+  ResolveState targetState;
+  if (getOid().isTransient()) {
+    object=getHydrator().recreateAdapter(getOid(),spec);
+    targetState=ResolveState.SERIALIZING_TRANSIENT;
+  }
+ else {
+    object=getHydrator().recreateAdapter(getOid(),spec);
+    targetState=ResolveState.UPDATING;
+  }
+  if (object.getSpecification().isCollection()) {
+    populateCollection(object,(CollectionData)state,targetState);
+  }
+ else {
+    updateObject(object,state,targetState);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("recreated object " + object.getOid());
+  }
+  return object;
+}

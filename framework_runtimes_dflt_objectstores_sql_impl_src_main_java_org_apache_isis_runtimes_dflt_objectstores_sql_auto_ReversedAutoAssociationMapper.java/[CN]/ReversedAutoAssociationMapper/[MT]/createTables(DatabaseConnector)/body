@@ -1,0 +1,22 @@
+{
+  if (!connection.hasTable(table)) {
+    final StringBuffer sql=new StringBuffer();
+    sql.append("create table ");
+    sql.append(table);
+    sql.append(" (");
+    idMapping.appendColumnDefinitions(sql);
+    sql.append(", ");
+    for (    final FieldMapping mapping : fieldMappings) {
+      mapping.appendColumnDefinitions(sql);
+      sql.append(",");
+    }
+    sql.append(versionMapping.appendColumnDefinitions());
+    sql.append(")");
+    connection.update(sql.toString());
+  }
+  for (int i=0; collectionMappers != null && i < collectionMappers.length; i++) {
+    if (collectionMappers[i].needsTables(connection)) {
+      collectionMappers[i].createTables(connection);
+    }
+  }
+}

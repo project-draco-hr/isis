@@ -1,0 +1,34 @@
+{
+  if (s == null) {
+    if (persistorName == "xml") {
+    }
+    if (tableName.equalsIgnoreCase("sqldataclass")) {
+      final List<SqlDataClass> list=sqlDataClassFactory.allDataClasses();
+      for (      final SqlDataClass sqlDataClass : list) {
+        sqlDataClassFactory.delete(sqlDataClass);
+      }
+      return;
+    }
+    if (tableName.equalsIgnoreCase("simpleclass")) {
+      final List<SimpleClass> list=sqlDataClassFactory.allSimpleClasses();
+      for (      final SimpleClass sqlClass : list) {
+        sqlDataClassFactory.delete(sqlClass);
+      }
+      return;
+    }
+    if (tableName.equalsIgnoreCase("simpleclasstwo")) {
+      final List<SimpleClassTwo> list=sqlDataClassFactory.allSimpleClassTwos();
+      for (      final SimpleClassTwo sqlClass : list) {
+        sqlDataClassFactory.delete(sqlClass);
+      }
+      return;
+    }
+    return;
+  }
+  try {
+    s.executeUpdate("DROP TABLE " + tableName + "");
+  }
+ catch (  final SQLException e) {
+    e.printStackTrace();
+  }
+}

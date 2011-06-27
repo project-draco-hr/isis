@@ -1,0 +1,23 @@
+{
+  byte[] buf=new byte[32];
+  int i=0;
+  int c1=input.read();
+  if (c1 == '.') {
+    return null;
+  }
+  int c2=input.read();
+  boolean isEnd;
+  do {
+    if (i == buf.length) {
+      final byte[] newBuf=new byte[buf.length * 2];
+      System.arraycopy(buf,0,newBuf,0,buf.length);
+      buf=newBuf;
+    }
+    buf[i++]=(byte)c1;
+    c1=c2;
+    c2=input.read();
+    isEnd=(c1 == NEWLINE && c2 == NEWLINE) || c2 == -1;
+  }
+ while (!isEnd);
+  return buf;
+}

@@ -1,0 +1,19 @@
+{
+  final List<ObjectAssociation> originalFields=specification.getAssociations();
+  final Vector sorted=new Vector(originalFields.size());
+  outer:   for (int i=0; i < originalFields.size(); i++) {
+    final String fieldId=originalFields.get(i).getId();
+    for (int j=0; j < sorted.size(); j++) {
+      final ObjectAssociation sortedElement=(ObjectAssociation)sorted.elementAt(j);
+      final String sortedFieldId=sortedElement.getId();
+      if (sortedFieldId.compareTo(fieldId) > 0) {
+        sorted.insertElementAt(originalFields.get(i),j);
+        continue outer;
+      }
+    }
+    sorted.addElement(originalFields.get(i));
+  }
+  final ObjectAssociation[] fields=new ObjectAssociation[originalFields.size()];
+  sorted.copyInto(fields);
+  return fields;
+}

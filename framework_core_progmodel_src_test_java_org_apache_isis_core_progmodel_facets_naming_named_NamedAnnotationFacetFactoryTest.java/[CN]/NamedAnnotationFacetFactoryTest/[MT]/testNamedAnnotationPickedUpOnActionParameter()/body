@@ -1,0 +1,15 @@
+{
+  NamedAnnotationOnParameterFacetFactory facetFactory=new NamedAnnotationOnParameterFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @Named("some name") final int x){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class});
+  facetFactory.processParams(new ProcessParameterContext(actionMethod,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacetAbstract);
+  final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;
+  assertEquals("some name",namedFacetAbstract.value());
+}

@@ -1,0 +1,16 @@
+{
+  final ObjectSpecification returnType=serviceAction.getReturnType();
+  if (returnType == null) {
+    return;
+  }
+  if (returnType.isCollection()) {
+    final TypeOfFacet facet=serviceAction.getFacet(TypeOfFacet.class);
+    if (facet != null) {
+      final ObjectSpecification elementType=facet.valueSpec();
+      addIfReturnsSubtype(serviceAction,elementType,matchingActionsToAppendTo);
+    }
+  }
+ else {
+    addIfReturnsSubtype(serviceAction,returnType,matchingActionsToAppendTo);
+  }
+}

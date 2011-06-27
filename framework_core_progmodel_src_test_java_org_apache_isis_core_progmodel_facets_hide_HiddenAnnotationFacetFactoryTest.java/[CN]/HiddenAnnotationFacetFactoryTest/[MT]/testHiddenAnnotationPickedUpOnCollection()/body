@@ -1,0 +1,13 @@
+{
+class Customer {
+    @Hidden public Collection getOrders(){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"getOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(HiddenFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HiddenFacetAbstract);
+  assertNoMethodsRemoved();
+}

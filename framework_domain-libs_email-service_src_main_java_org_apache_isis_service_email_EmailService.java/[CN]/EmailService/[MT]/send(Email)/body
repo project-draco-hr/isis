@@ -1,0 +1,39 @@
+{
+  String smtpHost=getContainer().getProperty(PROPERTY_ROOT + "host","localhost");
+  String portValue=getContainer().getProperty(PROPERTY_ROOT + "port","25");
+  int port=Integer.valueOf(portValue).intValue();
+  String authenticationName=getContainer().getProperty(PROPERTY_ROOT + "authentication.name");
+  String authenticationPassword=getContainer().getProperty(PROPERTY_ROOT + "authentication.password","");
+  String fromName=getContainer().getProperty(PROPERTY_ROOT + "from.name","No reply");
+  String fromEmailAddress=getContainer().getProperty(PROPERTY_ROOT + "from.address","noreply@domain.com");
+  try {
+    SimpleEmail simpleEmail=new SimpleEmail();
+    simpleEmail.setHostName(smtpHost);
+    simpleEmail.setSmtpPort(port);
+    if (authenticationName != null) {
+      simpleEmail.setAuthentication(authenticationName,authenticationPassword);
+    }
+    for (    Address address : emailObject.getTo()) {
+      String name=address.getName();
+      if (name == null) {
+        simpleEmail.addTo(address.getEmailAddress());
+      }
+ else {
+        simpleEmail.addTo(address.getEmailAddress(),name);
+      }
+    }
+    Address from=emailObject.getFrom();
+    if (from == null) {
+      simpleEmail.setFrom(fromEmailAddress,fromName);
+    }
+ else {
+      simpleEmail.setFrom(from.getEmailAddress(),from.getName());
+    }
+    simpleEmail.setSubject(emailObject.getSubject());
+    simpleEmail.setMsg(emailObject.getMessage());
+    simpleEmail.send();
+  }
+ catch (  EmailException e) {
+    throw new org.apache.isis.service.email.EmailException(e.getMessage(),e);
+  }
+}

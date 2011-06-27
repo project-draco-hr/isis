@@ -1,0 +1,19 @@
+{
+  final int height=internalDisplaySize.getHeight();
+  final int top=height - statusBarHeight;
+  if (refreshStatus || graphic.getClip().getBounds().getY() + graphic.getClip().getBounds().getHeight() > top) {
+    refreshStatus=false;
+    UI_LOG.debug("changed user status " + status + " "+ statusBarArea);
+    final int width=internalDisplaySize.getWidth();
+    graphic.setClip(0,top,width,statusBarHeight);
+    graphic.setColor(((AwtColor)Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3)).getAwtColor());
+    final AwtText textStyle=(AwtText)Toolkit.getText(ColorsAndFonts.TEXT_STATUS);
+    graphic.setFont(textStyle.getAwtFont());
+    final int baseline=top + textStyle.getAscent();
+    graphic.fillRect(0,top,width,statusBarHeight);
+    graphic.setColor(((AwtColor)Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1)).getAwtColor());
+    graphic.drawLine(0,top,internalDisplaySize.getWidth(),top);
+    graphic.setColor(((AwtColor)Toolkit.getColor(ColorsAndFonts.COLOR_BLACK)).getAwtColor());
+    graphic.drawString(status,5,baseline + View.VPADDING);
+  }
+}

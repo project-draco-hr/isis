@@ -1,0 +1,17 @@
+{
+  ObjectSpecification typeOfSpec;
+  PackageResource imageResource=null;
+  if (adapter != null) {
+    typeOfSpec=adapter.getSpecification();
+    final IconFacet iconFacet=typeOfSpec.getFacet(IconFacet.class);
+    if (iconFacet != null) {
+      final String iconName=iconFacet.iconName(adapter);
+      imageResource=getImageCache().findImage(iconName);
+    }
+  }
+  if (imageResource == null) {
+    typeOfSpec=getEntityModel().getTypeOfSpecification();
+    imageResource=getImageCache().findImage(typeOfSpec);
+  }
+  return imageResource;
+}

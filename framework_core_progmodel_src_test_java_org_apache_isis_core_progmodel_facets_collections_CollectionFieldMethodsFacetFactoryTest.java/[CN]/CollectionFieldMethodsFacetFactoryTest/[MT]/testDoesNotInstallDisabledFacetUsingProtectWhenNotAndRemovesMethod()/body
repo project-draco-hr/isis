@@ -1,0 +1,9 @@
+{
+  DisabledFacetViaProtectMethodFacetFactory facetFactory=new DisabledFacetViaProtectMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOtherOrders");
+  final Method protectMethod=findMethod(CustomerStatic.class,"protectOtherOrders");
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  assertNull(facetedMethod.getFacet(DisabledFacet.class));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(protectMethod));
+}

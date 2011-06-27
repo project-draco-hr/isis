@@ -1,0 +1,25 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  final Class<?>[] actionParamTypes=actionMethod.getParameterTypes();
+  if (actionParamTypes.length <= 0) {
+    return;
+  }
+  Method choicesMethod=null;
+  if (choicesMethod == null) {
+    choicesMethod=findChoicesMethodReturning(processMethodContext,Object[][].class);
+  }
+  if (choicesMethod == null) {
+    choicesMethod=findChoicesMethodReturning(processMethodContext,Object[].class);
+  }
+  if (choicesMethod == null) {
+    choicesMethod=findChoicesMethodReturning(processMethodContext,List.class);
+  }
+  if (choicesMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(choicesMethod);
+  final Class<?> returnType=actionMethod.getReturnType();
+  final FacetHolder action=processMethodContext.getFacetHolder();
+  final ActionChoicesFacetViaMethod facet=new ActionChoicesFacetViaMethod(choicesMethod,returnType,action,getSpecificationLookup(),getAdapterMap());
+  FacetUtil.addFacet(facet);
+}

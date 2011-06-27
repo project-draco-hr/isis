@@ -1,0 +1,33 @@
+{
+  final String username=context.getParameter("username");
+  final String password=context.getParameter("password");
+  final AuthenticationSession session=UserManager.authenticate(new AuthenticationRequestPassword(username,password));
+  String view;
+  if (session == null) {
+    final FormState formState=new FormState();
+    formState.setError("Failed to login. Check the username and ensure that your password was entered correctly");
+    FieldEditState fieldState=formState.createField("username",username);
+    if (username.length() == 0) {
+      fieldState.setError("User Name required");
+    }
+    fieldState=formState.createField("password",password);
+    if (password.length() == 0) {
+      fieldState.setError("Password required");
+    }
+    if (username.length() == 0 || password.length() == 0) {
+      formState.setError("Both the user name and password must be entered");
+    }
+    context.addVariable(ENTRY_FIELDS,formState,Scope.REQUEST);
+    view=context.getParameter("error");
+    context.setRequestPath("/" + view,Dispatcher.ACTION);
+  }
+ else {
+    context.setSession(session);
+    context.startHttpSession();
+    view=context.getParameter("view");
+    if (view == null) {
+      view="start." + Dispatcher.EXTENSION;
+    }
+    context.redirectTo(view);
+  }
+}

@@ -1,0 +1,8 @@
+{
+  final PersistenceCommand command=store.createDestroyObjectCommand(object);
+  assertEquals(object,command.onObject());
+  store.execute(Collections.<PersistenceCommand>singletonList(command));
+  resetIdentityMap();
+  final ObjectSpecification specification=object.getSpecification();
+  assertEquals(false,store.hasInstances(specification));
+}

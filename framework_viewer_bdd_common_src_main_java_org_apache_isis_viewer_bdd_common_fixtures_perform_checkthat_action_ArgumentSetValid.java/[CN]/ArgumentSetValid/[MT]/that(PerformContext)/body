@@ -1,0 +1,18 @@
+{
+  final ObjectAdapter onAdapter=performContext.getOnAdapter();
+  final ObjectMember nakedObjectMember=performContext.getObjectMember();
+  final CellBinding onMemberBinding=performContext.getPeer().getOnMemberBinding();
+  final List<ScenarioCell> argumentCells=performContext.getArgumentCells();
+  final ObjectAction nakedObjectAction=(ObjectAction)nakedObjectMember;
+  final int parameterCount=nakedObjectAction.getParameterCount();
+  final boolean isContributedOneArgAction=nakedObjectAction.isContributed() && parameterCount == 1;
+  if (isContributedOneArgAction) {
+    return null;
+  }
+  final ObjectAdapter[] proposedArguments=performContext.getPeer().getAdapters(onAdapter,nakedObjectAction,onMemberBinding,argumentCells);
+  final Consent argSetValid=nakedObjectAction.isProposedArgumentSetValid(onAdapter,proposedArguments);
+  if (argSetValid.isVetoed()) {
+    throw ScenarioBoundValueException.current(onMemberBinding,argSetValid.getReason());
+  }
+  return null;
+}

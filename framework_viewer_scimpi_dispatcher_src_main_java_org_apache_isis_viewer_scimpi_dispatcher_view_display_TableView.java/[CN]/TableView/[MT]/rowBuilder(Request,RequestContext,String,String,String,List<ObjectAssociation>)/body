@@ -1,0 +1,36 @@
+{
+  final String linkRowView=request.getOptionalProperty(LINK);
+  final String linkObjectName=request.getOptionalProperty(ELEMENT_NAME,RequestContext.RESULT);
+  final String linkObjectScope=request.getOptionalProperty(SCOPE,Scope.INTERACTION.toString());
+  final LinkedObject linkRow=linkRowView == null ? null : new LinkedObject(linkObjectName,linkObjectScope,context.fullUriPath(linkRowView));
+  final boolean includeHeading=request.isRequested(HEADING,true);
+  final boolean includeFooting=request.isRequested(FOOTING,false);
+  final boolean linkFields=request.isRequested("link-fields",true);
+  final boolean showIcons=request.isRequested(SHOW_ICON,true);
+  final boolean showSelectOption=request.isRequested(SHOW_SELECT,true);
+  final boolean showEditOption=request.isRequested(SHOW_EDIT,true);
+  final boolean showDeleteOption=request.isRequested(SHOW_DELETE,true);
+  final LinkedFieldsBlock block=new LinkedFieldsBlock();
+  request.setBlockContent(block);
+  request.processUtilCloseTag();
+  final List<ObjectAssociation> fields=block.includedFields(allFields);
+  final LinkedObject[] linkedFields=block.linkedFields(fields);
+  for (int i=0; i < linkedFields.length; i++) {
+    if (linkedFields[i] == null && linkFields && !fields.get(i).getSpecification().containsFacet(ParseableFacet.class)) {
+      linkedFields[i]=new LinkedObject("_generic.shtml");
+    }
+    if (linkedFields[i] != null) {
+      linkedFields[i].setForwardView(context.fullUriPath(linkedFields[i].getForwardView()));
+    }
+  }
+  final String headers[]=new String[fields.size()];
+  int h=0;
+  for (int i=0; i < fields.size(); i++) {
+    if (fields.get(i).isOneToManyAssociation()) {
+      continue;
+    }
+    headers[h++]=fields.get(i).getName();
+  }
+  request.popBlockContent();
+  return new SimpleTableBuilder(object,includeHeading,includeFooting,title,headers,fields,showIcons,showSelectOption,showDeleteOption,showEditOption,fieldName,linkedFields,linkRow);
+}

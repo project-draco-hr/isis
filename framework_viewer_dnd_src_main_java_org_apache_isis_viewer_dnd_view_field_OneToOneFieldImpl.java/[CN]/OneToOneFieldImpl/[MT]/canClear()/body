@@ -1,0 +1,13 @@
+{
+  final ObjectAdapter parentAdapter=getParent();
+  final OneToOneAssociation association=getOneToOneAssociation();
+  final Consent isEditable=isEditable();
+  if (isEditable.isVetoed()) {
+    return isEditable;
+  }
+  final Consent consent=association.isAssociationValid(parentAdapter,null);
+  if (consent.isAllowed()) {
+    consent.setDescription("Clear the association to this object from '" + parentAdapter.titleString() + "'");
+  }
+  return consent;
+}

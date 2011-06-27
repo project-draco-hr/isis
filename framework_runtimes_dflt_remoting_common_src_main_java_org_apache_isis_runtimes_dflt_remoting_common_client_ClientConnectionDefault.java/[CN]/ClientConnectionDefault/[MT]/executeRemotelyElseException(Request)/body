@@ -1,0 +1,12 @@
+{
+  final Object response=marshaller.request(request);
+  if (response instanceof ConcurrencyException) {
+    throw (ConcurrencyException)response;
+  }
+ else   if (response instanceof Exception) {
+    throw new IsisRemoteException("Exception occurred on server",(Throwable)response);
+  }
+ else {
+    return (ResponseEnvelope)response;
+  }
+}

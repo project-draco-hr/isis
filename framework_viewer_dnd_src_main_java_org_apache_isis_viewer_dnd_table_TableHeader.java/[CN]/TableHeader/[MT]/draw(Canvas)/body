@@ -1,0 +1,25 @@
+{
+  super.draw(canvas.createSubcanvas());
+  final int y=VPADDING + Toolkit.getText(ColorsAndFonts.TEXT_LABEL).getAscent();
+  int x=axis.getHeaderOffset() - 2;
+  if (((CollectionContent)getContent()).getOrderByElement()) {
+    drawOrderIndicator(canvas,axis,x - 10);
+  }
+  final Color secondary1=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1);
+  canvas.drawLine(0,0,getSize().getWidth() - 1,0,secondary1);
+  canvas.drawLine(0,height - 1,getSize().getWidth() - 1,height - 1,secondary1);
+  canvas.drawLine(x,0,x,getSize().getHeight() - 1,secondary1);
+  x++;
+  final int columns=axis.getColumnCount();
+  final ObjectAssociation fieldSortOrder=((CollectionContent)getContent()).getFieldSortOrder();
+  for (int i=0; i < columns; i++) {
+    if (fieldSortOrder == axis.getFieldForColumn(i)) {
+      drawOrderIndicator(canvas,axis,x + axis.getColumnWidth(i) - 10);
+    }
+    canvas.drawLine(0,0,0,getSize().getHeight() - 1,secondary1);
+    canvas.drawLine(x,0,x,getSize().getHeight() - 1,secondary1);
+    final Canvas headerCanvas=canvas.createSubcanvas(x,0,axis.getColumnWidth(i) - 1,height);
+    headerCanvas.drawText(axis.getColumnName(i),HPADDING,y,secondary1,Toolkit.getText(ColorsAndFonts.TEXT_LABEL));
+    x+=axis.getColumnWidth(i);
+  }
+}

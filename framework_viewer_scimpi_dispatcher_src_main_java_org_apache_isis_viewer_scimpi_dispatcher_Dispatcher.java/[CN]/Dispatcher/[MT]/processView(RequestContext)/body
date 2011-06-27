@@ -1,0 +1,37 @@
+{
+  String file=context.getRequestedFile();
+  if (file == null) {
+    LOG.warn("No view specified to process");
+    return;
+  }
+  if (file.endsWith(COMMAND_ROOT)) {
+    return;
+  }
+  file=determineFile(context,file);
+  final String fullPath=context.requestedFilePath(file);
+  LOG.debug("processing file " + fullPath);
+  context.setResourcePath(fullPath);
+  context.setContentType("text/html");
+  context.addVariable("title","Untitled Page",Scope.REQUEST);
+  final Stack<Snippet> tags=loadPageTemplate(context,fullPath);
+  final Request request=new Request(file,context,encoder,tags,processors);
+  request.appendDebug("processing " + fullPath);
+  try {
+    request.processNextTag();
+    noteIfMessagesHaveNotBeenDisplay(context);
+    IsisContext.getUpdateNotifier().clear();
+  }
+ catch (  final RuntimeException e) {
+    IsisContext.getMessageBroker().getMessages();
+    IsisContext.getMessageBroker().getWarnings();
+    IsisContext.getUpdateNotifier().clear();
+    throw e;
+  }
+  final String page=request.popBuffer();
+  final PrintWriter writer=context.getWriter();
+  writer.write(page);
+  if (context.getDebug() == Debug.PAGE) {
+    final DebugWriter view=new DebugWriter(writer,false);
+    context.append(view);
+  }
+}

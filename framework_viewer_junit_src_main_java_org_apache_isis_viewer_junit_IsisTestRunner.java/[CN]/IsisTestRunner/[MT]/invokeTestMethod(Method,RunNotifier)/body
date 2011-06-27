@@ -1,0 +1,50 @@
+{
+  final TestClass testClass=getTestClass();
+  final String configDirIfAny=getConfigDir(testClass.getJavaClass());
+  final Description description=methodDescription(method);
+  final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderDefault(configDirIfAny);
+  isisConfigurationBuilder.add(SystemConstants.NOSPLASH_KEY,"" + true);
+  final InstallerLookupDefault installerLookup=new InstallerLookupDefault();
+  isisConfigurationBuilder.injectInto(installerLookup);
+  installerLookup.init();
+  IsisSystemUsingInstallersWithinJunit system=null;
+  AuthenticationSession session=null;
+  try {
+    final DeploymentType deploymentType=DeploymentType.PROTOTYPE;
+    system=new IsisSystemUsingInstallersWithinJunit(deploymentType,installerLookup,testClass);
+    system.init();
+    AuthenticationRequest request;
+    final LogonFixture logonFixture=system.getFixturesInstaller().getLogonFixture();
+    if (logonFixture != null) {
+      request=new AuthenticationRequestLogonFixture(logonFixture);
+    }
+ else {
+      request=new AuthenticationRequestExploration(logonFixture);
+    }
+    session=IsisContext.getAuthenticationManager().authenticate(request);
+    IsisContext.openSession(session);
+    getTransactionManager().startTransaction();
+    final Object test=createTest();
+    getServicesInjector().injectDependencies(test);
+    final TestMethod testMethod=wrapMethod(method);
+    new MethodRoadie(test,testMethod,notifier,description).run();
+    getTransactionManager().endTransaction();
+  }
+ catch (  final InvocationTargetException e) {
+    testAborted(notifier,description,e.getCause());
+    getTransactionManager().abortTransaction();
+    return;
+  }
+catch (  final Exception e) {
+    testAborted(notifier,description,e);
+    return;
+  }
+ finally {
+    if (system != null) {
+      if (session != null) {
+        IsisContext.closeSession();
+      }
+      system.shutdown();
+    }
+  }
+}

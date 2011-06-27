@@ -1,0 +1,15 @@
+{
+  final ExecutedFacet facet=objectAction.getFacet(ExecutedFacet.class);
+  final boolean localOverride=(facet.value() == Where.LOCALLY);
+  if (localOverride) {
+    return false;
+  }
+  final boolean remoteOverride=(facet.value() == Where.REMOTELY);
+  if (remoteOverride) {
+    return true;
+  }
+  if (targetAdapter.getSpecification().isService()) {
+    return true;
+  }
+  return targetAdapter.isPersistent();
+}

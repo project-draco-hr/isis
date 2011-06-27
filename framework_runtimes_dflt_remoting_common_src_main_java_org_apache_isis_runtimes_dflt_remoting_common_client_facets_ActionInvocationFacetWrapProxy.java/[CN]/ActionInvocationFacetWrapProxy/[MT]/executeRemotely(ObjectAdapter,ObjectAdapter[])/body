@@ -1,0 +1,59 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug(debug("execute remotely",getIdentifier(),targetAdapter,parameterAdapters));
+  }
+  final KnownObjectsRequest knownObjects=new KnownObjectsRequest();
+  final Data[] parameterObjectData=parameterValues(parameterAdapters,knownObjects);
+  final ReferenceData targetReference=targetAdapter == null ? null : encoder.encodeActionTarget(targetAdapter,knownObjects);
+  ExecuteServerActionResponse response;
+  try {
+    final ExecuteServerActionRequest request=new ExecuteServerActionRequest(getAuthenticationSession(),ActionType.USER,objectAction.getIdentifier().toNameParmsIdentityString(),targetReference,parameterObjectData);
+    response=serverFacade.executeServerAction(request);
+    if (targetAdapter.isTransient()) {
+      encoder.madePersistent(targetAdapter,response.getPersistedTarget());
+    }
+    final List<ObjectActionParameter> parameters2=objectAction.getParameters();
+    for (int i=0; i < parameterAdapters.length; i++) {
+      if (parameters2.get(i).getSpecification().isNotCollection()) {
+        encoder.madePersistent(parameterAdapters[i],response.getPersistedParameters()[i]);
+      }
+    }
+    final Data returned=response.getReturn();
+    final ObjectAdapter returnedObject=returned instanceof NullData ? null : encoder.decode(returned);
+    final ObjectData[] updates=response.getUpdates();
+    for (    final ObjectData update : updates) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("update " + update.getOid());
+      }
+      encoder.decode(update);
+    }
+    final ReferenceData[] disposed=response.getDisposed();
+    for (    final ReferenceData element : disposed) {
+      final Oid oid=element.getOid();
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("disposed " + oid);
+      }
+      final ObjectAdapter adapter=getAdapterManager().getAdapterFor(oid);
+      getUpdateNotifier().addDisposedObject(adapter);
+    }
+    copyMessages(response);
+    copyWarnings(response);
+    return returnedObject;
+  }
+ catch (  final ConcurrencyException e) {
+    final Oid source=e.getSource();
+    if (source == null) {
+      throw e;
+    }
+    final ObjectAdapter failedObject=getAdapterManager().getAdapterFor(source);
+    getPersistenceSession().reload(failedObject);
+    if (LOG.isInfoEnabled()) {
+      LOG.info("concurrency conflict: " + e.getMessage());
+    }
+    throw new ConcurrencyException("Object automatically reloaded: " + failedObject.titleString(),e);
+  }
+catch (  final IsisException e) {
+    LOG.error("remoting exception",e);
+    throw e;
+  }
+}

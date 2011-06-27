@@ -1,0 +1,16 @@
+{
+  try {
+    final Installer installer=CastUtils.cast(InstanceUtil.createInstance(implClassName));
+    if (installer != null) {
+      mergeConfigurationFor(installer);
+      injectDependenciesInto(installer);
+    }
+    return installer;
+  }
+ catch (  final InstanceCreationException e) {
+    throw new InstanceCreationException("Specification error in " + IsisInstallerRegistry.INSTALLER_REGISTRY_FILE,e);
+  }
+catch (  final UnavailableClassException e) {
+    return null;
+  }
+}

@@ -1,0 +1,12 @@
+{
+  ensureThatArg(oid,is(notNullValue()));
+  ensureThatArg(spec,is(notNullValue()));
+  ObjectAdapter adapter=getAdapterManager().getAdapterFor(oid);
+  if (adapter == null) {
+    adapter=persistedObjects.get(oid);
+  }
+  if (adapter == null) {
+    throw new TestProxyException("No persisted object to get for " + oid);
+  }
+  return adapter;
+}

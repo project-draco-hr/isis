@@ -1,0 +1,30 @@
+{
+  final int baseline=getBaseline();
+  final int width=axis.getHeaderOffset();
+  final Size s=getSize();
+  final Canvas subcanvas=canvas.createSubcanvas(0,0,width,s.getHeight());
+  int offset=HPADDING;
+  icon.draw(subcanvas,offset,baseline);
+  offset+=icon.getSize().getWidth() + HPADDING + 0+ HPADDING;
+  title.draw(subcanvas,offset,baseline,getLeft() - offset);
+  final int columns=axis.getColumnCount();
+  int x=-1;
+  x+=axis.getHeaderOffset();
+  final Color secondary1=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1);
+  canvas.drawLine(x - 1,0,x - 1,s.getHeight() - 1,secondary1);
+  canvas.drawLine(x,0,x,s.getHeight() - 1,secondary1);
+  for (int i=0; i < columns; i++) {
+    x+=axis.getColumnWidth(i);
+    canvas.drawLine(x,0,x,s.getHeight() - 1,secondary1);
+  }
+  canvas.drawLine(0,0,0,s.getHeight() - 1,secondary1);
+  final int y=s.getHeight() - 1;
+  final Color secondary2=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY2);
+  canvas.drawLine(0,y,s.getWidth(),y,secondary2);
+  if (getState().isObjectIdentified()) {
+    final int xExtent=width - 1;
+    canvas.drawLine(xExtent - BORDER,top,xExtent - BORDER,top + s.getHeight() - 1,secondary2);
+    canvas.drawSolidRectangle(xExtent - BORDER + 1,top,BORDER - 2,s.getHeight() - 2 * top - 1,Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3));
+  }
+  super.draw(canvas);
+}

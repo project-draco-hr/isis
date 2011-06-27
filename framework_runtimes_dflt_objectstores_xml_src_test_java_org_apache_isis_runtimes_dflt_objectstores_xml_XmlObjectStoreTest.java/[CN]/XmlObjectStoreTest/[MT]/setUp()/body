@@ -1,0 +1,15 @@
+{
+  mockAdapter=context.mock(ObjectAdapter.class);
+  dataManager=new MockDataManager();
+  objectStore=new XmlObjectStore(dataManager,new DummyServiceManager());
+  objectStore.setClock(new DefaultClock());
+  configuration=new TestProxyConfiguration();
+  spec=new TestProxySpecification(this.getClass());
+  spec.fields=Collections.emptyList();
+  adapter=new TestProxyAdapter();
+  adapter.setupSpecification(spec);
+  adapter.setOptimisticLock(new SerialNumberVersion(23,null,null));
+  adapter.setupOid(SerialOid.createPersistent(1));
+  persistenceHelper=new ObjectStorePersistenceHelper(spec);
+  transaction=null;
+}

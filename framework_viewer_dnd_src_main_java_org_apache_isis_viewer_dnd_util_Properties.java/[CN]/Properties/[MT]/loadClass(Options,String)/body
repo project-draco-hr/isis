@@ -1,0 +1,19 @@
+{
+  final String specificationName=viewOptions.getString(name);
+  if (specificationName != null) {
+    try {
+      final Class<?> specificationClass=Class.forName(specificationName);
+      return specificationClass.newInstance();
+    }
+ catch (    final ClassNotFoundException e) {
+      throw new ViewerException(e);
+    }
+catch (    final InstantiationException e) {
+      throw new ViewerException(e);
+    }
+catch (    final IllegalAccessException e) {
+      throw new ViewerException(e);
+    }
+  }
+  return null;
+}

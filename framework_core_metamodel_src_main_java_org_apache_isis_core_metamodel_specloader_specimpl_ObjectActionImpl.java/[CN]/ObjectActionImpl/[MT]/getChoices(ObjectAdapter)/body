@@ -1,0 +1,58 @@
+{
+  final ObjectAdapter realTarget=realTarget(target);
+  final int parameterCount=getParameterCount();
+  Object[][] parameterChoicesPojos;
+  final ActionChoicesFacet facet=getFacet(ActionChoicesFacet.class);
+  final List<ObjectActionParameter> parameters=getParameters();
+  if (!facet.isNoop()) {
+    parameterChoicesPojos=facet.getChoices(realTarget);
+    if (parameterChoicesPojos == null) {
+      parameterChoicesPojos=new Object[parameterCount][];
+    }
+ else     if (parameterChoicesPojos.length != parameterCount) {
+      throw new DomainModelException("Choices array of incompatible size; expected " + parameterCount + " elements, but was "+ parameterChoicesPojos.length+ " for "+ facet);
+    }
+  }
+ else {
+    parameterChoicesPojos=new Object[parameterCount][];
+    for (int i=0; i < parameterCount; i++) {
+      final ActionParameterChoicesFacet paramFacet=parameters.get(i).getFacet(ActionParameterChoicesFacet.class);
+      if (paramFacet != null && !paramFacet.isNoop()) {
+        parameterChoicesPojos[i]=paramFacet.getChoices(realTarget);
+      }
+ else {
+        parameterChoicesPojos[i]=new Object[0];
+      }
+    }
+  }
+  final ObjectAdapter[][] parameterChoicesAdapters=new ObjectAdapter[parameterCount][];
+  for (int i=0; i < parameterCount; i++) {
+    final ObjectSpecification paramSpec=parameters.get(i).getSpecification();
+    if (parameterChoicesPojos[i] != null && parameterChoicesPojos[i].length > 0) {
+      ObjectActionParameterAbstract.checkChoicesType(getSpecificationLookup(),parameterChoicesPojos[i],paramSpec);
+      parameterChoicesAdapters[i]=new ObjectAdapter[parameterChoicesPojos[i].length];
+      for (int j=0; j < parameterChoicesPojos[i].length; j++) {
+        parameterChoicesAdapters[i][j]=adapterFor(parameterChoicesPojos[i][j]);
+      }
+    }
+ else     if (BoundedFacetUtils.isBoundedSet(paramSpec)) {
+      final QueryFindAllInstances query=new QueryFindAllInstances(paramSpec.getFullIdentifier());
+      final List<ObjectAdapter> allInstancesAdapter=getQuerySubmitter().allMatchingQuery(query);
+      parameterChoicesAdapters[i]=new ObjectAdapter[allInstancesAdapter.size()];
+      int j=0;
+      for (      final ObjectAdapter adapter : allInstancesAdapter) {
+        parameterChoicesAdapters[i][j++]=adapter;
+      }
+    }
+ else     if (paramSpec.isNotCollection()) {
+      parameterChoicesAdapters[i]=new ObjectAdapter[0];
+    }
+ else {
+      throw new UnknownTypeException(paramSpec);
+    }
+    if (parameterChoicesAdapters[i].length == 0) {
+      parameterChoicesAdapters[i]=null;
+    }
+  }
+  return parameterChoicesAdapters;
+}

@@ -1,0 +1,39 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  final TestProxySystemII system=new TestProxySystemII();
+  system.init();
+  specification=IsisContext.getSpecificationLoader().loadSpecification(ExampleReferencePojo.class);
+  object=IsisContext.getPersistenceSession().createInstance(specification);
+  ((SerialOid)object.getOid()).setId(3);
+  object.getOid().makePersistent();
+  context=new Mockery();
+  db=context.mock(NoSqlDataDatabase.class);
+  context.checking(new Expectations(){
+{
+      one(db).open();
+      one(db).containsData();
+      will(returnValue(false));
+      one(db).close();
+    }
+  }
+);
+  keyCreator=context.mock(KeyCreator.class);
+  versionCreator=context.mock(VersionCreator.class);
+  Map<String,DataEncryption> dataEncrypter=new HashMap<String,DataEncryption>();
+  DataEncryption dataEncrypter1=new DataEncryption(){
+    public String getType(){
+      return "etc";
+    }
+    public void init(    IsisConfiguration configuration){
+    }
+    public String encrypt(    String plainText){
+      throw new UnexpectedCallException();
+    }
+    public String decrypt(    String encryptedText){
+      return encryptedText.substring(3);
+    }
+  }
+;
+  dataEncrypter.put(dataEncrypter1.getType(),dataEncrypter1);
+  store=new NoSqlObjectStore(db,new NoSqlOidGenerator(db),keyCreator,versionCreator,null,dataEncrypter);
+}

@@ -1,0 +1,11 @@
+{
+  final boolean[] linkFields=new boolean[fields.size()];
+  if (linkAllFields) {
+    for (int i=0; i < linkFields.length; i++) {
+      linkFields[i]=fields.get(i).isOneToOneAssociation();
+    }
+  }
+  final RequestContext context=request.getContext();
+  final TableContentWriter rowBuilder=rowBuilder(request,context,null,context.mapObject(object,Scope.REQUEST),field.getId(),fields);
+  write(request,collection,summary,rowBuilder,null,null);
+}

@@ -1,0 +1,11 @@
+{
+@FieldOrder("foo,bar") class Customer {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(FieldOrderFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof FieldOrderFacetAnnotation);
+  final FieldOrderFacetAnnotation fieldOrderFacetAnnotation=(FieldOrderFacetAnnotation)facet;
+  assertEquals("foo,bar",fieldOrderFacetAnnotation.value());
+  assertNoMethodsRemoved();
+}

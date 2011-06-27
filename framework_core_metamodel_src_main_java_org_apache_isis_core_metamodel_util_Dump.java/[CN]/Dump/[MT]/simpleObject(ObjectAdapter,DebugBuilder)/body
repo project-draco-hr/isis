@@ -1,0 +1,30 @@
+{
+  debugBuilder.appendln(collectionAdapter.titleString());
+  final ObjectSpecification objectSpec=collectionAdapter.getSpecification();
+  if (objectSpec.isCollection()) {
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collectionAdapter);
+    int i=1;
+    for (    final ObjectAdapter element : facet.collection(collectionAdapter)) {
+      debugBuilder.appendln(i++ + " " + element.titleString());
+    }
+  }
+ else {
+    try {
+      final List<ObjectAssociation> fields=objectSpec.getAssociations();
+      for (int i=0; i < fields.size(); i++) {
+        final ObjectAssociation field=fields.get(i);
+        final ObjectAdapter obj=field.get(collectionAdapter);
+        final String name=field.getId();
+        if (obj == null) {
+          debugBuilder.appendln(name,"null");
+        }
+ else {
+          debugBuilder.appendln(name,obj.titleString());
+        }
+      }
+    }
+ catch (    final RuntimeException e) {
+      debugBuilder.appendException(e);
+    }
+  }
+}

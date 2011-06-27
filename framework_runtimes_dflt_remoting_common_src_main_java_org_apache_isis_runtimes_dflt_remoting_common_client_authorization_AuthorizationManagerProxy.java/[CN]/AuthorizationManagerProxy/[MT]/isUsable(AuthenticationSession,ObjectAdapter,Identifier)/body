@@ -1,0 +1,10 @@
+{
+  final IdentityData targetData=encoderDecoder.encodeIdentityData(target);
+  final String idString=identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARAMETERS);
+  if (!usabilityCache.containsKey(idString)) {
+    final AuthorizationResponse response=serverFacade.authorizeUsability(new AuthorizationRequestUsability(session,targetData,idString));
+    final Boolean authorized=isAuthorized(response);
+    usabilityCache.put(idString,authorized);
+  }
+  return usabilityCache.get(idString);
+}

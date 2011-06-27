@@ -1,0 +1,14 @@
+{
+  final ObjectAdapter adapterLookedUpByOid=getAdapterManager().getAdapterFor(oid);
+  if (adapterLookedUpByOid != null) {
+    return adapterLookedUpByOid;
+  }
+  final ObjectAdapter adapterLookedUpByPojo=getAdapterManager().getAdapterFor(pojo);
+  if (adapterLookedUpByPojo != null) {
+    return adapterLookedUpByPojo;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("recreating adapter for Oid: " + oid + " for provided pojo ");
+  }
+  return getAdapterManager().recreateRootAdapter(oid,pojo);
+}

@@ -1,0 +1,15 @@
+{
+class Customer {
+    @SuppressWarnings("unused") @MemberOrder(sequence="1") public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MemberOrderFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MemberOrderFacetAnnotation);
+  final MemberOrderFacetAnnotation memberOrderFacetAnnotation=(MemberOrderFacetAnnotation)facet;
+  assertEquals("1",memberOrderFacetAnnotation.sequence());
+  assertNoMethodsRemoved();
+}

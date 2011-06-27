@@ -1,0 +1,14 @@
+{
+  final int lines=decodePixel(data,0);
+  final int width=decodePixel(data,1);
+  final int[][] imageData=new int[lines][width];
+  int offset=2;
+  for (int line=0; line < lines; line++) {
+    for (int pixel=0; pixel < width; pixel++) {
+      imageData[line][pixel]=decodePixel(data,offset++);
+      imageData[line][pixel]=imageData[line][pixel] | 0xFF000000;
+    }
+  }
+  final T image=setPixels(imageData);
+  return image;
+}

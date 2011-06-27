@@ -1,0 +1,19 @@
+{
+  ensureNotInitialized();
+  reflector=new ObjectReflectorDefault(configuration,classSubstitutor,collectionTypeRegistry,specificationTraverser,memberLayoutArranger,programmingModel,facetDecorators,metaModelValidator);
+  services=createServices(serviceTypes);
+  runtimeContext=new RuntimeContextForEmbeddedMetaModel(context,services);
+  final DomainObjectContainerDefault container=new DomainObjectContainerWrapperFactory();
+  runtimeContext.injectInto(container);
+  runtimeContext.setContainer(container);
+  runtimeContext.injectInto(reflector);
+  reflector.injectInto(runtimeContext);
+  reflector.init();
+  runtimeContext.init();
+  for (  final Class<?> serviceType : serviceTypes) {
+    final ObjectSpecification serviceSpec=reflector.loadSpecification(serviceType);
+    serviceSpec.markAsService();
+  }
+  state=State.INITIALIZED;
+  viewer=new WrapperFactoryDefault();
+}

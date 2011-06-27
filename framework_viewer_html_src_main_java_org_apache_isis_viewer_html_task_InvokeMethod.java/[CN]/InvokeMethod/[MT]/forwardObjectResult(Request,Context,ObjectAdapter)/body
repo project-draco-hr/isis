@@ -1,0 +1,12 @@
+{
+  final String objectId=context.mapObject(resultAdapter);
+  if (resultAdapter.isTransient() && resultAdapter.getSpecification().persistability() == Persistability.USER_PERSISTABLE) {
+    request.forward(ForwardRequest.editObject(objectId));
+  }
+ else   if (resultAdapter.getSpecification().isService()) {
+    request.forward(ForwardRequest.viewService(objectId));
+  }
+ else {
+    request.forward(ForwardRequest.viewObject(objectId));
+  }
+}

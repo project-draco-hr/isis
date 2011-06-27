@@ -1,0 +1,17 @@
+{
+  super.setUp();
+  clearTestDirectory();
+  final String charset=XmlFileUtil.lookupCharset(system.getConfiguration());
+  manager=new XmlDataManager(new XmlFile(charset,"tmp/tests"));
+  FileVersion.setClock(new DefaultClock());
+  oids=new SerialOid[SIZE];
+  data=new ObjectData[SIZE];
+  final ObjectSpecification type=system.getSpecification(Object.class);
+  pattern=new ObjectData(type,null,new FileVersion("user",13));
+  for (int i=0; i < SIZE; i++) {
+    oids[i]=SerialOid.createPersistent(i);
+    data[i]=new ObjectData(type,oids[i],new FileVersion("user",13));
+    manager.insertObject(data[i]);
+  }
+  LOG.debug("test starting...");
+}

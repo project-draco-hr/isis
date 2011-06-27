@@ -1,0 +1,14 @@
+{
+  final List<ObjectActionParameter> parameters=objectAction.getParameters();
+  final int parameterCount=parameters.size();
+  if (argumentCells.size() < parameterCount) {
+    throw ScenarioBoundValueException.current(onMemberBinding,"(action requires " + parameterCount + " arguments)");
+  }
+  final ObjectAdapter[] adapters=new ObjectAdapter[parameterCount];
+  for (int i=0; i < parameterCount; i++) {
+    final ScenarioCell paramCell=argumentCells.get(i);
+    final ObjectActionParameter parameter=parameters.get(i);
+    adapters[i]=getAdapter(null,parameter.getSpecification(),onMemberBinding,paramCell);
+  }
+  return adapters;
+}

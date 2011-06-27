@@ -1,0 +1,13 @@
+{
+  super(EncodableFacet.class,holder,false);
+  this.adapterMap=adapterManager;
+  this.dependencyInjector=dependencyInjector;
+  this.encoderDecoderClass=EncoderDecoderUtil.encoderDecoderOrNull(candidateEncoderDecoderClass,candidateEncoderDecoderName);
+  if (isValid()) {
+    final EncoderDecoder encoderDecoder=(EncoderDecoder<?>)ClassUtil.newInstance(encoderDecoderClass,FacetHolder.class,holder);
+    this.encodeableFacetUsingEncoderDecoder=new EncodableFacetUsingEncoderDecoder(encoderDecoder,holder,getAdapterMap(),getDependencyInjector());
+  }
+ else {
+    this.encodeableFacetUsingEncoderDecoder=null;
+  }
+}
