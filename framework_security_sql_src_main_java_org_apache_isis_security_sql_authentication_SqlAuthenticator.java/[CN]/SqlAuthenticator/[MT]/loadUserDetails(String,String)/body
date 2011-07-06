@@ -1,0 +1,18 @@
+{
+  String sql="SELECT * FROM " + userTable + " WHERE UPPER("+ userNameField+ ") = ?";
+  addToQueryValues(user.toUpperCase());
+  ResultSet results=select(sql);
+  try {
+    while (results.next()) {
+      String dbPassword=results.getString(passwordField);
+      if (dbPassword.equals(password)) {
+        return postProcessLogin(user,password,results);
+      }
+    }
+  }
+ catch (  SQLException e) {
+    LOG.error("Error loading user details: " + sql);
+    throw new ApplicationException("Error loading user details",e);
+  }
+  return null;
+}
