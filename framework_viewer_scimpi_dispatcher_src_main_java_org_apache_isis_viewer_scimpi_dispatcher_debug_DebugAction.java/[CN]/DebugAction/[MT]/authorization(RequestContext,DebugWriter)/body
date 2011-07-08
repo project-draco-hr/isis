@@ -11,7 +11,7 @@
   final List<String> fullIdentifierList=Lists.newArrayList(Collections2.transform(specs,className));
   for (  final String fullIdentifier : fullIdentifierList) {
     final ObjectSpecification spec=getSpecificationLoader().loadSpecification(fullIdentifier);
-    if (spec.getAssociations().size() == 0 && spec.getObjectActionsAll().size() == 0) {
+    if (spec.getAssociations().size() == 0 && spec.getObjectActions(Contributed.EXCLUDED).size() == 0) {
       continue;
     }
     final String name=spec.getIdentifier().toClassIdentityString();
@@ -20,7 +20,7 @@
     for (    final ObjectAssociation assoc : spec.getAssociations()) {
       context.getWriter().append("#" + name + "#"+ assoc.getId()+ ":roles\n");
     }
-    for (    final ObjectAction action : spec.getObjectActionsAll()) {
+    for (    final ObjectAction action : spec.getObjectActions(Contributed.EXCLUDED)) {
       context.getWriter().append("#" + name + "#"+ action.getId()+ "():roles\n");
     }
     context.getWriter().append("\n");
