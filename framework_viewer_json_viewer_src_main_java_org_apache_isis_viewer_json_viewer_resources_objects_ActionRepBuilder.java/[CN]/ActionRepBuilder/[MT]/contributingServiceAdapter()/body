@@ -1,0 +1,10 @@
+{
+  ObjectSpecification serviceType=objectMember.getOnType();
+  List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+  for (  ObjectAdapter serviceAdapter : serviceAdapters) {
+    if (serviceAdapter.getSpecification() == serviceType) {
+      return serviceAdapter;
+    }
+  }
+  throw new IllegalStateException("Unable to locate contributing service");
+}

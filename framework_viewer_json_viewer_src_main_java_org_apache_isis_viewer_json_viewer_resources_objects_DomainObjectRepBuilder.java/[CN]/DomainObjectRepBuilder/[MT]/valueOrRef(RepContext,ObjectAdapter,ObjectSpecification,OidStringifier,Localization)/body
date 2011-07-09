@@ -1,0 +1,10 @@
+{
+  ValueFacet valueFacet=objectSpec.getFacet(ValueFacet.class);
+  if (valueFacet != null) {
+    EncodableFacet encodeableFacet=objectSpec.getFacet(EncodableFacet.class);
+    return encodeableFacet.toEncodedString(objectAdapter);
+  }
+  TitleFacet titleFacet=objectSpec.getFacet(TitleFacet.class);
+  String title=titleFacet.title(objectAdapter,localization);
+  return LinkRepBuilder.newObjectBuilder(repContext,objectAdapter,oidStringifier).withTitle(title).build();
+}

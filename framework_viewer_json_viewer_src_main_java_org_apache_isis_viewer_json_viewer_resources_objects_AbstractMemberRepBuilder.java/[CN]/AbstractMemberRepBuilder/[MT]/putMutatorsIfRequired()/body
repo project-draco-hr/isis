@@ -1,5 +1,5 @@
 {
-  if (!memberRepType.hasMutators() || usability().isVetoed()) {
+  if (!memberRepType.isStandalone() || usability().isVetoed()) {
     return;
   }
   Map<String,MutatorSpec> mutators=memberType.getMutators();
@@ -7,7 +7,7 @@
     MutatorSpec mutatorSpec=mutators.get(mutator);
     if (hasMemberFacet(mutatorSpec.mutatorFacetType)) {
       String urlForMember=urlForMember(mutatorSpec.suffix);
-      List<String> body=mutatorArgValues(mutatorSpec);
+      Object body=mutatorArgs(mutatorSpec);
       Representation detailsLink=LinkRepBuilder.newBuilder(repContext,mutator,urlForMember).withHttpMethod(mutatorSpec.httpMethod).withBody(body).build();
       representation.put(mutator,detailsLink);
     }
