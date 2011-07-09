@@ -1,0 +1,23 @@
+{
+  return new TextField<ObjectAdapterMemento>(ID_VALUE_ID,new Model<ObjectAdapterMemento>(){
+    private static final long serialVersionUID=1L;
+    @Override public ObjectAdapterMemento getObject(){
+      if (pending != null) {
+        return pending;
+      }
+      final ObjectAdapter adapter=ValueCollection.this.getModelValue();
+      return ObjectAdapterMemento.createOrNull(adapter);
+    }
+    @Override public void setObject(    final ObjectAdapterMemento adapterMemento){
+      pending=adapterMemento;
+    }
+  }
+){
+    private static final long serialVersionUID=1L;
+    @Override protected void onModelChanged(){
+      super.onModelChanged();
+      syncWithInput();
+    }
+  }
+;
+}
