@@ -1,14 +1,6 @@
 {
-  init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  ObjectAssociation association=objectAdapter.getSpecification().getAssociation(collectionId);
-  if (association == null || !association.isOneToManyAssociation()) {
-    throwCollectionNotFoundException(collectionId);
-  }
-  OneToManyAssociation collection=(OneToManyAssociation)association;
-  CollectionRepBuilder builder=CollectionRepBuilder.newBuilder(getResourceContext().repContext(),objectAdapter,collection);
-  if (!builder.isMemberVisible()) {
-    throwCollectionNotFoundException(collectionId);
-  }
+  final OneToManyAssociation collection=getCollection(objectAdapter,collectionId,Intent.ACCESS);
+  final CollectionRepBuilder builder=CollectionRepBuilder.newBuilder(getResourceContext().repContext(),objectAdapter,collection);
   return jsonRepresentionFrom(builder);
 }

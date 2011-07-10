@@ -1,0 +1,10 @@
+{
+  String memberId=objectMember.getId();
+  if (objectMember.isVisible(getSession(),objectAdapter).isVetoed()) {
+    throwNotFoundException(memberId,memberType);
+  }
+  if (intent.isMutate() && objectMember.isUsable(getSession(),objectAdapter).isVetoed()) {
+    throwPreconditionFailedException(memberId,memberType);
+  }
+  return objectMember;
+}

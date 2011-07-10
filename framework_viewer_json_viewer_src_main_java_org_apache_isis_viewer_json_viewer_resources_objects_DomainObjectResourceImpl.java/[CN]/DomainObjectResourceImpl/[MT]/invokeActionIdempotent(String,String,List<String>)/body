@@ -1,3 +1,23 @@
 {
-  return null;
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  final ObjectAction action=getObjectAction(objectAdapter,actionId,Intent.ACCESS);
+  if (action.isContributed()) {
+    throw new NotYetImplementedException();
+  }
+  if (action.getParameterCount() > 0) {
+    throw new NotYetImplementedException();
+  }
+  ObjectAdapter[] parameters=new ObjectAdapter[0];
+  ObjectAdapter returnedAdapter=action.execute(objectAdapter,parameters);
+  if (returnedAdapter == null) {
+    return responseOfOk();
+  }
+  CollectionFacet facet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
+  if (facet != null) {
+    Collection<ObjectAdapter> collectionAdapters=facet.collection(returnedAdapter);
+    return jsonRepresentationOf(collectionAdapters);
+  }
+ else {
+    return jsonRepresentationOf(returnedAdapter);
+  }
 }
