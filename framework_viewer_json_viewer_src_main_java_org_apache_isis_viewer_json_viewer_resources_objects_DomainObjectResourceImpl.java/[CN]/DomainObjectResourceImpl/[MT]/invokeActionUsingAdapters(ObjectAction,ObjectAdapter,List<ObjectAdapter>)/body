@@ -1,0 +1,15 @@
+{
+  ObjectAdapter[] parameterArray=parameterAdapters.toArray(new ObjectAdapter[0]);
+  final ObjectAdapter returnedAdapter=action.execute(objectAdapter,parameterArray);
+  if (returnedAdapter == null) {
+    return responseOfOk();
+  }
+  final CollectionFacet facet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
+  if (facet != null) {
+    final Collection<ObjectAdapter> collectionAdapters=facet.collection(returnedAdapter);
+    return jsonRepresentationOf(collectionAdapters);
+  }
+ else {
+    return jsonRepresentationOf(returnedAdapter);
+  }
+}

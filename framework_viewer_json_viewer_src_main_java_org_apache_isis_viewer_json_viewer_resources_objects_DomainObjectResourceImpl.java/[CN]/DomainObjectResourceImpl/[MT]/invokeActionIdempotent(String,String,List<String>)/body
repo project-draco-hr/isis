@@ -1,23 +1,14 @@
 {
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final ObjectAction action=getObjectAction(objectAdapter,actionId,Intent.ACCESS);
-  if (action.isContributed()) {
-    throw new NotYetImplementedException();
+  if (!isIdempotent(action)) {
+    throw new WebApplicationException(responseOfMethodNotAllowed("Method not allowed; action '" + action.getId() + "' is not idempotent"));
   }
-  if (action.getParameterCount() > 0) {
-    throw new NotYetImplementedException();
+  int numParameters=action.getParameterCount();
+  int numArguments=arguments.size();
+  if (numArguments != numParameters) {
+    throw new WebApplicationException(responseOfBadRequest("Action '" + action.getId() + "' has "+ numParameters+ " parameters but received "+ numArguments+ " arguments"));
   }
-  ObjectAdapter[] parameters=new ObjectAdapter[0];
-  ObjectAdapter returnedAdapter=action.execute(objectAdapter,parameters);
-  if (returnedAdapter == null) {
-    return responseOfOk();
-  }
-  CollectionFacet facet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
-  if (facet != null) {
-    Collection<ObjectAdapter> collectionAdapters=facet.collection(returnedAdapter);
-    return jsonRepresentationOf(collectionAdapters);
-  }
- else {
-    return jsonRepresentationOf(returnedAdapter);
-  }
+  final List<ObjectAdapter> parameters=argumentAdaptersFor(action,arguments);
+  return invokeActionUsingAdapters(action,objectAdapter,parameters);
 }

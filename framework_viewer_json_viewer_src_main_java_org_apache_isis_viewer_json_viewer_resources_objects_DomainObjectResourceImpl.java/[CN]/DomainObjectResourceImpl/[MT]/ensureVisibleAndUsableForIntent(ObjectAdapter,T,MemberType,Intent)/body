@@ -3,8 +3,12 @@
   if (objectMember.isVisible(getSession(),objectAdapter).isVetoed()) {
     throwNotFoundException(memberId,memberType);
   }
-  if (intent.isMutate() && objectMember.isUsable(getSession(),objectAdapter).isVetoed()) {
-    throwPreconditionFailedException(memberId,memberType);
+  if (intent.isMutate()) {
+    Consent usable=objectMember.isUsable(getSession(),objectAdapter);
+    if (usable.isVetoed()) {
+      String memberTypeStr=memberType.name().toLowerCase();
+      throw new WebApplicationException(responseOfPreconditionFailed(memberTypeStr + " is not usable: '" + memberId+ "' ("+ usable.getReason()+ ")"));
+    }
   }
   return objectMember;
 }
