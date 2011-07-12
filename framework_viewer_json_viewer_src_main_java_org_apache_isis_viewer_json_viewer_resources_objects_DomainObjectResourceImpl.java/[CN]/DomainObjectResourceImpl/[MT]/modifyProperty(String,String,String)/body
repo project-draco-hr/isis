@@ -1,7 +1,13 @@
 {
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToOneAssociation property=getProperty(objectAdapter,propertyId,Intent.MUTATE);
+  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
   ObjectSpecification objectSpec=property.getSpecification();
-  objectAdapterFor(objectSpec,proposedValue);
-  return null;
+  ObjectAdapter proposedValueAdapter=objectAdapterFor(objectSpec,proposedValue);
+  Consent consent=property.isAssociationValid(objectAdapter,proposedValueAdapter);
+  if (consent.isVetoed()) {
+    throw new WebApplicationException(responseOfPreconditionFailed(consent.getReason()));
+  }
+  PropertySetterFacet setterFacet=property.getFacet(PropertySetterFacet.class);
+  setterFacet.setProperty(objectAdapter,proposedValueAdapter);
+  return responseOfOk();
 }
