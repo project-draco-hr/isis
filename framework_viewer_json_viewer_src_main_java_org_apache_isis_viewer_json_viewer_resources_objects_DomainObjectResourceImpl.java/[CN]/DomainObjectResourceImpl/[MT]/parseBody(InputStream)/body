@@ -1,0 +1,17 @@
+{
+  try {
+    byte[] byteArray=ByteStreams.toByteArray(body);
+    String bodyAsString=new String(byteArray,Charsets.UTF_8);
+    List<?> arguments=objectMapper.readValue(bodyAsString,ArrayList.class);
+    return arguments;
+  }
+ catch (  JsonParseException e) {
+    throw new WebApplicationException(e,responseOfBadRequest("could not parse body"));
+  }
+catch (  JsonMappingException e) {
+    throw new WebApplicationException(e,responseOfBadRequest("could not map body to a Map structure"));
+  }
+catch (  IOException e) {
+    throw new WebApplicationException(e,responseOfBadRequest("could not read body"));
+  }
+}

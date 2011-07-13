@@ -1,27 +1,14 @@
 {
   List<ObjectAdapter> argAdapters=Lists.newArrayList();
-  try {
-    byte[] byteArray=ByteStreams.toByteArray(body);
-    String bodyAsString=new String(byteArray,Charsets.UTF_8);
-    List<?> arguments=objectMapper.readValue(bodyAsString,ArrayList.class);
-    int numParameters=action.getParameterCount();
-    int numArguments=arguments.size();
-    if (numArguments != numParameters) {
-      throw new WebApplicationException(responseOfBadRequest("Action '" + action.getId() + "' has "+ numParameters+ " parameters but received "+ numArguments+ " arguments"));
-    }
-    for (int i=0; i < numParameters; i++) {
-      ObjectAdapter argAdapter=toObjectAdapter(action,arguments,i);
-      argAdapters.add(argAdapter);
-    }
-    return argAdapters;
+  List<?> arguments=parseBody(body);
+  int numParameters=action.getParameterCount();
+  int numArguments=arguments.size();
+  if (numArguments != numParameters) {
+    throw new WebApplicationException(responseOfBadRequest("Action '" + action.getId() + "' has "+ numParameters+ " parameters but received "+ numArguments+ " arguments in body"));
   }
- catch (  JsonParseException e) {
-    throw new WebApplicationException(e,responseOfBadRequest("could not parse body"));
+  for (int i=0; i < numParameters; i++) {
+    ObjectAdapter argAdapter=objectAdapterFor(action,arguments,i);
+    argAdapters.add(argAdapter);
   }
-catch (  JsonMappingException e) {
-    throw new WebApplicationException(e,responseOfBadRequest("could not map body to a Map structure"));
-  }
-catch (  IOException e) {
-    throw new WebApplicationException(e,responseOfBadRequest("could not read body"));
-  }
+  return argAdapters;
 }

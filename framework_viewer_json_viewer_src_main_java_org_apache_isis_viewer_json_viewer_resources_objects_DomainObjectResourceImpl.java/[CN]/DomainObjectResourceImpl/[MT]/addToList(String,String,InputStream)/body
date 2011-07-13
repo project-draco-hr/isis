@@ -1,0 +1,15 @@
+{
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.MUTATE);
+  if (!collection.getCollectionSemantics().isListOrArray()) {
+    throw new WebApplicationException(responseOfBadRequest("Collection '" + collectionId + "' does not have list or array semantics"));
+  }
+  ObjectSpecification collectionSpec=collection.getSpecification();
+  ObjectAdapter argAdapter=parseBody(collectionSpec,body);
+  Consent consent=collection.isValidToAdd(objectAdapter,argAdapter);
+  if (consent.isVetoed()) {
+    throw new WebApplicationException(responseOfPreconditionFailed(consent.getReason()));
+  }
+  collection.addElement(objectAdapter,argAdapter);
+  return responseOfOk();
+}
