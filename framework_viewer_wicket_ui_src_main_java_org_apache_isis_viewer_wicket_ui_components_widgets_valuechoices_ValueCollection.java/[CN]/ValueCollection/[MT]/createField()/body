@@ -1,0 +1,28 @@
+{
+  return new TextField<ObjectAdapterMemento>(ID_VALUE_ID,new Model<ObjectAdapterMemento>(){
+    private static final long serialVersionUID=1L;
+    @Override public ObjectAdapterMemento getObject(){
+      if (pending != null) {
+        LOG.info("TextField: pending not null: " + pending.toString());
+        return pending;
+      }
+      LOG.info("TextField: pending is null");
+      final ObjectAdapter adapter=ValueCollection.this.getModelValue();
+      return ObjectAdapterMemento.createOrNull(adapter);
+    }
+    @Override public void setObject(    final ObjectAdapterMemento adapterMemento){
+      if (adapterMemento != null) {
+        LOG.info("TextField: setting to: " + adapterMemento.toString());
+        pending=adapterMemento;
+      }
+      if (scalarModel != null && pending != null) {
+        LOG.info("TextField: setting to pending: " + pending.toString());
+        scalarModel.setObject(pending.getObjectAdapter());
+      }
+    }
+  }
+){
+    private static final long serialVersionUID=1L;
+  }
+;
+}
