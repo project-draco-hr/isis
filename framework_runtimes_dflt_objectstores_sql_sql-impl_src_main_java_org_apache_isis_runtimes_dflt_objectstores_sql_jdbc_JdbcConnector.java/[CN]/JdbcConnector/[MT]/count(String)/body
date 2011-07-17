@@ -1,0 +1,15 @@
+{
+  LOG.debug("SQL: " + sql);
+  PreparedStatement statement;
+  try {
+    statement=connection.prepareStatement(sql);
+    final ResultSet result=statement.executeQuery();
+    result.next();
+    final int count=result.getInt(1);
+    statement.close();
+    return count;
+  }
+ catch (  final SQLException e) {
+    throw new SqlObjectStoreException("Failed count",e);
+  }
+}

@@ -1,0 +1,28 @@
+{
+  if (value == null) {
+    return null;
+  }
+  final Object o=value.getObject();
+  if (o instanceof Money) {
+    return ((Money)o).floatValue();
+  }
+ else   if (o instanceof Percentage) {
+    return ((Percentage)o).floatValue();
+  }
+ else   if (o instanceof Password) {
+    return ((Password)o).getPassword();
+  }
+ else   if (o instanceof String) {
+    return o;
+  }
+ else {
+    if (columnType().contains("CHAR")) {
+      final EncodableFacet facet=value.getSpecification().getFacet(EncodableFacet.class);
+      final String encodedString=facet.toEncodedString(value);
+      return encodedString;
+    }
+ else {
+      return o;
+    }
+  }
+}

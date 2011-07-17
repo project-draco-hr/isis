@@ -1,0 +1,15 @@
+{
+  final DatabaseConnector connector=connectionPool.acquire();
+  final StringBuffer sql=new StringBuffer();
+  sql.append("insert into ");
+  sql.append(Sql.tableIdentifier(TABLE_NAME));
+  sql.append(" (");
+  sql.append(Sql.identifier(PRIMARYKEY_COLUMN));
+  sql.append(", ");
+  sql.append(Sql.identifier(ID_COLUMN));
+  sql.append(") values (?,?)");
+  connector.addToQueryValues(((SqlOid)oid).getPrimaryKey().naturalValue());
+  connector.addToQueryValues(name);
+  connector.insert(sql.toString());
+  connectionPool.release(connector);
+}
