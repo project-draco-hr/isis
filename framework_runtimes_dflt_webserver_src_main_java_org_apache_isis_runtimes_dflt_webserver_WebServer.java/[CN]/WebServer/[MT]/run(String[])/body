@@ -3,8 +3,11 @@
   runner.addOptionHandler(new OptionHandlerPort());
   runner.addOptionHandler(new OptionHandlerAddress());
   runner.addOptionHandler(new OptionHandlerResourceBase());
+  runner.addOptionHandler(new OptionHandlerStartupMode());
   if (!runner.parseAndValidate()) {
     return;
   }
-  runner.bootstrap(new WebServerBootstrapper(runner));
+  WebServerBootstrapper bootstrapper=new WebServerBootstrapper(runner);
+  runner.bootstrap(bootstrapper);
+  jettyServer=bootstrapper.getJettyServer();
 }
