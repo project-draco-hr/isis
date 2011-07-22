@@ -1,6 +1,8 @@
 {
   Response resources=homePageResource.resources();
   assertThat(resources.getStatus(),is(200));
-  Object entity=resources.getEntity();
+  String entity=(String)resources.getEntity();
   assertThat(entity,is(not(nullValue())));
+  HomePage homePage=jsonMapper.read(entity,HomePage.class);
+  assertThat(homePage.getUser().getMethod(),is(Method.GET));
 }

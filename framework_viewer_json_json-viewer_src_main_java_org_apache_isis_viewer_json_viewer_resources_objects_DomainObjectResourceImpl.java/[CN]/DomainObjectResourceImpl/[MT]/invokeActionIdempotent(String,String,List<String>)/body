@@ -9,6 +9,12 @@
   if (numArguments != numParameters) {
     throw new WebApplicationException(responseOfBadRequest("Action '" + action.getId() + "' has "+ numParameters+ " parameters but received "+ numArguments+ " arguments"));
   }
-  final List<ObjectAdapter> parameters=argumentAdaptersFor(action,arguments);
+  List<ObjectAdapter> parameters;
+  try {
+    parameters=argumentAdaptersFor(action,arguments);
+  }
+ catch (  IOException e) {
+    throw new WebApplicationException(responseOfBadRequest("Action '" + action.getId() + "' has body that cannot be parsed as JSON",e));
+  }
   return invokeActionUsingAdapters(action,objectAdapter,parameters);
 }
