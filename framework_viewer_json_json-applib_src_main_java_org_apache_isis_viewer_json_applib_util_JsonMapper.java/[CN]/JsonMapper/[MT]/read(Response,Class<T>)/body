@@ -1,0 +1,15 @@
+{
+  int status=response.getStatus();
+  if (status >= 200 && status < 300) {
+    throw new IllegalArgumentException("response status must be in 2xx range (was " + status + ")");
+  }
+  Object entityObj=response.getEntity();
+  if (entityObj == null) {
+    return null;
+  }
+  if (!(entityObj instanceof String)) {
+    throw new IllegalArgumentException("response entity must be a String (was " + entityObj.getClass().getName() + ")");
+  }
+  String entity=(String)entityObj;
+  return read(entity,requiredType);
+}
