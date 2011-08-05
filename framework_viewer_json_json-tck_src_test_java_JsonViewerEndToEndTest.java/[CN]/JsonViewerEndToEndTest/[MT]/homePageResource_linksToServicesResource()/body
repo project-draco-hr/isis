@@ -1,0 +1,11 @@
+{
+  HomePageResource homePageResource=client.getHomePageResource();
+  Response resourcesResp=homePageResource.resources();
+  JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
+  Response servicesResp=client.follow(homePageRepr.getServices());
+  JsonResponse<ServicesRepresentation> servicesJsonResp=JsonResponse.of(servicesResp,ServicesRepresentation.class);
+  ServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
+  DomainObjectRepresentation applibValuesEntityRepoRep=servicesRepr.get(0);
+  assertThat(applibValuesEntityRepoRep,is(not(nullValue())));
+}

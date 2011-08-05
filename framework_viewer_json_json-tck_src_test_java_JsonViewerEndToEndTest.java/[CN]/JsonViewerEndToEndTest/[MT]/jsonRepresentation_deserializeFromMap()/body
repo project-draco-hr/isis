@@ -1,0 +1,9 @@
+{
+  HomePageResource homePageResource=client.getHomePageResource();
+  Response resourcesResp=homePageResource.resources();
+  JsonResponse<JsonRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,JsonRepresentation.class);
+  assertThat(homePageJsonResp.getStatus(),is(HttpStatusCode.OK));
+  JsonRepresentation jsonRepr=homePageJsonResp.getEntity();
+  assertThat(jsonRepr,is(not(nullValue())));
+  assertThat(jsonRepr.getJsonNode().isArray(),is(false));
+}

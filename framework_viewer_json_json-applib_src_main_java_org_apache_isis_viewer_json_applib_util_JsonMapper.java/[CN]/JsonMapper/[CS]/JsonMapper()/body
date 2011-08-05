@@ -1,4 +1,15 @@
 {
+  DeserializerProvider deserializerProvider=new StdDeserializerProvider();
+  SimpleDeserializers d=new SimpleDeserializers();
+  d.addDeserializer(JsonRepresentation.class,new JsonDeserializer<JsonRepresentation>(){
+    private JsonDeserializer<? extends JsonNode> jsonNodeDeser=JsonNodeDeserializer.getDeserializer(JsonNode.class);
+    @Override public JsonRepresentation deserialize(    JsonParser jp,    DeserializationContext ctxt) throws IOException, JsonProcessingException {
+      return new JsonRepresentation(jsonNodeDeser.deserialize(jp,ctxt));
+    }
+  }
+);
+  deserializerProvider.withAdditionalDeserializers(d);
+  objectMapper=new ObjectMapper(null,null,deserializerProvider);
   objectMapper.configure(SerializationConfig.Feature.INDENT_OUTPUT,true);
   objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 }
