@@ -1,0 +1,10 @@
+{
+  ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  Serializer serializer=new nu.xom.Serializer(baos);
+  serializer.write(document2);
+  ByteArrayInputStream bais=new ByteArrayInputStream(baos.toByteArray());
+  XMLSerializer xmlSerializer=new XMLSerializer();
+  JSON json=xmlSerializer.readFromStream(bais);
+  String jsonStr=json.toString();
+  return JsonMapper.instance().read(jsonStr,JsonRepresentation.class);
+}

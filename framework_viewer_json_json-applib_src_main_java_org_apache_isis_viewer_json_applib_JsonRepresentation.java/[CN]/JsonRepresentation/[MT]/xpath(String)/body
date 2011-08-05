@@ -1,4 +1,28 @@
 {
   String xml=toXml();
+  Builder builder=new nu.xom.Builder();
+  Document document=builder.build(xml,".");
+  Nodes matchingNodes=document.query("/o" + xpathExpression);
+  Document doc;
+switch (matchingNodes.size()) {
+case 0:
+    return null;
+case 1:
+  Node node=matchingNodes.get(0);
+if (!(node instanceof Element)) {
   return null;
+}
+Element el=(Element)node;
+el.detach();
+doc=new nu.xom.Document(el);
+return asJsonRepresentation(doc);
+default :
+doc=new Document(new nu.xom.Element("o"));
+for (int i=0; i < matchingNodes.size(); i++) {
+Node matchingNode=matchingNodes.get(i);
+matchingNode.detach();
+doc.getRootElement().appendChild(matchingNode);
+}
+return asJsonRepresentation(doc);
+}
 }
