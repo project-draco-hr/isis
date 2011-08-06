@@ -1,4 +1,17 @@
 {
-  JsonNode subNode=jsonNode.get(key);
-  return as(subNode,Link.class);
+  JsonNode node=getNode(path);
+  if (node == null || node.isMissingNode()) {
+    return null;
+  }
+  if (node.isArray()) {
+    throw new IllegalArgumentException("'" + path + "' (a list) does not represent a link");
+  }
+  if (node.isValueNode()) {
+    throw new IllegalArgumentException("'" + path + "' (a value) does not represent a link");
+  }
+  Link link=JsonNodeUtils.convert(node,Link.class);
+  if (link.getHref() == null || link.getRel() == null) {
+    throw new IllegalArgumentException("'" + path + "' (a map) does not fully represent a link");
+  }
+  return link;
 }

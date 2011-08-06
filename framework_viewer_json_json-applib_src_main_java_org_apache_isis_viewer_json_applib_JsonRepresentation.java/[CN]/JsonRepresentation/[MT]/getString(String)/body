@@ -1,11 +1,11 @@
 {
-  JsonNode subNode=jsonNode.get(key);
-  if (subNode == null) {
+  JsonNode node=getNode(path);
+  if (node == null || node.isMissingNode()) {
     return null;
   }
-  ensureValue(key,subNode,"string");
-  if (!subNode.isTextual()) {
-    throw new IllegalArgumentException("'" + key + "' ("+ subNode.toString()+ ") is not a string");
+  checkValue(path,node,"a string");
+  if (!node.isTextual()) {
+    throw new IllegalArgumentException("'" + path + "' ("+ node.toString()+ ") is not a string");
   }
-  return subNode.getTextValue();
+  return node.getTextValue();
 }

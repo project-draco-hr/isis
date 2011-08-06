@@ -1,4 +1,7 @@
 {
-  JsonNode subNode=jsonNode.get(key);
-  return as(subNode,JsonRepresentation.class);
+  JsonNode node=getNode(path);
+  if (node == null || node.isMissingNode()) {
+    return null;
+  }
+  return new JsonRepresentation(node);
 }
