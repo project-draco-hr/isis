@@ -3,6 +3,19 @@
   Response servicesResp=servicesResource.services();
   JsonResponse<ServicesRepresentation> servicesJsonResp=JsonResponse.of(servicesResp,ServicesRepresentation.class);
   ServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
-  JsonRepresentation applibValuesEntityRepoRep=servicesRepr.elementAt(0);
-  assertThat(applibValuesEntityRepoRep,is(not(nullValue())));
+  assertThat(servicesRepr,is(not(nullValue())));
+  assertThat(servicesRepr.isArray(),is(true));
+  assertThat(servicesRepr.size(),is(4));
+  JsonRepresentation repoRepr=servicesRepr.elementAt(0);
+  assertThat(repoRepr,is(not(nullValue())));
+  assertThat(repoRepr.getString("title"),is("ApplibValues"));
+  Link repoObjLink=repoRepr.getLink("link");
+  assertThat(repoObjLink.getRel(),is("object"));
+  assertThat(repoObjLink.getHref(),matches("http://localhost:\\d+/objects/OID:1"));
+  Link repoTypeLink=repoRepr.getLink("type");
+  assertThat(repoTypeLink.getRel(),is("type"));
+  assertThat(repoTypeLink.getHref(),matches("http://localhost:\\d+/types/application/vnd.org.apache.isis.tck.objstore.dflt.scalars.ApplibValuesEntityRepositoryDefault\\+json"));
+  Link repoIconLink=repoRepr.getLink("icon");
+  assertThat(repoIconLink.getRel(),is("icon"));
+  assertThat(repoIconLink.getHref(),matches("http://localhost:\\d+/images/null.png"));
 }

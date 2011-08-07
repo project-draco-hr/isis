@@ -3,4 +3,7 @@
   Response domainObjectResp=domainObjectResource.object("OID:1");
   JsonResponse<DomainObjectRepresentation> domainObjectJsonResp=JsonResponse.of(domainObjectResp,DomainObjectRepresentation.class);
   DomainObjectRepresentation domainObjectRepr=domainObjectJsonResp.getEntity();
+  Link link=domainObjectRepr.getLink("_self.link");
+  assertThat(link.getRel(),is("object"));
+  assertThat(link.getHref(),matches(".+objects/OID:1"));
 }

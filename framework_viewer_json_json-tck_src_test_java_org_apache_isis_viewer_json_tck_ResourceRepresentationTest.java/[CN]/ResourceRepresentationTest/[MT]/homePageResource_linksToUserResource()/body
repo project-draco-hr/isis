@@ -1,0 +1,11 @@
+{
+  HomePageResource homePageResource=client.getHomePageResource();
+  Response resourcesResp=homePageResource.resources();
+  JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
+  Response userResp=client.follow(homePageRepr.getUser());
+  JsonResponse<UserRepresentation> userJsonResp=JsonResponse.of(userResp,UserRepresentation.class);
+  UserRepresentation userRepr=userJsonResp.getEntity();
+  assertThat(userRepr,is(not(nullValue())));
+  assertThat(userRepr.isMap(),is(true));
+}

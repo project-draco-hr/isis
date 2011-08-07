@@ -1,0 +1,13 @@
+{
+  ServicesResource servicesResource=client.getServicesResource();
+  Response servicesResp=servicesResource.services();
+  JsonResponse<ServicesRepresentation> servicesJsonResp=JsonResponse.of(servicesResp,ServicesRepresentation.class);
+  ServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
+  JsonRepresentation repoRepr=servicesRepr.elementAt(0);
+  Link repoObjLink=repoRepr.getLink("link");
+  Response repoFollowResp=client.follow(repoObjLink);
+  JsonResponse<DomainObjectRepresentation> repoFollowJsonResp=JsonResponse.of(repoFollowResp,DomainObjectRepresentation.class);
+  DomainObjectRepresentation domainObjectRepr=repoFollowJsonResp.getEntity();
+  Link domainObjectReprLink=domainObjectRepr.getLink("_self.link");
+  assertThat(domainObjectReprLink,is(repoObjLink));
+}
