@@ -2,6 +2,7 @@
   HomePageResource homePageResource=client.getHomePageResource();
   Response resourcesResp=homePageResource.resources();
   JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  assertThat(homePageJsonResp.getStatus().getRange(),is(Range.SUCCESS));
   assertThat(homePageJsonResp.getStatus(),is(HttpStatusCode.OK));
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   assertThat(homePageRepr,is(not(nullValue())));

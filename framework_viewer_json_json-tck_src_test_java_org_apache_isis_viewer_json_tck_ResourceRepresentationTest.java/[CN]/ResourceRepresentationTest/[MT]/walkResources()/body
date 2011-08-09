@@ -1,0 +1,9 @@
+{
+  HomePageResource homePageResource=client.getHomePageResource();
+  RepresentationWalker walker=client.createWalker(homePageResource.resources());
+  walker.walk("services");
+  walker.walkXpath("/*[title='ApplibValues']/link[rel='object']");
+  walker.walkXpath("/newEntity[memberType='action']/details");
+  JsonRepresentation jsonRepresentation=walker.getEntity();
+  assertThat(jsonRepresentation.getString("_self.link.href"),matches(".+/objects/OID:1/actions/newEntity"));
+}

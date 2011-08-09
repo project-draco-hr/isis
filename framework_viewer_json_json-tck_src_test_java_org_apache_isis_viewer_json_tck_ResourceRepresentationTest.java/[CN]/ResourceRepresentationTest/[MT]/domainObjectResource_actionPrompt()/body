@@ -1,0 +1,30 @@
+{
+  DomainObjectResource domainObjectResource=client.getDomainObjectResource();
+  Response actionPromptResp=domainObjectResource.actionPrompt("OID:1","list");
+  JsonResponse<ActionPromptRepresentation> actionPromptJsonResp=JsonResponse.of(actionPromptResp,ActionPromptRepresentation.class);
+  assertThat(actionPromptJsonResp.getStatus().getRange(),is(Range.SUCCESS));
+  ActionPromptRepresentation actionPromptRepr=actionPromptJsonResp.getEntity();
+  Link selfLink=actionPromptRepr.getLink("_self.link");
+  assertThat(selfLink.getRel(),is("member"));
+  assertThat(selfLink.getHref(),matches(".+objects/OID:1/actions/list"));
+  assertThat(selfLink.getMethod(),is(Method.GET));
+  Link selfObject=actionPromptRepr.getLink("_self.object");
+  assertThat(selfObject.getRel(),is("object"));
+  assertThat(selfObject.getHref(),matches(".+objects/OID:1"));
+  assertThat(selfObject.getMethod(),is(Method.GET));
+  Link type=actionPromptRepr.getLink("type");
+  assertThat(type.getRel(),is("type"));
+  assertThat(type.getHref(),matches(".+vnd\\.list\\+json"));
+  assertThat(type.getMethod(),is(Method.GET));
+  assertThat(actionPromptRepr.getString("memberType"),is("action"));
+  assertThat(actionPromptRepr.getString("actionType"),is("USER"));
+  assertThat(actionPromptRepr.getInt("numParameters"),is(0));
+  assertThat(actionPromptRepr.getArray("parameters").arraySize(),is(0));
+  Link invokeLink=actionPromptRepr.getLink("invoke");
+  assertThat(invokeLink.getRel(),is("invoke"));
+  assertThat(invokeLink.getHref(),matches(".+objects/OID:1/actions/list/invoke"));
+  assertThat(invokeLink.getMethod(),is(Method.POST));
+  assertThat(invokeLink.getBody(),is(not(nullValue())));
+  assertThat(invokeLink.getBody().isArray(),is(true));
+  assertThat(invokeLink.getBody().arraySize(),is(0));
+}

@@ -1,0 +1,22 @@
+{
+  DomainObjectResource domainObjectResource=client.getDomainObjectResource();
+  JsonRepresentation body=JsonRepresentation.newArray();
+  Response actionInvokeResp=domainObjectResource.invokeAction("OID:1","list",body.asInputStream());
+  JsonResponse<ActionInvocationRepresentation> actionInvokeJsonResp=JsonResponse.of(actionInvokeResp,ActionInvocationRepresentation.class);
+  assertThat(actionInvokeJsonResp.getStatus().getRange(),is(Range.SUCCESS));
+  ActionInvocationRepresentation actionInvokeRepr=actionInvokeJsonResp.getEntity();
+  assertThat(actionInvokeRepr.isArray(),is(true));
+  assertThat(actionInvokeRepr.arraySize(),is(5));
+  JsonRepresentation domainObjectRefRepr=actionInvokeRepr.elementAt(0);
+  assertThat(domainObjectRefRepr,is(not(nullValue())));
+  assertThat(domainObjectRefRepr.getString("title"),is("Untitled Applib Values Entity"));
+  Link domainObjectLink=domainObjectRefRepr.getLink("link");
+  assertThat(domainObjectLink.getRel(),is("object"));
+  assertThat(domainObjectLink.getHref(),matches("http://localhost:\\d+/objects/OID:7"));
+  Link domainObjectTypeLink=domainObjectRefRepr.getLink("type");
+  assertThat(domainObjectTypeLink.getRel(),is("type"));
+  assertThat(domainObjectTypeLink.getHref(),matches("http://localhost:\\d+/types/application/vnd." + org.apache.isis.tck.dom.scalars.ApplibValuesEntity.class.getName() + "\\+json"));
+  Link domainObjectIconLink=domainObjectRefRepr.getLink("icon");
+  assertThat(domainObjectIconLink.getRel(),is("icon"));
+  assertThat(domainObjectIconLink.getHref(),matches("http://localhost:\\d+/images/null.png"));
+}

@@ -1,0 +1,11 @@
+{
+  JsonNode node=getNode(path);
+  if (node == null || node.isMissingNode()) {
+    return null;
+  }
+  checkValue(path,node,"the null value");
+  if (!node.isNull()) {
+    throw new IllegalArgumentException("'" + path + "' ("+ node.toString()+ ") is not the null value");
+  }
+  return new JsonRepresentation(node);
+}
