@@ -1,16 +1,24 @@
 {
-  Document document=toXomDoc();
-  String prefix=jsonNode.isArray() ? "a" : "o";
-  Nodes matchingNodes=document.query("/" + prefix + xpathExpression);
-  Document doc=new Document(new nu.xom.Element(prefix));
-  for (int i=0; i < matchingNodes.size(); i++) {
-    Node matchingNode=matchingNodes.get(i);
-    matchingNode.detach();
-    doc.getRootElement().appendChild(matchingNode);
+  try {
+    org.jdom.Document jdomDoc=new SAXBuilder().build(new StringReader(toXml()));
+    String prefix=jsonNode.isArray() ? "a" : "o";
+    XPath xpath=XPath.newInstance("/" + prefix + xpathExpression);
+    @SuppressWarnings("unchecked") List<Element> matchingElements=xpath.selectNodes(jdomDoc);
+    org.jdom.Document doc=new org.jdom.Document(new org.jdom.Element(prefix));
+    for (    Element el : matchingElements) {
+      el.detach();
+      doc.getRootElement().addContent(el);
+    }
+    JsonRepresentation matchedRepresentation=asJsonRepresentation(doc);
+    if (matchedRepresentation == null) {
+      return null;
+    }
+    return matchedRepresentation;
   }
-  JsonRepresentation matchedRepresentation=asJsonRepresentation(doc);
-  if (matchedRepresentation == null) {
-    return null;
+ catch (  JDOMException e) {
+    throw new RuntimeException(e);
   }
-  return matchedRepresentation;
+catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
 }
