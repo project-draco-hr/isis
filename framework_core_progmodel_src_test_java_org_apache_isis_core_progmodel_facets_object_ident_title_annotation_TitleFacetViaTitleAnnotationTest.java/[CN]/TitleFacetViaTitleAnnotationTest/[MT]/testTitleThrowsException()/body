@@ -1,0 +1,14 @@
+{
+  List<Method> methods=MethodFinderUtils.findMethodsWithAnnotation(DomainObjectWithProblemInItsAnnotatedTitleMethod.class,MethodScope.OBJECT,Title.class);
+  TitleFacetViaTitleAnnotation facet=new TitleFacetViaTitleAnnotation(methods,mockFacetHolder);
+  final DomainObjectWithProblemInItsAnnotatedTitleMethod screwedPojo=new DomainObjectWithProblemInItsAnnotatedTitleMethod();
+  mockery.checking(new Expectations(){
+{
+      allowing(mockOwningAdapter).getObject();
+      will(returnValue(screwedPojo));
+    }
+  }
+);
+  String title=facet.title(mockOwningAdapter,null);
+  assertThat(title,is("Failed Title"));
+}

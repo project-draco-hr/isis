@@ -1,0 +1,14 @@
+{
+  List<Method> methods=MethodFinderUtils.findMethodsWithAnnotation(NormalDomainObject.class,MethodScope.OBJECT,Title.class);
+  TitleFacetViaTitleAnnotation facet=new TitleFacetViaTitleAnnotation(methods,mockFacetHolder);
+  final NormalDomainObject normalPojo=new NormalDomainObject();
+  mockery.checking(new Expectations(){
+{
+      allowing(mockOwningAdapter).getObject();
+      will(returnValue(normalPojo));
+    }
+  }
+);
+  String title=facet.title(mockOwningAdapter,null);
+  assertThat(title,is("Normal Domain Object"));
+}
