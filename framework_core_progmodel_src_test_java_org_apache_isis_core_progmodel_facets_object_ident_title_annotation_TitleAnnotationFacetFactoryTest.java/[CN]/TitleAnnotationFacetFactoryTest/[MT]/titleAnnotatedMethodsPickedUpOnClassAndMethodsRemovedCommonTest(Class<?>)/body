@@ -1,0 +1,11 @@
+{
+  assertNotNull("Type MUST not be 'null'",type);
+  final List<Method> titleMethods=MethodFinderUtils.findMethodsWithAnnotation(type,MethodScope.OBJECT,Title.class);
+  facetFactory.process(new ProcessClassContext(type,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TitleFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TitleFacetViaTitleAnnotation);
+  final TitleFacetViaTitleAnnotation titleFacetViaTitleAnnotation=(TitleFacetViaTitleAnnotation)facet;
+  assertEquals(titleMethods,titleFacetViaTitleAnnotation.getMethods());
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().containsAll(titleMethods));
+}

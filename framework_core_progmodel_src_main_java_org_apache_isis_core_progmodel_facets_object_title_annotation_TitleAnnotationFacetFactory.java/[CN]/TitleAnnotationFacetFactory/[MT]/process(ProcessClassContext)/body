@@ -1,0 +1,12 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  List<Method> methods=MethodFinderUtils.findMethodsWithAnnotation(cls,MethodScope.OBJECT,Title.class);
+  if (!methods.isEmpty()) {
+    for (    Method method : methods) {
+      processClassContext.removeMethod(method);
+    }
+    FacetUtil.addFacet(new TitleFacetViaTitleAnnotation(methods,facetHolder));
+    return;
+  }
+}
