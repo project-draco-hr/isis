@@ -1,0 +1,17 @@
+{
+  ObjectNode jsonRep=new ObjectNode(JsonNodeFactory.instance);
+  jsonRep.put("rel",getRel());
+  jsonRep.put("href",getHref());
+  if (getMethod() != null) {
+    jsonRep.put("method",getMethod().name());
+  }
+  if (getBody() != null) {
+    jsonRep.put("body",getBody().getJsonNode());
+  }
+  try {
+    return URLEncoder.encode(jsonRep.toString(),Charsets.UTF_16.name());
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException(e);
+  }
+}
