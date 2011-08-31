@@ -1,0 +1,11 @@
+{
+  if (!isMap()) {
+    throw new IllegalStateException("does not represent map");
+  }
+  if (value == null) {
+    return;
+  }
+  Path path=Path.parse(key);
+  ObjectNode node=JsonNodeUtils.walkNodeUpTo(nodeAsMap(),path.getHead());
+  node.put(path.getTail(),new POJONode(value));
+}

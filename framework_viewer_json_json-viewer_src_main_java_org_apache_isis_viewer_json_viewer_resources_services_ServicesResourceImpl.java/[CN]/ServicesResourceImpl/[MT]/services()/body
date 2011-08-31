@@ -1,5 +1,8 @@
 {
   init();
   final List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
-  return responseOfOk(jsonRepresentationOf(serviceAdapters));
+  ObjectSpecification objectSpec=getSpecification(Object.class.getName());
+  RepContext repContext=getResourceContext().repContext();
+  DomainObjectListRepBuilder builder=DomainObjectListRepBuilder.newBuilder(repContext,objectSpec,serviceAdapters);
+  return responseOfOk(jsonRepresentionFrom(builder));
 }

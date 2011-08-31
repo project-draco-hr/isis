@@ -1,10 +1,10 @@
 {
   RepContext repContext=this.repContext.underAttribute("_self");
-  Representation selfLink=LinkRepBuilder.newBuilder(repContext,"object",url()).build();
-  Representation selfType=LinkRepBuilder.newTypeBuilder(repContext,objectAdapter.getSpecification()).build();
+  JsonRepresentation selfLink=LinkRepBuilder.newBuilder(repContext,"object",url()).build();
+  JsonRepresentation selfType=LinkRepBuilder.newTypeBuilder(repContext,objectAdapter.getSpecification()).build();
   String title=objectAdapter.titleString();
-  Representation iconLink=LinkRepBuilder.newBuilder(repContext,"icon",icon()).build();
-  Representation self=new Representation();
+  JsonRepresentation iconLink=LinkRepBuilder.newBuilder(repContext,"icon",icon()).build();
+  JsonRepresentation self=JsonRepresentation.newMap();
   self.put("link",selfLink);
   self.put("type",selfType);
   self.put("oid",OidUtils.getOidStr(objectAdapter,getOidStringifier()));
@@ -13,9 +13,9 @@
   representation.put("_self",self);
   withAllMembers(objectAdapter);
   if (!members.isEmpty()) {
-    for (    Map.Entry<String,Representation> entry : members.entrySet()) {
+    for (    Map.Entry<String,JsonRepresentation> entry : members.entrySet()) {
       String memberId=entry.getKey();
-      Representation memberRep=entry.getValue();
+      JsonRepresentation memberRep=entry.getValue();
       representation.put(memberId,memberRep);
     }
   }
