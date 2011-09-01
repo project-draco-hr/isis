@@ -5,7 +5,11 @@
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   Response servicesResp=client.follow(homePageRepr.getServices());
   JsonResponse<ServicesRepresentation> servicesJsonResp=JsonResponse.of(servicesResp,ServicesRepresentation.class);
+  assertThat(servicesJsonResp.getStatus().getRange(),is(HttpStatusCode.Range.SUCCESS));
   ServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
-  JsonRepresentation applibValuesEntityRepoRep=servicesRepr.elementAt(0);
-  assertThat(applibValuesEntityRepoRep,is(not(nullValue())));
+  Link serviceReprRepTypeLink=servicesRepr.getRepresentationType();
+  assertThat(serviceReprRepTypeLink.getHref(),matches(".*/representationTypes/list:object$"));
+  JsonRepresentation serviceValues=servicesRepr.xpath("/value/e[rel='service']");
+  assertThat(serviceValues,is(not(nullValue())));
+  assertThat(serviceValues.arraySize(),is(greaterThan(0)));
 }

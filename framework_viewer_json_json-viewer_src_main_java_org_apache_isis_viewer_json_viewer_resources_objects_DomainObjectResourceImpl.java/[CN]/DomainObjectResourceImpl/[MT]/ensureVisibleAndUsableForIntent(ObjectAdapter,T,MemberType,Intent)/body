@@ -1,10 +1,10 @@
 {
   String memberId=objectMember.getId();
-  if (objectMember.isVisible(getSession(),objectAdapter).isVetoed()) {
+  if (objectMember.isVisible(getAuthenticationSession(),objectAdapter).isVetoed()) {
     throwNotFoundException(memberId,memberType);
   }
   if (intent.isMutate()) {
-    Consent usable=objectMember.isUsable(getSession(),objectAdapter);
+    Consent usable=objectMember.isUsable(getAuthenticationSession(),objectAdapter);
     if (usable.isVetoed()) {
       String memberTypeStr=memberType.name().toLowerCase();
       throw new WebApplicationException(responseOfPreconditionFailed(memberTypeStr + " is not usable: '" + memberId+ "' ("+ usable.getReason()+ ")"));

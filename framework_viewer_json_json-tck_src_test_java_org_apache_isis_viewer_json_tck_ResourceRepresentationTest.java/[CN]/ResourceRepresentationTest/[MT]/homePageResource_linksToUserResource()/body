@@ -5,7 +5,9 @@
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   Response userResp=client.follow(homePageRepr.getUser());
   JsonResponse<UserRepresentation> userJsonResp=JsonResponse.of(userResp,UserRepresentation.class);
+  assertThat(userJsonResp.getStatus().getRange(),is(HttpStatusCode.Range.SUCCESS));
   UserRepresentation userRepr=userJsonResp.getEntity();
-  assertThat(userRepr,is(not(nullValue())));
-  assertThat(userRepr.isMap(),is(true));
+  Link userReprRepTypeLink=userRepr.getRepresentationType();
+  assertThat(userReprRepTypeLink.getHref(),matches(".*/representationTypes/user$"));
+  assertThat(userRepr.getUserName(),is(not(nullValue())));
 }

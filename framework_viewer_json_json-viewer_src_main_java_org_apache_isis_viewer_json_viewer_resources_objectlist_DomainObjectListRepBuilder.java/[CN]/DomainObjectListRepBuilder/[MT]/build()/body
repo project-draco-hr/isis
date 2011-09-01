@@ -1,6 +1,13 @@
 {
-  representation.put("resourceType","objectList");
-  JsonRepresentation type=LinkRepBuilder.newTypeBuilder(repContext,objectSpec).build();
-  representation.put("type",type);
+  JsonRepresentation linkToRepresentationType=LinkRepBuilder.newBuilder(repContext,"representationType","representationTypes/list:" + typeName).build();
+  representation.put("representationType",linkToRepresentationType);
+  JsonRepresentation list=JsonRepresentation.newArray();
+  for (  ObjectAdapter adapter : objectAdapters) {
+    JsonRepresentation linkToObject=buildLinkTo(adapter);
+    list.add(linkToObject);
+  }
+  representation.put("value",list);
+  representation.put("links",JsonRepresentation.newArray());
+  representation.put("metadata",JsonRepresentation.newMap());
   return representation;
 }
