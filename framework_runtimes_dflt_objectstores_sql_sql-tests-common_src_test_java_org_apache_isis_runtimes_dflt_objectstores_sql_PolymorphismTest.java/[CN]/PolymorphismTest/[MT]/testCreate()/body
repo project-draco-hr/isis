@@ -1,0 +1,20 @@
+{
+  SqlIntegrationTestSingleton.drop("ISIS_POLYTESTCLASS");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSONE");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSTWO");
+  final SqlDataClassFactory factory=SqlIntegrationTestSingleton.getSqlDataClassFactory();
+  final PolyTestClass polyTestClass=factory.newPolyTestClass();
+  polyTestClass.setString("polyTestClass");
+  PolySubClassOne polySubClassOne=factory.newPolySubClassOne();
+  polySubClassOne.setString("PolySubClassOne 1");
+  PolySubClassTwo polySubClassTwo=factory.newPolySubClassTwo();
+  polySubClassTwo.setString("PolySubClassTwo 1");
+  polyTestClass.getPolyBaseClasses().add(polySubClassOne);
+  polyTestClass.getPolyBaseClasses().add(polySubClassTwo);
+  factory.save(polySubClassOne);
+  factory.save(polySubClassTwo);
+  factory.save(polyTestClass);
+  if (getProperties().getProperty("isis.persistor") == "in-memory") {
+    getSingletonInstance().setState(1);
+  }
+}
