@@ -4,5 +4,10 @@
   sql.append(classnameColumn);
   sql.append(" = ?");
   ObjectAdapter objectAdapter=field.get(object);
-  connector.addToQueryValues(objectAdapter.getSpecification().getFullIdentifier());
+  if (objectAdapter != null) {
+    connector.addToQueryValues(objectAdapter.getSpecification().getFullIdentifier());
+  }
+ else {
+    connector.addToQueryValues(null);
+  }
 }
