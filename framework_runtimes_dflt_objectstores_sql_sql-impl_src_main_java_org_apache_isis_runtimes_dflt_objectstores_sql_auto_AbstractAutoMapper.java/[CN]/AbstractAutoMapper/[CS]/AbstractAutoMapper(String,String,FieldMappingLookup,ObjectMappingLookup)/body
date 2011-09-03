@@ -1,7 +1,11 @@
 {
   specification=IsisContext.getSpecificationLoader().loadSpecification(className);
   if (specification.getProperties() == null || specification.getProperties().size() == 0) {
-    throw new SqlObjectStoreException(specification.getFullIdentifier() + " has no fields: " + specification);
+    if (specification.isAbstract() == false) {
+      throw new SqlObjectStoreException(specification.getFullIdentifier() + " has no fields: " + specification);
+    }
   }
-  setUpFieldMappers(lookup,objectMapperLookup,className,parameterBase);
+ else {
+    setUpFieldMappers(lookup,objectMapperLookup,className,parameterBase);
+  }
 }
