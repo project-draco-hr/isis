@@ -1,10 +1,10 @@
 {
   HomePageResource homePageResource=client.getHomePageResource();
   Response resourcesResp=homePageResource.resources();
-  JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  RestfulResponse<HomePageRepresentation> homePageJsonResp=RestfulResponse.of(resourcesResp,HomePageRepresentation.class);
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   Response servicesResp=client.follow(homePageRepr.getSelf());
-  JsonResponse<HomePageRepresentation> homePageJsonResp2=JsonResponse.of(servicesResp,HomePageRepresentation.class);
+  RestfulResponse<HomePageRepresentation> homePageJsonResp2=RestfulResponse.of(servicesResp,HomePageRepresentation.class);
   HomePageRepresentation homePageRepr2=homePageJsonResp2.getEntity();
   assertThat(homePageRepr.getSelf(),is(homePageRepr2.getSelf()));
 }

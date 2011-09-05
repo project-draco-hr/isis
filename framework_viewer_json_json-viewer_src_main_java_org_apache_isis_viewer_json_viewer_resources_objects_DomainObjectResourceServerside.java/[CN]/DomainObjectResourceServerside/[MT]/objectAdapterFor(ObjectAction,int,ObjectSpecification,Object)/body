@@ -1,0 +1,11 @@
+{
+  try {
+    return objectAdapterFor(paramSpec,arg);
+  }
+ catch (  ExpectedStringRepresentingValueException e) {
+    throw new WebApplicationException(responseOf(HttpStatusCode.BAD_REQUEST,"Action '%s', argument %d should be a URL encoded string representing a value of type %s",action.getId(),i,resourceFor(paramSpec)));
+  }
+catch (  ExpectedMapRepresentingReferenceException e) {
+    throw new WebApplicationException(responseOf(HttpStatusCode.BAD_REQUEST,"Action '%s', argument %d should be a map representing a link to reference of type %s",action.getId(),i,resourceFor(paramSpec)));
+  }
+}

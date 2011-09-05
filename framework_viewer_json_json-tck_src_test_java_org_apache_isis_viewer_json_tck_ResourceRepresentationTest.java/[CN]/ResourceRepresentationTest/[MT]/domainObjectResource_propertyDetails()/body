@@ -1,8 +1,8 @@
 {
   DomainObjectResource domainObjectResource=client.getDomainObjectResource();
   Response idPropertyResp=domainObjectResource.propertyDetails("OID:1","id");
-  JsonResponse<PropertyDetailsRepresentation> idPropertyJsonResp=JsonResponse.of(idPropertyResp,PropertyDetailsRepresentation.class);
-  assertThat(idPropertyJsonResp.getStatus().getRange(),is(Range.SUCCESS));
+  RestfulResponse<PropertyDetailsRepresentation> idPropertyJsonResp=RestfulResponse.of(idPropertyResp,PropertyDetailsRepresentation.class);
+  assertThat(idPropertyJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   PropertyDetailsRepresentation propertyDetailsRepr=idPropertyJsonResp.getEntity();
   Link selfLink=propertyDetailsRepr.getLink("_self.link");
   assertThat(selfLink.getRel(),is("member"));

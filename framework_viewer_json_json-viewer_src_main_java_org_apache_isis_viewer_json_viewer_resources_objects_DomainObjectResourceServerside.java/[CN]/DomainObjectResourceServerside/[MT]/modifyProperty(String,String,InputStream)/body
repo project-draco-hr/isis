@@ -1,0 +1,12 @@
+{
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
+  ObjectSpecification propertySpec=property.getSpecification();
+  ObjectAdapter argAdapter=parseBody(propertySpec,body);
+  Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
+  if (consent.isVetoed()) {
+    return responseOfUnauthorized(consent);
+  }
+  property.set(objectAdapter,argAdapter);
+  return responseOfNoContent();
+}

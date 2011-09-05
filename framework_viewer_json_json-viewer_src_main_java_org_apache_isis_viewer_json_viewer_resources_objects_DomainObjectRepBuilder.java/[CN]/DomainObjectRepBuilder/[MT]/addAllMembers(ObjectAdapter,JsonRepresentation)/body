@@ -1,0 +1,22 @@
+{
+  List<ObjectAssociation> associations=objectAdapter.getSpecification().getAssociations();
+  for (  ObjectAssociation assoc : associations) {
+    Consent visibility=assoc.isVisible(getSession(),objectAdapter);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    String id=assoc.getId();
+    if (assoc instanceof OneToOneAssociation) {
+      OneToOneAssociation property=(OneToOneAssociation)assoc;
+      JsonRepresentation propertyRep=PropertyRepBuilder.newBuilder(resourceContext,objectAdapter,property).build();
+      members.put(id,propertyRep);
+    }
+    if (assoc instanceof OneToManyAssociation) {
+      OneToManyAssociation collection=(OneToManyAssociation)assoc;
+      JsonRepresentation collectionRep=CollectionRepBuilder.newBuilder(resourceContext,objectAdapter,collection).build();
+      members.put(id,collectionRep);
+    }
+  }
+  List<ObjectAction> actions=objectAdapter.getSpecification().getObjectActions(Contributed.INCLUDED);
+  addActions(objectAdapter,actions,members);
+}

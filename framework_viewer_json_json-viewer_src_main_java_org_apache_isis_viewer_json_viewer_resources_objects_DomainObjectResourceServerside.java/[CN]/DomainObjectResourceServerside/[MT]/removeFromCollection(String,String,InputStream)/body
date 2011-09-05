@@ -1,0 +1,12 @@
+{
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.MUTATE);
+  ObjectSpecification collectionSpec=collection.getSpecification();
+  ObjectAdapter argAdapter=parseBody(collectionSpec,body);
+  Consent consent=collection.isValidToRemove(objectAdapter,argAdapter);
+  if (consent.isVetoed()) {
+    return responseOfUnauthorized(consent);
+  }
+  collection.removeElement(objectAdapter,argAdapter);
+  return responseOfNoContent();
+}

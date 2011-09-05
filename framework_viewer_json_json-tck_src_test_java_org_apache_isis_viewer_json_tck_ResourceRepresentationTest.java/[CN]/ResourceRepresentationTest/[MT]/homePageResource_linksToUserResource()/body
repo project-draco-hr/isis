@@ -1,11 +1,11 @@
 {
   HomePageResource homePageResource=client.getHomePageResource();
   Response resourcesResp=homePageResource.resources();
-  JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  RestfulResponse<HomePageRepresentation> homePageJsonResp=RestfulResponse.of(resourcesResp,HomePageRepresentation.class);
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   Response userResp=client.follow(homePageRepr.getUser());
-  JsonResponse<UserRepresentation> userJsonResp=JsonResponse.of(userResp,UserRepresentation.class);
-  assertThat(userJsonResp.getStatus().getRange(),is(HttpStatusCode.Range.SUCCESS));
+  RestfulResponse<UserRepresentation> userJsonResp=RestfulResponse.of(userResp,UserRepresentation.class);
+  assertThat(userJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   UserRepresentation userRepr=userJsonResp.getEntity();
   Link userReprRepTypeLink=userRepr.getRepresentationType();
   assertThat(userReprRepTypeLink.getHref(),matches(".*/representationTypes/user$"));

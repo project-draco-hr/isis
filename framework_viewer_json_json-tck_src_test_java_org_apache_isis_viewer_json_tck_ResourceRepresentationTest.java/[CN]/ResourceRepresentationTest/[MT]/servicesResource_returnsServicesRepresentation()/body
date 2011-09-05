@@ -1,22 +1,17 @@
 {
-  ServicesResource servicesResource=client.getServicesResource();
+  DomainServicesResource servicesResource=client.getServicesResource();
   Response servicesResp=servicesResource.services();
-  JsonResponse<ServicesRepresentation> servicesJsonResp=JsonResponse.of(servicesResp,ServicesRepresentation.class);
-  assertThat(servicesJsonResp.getStatus().getRange(),is(Range.SUCCESS));
+  RestfulResponse<ServicesRepresentation> servicesJsonResp=RestfulResponse.of(servicesResp,ServicesRepresentation.class);
+  assertThat(servicesJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   ServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
   assertThat(servicesRepr,is(not(nullValue())));
-  assertThat(servicesRepr.isArray(),is(true));
-  assertThat(servicesRepr.arraySize(),is(4));
-  JsonRepresentation repoRepr=servicesRepr.elementAt(0);
-  assertThat(repoRepr,is(not(nullValue())));
-  assertThat(repoRepr.getString("title"),is("ApplibValues"));
-  Link repoObjLink=repoRepr.getLink("link");
-  assertThat(repoObjLink.getRel(),is("object"));
-  assertThat(repoObjLink.getHref(),matches("http://localhost:\\d+/objects/OID:1"));
-  Link repoTypeLink=repoRepr.getLink("type");
-  assertThat(repoTypeLink.getRel(),is("type"));
-  assertThat(repoTypeLink.getHref(),matches("http://localhost:\\d+/types/application/vnd." + org.apache.isis.tck.objstore.dflt.scalars.ApplibValuedEntityRepositoryDefault.class.getName() + "\\+json"));
-  Link repoIconLink=repoRepr.getLink("icon");
-  assertThat(repoIconLink.getRel(),is("icon"));
-  assertThat(repoIconLink.getHref(),matches("http://localhost:\\d+/images/null.png"));
+  assertThat(servicesRepr.isMap(),is(true));
+  assertThat(servicesRepr.getRepresentationType(),is(not(notNullValue())));
+  assertThat(servicesRepr.getString("title"),is("ApplibValues"));
+  JsonRepresentation serviceValues=servicesRepr.xpath("/value/e[rel='service']");
+  assertThat(serviceValues,is(not(nullValue())));
+  assertThat(serviceValues.arraySize(),is(greaterThan(0)));
+  Link serviceLink=serviceValues.elementAt(0).asLink();
+  assertThat(serviceLink.getRel(),is("service"));
+  assertThat(serviceLink.getHref(),matches("http://localhost:\\d+/services/.*$"));
 }

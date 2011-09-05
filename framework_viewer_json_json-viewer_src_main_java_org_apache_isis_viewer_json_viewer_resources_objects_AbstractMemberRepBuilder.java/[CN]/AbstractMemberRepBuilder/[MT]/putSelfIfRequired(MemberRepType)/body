@@ -1,0 +1,12 @@
+{
+  if (!memberRepType.isStandalone()) {
+    return;
+  }
+  JsonRepresentation selfRep=JsonRepresentation.newMap();
+  String url=AbstractMemberRepBuilder.urlForMember(objectAdapter,memberType,objectMember,getOidStringifier());
+  JsonRepresentation memberLinkRep=LinkRepBuilder.newBuilder(resourceContext,"member",url).build();
+  selfRep.put("link",memberLinkRep);
+  JsonRepresentation linkTo=DomainObjectRepBuilder.newLinkToBuilder(resourceContext,objectAdapter,getOidStringifier()).build();
+  selfRep.put("object",linkTo);
+  representation.put("self",selfRep);
+}

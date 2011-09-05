@@ -1,0 +1,14 @@
+{
+  List<ObjectAdapter> argAdapters=Lists.newArrayList();
+  List<?> arguments=parseBody(body);
+  int numParameters=action.getParameterCount();
+  int numArguments=arguments.size();
+  if (numArguments != numParameters) {
+    throw new WebApplicationException(responseOf(HttpStatusCode.BAD_REQUEST,"Action '%s' has %d parameters but received %d arguments in body",action.getId(),numParameters,numArguments));
+  }
+  for (int i=0; i < numParameters; i++) {
+    ObjectAdapter argAdapter=objectAdapterFor(action,arguments,i);
+    argAdapters.add(argAdapter);
+  }
+  return argAdapters;
+}

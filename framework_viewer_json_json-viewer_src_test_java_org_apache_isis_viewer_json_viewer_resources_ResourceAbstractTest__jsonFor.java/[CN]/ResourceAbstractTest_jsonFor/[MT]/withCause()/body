@@ -1,0 +1,11 @@
+{
+  Exception cause=new Exception("barfoo");
+  Exception ex=new Exception("foobar",cause);
+  String jsonFor=ResourceAbstract.jsonFor(ex);
+  assertThat(jsonFor,is(not(nullValue())));
+  JsonRepresentation jsonRepr=JsonMapper.instance().read(jsonFor,JsonRepresentation.class);
+  assertThat(jsonRepr.getString("message"),is(ex.getMessage()));
+  JsonRepresentation causedByRepr=jsonRepr.getRepresentation("causedBy");
+  assertThat(causedByRepr,is(not(nullValue())));
+  assertThat(causedByRepr.getString("message"),is(cause.getMessage()));
+}

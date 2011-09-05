@@ -1,15 +1,19 @@
 {
   HomePageResource homePageResource=client.getHomePageResource();
   Response resourcesResp=homePageResource.resources();
-  JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  RestfulResponse<HomePageRepresentation> homePageJsonResp=RestfulResponse.of(resourcesResp,HomePageRepresentation.class);
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   Response servicesResp=client.follow(homePageRepr.getServices());
-  JsonResponse<ServicesRepresentation> servicesJsonResp=JsonResponse.of(servicesResp,ServicesRepresentation.class);
-  assertThat(servicesJsonResp.getStatus().getRange(),is(HttpStatusCode.Range.SUCCESS));
+  RestfulResponse<ServicesRepresentation> servicesJsonResp=RestfulResponse.of(servicesResp,ServicesRepresentation.class);
+  assertThat(servicesJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   ServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
   Link serviceReprRepTypeLink=servicesRepr.getRepresentationType();
   assertThat(serviceReprRepTypeLink.getHref(),matches(".*/representationTypes/list:object$"));
+  Link serviceReprSelfLink=servicesRepr.getSelf();
+  assertThat(serviceReprSelfLink,is(not(nullValue())));
   JsonRepresentation serviceValues=servicesRepr.xpath("/value/e[rel='service']");
   assertThat(serviceValues,is(not(nullValue())));
   assertThat(serviceValues.arraySize(),is(greaterThan(0)));
+  assertThat(homePageRepr.getLinks(),is(not(nullValue())));
+  assertThat(homePageRepr.getMetadata(),is(not(nullValue())));
 }

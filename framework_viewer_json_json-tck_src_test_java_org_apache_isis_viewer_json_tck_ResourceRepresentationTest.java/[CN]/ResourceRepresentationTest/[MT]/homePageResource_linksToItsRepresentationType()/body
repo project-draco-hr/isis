@@ -1,9 +1,9 @@
 {
   HomePageResource homePageResource=client.getHomePageResource();
   Response resourcesResp=homePageResource.resources();
-  JsonResponse<HomePageRepresentation> homePageJsonResp=JsonResponse.of(resourcesResp,HomePageRepresentation.class);
+  RestfulResponse<HomePageRepresentation> homePageJsonResp=RestfulResponse.of(resourcesResp,HomePageRepresentation.class);
   HomePageRepresentation homePageRepr=homePageJsonResp.getEntity();
   Response representationTypeResp=client.follow(homePageRepr.getRepresentationType());
-  JsonResponse<RepresentationTypeRepresentation> representationTypeJsonResp=JsonResponse.of(representationTypeResp,RepresentationTypeRepresentation.class);
-  assertThat(representationTypeJsonResp.getStatus().getRange(),is(HttpStatusCode.Range.SUCCESS));
+  RestfulResponse<RepresentationTypeRepresentation> representationTypeJsonResp=RestfulResponse.of(representationTypeResp,RepresentationTypeRepresentation.class);
+  assertThat(representationTypeJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
 }
