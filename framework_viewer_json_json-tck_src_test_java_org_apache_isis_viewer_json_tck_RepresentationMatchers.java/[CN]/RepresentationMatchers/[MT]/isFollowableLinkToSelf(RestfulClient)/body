@@ -1,0 +1,22 @@
+{
+  return new TypeSafeMatcher<T>(){
+    @Override public void describeTo(    Description description){
+      description.appendText("links to self");
+    }
+    @Override public boolean matchesSafely(    T item){
+      LinksToSelf initialRepr=(LinksToSelf)item;
+      Response servicesResp;
+      try {
+        servicesResp=client.follow(initialRepr.getSelf());
+        RestfulResponse<T> followedResp=RestfulResponse.of(servicesResp,asT(item));
+        T repr2=followedResp.getEntity();
+        LinksToSelf repr2AsLinksToSelf=(LinksToSelf)repr2;
+        return initialRepr.getSelf().equals(repr2AsLinksToSelf.getSelf());
+      }
+ catch (      Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+;
+}

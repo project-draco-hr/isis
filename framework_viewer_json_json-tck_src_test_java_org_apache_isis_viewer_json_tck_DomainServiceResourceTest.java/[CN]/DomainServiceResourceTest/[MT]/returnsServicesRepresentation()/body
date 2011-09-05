@@ -1,0 +1,14 @@
+{
+  Response servicesResp=resource.services();
+  RestfulResponse<DomainServicesRepresentation> servicesJsonResp=RestfulResponse.of(servicesResp,DomainServicesRepresentation.class);
+  assertThat(servicesJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
+  DomainServicesRepresentation servicesRepr=servicesJsonResp.getEntity();
+  assertThat(servicesRepr,isMap());
+  assertThat(servicesRepr.getSelf(),isLink().method(Method.GET));
+  assertThat(servicesRepr.getString("title"),is("ApplibValues"));
+  JsonRepresentation serviceValues=servicesRepr.xpath("/value/e[rel='service']");
+  assertThat(serviceValues,isArray());
+  assertThat(serviceValues.arraySize(),is(greaterThan(0)));
+  Link serviceLink=serviceValues.elementAt(0).asLink();
+  assertThat(serviceLink,isLink().rel("service").href(matches("http://localhost:\\d+/services/.*$")).method(Method.GET));
+}

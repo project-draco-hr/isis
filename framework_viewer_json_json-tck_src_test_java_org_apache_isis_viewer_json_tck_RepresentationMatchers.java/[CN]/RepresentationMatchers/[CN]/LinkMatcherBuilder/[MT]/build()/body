@@ -1,0 +1,63 @@
+{
+  return new TypeSafeMatcher<Link>(){
+    @Override public void describeTo(    Description description){
+      description.appendText("a link ");
+      if (rel != null) {
+        description.appendText(" with rel ").appendText(rel);
+      }
+      if (href != null) {
+        description.appendText(" with href ").appendText(href);
+      }
+      if (hrefMatcher != null) {
+        description.appendText(" with href ");
+        hrefMatcher.describeTo(description);
+      }
+      if (method != null) {
+        description.appendText(" with method ").appendValue(method);
+      }
+      if (statusCode != null) {
+        if (client == null) {
+          description.appendText(" !!! provide client in matcher's constructor !!!");
+        }
+        description.appendText(" that when followed");
+      }
+      if (statusCode != null) {
+        description.appendText(" returns ").appendValue(statusCode);
+      }
+    }
+    @Override public boolean matchesSafely(    Link link){
+      if (rel != null && !rel.equals(link.getRel())) {
+        return false;
+      }
+      if (href != null && !href.equals(link.getHref())) {
+        return false;
+      }
+      if (hrefMatcher != null && !hrefMatcher.matches(link.getHref())) {
+        return false;
+      }
+      if (method != null && !method.equals(link.getMethod())) {
+        return false;
+      }
+      Response linkedResp=null;
+      if (statusCode != null) {
+        if (client == null) {
+          return false;
+        }
+        try {
+          linkedResp=client.follow(link);
+        }
+ catch (        Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+      if (statusCode != null) {
+        RestfulResponse<JsonRepresentation> jsonResp=RestfulResponse.of(linkedResp,JsonRepresentation.class);
+        if (jsonResp.getStatus() != statusCode) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+;
+}
