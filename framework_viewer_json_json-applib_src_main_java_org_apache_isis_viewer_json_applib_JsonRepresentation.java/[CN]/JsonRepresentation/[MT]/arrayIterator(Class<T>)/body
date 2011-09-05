@@ -1,0 +1,11 @@
+{
+  ensureIsAnArrayAtLeastAsLargeAs(0);
+  Function<JsonNode,?> transformer=JSON_NODE_TRANSFORMERS.get(requiredType);
+  if (transformer == null) {
+    throw new IllegalArgumentException("Conversions from JsonNode to " + requiredType + " are not supported");
+  }
+  ArrayNode arrayNode=(ArrayNode)jsonNode;
+  Iterator<JsonNode> iterator=arrayNode.iterator();
+  Function<JsonNode,T> typedTransformer=asT(transformer);
+  return Iterators.transform(iterator,typedTransformer);
+}

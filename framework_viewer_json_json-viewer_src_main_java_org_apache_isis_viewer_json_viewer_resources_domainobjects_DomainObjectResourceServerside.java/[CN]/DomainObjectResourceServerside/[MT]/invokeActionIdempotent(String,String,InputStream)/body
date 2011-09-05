@@ -1,0 +1,9 @@
+{
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.MUTATE);
+  if (!isIdempotent(action)) {
+    return responseOf(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
+  }
+  List<ObjectAdapter> argumentAdapters=parseBody(action,arguments);
+  return invokeActionUsingAdapters(action,objectAdapter,argumentAdapters);
+}
