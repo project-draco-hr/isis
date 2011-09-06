@@ -1,0 +1,18 @@
+{
+  final PolyTestClass polyTestClass=SqlIntegrationTestSingleton.getStaticPolyTestClass();
+  PolySelfRefClass polySelfRefParent=polyTestClass.getPolySelfRefClass();
+  List<PolySelfRefClass> list=polySelfRefParent.getPolySelfRefClasses();
+  assertEquals(2,list.size());
+  PolySelfRefClass polySelfRefChild1=null;
+  for (  PolySelfRefClass polySelfRefClass : list) {
+    if (polySelfRefClass.getString().equals(CHILD_1)) {
+      polySelfRefChild1=polySelfRefClass;
+    }
+  }
+  assertNotNull(polySelfRefChild1);
+  assertEquals(CHILD_1,polySelfRefChild1.title());
+  final SqlDataClassFactory factory=SqlIntegrationTestSingleton.getSqlDataClassFactory();
+  factory.resolve(polySelfRefChild1);
+  List<PolySelfRefClass> list2=polySelfRefChild1.getPolySelfRefClasses();
+  assertEquals(1,list2.size());
+}
