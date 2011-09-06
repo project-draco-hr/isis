@@ -1,37 +1,27 @@
 {
-  if (collectionMappers == null) {
-    return;
-  }
   final ObjectAdapter collection=field.get(parent);
   if (collection.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
     LOG.debug("loading internal collection " + field);
-    PersistorUtil.start(collection,ResolveState.RESOLVING);
+    collection.changeState(ResolveState.RESOLVING);
     final StringBuffer sql=new StringBuffer();
     sql.append("select ");
     idMapping.appendColumnNames(sql);
     sql.append(", ");
-    final String columnList=columnList();
-    if (columnList.length() > 0) {
-      sql.append(columnList);
-      sql.append(", ");
-    }
-    sql.append(versionMapping.appendSelectColumns());
+    elementMapping.appendColumnNames(sql);
     sql.append(" from ");
-    sql.append(table);
-    sql.append(" where ");
-    foreignKeyMapping.appendUpdateValues(connector,sql,parent);
+    sql.append(tableName);
     final Results rs=connector.select(sql.toString());
     final List<ObjectAdapter> list=new ArrayList<ObjectAdapter>();
     while (rs.next()) {
-      final Oid oid=idMapping.recreateOid(rs,specification);
-      final ObjectAdapter element=getAdapter(specification,oid);
-      loadFields(element,rs);
+      final ObjectAdapter element=((JdbcObjectReferenceMapping)elementMapping).initializeField(rs);
       LOG.debug("  element  " + element.getOid());
       list.add(element);
     }
     final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
     collectionFacet.init(collection,list.toArray(new ObjectAdapter[list.size()]));
     rs.close();
-    PersistorUtil.end(collection);
+    if (makeResolved) {
+      PersistorUtil.end(collection);
+    }
   }
 }
