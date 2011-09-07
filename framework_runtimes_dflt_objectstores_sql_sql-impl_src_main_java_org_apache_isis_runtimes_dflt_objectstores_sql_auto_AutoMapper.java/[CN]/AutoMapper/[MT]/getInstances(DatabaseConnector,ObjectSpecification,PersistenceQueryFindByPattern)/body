@@ -1,19 +1,25 @@
 {
+  final Vector<ObjectAdapter> instances=new Vector<ObjectAdapter>();
   final StringBuffer sql=createSelectStatement();
   sql.append(" WHERE ");
   final int initialLength=sql.length();
   final ObjectAdapter pattern=query.getPattern();
-  for (  final ObjectAssociation assoc : specification.getAssociations()) {
-    final ObjectAdapter field=assoc.get(pattern);
-    if (field != null) {
-      final FieldMapping fieldMapping=fieldMappingFor(assoc);
-      if (fieldMapping != null) {
-        if (sql.length() > initialLength) {
-          sql.append(" AND ");
+  try {
+    for (    final ObjectAssociation assoc : specification.getAssociations()) {
+      final ObjectAdapter field=assoc.get(pattern);
+      if (field != null) {
+        final FieldMapping fieldMapping=fieldMappingFor(assoc);
+        if (fieldMapping != null) {
+          if (sql.length() > initialLength) {
+            sql.append(" AND ");
+          }
+          fieldMapping.appendWhereClause(connector,sql,pattern);
         }
-        fieldMapping.appendWhereClause(connector,sql,pattern);
       }
     }
+    loadInstancesToVector(connector,spec,completeSelectStatement(sql),instances);
   }
-  return loadInstances(connector,spec,completeSelectStatement(sql));
+ catch (  IllegalArgumentException a) {
+  }
+  return instances;
 }
