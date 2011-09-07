@@ -7,13 +7,21 @@
       httpResponse.sendRedirect(logonPageIfNoSession);
     }
  else {
-      chain.doFilter(request,response);
+      try {
+        chain.doFilter(request,response);
+      }
+  finally {
+      }
     }
   }
  else {
     authSessionLookupStrategy.bind(request,response,authSession);
     IsisContext.openSession(authSession);
-    chain.doFilter(request,response);
-    IsisContext.closeSession();
+    try {
+      chain.doFilter(request,response);
+    }
+  finally {
+      IsisContext.closeSession();
+    }
   }
 }

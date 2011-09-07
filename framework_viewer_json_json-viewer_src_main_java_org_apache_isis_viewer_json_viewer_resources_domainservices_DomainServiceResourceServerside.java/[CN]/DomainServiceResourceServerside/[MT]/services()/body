@@ -1,0 +1,7 @@
+{
+  init();
+  ResourceContext resourceContext=getResourceContext();
+  final List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+  DomainObjectListRepBuilder builder=DomainServiceListRepBuilder.newBuilder(resourceContext).withSelf("services").withAdapters(serviceAdapters);
+  return Response.ok().entity(jsonFrom(builder)).cacheControl(CACHE_NONE).header(RestfulResponse.Header.X_REPRESENTATION_TYPE.getName(),RepresentationType.LIST.getName()).type(MediaType.APPLICATION_JSON_TYPE).build();
+}

@@ -1,0 +1,18 @@
+{
+  for (  ObjectAssociation assoc : associations) {
+    Consent visibility=assoc.isVisible(getSession(),objectAdapter);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    if (assoc instanceof OneToOneAssociation) {
+      OneToOneAssociation property=(OneToOneAssociation)assoc;
+      JsonRepresentation propertyRep=PropertyRepBuilder.newBuilder(resourceContext,objectAdapter,property).build();
+      members.add(propertyRep);
+    }
+    if (assoc instanceof OneToManyAssociation) {
+      OneToManyAssociation collection=(OneToManyAssociation)assoc;
+      JsonRepresentation collectionRep=CollectionRepBuilder.newBuilder(resourceContext,objectAdapter,collection).build();
+      members.add(collectionRep);
+    }
+  }
+}
