@@ -1,9 +1,12 @@
 {
   final SqlDataClassFactory factory=SqlIntegrationTestSingleton.getSqlDataClassFactory();
   final List<SimpleClassTwo> classes=factory.allSimpleClassTwos();
-  assertEquals(1,classes.size());
+  assertEquals(2,classes.size());
   final SimpleClassTwo simpleClass=classes.get(0);
   simpleClass.setText("XXX");
   simpleClass.setBooleanValue(false);
   simpleClassTwoA.setBooleanValue(false);
+  if (getProperties().getProperty("isis.persistor") != "in-memory") {
+    getSingletonInstance().setState(0);
+  }
 }
