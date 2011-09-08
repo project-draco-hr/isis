@@ -8,7 +8,9 @@
   if (specification.hasSubclasses()) {
     final List<ObjectSpecification> subclasses=specification.subclasses();
     for (    ObjectSpecification subclassSpec : subclasses) {
-      addSpecQueryInstances(subclassSpec,connector,query,matchingInstances);
+      if (!subclassSpec.isAbstract()) {
+        addSpecQueryInstances(subclassSpec,connector,query,matchingInstances);
+      }
     }
   }
   connectionPool.release(connector);

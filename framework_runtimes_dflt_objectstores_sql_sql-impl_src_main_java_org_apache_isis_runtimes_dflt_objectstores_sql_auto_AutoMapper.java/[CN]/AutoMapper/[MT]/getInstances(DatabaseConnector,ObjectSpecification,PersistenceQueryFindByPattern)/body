@@ -3,23 +3,33 @@
   final StringBuffer sql=createSelectStatement();
   sql.append(" WHERE ");
   final int initialLength=sql.length();
+  int foundFields=0;
   final ObjectAdapter pattern=query.getPattern();
-  try {
-    for (    final ObjectAssociation assoc : specification.getAssociations()) {
-      final ObjectAdapter field=assoc.get(pattern);
-      if (field != null) {
-        final FieldMapping fieldMapping=fieldMappingFor(assoc);
-        if (fieldMapping != null) {
-          if (sql.length() > initialLength) {
-            sql.append(" AND ");
-          }
-          fieldMapping.appendWhereClause(connector,sql,pattern);
+  final Object o=pattern.getObject();
+  final ObjectSpecification patternSpec=pattern.getSpecification();
+  final List<ObjectAssociation> patternAssociations=patternSpec.getAssociations();
+  for (  ObjectAssociation patternAssoc : patternAssociations) {
+    final Method method;
+    try {
+      method=o.getClass().getMethod("get" + patternAssoc.getName(),(Class<?>[])null);
+      final Object res=InvokeUtils.invoke(method,o);
+      if (res != null) {
+        if (sql.length() > initialLength) {
+          sql.append(" AND ");
         }
+        final String fieldName=Sql.sqlFieldName(patternAssoc.getIdentifier().getMemberName());
+        sql.append(fieldName + "=?");
+        connector.addToQueryValues(res);
+        foundFields++;
       }
     }
-    loadInstancesToVector(connector,spec,completeSelectStatement(sql),instances);
+ catch (    SecurityException e) {
+    }
+catch (    NoSuchMethodException e) {
+    }
   }
- catch (  IllegalArgumentException a) {
+  if (foundFields > 0) {
+    loadInstancesToVector(connector,spec,completeSelectStatement(sql),instances);
   }
   return instances;
 }

@@ -1,10 +1,14 @@
 {
   LOG.debug("loading instances from SQL " + table);
-  final Results rs=connector.select(selectStatment);
-  for (int count=0; rs.next() && count < MAX_INSTANCES; count++) {
-    final ObjectAdapter instance=loadObject(connector,cls,rs);
-    LOG.debug("  instance  " + instance);
-    instances.addElement(instance);
+  try {
+    final Results rs=connector.select(selectStatment);
+    for (int count=0; rs.next() && count < MAX_INSTANCES; count++) {
+      final ObjectAdapter instance=loadObject(connector,cls,rs);
+      LOG.debug("  instance  " + instance);
+      instances.addElement(instance);
+    }
+    rs.close();
   }
-  rs.close();
+ catch (  SqlObjectStoreException e) {
+  }
 }
