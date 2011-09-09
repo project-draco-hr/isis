@@ -1,9 +1,9 @@
 {
   DomainObjectResource domainObjectResource=client.getDomainObjectResource();
   Response actionPromptResp=domainObjectResource.actionPrompt("OID:1","list");
-  RestfulResponse<ActionPromptRepresentation> actionPromptJsonResp=RestfulResponse.of(actionPromptResp,ActionPromptRepresentation.class);
+  RestfulResponse<ObjectActionRepresentation> actionPromptJsonResp=RestfulResponse.of(actionPromptResp,ObjectActionRepresentation.class);
   assertThat(actionPromptJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
-  ActionPromptRepresentation actionPromptRepr=actionPromptJsonResp.getEntity();
+  ObjectActionRepresentation actionPromptRepr=actionPromptJsonResp.getEntity();
   Link selfLink=actionPromptRepr.getLink("_self.link");
   assertThat(selfLink.getRel(),is("member"));
   assertThat(selfLink.getHref(),matches(".+objects/OID:1/actions/list"));

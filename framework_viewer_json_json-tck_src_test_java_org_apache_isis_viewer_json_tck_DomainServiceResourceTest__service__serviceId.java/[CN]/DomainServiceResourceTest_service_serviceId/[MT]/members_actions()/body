@@ -1,0 +1,15 @@
+{
+  DomainObjectRepresentation repr=givenRepresentation("simples");
+  JsonRepresentation actions=repr.xpath("/members/e[memberType='objectAction']");
+  assertThat(actions.arraySize(),is(3));
+  for (  ObjectActionRepresentation memberRepr : actions.arrayIterable(ObjectActionRepresentation.class)) {
+    assertThat(memberRepr.getMemberType(),is(not(nullValue())));
+    assertThat(MemberType.lookup(memberRepr.getMemberType()),is(MemberType.OBJECT_ACTION));
+    assertThat(memberRepr.getActionId(),is(not(nullValue())));
+    assertThat(memberRepr.getActionDetails(),isLink());
+    assertThat(memberRepr.getDisabledReason(),is(nullValue()));
+  }
+  JsonRepresentation listAction=repr.xpath("/members/e[memberType='objectAction' and actionId='list']").getRepresentation("e");
+  for (  JsonRepresentation memberRepr : actions.arrayIterable()) {
+  }
+}

@@ -1,0 +1,14 @@
+{
+  HttpStatusCode status=HttpStatusCode.BAD_REQUEST;
+  JsonApplicationException ex=JsonApplicationException.create(status);
+  Response response=exceptionMapper.toResponse(ex);
+  assertThat(HttpStatusCode.lookup(response.getStatus()),is(status));
+  assertThat(response.getMetadata().get("Warning"),is(nullValue()));
+  String entity=(String)response.getEntity();
+  assertThat(entity,is(not(nullValue())));
+  JsonRepresentation jsonRepr=JsonMapper.instance().read(entity,JsonRepresentation.class);
+  assertThat(jsonRepr.getString("message"),is(nullValue()));
+  assertThat(jsonRepr.getArray("stackTrace"),is(not(nullValue())));
+  assertThat(jsonRepr.getArray("stackTrace").arraySize(),is(greaterThan(0)));
+  assertThat(jsonRepr.getRepresentation("causedBy"),is(nullValue()));
+}

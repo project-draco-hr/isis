@@ -1,0 +1,9 @@
+{
+  JsonApplicationException ex=JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"foobar");
+  Response response=exceptionMapper.toResponse(ex);
+  assertThat((String)response.getMetadata().get("Warning").get(0),is(ex.getMessage()));
+  String entity=(String)response.getEntity();
+  assertThat(entity,is(not(nullValue())));
+  JsonRepresentation jsonRepr=JsonMapper.instance().read(entity,JsonRepresentation.class);
+  assertThat(jsonRepr.getString("message"),is(ex.getMessage()));
+}

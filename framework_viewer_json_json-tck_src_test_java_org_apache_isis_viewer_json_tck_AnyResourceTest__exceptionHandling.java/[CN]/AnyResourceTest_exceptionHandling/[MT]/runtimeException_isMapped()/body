@@ -1,0 +1,6 @@
+{
+  RestfulRequest req=client.createRequest(HttpMethod.GET,"/");
+  req.getClientRequest().header("X-FAIL","true");
+  RestfulResponse<HomePageRepresentation> jsonResp=req.execute(HomePageRepresentation.class);
+  assertThat(jsonResp.getStatus(),is(HttpStatusCode.METHOD_FAILURE));
+}
