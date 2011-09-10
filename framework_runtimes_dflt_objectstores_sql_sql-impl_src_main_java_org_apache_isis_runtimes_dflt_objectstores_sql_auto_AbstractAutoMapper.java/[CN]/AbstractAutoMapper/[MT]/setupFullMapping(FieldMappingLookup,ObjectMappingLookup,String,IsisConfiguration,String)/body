@@ -36,6 +36,7 @@
   final ObjectAssociation[] oneToOneProperties=new ObjectAssociation[simpleFieldCount];
   final ObjectAssociation[] oneToManyProperties=new ObjectAssociation[collectionFieldCount];
   collectionMappers=new CollectionMapper[collectionFieldCount];
+  collectionMapperFields=new String[collectionFieldCount];
   final IsisConfiguration subset=IsisContext.getConfiguration().createSubset(parameterBase + ".mapper.");
   for (int i=0, simpleFieldNo=0, collectionFieldNo=0; i < fields.size(); i++) {
     final ObjectAssociation field=fields.get(i);
@@ -57,6 +58,7 @@
           collectionMapper=new MultiColumnCombinedCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
         }
         collectionMappers[collectionFieldNo]=collectionMapper;
+        collectionMapperFields[collectionFieldNo]=field.getId();
       }
  else       if (type.equals("fk-table")) {
         final String property=parameterBase + field.getId() + ".element-type";

@@ -1,0 +1,18 @@
+{
+  ObjectSpecification collectionSpecification=collection.getSpecification();
+  if (collectionSpecification.isDirty(collection)) {
+    LOG.debug(collection.getOid() + " is dirty");
+  }
+ else {
+    LOG.debug(collection.getOid() + " is clean");
+  }
+  final CollectionFacet collectionFacetD=collection.getSpecification().getFacet(CollectionFacet.class);
+  for (  final ObjectAdapter element : collectionFacetD.iterable(collection)) {
+    if (collectionSpecification.isDirty(element)) {
+      LOG.debug(element.getOid() + " is dirty");
+    }
+ else {
+      LOG.debug(element.getOid() + " is clean");
+    }
+  }
+}

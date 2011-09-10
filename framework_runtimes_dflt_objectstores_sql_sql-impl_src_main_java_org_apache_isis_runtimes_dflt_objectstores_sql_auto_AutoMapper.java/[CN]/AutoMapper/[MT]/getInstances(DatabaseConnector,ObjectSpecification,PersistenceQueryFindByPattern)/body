@@ -10,10 +10,10 @@
   final List<ObjectAssociation> patternAssociations=patternSpec.getAssociations();
   for (  ObjectAssociation patternAssoc : patternAssociations) {
     final Method method;
+    final Identifier identifier=patternAssoc.getIdentifier();
+    final String memberName=identifier.getMemberName();
+    final String methodName=memberName.substring(0,1).toUpperCase() + memberName.substring(1);
     try {
-      final Identifier identifier=patternAssoc.getIdentifier();
-      final String memberName=identifier.getMemberName();
-      final String methodName=memberName.substring(0,1).toUpperCase() + memberName.substring(1);
       method=o.getClass().getMethod("get" + methodName,(Class<?>[])null);
       final Object res=InvokeUtils.invoke(method,o);
       if (res != null) {
@@ -22,14 +22,12 @@
         }
         final ObjectSpecification specification=patternAssoc.getSpecification();
         if (specification.isValue()) {
-          LOG.debug("Pattern Assoc Is Value");
           final String fieldName=Sql.sqlFieldName(identifier.getMemberName());
           sql.append(fieldName + "=?");
           connector.addToQueryValues(res);
           foundFields++;
         }
  else {
-          LOG.debug("Pattern Assoc Is Entity");
           FieldMapping fieldMapping=fieldMappingLookup.get(patternAssoc);
           fieldMapping.appendColumnNames(sql);
           sql.append("=?");
@@ -46,6 +44,7 @@
       LOG.debug(e.getMessage());
     }
 catch (    NoSuchMethodException e) {
+      LOG.info("Unable to invode method: get" + methodName + " in getInstances");
       LOG.debug(e.getMessage());
     }
   }

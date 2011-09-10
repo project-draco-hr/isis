@@ -4,7 +4,12 @@
   }
   final ObjectAdapter collection=field.get(parent);
   LOG.debug("Saving internal collection " + collection);
-  StringBuffer sql=new StringBuffer();
+  final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+  final Iterable<ObjectAdapter> elements=collectionFacet.iterable(collection);
+  if (elements.iterator().hasNext() == false) {
+    return;
+  }
+  final StringBuffer sql=new StringBuffer();
   sql.append("update ");
   sql.append(table);
   sql.append(" set ");
@@ -12,16 +17,23 @@
   sql.append(" = NULL where ");
   foreignKeyMapping.appendUpdateValues(connector,sql,parent);
   connector.update(sql.toString());
-  sql=new StringBuffer();
-  sql.append("update ");
-  sql.append(table);
-  sql.append(" set ");
-  final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
-  for (  final ObjectAdapter element : collectionFacet.iterable(collection)) {
-    final StringBuffer update=new StringBuffer(sql);
-    foreignKeyMapping.appendUpdateValues(connector,update,parent);
-    update.append(" where ");
-    idMapping.appendWhereClause(connector,update,element.getOid());
+  final StringBuffer update=new StringBuffer();
+  update.append("update ");
+  update.append(table);
+  update.append(" set ");
+  foreignKeyMapping.appendUpdateValues(connector,update,parent);
+  update.append(" where ");
+  idMapping.appendColumnNames(update);
+  update.append(" IN (");
+  int count=0;
+  for (  final ObjectAdapter element : elements) {
+    if (count++ > 0) {
+      update.append(",");
+    }
+    idMapping.appendObjectId(connector,update,element.getOid());
+  }
+  update.append(")");
+  if (count > 0) {
     connector.insert(update.toString());
   }
 }
