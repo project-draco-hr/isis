@@ -9,7 +9,10 @@
     assertThat(memberRepr.getActionDetails(),isLink());
     assertThat(memberRepr.getDisabledReason(),is(nullValue()));
   }
-  JsonRepresentation listAction=repr.xpath("/members/e[memberType='objectAction' and actionId='list']").getRepresentation("e");
-  for (  JsonRepresentation memberRepr : actions.arrayIterable()) {
-  }
+  JsonRepresentation listActionRepr=repr.xpath("/members/e[memberType='objectAction' and actionId='list']").getRepresentation("e");
+  Link listActionDetailsLink=listActionRepr.getLink("actionDetails");
+  Response listActionDetailsResp=client.follow(listActionDetailsLink);
+  RestfulResponse<ObjectActionRepresentation> listActionDetailsJsonResp=RestfulResponse.of(listActionDetailsResp,ObjectActionRepresentation.class);
+  assertThat(listActionDetailsJsonResp.getStatus(),is(HttpStatusCode.OK));
+  ObjectActionRepresentation listActionDetailsRepr=listActionDetailsJsonResp.getEntity();
 }

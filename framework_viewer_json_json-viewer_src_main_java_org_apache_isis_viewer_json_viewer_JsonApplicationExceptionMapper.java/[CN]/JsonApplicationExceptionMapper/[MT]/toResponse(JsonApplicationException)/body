@@ -1,5 +1,8 @@
 {
   ResponseBuilder builder=Response.status(ex.getHttpStatusCode().getJaxrsStatusType()).type(MediaType.APPLICATION_JSON_TYPE).entity(jsonFor(ex));
-  withWarningIfAny(ex,builder);
+  String message=ex.getMessage();
+  if (message != null) {
+    builder.header(RestfulResponse.Header.WARNING.getName(),message);
+  }
   return builder.build();
 }
