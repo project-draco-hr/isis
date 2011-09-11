@@ -2,6 +2,7 @@
   SqlIntegrationTestSingleton.drop("ISIS_POLYTESTCLASS");
   SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSONE");
   SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSTWO");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSTHREE");
   SqlIntegrationTestSingleton.drop("ISIS_POLYINTERFACEIMPLA");
   SqlIntegrationTestSingleton.drop("ISIS_POLYINTERFACEIMPLB");
   SqlIntegrationTestSingleton.drop("ISIS_POLYSELFREFCLASS");
@@ -29,6 +30,19 @@
   polyIntImpA.setSpecial("special");
   factory.save(polyIntImpA);
   polyTestClass.setPolyInterfaceType(polyIntImpA);
+  PolySubClassOne polySubClassOne=factory.newPolySubClassOne();
+  polySubClassOne.setString("PolySubClassOne 1");
+  PolySubClassTwo polySubClassTwo=factory.newPolySubClassTwo();
+  polySubClassTwo.setString("PolySubClassTwo 1");
+  PolySubClassThree polySubClassThree=factory.newPolySubClassThree();
+  polySubClassThree.setString("PolySubClassThree 1");
+  polySubClassThree.setAnotherString("Another String");
+  polyTestClass.getPolyBaseClasses().add(polySubClassOne);
+  polyTestClass.getPolyBaseClasses().add(polySubClassTwo);
+  polyTestClass.getPolyBaseClasses().add(polySubClassThree);
+  factory.save(polySubClassOne);
+  factory.save(polySubClassTwo);
+  factory.save(polySubClassThree);
   factory.save(polyTestClass);
   if (getProperties().getProperty("isis.persistor") == "in-memory") {
     getSingletonInstance().setState(1);
