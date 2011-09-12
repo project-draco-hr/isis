@@ -1,9 +1,12 @@
 {
   final IsisConfiguration configParameters=IsisContext.getConfiguration();
-  table=configParameters.getString(parameterBase + "table");
+  table=configParameters.getString(parameterBase + ".table." + className);
   if (table == null) {
-    final String name="isis_" + className.substring(className.lastIndexOf('.') + 1).toUpperCase();
-    table=Sql.sqlName(name);
+    final String name=getTableNameFromSpecification(specification);
+    table=name;
+  }
+ else {
+    table=Sql.tableIdentifier(table);
   }
   dbCreatesId=configParameters.getBoolean(parameterBase + "db-ids",false);
   if (configParameters.getBoolean(parameterBase + "all-fields",true)) {
@@ -11,6 +14,5 @@
   }
  else {
   }
-  table=Sql.tableIdentifier(table);
   LOG.info("table mapping: " + table + " ("+ columnList()+ ")");
 }

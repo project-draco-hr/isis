@@ -1,0 +1,19 @@
+{
+  final ObjectAdapter collection=field.get(parent);
+  if (collection.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    LOG.debug("loading internal collection " + field);
+    PersistorUtil.start(collection,ResolveState.RESOLVING);
+    final List<ObjectAdapter> list=new ArrayList<ObjectAdapter>();
+    loadCollectionIntoList(connector,parent,makeResolved,list);
+    final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
+    collectionFacet.init(collection,list.toArray(new ObjectAdapter[list.size()]));
+    PersistorUtil.end(collection);
+    if (makeResolved) {
+      for (      ObjectAdapter field : list) {
+        if (field.getSpecification().isOfType(parent.getSpecification())) {
+          loadInternalCollection(connector,field,false);
+        }
+      }
+    }
+  }
+}

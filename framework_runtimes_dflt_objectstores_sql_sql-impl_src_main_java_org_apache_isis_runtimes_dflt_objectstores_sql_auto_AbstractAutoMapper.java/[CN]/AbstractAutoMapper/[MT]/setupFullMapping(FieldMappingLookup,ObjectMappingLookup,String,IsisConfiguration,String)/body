@@ -28,14 +28,19 @@
       final String type=subset.getString(field.getId());
       if (type == null || type.equals("association-table")) {
         CollectionMapper collectionMapper=null;
-        if (this instanceof MultiColumnCombinedCollectionMapper) {
-          MultiColumnCombinedCollectionMapper mc=(MultiColumnCombinedCollectionMapper)this;
+        if (this instanceof ForeignKeyInChildCollectionMapper) {
+          ForeignKeyInChildCollectionMapper mc=(ForeignKeyInChildCollectionMapper)this;
           if (mc.priorField == field) {
             collectionMapper=mc;
           }
         }
         if (collectionMapper == null) {
-          collectionMapper=new MultiColumnCombinedCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
+          if (field.getSpecification().hasSubclasses()) {
+            collectionMapper=new PolymorphicForeignKeyInChildCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
+          }
+ else {
+            collectionMapper=new ForeignKeyInChildCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
+          }
         }
         collectionMappers[collectionFieldNo]=collectionMapper;
         collectionMapperFields[collectionFieldNo]=field.getId();
