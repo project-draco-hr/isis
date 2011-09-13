@@ -5,32 +5,6 @@
   if (elements.hasNext() == false) {
     return;
   }
-  final StringBuffer sql=new StringBuffer();
-  sql.append("update ");
-  sql.append(table);
-  sql.append(" set ");
-  appendCollectionUpdateColumnsToNull(sql);
-  sql.append(" where ");
-  appendCollectionWhereValues(connector,parent,sql);
-  connector.update(sql.toString());
-  final StringBuffer update=new StringBuffer();
-  update.append("update ");
-  update.append(table);
-  update.append(" set ");
-  appendCollectionUpdateValues(connector,parent,update);
-  update.append(" where ");
-  idMapping.appendColumnNames(update);
-  update.append(" IN (");
-  int count=0;
-  for (Iterator<ObjectAdapter> iterator=elements; iterator.hasNext(); ) {
-    ObjectAdapter element=iterator.next();
-    if (count++ > 0) {
-      update.append(",");
-    }
-    idMapping.appendObjectId(connector,update,element.getOid());
-  }
-  update.append(")");
-  if (count > 0) {
-    connector.insert(update.toString());
-  }
+  clearCollectionParent(connector,parent);
+  resetCollectionParent(connector,parent,elements);
 }

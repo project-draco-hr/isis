@@ -35,8 +35,9 @@
           }
         }
         if (collectionMapper == null) {
-          if (field.getSpecification().hasSubclasses()) {
-            collectionMapper=new PolymorphicForeignKeyInChildCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
+          final ObjectSpecification fieldSpecification=field.getSpecification();
+          if (fieldSpecification.hasSubclasses() || fieldSpecification.isAbstract()) {
+            collectionMapper=new PolymorphicForeignKeyInChildCollectionBaseMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
           }
  else {
             ForeignKeyInChildCollectionMapper mapper=new ForeignKeyInChildCollectionMapper(oneToManyProperties[collectionFieldNo],parameterBase,lookup,objectMapperLookup,this,field);
