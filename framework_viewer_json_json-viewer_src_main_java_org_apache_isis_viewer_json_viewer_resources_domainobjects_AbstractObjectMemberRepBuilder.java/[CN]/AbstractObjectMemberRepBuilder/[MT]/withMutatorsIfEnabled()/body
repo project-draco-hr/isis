@@ -6,9 +6,8 @@
   for (  String mutator : mutators.keySet()) {
     MutatorSpec mutatorSpec=mutators.get(mutator);
     if (hasMemberFacet(mutatorSpec.mutatorFacetType)) {
-      String urlForMember=urlForMember(mutatorSpec.suffix);
       JsonRepresentation arguments=mutatorArgs(mutatorSpec);
-      JsonRepresentation detailsLink=LinkToBuilder.newBuilder(resourceContext,mutator,urlForMember).withHttpMethod(mutatorSpec.httpMethod).withArguments(arguments).build();
+      JsonRepresentation detailsLink=linkToBuilder.linkToMember(mutator,memberType,objectMember,mutatorSpec.suffix).withHttpMethod(mutatorSpec.httpMethod).withArguments(arguments).build();
       representation.mapPut(mutator,detailsLink);
     }
   }
