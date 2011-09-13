@@ -1,0 +1,11 @@
+{
+  init();
+  final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
+  if (serviceAdapter == null) {
+    Object[] args={serviceId};
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND,"Could not locate service '%s'",args);
+  }
+  ResourceContext resourceContext=getResourceContext();
+  AbstractRepresentationBuilder<?> builder=DomainObjectRepBuilder.newBuilder(resourceContext).usingLinkToBuilder(new DomainServiceLinkToBuilder()).withAdapter(serviceAdapter);
+  return Response.ok().entity(jsonFrom(builder)).cacheControl(CACHE_NONE).header(RestfulResponse.Header.X_REPRESENTATION_TYPE.getName(),RepresentationType.DOMAIN_OBJECT.getName()).type(MediaType.APPLICATION_JSON_TYPE).build();
+}

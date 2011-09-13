@@ -2,14 +2,14 @@
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.ACCESS);
   if (!isQueryOnly(action)) {
-    return responseOf(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not query only",action.getId());
+    throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not query only",action.getId());
   }
   List<ObjectAdapter> argumentAdapters;
   try {
     argumentAdapters=argumentAdaptersFor(action,arguments);
   }
  catch (  IOException e) {
-    return responseOf(HttpStatusCode.BAD_REQUEST,"Action '%s' has body that cannot be parsed as JSON",e,action.getId());
+    throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has query arguments that cannot be parsed as JSON",e,action.getId());
   }
   int numParameters=action.getParameterCount();
   int argSize=argumentAdapters.size();

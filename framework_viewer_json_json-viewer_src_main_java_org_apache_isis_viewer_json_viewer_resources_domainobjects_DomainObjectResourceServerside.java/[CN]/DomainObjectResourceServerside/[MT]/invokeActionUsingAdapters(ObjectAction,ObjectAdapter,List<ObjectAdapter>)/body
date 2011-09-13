@@ -7,14 +7,14 @@
       Object arg=paramAdapter.getObject();
       String reasonNotValid=parameter.isValid(objectAdapter,arg);
       if (reasonNotValid != null) {
-        return responseOf(HttpStatusCode.NOT_ACCEPTABLE,reasonNotValid);
+        throw JsonApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,reasonNotValid);
       }
     }
   }
   ObjectAdapter[] argArray=argAdapters.toArray(new ObjectAdapter[0]);
   Consent consent=action.isProposedArgumentSetValid(objectAdapter,argArray);
   if (consent.isVetoed()) {
-    return responseOf(HttpStatusCode.NOT_ACCEPTABLE,consent.getReason());
+    throw JsonApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,consent.getReason());
   }
   final ObjectAdapter returnedAdapter=action.execute(objectAdapter,argArray);
   if (returnedAdapter == null) {
