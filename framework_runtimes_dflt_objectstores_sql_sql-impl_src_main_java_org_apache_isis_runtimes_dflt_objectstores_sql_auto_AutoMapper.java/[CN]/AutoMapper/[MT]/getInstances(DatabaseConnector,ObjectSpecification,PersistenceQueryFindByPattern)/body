@@ -1,8 +1,7 @@
 {
   final Vector<ObjectAdapter> instances=new Vector<ObjectAdapter>();
   final StringBuffer sql=createSelectStatement();
-  sql.append(" WHERE ");
-  final int initialLength=sql.length();
+  int initialLength=0;
   int foundFields=0;
   final ObjectAdapter pattern=query.getPattern();
   final Object o=pattern.getObject();
@@ -17,6 +16,10 @@
       method=o.getClass().getMethod("get" + methodName,(Class<?>[])null);
       final Object res=InvokeUtils.invoke(method,o);
       if (res != null) {
+        if (foundFields == 0) {
+          sql.append(" WHERE ");
+          initialLength=sql.length();
+        }
         if (sql.length() > initialLength) {
           sql.append(" AND ");
         }
@@ -31,7 +34,6 @@
           FieldMapping fieldMapping=fieldMappingLookup.get(patternAssoc);
           fieldMapping.appendColumnNames(sql);
           sql.append("=?");
-          final AdapterManager adapterManager=IsisContext.getPersistenceSession().getAdapterManager();
           final ObjectAdapter restoredValue=adapterManager.adapterFor(res);
           Oid oid=restoredValue.getOid();
           Object oidObject=idMapping.primaryKeyAsObject(oid);
@@ -48,8 +50,6 @@ catch (    NoSuchMethodException e) {
       LOG.debug(e.getMessage());
     }
   }
-  if (foundFields > 0) {
-    loadInstancesToVector(connector,spec,completeSelectStatement(sql),instances);
-  }
+  loadInstancesToVector(connector,spec,completeSelectStatement(sql),instances);
   return instances;
 }

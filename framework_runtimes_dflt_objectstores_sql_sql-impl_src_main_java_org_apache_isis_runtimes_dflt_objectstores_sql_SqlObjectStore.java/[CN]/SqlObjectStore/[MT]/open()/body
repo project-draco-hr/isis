@@ -1,20 +1,30 @@
 {
   Sql.setMetaData(connectionPool.acquire().getMetaData());
+  if (!isInitialized) {
+    Defaults.initialise(BASE_NAME);
+    Defaults.setPkIdLabel(Sql.identifier(Defaults.getPkIdLabel()));
+    Defaults.setIdColumn(Sql.identifier(Defaults.getIdColumn()));
+  }
   final DebugBuilder debug=new DebugString();
   connectionPool.debug(debug);
   LOG.info("Database: " + debug);
   objectMappingLookup.init();
   final DatabaseConnector connector=connectionPool.acquire();
-  isInitialized=connector.hasTable(Sql.tableIdentifier(TABLE_NAME));
+  isInitialized=connector.hasColumn(Sql.tableIdentifier(TABLE_NAME),Defaults.getPkIdLabel());
   if (!isInitialized) {
-    Defaults.initialise();
+    if (connector.hasTable(Sql.tableIdentifier(TABLE_NAME))) {
+      final StringBuffer sql=new StringBuffer();
+      sql.append("drop table ");
+      sql.append(Sql.tableIdentifier(TABLE_NAME));
+      connector.update(sql.toString());
+    }
     final StringBuffer sql=new StringBuffer();
     sql.append("create table ");
     sql.append(Sql.tableIdentifier(TABLE_NAME));
     sql.append(" (");
-    sql.append(Sql.identifier(PRIMARYKEY_COLUMN));
+    sql.append(Defaults.getPkIdLabel());
     sql.append(" int, ");
-    sql.append(Sql.identifier(ID_COLUMN));
+    sql.append(Defaults.getIdColumn());
     sql.append(" varchar(255)");
     sql.append(")");
     connector.update(sql.toString());

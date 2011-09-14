@@ -9,24 +9,40 @@
       }
       return;
     }
-    if (tableName.equalsIgnoreCase("simpleclass")) {
+ else     if (tableName.equalsIgnoreCase("simpleclass")) {
       final List<SimpleClass> list=sqlDataClassFactory.allSimpleClasses();
       for (      final SimpleClass sqlClass : list) {
         sqlDataClassFactory.delete(sqlClass);
       }
       return;
     }
-    if (tableName.equalsIgnoreCase("simpleclasstwo")) {
+ else     if (tableName.equalsIgnoreCase("simpleclasstwo")) {
       final List<SimpleClassTwo> list=sqlDataClassFactory.allSimpleClassTwos();
       for (      final SimpleClassTwo sqlClass : list) {
         sqlDataClassFactory.delete(sqlClass);
       }
       return;
     }
-    return;
+ else     if (tableName.equalsIgnoreCase("numerictestclass")) {
+      final List<NumericTestClass> list=sqlDataClassFactory.allNumericTestClasses();
+      for (      final NumericTestClass sqlClass : list) {
+        sqlDataClassFactory.delete(sqlClass);
+      }
+      return;
+    }
+ else {
+      throw new IsisException("Unknown table: " + tableName);
+    }
   }
   try {
-    s.executeUpdate("DROP TABLE " + tableName + "");
+    String tableIdentifier;
+    if (tableName.substring(0,4).toUpperCase().equals("ISIS")) {
+      tableIdentifier=Sql.tableIdentifier(tableName);
+    }
+ else {
+      tableIdentifier=Sql.tableIdentifier("isis_" + tableName);
+    }
+    s.executeUpdate("DROP TABLE " + tableIdentifier);
   }
  catch (  final SQLException e) {
     e.printStackTrace();
