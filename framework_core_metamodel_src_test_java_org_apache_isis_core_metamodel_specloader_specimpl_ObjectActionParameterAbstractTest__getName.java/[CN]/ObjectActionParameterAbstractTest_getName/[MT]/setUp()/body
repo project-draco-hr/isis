@@ -1,0 +1,29 @@
+{
+  parentAction=context.mock(ObjectActionImpl.class);
+  actionParamPeer=context.mock(TypedHolder.class);
+  namedFacet=context.mock(NamedFacet.class);
+  stubSpecForString=context.mock(ObjectSpecification.class,"specForString");
+  context.checking(new Expectations(){
+{
+      allowing(stubSpecForString).getSingularName();
+      will(returnValue("string"));
+    }
+  }
+);
+  stubObjectActionParameterString=context.mock(ObjectActionParameter.class,"actionParamString");
+  context.checking(new Expectations(){
+{
+      allowing(stubObjectActionParameterString).getSpecification();
+      will(returnValue(stubSpecForString));
+    }
+  }
+);
+  stubObjectActionParameterString2=context.mock(ObjectActionParameter.class,"actionParamOtherString");
+  context.checking(new Expectations(){
+{
+      allowing(stubObjectActionParameterString2).getSpecification();
+      will(returnValue(stubSpecForString));
+    }
+  }
+);
+}

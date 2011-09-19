@@ -1,6 +1,18 @@
 {
   final NamedFacet facet=getFacet(NamedFacet.class);
-  String name=facet == null ? null : facet.value();
-  name=name == null ? getSpecification().getSingularName() : name;
-  return name;
+  if (facet != null) {
+    return StringUtils.camelLowerFirst(facet.value());
+  }
+  String name=getSpecification().getSingularName();
+  List<ObjectActionParameter> parameters=this.getAction().getParameters(new Filter<ObjectActionParameter>(){
+    @Override public boolean accept(    ObjectActionParameter t){
+      return t.getSpecification() == getSpecification();
+    }
+  }
+);
+  if (parameters.size() == 1) {
+    return StringUtils.camelLowerFirst(name);
+  }
+  int indexOf=parameters.indexOf(this);
+  return StringUtils.camel(name + indexOf);
 }
