@@ -1,6 +1,8 @@
 {
+  init();
   final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
-  final OneToOneAssociation property=DomainObjectResourceServerside.getPropertyThatIsVisibleAndUsable(getResourceContext(),serviceAdapter,propertyId,Intent.ACCESS);
-  final ObjectPropertyRepBuilder builder=ObjectPropertyRepBuilder.newBuilder(getResourceContext(),serviceAdapter,property);
-  return responseOfOk(jsonFrom(builder));
+  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(serviceAdapter,propertyId,Intent.ACCESS);
+  ResourceContext resourceContext=getResourceContext();
+  final ObjectPropertyRepBuilder builder=ObjectPropertyRepBuilder.newBuilder(resourceContext,serviceAdapter,property);
+  return responseOfOk(RepresentationType.OBJECT_PROPERTY,builder,Caching.ONE_DAY).build();
 }

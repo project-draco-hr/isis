@@ -1,9 +1,8 @@
 {
-  init();
   final ObjectAdapter objectAdapter=OidUtils.getObjectAdapter(oidEncodedStr,getOidStringifier());
   if (objectAdapter == null) {
     final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
-    throw new WebApplicationException(responseOf(HttpStatusCode.NOT_FOUND,"could not determine adapter for OID: '%s'",oidStr));
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND,"could not determine adapter for OID: '%s'",oidStr);
   }
   return objectAdapter;
 }

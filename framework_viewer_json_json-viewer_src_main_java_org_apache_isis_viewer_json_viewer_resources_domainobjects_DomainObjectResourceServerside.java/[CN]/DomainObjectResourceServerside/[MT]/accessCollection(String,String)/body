@@ -1,6 +1,6 @@
 {
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(getResourceContext(),objectAdapter,collectionId,Intent.ACCESS);
+  final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.ACCESS);
   final ObjectCollectionRepBuilder builder=ObjectCollectionRepBuilder.newBuilder(getResourceContext(),objectAdapter,collection);
-  return responseOfOk(jsonFrom(builder));
+  return Response.status(HttpStatusCode.OK.getJaxrsStatusType()).entity(jsonFor(builder)).type(MediaType.APPLICATION_JSON_TYPE).build();
 }

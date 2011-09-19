@@ -1,6 +1,8 @@
 {
+  init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(getResourceContext(),objectAdapter,propertyId,Intent.ACCESS);
-  final ObjectPropertyRepBuilder builder=ObjectPropertyRepBuilder.newBuilder(getResourceContext(),objectAdapter,property);
-  return responseOfOk(jsonFrom(builder));
+  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.ACCESS);
+  ResourceContext resourceContext=getResourceContext();
+  final ObjectPropertyRepBuilder builder=ObjectPropertyRepBuilder.newBuilder(resourceContext,objectAdapter,property);
+  return responseOfOk(RepresentationType.OBJECT_PROPERTY,builder,Caching.NONE).build();
 }

@@ -1,6 +1,7 @@
 {
+  init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(getResourceContext(),objectAdapter,actionId,Intent.ACCESS);
-  ObjectActionRepBuilder builder=ObjectActionRepBuilder.newBuilder(getResourceContext(),objectAdapter,action);
-  return responseOfOk(jsonFrom(builder));
+  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.ACCESS);
+  ObjectActionRepBuilder repBuilder=ObjectActionRepBuilder.newBuilder(getResourceContext(),objectAdapter,action);
+  return responseOfOk(RepresentationType.OBJECT_ACTION,repBuilder,Caching.NONE).build();
 }

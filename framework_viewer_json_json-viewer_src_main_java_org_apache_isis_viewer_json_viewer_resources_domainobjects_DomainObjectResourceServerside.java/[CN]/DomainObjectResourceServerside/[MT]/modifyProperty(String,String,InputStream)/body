@@ -1,12 +1,13 @@
 {
+  init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(getResourceContext(),objectAdapter,propertyId,Intent.MUTATE);
+  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
   ObjectSpecification propertySpec=property.getSpecification();
   ObjectAdapter argAdapter=parseBody(propertySpec,body);
   Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
-    return responseOfUnauthorized(consent);
+    throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   property.set(objectAdapter,argAdapter);
-  return responseOfNoContent();
+  return Response.status(HttpStatusCode.NO_CONTENT.getJaxrsStatusType()).build();
 }

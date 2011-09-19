@@ -1,15 +1,16 @@
 {
+  init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(getResourceContext(),objectAdapter,collectionId,Intent.MUTATE);
+  final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.MUTATE);
   if (!collection.getCollectionSemantics().isListOrArray()) {
-    return responseOf(HttpStatusCode.METHOD_NOT_ALLOWED,"Collection '%s' does not have list or array semantics",collectionId);
+    throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Collection '%s' does not have list or array semantics",collectionId);
   }
   ObjectSpecification collectionSpec=collection.getSpecification();
   ObjectAdapter argAdapter=parseBody(collectionSpec,body);
   Consent consent=collection.isValidToAdd(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
-    return responseOfUnauthorized(consent);
+    throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   collection.addElement(objectAdapter,argAdapter);
-  return responseOfNoContent();
+  return responseOfNoContent(objectAdapter.getVersion()).build();
 }
