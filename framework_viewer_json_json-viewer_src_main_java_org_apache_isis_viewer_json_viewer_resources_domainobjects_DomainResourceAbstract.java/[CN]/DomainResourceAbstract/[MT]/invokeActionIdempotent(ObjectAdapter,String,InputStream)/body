@@ -1,8 +1,9 @@
 {
   final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.MUTATE);
   final ActionSemantics actionSemantics=ActionSemantics.determine(getResourceContext(),action);
-  if (actionSemantics.isIdempotent()) {
+  if (actionSemantics.isQueryOnlyOrIdempotent()) {
   }
   List<ObjectAdapter> argumentAdapters=parseBody(action,arguments);
-  return invokeActionUsingAdapters(action,objectAdapter,argumentAdapters);
+  JsonRepresentation representationWithSelf=representationWithSelfFor(objectAdapter,action);
+  return invokeActionUsingAdapters(objectAdapter,action,argumentAdapters,representationWithSelf);
 }

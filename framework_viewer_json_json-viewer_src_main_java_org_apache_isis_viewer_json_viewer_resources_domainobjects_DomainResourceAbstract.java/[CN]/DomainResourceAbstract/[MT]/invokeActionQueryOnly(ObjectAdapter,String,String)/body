@@ -15,5 +15,6 @@
   if (argSize != numParameters) {
     throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has %d parameters but received %d arguments",numParameters,argSize,action.getId());
   }
-  return invokeActionUsingAdapters(action,objectAdapter,argumentAdapters);
+  JsonRepresentation representationWithSelf=representationWithSelfFor(objectAdapter,action);
+  return invokeActionUsingAdapters(objectAdapter,action,argumentAdapters,representationWithSelf);
 }

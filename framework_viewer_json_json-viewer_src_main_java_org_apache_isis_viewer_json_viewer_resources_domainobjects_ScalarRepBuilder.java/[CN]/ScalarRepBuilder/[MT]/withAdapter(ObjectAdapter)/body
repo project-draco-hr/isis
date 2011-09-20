@@ -1,0 +1,9 @@
+{
+  final EncodableFacet facet=objectAdapter.getSpecification().getFacet(EncodableFacet.class);
+  if (facet == null) {
+    throw JsonApplicationException.create(HttpStatusCode.INTERNAL_SERVER_ERROR,"Not an (encodable) value",objectAdapter.titleString());
+  }
+  final String encodedString=facet.toEncodedString(objectAdapter);
+  representation.mapPut("value",encodedString);
+  return this;
+}

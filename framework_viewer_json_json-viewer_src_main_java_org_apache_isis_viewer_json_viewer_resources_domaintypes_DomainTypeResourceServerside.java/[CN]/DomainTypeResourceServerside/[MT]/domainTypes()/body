@@ -1,3 +1,13 @@
 {
-  return null;
+  init();
+  JsonRepresentation representation=JsonRepresentation.newMap();
+  representation.mapPut("self",LinkToBuilder.newBuilder(getResourceContext(),"self","domainTypes").build());
+  JsonRepresentation specList=JsonRepresentation.newArray();
+  final Collection<ObjectSpecification> allSpecifications=getSpecificationLoader().allSpecifications();
+  for (  ObjectSpecification objectSpec : allSpecifications) {
+    final LinkToBuilder linkBuilder=LinkToBuilder.newBuilder(getResourceContext(),"domainType","domainTypes/%s",objectSpec.getFullIdentifier());
+    specList.arrayAdd(linkBuilder.build());
+  }
+  representation.mapPut("domainTypes",specList);
+  return responseOfOk(RepresentationType.DOMAIN_TYPE,representation,Caching.ONE_DAY).build();
 }

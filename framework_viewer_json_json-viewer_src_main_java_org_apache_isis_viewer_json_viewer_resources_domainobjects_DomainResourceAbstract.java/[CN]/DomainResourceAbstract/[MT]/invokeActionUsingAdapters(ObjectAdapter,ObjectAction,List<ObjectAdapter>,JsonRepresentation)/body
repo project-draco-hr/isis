@@ -20,11 +20,16 @@
   if (returnedAdapter == null) {
     return responseOfNoContent(objectAdapter.getVersion()).build();
   }
-  final CollectionFacet facet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
-  if (facet != null) {
-    final Collection<ObjectAdapter> collectionAdapters=facet.collection(returnedAdapter);
-    String json=jsonFor(collectionAdapters);
-    return responseOfOk(RepresentationType.LIST,json,Caching.NONE).build();
+  final CollectionFacet collectionFacet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
+  if (collectionFacet != null) {
+    final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
+    DomainObjectListRepBuilder repBuilder=DomainObjectListRepBuilder.newBuilder(getResourceContext(),representationWithSelf).withAdapters(collectionAdapters);
+    return responseOfOk(RepresentationType.LIST,repBuilder,Caching.NONE).build();
   }
-  return responseWithRepresentationOf(returnedAdapter);
+  final EncodableFacet encodableFacet=returnedAdapter.getSpecification().getFacet(EncodableFacet.class);
+  if (encodableFacet != null) {
+    ScalarRepBuilder repBuilder=ScalarRepBuilder.newBuilder(getResourceContext(),representationWithSelf).withAdapter(objectAdapter);
+    return responseOfOk(RepresentationType.SCALAR_VALUE,repBuilder,Caching.NONE).build();
+  }
+  return object(returnedAdapter);
 }
