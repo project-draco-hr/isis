@@ -1,7 +1,7 @@
 {
   final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.MUTATE);
-  if (!isIdempotent(action)) {
-    throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
+  final ActionSemantics actionSemantics=ActionSemantics.determine(getResourceContext(),action);
+  if (actionSemantics.isIdempotent()) {
   }
   List<ObjectAdapter> argumentAdapters=parseBody(action,arguments);
   return invokeActionUsingAdapters(action,objectAdapter,argumentAdapters);
