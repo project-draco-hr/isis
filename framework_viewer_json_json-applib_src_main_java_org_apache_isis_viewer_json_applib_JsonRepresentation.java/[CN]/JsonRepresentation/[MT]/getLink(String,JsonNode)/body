@@ -1,0 +1,16 @@
+{
+  if (representsNull(node)) {
+    return null;
+  }
+  if (node.isArray()) {
+    throw new IllegalArgumentException(formatExMsg(path,"is an array that does not represent a link"));
+  }
+  if (node.isValueNode()) {
+    throw new IllegalArgumentException(formatExMsg(path,"is a value that does not represent a link"));
+  }
+  Link link=new Link(node);
+  if (link.getHref() == null || link.getRel() == null) {
+    throw new IllegalArgumentException(formatExMsg(path,"is a map that does not fully represent a link"));
+  }
+  return link;
+}

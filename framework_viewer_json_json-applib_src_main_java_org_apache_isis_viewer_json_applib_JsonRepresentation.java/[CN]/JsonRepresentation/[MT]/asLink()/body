@@ -1,17 +1,3 @@
 {
-  JsonNode node=asJsonNode();
-  if (representsNull(node)) {
-    return null;
-  }
-  if (node.isArray()) {
-    throw new IllegalArgumentException("is an array, does not represent a link");
-  }
-  if (node.isValueNode()) {
-    throw new IllegalArgumentException("is a value, does not represent a link");
-  }
-  Link link=new Link(node);
-  if (link.getHref() == null || link.getRel() == null) {
-    throw new IllegalArgumentException("is a map but does not fully represent a link");
-  }
-  return link;
+  return getLink(null,asJsonNode());
 }
