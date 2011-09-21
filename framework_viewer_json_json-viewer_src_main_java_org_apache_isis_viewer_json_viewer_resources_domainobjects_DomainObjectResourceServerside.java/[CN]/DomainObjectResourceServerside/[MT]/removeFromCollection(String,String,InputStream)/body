@@ -2,7 +2,8 @@
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final OneToManyAssociation collection=getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.MUTATE);
   ObjectSpecification collectionSpec=collection.getSpecification();
-  ObjectAdapter argAdapter=parseBody(collectionSpec,body);
+  String bodyAsString=asStringUtf8(body);
+  ObjectAdapter argAdapter=parseBodyAsMapWithSingleValue(collectionSpec,bodyAsString);
   Consent consent=collection.isValidToRemove(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());

@@ -1,11 +1,5 @@
 {
   final String json=UrlDecoderUtils.urlDecode(urlEncodedJson);
-  if (spec.containsFacet(EncodableFacet.class)) {
-    EncodableFacet encodableFacet=spec.getFacet(EncodableFacet.class);
-    return encodableFacet.fromEncodedString(json);
-  }
- else {
-    Map<String,Object> representation=JsonMapper.instance().readAsMap(json);
-    return objectAdapterFor(spec,representation);
-  }
+  JsonRepresentation representation=jsonMapper.read(json);
+  return objectAdapterFor(getResourceContext(),spec,representation);
 }

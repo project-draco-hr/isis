@@ -2,6 +2,7 @@
   final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.ACCESS);
   final ActionSemantics actionSemantics=ActionSemantics.determine(getResourceContext(),action);
   if (!actionSemantics.isQueryOnly()) {
+    throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not query only",action.getId());
   }
   List<ObjectAdapter> argumentAdapters;
   try {
@@ -15,6 +16,6 @@
   if (argSize != numParameters) {
     throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has %d parameters but received %d arguments",numParameters,argSize,action.getId());
   }
-  JsonRepresentation representationWithSelf=representationWithSelfFor(objectAdapter,action);
+  JsonRepresentation representationWithSelf=representationWithSelfFor(objectAdapter,action,arguments);
   return invokeActionUsingAdapters(objectAdapter,action,argumentAdapters,representationWithSelf);
 }

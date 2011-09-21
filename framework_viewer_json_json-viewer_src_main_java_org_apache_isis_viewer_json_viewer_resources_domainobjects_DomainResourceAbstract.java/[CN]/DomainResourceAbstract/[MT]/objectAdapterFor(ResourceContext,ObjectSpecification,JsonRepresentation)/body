@@ -1,0 +1,20 @@
+{
+  if (objectSpec.isEncodeable()) {
+    EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+    if (!representation.isString()) {
+      throw new ExpectedStringRepresentingValueException();
+    }
+    String argStr=representation.asString();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (!representation.isLink()) {
+    throw new ExpectedMapRepresentingLinkException();
+  }
+  JsonRepresentation argLink=representation.asLink();
+  String oidFromHref=UrlParserUtils.oidFromLink(argLink);
+  final ObjectAdapter objectAdapter=OidUtils.getObjectAdapter(resourceContext,oidFromHref);
+  if (objectAdapter == null) {
+    throw new UnknownOidException(oidFromHref);
+  }
+  return objectAdapter;
+}

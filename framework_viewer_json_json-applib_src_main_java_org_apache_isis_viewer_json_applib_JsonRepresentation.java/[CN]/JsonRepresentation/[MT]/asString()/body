@@ -1,0 +1,16 @@
+{
+  JsonNode node=asJsonNode();
+  if (representsNull(node)) {
+    return null;
+  }
+  if (node.isArray()) {
+    throw new IllegalArgumentException("is an array, not a string");
+  }
+  if (!node.isValueNode()) {
+    throw new IllegalArgumentException("is a map, not a string");
+  }
+  if (!node.isTextual()) {
+    throw new IllegalArgumentException("is a value but is not a string");
+  }
+  return node.getTextValue();
+}

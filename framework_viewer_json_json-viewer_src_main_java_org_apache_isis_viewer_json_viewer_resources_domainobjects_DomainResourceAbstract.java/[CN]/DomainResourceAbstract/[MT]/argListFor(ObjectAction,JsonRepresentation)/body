@@ -1,0 +1,18 @@
+{
+  List<JsonRepresentation> argList=Lists.newArrayList();
+  int numParameters=action.getParameterCount();
+  int numArguments=arguments.mapSize();
+  if (numArguments != numParameters) {
+    throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has %d parameters but received %d arguments in body",action.getId(),numParameters,numArguments);
+  }
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  for (  ObjectActionParameter param : parameters) {
+    final String paramName=param.getName();
+    final JsonRepresentation argRepr=arguments.getRepresentation(paramName);
+    if (argRepr == null) {
+      throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s', no argument found for parameter '%s'",action.getId(),paramName);
+    }
+    argList.add(argRepr);
+  }
+  return argList;
+}

@@ -3,7 +3,8 @@
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
   ObjectSpecification propertySpec=property.getSpecification();
-  ObjectAdapter argAdapter=parseBody(propertySpec,body);
+  String bodyAsString=asStringUtf8(body);
+  ObjectAdapter argAdapter=parseBodyAsMapWithSingleValue(propertySpec,bodyAsString);
   Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
