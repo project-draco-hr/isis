@@ -1,11 +1,10 @@
 {
   init();
-  fakeRuntimeExceptionIfXFail();
   JsonRepresentation representation=JsonRepresentation.newMap();
-  representation.mapPut("self",LinkToBuilder.newBuilder(getResourceContext(),"self","").build());
-  representation.mapPut("user",LinkToBuilder.newBuilder(getResourceContext(),"user","user").build());
-  representation.mapPut("services",LinkToBuilder.newBuilder(getResourceContext(),"services","services").build());
-  representation.mapPut("capabilities",LinkToBuilder.newBuilder(getResourceContext(),"capabilities","capabilities").build());
+  representation.mapPut("self",LinkReprBuilder.newBuilder(getResourceContext(),"self","").build());
+  putLinkToUser(representation);
+  putLinkToServices(representation);
+  representation.mapPut("capabilities",LinkReprBuilder.newBuilder(getResourceContext(),"capabilities","capabilities").build());
   representation.mapPut("links",JsonRepresentation.newArray());
   representation.mapPut("extensions",JsonRepresentation.newMap());
   return responseOfOk(RepresentationType.HOME_PAGE,Caching.ONE_DAY,representation).build();

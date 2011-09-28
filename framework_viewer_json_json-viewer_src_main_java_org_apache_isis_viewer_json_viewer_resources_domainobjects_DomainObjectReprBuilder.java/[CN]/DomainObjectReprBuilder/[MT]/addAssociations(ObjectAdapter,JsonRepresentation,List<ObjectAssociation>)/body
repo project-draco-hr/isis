@@ -1,0 +1,18 @@
+{
+  for (  ObjectAssociation assoc : associations) {
+    Consent visibility=assoc.isVisible(getSession(),objectAdapter);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    if (assoc instanceof OneToOneAssociation) {
+      OneToOneAssociation property=(OneToOneAssociation)assoc;
+      JsonRepresentation propertyRep=ObjectPropertyReprBuilder.newBuilder(resourceContext,objectAdapter,property).usingLinkToBuilder(linkToBuilder).withDetailsLink().build();
+      members.arrayAdd(propertyRep);
+    }
+    if (assoc instanceof OneToManyAssociation) {
+      OneToManyAssociation collection=(OneToManyAssociation)assoc;
+      JsonRepresentation collectionRep=ObjectCollectionReprBuilder.newBuilder(resourceContext,objectAdapter,collection).usingLinkToBuilder(linkToBuilder).withDetailsLink().build();
+      members.arrayAdd(collectionRep);
+    }
+  }
+}

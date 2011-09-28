@@ -23,12 +23,12 @@
   final CollectionFacet collectionFacet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
   if (collectionFacet != null) {
     final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
-    DomainObjectListRepBuilder repBuilder=DomainObjectListRepBuilder.newBuilder(getResourceContext(),representationWithSelf).withAdapters(collectionAdapters);
+    DomainObjectListReprBuilder repBuilder=DomainObjectListReprBuilder.newBuilder(getResourceContext(),representationWithSelf).withAdapters(collectionAdapters);
     return responseOfOk(RepresentationType.LIST,Caching.NONE,repBuilder).build();
   }
   final EncodableFacet encodableFacet=returnedAdapter.getSpecification().getFacet(EncodableFacet.class);
   if (encodableFacet != null) {
-    ScalarRepBuilder repBuilder=ScalarRepBuilder.newBuilder(getResourceContext(),representationWithSelf).withAdapter(objectAdapter);
+    ScalarReprBuilder repBuilder=ScalarReprBuilder.newBuilder(getResourceContext(),representationWithSelf).withAdapter(objectAdapter);
     return responseOfOk(RepresentationType.SCALAR_VALUE,Caching.NONE,repBuilder).build();
   }
   return object(returnedAdapter);

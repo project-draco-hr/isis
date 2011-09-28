@@ -1,0 +1,17 @@
+{
+  for (  ObjectAction action : actions) {
+    Consent visibility=action.isVisible(getSession(),objectAdapter);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    if (action.getType().isSet()) {
+      ObjectActionSet objectActionSet=(ObjectActionSet)action;
+      List<ObjectAction> subactions=objectActionSet.getActions();
+      addActions(objectAdapter,subactions,members);
+    }
+ else {
+      JsonRepresentation actionRep=ObjectActionReprBuilder.newBuilder(resourceContext,objectAdapter,action).usingLinkToBuilder(linkToBuilder).withDetailsLink().build();
+      members.arrayAdd(actionRep);
+    }
+  }
+}

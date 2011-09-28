@@ -1,0 +1,9 @@
+{
+  final LinkReprBuilder userLinkBuilder=LinkReprBuilder.newBuilder(getResourceContext(),"user","user");
+  final List<String> followLinks=getResourceContext().getArg(QueryParameter.FOLLOW_LINKS);
+  if (followLinks.contains("user")) {
+    final ReprBuilder reprBuilder=new UserResourceHelper(getResourceContext()).user();
+    userLinkBuilder.withValue(reprBuilder.build());
+  }
+  representation.mapPut("user",userLinkBuilder.build());
+}
