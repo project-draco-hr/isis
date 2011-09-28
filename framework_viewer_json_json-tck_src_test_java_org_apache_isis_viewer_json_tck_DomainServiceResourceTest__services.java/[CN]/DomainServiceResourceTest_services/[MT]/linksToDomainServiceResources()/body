@@ -1,9 +1,9 @@
 {
-  DomainServicesRepresentation repr=givenRepresentation();
+  ListRepresentation repr=givenRepresentation();
   JsonRepresentation values=repr.getValues();
   for (  Link link : values.arrayIterable(Link.class)) {
     Response followResp=client.follow(link);
-    RestfulResponse<JsonRepresentation> followJsonResp=RestfulResponse.of(followResp,JsonRepresentation.class);
+    RestfulResponse<JsonRepresentation> followJsonResp=RestfulResponse.of(followResp);
     assertThat(followJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
     JsonRepresentation followRepr=followJsonResp.getEntity();
     Link self=followRepr.getLink("self");

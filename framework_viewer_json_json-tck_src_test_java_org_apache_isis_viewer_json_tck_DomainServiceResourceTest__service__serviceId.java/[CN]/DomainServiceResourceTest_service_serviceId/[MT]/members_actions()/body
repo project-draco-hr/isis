@@ -12,7 +12,7 @@
   JsonRepresentation listActionRepr=repr.xpath("/members/e[memberType='objectAction' and actionId='list']").getRepresentation("e");
   Link listActionDetailsLink=listActionRepr.getLink("actionDetails");
   Response listActionDetailsResp=client.follow(listActionDetailsLink);
-  RestfulResponse<ObjectActionRepresentation> listActionDetailsJsonResp=RestfulResponse.of(listActionDetailsResp,ObjectActionRepresentation.class);
+  RestfulResponse<ObjectActionRepresentation> listActionDetailsJsonResp=RestfulResponse.ofT(listActionDetailsResp);
   assertThat(listActionDetailsJsonResp.getStatus(),is(HttpStatusCode.OK));
   ObjectActionRepresentation listActionDetailsRepr=listActionDetailsJsonResp.getEntity();
 }

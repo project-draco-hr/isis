@@ -1,10 +1,10 @@
 {
   Response resp=resource.services();
-  RestfulResponse<DomainServicesRepresentation> jsonResp=RestfulResponse.of(resp,DomainServicesRepresentation.class);
+  RestfulResponse<ListRepresentation> jsonResp=RestfulResponse.ofT(resp);
   assertThat(jsonResp.getStatus(),is(HttpStatusCode.OK));
   assertThat(jsonResp.getHeader(RestfulResponse.Header.CONTENT_TYPE),is(RepresentationType.LIST.getMediaType()));
   assertThat(jsonResp.getHeader(RestfulResponse.Header.CACHE_CONTROL).getMaxAge(),is(24 * 60 * 60));
-  DomainServicesRepresentation repr=jsonResp.getEntity();
+  ListRepresentation repr=jsonResp.getEntity();
   assertThat(repr,isMap());
   assertThat(repr.getSelf(),isLink().method(Method.GET));
   assertThat(repr.getValues(),isArray());

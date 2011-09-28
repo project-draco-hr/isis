@@ -2,7 +2,7 @@
   DomainObjectResource domainObjectResource=client.getDomainObjectResource();
   JsonRepresentation body=JsonRepresentation.newArray();
   Response actionInvokeResp=domainObjectResource.invokeAction("OID:1","list",body.asInputStream());
-  RestfulResponse<ScalarValueRepresentation> actionInvokeJsonResp=RestfulResponse.of(actionInvokeResp,ScalarValueRepresentation.class);
+  RestfulResponse<ScalarValueRepresentation> actionInvokeJsonResp=RestfulResponse.ofT(actionInvokeResp);
   assertThat(actionInvokeJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   ScalarValueRepresentation actionInvokeRepr=actionInvokeJsonResp.getEntity();
   assertThat(actionInvokeRepr.isArray(),is(true));
