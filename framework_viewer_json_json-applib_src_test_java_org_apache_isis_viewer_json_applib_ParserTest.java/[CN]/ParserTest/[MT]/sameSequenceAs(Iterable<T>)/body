@@ -1,0 +1,21 @@
+{
+  return new TypeSafeMatcher<Iterable<T>>(){
+    @Override public void describeTo(    Description description){
+      description.appendText("same sequence as {provided}");
+    }
+    @Override public boolean matchesSafely(    Iterable<T> actual){
+      for (      T element : expected) {
+        if (!Iterables.contains(actual,element)) {
+          return false;
+        }
+      }
+      for (      T element : actual) {
+        if (!Iterables.contains(expected,element)) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+;
+}
