@@ -1,9 +1,9 @@
 {
   init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final TypedReprBuilderFactory reprBuilderBuilder=BUILDER_REGISTRY.locate(RepresentationType.DOMAIN_OBJECT.getMediaType());
-  final TypedReprBuilder<ObjectAdapter> repBuilder=reprBuilderBuilder.newBuilder(getResourceContext(),ObjectAdapter.class);
-  repBuilder.withSelf().with(objectAdapter);
+  final TypedReprBuilderFactory reprBuilderBuilder=builderFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
+  final DomainObjectReprBuilder repBuilder=reprBuilderBuilder.newBuilder(getResourceContext(),ObjectAdapter.class);
+  repBuilder.with(objectAdapter);
   ResponseBuilder respBuilder=responseOfOk(RepresentationType.DOMAIN_OBJECT,Caching.NONE,repBuilder);
   Version version=objectAdapter.getVersion();
   if (version != null && version.getTime() != null) {
