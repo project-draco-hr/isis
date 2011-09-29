@@ -1,5 +1,13 @@
 {
   init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  return object(objectAdapter);
+  final TypedReprBuilderFactory reprBuilderBuilder=BUILDER_REGISTRY.locate(RepresentationType.DOMAIN_OBJECT.getMediaType());
+  final TypedReprBuilder<ObjectAdapter> repBuilder=reprBuilderBuilder.newBuilder(getResourceContext(),ObjectAdapter.class);
+  repBuilder.withSelf().with(objectAdapter);
+  ResponseBuilder respBuilder=responseOfOk(RepresentationType.DOMAIN_OBJECT,Caching.NONE,repBuilder);
+  Version version=objectAdapter.getVersion();
+  if (version != null && version.getTime() != null) {
+    respBuilder.tag(ETAG_FORMAT.format(version.getTime()));
+  }
+  return respBuilder.build();
 }
