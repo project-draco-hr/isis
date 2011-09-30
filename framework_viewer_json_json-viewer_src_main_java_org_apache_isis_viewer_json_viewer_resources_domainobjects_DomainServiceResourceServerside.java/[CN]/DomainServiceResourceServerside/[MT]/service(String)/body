@@ -2,7 +2,7 @@
   init();
   final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
   final TypedReprBuilderFactory factory=builderFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
-  final DomainObjectReprBuilder reprBuilder=factory.newBuilder(getResourceContext(),ObjectAdapter.class);
+  final DomainObjectReprBuilder reprBuilder=(DomainObjectReprBuilder)factory.newBuilder(getResourceContext());
   reprBuilder.usingLinkToBuilder(new DomainServiceLinkToBuilder()).withSelf().with(serviceAdapter);
   return responseOfOk(RepresentationType.DOMAIN_OBJECT,Caching.ONE_DAY,reprBuilder).build();
 }
