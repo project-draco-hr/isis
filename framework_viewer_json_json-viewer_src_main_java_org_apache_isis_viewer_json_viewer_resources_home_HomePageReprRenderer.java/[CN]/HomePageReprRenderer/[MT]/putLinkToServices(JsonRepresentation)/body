@@ -2,8 +2,11 @@
   final LinkReprBuilder servicesLinkBuilder=LinkReprBuilder.newBuilder(getResourceContext(),"services","services");
   final List<String> followLinks=getResourceContext().getArg(QueryParameter.FOLLOW_LINKS);
   if (followLinks.contains("services")) {
-    final ReprBuilder reprBuilder=new DomainServiceResourceHelper(getResourceContext()).services();
-    servicesLinkBuilder.withValue(reprBuilder.render());
+    final List<ObjectAdapter> serviceAdapters=getResourceContext().getPersistenceSession().getServices();
+    final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.LIST);
+    final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+    renderer.usingLinkToBuilder(new DomainServiceLinkToBuilder()).withSelf("services").with(serviceAdapters);
+    servicesLinkBuilder.withValue(renderer.render());
   }
   representation.mapPut("services",servicesLinkBuilder.render());
 }
