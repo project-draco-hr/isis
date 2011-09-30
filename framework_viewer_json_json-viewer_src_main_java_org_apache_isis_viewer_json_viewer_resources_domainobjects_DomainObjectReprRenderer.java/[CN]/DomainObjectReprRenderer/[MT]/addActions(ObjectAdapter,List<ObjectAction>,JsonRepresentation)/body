@@ -1,0 +1,19 @@
+{
+  for (  ObjectAction action : actions) {
+    Consent visibility=action.isVisible(getSession(),objectAdapter);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    if (action.getType().isSet()) {
+      ObjectActionSet objectActionSet=(ObjectActionSet)action;
+      List<ObjectAction> subactions=objectActionSet.getActions();
+      addActions(objectAdapter,subactions,members);
+    }
+ else {
+      RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.OBJECT_ACTION);
+      final ObjectActionReprRenderer renderer=(ObjectActionReprRenderer)factory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+      renderer.with(new ObjectAndAction(objectAdapter,action)).usingLinkToBuilder(linkToBuilder).withDetailsLink();
+      members.arrayAdd(renderer.render());
+    }
+  }
+}

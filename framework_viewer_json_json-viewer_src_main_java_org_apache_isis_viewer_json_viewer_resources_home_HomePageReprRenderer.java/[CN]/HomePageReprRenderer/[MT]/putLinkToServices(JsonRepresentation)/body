@@ -1,0 +1,9 @@
+{
+  final LinkReprBuilder servicesLinkBuilder=LinkReprBuilder.newBuilder(getResourceContext(),"services","services");
+  final List<String> followLinks=getResourceContext().getArg(QueryParameter.FOLLOW_LINKS);
+  if (followLinks.contains("services")) {
+    final ReprBuilder reprBuilder=new DomainServiceResourceHelper(getResourceContext()).services();
+    servicesLinkBuilder.withValue(reprBuilder.render());
+  }
+  representation.mapPut("services",servicesLinkBuilder.render());
+}

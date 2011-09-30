@@ -1,0 +1,9 @@
+{
+  JsonRepresentation arguments=readBodyAsMap(bodyAsString);
+  JsonRepresentation representation=arguments.getRepresentation("value");
+  if (arguments.mapSize() != 1 || representation == null) {
+    throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Body should be a map with a single key 'value' whose value represents an instance of type '%s'",resourceFor(objectSpec));
+  }
+  ObjectAdapter proposedValueAdapter=objectAdapterFor(resourceContext,objectSpec,arguments);
+  return proposedValueAdapter;
+}

@@ -1,0 +1,7 @@
+{
+  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(serviceAdapter,actionId,Intent.ACCESS);
+  RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.OBJECT_ACTION);
+  final ObjectActionReprRenderer renderer=(ObjectActionReprRenderer)factory.newRenderer(resourceContext,JsonRepresentation.newMap());
+  renderer.with(new ObjectAndAction(serviceAdapter,action)).withSelf().withMutatorsIfEnabled();
+  return ResourceAbstract.responseOfOk(RepresentationType.OBJECT_ACTION,Caching.NONE,renderer.render()).build();
+}

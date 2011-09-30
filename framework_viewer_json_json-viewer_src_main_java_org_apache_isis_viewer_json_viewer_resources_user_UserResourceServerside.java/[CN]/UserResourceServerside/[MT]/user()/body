@@ -1,7 +1,7 @@
 {
   init();
-  final TypedReprBuilderFactory factory=builderFactoryRegistry.find(RepresentationType.USER);
-  final UserReprBuilder reprBuilder=(UserReprBuilder)factory.newBuilder(getResourceContext());
-  reprBuilder.with(getAuthenticationSession());
-  return responseOfOk(RepresentationType.USER,Caching.ONE_HOUR,reprBuilder.build()).build();
+  final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.USER);
+  final UserReprRenderer renderer=(UserReprRenderer)factory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+  renderer.includesSelf().with(getAuthenticationSession());
+  return responseOfOk(RepresentationType.USER,Caching.ONE_HOUR,renderer.render()).build();
 }

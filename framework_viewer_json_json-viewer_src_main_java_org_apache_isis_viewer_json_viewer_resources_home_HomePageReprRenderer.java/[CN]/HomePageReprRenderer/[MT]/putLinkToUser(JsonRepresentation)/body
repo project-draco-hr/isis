@@ -1,0 +1,11 @@
+{
+  final LinkReprBuilder userLinkBuilder=LinkReprBuilder.newBuilder(getResourceContext(),"user","user");
+  final List<String> followLinks=getResourceContext().getArg(QueryParameter.FOLLOW_LINKS);
+  if (followLinks.contains("user")) {
+    final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.USER);
+    final UserReprRenderer renderer=(UserReprRenderer)factory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+    renderer.with(getResourceContext().getAuthenticationSession());
+    userLinkBuilder.withValue(renderer.render());
+  }
+  representation.mapPut("user",userLinkBuilder.render());
+}

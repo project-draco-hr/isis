@@ -1,10 +1,11 @@
 {
   init();
+  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext());
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
+  final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
   ObjectSpecification propertySpec=property.getSpecification();
-  String bodyAsString=asStringUtf8(body);
-  ObjectAdapter argAdapter=parseBodyAsMapWithSingleValue(propertySpec,bodyAsString);
+  String bodyAsString=DomainResourceHelper.asStringUtf8(body);
+  ObjectAdapter argAdapter=helper.parseBodyAsMapWithSingleValue(propertySpec,bodyAsString);
   Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());

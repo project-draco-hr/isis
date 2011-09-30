@@ -1,8 +1,10 @@
 {
   init();
+  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext());
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.OBJECT_PROPERTY);
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.ACCESS);
-  ResourceContext resourceContext=getResourceContext();
-  final ObjectPropertyReprBuilder builder=ObjectPropertyReprBuilder.newBuilder(resourceContext,objectAdapter,property);
-  return responseOfOk(RepresentationType.OBJECT_PROPERTY,Caching.NONE,builder).build();
+  final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.ACCESS);
+  final ObjectPropertyReprRenderer renderer=(ObjectPropertyReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+  renderer.with(new ObjectAndProperty(objectAdapter,property));
+  return responseOfOk(RepresentationType.OBJECT_PROPERTY,Caching.NONE,renderer).build();
 }

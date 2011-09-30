@@ -1,10 +1,10 @@
 {
   init();
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final TypedReprBuilderFactory reprBuilderBuilder=builderFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
-  final DomainObjectReprBuilder repBuilder=(DomainObjectReprBuilder)reprBuilderBuilder.newBuilder(getResourceContext());
-  repBuilder.with(objectAdapter);
-  ResponseBuilder respBuilder=responseOfOk(RepresentationType.DOMAIN_OBJECT,Caching.NONE,repBuilder);
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
+  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+  renderer.with(objectAdapter);
+  ResponseBuilder respBuilder=responseOfOk(RepresentationType.DOMAIN_OBJECT,Caching.NONE,renderer);
   Version version=objectAdapter.getVersion();
   if (version != null && version.getTime() != null) {
     respBuilder.tag(ETAG_FORMAT.format(version.getTime()));

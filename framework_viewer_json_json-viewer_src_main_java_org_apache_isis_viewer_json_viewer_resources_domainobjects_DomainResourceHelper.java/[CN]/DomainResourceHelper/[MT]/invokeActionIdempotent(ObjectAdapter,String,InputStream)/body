@@ -1,0 +1,12 @@
+{
+  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(objectAdapter,actionId,Intent.MUTATE);
+  final ActionSemantics actionSemantics=ActionSemantics.determine(resourceContext,action);
+  if (!actionSemantics.isIdempotent()) {
+    throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
+  }
+  String bodyAsString=asStringUtf8(body);
+  final JsonRepresentation arguments=readBodyAsMap(bodyAsString);
+  List<ObjectAdapter> argumentAdapters=parseArguments(action,arguments);
+  JsonRepresentation representationWithSelf=representationWithSelfFor(objectAdapter,action,arguments);
+  return invokeActionUsingAdapters(objectAdapter,action,argumentAdapters,representationWithSelf);
+}
