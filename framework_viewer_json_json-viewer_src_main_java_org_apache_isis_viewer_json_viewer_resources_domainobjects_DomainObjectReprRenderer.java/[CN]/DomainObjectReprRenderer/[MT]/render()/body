@@ -1,5 +1,15 @@
 {
-  withLinks();
+  if (includesSelf) {
+    JsonRepresentation self=linkToBuilder.with(objectAdapter).linkToAdapter().render();
+    representation.mapPut("self",self);
+  }
+  String title=objectAdapter.titleString();
+  representation.mapPut("oid",OidUtils.getOidStr(resourceContext,objectAdapter));
+  representation.mapPut("title",title);
+  withMembers(objectAdapter);
+  final JsonRepresentation links=JsonRepresentation.newArray();
+  links.arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),"domainType",objectAdapter.getSpecification()).render());
+  withLinks(links);
   withExtensions();
   return representation;
 }

@@ -1,0 +1,14 @@
+{
+  if (includesSelf) {
+    withSelf("domainTypes");
+  }
+  JsonRepresentation specList=JsonRepresentation.newArray();
+  for (  ObjectSpecification objectSpec : specifications) {
+    final LinkReprBuilder linkBuilder=LinkReprBuilder.newBuilder(getResourceContext(),"domainType",RepresentationType.DOMAIN_TYPE,"domainTypes/%s",objectSpec.getFullIdentifier());
+    specList.arrayAdd(linkBuilder.render());
+  }
+  representation.mapPut("domainTypes",specList);
+  representation.mapPut("links",JsonRepresentation.newArray());
+  representation.mapPut("extensions",JsonRepresentation.newMap());
+  return representation;
+}

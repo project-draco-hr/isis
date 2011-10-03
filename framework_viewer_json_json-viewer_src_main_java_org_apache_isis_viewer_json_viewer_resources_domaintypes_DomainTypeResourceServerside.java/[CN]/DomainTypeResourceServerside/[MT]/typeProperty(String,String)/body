@@ -1,6 +1,16 @@
 {
   init();
-  JsonRepresentation representation=JsonRepresentation.newMap();
-  representation.mapPut("self",LinkReprBuilder.newBuilder(getResourceContext(),"self","domainTypes/%s/properties/%s",domainType,propertyId).render());
-  return responseOfOk(RepresentationType.TYPE_PROPERTY,Caching.ONE_DAY,representation).build();
+  final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
+  if (objectSpec == null) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  final ObjectMember objectMember=objectSpec.getAssociation(propertyId);
+  if (objectMember == null || objectMember.isOneToManyAssociation()) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  OneToOneAssociation property=(OneToOneAssociation)objectMember;
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.TYPE_PROPERTY);
+  final TypePropertyReprRenderer renderer=(TypePropertyReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+  renderer.with(new SpecAndProperty(objectSpec,property)).includesSelf();
+  return responseOfOk(Caching.ONE_DAY,renderer).build();
 }
