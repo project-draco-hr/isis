@@ -1,11 +1,9 @@
 {
   Response resp=resource.resources();
-  RestfulResponse<HomePageRepresentation> jsonResp=RestfulResponse.ofT(resp);
-  assertThat(jsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
-  assertThat(jsonResp.getStatus(),is(HttpStatusCode.OK));
-  assertThat(jsonResp.getHeader(RestfulResponse.Header.CONTENT_TYPE),is(RepresentationType.HOME_PAGE.getMediaType()));
-  assertThat(jsonResp.getHeader(RestfulResponse.Header.CACHE_CONTROL).getMaxAge(),is(24 * 60 * 60));
-  HomePageRepresentation repr=jsonResp.getEntity();
+  RestfulResponse<HomePageRepresentation> restfulResponse=RestfulResponse.ofT(resp);
+  assertThat(restfulResponse.getStatus().getFamily(),is(Family.SUCCESSFUL));
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  HomePageRepresentation repr=restfulResponse.getEntity();
   assertThat(repr,is(not(nullValue())));
   assertThat(repr.isMap(),is(true));
   assertThat(repr.getSelf(),isLink(client).method(Method.GET));

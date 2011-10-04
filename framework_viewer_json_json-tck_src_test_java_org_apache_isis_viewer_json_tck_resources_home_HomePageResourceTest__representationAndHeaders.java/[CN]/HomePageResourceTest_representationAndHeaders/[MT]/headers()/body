@@ -1,8 +1,10 @@
 {
   Response resp=resource.resources();
-  RestfulResponse<HomePageRepresentation> jsonResp=RestfulResponse.ofT(resp);
-  final MediaType contentType=jsonResp.getHeader(Header.CONTENT_TYPE);
+  RestfulResponse<HomePageRepresentation> restfulResponse=RestfulResponse.ofT(resp);
+  final MediaType contentType=restfulResponse.getHeader(Header.CONTENT_TYPE);
   assertThat(contentType,hasType("application"));
   assertThat(contentType,hasSubType("json"));
   assertThat(contentType,hasParameter("profile","http://restfulobjects.org/profiles/homepage"));
+  final CacheControl cacheControl=restfulResponse.getHeader(Header.CACHE_CONTROL);
+  assertThat(cacheControl,hasMaxAge(24 * 60 * 60));
 }
