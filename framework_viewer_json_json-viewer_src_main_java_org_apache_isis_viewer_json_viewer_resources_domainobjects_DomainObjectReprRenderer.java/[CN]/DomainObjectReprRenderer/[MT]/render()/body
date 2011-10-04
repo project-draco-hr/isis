@@ -1,6 +1,6 @@
 {
   if (includesSelf) {
-    JsonRepresentation self=linkToBuilder.with(objectAdapter).linkToAdapter().render();
+    JsonRepresentation self=linkToBuilder.with(objectAdapter).linkToAdapter().build();
     representation.mapPut("self",self);
   }
   String title=objectAdapter.titleString();
@@ -8,7 +8,7 @@
   representation.mapPut("title",title);
   withMembers(objectAdapter);
   final JsonRepresentation links=JsonRepresentation.newArray();
-  links.arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),"domainType",objectAdapter.getSpecification()).render());
+  links.arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),"domainType",objectAdapter.getSpecification()).build());
   withLinks(links);
   withExtensions();
   return representation;
