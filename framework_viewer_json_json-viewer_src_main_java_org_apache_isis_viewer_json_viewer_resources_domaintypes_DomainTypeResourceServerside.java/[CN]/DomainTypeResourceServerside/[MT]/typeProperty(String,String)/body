@@ -1,5 +1,6 @@
 {
-  init();
+  RepresentationType representationType=RepresentationType.TYPE_PROPERTY;
+  init(representationType);
   final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
   if (objectSpec == null) {
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
@@ -9,7 +10,7 @@
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
   OneToOneAssociation property=(OneToOneAssociation)objectMember;
-  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.TYPE_PROPERTY);
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
   final TypePropertyReprRenderer renderer=(TypePropertyReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
   renderer.with(new SpecAndProperty(objectSpec,property)).includesSelf();
   return responseOfOk(Caching.ONE_DAY,renderer).build();

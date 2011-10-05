@@ -1,6 +1,18 @@
 {
-  init();
-  JsonRepresentation representation=JsonRepresentation.newMap();
-  representation.mapPut("self",LinkBuilder.newBuilder(getResourceContext(),"self",RepresentationType.TYPE_ACTION_PARAMETER,"domainTypes/%s/actions/%s/params/%s",domainType,actionId,paramName).build());
-  return responseOfOk(RepresentationType.TYPE_COLLECTION,Caching.ONE_DAY,representation).build();
+  RepresentationType representationType=RepresentationType.TYPE_ACTION_PARAMETER;
+  init(representationType);
+  final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
+  if (objectSpec == null) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  final ObjectMember objectMember=objectSpec.getObjectAction(actionId);
+  if (objectMember == null) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  ObjectAction action=(ObjectAction)objectMember;
+  ObjectActionParameter actionParam=action.getParameter(paramName);
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
+  final TypeActionParamReprRenderer renderer=(TypeActionParamReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+  renderer.with(new SpecAndActionParam(objectSpec,actionParam)).includesSelf();
+  return responseOfOk(Caching.ONE_DAY,renderer).build();
 }

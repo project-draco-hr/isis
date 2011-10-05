@@ -1,7 +1,8 @@
 {
-  init();
+  final RepresentationType representationType=RepresentationType.DOMAIN_OBJECT;
+  init(representationType);
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
   final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
   renderer.with(objectAdapter);
   ResponseBuilder respBuilder=responseOfOk(Caching.NONE,renderer);

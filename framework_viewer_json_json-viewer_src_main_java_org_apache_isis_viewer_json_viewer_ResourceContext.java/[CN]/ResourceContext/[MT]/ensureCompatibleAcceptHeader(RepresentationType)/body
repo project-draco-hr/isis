@@ -1,0 +1,15 @@
+{
+  if (representationType == null) {
+    return;
+  }
+  final MediaType producedType=representationType.getMediaType();
+  List<MediaType> acceptableMediaTypes=acceptableMediaTypes();
+  for (  MediaType mediaType : acceptableMediaTypes) {
+    if (compatible(mediaType,representationType)) {
+      return;
+    }
+  }
+  if (!acceptableMediaTypes.contains(producedType)) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,"Resource produces %s media type",representationType.getMediaTypeWithProfile());
+  }
+}

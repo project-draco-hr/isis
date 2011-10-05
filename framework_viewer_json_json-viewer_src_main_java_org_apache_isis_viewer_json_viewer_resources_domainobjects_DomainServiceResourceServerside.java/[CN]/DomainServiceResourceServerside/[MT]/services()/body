@@ -1,7 +1,8 @@
 {
-  init();
+  RepresentationType representationType=RepresentationType.LIST;
+  init(representationType);
   final List<ObjectAdapter> serviceAdapters=getResourceContext().getPersistenceSession().getServices();
-  final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.LIST);
+  final RendererFactory factory=RendererFactoryRegistry.instance.find(representationType);
   final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
   renderer.usingLinkToBuilder(new DomainServiceLinkToBuilder()).withSelf("services").with(serviceAdapters);
   return responseOfOk(Caching.ONE_DAY,renderer).build();

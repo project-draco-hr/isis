@@ -1,6 +1,17 @@
 {
-  init();
-  JsonRepresentation representation=JsonRepresentation.newMap();
-  representation.mapPut("self",LinkBuilder.newBuilder(getResourceContext(),"self",RepresentationType.TYPE_COLLECTION,"domainType/%s/collections/%s",domainType,collectionId).build());
-  return responseOfOk(RepresentationType.TYPE_COLLECTION,Caching.ONE_DAY,representation).build();
+  RepresentationType representationType=RepresentationType.TYPE_COLLECTION;
+  init(representationType);
+  final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
+  if (objectSpec == null) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  final ObjectMember objectMember=objectSpec.getAssociation(collectionId);
+  if (objectMember == null || objectMember.isOneToOneAssociation()) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  OneToManyAssociation collection=(OneToManyAssociation)objectMember;
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
+  final TypeCollectionReprRenderer renderer=(TypeCollectionReprRenderer)rendererFactory.newRenderer(getResourceContext(),JsonRepresentation.newMap());
+  renderer.with(new SpecAndCollection(objectSpec,collection)).includesSelf();
+  return responseOfOk(Caching.ONE_DAY,renderer).build();
 }
