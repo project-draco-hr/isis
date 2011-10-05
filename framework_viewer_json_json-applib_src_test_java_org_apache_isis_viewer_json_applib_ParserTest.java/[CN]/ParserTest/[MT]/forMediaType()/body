@@ -1,5 +1,8 @@
 {
+  Parser<MediaType> parser=Parser.forMediaType();
   for (  MediaType v : new MediaType[]{MediaType.APPLICATION_ATOM_XML_TYPE,MediaType.APPLICATION_JSON_TYPE,MediaType.APPLICATION_XHTML_XML_TYPE,MediaType.valueOf(RestfulMediaType.APPLICATION_JSON_DOMAIN_OBJECT)}) {
-    assertRoundTrips(Parser.forMediaType(),v);
+    final String asString=parser.asString(v);
+    final MediaType valueOf=parser.valueOf(asString);
+    assertThat(v,is(equalTo(valueOf)));
   }
 }

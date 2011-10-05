@@ -1,5 +1,10 @@
 {
+  Parser<Boolean> parser=Parser.forBoolean();
   for (  Boolean v : new Boolean[]{Boolean.TRUE,Boolean.FALSE}) {
-    assertRoundTrips(Parser.forBoolean(),v);
+    final String asString=parser.asString(v);
+    final Boolean valueOf=parser.valueOf(asString);
+    assertThat(v,is(equalTo(valueOf)));
   }
+  final Boolean valueOf=parser.valueOf(Arrays.asList(parser.asString(Boolean.TRUE),parser.asString(Boolean.FALSE)));
+  assertThat(valueOf,is(Boolean.TRUE));
 }
