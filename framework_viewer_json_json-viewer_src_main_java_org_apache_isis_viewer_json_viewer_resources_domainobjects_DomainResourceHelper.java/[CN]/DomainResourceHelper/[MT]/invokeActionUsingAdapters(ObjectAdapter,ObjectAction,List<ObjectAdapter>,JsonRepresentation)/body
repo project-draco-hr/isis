@@ -24,19 +24,19 @@
   if (collectionFacet != null) {
     final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
     final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.LIST);
-    final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(resourceContext,representation);
+    final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(resourceContext,null,representation);
     renderer.with(collectionAdapters);
     return ResourceAbstract.responseOfOk(Caching.NONE,renderer).build();
   }
   final EncodableFacet encodableFacet=returnedAdapter.getSpecification().getFacet(EncodableFacet.class);
   if (encodableFacet != null) {
     final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.SCALAR_VALUE);
-    ScalarValueReprRenderer renderer=(ScalarValueReprRenderer)factory.newRenderer(resourceContext,representation);
+    ScalarValueReprRenderer renderer=(ScalarValueReprRenderer)factory.newRenderer(resourceContext,null,representation);
     renderer.with(objectAdapter);
     return ResourceAbstract.responseOfOk(Caching.NONE,renderer).build();
   }
   final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
-  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(resourceContext,representation);
+  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(resourceContext,null,representation);
   renderer.with(returnedAdapter);
   ResponseBuilder respBuilder=ResourceAbstract.responseOfOk(Caching.NONE,renderer);
   Version version=returnedAdapter.getVersion();

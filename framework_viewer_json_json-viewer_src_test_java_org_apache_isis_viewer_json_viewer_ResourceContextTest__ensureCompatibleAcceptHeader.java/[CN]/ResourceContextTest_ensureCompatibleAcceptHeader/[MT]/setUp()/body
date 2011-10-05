@@ -1,4 +1,11 @@
 {
   httpHeaders=context.mock(HttpHeaders.class);
-  resourceContext=new ResourceContext(httpHeaders,null,null,null,null,null,null,null,null,null,null);
+  httpServletRequest=context.mock(HttpServletRequest.class);
+  context.checking(new Expectations(){
+{
+      allowing(httpServletRequest).getParameterMap();
+      will(returnValue(Collections.emptyMap()));
+    }
+  }
+);
 }
