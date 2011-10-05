@@ -1,29 +1,14 @@
 {
-  if (path == null) {
+  if (path == null || mode == Mode.TERMINATED) {
     return PathFollower.terminated();
   }
-  if (mode == Mode.FINDING_PATH) {
-    List<String> remaining=linkCandidatesByPath.get(path);
+  if (mode == Mode.FOLLOWING_PATH) {
+    Map remaining=graph.get(path);
     if (remaining != null) {
       return PathFollower.following(remaining);
     }
  else {
       return PathFollower.terminated();
-    }
-  }
-  if (mode == Mode.FOLLOWING_PATH) {
-    if (links.size() == 0) {
-      return PathFollower.terminated();
-    }
- else {
-      String firstPath=links.get(0);
-      if (Objects.equal(path,firstPath)) {
-        List<String> remaining=links.subList(1,links.size());
-        return PathFollower.following(remaining);
-      }
- else {
-        return PathFollower.terminated();
-      }
     }
   }
   return PathFollower.terminated();
