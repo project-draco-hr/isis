@@ -13,31 +13,33 @@
     final String memberName=identifier.getMemberName();
     final String methodName=memberName.substring(0,1).toUpperCase() + memberName.substring(1);
     try {
-      method=o.getClass().getMethod("get" + methodName,(Class<?>[])null);
-      final Object res=InvokeUtils.invoke(method,o);
-      if (res != null) {
-        if (foundFields == 0) {
-          sql.append(" WHERE ");
-          initialLength=sql.length();
-        }
-        if (sql.length() > initialLength) {
-          sql.append(" AND ");
-        }
-        final ObjectSpecification specification=patternAssoc.getSpecification();
-        if (specification.isValue()) {
-          final String fieldName=Sql.sqlFieldName(identifier.getMemberName());
-          sql.append(fieldName + "=?");
-          connector.addToQueryValues(res);
-          foundFields++;
-        }
+      if (true) {
+        final ObjectAdapter field=patternAssoc.get(pattern);
+        if (field != null) {
+          if (foundFields == 0) {
+            sql.append(" WHERE ");
+            initialLength=sql.length();
+          }
+          if (sql.length() > initialLength) {
+            sql.append(" AND ");
+          }
+          final FieldMapping fieldMapping=fieldMappingFor(patternAssoc);
+          if (fieldMapping != null) {
+            fieldMapping.appendWhereClause(connector,sql,pattern);
+          }
  else {
-          FieldMapping fieldMapping=fieldMappingLookup.get(patternAssoc);
-          fieldMapping.appendColumnNames(sql);
-          sql.append("=?");
-          final ObjectAdapter restoredValue=adapterManager.adapterFor(res);
-          Oid oid=restoredValue.getOid();
-          Object oidObject=idMapping.primaryKeyAsObject(oid);
-          connector.addToQueryValues(oidObject);
+            final ObjectSpecification specification=patternAssoc.getSpecification();
+            method=o.getClass().getMethod("get" + methodName,(Class<?>[])null);
+            final Object res=InvokeUtils.invoke(method,o);
+            if (specification.isValue()) {
+              final String fieldName=Sql.sqlFieldName(identifier.getMemberName());
+              sql.append(fieldName + "=?");
+              connector.addToQueryValues(res);
+            }
+ else {
+              throw new SqlObjectStoreException("Unhandled combination!");
+            }
+          }
           foundFields++;
         }
       }
