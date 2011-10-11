@@ -1,6 +1,10 @@
 {
   setTimeZone(DateTimeZone.UTC);
   final IsisConfiguration configParameters=IsisContext.getConfiguration();
-  setPkIdLabel(getProperty(propertiesBase,configParameters,"pk_id"));
-  setIdColumn(getProperty(propertiesBase,configParameters,"id"));
+  setPkIdLabel(getStringProperty(propertiesBase,configParameters,"pk_id"));
+  setIdColumn(getStringProperty(propertiesBase,configParameters,"id"));
+  setMaxInstances(getIntProperty(propertiesBase,configParameters,"maxinstances",100));
+  final String BASE_DATATYPE=propertiesBase + ".datatypes.";
+  final IsisConfiguration dataTypes=IsisContext.getConfiguration().getProperties(BASE_DATATYPE);
+  populateSqlDataTypes(dataTypes,BASE_DATATYPE);
 }

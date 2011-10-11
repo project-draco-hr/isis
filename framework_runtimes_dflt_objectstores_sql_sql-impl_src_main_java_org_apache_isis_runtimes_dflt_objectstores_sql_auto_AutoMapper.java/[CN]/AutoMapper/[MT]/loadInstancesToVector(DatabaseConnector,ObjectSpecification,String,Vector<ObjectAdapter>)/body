@@ -2,7 +2,8 @@
   LOG.debug("loading instances from SQL " + table);
   try {
     final Results rs=connector.select(selectStatment);
-    for (int count=0; rs.next() && count < MAX_INSTANCES; count++) {
+    final int maxInstances=Defaults.getMaxInstances();
+    for (int count=0; rs.next() && count < maxInstances; count++) {
       final ObjectAdapter instance=loadObject(connector,cls,rs);
       LOG.debug("  instance  " + instance);
       instances.addElement(instance);
