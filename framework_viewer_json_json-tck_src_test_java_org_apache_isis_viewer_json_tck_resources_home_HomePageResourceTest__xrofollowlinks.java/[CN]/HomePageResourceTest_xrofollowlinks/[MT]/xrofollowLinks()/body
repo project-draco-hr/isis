@@ -1,4 +1,17 @@
 {
-  final RestfulRequest request=client.createRequest(HttpMethod.GET,"/").withArg(QueryParameter.FOLLOW_LINKS,"user,services");
-  final RestfulResponse<HomePageRepresentation> restfulResponse=request.executeT();
+  RestfulRequest request;
+  RestfulResponse<HomePageRepresentation> restfulResponse;
+  HomePageRepresentation repr;
+  request=client.createRequest(HttpMethod.GET,"/");
+  restfulResponse=request.executeT();
+  repr=restfulResponse.getEntity();
+  assertThat(repr.getUser().getValue(),is(nullValue()));
+  assertThat(repr.getCapabilities().getValue(),is(nullValue()));
+  assertThat(repr.getServices().getValue(),is(nullValue()));
+  request=client.createRequest(HttpMethod.GET,"/").withArg(QueryParameter.FOLLOW_LINKS,"user,services,capabilities");
+  restfulResponse=request.executeT();
+  repr=restfulResponse.getEntity();
+  assertThat(repr.getUser().getValue(),is(not(nullValue())));
+  assertThat(repr.getCapabilities().getValue(),is(not(nullValue())));
+  assertThat(repr.getServices().getValue(),is(not(nullValue())));
 }

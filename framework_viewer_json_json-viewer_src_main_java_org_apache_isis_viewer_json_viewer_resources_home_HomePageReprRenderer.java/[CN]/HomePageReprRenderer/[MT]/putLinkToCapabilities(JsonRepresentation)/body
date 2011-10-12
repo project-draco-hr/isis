@@ -1,9 +1,9 @@
 {
   final LinkBuilder linkBuilder=LinkBuilder.newBuilder(getResourceContext(),"capabilities",RepresentationType.CAPABILITIES,"capabilities");
-  final PathFollower pathFollower=getPathFollower().follow("capabilities");
-  if (!pathFollower.isTerminated()) {
+  final LinkFollower linkFollower=getLinkFollower().follow("capabilities");
+  if (linkFollower.isFollowing()) {
     final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.CAPABILITIES);
-    final CapabilitiesReprRenderer renderer=(CapabilitiesReprRenderer)factory.newRenderer(getResourceContext(),pathFollower,JsonRepresentation.newMap());
+    final CapabilitiesReprRenderer renderer=(CapabilitiesReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
     linkBuilder.withValue(renderer.render());
   }
   representation.mapPut("capabilities",linkBuilder.build());

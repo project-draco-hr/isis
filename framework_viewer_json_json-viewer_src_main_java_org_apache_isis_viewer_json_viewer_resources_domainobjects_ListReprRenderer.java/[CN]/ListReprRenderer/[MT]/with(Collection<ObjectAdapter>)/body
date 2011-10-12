@@ -1,8 +1,16 @@
 {
   JsonRepresentation list=JsonRepresentation.newArray();
+  final LinkFollower linkFollower=getLinkFollower().follow("values");
+  final boolean following=linkFollower.isFollowing();
   for (  ObjectAdapter adapter : objectAdapters) {
     JsonRepresentation linkToObject=objectAdapterLinkToBuilder.with(adapter).linkToAdapter().build();
     list.arrayAdd(linkToObject);
+    if (following) {
+      final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.DOMAIN_OBJECT);
+      final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+      JsonRepresentation domainObject=renderer.with(adapter).render();
+      linkToObject.mapPut("value",domainObject);
+    }
   }
   representation.mapPut("values",list);
   return this;
