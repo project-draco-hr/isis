@@ -1,11 +1,11 @@
 {
-  Response resp=resource.resources();
+  Response resp=resource.homePage();
   RestfulResponse<HomePageRepresentation> restfulResponse=RestfulResponse.ofT(resp);
   assertThat(restfulResponse.getStatus().getFamily(),is(Family.SUCCESSFUL));
   assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
   HomePageRepresentation repr=restfulResponse.getEntity();
   assertThat(repr,is(not(nullValue())));
-  assertThat(repr.isMap(),is(true));
+  assertThat(repr,isMap());
   assertThat(repr.getSelf(),isLink(client).method(Method.GET));
   assertThat(repr.getUser(),isLink(client).method(Method.GET));
   assertThat(repr.getServices(),isLink(client).method(Method.GET));

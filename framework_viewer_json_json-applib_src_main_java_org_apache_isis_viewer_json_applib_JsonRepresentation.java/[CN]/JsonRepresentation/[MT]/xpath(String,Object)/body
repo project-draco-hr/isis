@@ -1,0 +1,25 @@
+{
+  String xpathExpression=String.format(xpathExpressionFormat,args);
+  try {
+    org.jdom.Document jdomDoc=new SAXBuilder().build(new StringReader(toXml()));
+    String prefix=jsonNode.isArray() ? "a" : "o";
+    XPath xpath=XPath.newInstance("/" + prefix + xpathExpression);
+    @SuppressWarnings("unchecked") List<Element> matchingElements=xpath.selectNodes(jdomDoc);
+    org.jdom.Document doc=new org.jdom.Document(new org.jdom.Element(prefix));
+    for (    Element el : matchingElements) {
+      el.detach();
+      doc.getRootElement().addContent(el);
+    }
+    JsonRepresentation matchedRepresentation=asJsonRepresentation(doc);
+    if (matchedRepresentation == null) {
+      return null;
+    }
+    return matchedRepresentation;
+  }
+ catch (  JDOMException e) {
+    throw new RuntimeException(e);
+  }
+catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+}

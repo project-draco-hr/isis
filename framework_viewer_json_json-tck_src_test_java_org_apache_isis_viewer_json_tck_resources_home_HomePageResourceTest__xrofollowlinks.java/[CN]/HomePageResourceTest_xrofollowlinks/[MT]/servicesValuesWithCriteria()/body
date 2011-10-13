@@ -1,0 +1,15 @@
+{
+  repr=whenExecuteWith("/","services.values[key=simples]");
+  JsonRepresentation servicesValue=repr.getServices().getValue();
+  assertThat(servicesValue,is(not(nullValue())));
+  assertThat(servicesValue,isMap());
+  final JsonRepresentation serviceLinkList=servicesValue.getArray("values");
+  assertThat(serviceLinkList,isArray());
+  JsonRepresentation service;
+  service=serviceLinkList.xpath("/e[key='%s']","simples");
+  assertThat(service.getRepresentation("e"),isMap());
+  assertThat(service.getString("e.key"),is("simples"));
+  assertThat(service.getRepresentation("e.value"),is(not(nullValue())));
+  service=serviceLinkList.xpath("/e[key='%s']","applibValuedEntities");
+  assertThat(service.getRepresentation("e.value"),is(nullValue()));
+}

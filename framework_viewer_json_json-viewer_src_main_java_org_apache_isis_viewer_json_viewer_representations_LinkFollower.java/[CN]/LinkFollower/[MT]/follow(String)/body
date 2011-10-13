@@ -1,15 +1,20 @@
 {
-  if (path == null || mode == Mode.TERMINATED) {
-    return LinkFollower.terminated();
+  if (path == null) {
+    return terminated(Node.NULL);
   }
-  if (mode == Mode.FOLLOWINGPATH) {
-    Map remaining=graph.get(path);
+  if (mode == Mode.TERMINATED) {
+    return terminated(this.root);
+  }
+  Node node=Node.parse(path);
+  if (mode == Mode.FOLLOWING) {
+    Map<Node,Map> remaining=graph.get(node);
     if (remaining != null) {
-      return LinkFollower.following(remaining);
+      Node key=findKey(node);
+      return new LinkFollower(remaining,Mode.FOLLOWING,key);
     }
  else {
-      return LinkFollower.terminated();
+      return terminated(node);
     }
   }
-  return LinkFollower.terminated();
+  return terminated(node);
 }
