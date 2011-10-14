@@ -1,0 +1,18 @@
+{
+  emptyRepr=JsonRepresentation.newMap();
+  nonEmptyRepr=JsonRepresentation.newMap();
+  nonEmptyRepr.mapPut("aString","bar");
+  nonEmptyRepr.mapPut("anInt",3);
+  nonEmptyRepr.mapPut("aLong",31231231L);
+  nonEmptyRepr.mapPut("aBoolean",true);
+  nonEmptyRepr.mapPut("aStringRequiringEncoding","http://localhost:8080/somewhere");
+  request=context.mock(ClientRequest.class);
+  requestQueryArgs=context.mock(MultivaluedMap.class);
+  context.checking(new Expectations(){
+{
+      allowing(request).getQueryParameters();
+      will(returnValue(requestQueryArgs));
+    }
+  }
+);
+}
