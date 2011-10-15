@@ -1,0 +1,17 @@
+{
+  EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (isBoolean(objectSpec)) {
+    if (representation.isBoolean()) {
+      String argStr="" + representation.asBoolean();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+ else {
+      throw new IllegalArgumentException("ObjectSpec is Boolean.class or boolean.class but representation is not a JSON boolean");
+    }
+  }
+  if (!representation.isString()) {
+    throw new ExpectedStringRepresentingValueException();
+  }
+  String argStr=representation.asString();
+  return encodableFacet.fromEncodedString(argStr);
+}

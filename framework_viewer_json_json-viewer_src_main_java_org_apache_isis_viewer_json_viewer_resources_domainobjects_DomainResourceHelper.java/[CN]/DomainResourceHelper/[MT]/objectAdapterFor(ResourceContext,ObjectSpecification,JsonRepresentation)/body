@@ -1,16 +1,6 @@
 {
   if (objectSpec.isEncodeable()) {
-    final Class<?> specClass=objectSpec.getCorrespondingClass();
-    if (specClass == boolean.class || specClass == Boolean.class) {
-      if (representation.isBoolean()) {
-      }
-    }
-    EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
-    if (!representation.isString()) {
-      throw new ExpectedStringRepresentingValueException();
-    }
-    String argStr=representation.asString();
-    return encodableFacet.fromEncodedString(argStr);
+    return new JsonValueEncoder().asAdapter(objectSpec,representation);
   }
   if (!representation.isLink()) {
     throw new ExpectedMapRepresentingLinkException();

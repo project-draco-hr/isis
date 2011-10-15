@@ -11,7 +11,7 @@
   Link selfIcon=domainObjectRepr.getLink("_self.icon");
   assertThat(selfIcon,isLink().rel("icon").href(matches(".+" + "/images/" + "null\\.png")).method(Method.GET));
   JsonRepresentation properties=domainObjectRepr.getProperties();
-  assertThat(properties.mapSize(),is(1));
+  assertThat(properties.size(),is(1));
   JsonRepresentation idProperty=properties.getRepresentation("id");
   assertThat(idProperty.getString("memberType"),is("property"));
   assertThat(idProperty.getString("propertyId"),is("id"));
@@ -22,7 +22,7 @@
   Link idPropertyDetails=idProperty.getLink("details");
   assertThat(idPropertyDetails,isLink().rel("property").href(self.getHref() + "/properties/id").method(Method.GET));
   JsonRepresentation actions=domainObjectRepr.getActions();
-  assertThat(actions.mapSize(),is(2));
+  assertThat(actions.size(),is(2));
   JsonRepresentation listAction=actions.getRepresentation("list");
   assertThat(listAction.getString("memberType"),is("action"));
   assertThat(listAction.getString("actionId"),is("list"));
