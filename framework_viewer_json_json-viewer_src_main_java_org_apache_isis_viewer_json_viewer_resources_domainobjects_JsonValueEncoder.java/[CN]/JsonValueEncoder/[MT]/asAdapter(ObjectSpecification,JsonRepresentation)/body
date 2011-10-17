@@ -1,13 +1,58 @@
 {
-  EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (objectSpec == null) {
+    throw new IllegalArgumentException("objectSpec cannot be null");
+  }
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (encodableFacet == null) {
+    throw new IllegalArgumentException("objectSpec expected to have EncodableFacet");
+  }
+  if (representation == null) {
+    throw new IllegalArgumentException("representation cannot be null");
+  }
+  if (!representation.isValue()) {
+    throw new IllegalArgumentException("representation must be of a value");
+  }
   if (isBoolean(objectSpec)) {
-    if (representation.isBoolean()) {
-      String argStr="" + representation.asBoolean();
-      return encodableFacet.fromEncodedString(argStr);
+    if (!representation.isBoolean()) {
+      throwIncompatibleException(objectSpec,representation);
     }
- else {
-      throw new IllegalArgumentException("ObjectSpec is Boolean.class or boolean.class but representation is not a JSON boolean");
+    String argStr="" + representation.asBoolean();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isInteger(objectSpec)) {
+    if (!representation.isInt()) {
+      throwIncompatibleException(objectSpec,representation);
     }
+    String argStr="" + representation.asInt();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isLong(objectSpec)) {
+    if (!representation.isLong()) {
+      throwIncompatibleException(objectSpec,representation);
+    }
+    String argStr="" + representation.asLong();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isBigInteger(objectSpec)) {
+    if (!representation.isBigInteger()) {
+      throwIncompatibleException(objectSpec,representation);
+    }
+    String argStr="" + representation.asBigInteger();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isBigDecimal(objectSpec)) {
+    if (!representation.isBigDecimal()) {
+      throwIncompatibleException(objectSpec,representation);
+    }
+    String argStr="" + representation.asBigDecimal();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isDouble(objectSpec)) {
+    if (!representation.isDouble()) {
+      throwIncompatibleException(objectSpec,representation);
+    }
+    String argStr="" + representation.asDouble();
+    return encodableFacet.fromEncodedString(argStr);
   }
   if (!representation.isString()) {
     throw new ExpectedStringRepresentingValueException();

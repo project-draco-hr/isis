@@ -1,5 +1,5 @@
 {
-  if (includesSelf) {
+  if (includesSelf && objectAdapter.isPersistent()) {
     JsonRepresentation self=linkToBuilder.with(objectAdapter).builder().build();
     representation.mapPut("self",self);
   }
@@ -8,7 +8,7 @@
   representation.mapPut("title",title);
   withMembers(objectAdapter);
   final JsonRepresentation links=JsonRepresentation.newArray();
-  links.arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),"domainType",objectAdapter.getSpecification()).build());
+  links.arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification()).build());
   withLinks(links);
   withExtensions();
   return representation;

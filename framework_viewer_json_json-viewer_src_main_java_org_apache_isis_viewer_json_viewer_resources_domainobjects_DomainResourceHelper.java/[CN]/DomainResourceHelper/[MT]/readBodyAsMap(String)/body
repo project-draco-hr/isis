@@ -1,6 +1,13 @@
 {
+  if (body == null) {
+    return JsonRepresentation.newMap();
+  }
+  final String bodyTrimmed=body.trim();
+  if (bodyTrimmed.isEmpty()) {
+    return JsonRepresentation.newMap();
+  }
   try {
-    final JsonRepresentation jsonRepr=JsonMapper.instance().read(bodyAsString);
+    final JsonRepresentation jsonRepr=JsonMapper.instance().read(bodyTrimmed);
     if (!jsonRepr.isMap()) {
       throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"could not read body as a JSON map");
     }

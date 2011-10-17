@@ -1,7 +1,9 @@
 {
   String xpathExpression=String.format(xpathTemplate,args);
   try {
-    org.jdom.Document jdomDoc=new SAXBuilder().build(new StringReader(toXml()));
+    final StringReader xmlStream=new StringReader(toXml());
+    final SAXBuilder saxBuilder=new SAXBuilder();
+    org.jdom.Document jdomDoc=saxBuilder.build(xmlStream);
     String prefix=jsonNode.isArray() ? "a" : "o";
     XPath xpath=XPath.newInstance("/" + prefix + xpathExpression);
     @SuppressWarnings("unchecked") List<Element> matchingElements=xpath.selectNodes(jdomDoc);

@@ -1,6 +1,6 @@
 {
   final String href=givenHrefToService("simples");
-  final RestfulRequest request=client.createRequest(HttpMethod.GET,href).withArg(QueryParameter.FOLLOW_LINKS,"members[actionId=%s].actionDetails","list");
+  final RestfulRequest request=client.createRequest(HttpMethod.GET,href).withArg(QueryParameter.FOLLOW_LINKS,"members[actionId=%s].details","list");
   final RestfulResponse<DomainObjectRepresentation> restfulResponse=request.executeT();
   assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
   final DomainObjectRepresentation repr=restfulResponse.getEntity();
@@ -8,9 +8,9 @@
   assertThat(membersList,isArray());
   JsonRepresentation actionRepr;
   actionRepr=membersList.xpath("/e[actionId='%s']","list");
-  assertThat(actionRepr.getRepresentation("e.actionDetails"),is(not(nullValue())));
-  assertThat(actionRepr.getRepresentation("e.actionDetails.value"),is(not(nullValue())));
+  assertThat(actionRepr.getRepresentation("e.details"),is(not(nullValue())));
+  assertThat(actionRepr.getRepresentation("e.details.value"),is(not(nullValue())));
   actionRepr=membersList.xpath("/e[actionId='%s']","newTransientEntity");
-  assertThat(actionRepr.getRepresentation("e.actionDetails"),is(not(nullValue())));
-  assertThat(actionRepr.getRepresentation("e.actionDetails.value"),is(nullValue()));
+  assertThat(actionRepr.getRepresentation("e.details"),is(not(nullValue())));
+  assertThat(actionRepr.getRepresentation("e.details.value"),is(nullValue()));
 }
