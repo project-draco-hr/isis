@@ -1,0 +1,9 @@
+{
+  final String urlDecode=UrlEncodingUtils.urlDecode(argumentsQueryString);
+  try {
+    return JsonMapper.instance().read(urlDecode);
+  }
+ catch (  Exception e) {
+    throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has query arguments that cannot be parsed as JSON",e,action.getId());
+  }
+}
