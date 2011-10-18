@@ -12,6 +12,6 @@
   final Response response=client.follow(invokeLink,args);
   RestfulResponse<DomainObjectRepresentation> restfulResponse=RestfulResponse.ofT(response);
   final DomainObjectRepresentation objectRepr=restfulResponse.getEntity();
-  assertThat(objectRepr.xpath("//members/e[propertyId='%s']/value","name").getString("value"),is("New Name"));
-  assertThat(objectRepr.xpath("//members/e[propertyId='%s']/value","flag").getBoolean("value"),is(true));
+  assertThat(objectRepr.getRepresentation("members[propertyId=%s].value","name").asString(),is("New Name"));
+  assertThat(objectRepr.getRepresentation("members[propertyId=%s].value","flag").asBoolean(),is(true));
 }

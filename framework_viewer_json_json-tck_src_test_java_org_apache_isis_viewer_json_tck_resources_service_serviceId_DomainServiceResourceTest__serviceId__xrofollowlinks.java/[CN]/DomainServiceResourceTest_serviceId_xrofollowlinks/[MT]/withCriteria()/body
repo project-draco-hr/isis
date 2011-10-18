@@ -7,10 +7,10 @@
   JsonRepresentation membersList=repr.getMembers();
   assertThat(membersList,isArray());
   JsonRepresentation actionRepr;
-  actionRepr=membersList.xpath("/e[actionId='%s']","list");
-  assertThat(actionRepr.getRepresentation("e.details"),is(not(nullValue())));
-  assertThat(actionRepr.getRepresentation("e.details.value"),is(not(nullValue())));
-  actionRepr=membersList.xpath("/e[actionId='%s']","newTransientEntity");
-  assertThat(actionRepr.getRepresentation("e.details"),is(not(nullValue())));
-  assertThat(actionRepr.getRepresentation("e.details.value"),is(nullValue()));
+  actionRepr=membersList.getRepresentation("[actionId=%s]","list");
+  assertThat(actionRepr.getRepresentation("details"),is(not(nullValue())));
+  assertThat(actionRepr.getRepresentation("details.value"),is(not(nullValue())));
+  actionRepr=membersList.getRepresentation("[actionId=%s]","newTransientEntity");
+  assertThat(actionRepr.getRepresentation("details"),is(not(nullValue())));
+  assertThat(actionRepr.getRepresentation("details.value"),is(nullValue()));
 }

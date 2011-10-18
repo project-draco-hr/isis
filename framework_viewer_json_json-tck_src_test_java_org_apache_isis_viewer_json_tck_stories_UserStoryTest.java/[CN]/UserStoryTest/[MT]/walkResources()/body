@@ -3,11 +3,11 @@
   Response homePageResp=homePageResource.homePage();
   RepresentationWalker walker=client.createWalker(homePageResp);
   walker.walk("services");
-  walker.walkXpath("/*[title='ApplibValues']/link[rel='object']");
-  walker.walkXpath("/newEntity[memberType='action']/details");
+  walker.walk("values[title=ApplibValues].links[rel=object]");
+  walker.walk("values[memberType=action].details");
   JsonRepresentation newEntityActionDetails=walker.getEntity();
   JsonRepresentation newEntityActionInvokeBody=newEntityActionDetails.getArray("invoke.body");
-  walker.walkXpath("/invoke",newEntityActionInvokeBody);
+  walker.walk("invoke",newEntityActionInvokeBody);
   walker.walk("link");
   JsonRepresentation newEntityDomainObject=walker.getEntity();
   assertThat(newEntityDomainObject.getString("_self.link.href"),matches(".+/objects/OID:[\\d]+$"));

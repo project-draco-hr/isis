@@ -1,8 +1,26 @@
 {
-  JsonNode node=jsonNode;
+  JsonNode jsonNode=this.jsonNode;
   String[] keys=path.split("\\.");
   for (  String key : keys) {
-    node=node.path(key);
+    final PathNode pathNode=PathNode.parse(key);
+    if (!pathNode.getKey().isEmpty()) {
+      jsonNode=jsonNode.path(pathNode.getKey());
+    }
+ else {
+    }
+    if (jsonNode.isNull()) {
+      return jsonNode;
+    }
+    if (!pathNode.hasCriteria()) {
+      continue;
+    }
+    if (!jsonNode.isArray()) {
+      return NullNode.getInstance();
+    }
+    jsonNode=matching(jsonNode,pathNode);
+    if (jsonNode.isNull()) {
+      return jsonNode;
+    }
   }
-  return node;
+  return jsonNode;
 }

@@ -4,6 +4,6 @@
   final RestfulResponse<DomainObjectRepresentation> restfulResponse=request.executeT();
   assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
   final DomainObjectRepresentation repr=restfulResponse.getEntity();
-  JsonRepresentation actionLinkRepr=repr.xpath("/members/e[actionId='%s']",actionId);
-  return actionLinkRepr.getRepresentation("e.details.value");
+  JsonRepresentation actionLinkRepr=repr.getRepresentation("members[actionId=%s]",actionId);
+  return actionLinkRepr.getRepresentation("details.value");
 }
