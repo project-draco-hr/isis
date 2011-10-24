@@ -4,15 +4,15 @@
   RestfulResponse<ObjectActionRepresentation> actionPromptJsonResp=RestfulResponse.ofT(actionPromptResp);
   assertThat(actionPromptJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   ObjectActionRepresentation actionPromptRepr=actionPromptJsonResp.getEntity();
-  Link selfLink=actionPromptRepr.getLink("_self.link");
+  LinkRepresentation selfLink=actionPromptRepr.getLink("_self.link");
   assertThat(selfLink.getRel(),is("member"));
   assertThat(selfLink.getHref(),matches(".+objects/OID:1/actions/list"));
   assertThat(selfLink.getMethod(),is(Method.GET));
-  Link selfObject=actionPromptRepr.getLink("_self.object");
+  LinkRepresentation selfObject=actionPromptRepr.getLink("_self.object");
   assertThat(selfObject.getRel(),is("object"));
   assertThat(selfObject.getHref(),matches(".+objects/OID:1"));
   assertThat(selfObject.getMethod(),is(Method.GET));
-  Link type=actionPromptRepr.getLink("type");
+  LinkRepresentation type=actionPromptRepr.getLink("type");
   assertThat(type.getRel(),is("type"));
   assertThat(type.getHref(),matches(".+vnd\\.list\\+json"));
   assertThat(type.getMethod(),is(Method.GET));
@@ -20,7 +20,7 @@
   assertThat(actionPromptRepr.getString("actionType"),is("USER"));
   assertThat(actionPromptRepr.getInt("numParameters"),is(0));
   assertThat(actionPromptRepr.getArray("parameters").size(),is(0));
-  Link invokeLink=actionPromptRepr.getLink("invoke");
+  LinkRepresentation invokeLink=actionPromptRepr.getLink("invoke");
   assertThat(invokeLink.getRel(),is("invoke"));
   assertThat(invokeLink.getHref(),matches(".+objects/OID:1/actions/list/invoke"));
   assertThat(invokeLink.getMethod(),is(Method.POST));

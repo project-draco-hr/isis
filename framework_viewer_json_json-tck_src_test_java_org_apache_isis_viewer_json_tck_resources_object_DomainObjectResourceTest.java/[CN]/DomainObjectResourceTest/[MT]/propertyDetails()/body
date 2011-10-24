@@ -4,15 +4,15 @@
   RestfulResponse<ObjectPropertyRepresentation> idPropertyJsonResp=RestfulResponse.ofT(idPropertyResp);
   assertThat(idPropertyJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   ObjectPropertyRepresentation propertyDetailsRepr=idPropertyJsonResp.getEntity();
-  Link selfLink=propertyDetailsRepr.getLink("_self.link");
+  LinkRepresentation selfLink=propertyDetailsRepr.getLink("_self.link");
   assertThat(selfLink.getRel(),is("member"));
   assertThat(selfLink.getHref(),matches(".+objects/OID:1/properties/id"));
   assertThat(selfLink.getMethod(),is(Method.GET));
-  Link selfObject=propertyDetailsRepr.getLink("_self.object");
+  LinkRepresentation selfObject=propertyDetailsRepr.getLink("_self.object");
   assertThat(selfObject.getRel(),is("object"));
   assertThat(selfObject.getHref(),matches(".+objects/OID:1"));
   assertThat(selfObject.getMethod(),is(Method.GET));
-  Link type=propertyDetailsRepr.getLink("type");
+  LinkRepresentation type=propertyDetailsRepr.getLink("type");
   assertThat(type.getRel(),is("type"));
   assertThat(type.getHref(),matches(".+vnd\\.string\\+json"));
   assertThat(type.getMethod(),is(Method.GET));

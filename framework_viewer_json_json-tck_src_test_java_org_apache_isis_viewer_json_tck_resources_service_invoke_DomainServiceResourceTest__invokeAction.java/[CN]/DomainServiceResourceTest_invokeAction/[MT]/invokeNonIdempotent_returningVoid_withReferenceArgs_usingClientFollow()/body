@@ -1,12 +1,12 @@
 {
-  final Link linkToSimpleEntity=givenLinkToSimpleEntity(0);
+  final LinkRepresentation linkToSimpleEntity=givenLinkToSimpleEntity(0);
   final Response responseBefore=client.follow(linkToSimpleEntity);
   final RestfulResponse<DomainObjectRepresentation> restfulResponseBefore=RestfulResponse.ofT(responseBefore);
   final DomainObjectRepresentation simpleEntityBefore=restfulResponseBefore.getEntity();
   assertThat(simpleEntityBefore.getProperty("flag").getBoolean("value"),is(true));
   JsonRepresentation givenAction=givenAction("simples","toggle");
   final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
-  final Link invokeLink=actionRepr.getInvoke();
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
   assertThat(invokeLink,is(not(nullValue())));
   final JsonRepresentation args=invokeLink.getArguments();
   assertThat(args.size(),is(1));
