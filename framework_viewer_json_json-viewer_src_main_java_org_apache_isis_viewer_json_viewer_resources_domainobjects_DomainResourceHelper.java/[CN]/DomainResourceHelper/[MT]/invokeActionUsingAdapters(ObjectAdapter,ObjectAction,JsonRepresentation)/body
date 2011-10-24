@@ -24,7 +24,7 @@
   }
   final CollectionFacet collectionFacet=returnedAdapter.getSpecification().getFacet(CollectionFacet.class);
   if (collectionFacet != null) {
-    representation=representationWithSelfFor(objectAdapter,action,arguments);
+    representation=representationWithSelfFor(RepresentationType.LIST,objectAdapter,action,arguments);
     final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
     final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.LIST);
     final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(resourceContext,null,representation);
@@ -33,7 +33,7 @@
   }
   final EncodableFacet encodableFacet=returnedAdapter.getSpecification().getFacet(EncodableFacet.class);
   if (encodableFacet != null) {
-    representation=representationWithSelfFor(objectAdapter,action,arguments);
+    representation=representationWithSelfFor(RepresentationType.SCALAR_VALUE,objectAdapter,action,arguments);
     final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.SCALAR_VALUE);
     ScalarValueReprRenderer renderer=(ScalarValueReprRenderer)factory.newRenderer(resourceContext,null,representation);
     renderer.with(returnedAdapter);

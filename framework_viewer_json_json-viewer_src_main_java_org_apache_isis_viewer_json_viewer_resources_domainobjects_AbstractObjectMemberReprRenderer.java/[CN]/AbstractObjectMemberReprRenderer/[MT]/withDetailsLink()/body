@@ -1,8 +1,8 @@
 {
   final JsonRepresentation link=linkToBuilder.linkToMember(memberType.getDetailsRel(),memberType,objectMember).build();
-  representation.mapPut(memberType.getDetailsRel().getName(),link);
+  getLinks().arrayAdd(link);
   final LinkFollower membersLinkFollower=getLinkFollower();
-  final LinkFollower detailsLinkFollower=membersLinkFollower.follow(memberType.getDetailsRel().getName());
+  final LinkFollower detailsLinkFollower=membersLinkFollower.follow("links[rel=%s]",memberType.getDetailsRel().getName());
   if (membersLinkFollower.matches(representation) && detailsLinkFollower.matches(link)) {
     followDetailsLink(link);
   }

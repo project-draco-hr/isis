@@ -1,0 +1,21 @@
+{
+  String path=String.format(pathTemplate,args);
+  if (path == null) {
+    return terminated(PathNode.NULL);
+  }
+  if (mode == Mode.TERMINATED) {
+    return terminated(this.root);
+  }
+  PathNode node=PathNode.parse(path);
+  if (mode == Mode.FOLLOWING) {
+    Map<PathNode,Map> remaining=graph.get(node);
+    if (remaining != null) {
+      PathNode key=findKey(node);
+      return new LinkFollower(remaining,Mode.FOLLOWING,key);
+    }
+ else {
+      return terminated(node);
+    }
+  }
+  return terminated(node);
+}
