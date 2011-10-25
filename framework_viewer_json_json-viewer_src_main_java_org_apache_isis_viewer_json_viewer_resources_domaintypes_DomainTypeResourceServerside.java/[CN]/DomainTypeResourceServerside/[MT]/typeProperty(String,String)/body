@@ -1,17 +1,17 @@
 {
   RepresentationType representationType=RepresentationType.TYPE_PROPERTY;
   init(representationType);
-  final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
-  if (objectSpec == null) {
+  final ObjectSpecification parentSpec=getSpecificationLoader().loadSpecification(domainType);
+  if (parentSpec == null) {
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
-  final ObjectMember objectMember=objectSpec.getAssociation(propertyId);
+  final ObjectMember objectMember=parentSpec.getAssociation(propertyId);
   if (objectMember == null || objectMember.isOneToManyAssociation()) {
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
   OneToOneAssociation property=(OneToOneAssociation)objectMember;
   final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
   final TypePropertyReprRenderer renderer=(TypePropertyReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
-  renderer.with(new SpecAndProperty(objectSpec,property)).includesSelf();
+  renderer.with(new SpecAndProperty(parentSpec,property)).includesSelf().withParent(parentSpec);
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

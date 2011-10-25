@@ -1,17 +1,17 @@
 {
   RepresentationType representationType=RepresentationType.TYPE_ACTION;
   init(representationType);
-  final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
-  if (objectSpec == null) {
+  final ObjectSpecification parentSpec=getSpecificationLoader().loadSpecification(domainType);
+  if (parentSpec == null) {
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
-  final ObjectMember objectMember=objectSpec.getObjectAction(actionId);
+  final ObjectMember objectMember=parentSpec.getObjectAction(actionId);
   if (objectMember == null) {
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
   ObjectAction action=(ObjectAction)objectMember;
   final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
   final TypeActionReprRenderer renderer=(TypeActionReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
-  renderer.with(new SpecAndAction(objectSpec,action)).includesSelf();
+  renderer.with(new SpecAndAction(parentSpec,action)).includesSelf().withParent(parentSpec);
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

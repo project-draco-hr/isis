@@ -1,8 +1,13 @@
 {
   if (includesSelf) {
-    representation.mapPut("self",newLinkToBuilder(getResourceContext(),Rel.SELF,objectSpecification).build());
+    final JsonRepresentation selfLink=newLinkToBuilder(getResourceContext(),Rel.SELF,objectSpecification).build();
+    getLinks().arrayAdd(selfLink);
   }
-  representation.mapPut("links",JsonRepresentation.newArray());
-  representation.mapPut("extensions",JsonRepresentation.newMap());
+  if (objectSpecification != null) {
+    representation.mapPut("canonicalName",objectSpecification.getFullIdentifier());
+    addMembers();
+    putExtensionsNames();
+    putExtensionsDescriptionIfAvailable();
+  }
   return representation;
 }

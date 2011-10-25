@@ -6,7 +6,10 @@
   String name=getSpecification().getSingularName();
   List<ObjectActionParameter> parameters=this.getAction().getParameters(new Filter<ObjectActionParameter>(){
     @Override public boolean accept(    ObjectActionParameter t){
-      return t.getSpecification() == getSpecification();
+      return equalsShortIdentifier(t.getSpecification(),getSpecification());
+    }
+    protected boolean equalsShortIdentifier(    final ObjectSpecification spec1,    final ObjectSpecification spec2){
+      return spec1.getShortIdentifier().toLowerCase().equals(spec2.getShortIdentifier().toLowerCase());
     }
   }
 );
@@ -14,5 +17,5 @@
     return StringUtils.camelLowerFirst(name);
   }
   int indexOf=parameters.indexOf(this);
-  return StringUtils.camel(name + indexOf);
+  return StringUtils.camelLowerFirst(name + (indexOf + 1));
 }
