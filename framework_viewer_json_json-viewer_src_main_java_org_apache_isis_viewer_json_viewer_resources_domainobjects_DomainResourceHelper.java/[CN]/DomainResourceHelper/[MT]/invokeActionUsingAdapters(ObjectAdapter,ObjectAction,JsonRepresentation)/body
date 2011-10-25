@@ -29,6 +29,8 @@
     final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.LIST);
     final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(resourceContext,null,representation);
     renderer.with(collectionAdapters);
+    renderer.withReturnType(action.getReturnType());
+    renderer.withElementType(returnedAdapter.getElementSpecification());
     return ResourceAbstract.responseOfOk(renderer,Caching.NONE).build();
   }
   final EncodableFacet encodableFacet=returnedAdapter.getSpecification().getFacet(EncodableFacet.class);
@@ -37,6 +39,7 @@
     final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.SCALAR_VALUE);
     ScalarValueReprRenderer renderer=(ScalarValueReprRenderer)factory.newRenderer(resourceContext,null,representation);
     renderer.with(returnedAdapter);
+    renderer.withReturnType(action.getReturnType());
     return ResourceAbstract.responseOfOk(renderer,Caching.NONE).build();
   }
   final RendererFactory factory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
