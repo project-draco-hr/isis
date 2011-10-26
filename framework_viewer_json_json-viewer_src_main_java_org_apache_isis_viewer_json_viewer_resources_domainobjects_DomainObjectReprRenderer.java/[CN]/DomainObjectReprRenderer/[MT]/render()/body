@@ -1,14 +1,18 @@
 {
   if (includesSelf && objectAdapter.isPersistent()) {
-    JsonRepresentation self=linkToBuilder.with(Rel.SELF).with(objectAdapter).builder().build();
+    JsonRepresentation self=linkToBuilder.with(objectAdapter).builder(Rel.SELF).build();
     getLinks().arrayAdd(self);
   }
   String title=objectAdapter.titleString();
-  representation.mapPut("oid",OidUtils.getOidStr(resourceContext,objectAdapter));
   representation.mapPut("title",title);
+  representation.mapPut("oid",OidUtils.getOidStr(resourceContext,objectAdapter));
+  final boolean isService=objectAdapter.getSpecification().isService();
+  if (isService) {
+    representation.mapPut("serviceId",ServiceUtil.id(objectAdapter.getObject()));
+  }
   withMembers(objectAdapter);
   final JsonRepresentation links=getLinks();
   links.arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification()).build());
-  getExtensions();
+  getExtensions().mapPut("isService",isService);
   return representation;
 }

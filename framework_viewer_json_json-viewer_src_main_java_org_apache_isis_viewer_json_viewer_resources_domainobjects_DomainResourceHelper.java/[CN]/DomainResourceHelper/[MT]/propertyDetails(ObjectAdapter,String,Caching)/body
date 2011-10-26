@@ -1,7 +1,7 @@
 {
-  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.ACCESS);
+  final OneToOneAssociation property=getPropertyThatIsVisibleAndUsable(propertyId,Intent.ACCESS);
   RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.OBJECT_PROPERTY);
   final ObjectPropertyReprRenderer renderer=(ObjectPropertyReprRenderer)factory.newRenderer(resourceContext,null,JsonRepresentation.newMap());
-  renderer.with(new ObjectAndProperty(objectAdapter,property)).asStandalone();
+  renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(adapterLinkTo).asStandalone();
   return ResourceAbstract.responseOfOk(renderer,caching).build();
 }

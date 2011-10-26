@@ -1,0 +1,10 @@
+{
+  JsonRepresentation representation=JsonRepresentation.newMap();
+  final JsonRepresentation links=JsonRepresentation.newArray();
+  representation.mapPut("links",links);
+  final LinkBuilder memberBuilder=adapterLinkTo.memberBuilder(Rel.SELF,MemberType.ACTION,action,representationType,"invoke");
+  final JsonRepresentation selfLink=memberBuilder.build();
+  links.arrayAdd(selfLink);
+  selfLink.mapPut("args",bodyArgs);
+  return representation;
+}

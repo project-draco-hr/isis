@@ -3,7 +3,7 @@
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
   final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
-  renderer.with(objectAdapter);
+  renderer.with(objectAdapter).includesSelf();
   ResponseBuilder respBuilder=responseOfOk(renderer,Caching.NONE);
   Version version=objectAdapter.getVersion();
   if (version != null && version.getTime() != null) {

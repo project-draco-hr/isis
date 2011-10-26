@@ -1,8 +1,8 @@
 {
   init();
-  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext());
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(objectAdapter,propertyId,Intent.MUTATE);
+  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
+  final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(propertyId,Intent.MUTATE);
   Consent consent=property.isAssociationValid(objectAdapter,null);
   if (consent.isVetoed()) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());

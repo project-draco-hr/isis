@@ -1,9 +1,8 @@
 {
-  RepresentationType representationType=RepresentationType.DOMAIN_OBJECT;
-  init(representationType);
+  init(RepresentationType.DOMAIN_OBJECT);
   final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
-  final RendererFactory factory=rendererFactoryRegistry.find(representationType);
-  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
-  renderer.usingLinkToBuilder(new DomainServiceLinkTo()).includesSelf().with(serviceAdapter);
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
+  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  renderer.usingLinkToBuilder(new DomainServiceLinkTo()).with(serviceAdapter).includesSelf();
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

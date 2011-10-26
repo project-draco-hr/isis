@@ -1,0 +1,7 @@
+{
+  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(actionId,Intent.ACCESS);
+  RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.OBJECT_ACTION);
+  final ObjectActionReprRenderer renderer=(ObjectActionReprRenderer)factory.newRenderer(resourceContext,null,JsonRepresentation.newMap());
+  renderer.with(new ObjectAndAction(objectAdapter,action)).usingLinkTo(adapterLinkTo).asStandalone();
+  return ResourceAbstract.responseOfOk(renderer,Caching.NONE).build();
+}

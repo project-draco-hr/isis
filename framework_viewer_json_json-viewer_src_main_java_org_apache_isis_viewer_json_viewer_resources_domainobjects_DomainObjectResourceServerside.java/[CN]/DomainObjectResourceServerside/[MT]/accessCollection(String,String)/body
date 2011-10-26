@@ -1,8 +1,8 @@
 {
   init(RepresentationType.OBJECT_COLLECTION);
-  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext());
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.ACCESS);
+  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
+  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(collectionId,Intent.ACCESS);
   RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.OBJECT_COLLECTION);
   final ObjectCollectionReprRenderer renderer=(ObjectCollectionReprRenderer)factory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.with(new ObjectAndCollection(objectAdapter,collection)).asStandalone();

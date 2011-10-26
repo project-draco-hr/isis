@@ -1,8 +1,8 @@
 {
   init();
-  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext());
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
-  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.MUTATE);
+  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
+  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(collectionId,Intent.MUTATE);
   ObjectSpecification collectionSpec=collection.getSpecification();
   String bodyAsString=DomainResourceHelper.asStringUtf8(body);
   ObjectAdapter argAdapter=helper.parseBodyAsMapWithSingleValue(collectionSpec,bodyAsString);
