@@ -5,10 +5,5 @@
     throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not query only",action.getId());
   }
   JsonRepresentation arguments=parseQueryString(action,argumentsQueryString);
-  int numParameters=action.getParameterCount();
-  int argSize=arguments.size();
-  if (argSize != numParameters) {
-    throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has %d parameters but received %d arguments",numParameters,argSize,action.getId());
-  }
   return invokeActionUsingAdapters(objectAdapter,action,arguments);
 }

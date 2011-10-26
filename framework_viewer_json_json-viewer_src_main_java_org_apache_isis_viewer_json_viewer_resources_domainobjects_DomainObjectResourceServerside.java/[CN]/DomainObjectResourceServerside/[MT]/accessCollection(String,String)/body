@@ -1,9 +1,10 @@
 {
+  init(RepresentationType.OBJECT_COLLECTION);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext());
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(objectAdapter,collectionId,Intent.ACCESS);
   RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.OBJECT_COLLECTION);
   final ObjectCollectionReprRenderer renderer=(ObjectCollectionReprRenderer)factory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
-  renderer.with(new ObjectAndCollection(objectAdapter,collection));
-  return Response.status(HttpStatusCode.OK.getJaxrsStatusType()).entity(jsonFor(renderer)).type(MediaType.APPLICATION_JSON_TYPE).build();
+  renderer.with(new ObjectAndCollection(objectAdapter,collection)).asStandalone();
+  return ResourceAbstract.responseOfOk(renderer,Caching.NONE).build();
 }
