@@ -1,8 +1,20 @@
 {
   StringBuilder stringBuilder=new StringBuilder();
   try {
-    for (    Method method : this.methods) {
-      stringBuilder.append((String)AdapterInvokeUtils.invoke(method,owningAdapter)).append(' ');
+    for (    TitleComponent entry : this.components) {
+      final Object titlePart=AdapterInvokeUtils.invoke(entry.getMethod(),owningAdapter);
+      if (titlePart == null) {
+        continue;
+      }
+      final String trim=titlePart.toString().trim();
+      if (Strings.isNullOrEmpty(trim)) {
+        continue;
+      }
+      if (stringBuilder.length() > 0) {
+        stringBuilder.append(entry.getPrepend());
+      }
+      stringBuilder.append(trim);
+      stringBuilder.append(entry.getAppend());
     }
     return stringBuilder.toString().trim();
   }

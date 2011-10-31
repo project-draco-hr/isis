@@ -1,6 +1,7 @@
 {
   List<Method> methods=MethodFinderUtils.findMethodsWithAnnotation(DomainObjectWithProblemInItsAnnotatedTitleMethod.class,MethodScope.OBJECT,Title.class);
-  TitleFacetViaTitleAnnotation facet=new TitleFacetViaTitleAnnotation(methods,mockFacetHolder);
+  final List<TitleComponent> components=Lists.transform(methods,TitleComponent.FROM_METHOD);
+  TitleFacetViaTitleAnnotation facet=new TitleFacetViaTitleAnnotation(components,mockFacetHolder);
   final DomainObjectWithProblemInItsAnnotatedTitleMethod screwedPojo=new DomainObjectWithProblemInItsAnnotatedTitleMethod();
   mockery.checking(new Expectations(){
 {
