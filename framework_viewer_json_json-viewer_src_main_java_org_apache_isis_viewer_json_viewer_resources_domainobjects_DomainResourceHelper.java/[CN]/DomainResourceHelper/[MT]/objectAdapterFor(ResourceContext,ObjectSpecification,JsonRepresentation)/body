@@ -10,7 +10,10 @@
   }
   JsonRepresentation argLink=representation.asLink();
   String oidFromHref=UrlParserUtils.oidFromLink(argLink);
-  final ObjectAdapter objectAdapter=OidUtils.getObjectAdapter(resourceContext,oidFromHref);
+  if (oidFromHref == null) {
+    throw new ExpectedMapRepresentingLinkException();
+  }
+  ObjectAdapter objectAdapter=OidUtils.getObjectAdapter(resourceContext,oidFromHref);
   if (objectAdapter == null) {
     throw new UnknownOidException(oidFromHref);
   }
