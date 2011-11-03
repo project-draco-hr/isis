@@ -3,7 +3,6 @@
   final Facet facet=facetedMethod.getFacet(TitleFacet.class);
   final TitleFacetViaTitleAnnotation titleFacetViaTitleAnnotation=(TitleFacetViaTitleAnnotation)facet;
   final Customer4 customer=new Customer4();
-  Localization localization=null;
   context.checking(new Expectations(){
 {
       allowing(objectAdapter).getObject();
@@ -11,6 +10,6 @@
     }
   }
 );
-  final String title=titleFacetViaTitleAnnotation.title(objectAdapter,localization);
+  final String title=titleFacetViaTitleAnnotation.title(objectAdapter,mockLocalizationProvider.getLocalization());
   assertThat(title,is("titleElement1 titleElement3 titleElement5 3 this needs to be trimmed"));
 }

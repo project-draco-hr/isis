@@ -2,18 +2,21 @@
   StringBuilder stringBuilder=new StringBuilder();
   try {
     for (    TitleComponent entry : this.components) {
+      String title=null;
       final Object titlePart=AdapterInvokeUtils.invoke(entry.getMethod(),owningAdapter);
-      if (titlePart == null) {
-        continue;
+      if (titlePart != null) {
+        title=titleOf(titlePart);
+        if (Strings.isNullOrEmpty(title)) {
+          title=titlePart.toString().trim();
+        }
       }
-      final String trim=titlePart.toString().trim();
-      if (Strings.isNullOrEmpty(trim)) {
+      if (Strings.isNullOrEmpty(title)) {
         continue;
       }
       if (stringBuilder.length() > 0) {
         stringBuilder.append(entry.getPrepend());
       }
-      stringBuilder.append(trim);
+      stringBuilder.append(title);
       stringBuilder.append(entry.getAppend());
     }
     return stringBuilder.toString().trim();
