@@ -1,0 +1,14 @@
+{
+  Basket basket=firstMatch(Basket.class,new Filter<Basket>(){
+    @Override public boolean accept(    Basket basket){
+      return basket.getOwner() == customer;
+    }
+  }
+);
+  if (basket == null) {
+    basket=newTransientInstance(Basket.class);
+    basket.setOwner(customer);
+    persistIfNotAlready(basket);
+  }
+  return basket;
+}
