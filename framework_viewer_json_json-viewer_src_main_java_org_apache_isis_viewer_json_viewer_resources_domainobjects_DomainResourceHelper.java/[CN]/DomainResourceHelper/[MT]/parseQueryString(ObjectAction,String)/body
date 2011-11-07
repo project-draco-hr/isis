@@ -1,16 +1,3 @@
 {
-  if (argumentsQueryString == null) {
-    return JsonRepresentation.newMap();
-  }
-  String argumentsTrimmed=argumentsQueryString.trim();
-  if (argumentsTrimmed.isEmpty()) {
-    return JsonRepresentation.newMap();
-  }
-  final String urlDecode=UrlEncodingUtils.urlDecode(argumentsTrimmed);
-  try {
-    return JsonMapper.instance().read(urlDecode);
-  }
- catch (  Exception e) {
-    throw JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' has query arguments that cannot be parsed as JSON",e,action.getId());
-  }
+  return QueryStringUtil.parseQueryString(argumentsQueryString,"Action",action.getId());
 }

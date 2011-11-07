@@ -1,9 +1,9 @@
 {
   StringBuilder stringBuilder=new StringBuilder();
   try {
-    for (    TitleComponent entry : this.components) {
+    for (    TitleComponent component : this.components) {
       String title=null;
-      final Object titlePart=AdapterInvokeUtils.invoke(entry.getMethod(),owningAdapter);
+      final Object titlePart=AdapterInvokeUtils.invoke(component.getMethod(),owningAdapter);
       if (titlePart != null) {
         title=titleOf(titlePart);
         if (Strings.isNullOrEmpty(title)) {
@@ -14,10 +14,10 @@
         continue;
       }
       if (stringBuilder.length() > 0) {
-        stringBuilder.append(entry.getPrepend());
+        stringBuilder.append(component.getPrepend());
       }
-      stringBuilder.append(title);
-      stringBuilder.append(entry.getAppend());
+      stringBuilder.append(abbreviated(title,component.abbreviateTo));
+      stringBuilder.append(component.getAppend());
     }
     return stringBuilder.toString().trim();
   }
