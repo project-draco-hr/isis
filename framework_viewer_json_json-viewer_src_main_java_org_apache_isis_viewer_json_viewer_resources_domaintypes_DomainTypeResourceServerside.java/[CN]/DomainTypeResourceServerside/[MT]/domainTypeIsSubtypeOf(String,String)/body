@@ -1,5 +1,5 @@
 {
-  RepresentationType representationType=RepresentationType.DOMAIN_TYPE_IS_SUBTYPE_OF;
+  RepresentationType representationType=RepresentationType.TYPE_ACTION_RESULT;
   init();
   JsonRepresentation arguments=QueryStringUtil.parseQueryString(argumentsQueryString,"Type action","isSubtypeOf");
   if (!arguments.isLink("supertype")) {
@@ -10,7 +10,7 @@
   final ObjectSpecification domainTypeSpec=getSpecificationLoader().loadSpecification(domainType);
   final ObjectSpecification supertypeSpec=getSpecificationLoader().loadSpecification(supertypeFullName);
   final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
-  final DomainTypeIsSubtypeOfReprRenderer renderer=(DomainTypeIsSubtypeOfReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final TypeActionIsSubtypeOfReprRenderer renderer=(TypeActionIsSubtypeOfReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   final ObjectSpecAndSuperSpec objectSpecAndSuperSpec=new ObjectSpecAndSuperSpec(domainTypeSpec,supertypeSpec);
   renderer.with(objectSpecAndSuperSpec).includesSelf();
   return responseOfOk(renderer,Caching.ONE_DAY).build();
