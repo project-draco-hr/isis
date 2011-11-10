@@ -3,19 +3,25 @@
     @Override public void describeTo(    Description description){
       description.appendText("a link");
       if (rel != null) {
-        description.appendText(" with rel ").appendText(rel);
+        description.appendText(" with rel '").appendText(rel).appendText("'");
       }
       if (href != null) {
-        description.appendText(" with href ").appendText(href);
+        description.appendText(" with href '").appendText(href).appendText("'");
       }
       if (hrefMatcher != null) {
         description.appendText(" with href ");
         hrefMatcher.describeTo(description);
       }
       if (method != null) {
-        description.appendText(" with method ").appendValue(method);
+        description.appendText(" with method '").appendValue(method).appendText("'");
       }
-      if (novalue) {
+      if (mediaType != null) {
+        description.appendText(" with type '").appendValue(mediaType).appendText("'");
+      }
+      if (typeParameterName != null) {
+        description.appendText(" with media type parameter '").appendText(typeParameterName).appendText("=").appendText(typeParameterValue).appendText("'");
+      }
+      if (novalue != null && novalue) {
         description.appendText(" with no value");
       }
       if (valueMatcher != null) {
@@ -48,6 +54,16 @@
       }
       if (method != null && !method.equals(link.getMethod())) {
         return false;
+      }
+      if (mediaType != null && !mediaType.isCompatible(mediaType)) {
+        return false;
+      }
+      if (typeParameterName != null) {
+        final MediaType mediaType=link.getType();
+        String parameterValue=mediaType.getParameters().get(typeParameterName);
+        if (!typeParameterValue.equals(parameterValue)) {
+          return false;
+        }
       }
       if (novalue != null && novalue && link.getValue() != null) {
         return false;
