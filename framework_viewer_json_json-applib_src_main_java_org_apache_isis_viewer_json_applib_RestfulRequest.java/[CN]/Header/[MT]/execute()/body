@@ -1,15 +1,19 @@
 {
   try {
-    if (httpMethod == HttpMethod.GET) {
+switch (httpMethod) {
+case GET:
+case PUT:
       setQueryArgs();
-    }
-    if (httpMethod == HttpMethod.POST) {
-      throw new RuntimeException("not yet implemented");
-    }
-    Response executeJaxrs=clientRequest.execute();
-    return RestfulResponse.ofT(executeJaxrs);
-  }
- catch (  Exception ex) {
-    throw new RuntimeException(ex);
-  }
+    break;
+case POST:
+case DELETE:
+  setBody();
+break;
+}
+Response executeJaxrs=clientRequest.execute();
+return RestfulResponse.ofT(executeJaxrs);
+}
+ catch (Exception ex) {
+throw new RuntimeException(ex);
+}
 }
