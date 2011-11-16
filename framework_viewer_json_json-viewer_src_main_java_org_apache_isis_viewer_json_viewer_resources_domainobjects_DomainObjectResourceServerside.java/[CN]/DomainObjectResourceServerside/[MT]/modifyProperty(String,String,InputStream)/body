@@ -5,7 +5,7 @@
   final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(propertyId,Intent.MUTATE);
   ObjectSpecification propertySpec=property.getSpecification();
   String bodyAsString=DomainResourceHelper.asStringUtf8(body);
-  ObjectAdapter argAdapter=helper.parseBodyAsMapWithSingleValue(propertySpec,bodyAsString);
+  ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(propertySpec,bodyAsString);
   Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());

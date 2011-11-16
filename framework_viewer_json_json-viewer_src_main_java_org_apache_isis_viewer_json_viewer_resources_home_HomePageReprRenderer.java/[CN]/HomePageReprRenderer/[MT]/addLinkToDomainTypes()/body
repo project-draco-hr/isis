@@ -1,0 +1,12 @@
+{
+  final JsonRepresentation link=LinkBuilder.newBuilder(getResourceContext(),Rel.TYPES,RepresentationType.TYPE_LIST,"domainTypes").build();
+  final LinkFollower linkFollower=getLinkFollower().follow("links[rel=types]");
+  if (linkFollower.matches(link)) {
+    final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.TYPE_LIST);
+    final TypeListReprRenderer renderer=(TypeListReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+    Collection<ObjectSpecification> specifications=getResourceContext().getSpecificationLookup().allSpecifications();
+    renderer.withSelf("domainTypes").with(specifications);
+    link.mapPut("value",renderer.render());
+  }
+  getLinks().arrayAdd(link);
+}

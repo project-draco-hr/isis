@@ -4,6 +4,6 @@
   if (!actionSemantics.isQueryOnly()) {
     throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not query only",action.getId());
   }
-  JsonRepresentation arguments=parseQueryString(action,argumentsQueryString);
+  JsonRepresentation arguments=DomainResourceHelper.readQueryStringAsMap(argumentsQueryString);
   return invokeActionUsingAdapters(action,arguments);
 }

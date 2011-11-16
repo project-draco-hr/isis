@@ -2,8 +2,10 @@
   JsonRepresentation members=JsonRepresentation.newArray();
   List<ObjectAssociation> associations=objectAdapter.getSpecification().getAssociations();
   addAssociations(objectAdapter,members,associations);
-  List<ObjectAction> actions=objectAdapter.getSpecification().getObjectActions(Contributed.INCLUDED);
-  addActions(objectAdapter,actions,members);
+  if (!mode.isCutDown()) {
+    List<ObjectAction> actions=objectAdapter.getSpecification().getObjectActions(Contributed.INCLUDED);
+    addActions(objectAdapter,actions,members);
+  }
   representation.mapPut("members",members);
   return this;
 }

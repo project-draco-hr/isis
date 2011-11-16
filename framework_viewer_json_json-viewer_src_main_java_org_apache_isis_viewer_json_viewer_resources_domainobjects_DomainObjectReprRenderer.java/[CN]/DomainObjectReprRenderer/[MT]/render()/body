@@ -1,19 +1,33 @@
 {
-  if (objectAdapter.isPersistent()) {
-    if (includesSelf) {
-      JsonRepresentation self=linkToBuilder.with(objectAdapter).builder(Rel.SELF).build();
-      getLinks().arrayAdd(self);
+  if (!mode.isCutDown()) {
+    if (objectAdapter.isPersistent()) {
+      if (includesSelf) {
+        JsonRepresentation self=linkToBuilder.with(objectAdapter).builder(Rel.SELF).build();
+        getLinks().arrayAdd(self);
+      }
+      representation.mapPut("oid",getOidStr());
     }
-    representation.mapPut("oid",OidUtils.getOidStr(resourceContext,objectAdapter));
   }
-  String title=objectAdapter.titleString();
-  representation.mapPut("title",title);
-  final boolean isService=objectAdapter.getSpecification().isService();
-  if (isService) {
-    representation.mapPut("serviceId",ServiceUtil.id(objectAdapter.getObject()));
+  if (!mode.isCutDown()) {
+    String title=objectAdapter.titleString();
+    representation.mapPut("title",title);
+  }
+  if (!mode.isCutDown()) {
+    final boolean isService=objectAdapter.getSpecification().isService();
+    if (isService) {
+      representation.mapPut("serviceId",ServiceUtil.id(objectAdapter.getObject()));
+    }
   }
   withMembers(objectAdapter);
-  getLinks().arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification()).build());
-  getExtensions().mapPut("isService",isService);
+  if (mode.includesDescribedBy()) {
+    getLinks().arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getResourceContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification()).build());
+  }
+  if (!mode.isCutDown()) {
+    addPersistLinkIfTransient();
+    addUpdatePropertiesLinkIfPersistent();
+    final boolean isService=objectAdapter.getSpecification().isService();
+    getExtensions().mapPut("isService",isService);
+    getExtensions().mapPut("isPersistent",objectAdapter.isPersistent());
+  }
   return representation;
 }

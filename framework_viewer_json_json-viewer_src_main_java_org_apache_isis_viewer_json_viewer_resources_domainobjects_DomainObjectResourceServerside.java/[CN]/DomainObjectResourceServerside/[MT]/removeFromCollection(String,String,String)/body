@@ -1,0 +1,14 @@
+{
+  init();
+  final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
+  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
+  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(collectionId,Intent.MUTATE);
+  ObjectSpecification collectionSpec=collection.getSpecification();
+  ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,arguments);
+  Consent consent=collection.isValidToRemove(objectAdapter,argAdapter);
+  if (consent.isVetoed()) {
+    throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
+  }
+  collection.removeElement(objectAdapter,argAdapter);
+  return helper.collectionDetails(objectAdapter,collectionId,MemberMode.MUTATING,Caching.NONE);
+}

@@ -1,10 +1,10 @@
 {
-  final LinkBuilder linkBuilder=LinkBuilder.newBuilder(getResourceContext(),Rel.CAPABILITIES,RepresentationType.CAPABILITIES,"capabilities");
+  final JsonRepresentation link=LinkBuilder.newBuilder(getResourceContext(),Rel.CAPABILITIES,RepresentationType.CAPABILITIES,"capabilities").build();
   final LinkFollower linkFollower=getLinkFollower().follow("links[rel=capabilities]");
-  if (linkFollower.isFollowing()) {
+  if (linkFollower.matches(link)) {
     final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.CAPABILITIES);
     final CapabilitiesReprRenderer renderer=(CapabilitiesReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
-    linkBuilder.withValue(renderer.render());
+    link.mapPut("value",renderer.render());
   }
-  getLinks().arrayAdd(linkBuilder.build());
+  getLinks().arrayAdd(link);
 }
