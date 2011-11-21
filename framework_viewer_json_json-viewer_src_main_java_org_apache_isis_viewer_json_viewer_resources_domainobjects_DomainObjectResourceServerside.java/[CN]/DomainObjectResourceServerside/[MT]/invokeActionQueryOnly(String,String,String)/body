@@ -2,5 +2,11 @@
   init(RepresentationType.ACTION_RESULT);
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
-  return helper.invokeActionQueryOnly(actionId,arguments);
+  @SuppressWarnings("unchecked") final Map<String,String[]> parameterMap=getResourceContext().getHttpServletRequest().getParameterMap();
+  if (parameterMap.containsKey("args")) {
+    return helper.invokeActionQueryOnly(actionId,arguments);
+  }
+ else {
+    return helper.invokeActionQueryOnly(actionId,parameterMap);
+  }
 }
