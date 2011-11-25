@@ -1,7 +1,7 @@
 {
-  AuthenticationSession authSession=new AuthenticationSessionLookupStrategyDefault().lookup(request,response);
+  AuthenticationSession authSession=new AuthenticationSessionLookupStrategyDefault().lookupValid(request,response,Caching.CACHE);
   if (authSession != null) {
-    final boolean sessionValid=IsisContext.getAuthenticationManager().isSessionValid(authSession);
+    final boolean sessionValid=getAuthenticationManager().isSessionValid(authSession);
     if (sessionValid) {
       loggedIn(response,authSession.getUserName());
       return;
@@ -9,7 +9,7 @@
   }
   final String user=request.getParameter("username");
   final String password=request.getParameter("password");
-  if (user == null && !IsisContext.getDeploymentType().isExploring()) {
+  if (user == null && !getDeploymentType().isExploring()) {
     prompt(response,"","","");
     return;
   }
@@ -20,7 +20,7 @@
   }
   final HttpSession httpSession=request.getSession(true);
   httpSession.setAttribute(WebAppConstants.HTTP_SESSION_AUTHENTICATION_SESSION_KEY,authSession);
-  final Context context=new Context(new HtmlComponentFactory());
+  final Context context=new Context(new HtmlComponentFactory(getHtmlViewerContext()));
   context.setSession(authSession);
   authSession.setAttribute(HtmlServletConstants.AUTHENTICATION_SESSION_CONTEXT_KEY,context);
   LOG.info("created session: " + httpSession);
