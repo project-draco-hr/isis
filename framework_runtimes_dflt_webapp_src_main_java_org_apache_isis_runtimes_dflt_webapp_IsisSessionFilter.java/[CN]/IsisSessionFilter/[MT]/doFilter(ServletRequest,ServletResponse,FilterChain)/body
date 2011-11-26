@@ -1,27 +1,4 @@
 {
-  final HttpServletRequest httpRequest=(HttpServletRequest)request;
-  final HttpServletResponse httpResponse=(HttpServletResponse)response;
-  final AuthenticationSession authSession=authSessionLookupStrategy.lookup(request,response);
-  if (!isValid(authSession)) {
-    if (logonPageIfNoSession != null && !logonPageIfNoSession.equals(httpRequest.getServletPath())) {
-      httpResponse.sendRedirect(logonPageIfNoSession);
-    }
- else {
-      try {
-        chain.doFilter(request,response);
-      }
-  finally {
-      }
-    }
-  }
- else {
-    authSessionLookupStrategy.bind(request,response,authSession);
-    IsisContext.openSession(authSession);
-    try {
-      chain.doFilter(request,response);
-    }
-  finally {
-      IsisContext.closeSession();
-    }
-  }
+  SessionState sessionState=SessionState.lookup(request);
+  sessionState.handle(this,request,response,chain);
 }

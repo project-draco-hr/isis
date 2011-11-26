@@ -1,0 +1,40 @@
+{
+  final HttpServletRequest httpRequest=(HttpServletRequest)request;
+  final HttpServletResponse httpResponse=(HttpServletResponse)response;
+  if (requestToLogonPage(filter,httpRequest)) {
+    NO_SESSION_SINCE_REDIRECTING_TO_LOGON_PAGE.setOn(request);
+    try {
+      chain.doFilter(request,response);
+      return;
+    }
+  finally {
+      UNDEFINED.setOn(request);
+      closeSession();
+    }
+  }
+  final AuthenticationSession validSession=filter.authSessionLookupStrategy.lookupValid(request,response,filter.caching);
+  if (validSession != null) {
+    filter.authSessionLookupStrategy.bind(request,response,validSession,filter.caching);
+    openSession(validSession);
+    SESSION_IN_PROGRESS.setOn(request);
+    try {
+      chain.doFilter(request,response);
+    }
+  finally {
+      UNDEFINED.setOn(request);
+      closeSession();
+    }
+    return;
+  }
+  if (filter.logonPageIfNoSession != null) {
+    httpResponse.sendRedirect(filter.logonPageIfNoSession);
+    return;
+  }
+  try {
+    NO_SESSION_SINCE_NOT_AUTHENTICATED.setOn(request);
+    chain.doFilter(request,response);
+  }
+  finally {
+    UNDEFINED.setOn(request);
+  }
+}
