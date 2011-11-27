@@ -1,6 +1,15 @@
 {
   final HttpServletRequest httpRequest=(HttpServletRequest)request;
   final HttpServletResponse httpResponse=(HttpServletResponse)response;
+  if (requestIsIgnoreExtension(filter,httpRequest)) {
+    try {
+      chain.doFilter(request,response);
+      return;
+    }
+  finally {
+      closeSession();
+    }
+  }
   if (requestToLogonPage(filter,httpRequest)) {
     NO_SESSION_SINCE_REDIRECTING_TO_LOGON_PAGE.setOn(request);
     try {

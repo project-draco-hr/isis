@@ -1,0 +1,13 @@
+{
+  final String ignoreExtensionsStr=config.getInitParameter(IGNORE_EXTENSIONS_KEY);
+  if (ignoreExtensionsStr != null) {
+    final List<String> ignoreExtensions=Lists.newArrayList(Splitter.on(",").split(ignoreExtensionsStr));
+    return Collections2.transform(ignoreExtensions,new Function<String,Pattern>(){
+      @Override public Pattern apply(      String input){
+        return Pattern.compile(".*\\." + input);
+      }
+    }
+);
+  }
+  return Lists.newArrayList();
+}
