@@ -1,16 +1,18 @@
 {
-  final HttpServletResponse httpResponse=(HttpServletResponse)pResponse;
+  final HttpServletRequest httpRequest=(HttpServletRequest)servletRequest;
+  final HttpServletResponse httpResponse=(HttpServletResponse)servletResponse;
   for (  final String[] replyHeader : this.mReplyHeaders) {
     final String name=replyHeader[0];
     final String value=replyHeader[1];
     httpResponse.addHeader(name,value);
   }
-  if (this.mCacheTime > 0L) {
+  if (this.cacheTime > 0L) {
     final long now=System.currentTimeMillis();
     final DateFormat httpDateFormat=new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z",Locale.US);
     httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     httpResponse.addHeader(LAST_MODIFIED_HEADER,httpDateFormat.format(new Date(now)));
-    httpResponse.addHeader(EXPIRES_HEADER,httpDateFormat.format(new Date(now + (this.mCacheTime.longValue() * MILLISECONDS_IN_SECOND))));
+    httpResponse.addHeader(EXPIRES_HEADER,httpDateFormat.format(new Date(now + (this.cacheTime.longValue() * MILLISECONDS_IN_SECOND))));
   }
-  pChain.doFilter(pRequest,pResponse);
+  httpRequest.setAttribute(REQUEST_ATTRIBUTE,true);
+  chain.doFilter(servletRequest,servletResponse);
 }

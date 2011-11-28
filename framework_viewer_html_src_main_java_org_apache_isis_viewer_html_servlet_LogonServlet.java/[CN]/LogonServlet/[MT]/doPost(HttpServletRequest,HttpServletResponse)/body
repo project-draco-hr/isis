@@ -1,28 +1,24 @@
 {
-  AuthenticationSession authSession=new AuthenticationSessionLookupStrategyDefault().lookupValid(request,response,Caching.CACHE);
-  if (authSession != null) {
-    final boolean sessionValid=getAuthenticationManager().isSessionValid(authSession);
-    if (sessionValid) {
-      loggedIn(response,authSession.getUserName());
-      return;
-    }
+  AuthenticationSession existingAuthSession=authenticationSessionLookupStrategy.lookupValid(request,response,Caching.CACHE);
+  if (existingAuthSession != null) {
+    redirectToStartPage(response,existingAuthSession.getUserName());
+    return;
   }
   final String user=request.getParameter("username");
   final String password=request.getParameter("password");
   if (user == null && !getDeploymentType().isExploring()) {
-    prompt(response,"","","");
+    renderPrompt(response,"","","");
     return;
   }
-  authSession=authenticate(user,password);
+  final AuthenticationSession authSession=authenticate(user,password);
   if (authSession == null) {
-    prompt(response,user,password,"error");
+    renderPrompt(response,user,password,"error");
     return;
   }
-  final HttpSession httpSession=request.getSession(true);
-  httpSession.setAttribute(WebAppConstants.HTTP_SESSION_AUTHENTICATION_SESSION_KEY,authSession);
+  authenticationSessionLookupStrategy.bind(request,response,authSession,Caching.CACHE);
   final Context context=new Context(new HtmlComponentFactory(getHtmlViewerContext()));
   context.setSession(authSession);
   authSession.setAttribute(HtmlServletConstants.AUTHENTICATION_SESSION_CONTEXT_KEY,context);
-  LOG.info("created session: " + httpSession);
-  loggedIn(response,user);
+  LOG.info("created session");
+  redirectToStartPage(response,user);
 }
