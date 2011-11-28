@@ -1,0 +1,15 @@
+{
+  final String user=request.getParameter("username");
+  final String password=request.getParameter("password");
+  final String password2=request.getParameter("password2");
+  if (user == null) {
+    renderPrompt(response,"","","","");
+    return;
+  }
+  final boolean registered=register(user,password,password2);
+  if (!registered) {
+    renderPrompt(response,user,password,password2,"error");
+    return;
+  }
+  redirectToLogonPage(response,user);
+}
