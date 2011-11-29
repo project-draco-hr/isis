@@ -1,6 +1,7 @@
 {
   response.setContentType("text/html");
   final HtmlComponentFactory factory=new HtmlComponentFactory(getPathBuilder());
-  final LogonFormPage page=factory.createLogonPage(user,password);
+  boolean registerLink=getAuthenticationManager().supportsRegistration(RegistrationDetailsPassword.class);
+  final LogonFormPage page=factory.createLogonPage(user,password,registerLink,error);
   page.write(response.getWriter());
 }

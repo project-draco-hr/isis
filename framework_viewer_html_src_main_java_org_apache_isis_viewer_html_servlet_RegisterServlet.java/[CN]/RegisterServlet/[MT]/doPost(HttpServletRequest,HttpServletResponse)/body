@@ -6,9 +6,13 @@
     renderPrompt(response,"","","","");
     return;
   }
+  if (!Objects.equal(password,password2)) {
+    renderPrompt(response,user,"","","passwords don't match");
+    return;
+  }
   final boolean registered=register(user,password,password2);
   if (!registered) {
-    renderPrompt(response,user,password,password2,"error");
+    renderPrompt(response,user,"","","user name already taken");
     return;
   }
   redirectToLogonPage(response,user);

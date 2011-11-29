@@ -52,7 +52,28 @@
     NO_SESSION_SINCE_NOT_AUTHENTICATED.setOn(request);
     chain.doFilter(request,response);
   }
-  finally {
+ catch (  RuntimeException ex) {
+    if (filter.redirectToOnNoSessionException != null) {
+      httpResponse.sendRedirect(filter.redirectToOnNoSessionException);
+      return;
+    }
+    throw ex;
+  }
+catch (  IOException ex) {
+    if (filter.redirectToOnNoSessionException != null) {
+      httpResponse.sendRedirect(filter.redirectToOnNoSessionException);
+      return;
+    }
+    throw ex;
+  }
+catch (  ServletException ex) {
+    if (filter.redirectToOnNoSessionException != null) {
+      httpResponse.sendRedirect(filter.redirectToOnNoSessionException);
+      return;
+    }
+    throw ex;
+  }
+ finally {
     UNDEFINED.setOn(request);
   }
 }
