@@ -11,5 +11,7 @@
     return null;
   }
   final String user=matcher.group(1);
-  return new SimpleSession(user,new String[]{});
+  final String password=matcher.group(2);
+  final AuthenticationSession authSession=getAuthenticationManager().authenticate(new AuthenticationRequestPassword(user,password));
+  return authSession;
 }
