@@ -19,20 +19,9 @@
       closeSession();
     }
   }
-  if (requestToLogonPage(filter,httpRequest)) {
-    NO_SESSION_SINCE_REDIRECTING_TO_LOGON_PAGE.setOn(request);
-    try {
-      chain.doFilter(request,response);
-      return;
-    }
-  finally {
-      UNDEFINED.setOn(request);
-      closeSession();
-    }
-  }
-  final AuthenticationSession validSession=filter.authSessionLookupStrategy.lookupValid(request,response,filter.caching);
+  final AuthenticationSession validSession=filter.authSessionStrategy.lookupValid(request,response);
   if (validSession != null) {
-    filter.authSessionLookupStrategy.bind(request,response,validSession,filter.caching);
+    filter.authSessionStrategy.bind(request,response,validSession);
     openSession(validSession);
     SESSION_IN_PROGRESS.setOn(request);
     try {
@@ -44,31 +33,27 @@
     }
     return;
   }
-  if (filter.logonPageIfNoSession != null) {
-    httpResponse.sendRedirect(filter.logonPageIfNoSession);
-    return;
-  }
   try {
     NO_SESSION_SINCE_NOT_AUTHENTICATED.setOn(request);
-    chain.doFilter(request,response);
+    filter.whenNoSession.handle(filter,httpRequest,httpResponse,chain);
   }
  catch (  RuntimeException ex) {
-    if (filter.redirectToOnNoSessionException != null) {
-      httpResponse.sendRedirect(filter.redirectToOnNoSessionException);
+    if (filter.redirectToOnException != null) {
+      httpResponse.sendRedirect(filter.redirectToOnException);
       return;
     }
     throw ex;
   }
 catch (  IOException ex) {
-    if (filter.redirectToOnNoSessionException != null) {
-      httpResponse.sendRedirect(filter.redirectToOnNoSessionException);
+    if (filter.redirectToOnException != null) {
+      httpResponse.sendRedirect(filter.redirectToOnException);
       return;
     }
     throw ex;
   }
 catch (  ServletException ex) {
-    if (filter.redirectToOnNoSessionException != null) {
-      httpResponse.sendRedirect(filter.redirectToOnNoSessionException);
+    if (filter.redirectToOnException != null) {
+      httpResponse.sendRedirect(filter.redirectToOnException);
       return;
     }
     throw ex;

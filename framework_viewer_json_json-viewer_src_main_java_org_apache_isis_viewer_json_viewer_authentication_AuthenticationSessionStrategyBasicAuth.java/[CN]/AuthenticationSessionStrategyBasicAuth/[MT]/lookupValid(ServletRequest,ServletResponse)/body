@@ -1,0 +1,15 @@
+{
+  final HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
+  final String authStr=httpServletRequest.getHeader("Authorization");
+  if (authStr == null || !authStr.startsWith("Basic ")) {
+    return null;
+  }
+  final String digest=authStr.substring(6);
+  final String userAndPassword=new String(new Base64().decode(digest.getBytes()));
+  final Matcher matcher=USER_AND_PASSWORD_REGEX.matcher(userAndPassword);
+  if (!matcher.matches()) {
+    return null;
+  }
+  final String user=matcher.group(1);
+  return new SimpleSession(user,new String[]{});
+}

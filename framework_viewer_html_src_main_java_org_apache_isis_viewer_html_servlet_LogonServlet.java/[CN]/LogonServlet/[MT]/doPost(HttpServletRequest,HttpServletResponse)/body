@@ -1,5 +1,5 @@
 {
-  AuthenticationSession existingAuthSession=authenticationSessionLookupStrategy.lookupValid(request,response,Caching.CACHE);
+  AuthenticationSession existingAuthSession=authenticationSessionStrategy.lookupValid(request,response);
   if (existingAuthSession != null) {
     redirectToStartPage(response,existingAuthSession.getUserName());
     return;
@@ -15,7 +15,7 @@
     renderPrompt(response,user,password,"user/password invalid");
     return;
   }
-  authenticationSessionLookupStrategy.bind(request,response,authSession,Caching.CACHE);
+  authenticationSessionStrategy.bind(request,response,authSession);
   final Context context=new Context(getHtmlComponentFactory());
   context.setSession(authSession);
   authSession.setAttribute(HtmlServletConstants.AUTHENTICATION_SESSION_CONTEXT_KEY,context);
