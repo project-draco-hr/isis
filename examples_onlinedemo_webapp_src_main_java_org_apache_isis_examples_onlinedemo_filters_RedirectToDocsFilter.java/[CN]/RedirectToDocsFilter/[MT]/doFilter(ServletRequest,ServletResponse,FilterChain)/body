@@ -1,7 +1,10 @@
 {
   final HttpServletRequest httpServletRequest=(HttpServletRequest)request;
   final HttpServletResponse httpServletResponse=(HttpServletResponse)response;
-  if (!"/".equals(httpServletRequest.getServletPath())) {
+  final String servletPath=httpServletRequest.getServletPath();
+  System.out.println("redirectToDocsFilter: servletPath: " + servletPath);
+  LOG.info("redirectToDocsFilter: servletPath: " + servletPath);
+  if (!"/".equals(servletPath)) {
     chain.doFilter(request,response);
     return;
   }
@@ -10,5 +13,8 @@
     chain.doFilter(request,response);
     return;
   }
-  httpServletResponse.sendRedirect(redirectTo);
+  final String redirect=combine(httpServletRequest.getContextPath(),redirectTo);
+  System.out.println("redirectToDocsFilter: redirecting to: " + redirect);
+  LOG.info("redirectToDocsFilter: redirecting to: " + redirect);
+  httpServletResponse.sendRedirect(redirect);
 }
