@@ -1,15 +1,16 @@
 {
   final Class<?> cls=processClassContext.getCls();
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final Method methods[]=cls.getMethods();
   final Method uBooleanMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,VALIDATE_PREFIX,Boolean.class,NO_PARAMETERS_TYPES);
   if (uBooleanMethod != null) {
-    FacetUtil.addFacet(new HiddenObjectFacetViaHiddenMethod(uBooleanMethod,HiddenObjectFacetViaHiddenMethod.class,facetHolder,false));
+    addFacetToFacetHolder(methods,facetHolder,uBooleanMethod);
     processClassContext.removeMethod(uBooleanMethod);
     return;
   }
   final Method lBooleanMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,VALIDATE_PREFIX,boolean.class,NO_PARAMETERS_TYPES);
   if (lBooleanMethod != null) {
-    FacetUtil.addFacet(new HiddenObjectFacetViaHiddenMethod(lBooleanMethod,HiddenObjectFacetViaHiddenMethod.class,facetHolder,false));
+    addFacetToFacetHolder(methods,facetHolder,lBooleanMethod);
     processClassContext.removeMethod(lBooleanMethod);
   }
 }

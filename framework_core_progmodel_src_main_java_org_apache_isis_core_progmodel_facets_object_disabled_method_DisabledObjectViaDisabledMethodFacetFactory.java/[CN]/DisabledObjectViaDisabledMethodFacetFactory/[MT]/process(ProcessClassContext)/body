@@ -4,6 +4,11 @@
   final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,DISABLED_PREFIX,String.class,NO_PARAMETERS_TYPES);
   if (method != null) {
     FacetUtil.addFacet(new DisabledObjectFacetViaDisabledMethod(method,facetHolder));
+    ObjectSpecification spec=getSpecificationLookup().loadSpecification(cls);
+    List<ObjectAssociation> members=spec.getAssociations();
+    for (    ObjectAssociation member : members) {
+      FacetUtil.addFacet(new DisableForContextFacetViaMethod(method,member));
+    }
     processClassContext.removeMethod(method);
   }
 }
