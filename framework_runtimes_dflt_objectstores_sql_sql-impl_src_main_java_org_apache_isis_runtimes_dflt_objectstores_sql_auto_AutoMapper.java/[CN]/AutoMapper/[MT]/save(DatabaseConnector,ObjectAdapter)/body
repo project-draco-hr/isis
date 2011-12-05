@@ -1,6 +1,12 @@
 {
   final SerialNumberVersion version=(SerialNumberVersion)object.getVersion();
-  final long nextSequence=version.getSequence() + 1;
+  final long nextSequence;
+  if (useVersioning) {
+    nextSequence=version.getSequence() + 1;
+  }
+ else {
+    nextSequence=version.getSequence();
+  }
   final StringBuffer sql=new StringBuffer();
   sql.append("UPDATE " + table + " SET ");
   for (  final FieldMapping mapping : fieldMappings) {
@@ -12,8 +18,10 @@
   titleMapping.appendUpdateAssignment(connector,sql,object);
   sql.append(" WHERE ");
   idMapping.appendWhereClause(connector,sql,object.getOid());
-  sql.append(" AND ");
-  sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)object.getVersion()));
+  if (useVersioning) {
+    sql.append(" AND ");
+    sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)object.getVersion()));
+  }
   final int updateCount=connector.update(sql.toString());
   if (updateCount == 0) {
     LOG.info("concurrency conflict object " + this + "; no update performed");

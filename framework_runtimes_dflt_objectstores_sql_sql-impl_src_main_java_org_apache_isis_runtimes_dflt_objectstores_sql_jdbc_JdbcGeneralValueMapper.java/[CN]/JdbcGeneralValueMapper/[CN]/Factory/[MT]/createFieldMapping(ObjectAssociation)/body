@@ -1,3 +1,6 @@
 {
-  return new JdbcGeneralValueMapper(field,type);
+  final IsisConfiguration configParameters=IsisContext.getConfiguration();
+  final String property=SqlObjectStore.BASE_NAME + ".automapper.type." + field.getId();
+  String dataType=configParameters.getString(property,type);
+  return new JdbcGeneralValueMapper(field,dataType);
 }

@@ -1,9 +1,13 @@
 {
+  Defaults.propertiesBase=propertiesBase;
   setTimeZone(DateTimeZone.UTC);
   final IsisConfiguration configParameters=IsisContext.getConfiguration();
   setPkIdLabel(getStringProperty(propertiesBase,configParameters,"pk_id"));
   setIdColumn(getStringProperty(propertiesBase,configParameters,"id"));
   setMaxInstances(getIntProperty(propertiesBase,configParameters,"maxinstances",100));
+  final String useVersioningProperty=getStringProperty(propertiesBase,configParameters,"versioning","true");
+  final int isTrue=useVersioningProperty.compareToIgnoreCase("true");
+  useVersioning(isTrue == 0);
   final String BASE_DATATYPE=propertiesBase + ".datatypes.";
   final IsisConfiguration dataTypes=IsisContext.getConfiguration().getProperties(BASE_DATATYPE);
   populateSqlDataTypes(dataTypes,BASE_DATATYPE);
