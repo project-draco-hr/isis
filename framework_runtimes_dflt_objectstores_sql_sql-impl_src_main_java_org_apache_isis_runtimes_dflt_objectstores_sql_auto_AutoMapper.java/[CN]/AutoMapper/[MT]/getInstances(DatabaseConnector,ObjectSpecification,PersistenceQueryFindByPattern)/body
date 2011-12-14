@@ -16,6 +16,12 @@
       if (true) {
         final ObjectAdapter field=patternAssoc.get(pattern);
         if (field != null) {
+          String id=patternAssoc.getId();
+          ObjectAssociation oa=spec.getAssociation(id);
+          NotPersistedFacet fc=oa.getFacet(NotPersistedFacet.class);
+          if (fc != null) {
+            continue;
+          }
           if (foundFields == 0) {
             sql.append(" WHERE ");
             initialLength=sql.length();
