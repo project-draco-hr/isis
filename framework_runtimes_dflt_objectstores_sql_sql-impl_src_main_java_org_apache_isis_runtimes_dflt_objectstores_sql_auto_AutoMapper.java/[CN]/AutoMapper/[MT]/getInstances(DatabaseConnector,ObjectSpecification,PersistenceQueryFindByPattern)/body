@@ -17,10 +17,14 @@
         final ObjectAdapter field=patternAssoc.get(pattern);
         if (field != null) {
           String id=patternAssoc.getId();
-          ObjectAssociation oa=spec.getAssociation(id);
-          NotPersistedFacet fc=oa.getFacet(NotPersistedFacet.class);
-          if (fc != null) {
-            continue;
+          try {
+            ObjectAssociation oa=spec.getAssociation(id);
+            NotPersistedFacet fc=oa.getFacet(NotPersistedFacet.class);
+            if (fc != null) {
+              continue;
+            }
+          }
+ catch (          ObjectSpecificationException e) {
           }
           if (foundFields == 0) {
             sql.append(" WHERE ");
