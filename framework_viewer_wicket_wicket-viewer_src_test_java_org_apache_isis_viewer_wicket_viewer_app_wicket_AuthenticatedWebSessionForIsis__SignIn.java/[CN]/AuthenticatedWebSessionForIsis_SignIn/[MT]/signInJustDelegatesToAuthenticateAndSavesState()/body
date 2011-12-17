@@ -1,5 +1,10 @@
 {
-  final AuthenticationManager mockAuthMgr=context.fixture(Fixture_AuthenticationManager_AuthenticateOk.class).object();
+  context.checking(new Expectations(){
+{
+      one(mockAuthMgr).authenticate(with(any(AuthenticationRequest.class)));
+    }
+  }
+);
   webSession=new AuthenticatedWebSessionForIsis(stubRequest){
     private static final long serialVersionUID=1L;
     @Override protected AuthenticationManager getAuthenticationManager(){

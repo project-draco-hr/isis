@@ -1,0 +1,29 @@
+{
+  return new Statement(){
+    @Override public void evaluate() throws Throwable {
+      prepare(target);
+      base.evaluate();
+      assertIsSatisfied();
+    }
+    private void prepare(    final Object target){
+      List<Field> allFields=AllDeclaredFields.in(target.getClass());
+      assertOnlyOneJMockContextIn(allFields);
+      fillInAutoMocks(target,allFields);
+    }
+    private void assertOnlyOneJMockContextIn(    List<Field> allFields){
+      Field contextField=null;
+      for (      Field field : allFields) {
+        if (JUnitRuleMockery.class.isAssignableFrom(field.getType())) {
+          if (null != contextField) {
+            fail("Test class should only have one JUnitRuleMockery field, found " + contextField.getName() + " and "+ field.getName());
+          }
+          contextField=field;
+        }
+      }
+    }
+    private void fillInAutoMocks(    final Object target,    List<Field> allFields){
+      mockomatic.fillIn(target,allFields);
+    }
+  }
+;
+}
