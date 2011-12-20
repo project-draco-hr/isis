@@ -1,15 +1,7 @@
 {
   final DatabaseConnector connector=connectionPool.acquire();
   final Vector<ObjectAdapter> matchingInstances=new Vector<ObjectAdapter>();
-  if (!spec.isAbstract()) {
-    addSpecInstances(spec,connector,matchingInstances);
-  }
-  if (spec.hasSubclasses()) {
-    final List<ObjectSpecification> subclasses=spec.subclasses();
-    for (    ObjectSpecification subclassSpec : subclasses) {
-      addSpecInstances(subclassSpec,connector,matchingInstances);
-    }
-  }
+  addSpecInstances(spec,connector,matchingInstances);
   connectionPool.release(connector);
   final ObjectAdapter[] instanceArray=new ObjectAdapter[matchingInstances.size()];
   matchingInstances.copyInto(instanceArray);
