@@ -1,0 +1,51 @@
+{
+  String classSegment=" class=\"" + className + (id == null ? "\"" : "\" id=\"" + id + "\"");
+  request.appendHtml("<form " + classSegment + " action=\""+ action+ "\" method=\"post\" accept-charset=\"ISO-8859-1\">\n");
+  if (formTitle != null && formTitle.trim().length() > 0) {
+    classSegment=" class=\"title\"";
+    request.appendHtml("<div" + classSegment + ">");
+    request.appendAsHtmlEncoded(formTitle);
+    request.appendHtml("</div>\n");
+  }
+  final String cls="errors";
+  if (errors != null) {
+    request.appendHtml("<div class=\"" + cls + "\">");
+    request.appendAsHtmlEncoded(errors);
+    request.appendHtml("</div>");
+  }
+  for (  final HiddenInputField hiddenField : hiddenFields) {
+    if (hiddenField == null) {
+      continue;
+    }
+    request.appendHtml("  <input type=\"hidden\" name=\"" + hiddenField.getName() + "\" value=\"");
+    request.appendAsHtmlEncoded(hiddenField.getValue());
+    request.appendHtml("\" />\n");
+  }
+  request.appendHtml(request.getContext().interactionFields());
+  for (  final InputField fld : fields) {
+    if (fld.isHidden()) {
+      request.appendHtml("  <input type=\"hidden\" name=\"" + fld.getName() + "\" value=\"");
+      request.appendAsHtmlEncoded(fld.getValue());
+      request.appendHtml("\" />\n");
+    }
+ else {
+      final String errorSegment=fld.getErrorText() == null ? "" : "<span class=\"error\">" + fld.getErrorText() + "</span>";
+      final String fieldSegment=createField(fld);
+      final String helpSegment=HelpLink.createHelpSegment(fld.getDescription(),fld.getHelpReference());
+      final String title=fld.getDescription().equals("") ? "" : " title=\"" + fld.getDescription() + "\"";
+      request.appendHtml("  <div class=\"field\"><label class=\"label\" " + title + ">");
+      request.appendAsHtmlEncoded(fld.getLabel());
+      request.appendHtml(":</label>" + fieldSegment + errorSegment+ helpSegment+ "</div>\n");
+    }
+  }
+  request.appendHtml("  <input class=\"button\" type=\"submit\" value=\"");
+  request.appendAsHtmlEncoded(buttonTitle);
+  request.appendHtml("\" name=\"execute\" />\n");
+  HelpLink.append(request,description,helpReference);
+  if (cancelTo != null) {
+    request.appendHtml("  <input class=\"button\" type=\"button\" value=\"");
+    request.appendAsHtmlEncoded("Cancel");
+    request.appendHtml("\" onclick=\"window.location = '" + cancelTo + "'\" name=\"cancel\" />\n");
+  }
+  request.appendHtml("</form>\n");
+}

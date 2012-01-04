@@ -3,7 +3,7 @@
   final String scope=linkRow == null ? "" : "&amp;" + SCOPE + "="+ linkRow.getScope();
   String result="";
   result=context.encodedInteractionParameters();
-  if (fields.size() == 0) {
+  if (noColumns == 0) {
     request.appendHtml("<td>");
     if (linkRow != null) {
       request.appendHtml("<td><a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">");
@@ -16,10 +16,12 @@
     request.appendHtml("</td>");
   }
  else {
-    request.appendHtml("<td>");
-    request.appendAsHtmlEncoded(element.titleString());
-    request.appendHtml("</td>");
-    for (int i=0; i < fields.size(); i++) {
+    if (showTitle) {
+      request.appendHtml("<td>");
+      request.appendAsHtmlEncoded(element.titleString());
+      request.appendHtml("</td>");
+    }
+    for (int i=0; i < noColumns; i++) {
       if (fields.get(i).isOneToManyAssociation()) {
         continue;
       }
@@ -51,12 +53,12 @@
       request.appendHtml("</td>");
     }
   }
-  request.appendHtml("<td>");
+  request.appendHtml("<td class=\"controls\">");
   if (showSelectOption) {
-    request.appendHtml("<a class=\"element-select\" href=\"" + "_generic." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">view</a>");
+    request.appendHtml("<a class=\"button element-select\" href=\"" + "_generic." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">view</a>");
   }
   if (showEditOption) {
-    request.appendHtml(" <a class=\"element-edit\" href=\"" + "_generic_edit." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">edit</a>");
+    request.appendHtml(" <a class=\"button element-edit\" href=\"" + "_generic_edit." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">edit</a>");
   }
   if (showDeleteOption && parent != null) {
     String view=request.getViewPath();

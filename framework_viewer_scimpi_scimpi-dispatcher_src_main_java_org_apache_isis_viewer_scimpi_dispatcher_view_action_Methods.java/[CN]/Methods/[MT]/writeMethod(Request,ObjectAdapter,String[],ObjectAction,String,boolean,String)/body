@@ -1,0 +1,41 @@
+{
+  if (action.isVisible(IsisContext.getAuthenticationSession(),adapter).isAllowed()) {
+    request.appendHtml("<div class=\"action\">");
+    if (IsisContext.getSession() == null) {
+      request.appendHtml("<span class=\"disabled\" title=\"no user logged in\">");
+      request.appendAsHtmlEncoded(action.getName());
+      request.appendHtml("</span>");
+    }
+ else     if (action.isUsable(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
+      request.appendHtml("<span class=\"disabled\" title=\"" + action.isUsable(IsisContext.getAuthenticationSession(),adapter).getReason() + "\">");
+      request.appendAsHtmlEncoded(action.getName());
+      request.appendHtml("</span>");
+    }
+ else {
+      final String version=request.getContext().mapVersion(adapter);
+      if (action.getParameterCount() == 0 || (action.isContributed() && action.getParameterCount() == 1)) {
+        ActionButton.write(request,adapter,action,parameters,objectId,version,"_generic." + Dispatcher.EXTENSION,null,null,null,null,null,null,null,null,null);
+      }
+ else       if (showForms) {
+        final CreateFormParameter params=new CreateFormParameter();
+        params.objectId=objectId;
+        params.methodName=action.getId();
+        params.forwardResultTo="_generic." + Dispatcher.EXTENSION;
+        params.buttonTitle="OK";
+        params.formTitle=action.getName();
+        ActionForm.createForm(request,params,true);
+      }
+ else {
+        request.appendHtml("<a class=\"button\" href=\"_generic_action." + Dispatcher.EXTENSION + "?_result="+ objectId+ "&amp;"+ VERSION+ "="+ version+ "&_method="+ action.getId());
+        if (cancelTo != null) {
+          request.appendHtml("&_cancel-to=");
+          request.appendAsHtmlEncoded("cancel-to=\"" + cancelTo + "\"");
+        }
+        request.appendHtml("\" title=" + action.getDescription() + ">");
+        request.appendAsHtmlEncoded(action.getName() + "...");
+        request.appendHtml("</a>");
+      }
+    }
+    request.appendHtml("</div>");
+  }
+}

@@ -13,7 +13,7 @@
     final ObjectAction action=MethodsUtils.findAction(object,methodName);
     entryState=validateParameters(context,action,object);
     final AuthenticationSession session=context.getSession();
-    if (session == null && action.isUsable(new AnonymousSession(),object).isVetoed()) {
+    if (session == null && action.isVisible(new AnonymousSession(),object).isVetoed()) {
       throw new NotLoggedInException();
     }
     object.checkLock(context.getVersion(version));
@@ -49,7 +49,7 @@
         context.addVariable(resultName,override,Scope.REQUEST);
       }
       final String error=entryState.getError();
-      final String view=context.getParameter("_" + ERRORS);
+      final String view=context.getParameter("_" + ERROR);
       context.setRequestPath(view,Dispatcher.ACTION);
       final MessageBroker messageBroker=IsisContext.getMessageBroker();
       messageBroker.addWarning(error);
@@ -67,7 +67,7 @@
     if (error != null) {
       context.addVariable(RequestContext.ERROR,error,Scope.REQUEST);
     }
-    final String view=context.getParameter("_" + ERRORS);
+    final String view=context.getParameter("_" + ERROR);
     context.setRequestPath(view,Dispatcher.ACTION);
   }
 catch (  final RuntimeException e) {

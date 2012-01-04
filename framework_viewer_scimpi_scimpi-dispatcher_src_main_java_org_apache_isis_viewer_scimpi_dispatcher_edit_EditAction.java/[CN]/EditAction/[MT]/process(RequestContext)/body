@@ -1,7 +1,7 @@
 {
-  final AuthenticationSession session=context.getSession();
+  AuthenticationSession session=context.getSession();
   if (session == null) {
-    throw new NotLoggedInException();
+    session=new AnonymousSession();
   }
   try {
     final String objectId=context.getParameter("_" + OBJECT);
@@ -13,12 +13,17 @@
     String message=context.getParameter("_" + MESSAGE);
     final ObjectAdapter adapter=context.getMappedObject(objectId);
     final List<ObjectAssociation> fields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,adapter));
+    for (    ObjectAssociation objectAssociation : fields) {
+      if (objectAssociation.isVisible(session,adapter).isVetoed()) {
+        throw new NotLoggedInException();
+      }
+    }
     final FormState entryState=validateObject(context,adapter,fields);
     final Version adapterVersion=adapter.getVersion();
     final Version formVersion=context.getVersion(version);
     if (formVersion != null && adapterVersion.different(formVersion)) {
       IsisContext.getMessageBroker().addMessage("The " + adapter.getSpecification().getSingularName() + " was edited "+ "by another user ("+ adapterVersion.getUser()+ "). Please  make your changes based on their changes.");
-      final String view=context.getParameter("_" + ERRORS);
+      final String view=context.getParameter("_" + ERROR);
       context.setRequestPath(view,Dispatcher.EDIT);
       entryState.setForm(formId);
       context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
@@ -59,7 +64,7 @@
       }
     }
  else {
-      final String view=context.getParameter("_" + ERRORS);
+      final String view=context.getParameter("_" + ERROR);
       context.setRequestPath(view,Dispatcher.EDIT);
       entryState.setForm(formId);
       context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
