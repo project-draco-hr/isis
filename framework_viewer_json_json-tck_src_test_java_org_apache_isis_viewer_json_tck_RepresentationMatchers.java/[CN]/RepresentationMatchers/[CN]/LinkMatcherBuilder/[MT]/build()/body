@@ -12,8 +12,8 @@
         description.appendText(" with href ");
         hrefMatcher.describeTo(description);
       }
-      if (method != null) {
-        description.appendText(" with method '").appendValue(method).appendText("'");
+      if (httpMethod2 != null) {
+        description.appendText(" with method '").appendValue(httpMethod2).appendText("'");
       }
       if (mediaType != null) {
         description.appendText(" with type '").appendValue(mediaType).appendText("'");
@@ -52,7 +52,7 @@
       if (hrefMatcher != null && !hrefMatcher.matches(link.getHref())) {
         return false;
       }
-      if (method != null && !method.equals(link.getMethod())) {
+      if (httpMethod2 != null && !httpMethod2.equals(link.getHttpMethod())) {
         return false;
       }
       if (mediaType != null && !mediaType.isCompatible(mediaType)) {
@@ -71,20 +71,19 @@
       if (valueMatcher != null && !valueMatcher.matches(link)) {
         return false;
       }
-      Response linkedResp=null;
+      RestfulResponse<JsonRepresentation> jsonResp=null;
       if (statusCode != null) {
         if (client == null) {
           return false;
         }
         try {
-          linkedResp=client.follow(link);
+          jsonResp=client.followT(link);
         }
  catch (        Exception e) {
           throw new RuntimeException(e);
         }
       }
       if (statusCode != null) {
-        RestfulResponse<JsonRepresentation> jsonResp=RestfulResponse.of(linkedResp);
         if (jsonResp.getStatus() != statusCode) {
           return false;
         }

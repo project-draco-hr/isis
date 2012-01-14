@@ -1,0 +1,17 @@
+{
+  queryString=UrlEncodingUtils.asUrlEncoded(JsonRepresentation.newMap("xxx","123").asJsonNode());
+  context.checking(new Expectations(){
+{
+      one(httpServletRequest).getQueryString();
+      will(returnValue(queryString));
+    }
+  }
+);
+  resourceContext=new ResourceContext(null,null,null,null,httpServletRequest,null,null,null,null,null,null,null,null){
+    @Override void init(    RepresentationType representationType){
+    }
+  }
+;
+  final Integer arg=resourceContext.getArg(RequestParameter.PAGE);
+  assertThat(arg,equalTo(RequestParameter.PAGE.getDefault()));
+}

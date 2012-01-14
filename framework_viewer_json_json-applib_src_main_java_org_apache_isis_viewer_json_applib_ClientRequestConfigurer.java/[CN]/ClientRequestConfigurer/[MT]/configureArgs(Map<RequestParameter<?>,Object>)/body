@@ -1,0 +1,11 @@
+{
+  if (clientRequest.getHttpMethod() == null) {
+    throw new IllegalStateException("Must set up http method first");
+  }
+  JsonRepresentation argsAsMap=JsonRepresentation.newMap();
+  for (  RequestParameter<?> requestParam : args.keySet()) {
+    put(args,requestParam,argsAsMap);
+  }
+  getHttpMethod().setUpArgs(this,argsAsMap);
+  return this;
+}

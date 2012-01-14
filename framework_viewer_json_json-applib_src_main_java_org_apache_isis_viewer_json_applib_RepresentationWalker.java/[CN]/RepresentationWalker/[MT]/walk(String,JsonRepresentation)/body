@@ -24,7 +24,7 @@
     addStep(path,null,null,null,"no such link '" + path + "'",null);
     return;
   }
-  Response response;
+  final RestfulResponse<JsonRepresentation> response;
   try {
     if (invokeBody != null) {
       response=restfulClient.follow(link,invokeBody);
@@ -37,5 +37,5 @@
     addStep(path,link,null,null,"failed to follow link: " + e.getMessage(),e);
     return;
   }
-  addStep(path,link,null,RestfulResponse.of(response),null,null);
+  addStep(path,link,null,response,null,null);
 }

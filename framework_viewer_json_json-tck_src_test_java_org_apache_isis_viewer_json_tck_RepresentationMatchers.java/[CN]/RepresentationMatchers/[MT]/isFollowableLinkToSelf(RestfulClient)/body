@@ -5,10 +5,8 @@
     }
     @Override public boolean matchesSafely(    T item){
       LinksToSelf initialRepr=(LinksToSelf)item;
-      Response servicesResp;
       try {
-        servicesResp=client.follow(initialRepr.getSelf());
-        RestfulResponse<T> followedResp=RestfulResponse.ofT(servicesResp);
+        final RestfulResponse<T> followedResp=client.followT(initialRepr.getSelf());
         T repr2=followedResp.getEntity();
         LinksToSelf repr2AsLinksToSelf=(LinksToSelf)repr2;
         return initialRepr.getSelf().equals(repr2AsLinksToSelf.getSelf());

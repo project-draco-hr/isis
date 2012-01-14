@@ -1,19 +1,14 @@
 {
   try {
-switch (httpMethod) {
-case GET:
-case DELETE:
-      setQueryArgs();
-    break;
-case POST:
-case PUT:
-  setBody();
-break;
-}
-Response executeJaxrs=clientRequest.execute();
-return RestfulResponse.ofT(executeJaxrs);
-}
- catch (Exception ex) {
-throw new RuntimeException(ex);
-}
+    if (!args.isEmpty()) {
+      clientRequestConfigurer.configureArgs(args);
+    }
+    Response response=clientRequestConfigurer.getClientRequest().execute();
+    @SuppressWarnings("unchecked") BaseClientResponse<String> restEasyResponse=(BaseClientResponse<String>)response;
+    restEasyResponse.setReturnType(String.class);
+    return RestfulResponse.ofT(response);
+  }
+ catch (  Exception ex) {
+    throw new RuntimeException(ex);
+  }
 }

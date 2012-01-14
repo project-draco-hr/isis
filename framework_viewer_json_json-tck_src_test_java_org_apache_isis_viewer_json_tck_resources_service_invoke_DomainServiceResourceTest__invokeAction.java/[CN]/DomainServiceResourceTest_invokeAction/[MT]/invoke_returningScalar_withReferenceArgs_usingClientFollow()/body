@@ -5,8 +5,7 @@
   assertThat(invokeLink,is(not(nullValue())));
   final JsonRepresentation args=invokeLink.getArguments();
   assertThat(args.size(),is(0));
-  final Response response=client.follow(invokeLink,args);
-  RestfulResponse<ScalarValueRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  final RestfulResponse<ScalarValueRepresentation> restfulResponse=client.followT(invokeLink,args);
   final ScalarValueRepresentation objectRepr=restfulResponse.getEntity();
   assertThat(objectRepr.getValue().asInt(),is(6));
 }

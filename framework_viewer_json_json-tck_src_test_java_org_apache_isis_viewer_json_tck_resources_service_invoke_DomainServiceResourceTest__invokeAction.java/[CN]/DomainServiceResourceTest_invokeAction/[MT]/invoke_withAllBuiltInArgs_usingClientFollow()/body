@@ -20,8 +20,7 @@
   assertThat(args.mapHas("bigDecimal"),is(true));
   args.mapPut("name","New Name");
   args.mapPut("flag",true);
-  final Response response=client.follow(invokeLink,args);
-  RestfulResponse<DomainObjectRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=client.followT(invokeLink,args);
   final DomainObjectRepresentation objectRepr=restfulResponse.getEntity();
   assertThat(objectRepr.getRepresentation("members[propertyId=%s].value","name").asString(),is("New Name"));
   assertThat(objectRepr.getRepresentation("members[propertyId=%s].value","flag").asBoolean(),is(true));

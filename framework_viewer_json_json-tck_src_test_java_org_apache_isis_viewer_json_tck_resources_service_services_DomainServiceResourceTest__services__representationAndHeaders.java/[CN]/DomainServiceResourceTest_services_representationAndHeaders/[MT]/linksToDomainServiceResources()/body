@@ -2,8 +2,7 @@
   ListRepresentation repr=givenRepresentation();
   JsonRepresentation values=repr.getValues();
   for (  LinkRepresentation link : values.arrayIterable(LinkRepresentation.class)) {
-    Response followResp=client.follow(link);
-    RestfulResponse<JsonRepresentation> followJsonResp=RestfulResponse.of(followResp);
+    final RestfulResponse<JsonRepresentation> followJsonResp=client.follow(link);
     assertThat(followJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
     JsonRepresentation followRepr=followJsonResp.getEntity();
     LinkRepresentation self=followRepr.getLink("links[rel=self]");

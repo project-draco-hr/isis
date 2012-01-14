@@ -9,8 +9,7 @@
   assertThat(args.mapHas("flag"),is(true));
   args.mapPut("name","New Name");
   args.mapPut("flag",true);
-  final Response response=client.follow(invokeLink,args);
-  RestfulResponse<DomainObjectRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  RestfulResponse<DomainObjectRepresentation> restfulResponse=client.followT(invokeLink,args);
   final DomainObjectRepresentation objectRepr=restfulResponse.getEntity();
   assertThat(objectRepr.getProperty("name").getString("value"),is("New Name"));
   assertThat(objectRepr.getProperty("flag").getBoolean("value"),is(true));
