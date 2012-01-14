@@ -1,0 +1,9 @@
+{
+  boolean includesScheme=uriTemplate.startsWith("http:") || uriTemplate.startsWith("https:");
+  final String base=clientRequestFactory.getBase().toString();
+  String uri=(includesScheme ? "" : base) + uriTemplate;
+  final ClientRequestConfigurer clientRequestConfigurer=ClientRequestConfigurer.create(executor,uri);
+  clientRequestConfigurer.accept(MediaType.APPLICATION_JSON_TYPE);
+  clientRequestConfigurer.setHttpMethod(httpMethod);
+  return new RestfulRequest(clientRequestConfigurer);
+}
