@@ -7,7 +7,7 @@
   final Object o=pattern.getObject();
   final ObjectSpecification patternSpec=pattern.getSpecification();
   final List<ObjectAssociation> patternAssociations=patternSpec.getAssociations();
-  for (  ObjectAssociation patternAssoc : patternAssociations) {
+  for (  final ObjectAssociation patternAssoc : patternAssociations) {
     final Method method;
     final Identifier identifier=patternAssoc.getIdentifier();
     final String memberName=identifier.getMemberName();
@@ -16,15 +16,15 @@
       if (true) {
         final ObjectAdapter field=patternAssoc.get(pattern);
         if (field != null) {
-          String id=patternAssoc.getId();
+          final String id=patternAssoc.getId();
           try {
-            ObjectAssociation oa=spec.getAssociation(id);
-            NotPersistedFacet fc=oa.getFacet(NotPersistedFacet.class);
+            final ObjectAssociation oa=spec.getAssociation(id);
+            final NotPersistedFacet fc=oa.getFacet(NotPersistedFacet.class);
             if (fc != null) {
               continue;
             }
           }
- catch (          ObjectSpecificationException e) {
+ catch (          final ObjectSpecificationException e) {
           }
           if (foundFields == 0) {
             sql.append(" WHERE ");
@@ -54,10 +54,10 @@
         }
       }
     }
- catch (    SecurityException e) {
+ catch (    final SecurityException e) {
       LOG.debug(e.getMessage());
     }
-catch (    NoSuchMethodException e) {
+catch (    final NoSuchMethodException e) {
       LOG.info("Unable to invode method: get" + methodName + " in getInstances");
       LOG.debug(e.getMessage());
     }

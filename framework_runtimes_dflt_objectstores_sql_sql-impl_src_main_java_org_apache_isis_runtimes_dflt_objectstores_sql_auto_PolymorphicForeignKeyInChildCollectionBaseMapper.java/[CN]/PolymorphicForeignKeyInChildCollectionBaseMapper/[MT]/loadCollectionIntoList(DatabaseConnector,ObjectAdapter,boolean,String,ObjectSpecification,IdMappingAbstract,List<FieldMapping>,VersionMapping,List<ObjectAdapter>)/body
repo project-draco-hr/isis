@@ -11,12 +11,12 @@
   sql.append(" where ");
   appendCollectionWhereValues(connector,parent,sql);
   final Results rs=connector.select(sql.toString());
-  SpecificationLoader reflector=IsisContext.getSpecificationLoader();
+  final SpecificationLoader reflector=IsisContext.getSpecificationLoader();
   final JdbcPolymorphicObjectReferenceMapping idMapping=(JdbcPolymorphicObjectReferenceMapping)idMappingAbstract;
   while (rs.next()) {
-    ObjectSpecification itemSpecification=reflector.loadSpecification(rs.getString(classColumnName));
+    final ObjectSpecification itemSpecification=reflector.loadSpecification(rs.getString(classColumnName));
     idMapping.setObjectSpecification(itemSpecification);
-    ObjectMapping itemMapper=objectMapperLookup.getMapping(itemSpecification,connector);
+    final ObjectMapping itemMapper=objectMapperLookup.getMapping(itemSpecification,connector);
     final Oid oid=idMapping.recreateOid(rs,itemSpecification);
     final ObjectAdapter loadedObject=itemMapper.getObject(connector,oid,itemSpecification);
     LOG.debug("  element  " + loadedObject.getOid());

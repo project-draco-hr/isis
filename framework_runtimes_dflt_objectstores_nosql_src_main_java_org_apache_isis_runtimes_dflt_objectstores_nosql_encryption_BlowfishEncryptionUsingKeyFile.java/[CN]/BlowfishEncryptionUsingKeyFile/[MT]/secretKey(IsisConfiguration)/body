@@ -1,16 +1,16 @@
 {
-  String fileName=configuration.getString(ENCRYPTION_KEY_FILE,"./blowfish.key");
-  File file=new File(fileName);
+  final String fileName=configuration.getString(ENCRYPTION_KEY_FILE,"./blowfish.key");
+  final File file=new File(fileName);
   if (file.exists()) {
     try {
-      InputStream fileInput=new FileInputStream(file);
-      byte[] buffer=new byte[1024];
-      int length=fileInput.read(buffer);
-      byte[] key=new byte[length];
+      final InputStream fileInput=new FileInputStream(file);
+      final byte[] buffer=new byte[1024];
+      final int length=fileInput.read(buffer);
+      final byte[] key=new byte[length];
       System.arraycopy(buffer,0,key,0,length);
       return key;
     }
- catch (    IOException e) {
+ catch (    final IOException e) {
       throw new NoSqlStoreException("Failed to read in encryption file: " + file.getAbsolutePath(),e);
     }
   }

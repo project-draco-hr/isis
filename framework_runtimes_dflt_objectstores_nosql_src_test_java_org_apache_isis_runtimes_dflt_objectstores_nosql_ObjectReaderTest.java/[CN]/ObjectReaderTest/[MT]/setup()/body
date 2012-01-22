@@ -7,16 +7,16 @@
   keyCreator=context.mock(KeyCreator.class);
   versionCreator=context.mock(VersionCreator.class);
   dataEncrypter=new HashMap<String,DataEncryption>();
-  DataEncryption dataEncrypter1=new DataEncryption(){
-    public String getType(){
+  final DataEncryption dataEncrypter1=new DataEncryption(){
+    @Override public String getType(){
       return "etc1";
     }
-    public void init(    IsisConfiguration configuration){
+    @Override public void init(    final IsisConfiguration configuration){
     }
-    public String encrypt(    String plainText){
+    @Override public String encrypt(    final String plainText){
       throw new UnexpectedCallException();
     }
-    public String decrypt(    String encryptedText){
+    @Override public String decrypt(    final String encryptedText){
       return encryptedText.substring(3);
     }
   }

@@ -5,10 +5,10 @@
     System.err.println("No recovery files found");
     System.exit(0);
   }
-  long lastId=logFileRange.getLast();
+  final long lastId=logFileRange.getLast();
   LOG.info("last log file is " + Util.logFile(lastId).getName());
   long endId=lastId - 1;
-  int size=list.size();
+  final int size=list.size();
   if (size > 0) {
     endId=Long.valueOf((String)list.get(0));
   }
@@ -16,11 +16,11 @@
     System.err.println("File ID invalid: they must be less that " + lastId);
     System.exit(0);
   }
-  long startId=logFileRange.getFirst();
+  final long startId=logFileRange.getFirst();
   for (long id=startId; id <= endId; id++) {
-    File file=Util.logFile(id);
+    final File file=Util.logFile(id);
     LOG.info("moving " + file.getName());
-    File destination=Util.archiveLogFile(id);
+    final File destination=Util.archiveLogFile(id);
     file.renameTo(destination);
   }
   LOG.info("archive complete");

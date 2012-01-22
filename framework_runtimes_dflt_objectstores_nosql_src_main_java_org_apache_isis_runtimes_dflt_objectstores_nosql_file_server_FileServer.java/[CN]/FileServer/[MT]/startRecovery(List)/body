@@ -5,11 +5,11 @@
     System.err.println("No recovery files found");
     System.exit(0);
   }
-  long lastId=logFileRange.getLast();
+  final long lastId=logFileRange.getLast();
   LOG.info("last log file is " + Util.logFile(lastId).getName());
   long startId=lastId;
   long endId=lastId;
-  int size=list.size();
+  final int size=list.size();
   if (size > 0) {
     startId=Long.valueOf((String)list.get(0));
     if (size > 1) {
@@ -26,7 +26,7 @@
   }
   Util.ensureDirectoryExists();
   for (long id=startId; id <= endId; id++) {
-    File file=Util.logFile(id);
+    final File file=Util.logFile(id);
     LOG.info("recovering data from " + file.getName());
     recover(file);
   }
