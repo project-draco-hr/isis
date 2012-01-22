@@ -2,15 +2,15 @@
   if (objectAdapters == null) {
     return;
   }
-  JsonRepresentation values=JsonRepresentation.newArray();
+  final JsonRepresentation values=JsonRepresentation.newArray();
   final LinkFollower linkFollower=getLinkFollower().follow("value");
-  for (  ObjectAdapter adapter : objectAdapters) {
-    JsonRepresentation linkToObject=linkTo.with(adapter).builder().build();
+  for (  final ObjectAdapter adapter : objectAdapters) {
+    final JsonRepresentation linkToObject=linkTo.with(adapter).builder().build();
     values.arrayAdd(linkToObject);
     if (linkFollower.matches(linkToObject)) {
       final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.DOMAIN_OBJECT);
       final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
-      JsonRepresentation domainObject=renderer.with(adapter).render();
+      final JsonRepresentation domainObject=renderer.with(adapter).render();
       linkToObject.mapPut("value",domainObject);
     }
   }

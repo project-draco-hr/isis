@@ -2,12 +2,12 @@
   Function<JsonNode,?> transformer=REPRESENTATION_INSTANTIATORS.get(representationType);
   if (transformer == null) {
     transformer=new Function<JsonNode,T>(){
-      @Override public T apply(      JsonNode input){
+      @Override public T apply(      final JsonNode input){
         try {
-          Constructor<T> constructor=representationType.getConstructor(JsonNode.class);
+          final Constructor<T> constructor=representationType.getConstructor(JsonNode.class);
           return constructor.newInstance(input);
         }
- catch (        Exception e) {
+ catch (        final Exception e) {
           throw new IllegalArgumentException("Conversions from JsonNode to " + representationType + " are not supported");
         }
       }

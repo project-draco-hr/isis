@@ -4,7 +4,7 @@
   if (!actionSemantics.isIdempotent()) {
     throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
   }
-  String bodyAsString=asStringUtf8(body);
+  final String bodyAsString=asStringUtf8(body);
   final JsonRepresentation arguments=readAsMap(bodyAsString);
   return invokeActionUsingAdapters(action,arguments);
 }

@@ -1,13 +1,13 @@
 {
-  Class<?> rawClass=type.getRawClass();
+  final Class<?> rawClass=type.getRawClass();
   if (JsonRepresentation.class.isAssignableFrom(rawClass)) {
     try {
-      Constructor<?> rawClassConstructor=rawClass.getConstructor(JsonNode.class);
+      final Constructor<?> rawClassConstructor=rawClass.getConstructor(JsonNode.class);
       return new JsonRepresentationDeserializer(rawClassConstructor);
     }
- catch (    SecurityException e) {
+ catch (    final SecurityException e) {
     }
-catch (    NoSuchMethodException e) {
+catch (    final NoSuchMethodException e) {
     }
   }
   return super.createBeanDeserializer(config,p,type,property);

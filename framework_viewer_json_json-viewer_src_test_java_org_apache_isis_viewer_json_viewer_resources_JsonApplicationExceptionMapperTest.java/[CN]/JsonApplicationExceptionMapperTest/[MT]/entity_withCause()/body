@@ -1,12 +1,12 @@
 {
-  Exception cause=new Exception("barfoo");
-  JsonApplicationException ex=JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,cause,"foobar");
-  Response response=exceptionMapper.toResponse(ex);
-  String entity=(String)response.getEntity();
+  final Exception cause=new Exception("barfoo");
+  final JsonApplicationException ex=JsonApplicationException.create(HttpStatusCode.BAD_REQUEST,cause,"foobar");
+  final Response response=exceptionMapper.toResponse(ex);
+  final String entity=(String)response.getEntity();
   assertThat(entity,is(not(nullValue())));
-  JsonRepresentation jsonRepr=JsonMapper.instance().read(entity,JsonRepresentation.class);
+  final JsonRepresentation jsonRepr=JsonMapper.instance().read(entity,JsonRepresentation.class);
   assertThat(jsonRepr.getString("message"),is(ex.getMessage()));
-  JsonRepresentation causedByRepr=jsonRepr.getRepresentation("causedBy");
+  final JsonRepresentation causedByRepr=jsonRepr.getRepresentation("causedBy");
   assertThat(causedByRepr,is(not(nullValue())));
   assertThat(causedByRepr.getString("message"),is(cause.getMessage()));
 }

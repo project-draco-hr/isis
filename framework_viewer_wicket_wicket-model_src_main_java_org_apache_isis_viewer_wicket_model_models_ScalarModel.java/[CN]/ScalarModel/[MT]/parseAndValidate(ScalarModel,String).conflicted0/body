@@ -1,15 +1,13 @@
 {
-  final OneToOneAssociation property=scalarModel.getPropertyMemento().getProperty();
-  ParseableFacet parseableFacet=property.getFacet(ParseableFacet.class);
+  final ObjectActionParameter parameter=scalarModel.getParameterMemento().getActionParameter();
+  ParseableFacet parseableFacet=parameter.getFacet(ParseableFacet.class);
   if (parseableFacet == null) {
-    parseableFacet=property.getSpecification().getFacet(ParseableFacet.class);
+    parseableFacet=parameter.getSpecification().getFacet(ParseableFacet.class);
   }
   try {
     final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter();
-    final ObjectAdapter currentValue=property.get(parentAdapter);
-    final ObjectAdapter proposedAdapter=parseableFacet.parseTextEntry(currentValue,proposedPojoAsStr);
-    final Consent valid=property.isAssociationValid(parentAdapter,proposedAdapter);
-    return valid.isAllowed() ? null : valid.getReason();
+    final String invalidReasonIfAny=parameter.isValid(parentAdapter,proposedPojoAsStr);
+    return invalidReasonIfAny;
   }
  catch (  final Exception ex) {
     return ex.getLocalizedMessage();

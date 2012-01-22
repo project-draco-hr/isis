@@ -1,5 +1,5 @@
 {
-  RepresentationType representationType=RepresentationType.ACTION_DESCRIPTION;
+  final RepresentationType representationType=RepresentationType.ACTION_DESCRIPTION;
   init(representationType);
   final ObjectSpecification parentSpec=getSpecificationLoader().loadSpecification(domainType);
   if (parentSpec == null) {
@@ -9,7 +9,7 @@
   if (objectMember == null) {
     throw JsonApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
-  ObjectAction action=(ObjectAction)objectMember;
+  final ObjectAction action=(ObjectAction)objectMember;
   final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
   final ActionDescriptionReprRenderer renderer=(ActionDescriptionReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.with(new ParentSpecAndAction(parentSpec,action)).includesSelf();

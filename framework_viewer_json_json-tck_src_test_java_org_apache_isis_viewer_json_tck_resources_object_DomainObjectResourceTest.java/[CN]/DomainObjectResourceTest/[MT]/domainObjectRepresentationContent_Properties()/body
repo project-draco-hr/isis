@@ -1,12 +1,12 @@
 {
-  DomainObjectRepresentation domainObjectRepr=givenDomainObjectRepresentationFor("OID:32");
-  LinkRepresentation self=domainObjectRepr.getSelf();
-  JsonRepresentation properties=domainObjectRepr.getProperties();
+  final DomainObjectRepresentation domainObjectRepr=givenDomainObjectRepresentationFor("OID:32");
+  final LinkRepresentation self=domainObjectRepr.getSelf();
+  final JsonRepresentation properties=domainObjectRepr.getProperties();
   assertThat(properties.size(),is(2));
-  JsonRepresentation nameProperty=properties.getRepresentation("[id=name]");
+  final JsonRepresentation nameProperty=properties.getRepresentation("[id=name]");
   assertThat(nameProperty.getString("memberType"),is("property"));
   assertThat(nameProperty.getString("value"),is("child 2"));
   assertThat(nameProperty.getString("disabledReason"),is(nullValue()));
-  LinkRepresentation namePropertyDetails=nameProperty.getLink("links[rel=details]");
+  final LinkRepresentation namePropertyDetails=nameProperty.getLink("links[rel=details]");
   assertThat(namePropertyDetails,isLink().rel("details").href(self.getHref() + "/properties/name").httpMethod(HttpMethod.GET));
 }

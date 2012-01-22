@@ -1,22 +1,22 @@
 {
-  DomainObjectResource domainObjectResource=client.getDomainObjectResource();
-  JsonRepresentation body=JsonRepresentation.newArray();
-  Response actionInvokeResp=domainObjectResource.invokeAction("OID:1","list",body.asInputStream());
-  RestfulResponse<ScalarValueRepresentation> actionInvokeJsonResp=RestfulResponse.ofT(actionInvokeResp);
+  final DomainObjectResource domainObjectResource=client.getDomainObjectResource();
+  final JsonRepresentation body=JsonRepresentation.newArray();
+  final Response actionInvokeResp=domainObjectResource.invokeAction("OID:1","list",body.asInputStream());
+  final RestfulResponse<ScalarValueRepresentation> actionInvokeJsonResp=RestfulResponse.ofT(actionInvokeResp);
   assertThat(actionInvokeJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
-  ScalarValueRepresentation actionInvokeRepr=actionInvokeJsonResp.getEntity();
+  final ScalarValueRepresentation actionInvokeRepr=actionInvokeJsonResp.getEntity();
   assertThat(actionInvokeRepr.isArray(),is(true));
   assertThat(actionInvokeRepr.size(),is(5));
-  JsonRepresentation domainObjectRefRepr=actionInvokeRepr.arrayGet(0);
+  final JsonRepresentation domainObjectRefRepr=actionInvokeRepr.arrayGet(0);
   assertThat(domainObjectRefRepr,is(not(nullValue())));
   assertThat(domainObjectRefRepr.getString("title"),is("Untitled Applib Values Entity"));
-  LinkRepresentation domainObjectLink=domainObjectRefRepr.getLink("link");
+  final LinkRepresentation domainObjectLink=domainObjectRefRepr.getLink("link");
   assertThat(domainObjectLink.getRel(),is("object"));
   assertThat(domainObjectLink.getHref(),matches("http://localhost:\\d+/objects/OID:7"));
-  LinkRepresentation domainObjectTypeLink=domainObjectRefRepr.getLink("type");
+  final LinkRepresentation domainObjectTypeLink=domainObjectRefRepr.getLink("type");
   assertThat(domainObjectTypeLink.getRel(),is("type"));
   assertThat(domainObjectTypeLink.getHref(),matches("http://localhost:\\d+/types/application/vnd." + org.apache.isis.tck.dom.scalars.ApplibValuedEntity.class.getName() + "\\+json"));
-  LinkRepresentation domainObjectIconLink=domainObjectRefRepr.getLink("icon");
+  final LinkRepresentation domainObjectIconLink=domainObjectRefRepr.getLink("icon");
   assertThat(domainObjectIconLink.getRel(),is("icon"));
   assertThat(domainObjectIconLink.getHref(),matches("http://localhost:\\d+/images/null.png"));
 }

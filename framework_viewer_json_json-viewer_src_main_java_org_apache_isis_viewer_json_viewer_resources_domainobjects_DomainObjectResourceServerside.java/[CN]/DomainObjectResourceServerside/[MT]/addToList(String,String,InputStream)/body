@@ -6,10 +6,10 @@
   if (!collection.getCollectionSemantics().isListOrArray()) {
     throw JsonApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Collection '%s' does not have list or array semantics",collectionId);
   }
-  ObjectSpecification collectionSpec=collection.getSpecification();
-  String bodyAsString=DomainResourceHelper.asStringUtf8(body);
-  ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,bodyAsString);
-  Consent consent=collection.isValidToAdd(objectAdapter,argAdapter);
+  final ObjectSpecification collectionSpec=collection.getSpecification();
+  final String bodyAsString=DomainResourceHelper.asStringUtf8(body);
+  final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,bodyAsString);
+  final Consent consent=collection.isValidToAdd(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }

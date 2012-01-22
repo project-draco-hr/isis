@@ -1,14 +1,14 @@
 {
-  Step previousStep=currentStep();
+  final Step previousStep=currentStep();
   if (previousStep.error != null) {
     return;
   }
-  RestfulResponse<? extends JsonRepresentation> jsonResponse=previousStep.response;
+  final RestfulResponse<? extends JsonRepresentation> jsonResponse=previousStep.response;
   JsonRepresentation entity;
   try {
     entity=jsonResponse.getEntity();
   }
- catch (  Exception e) {
+ catch (  final Exception e) {
     addStep(path,null,null,null,"exception: " + e.getMessage(),e);
     return;
   }
@@ -16,7 +16,7 @@
   try {
     link=entity.getLink(path);
   }
- catch (  Exception e) {
+ catch (  final Exception e) {
     addStep(path,null,null,null,"exception: " + e.getMessage(),e);
     return;
   }
@@ -33,7 +33,7 @@
       response=restfulClient.follow(link);
     }
   }
- catch (  Exception e) {
+ catch (  final Exception e) {
     addStep(path,link,null,null,"failed to follow link: " + e.getMessage(),e);
     return;
   }

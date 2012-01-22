@@ -1,18 +1,18 @@
 {
-  DomainObjectResource domainObjectResource=client.getDomainObjectResource();
-  Response idPropertyResp=domainObjectResource.propertyDetails("OID:1","id");
-  RestfulResponse<ObjectPropertyRepresentation> idPropertyJsonResp=RestfulResponse.ofT(idPropertyResp);
+  final DomainObjectResource domainObjectResource=client.getDomainObjectResource();
+  final Response idPropertyResp=domainObjectResource.propertyDetails("OID:1","id");
+  final RestfulResponse<ObjectPropertyRepresentation> idPropertyJsonResp=RestfulResponse.ofT(idPropertyResp);
   assertThat(idPropertyJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
-  ObjectPropertyRepresentation propertyDetailsRepr=idPropertyJsonResp.getEntity();
-  LinkRepresentation selfLink=propertyDetailsRepr.getLink("_self.link");
+  final ObjectPropertyRepresentation propertyDetailsRepr=idPropertyJsonResp.getEntity();
+  final LinkRepresentation selfLink=propertyDetailsRepr.getLink("_self.link");
   assertThat(selfLink.getRel(),is("member"));
   assertThat(selfLink.getHref(),matches(".+objects/OID:1/properties/id"));
   assertThat(selfLink.getHttpMethod(),is(HttpMethod.GET));
-  LinkRepresentation selfObject=propertyDetailsRepr.getLink("_self.object");
+  final LinkRepresentation selfObject=propertyDetailsRepr.getLink("_self.object");
   assertThat(selfObject.getRel(),is("object"));
   assertThat(selfObject.getHref(),matches(".+objects/OID:1"));
   assertThat(selfObject.getHttpMethod(),is(HttpMethod.GET));
-  LinkRepresentation type=propertyDetailsRepr.getLink("type");
+  final LinkRepresentation type=propertyDetailsRepr.getLink("type");
   assertThat(type.getRel(),is("type"));
   assertThat(type.getHref(),matches(".+vnd\\.string\\+json"));
   assertThat(type.getHttpMethod(),is(HttpMethod.GET));

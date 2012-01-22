@@ -1,20 +1,20 @@
 {
   return new Parser<List<MediaType>>(){
-    @Override public List<MediaType> valueOf(    String str){
+    @Override public List<MediaType> valueOf(    final String str){
       if (str == null) {
         return Collections.emptyList();
       }
       final List<String> strings=Lists.newArrayList(Splitter.on(",").split(str));
-      return Lists.transform(strings,(Function<? super String,? extends MediaType>)new Function<String,MediaType>(){
-        @Override public MediaType apply(        String input){
+      return Lists.transform(strings,new Function<String,MediaType>(){
+        @Override public MediaType apply(        final String input){
           return MediaType.valueOf(input);
         }
       }
 );
     }
-    @Override public String asString(    List<MediaType> listOfMediaTypes){
+    @Override public String asString(    final List<MediaType> listOfMediaTypes){
       final List<String> strings=Lists.transform(listOfMediaTypes,new Function<MediaType,String>(){
-        @Override public String apply(        MediaType input){
+        @Override public String apply(        final MediaType input){
           return input.toString();
         }
       }

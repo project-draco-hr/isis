@@ -1,15 +1,15 @@
 {
-  Response servicesResp=resource.version();
-  RestfulResponse<VersionRepresentation> restfulResponse=RestfulResponse.ofT(servicesResp);
+  final Response servicesResp=resource.version();
+  final RestfulResponse<VersionRepresentation> restfulResponse=RestfulResponse.ofT(servicesResp);
   assertThat(restfulResponse.getStatus().getFamily(),is(Family.SUCCESSFUL));
   assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
-  VersionRepresentation repr=restfulResponse.getEntity();
+  final VersionRepresentation repr=restfulResponse.getEntity();
   assertThat(repr,is(not(nullValue())));
   assertThat(repr,isMap());
   assertThat(repr.getSelf(),isLink().httpMethod(HttpMethod.GET));
   assertThat(repr.getString("specVersion"),is("0.52"));
   assertThat(repr.getString("implVersion"),is(not(nullValue())));
-  JsonRepresentation optionalCapbilitiesRepr=repr.getOptionalCapabilities();
+  final JsonRepresentation optionalCapbilitiesRepr=repr.getOptionalCapabilities();
   assertThat(optionalCapbilitiesRepr,isMap());
   assertThat(optionalCapbilitiesRepr.getString("concurrencyChecking"),is("no"));
   assertThat(optionalCapbilitiesRepr.getString("transientObjects"),is("yes"));

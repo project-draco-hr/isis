@@ -1,6 +1,6 @@
 {
   return new TypeSafeMatcher<JsonRepresentation>(){
-    @Override public void describeTo(    Description description){
+    @Override public void describeTo(    final Description description){
       description.appendText("a link");
       if (rel != null) {
         description.appendText(" with rel '").appendText(rel).appendText("'");
@@ -38,11 +38,11 @@
         description.appendText(" returns ").appendValue(statusCode);
       }
     }
-    @Override public boolean matchesSafely(    JsonRepresentation linkRepr){
+    @Override public boolean matchesSafely(    final JsonRepresentation linkRepr){
       if (linkRepr == null) {
         return false;
       }
-      LinkRepresentation link=linkRepr.asLink();
+      final LinkRepresentation link=linkRepr.asLink();
       if (rel != null && !rel.equals(link.getRel())) {
         return false;
       }
@@ -60,7 +60,7 @@
       }
       if (typeParameterName != null) {
         final MediaType mediaType=link.getType();
-        String parameterValue=mediaType.getParameters().get(typeParameterName);
+        final String parameterValue=mediaType.getParameters().get(typeParameterName);
         if (!typeParameterValue.equals(parameterValue)) {
           return false;
         }
@@ -79,7 +79,7 @@
         try {
           jsonResp=client.followT(link);
         }
- catch (        Exception e) {
+ catch (        final Exception e) {
           throw new RuntimeException(e);
         }
       }
