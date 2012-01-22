@@ -3,9 +3,9 @@
   if (facet != null && facet.value() != null) {
     return StringUtils.camelLowerFirst(facet.value());
   }
-  String name=getSpecification().getSingularName();
-  List<ObjectActionParameter> parameters=this.getAction().getParameters(new Filter<ObjectActionParameter>(){
-    @Override public boolean accept(    ObjectActionParameter t){
+  final String name=getSpecification().getSingularName();
+  final List<ObjectActionParameter> parameters=this.getAction().getParameters(new Filter<ObjectActionParameter>(){
+    @Override public boolean accept(    final ObjectActionParameter t){
       return equalsShortIdentifier(t.getSpecification(),getSpecification());
     }
     protected boolean equalsShortIdentifier(    final ObjectSpecification spec1,    final ObjectSpecification spec2){
@@ -16,6 +16,6 @@
   if (parameters.size() == 1) {
     return StringUtils.camelLowerFirst(name);
   }
-  int indexOf=parameters.indexOf(this);
+  final int indexOf=parameters.indexOf(this);
   return StringUtils.camelLowerFirst(name + (indexOf + 1));
 }

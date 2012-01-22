@@ -1,5 +1,5 @@
 {
-  ActionParameterDefaultsFacetFactory facetFactory=new ActionParameterDefaultsFacetFactory();
+  final ActionParameterDefaultsFacetFactory facetFactory=new ActionParameterDefaultsFacetFactory();
   facetFactory.setSpecificationLookup(reflector);
   reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
@@ -12,10 +12,10 @@ class Customer {
       return 0;
     }
   }
-  Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
-  Method default0Method=findMethod(Customer.class,"default0SomeAction",new Class[]{});
-  Method default1Method=findMethod(Customer.class,"default1SomeAction",new Class[]{});
-  FacetedMethod facetHolderWithParms=FacetedMethod.createActionFacetedMethod(Customer.class,actionMethod);
+  final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
+  final Method default0Method=findMethod(Customer.class,"default0SomeAction",new Class[]{});
+  final Method default1Method=findMethod(Customer.class,"default1SomeAction",new Class[]{});
+  final FacetedMethod facetHolderWithParms=FacetedMethod.createActionFacetedMethod(Customer.class,actionMethod);
   facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetHolderWithParms));
   final Facet facet0=facetHolderWithParms.getParameters().get(0).getFacet(ActionParameterDefaultsFacet.class);
   assertNotNull(facet0);

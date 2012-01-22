@@ -14,17 +14,17 @@
   defaultSet.addAll(nonAnnotatedGroup);
   final Set<String> groupNames=sortedMembersByGroup.keySet();
   final SortedMap<String,DeweyOrderSet> orderSetsByGroup=Maps.newTreeMap();
-  for (final Iterator<String> iter=groupNames.iterator(); iter.hasNext(); ) {
-    final String groupName=(String)iter.next();
+  for (  final String string : groupNames) {
+    final String groupName=string;
     final DeweyOrderSet deweyOrderSet=new DeweyOrderSet(groupName);
     orderSetsByGroup.put(groupName,deweyOrderSet);
     ensureParentFor(orderSetsByGroup,deweyOrderSet);
   }
   for (  final String groupName : groupNames) {
-    final DeweyOrderSet deweyOrderSet=(DeweyOrderSet)orderSetsByGroup.get(groupName);
-    final SortedSet sortedMembers=(SortedSet)sortedMembersByGroup.get(groupName);
+    final DeweyOrderSet deweyOrderSet=orderSetsByGroup.get(groupName);
+    final SortedSet sortedMembers=sortedMembersByGroup.get(groupName);
     deweyOrderSet.addAll(sortedMembers);
     deweyOrderSet.copyOverChildren();
   }
-  return (DeweyOrderSet)orderSetsByGroup.get("");
+  return orderSetsByGroup.get("");
 }
