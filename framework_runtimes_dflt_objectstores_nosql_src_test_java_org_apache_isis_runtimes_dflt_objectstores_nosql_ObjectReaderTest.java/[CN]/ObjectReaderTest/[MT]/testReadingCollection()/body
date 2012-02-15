@@ -16,8 +16,8 @@
       one(reader2).readTime();
       will(returnValue("1020"));
       one(versionCreator).version("3","username","1020");
-      one(keyCreator).oid("5");
-      will(returnValue(SerialOid.createPersistent(5)));
+      one(keyCreator).oid(exampleCollectionPojoSpec,"5");
+      will(returnValue(oid5));
       ;
       one(reader2).readField("hetrogenousCollection");
       will(returnValue(null));
@@ -26,16 +26,16 @@
       one(keyCreator).specificationFromReference("ref@3");
       will(returnValue(specification));
       one(keyCreator).oidFromReference("ref@3");
-      will(returnValue(SerialOid.createPersistent(3)));
+      will(returnValue(oid3));
       one(keyCreator).specificationFromReference("ref@4");
       will(returnValue(specification));
       one(keyCreator).oidFromReference("ref@4");
-      will(returnValue(SerialOid.createPersistent(4)));
+      will(returnValue(oid4));
     }
   }
 );
   final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator,dataEncrypter);
-  assertEquals(SerialOid.createPersistent(5),readObject.getOid());
+  assertEquals(oid5,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
   final ExampleCollectionPojo pojo=(ExampleCollectionPojo)readObject.getObject();
   final List<ExampleValuePojo> collection2=pojo.getHomogenousCollection();

@@ -1,28 +1,12 @@
 {
-  if (savedObject.contains(object)) {
+  if (savedObject.contains(adapter)) {
     return null;
   }
-  savedObject.add(object);
-  final JSONObject data=new JSONObject();
-  final ObjectSpecification specification=object.getSpecification();
-  data.put("_class",specification.getFullIdentifier());
-  final Oid oid=object.getOid();
-  String encodedOid;
-  if (oid instanceof AggregatedOid) {
-    final AggregatedOid aoid=(AggregatedOid)oid;
-    final Oid parentOid=aoid.getParentOid();
-    final String aggregatedId=aoid.getId();
-    encodedOid=Long.toString(((SerialOid)parentOid).getSerialNo(),16) + "@" + aggregatedId;
-  }
- else   if (oid instanceof SerialOid) {
-    encodedOid=Long.toString(((SerialOid)oid).getSerialNo(),16);
-  }
- else {
-    throw new ScimpiException("Unsupportred OID type " + oid);
-  }
-  data.put("_id",encodedOid);
+  savedObject.add(adapter);
+  final JSONObject data=createJsonObject(adapter);
+  final ObjectSpecification specification=adapter.getSpecification();
   for (  final ObjectAssociation association : specification.getAssociations()) {
-    final ObjectAdapter fieldValue=association.get(object);
+    final ObjectAdapter fieldValue=association.get(adapter);
     final String fieldName=association.getId();
     if (fieldValue == null) {
       data.put(fieldName,(Object)null);

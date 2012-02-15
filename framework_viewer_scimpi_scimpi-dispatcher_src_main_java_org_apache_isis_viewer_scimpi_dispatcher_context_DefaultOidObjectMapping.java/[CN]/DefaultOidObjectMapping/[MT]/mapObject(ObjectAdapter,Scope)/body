@@ -1,25 +1,29 @@
 {
-  ObjectAdapter object=inObject;
-  final Oid oid=object.getOid();
+  ObjectAdapter adapter=inObject;
+  final Oid oid=adapter.getOid();
   if (oidType == null) {
     oidType=oid.getClass();
   }
   String encodedOid;
-  if (oid instanceof AggregatedOid) {
+  if (oid instanceof OidWithSpecification) {
+    OidWithSpecification ows=(OidWithSpecification)oid;
+    encodedOid=enString(ows);
+  }
+ else   if (oid instanceof AggregatedOid) {
     final AggregatedOid aoid=(AggregatedOid)oid;
-    final Oid parentOid=aoid.getParentOid();
-    object=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(parentOid);
     final String aggregatedId=aoid.getId();
-    encodedOid=Long.toString(((SerialOid)parentOid).getSerialNo(),16) + "@" + aggregatedId;
+    final Oid parentOid=aoid.getParentOid();
+    adapter=getAdapterManager().getAdapterFor(parentOid);
+    encodedOid=enString(parentOid,aggregatedId);
   }
  else   if (oid instanceof SerialOid) {
     encodedOid=Long.toString(((SerialOid)oid).getSerialNo(),16);
   }
  else {
-    encodedOid=IsisContext.getPersistenceSession().getOidGenerator().getOidStringifier().enString(oid);
+    throw new ScimpiException("Unsupported OID type " + oid);
   }
-  final boolean isTransient=object.isTransient();
-  final String transferableId=(isTransient ? "T" : "P") + object.getSpecification().getFullIdentifier() + "@"+ encodedOid;
+  final boolean isTransient=adapter.isTransient();
+  final String transferableId=(isTransient ? "T" : "P") + adapter.getSpecification().getFullIdentifier() + "@"+ encodedOid;
   LOG.debug("encoded " + oid + " as "+ transferableId+ " ~ "+ encodedOid);
   if (inObject.isTransient()) {
     final TransientObjectMapping mapping=new TransientObjectMapping(inObject);

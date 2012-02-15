@@ -15,23 +15,23 @@
       one(reader2).readTime();
       will(returnValue("1020"));
       one(versionCreator).version("3","username","1020");
-      one(keyCreator).oid("4");
-      will(returnValue(SerialOid.createPersistent(4)));
+      one(keyCreator).oid(exampleReferencePojoSpec,"4");
+      will(returnValue(oid4));
       ;
       one(reader2).readField("reference1");
       will(returnValue("ref@3"));
       one(reader2).readField("reference2");
       will(returnValue("null"));
       one(keyCreator).oidFromReference("ref@3");
-      will(returnValue(SerialOid.createPersistent(3)));
+      will(returnValue(oid3));
       ;
       one(keyCreator).specificationFromReference("ref@3");
-      will(returnValue(IsisContext.getSpecificationLoader().loadSpecification(ExampleValuePojo.class)));
+      will(returnValue(exampleValuePojoSpec));
     }
   }
 );
   final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator,dataEncrypter);
-  assertEquals(SerialOid.createPersistent(4),readObject.getOid());
+  assertEquals(oid4,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
   final ExampleReferencePojo pojo=(ExampleReferencePojo)readObject.getObject();
   assertEquals(null,pojo.getReference2());

@@ -1,10 +1,10 @@
 {
   getTransactionManager().startTransaction();
   for (  final Object service : servicesInjector.getRegisteredServices()) {
-    final ObjectSpecification serviceNoSpec=specificationLoader.loadSpecification(service.getClass());
-    serviceNoSpec.markAsService();
+    final ObjectSpecification serviceSpecification=specificationLoader.loadSpecification(service.getClass());
+    serviceSpecification.markAsService();
     final String serviceId=ServiceUtil.id(service);
-    final Oid existingOid=getOidForService(serviceId);
+    final Oid existingOid=getOidForService(serviceSpecification,serviceId);
     ObjectAdapter adapter;
     if (existingOid == null) {
       adapter=getAdapterManager().adapterFor(service);

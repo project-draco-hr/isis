@@ -1,0 +1,12 @@
+{
+  final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  final DataOutputStreamExtended outputImpl=new DataOutputStreamExtended(baos);
+  try {
+    outputImpl.writeEncodable(object);
+    final byte[] byteArray=baos.toByteArray();
+    return new String(Hex.encodeHex(byteArray));
+  }
+ catch (  final IOException e) {
+    throw new IsisException("Failed to write object",e);
+  }
+}

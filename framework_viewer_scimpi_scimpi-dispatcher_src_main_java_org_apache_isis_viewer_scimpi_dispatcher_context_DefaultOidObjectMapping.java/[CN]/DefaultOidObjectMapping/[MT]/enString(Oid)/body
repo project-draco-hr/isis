@@ -1,0 +1,15 @@
+{
+  final String parentOidStr;
+  if (oid instanceof OidWithSpecification) {
+    OidWithSpecification ows=(OidWithSpecification)oid;
+    parentOidStr=enString(ows);
+  }
+ else   if (oid instanceof SerialOid) {
+    final SerialOid parentSerialOid=(SerialOid)oid;
+    parentOidStr=Long.toString(parentSerialOid.getSerialNo(),16);
+  }
+ else {
+    throw new ScimpiException("Unsupported OID type " + oid);
+  }
+  return parentOidStr;
+}

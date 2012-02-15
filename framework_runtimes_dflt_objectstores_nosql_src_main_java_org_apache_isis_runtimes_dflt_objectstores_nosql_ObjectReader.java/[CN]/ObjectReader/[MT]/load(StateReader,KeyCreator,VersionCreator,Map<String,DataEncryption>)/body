@@ -1,9 +1,9 @@
 {
   final String className=reader.readObjectType();
-  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(className);
+  final ObjectSpecification specification=getSpecificationLoader().loadSpecification(className);
   final String id=reader.readId();
-  final Oid oid=keyCreator.oid(id);
-  final ObjectAdapter object=getAdapter(specification,oid);
+  final OidWithSpecification oid=keyCreator.oid(specification,id);
+  final ObjectAdapter object=getAdapter(oid);
   if (object.getResolveState().isResolved()) {
     Version version=null;
     final String versionString=reader.readVersion();

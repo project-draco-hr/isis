@@ -1,0 +1,17 @@
+{
+  if (OidWithSpecification.class.isAssignableFrom(oidType)) {
+    return getOidStringifier().deString(oidData);
+  }
+ else   if (SerialOid.class.isAssignableFrom(oidType)) {
+    final long value=Long.valueOf(oidData,16).longValue();
+    if (stateHint == State.TRANSIENT) {
+      return SerialOid.createTransient(value);
+    }
+ else {
+      return SerialOid.createPersistent(value);
+    }
+  }
+ else {
+    throw new ScimpiException("Unsupported OID type " + oidType);
+  }
+}

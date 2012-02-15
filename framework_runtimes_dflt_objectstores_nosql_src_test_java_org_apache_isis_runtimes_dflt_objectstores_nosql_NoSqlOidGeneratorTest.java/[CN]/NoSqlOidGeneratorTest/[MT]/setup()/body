@@ -1,14 +1,19 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  context=new Mockery();
-  db=context.mock(NoSqlDataDatabase.class);
   context.checking(new Expectations(){
 {
-      one(db).nextSerialNumberBatch("_id",4);
-      will(returnValue(1L));
+      allowing(mockSpecificationLoader).loadSpecification(with(ExamplePojo.class));
+      will(returnValue(mockSpecification));
+      allowing(mockSpecification).getCorrespondingClass();
+      will(returnValue(ExamplePojo.class));
     }
   }
 );
-  oidGenerator=new NoSqlOidGenerator(db,-999,4);
-  oid=oidGenerator.createTransientOid(null);
+  oidGenerator=new NoSqlOidGenerator(db,-999,4){
+    @Override protected SpecificationLoader getSpecificationLoader(){
+      return mockSpecificationLoader;
+    }
+  }
+;
+  oid=oidGenerator.createTransientOid(new ExamplePojo());
 }

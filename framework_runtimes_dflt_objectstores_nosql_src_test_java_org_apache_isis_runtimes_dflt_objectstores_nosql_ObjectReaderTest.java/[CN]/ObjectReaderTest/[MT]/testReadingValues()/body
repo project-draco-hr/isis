@@ -15,14 +15,14 @@
       one(reader1).readTime();
       will(returnValue("1020"));
       one(versionCreator).version("3","username","1020");
-      one(keyCreator).oid("3");
-      will(returnValue(SerialOid.createPersistent(3)));
+      one(keyCreator).oid(exampleValuePojoSpec,"3");
+      will(returnValue(oid3));
       ;
     }
   }
 );
   final ObjectAdapter readObject=objectReader.load(reader1,keyCreator,versionCreator,dataEncrypter);
-  assertEquals(SerialOid.createPersistent(3),readObject.getOid());
+  assertEquals(oid3,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
   final ExampleValuePojo pojo=(ExampleValuePojo)readObject.getObject();
   assertEquals("Fred Smith",pojo.getName());

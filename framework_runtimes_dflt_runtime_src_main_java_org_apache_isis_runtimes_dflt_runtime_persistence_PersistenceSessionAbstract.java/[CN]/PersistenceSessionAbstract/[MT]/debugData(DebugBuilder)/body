@@ -9,10 +9,12 @@
   oidGenerator.debugData(debug);
   debug.appendln();
   debug.appendTitle("Services");
-  for (  final Object service : servicesInjector.getRegisteredServices()) {
-    final String id=ServiceUtil.id(service);
-    final String serviceClassName=service.getClass().getName();
-    final Oid oidForService=getOidForService(id);
+  for (  final Object servicePojo : servicesInjector.getRegisteredServices()) {
+    final String id=ServiceUtil.id(servicePojo);
+    final Class<? extends Object> serviceClass=servicePojo.getClass();
+    final ObjectSpecification serviceSpecification=getSpecificationLoader().loadSpecification(serviceClass);
+    final String serviceClassName=serviceClass.getName();
+    final Oid oidForService=getOidForService(serviceSpecification,id);
     final String serviceId=id + (id.equals(serviceClassName) ? "" : " (" + serviceClassName + ")");
     debug.appendln(oidForService != null ? oidForService.toString() : "[NULL]",serviceId);
   }
