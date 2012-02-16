@@ -1,7 +1,8 @@
 {
+  final String userName=getContainer().getUser().getName();
   return allMatches(ToDoItem.class,new Filter<ToDoItem>(){
     @Override public boolean accept(    final ToDoItem t){
-      return !t.isComplete();
+      return Objects.equal(t.getOwnedBy(),userName) && !t.isDone();
     }
   }
 );
