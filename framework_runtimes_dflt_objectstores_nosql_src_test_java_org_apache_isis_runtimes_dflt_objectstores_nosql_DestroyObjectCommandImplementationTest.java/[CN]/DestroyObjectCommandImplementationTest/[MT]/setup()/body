@@ -1,5 +1,15 @@
 {
-  Logger.getRootLogger().setLevel(Level.OFF);
-  final TestProxySystemII system=new TestProxySystemII();
-  system.init();
+  context.checking(new Expectations(){
+{
+      allowing(specification).getFullIdentifier();
+      will(returnValue("com.foo.bar.SomeClass"));
+      allowing(adapter).getSpecification();
+      will(returnValue(specification));
+      allowing(adapter).getOid();
+      will(returnValue(sqlOid));
+      allowing(adapter).getVersion();
+      will(returnValue(version));
+    }
+  }
+);
 }
