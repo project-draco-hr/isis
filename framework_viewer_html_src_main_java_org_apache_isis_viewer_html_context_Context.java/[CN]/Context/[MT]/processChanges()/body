@@ -1,20 +1,9 @@
 {
-  final List<ObjectAdapter> disposedObjects=IsisContext.getUpdateNotifier().getDisposedObjects();
+  final List<ObjectAdapter> disposedObjects=getUpdateNotifier().getDisposedObjects();
   for (  final ObjectAdapter adapter : disposedObjects) {
-    final ObjectMapping mapping=objectMapping(adapter);
+    final ObjectMapping mapping=persistentOrTransientObjectMappingFor(adapter);
     if (objectMap.containsValue(mapping)) {
-      final String existingId=findExistingId(objectMap,mapping);
-      history.remove(existingId);
-      final ArrayList<Crumb> relatedCrumbs=new ArrayList<Crumb>();
-      for (      final Crumb crumb : getCrumbs()) {
-      }
-      for (      final Crumb crumb : relatedCrumbs) {
-        crumbs.remove(crumb);
-      }
-      for (      final CollectionMapping collection : collectionMap.values()) {
-        collection.remove(existingId);
-      }
-      objectMap.remove(existingId);
+      processChangeFor(mapping);
     }
   }
 }
