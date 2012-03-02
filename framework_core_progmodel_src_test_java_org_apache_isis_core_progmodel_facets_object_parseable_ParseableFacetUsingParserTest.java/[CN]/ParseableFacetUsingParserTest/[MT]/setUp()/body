@@ -1,9 +1,5 @@
 {
-  mockFacetHolder=mockery.mock(FacetHolder.class);
-  mockDependencyInjector=mockery.mock(DependencyInjector.class);
-  mockAdapterManager=mockery.mock(AdapterMap.class);
-  mockAuthenticationSessionProvider=mockery.mock(AuthenticationSessionProvider.class);
-  mockery.checking(new Expectations(){
+  context.checking(new Expectations(){
 {
       never(mockAuthenticationSessionProvider);
       never(mockAdapterManager);
@@ -13,7 +9,7 @@
     }
   }
 );
-  final Parser parser=new Parser<String>(){
+  final Parser<String> parser=new Parser<String>(){
     @Override public String parseTextEntry(    final Object contextPojo,    final String entry){
       if (entry.equals("invalid")) {
         throw new ParsingException();
