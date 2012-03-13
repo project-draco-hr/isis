@@ -3,7 +3,7 @@
   sql.append("select ");
   idMappingAbstract.appendColumnNames(sql);
   sql.append(", ");
-  final String columnList=columnList(fieldMappings);
+  final String columnList=columnList(fieldMappingByField);
   if (columnList.length() > 0) {
     sql.append(columnList);
     sql.append(", ");
@@ -17,7 +17,7 @@
   while (rs.next()) {
     final Oid oid=idMappingAbstract.recreateOid(rs,specification);
     final ObjectAdapter element=getAdapter(specification,oid);
-    loadFields(element,rs,makeResolved,fieldMappings);
+    loadFields(element,rs,makeResolved,fieldMappingByField);
     LOG.debug("  element  " + element.getOid());
     list.add(element);
   }

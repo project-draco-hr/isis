@@ -17,7 +17,7 @@
   final ObjectAssociation[] oneToManyProperties=new ObjectAssociation[collectionFieldCount];
   collectionMappers=new CollectionMapper[collectionFieldCount];
   collectionMapperFields=new String[collectionFieldCount];
-  final IsisConfiguration subset=IsisContext.getConfiguration().createSubset(parameterBase + ".mapper.");
+  final IsisConfiguration subset=getConfiguration().createSubset(parameterBase + ".mapper.");
   for (int i=0, simpleFieldNo=0, collectionFieldNo=0; i < fields.size(); i++) {
     final ObjectAssociation field=fields.get(i);
     if (field.isNotPersisted()) {
@@ -70,8 +70,10 @@
     }
   }
   for (  final ObjectAssociation field : oneToOneProperties) {
+    if (fieldMappingByField.containsKey(field)) {
+      continue;
+    }
     final FieldMapping mapping=lookup.createMapping(specification,field);
-    fieldMappings.add(mapping);
-    fieldMappingLookup.put(field,mapping);
+    fieldMappingByField.put(field,mapping);
   }
 }
