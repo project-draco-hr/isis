@@ -1,0 +1,8 @@
+{
+  final Class<?> cls=SimpleObjectWithOneToOneFetchLazy.class;
+  final Method method=cls.getMethod("getOther");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(cls,method,methodRemover,facetedMethod));
+  final JpaFetchTypeFacet facet=facetedMethod.getFacet(JpaFetchTypeFacet.class);
+  assertNotNull(facet);
+  assertEquals(FetchType.LAZY,facet.getFetchType());
+}

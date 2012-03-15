@@ -1,0 +1,13 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final NamedQueries namedQueriesAnnotation=getAnnotation(cls,NamedQueries.class);
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  if (namedQueriesAnnotation != null) {
+    FacetUtil.addFacet(new JpaNamedQueriesFacetAnnotation(namedQueriesAnnotation.value(),facetHolder));
+    return;
+  }
+  final NamedQuery namedQueryAnnotation=getAnnotation(cls,NamedQuery.class);
+  if (namedQueryAnnotation != null) {
+    FacetUtil.addFacet(new JpaNamedQueryFacetAnnotation(namedQueryAnnotation,facetHolder));
+  }
+}

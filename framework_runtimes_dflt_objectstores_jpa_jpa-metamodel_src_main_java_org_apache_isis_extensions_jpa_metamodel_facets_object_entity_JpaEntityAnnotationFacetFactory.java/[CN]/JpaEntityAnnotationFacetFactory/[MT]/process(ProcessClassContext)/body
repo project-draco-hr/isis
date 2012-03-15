@@ -1,0 +1,13 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final Entity annotation=getAnnotation(cls,Entity.class);
+  if (annotation == null) {
+    return;
+  }
+  String annotationNameAttribute=annotation.name();
+  if (StringUtils.isNullOrEmpty(annotationNameAttribute)) {
+    annotationNameAttribute=cls.getSimpleName();
+  }
+  FacetUtil.addFacet(new JpaEntityFacetAnnotation(annotationNameAttribute,processClassContext.getFacetHolder()));
+  return;
+}

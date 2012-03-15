@@ -1,0 +1,10 @@
+{
+  final Version annotation=getAnnotation(processMethodContext.getMethod(),Version.class);
+  if (annotation == null) {
+    return;
+  }
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new JpaVersionFacetAnnotation(holder));
+  FacetUtil.addFacet(new DisabledFacetDerivedFromJpaVersionAnnotation(holder));
+  FacetUtil.addFacet(new OptionalFacetDerivedFromJpaVersionAnnotation(holder));
+}
