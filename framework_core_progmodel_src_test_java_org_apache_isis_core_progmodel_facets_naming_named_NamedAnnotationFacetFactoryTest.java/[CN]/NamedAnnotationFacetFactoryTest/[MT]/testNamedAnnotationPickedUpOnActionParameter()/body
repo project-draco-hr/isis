@@ -6,10 +6,11 @@ class Customer {
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class});
+  expectNoMethodsRemoved();
   facetFactory.processParams(new ProcessParameterContext(actionMethod,0,facetedMethodParameter));
   final Facet facet=facetedMethodParameter.getFacet(NamedFacet.class);
-  assertNotNull(facet);
-  assertTrue(facet instanceof NamedFacetAbstract);
+  assertThat(facet,is(not(nullValue())));
+  assertThat(facet instanceof NamedFacetAbstract,is(true));
   final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;
-  assertEquals("some name",namedFacetAbstract.value());
+  assertThat(namedFacetAbstract.value(),equalTo("some name"));
 }

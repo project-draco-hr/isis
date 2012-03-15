@@ -7,11 +7,11 @@ class Customer {
     }
   }
   final Method actionMethod=findMethod(Customer.class,"getNumberOfOrders");
+  expectNoMethodsRemoved();
   facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(NamedFacet.class);
-  assertNotNull(facet);
-  assertTrue(facet instanceof NamedFacetAbstract);
+  assertThat(facet,is(not(nullValue())));
+  assertThat(facet instanceof NamedFacetAbstract,is(true));
   final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;
-  assertEquals("some name",namedFacetAbstract.value());
-  assertNoMethodsRemoved();
+  assertThat(namedFacetAbstract.value(),equalTo("some name"));
 }
