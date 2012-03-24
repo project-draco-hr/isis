@@ -1,0 +1,16 @@
+{
+  if (referencedAdapter == null) {
+    writer.writeField(otoa.getId(),null);
+    return;
+  }
+  final Oid referencedOid=referencedAdapter.getOid();
+  if (!(referencedOid instanceof AggregatedOid)) {
+    throw new NoSqlStoreException("Object type is inconsistent with it OID - it should have an AggregatedOid: " + referencedAdapter);
+  }
+  final AggregatedOid aggregatedOid=(AggregatedOid)referencedOid;
+  final String associationId=otoa.getId();
+  final StateWriter aggregateWriter=writer.addAggregate(associationId);
+  aggregateWriter.writeId(aggregatedOid.getLocalId());
+  final String specName=referencedAdapter.getSpecification().getFullIdentifier();
+  writeFields(aggregateWriter,specName,referencedAdapter);
+}

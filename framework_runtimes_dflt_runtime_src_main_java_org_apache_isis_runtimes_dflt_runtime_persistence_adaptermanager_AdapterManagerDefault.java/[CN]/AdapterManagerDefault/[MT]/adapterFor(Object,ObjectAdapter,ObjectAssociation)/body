@@ -1,0 +1,29 @@
+{
+  final ObjectAdapter adapter=getAdapterFor(pojo);
+  if (adapter != null) {
+    return adapter;
+  }
+  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
+  if (objSpec.containsFacet(ValueFacet.class)) {
+    return createStandaloneAdapterAndSetResolveState(pojo);
+  }
+  final ObjectAdapter newAdapter;
+  if (parentAdapter != null) {
+    if (association != null) {
+      if (association.isOneToManyAssociation()) {
+        OneToManyAssociation collection=(OneToManyAssociation)association;
+        newAdapter=createCollectionAdapter(pojo,parentAdapter,collection);
+      }
+ else {
+        newAdapter=createRootOrAggregatedAdapter(pojo,parentAdapter,Aggregation.hint(isAggregated(association)));
+      }
+    }
+ else {
+      newAdapter=createRootOrAggregatedAdapter(pojo,parentAdapter,Aggregation.hint(isAggregated(objSpec)));
+    }
+  }
+ else {
+    newAdapter=createTransientRootAdapter(pojo);
+  }
+  return mapAndInjectServices(newAdapter);
+}

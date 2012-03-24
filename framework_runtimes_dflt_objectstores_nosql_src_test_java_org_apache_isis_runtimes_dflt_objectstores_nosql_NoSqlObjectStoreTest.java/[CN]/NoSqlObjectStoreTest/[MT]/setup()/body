@@ -1,11 +1,10 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  final TestProxySystemII system=new TestProxySystemII();
-  system.init();
-  specification=IsisContext.getSpecificationLoader().loadSpecification(ExampleReferencePojo.class);
+  isisMetaModel=new IsisMetaModel(mockEmbeddedContext,new ExamplePojoRepository());
+  specification=isisMetaModel.getSpecificationLoader().loadSpecification(ExamplePojoWithReferences.class);
   object=IsisContext.getPersistenceSession().createInstance(specification);
-  ((SerialOid)object.getOid()).setId(3);
-  object.getOid().makePersistent();
+  final RootOidDefault rootOidDefault=(RootOidDefault)object.getOid();
+  rootOidDefault.asPersistent("" + 3);
   context.checking(new Expectations(){
 {
       one(db).open();

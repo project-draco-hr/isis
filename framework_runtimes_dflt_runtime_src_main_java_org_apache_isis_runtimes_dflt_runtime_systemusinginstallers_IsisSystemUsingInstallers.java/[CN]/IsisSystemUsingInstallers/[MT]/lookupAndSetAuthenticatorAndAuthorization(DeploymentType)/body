@@ -1,10 +1,13 @@
 {
   final IsisConfiguration configuration=installerLookup.getConfiguration();
-  final String connection=configuration.getString(SystemConstants.CLIENT_CONNECTION_KEY);
-  if (connection != null) {
-    lookupAndSetAuthenticatorAndAuthorizationUsingClientConnectionInstaller(connection);
+  final String authenticationManagerKey=getConfiguration().getString(SystemConstants.AUTHENTICATION_INSTALLER_KEY);
+  final AuthenticationManagerInstaller authenticationInstaller=installerLookup.authenticationManagerInstaller(authenticationManagerKey,deploymentType);
+  if (authenticationInstaller != null) {
+    setAuthenticationInstaller(authenticationInstaller);
   }
- else {
-    lookupAndSetAuthenticatorAndAuthorizationInstallers(deploymentType);
+  final String authorizationManagerKey=getConfiguration().getString(SystemConstants.AUTHORIZATION_INSTALLER_KEY);
+  final AuthorizationManagerInstaller authorizationInstaller=installerLookup.authorizationManagerInstaller(authorizationManagerKey,deploymentType);
+  if (authorizationInstaller != null) {
+    setAuthorizationInstaller(authorizationInstaller);
   }
 }

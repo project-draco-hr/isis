@@ -6,11 +6,14 @@
     xml.append(">\n");
     for (int i=0; i < size; i++) {
       final Object oid=references.elementAt(i);
-      if (((SerialOid)oid).isTransient()) {
+      final RootOidDefault rootOidDefault=(RootOidDefault)oid;
+      if (rootOidDefault.isTransient()) {
         throw new ObjectPersistenceException("Can't add tranisent OID (" + oid + ") to "+ field+ " element.");
       }
       xml.append("    <element ");
-      xml.append("ref=\"" + encodedOid((SerialOid)oid) + "\"/>\n");
+      xml.append(attribute("objectType",rootOidDefault.getObjectType()));
+      xml.append(attribute("id",rootOidDefault.getIdentifier()));
+      xml.append("/>\n");
     }
     xml.append("  </multiple-association>\n");
   }

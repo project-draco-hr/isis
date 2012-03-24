@@ -6,10 +6,10 @@
     }
   }
 );
-  oidGenerator.convertTransientToPersistentOid(oid);
-  oid=oidGenerator.createTransientOid(new ExamplePojo());
-  oidGenerator.convertTransientToPersistentOid(oid);
+  oidGenerator.asPersistent(oid);
+  oid=(RootOidDefault)oidGenerator.createTransientOid(new ExamplePojo());
+  oidGenerator.asPersistent(oid);
   assertFalse(oid.isTransient());
-  assertEquals(2,oid.getSerialNo());
+  assertEquals(2,oid.getIdentifier());
   context.assertIsSatisfied();
 }

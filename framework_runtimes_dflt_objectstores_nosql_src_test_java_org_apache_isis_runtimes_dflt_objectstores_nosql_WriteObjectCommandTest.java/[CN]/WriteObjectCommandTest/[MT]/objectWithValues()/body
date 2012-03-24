@@ -3,7 +3,7 @@
 {
       one(commandContext).createStateWriter(specification.getFullIdentifier());
       will(returnValue(writer));
-      one(keyCreator).key(SerialOid.createPersistent(3));
+      one(keyCreator).key(RootOidDefault.create(objectType,"" + 3));
       will(returnValue("3"));
       one(writer).writeId("3");
       one(writer).writeType(specification.getFullIdentifier());
@@ -18,6 +18,6 @@
     }
   }
 );
-  new WriteObjectCommand(false,keyCreator,versionCreator,dataEncrypter,object1).execute(commandContext);
+  new WriteObjectCommand(false,keyCreator,versionCreator,dataEncrypter,adapter1).execute(commandContext);
   context.assertIsSatisfied();
 }

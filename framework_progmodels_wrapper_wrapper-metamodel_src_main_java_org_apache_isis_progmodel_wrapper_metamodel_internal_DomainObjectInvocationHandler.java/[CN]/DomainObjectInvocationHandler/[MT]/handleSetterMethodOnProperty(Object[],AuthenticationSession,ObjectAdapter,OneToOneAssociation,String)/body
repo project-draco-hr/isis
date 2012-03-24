@@ -4,16 +4,11 @@
   }
   resolveIfRequired(targetAdapter);
   final Object argumentObj=underlying(args[0]);
-  final ObjectAdapter argumentNO=argumentObj != null ? getAdapterManager().adapterFor(argumentObj) : null;
-  final InteractionResult interactionResult=otoa.isAssociationValid(targetAdapter,argumentNO).getInteractionResult();
+  final ObjectAdapter argumentAdapter=argumentObj != null ? getAdapterManager().adapterFor(argumentObj) : null;
+  final InteractionResult interactionResult=otoa.isAssociationValid(targetAdapter,argumentAdapter).getInteractionResult();
   notifyListenersAndVetoIfRequired(interactionResult);
   if (getExecutionMode() == ExecutionMode.EXECUTE) {
-    if (argumentNO != null) {
-      otoa.setAssociation(targetAdapter,argumentNO);
-    }
- else {
-      otoa.clearAssociation(targetAdapter);
-    }
+    otoa.set(targetAdapter,argumentAdapter);
   }
   objectChangedIfRequired(targetAdapter);
   return null;

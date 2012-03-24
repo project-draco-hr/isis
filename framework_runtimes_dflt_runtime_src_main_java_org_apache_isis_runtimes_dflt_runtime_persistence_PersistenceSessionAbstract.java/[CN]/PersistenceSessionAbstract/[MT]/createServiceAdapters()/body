@@ -3,25 +3,24 @@
   for (  final Object service : servicesInjector.getRegisteredServices()) {
     final ObjectSpecification serviceSpecification=specificationLoader.loadSpecification(service.getClass());
     serviceSpecification.markAsService();
-    final String serviceId=ServiceUtil.id(service);
-    final Oid existingOid=getOidForService(serviceSpecification,serviceId);
-    ObjectAdapter adapter;
+    final RootOid existingOid=getOidForService(serviceSpecification);
+    ObjectAdapter serviceAdapter;
     if (existingOid == null) {
-      adapter=getAdapterManager().adapterFor(service);
+      serviceAdapter=getAdapterManager().adapterFor(service);
     }
  else {
-      adapter=getAdapterManager().recreateRootAdapter(existingOid,service);
+      serviceAdapter=getAdapterManager().recreateAdapter(existingOid,service);
     }
-    if (adapter.getOid().isTransient()) {
-      adapterManager.remapAsPersistent(adapter);
+    if (serviceAdapter.getOid().isTransient()) {
+      adapterManager.remapAsPersistent(serviceAdapter);
     }
-    if (adapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
-      adapter.changeState(ResolveState.RESOLVING);
-      adapter.changeState(ResolveState.RESOLVED);
+    if (serviceAdapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+      serviceAdapter.changeState(ResolveState.RESOLVING);
+      serviceAdapter.changeState(ResolveState.RESOLVED);
     }
     if (existingOid == null) {
-      final Oid persistentOid=adapter.getOid();
-      registerService(serviceId,persistentOid);
+      final RootOid persistentOid=(RootOid)serviceAdapter.getOid();
+      registerService(persistentOid);
     }
   }
   getTransactionManager().endTransaction();

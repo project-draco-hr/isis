@@ -1,12 +1,8 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
-  final TestProxySystem system=new TestProxySystem();
-  system.init();
-  mockTransactionManager=mockery.mock(IsisTransactionManager.class);
-  mockMessageBroker=mockery.mock(MessageBroker.class);
-  mockUpdateNotifier=mockery.mock(UpdateNotifier.class);
-  os=new ObjectStoreSpy();
-  t=new ObjectStoreTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,os);
-  object1=system.createTransientTestObject();
-  object2=system.createTransientTestObject();
+  transaction=new ObjectStoreTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,mockObjectStore);
+  transientAdapter1=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("1").build();
+  transientAdapter2=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("2").build();
+  persistentAdapter1=PojoAdapterBuilder.create().with(Persistence.PERSISTENT).withIdentifier("3").build();
+  persistentAdapter2=PojoAdapterBuilder.create().with(Persistence.PERSISTENT).withIdentifier("4").build();
 }

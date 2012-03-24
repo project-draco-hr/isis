@@ -5,19 +5,20 @@
     oidType=oid.getClass();
   }
   String encodedOid;
-  if (oid instanceof OidWithSpecification) {
-    OidWithSpecification ows=(OidWithSpecification)oid;
+  if (oid instanceof RootOid) {
+    RootOid ows=(RootOid)oid;
     encodedOid=enString(ows);
   }
  else   if (oid instanceof AggregatedOid) {
     final AggregatedOid aoid=(AggregatedOid)oid;
-    final String aggregatedId=aoid.getId();
+    final String aggregatedId=aoid.getLocalId();
     final Oid parentOid=aoid.getParentOid();
     adapter=getAdapterManager().getAdapterFor(parentOid);
     encodedOid=enString(parentOid,aggregatedId);
   }
- else   if (oid instanceof SerialOid) {
-    encodedOid=Long.toString(((SerialOid)oid).getSerialNo(),16);
+ else   if (oid instanceof RootOidDefault) {
+    final RootOidDefault rootOidDefault=(RootOidDefault)oid;
+    encodedOid=rootOidDefault.getIdentifier();
   }
  else {
     throw new ScimpiException("Unsupported OID type " + oid);

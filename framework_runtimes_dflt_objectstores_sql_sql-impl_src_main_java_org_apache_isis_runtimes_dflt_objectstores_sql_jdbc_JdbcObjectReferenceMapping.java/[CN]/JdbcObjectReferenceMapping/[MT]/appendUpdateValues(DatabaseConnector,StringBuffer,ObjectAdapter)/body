@@ -1,10 +1,11 @@
 {
   sql.append(getColumn());
-  if (object == null) {
+  if (adapter == null) {
     sql.append("= NULL ");
   }
  else {
     sql.append("= ?");
-    connector.addToQueryValues(primaryKeyAsObject(object.getOid()));
+    final RootOid oid=(RootOid)adapter.getOid();
+    connector.addToQueryValues(primaryKey(oid));
   }
 }

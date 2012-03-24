@@ -1,0 +1,13 @@
+{
+  final ObjectSpecification specification=system.loadSpecification(TestPojo.class);
+  final boolean hasInstances=store.hasInstances(specification);
+  final ObjectAdapter[] instances=store.getInstances(new PersistenceQueryFindAllInstances(specification));
+  assertEquals(false,hasInstances);
+  assertEquals(0,instances.length);
+  try {
+    store.getObject(adapter2.getOid(),specification);
+    fail();
+  }
+ catch (  final ObjectNotFoundException expected) {
+  }
+}

@@ -1,13 +1,8 @@
 {
-  PrimaryKey key;
   final Object object=rs.getObject(column);
   if (object == null) {
     return null;
   }
- else {
-    final int id=((Integer)object).intValue();
-    key=new IntegerPrimaryKey(id);
-  }
-  final Oid oid=new SqlOid(specification.getFullIdentifier(),key,State.PERSISTENT);
-  return oid;
+  final int id=((Integer)object).intValue();
+  return new RootOidDefault(specification.getObjectType(),"" + id,Oid.State.PERSISTENT);
 }

@@ -6,8 +6,9 @@
       final String tag=isObject ? "isis" : "collection";
       xml.append("<" + tag);
       xml.append(attribute("type",data.getTypeName()));
-      xml.append(attribute("id","" + encodedOid(data.getOid())));
-      xml.append(attribute("user","" + IsisContext.getAuthenticationSession().getUserName()));
+      final RootOidDefault oid=data.getOid();
+      xml.append(attribute("id","" + oid.getIdentifier()));
+      xml.append(attribute("user","" + getAuthenticationSession().getUserName()));
       final long sequence=data.getVersion().getSequence();
       final String sequenceString=Long.toHexString(sequence).toUpperCase();
       xml.append(attribute("ver","" + sequenceString));

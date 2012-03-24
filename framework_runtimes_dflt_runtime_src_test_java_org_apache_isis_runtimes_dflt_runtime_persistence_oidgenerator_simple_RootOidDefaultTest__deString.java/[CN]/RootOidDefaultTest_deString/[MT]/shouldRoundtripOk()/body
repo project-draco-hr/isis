@@ -1,0 +1,9 @@
+{
+  final String identifier=Long.toString(Long.MIN_VALUE + 1,16);
+  final RootOidDefault oid=RootOidDefault.createTransient(objectType,identifier);
+  final String enString=oid.enString();
+  assertThat(enString,CoreMatchers.equalTo("TOID:CUS:" + identifier));
+  final RootOidDefault oid2=RootOidDefault.deString(enString);
+  assertThat(oid2.getIdentifier(),is(oid.getIdentifier()));
+  assertThat(oid2.isTransient(),is(oid.isTransient()));
+}

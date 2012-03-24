@@ -1,7 +1,8 @@
 {
   final StringBuffer sql=new StringBuffer();
   sql.append("delete from " + table + " WHERE ");
-  idMapping.appendWhereClause(connector,sql,object.getOid());
+  final RootOid oid=(RootOid)object.getOid();
+  idMapping.appendWhereClause(connector,sql,oid);
   sql.append(" AND ");
   sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)object.getVersion()));
   final int updateCount=connector.update(sql.toString());

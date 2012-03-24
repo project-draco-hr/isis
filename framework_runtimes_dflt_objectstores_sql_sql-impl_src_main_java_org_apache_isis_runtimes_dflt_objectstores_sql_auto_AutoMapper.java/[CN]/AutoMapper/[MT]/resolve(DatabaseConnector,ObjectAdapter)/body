@@ -6,7 +6,8 @@
   sql.append(",");
   sql.append(versionMapping.appendColumnNames());
   sql.append(" from " + table + " WHERE ");
-  idMapping.appendWhereClause(connector,sql,object.getOid());
+  final RootOid oid=(RootOid)object.getOid();
+  idMapping.appendWhereClause(connector,sql,oid);
   final Results rs=connector.select(sql.toString());
   if (rs.next()) {
     loadFields(object,rs);
@@ -17,6 +18,6 @@
   }
  else {
     rs.close();
-    throw new SqlObjectStoreException("Unable to load data from " + table + " with id "+ idMapping.primaryKey(object.getOid()));
+    throw new SqlObjectStoreException("Unable to load data from " + table + " with id "+ object.getOid().enString());
   }
 }

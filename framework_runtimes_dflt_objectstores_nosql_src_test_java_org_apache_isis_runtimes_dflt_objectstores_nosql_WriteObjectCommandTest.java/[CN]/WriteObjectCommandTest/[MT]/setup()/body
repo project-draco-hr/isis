@@ -1,32 +1,20 @@
 {
-  Logger.getRootLogger().setLevel(Level.OFF);
-  final TestProxySystemII system=new TestProxySystemII();
-  system.init();
-  testObjects=new TrialObjects();
-  final ExampleValuePojo pojo1=new ExampleValuePojo();
+  final ExamplePojoWithValues pojo1=new ExamplePojoWithValues();
+  final String objectType="EVP";
   pojo1.setName("Fred Smith");
   pojo1.setSize(108);
-  SerialOid oid=SerialOid.createPersistent(3);
-  object1=testObjects.createAdapter(pojo1,oid);
-  specification=object1.getSpecification();
-  final ExampleValuePojo pojo2=new ExampleValuePojo();
+  adapter1=system.recreateAdapter(pojo1,RootOidDefault.create(objectType,"3"));
+  final ExamplePojoWithValues pojo2=new ExamplePojoWithValues();
   pojo2.setName("John Brown");
-  oid=SerialOid.createPersistent(4);
-  object2=testObjects.createAdapter(pojo2,oid);
-  final ExampleReferencePojo pojo3=new ExampleReferencePojo();
+  adapter2=system.recreateAdapter(pojo2,RootOidDefault.create(objectType,"4"));
+  final ExamplePojoWithReferences pojo3=new ExamplePojoWithReferences();
   pojo3.setReference1(pojo1);
-  oid=SerialOid.createPersistent(5);
-  object3=testObjects.createAdapter(pojo3,oid);
-  final ExampleCollectionPojo pojo4=new ExampleCollectionPojo();
-  pojo4.getHomogenousCollection().add(pojo1);
-  pojo4.getHomogenousCollection().add(pojo2);
-  oid=SerialOid.createPersistent(6);
-  object4=testObjects.createAdapter(pojo4,oid);
-  context=new Mockery();
-  writer=context.mock(StateWriter.class);
-  commandContext=context.mock(NoSqlCommandContext.class);
-  keyCreator=context.mock(KeyCreator.class);
-  versionCreator=context.mock(VersionCreator.class);
+  adapter3=system.recreateAdapter(pojo3,RootOidDefault.create(objectType,"5"));
+  final ExamplePojoWithCollections adapter4=new ExamplePojoWithCollections();
+  adapter4.getHomogenousCollection().add(pojo1);
+  adapter4.getHomogenousCollection().add(pojo2);
+  object4=system.recreateAdapter(adapter4,RootOidDefault.create(objectType,"6"));
+  specification=adapter1.getSpecification();
   final Version version=new SerialNumberVersion(2,"username",null);
   context.checking(new Expectations(){
 {

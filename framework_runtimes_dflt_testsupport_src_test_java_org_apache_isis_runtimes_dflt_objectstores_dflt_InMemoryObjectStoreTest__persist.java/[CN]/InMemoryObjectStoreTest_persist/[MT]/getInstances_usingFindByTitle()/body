@@ -1,0 +1,17 @@
+{
+  final String titleString=adapter2.titleString();
+  ObjectAdapter[] retrievedInstance=store.getInstances(new PersistenceQueryFindByTitle(specification,titleString));
+  assertEquals(0,retrievedInstance.length);
+  final PersistenceCommand command=store.createCreateObjectCommand(adapter2);
+  assertEquals(adapter2,command.onObject());
+  store.execute(Collections.<PersistenceCommand>singletonList(command));
+  system.resetMaps();
+  retrievedInstance=store.getInstances(new PersistenceQueryFindByTitle(specification,titleString));
+  assertEquals(1,retrievedInstance.length);
+  final ObjectAdapter retrievedAdapter=retrievedInstance[0];
+  assertNotSame(adapter2,retrievedAdapter);
+  assertEquals(((TestPojo)adapter2.getObject()).getPropertyUsedForTitle(),((TestPojo)retrievedAdapter.getObject()).getPropertyUsedForTitle());
+  assertEquals(adapter2.getOid(),retrievedAdapter.getOid());
+  retrievedInstance=store.getInstances(new PersistenceQueryFindByTitle(specification,"some other title"));
+  assertEquals(0,retrievedInstance.length);
+}

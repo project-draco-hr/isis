@@ -5,15 +5,15 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("adding identity for adapter with oid=" + adapter.getOid());
   }
-  if (adapter.getResolveState().isValue()) {
+  if (adapter.isValue()) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("not mapping value adapter");
     }
     servicesInjector.injectDependencies(pojo);
     return adapter;
   }
-  final ObjectSpecification noSpec=adapter.getSpecification();
-  if (!adapter.isAggregated() || adapter.isAggregated() && !noSpec.isImmutable()) {
+  final ObjectSpecification objSpec=adapter.getSpecification();
+  if (!adapter.isParented() || adapter.isParented() && !objSpec.isImmutable()) {
     getPojoAdapterMap().add(pojo,adapter);
   }
   getOidAdapterMap().add(adapter.getOid(),adapter);

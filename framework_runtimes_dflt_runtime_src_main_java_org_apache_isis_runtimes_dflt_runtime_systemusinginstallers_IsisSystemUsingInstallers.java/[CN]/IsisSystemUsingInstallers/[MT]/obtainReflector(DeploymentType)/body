@@ -5,10 +5,5 @@
   }
   ensureThatState(reflectorInstaller,is(not(nullValue())),"reflector installer has not been injected and could not be looked up");
   reflectorInstaller.addFacetDecoratorInstaller(installerLookup.getInstaller(TransactionFacetDecoratorInstaller.class));
-  final String connection=getConfiguration().getString(SystemConstants.CLIENT_CONNECTION_KEY);
-  if (connection != null) {
-    final FacetDecoratorInstaller clientConnectionInstaller=installerLookup.clientConnectionInstaller(connection);
-    reflectorInstaller.addFacetDecoratorInstaller(clientConnectionInstaller);
-  }
   return reflectorInstaller.createReflector();
 }

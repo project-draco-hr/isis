@@ -1,0 +1,9 @@
+{
+  persistToObjectStore(adapter2);
+  system.resetMaps();
+  final PersistenceCommand command=store.createDestroyObjectCommand(adapter2);
+  assertEquals(adapter2,command.onObject());
+  store.execute(Collections.<PersistenceCommand>singletonList(command));
+  system.resetMaps();
+  assertEquals(false,store.hasInstances(specification));
+}

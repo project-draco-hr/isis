@@ -4,13 +4,13 @@
       final DatabaseConnector connection=((SqlExecutionContext)context).getConnection();
       LOG.debug("  save object " + object);
       if (object.getSpecification().isCollectionOrIsAggregated()) {
-        final ObjectAdapter parent=object.getAggregateRoot();
+        final ObjectAdapter parent=object.getAggregateRoot(getAdapterManager());
         LOG.debug("change to internal collection being persisted through parent");
         final Oid oid=object.getOid();
         if (oid instanceof AggregatedOid) {
           final AggregatedOid aoid=(AggregatedOid)oid;
           final ObjectMapping mapping2=objectMappingLookup.getMapping(parent,connection);
-          if (mapping2.saveCollection(connection,parent,aoid.getId()) == false) {
+          if (mapping2.saveCollection(connection,parent,aoid.getLocalId()) == false) {
             final ObjectMapping mapping=objectMappingLookup.getMapping(parent,connection);
             mapping.save(connection,object);
           }

@@ -1,10 +1,10 @@
 {
-  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(ExampleValuePojo.class);
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(ExamplePojoWithValues.class);
   reader2=context.mock(StateReader.class,"reader 2");
   context.checking(new Expectations(){
 {
       one(reader2).readObjectType();
-      will(returnValue(ExampleCollectionPojo.class.getName()));
+      will(returnValue(ExamplePojoWithCollections.class.getName()));
       one(reader2).readId();
       will(returnValue("5"));
       one(reader2).readEncrytionType();
@@ -37,10 +37,10 @@
   final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator,dataEncrypter);
   assertEquals(oid5,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
-  final ExampleCollectionPojo pojo=(ExampleCollectionPojo)readObject.getObject();
-  final List<ExampleValuePojo> collection2=pojo.getHomogenousCollection();
+  final ExamplePojoWithCollections pojo=(ExamplePojoWithCollections)readObject.getObject();
+  final List<ExamplePojoWithValues> collection2=pojo.getHomogenousCollection();
   assertEquals(2,collection2.size());
-  assertThat(collection2.get(0),CoreMatchers.instanceOf(ExampleValuePojo.class));
-  assertThat(collection2.get(1),CoreMatchers.instanceOf(ExampleValuePojo.class));
+  assertThat(collection2.get(0),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
+  assertThat(collection2.get(1),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
   context.assertIsSatisfied();
 }

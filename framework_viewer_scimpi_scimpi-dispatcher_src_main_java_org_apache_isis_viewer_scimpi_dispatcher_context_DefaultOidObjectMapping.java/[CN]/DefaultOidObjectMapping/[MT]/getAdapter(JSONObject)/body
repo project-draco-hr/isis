@@ -1,29 +1,25 @@
 {
-  final String cls=jsonObject.getString("_class");
+  final String objectType=jsonObject.getString("_objectType");
+  final ObjectSpecification objectSpec=getSpecificationLoader().lookupByObjectType(objectType);
   final String id=jsonObject.getString("_id");
-  final String oidTypeStr=jsonObject.getString("_oidType");
-  final Class<?> oidType=InstanceUtil.loadClass(oidTypeStr);
-  ObjectAdapter adapter;
-  final ObjectSpecification objectSpec=getSpecification(cls);
   if (objectSpec.isAggregated() && !objectSpec.isCollection()) {
     final String[] split=id.split("@");
     final String parentOidStr=split[0];
-    final String aggregatedId=split[1];
-    Oid parentOid;
-    if (OidWithSpecification.class.isAssignableFrom(oidType)) {
+    final String aggregatedLocalId=split[1];
+    RootOid parentOid;
+    if (RootOid.class.isAssignableFrom(oidType)) {
       parentOid=getOidStringifier().deString(parentOidStr);
     }
- else     if (SerialOid.class.isAssignableFrom(oidType)) {
-      parentOid=SerialOid.createTransient(Long.parseLong(parentOidStr,16));
+ else     if (RootOidDefault.class.isAssignableFrom(oidType)) {
+      parentOid=RootOidDefault.createTransient(objectType,parentOidStr);
     }
  else {
       throw new ScimpiException("Unsupported OID type " + oidType);
     }
-    final AggregatedOid oid=new AggregatedOid(parentOid,aggregatedId);
-    adapter=getPersistenceSession().recreateAdapter(oid,objectSpec);
+    final AggregatedOid oid=new AggregatedOid(parentOid,aggregatedLocalId);
+    return getPersistenceSession().recreateAdapter(oid,objectSpec);
   }
  else {
-    adapter=mappedObject("T" + cls + "@"+ id);
+    return mappedObject("T" + objectType + "@"+ id);
   }
-  return adapter;
 }

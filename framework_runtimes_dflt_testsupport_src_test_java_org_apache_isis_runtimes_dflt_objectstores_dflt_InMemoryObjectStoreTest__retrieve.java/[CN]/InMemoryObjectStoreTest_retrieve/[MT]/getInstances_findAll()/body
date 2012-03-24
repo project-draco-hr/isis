@@ -1,0 +1,10 @@
+{
+  persistToObjectStore(adapter2);
+  system.resetMaps();
+  final ObjectAdapter[] retrievedAdapters=store.getInstances(new PersistenceQueryFindAllInstances(specification));
+  assertEquals(1,retrievedAdapters.length);
+  final ObjectAdapter retrievedAdapter=retrievedAdapters[0];
+  assertNotSame(adapter2,retrievedAdapter);
+  assertEquals(((TestPojo)adapter2.getObject()).getPropertyUsedForTitle(),((TestPojo)retrievedAdapter.getObject()).getPropertyUsedForTitle());
+  assertEquals(adapter2.getOid(),retrievedAdapter.getOid());
+}

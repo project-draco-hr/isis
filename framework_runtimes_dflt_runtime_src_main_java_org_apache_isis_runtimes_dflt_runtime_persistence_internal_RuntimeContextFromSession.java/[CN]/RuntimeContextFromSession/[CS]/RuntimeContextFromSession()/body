@@ -12,11 +12,11 @@
     @Override public ObjectAdapter adapterFor(    final Object pojo){
       return getRuntimeAdapterManager().adapterFor(pojo);
     }
-    @Override public ObjectAdapter adapterForAggregated(    final Object domainObject,    final ObjectAdapter parent){
-      return getRuntimeAdapterManager().adapterForAggregated(domainObject,parent);
+    @Override public ObjectAdapter adapterFor(    final Object pojo,    final ObjectAdapter ownerAdapter){
+      return getRuntimeAdapterManager().adapterFor(pojo,ownerAdapter);
     }
-    @Override public ObjectAdapter adapterFor(    final Object pojo,    final ObjectAdapter ownerAdapter,    final IdentifiedHolder identifiedHolder){
-      return getRuntimeAdapterManager().adapterFor(pojo,ownerAdapter,identifiedHolder);
+    @Override public ObjectAdapter adapterFor(    final Object pojo,    final ObjectAdapter ownerAdapter,    final ObjectAssociation association){
+      return getRuntimeAdapterManager().adapterFor(pojo,ownerAdapter,association);
     }
   }
 ;
@@ -56,7 +56,7 @@
       return getPersistenceSession().createInstance(spec);
     }
     @Override public ObjectAdapter createAggregatedInstance(    final ObjectSpecification spec,    final ObjectAdapter parent){
-      return getPersistenceSession().createAggregatedInstance(spec,parent);
+      return getPersistenceSession().createInstance(spec,parent);
     }
     @Override public void resolve(    final Object parent){
       new DomainObjectContainerResolve().resolve(parent);

@@ -1,5 +1,10 @@
 {
   final ObjectSpecification serviceSpecification=getSpecificationLoader().loadSpecification(servicePojo.getClass());
-  final Oid oid=getOidForService(serviceSpecification,ServiceUtil.id(servicePojo));
-  return recreateAdapterForExistingService(oid,servicePojo);
+  final RootOid oid=getOidForService(serviceSpecification);
+  final ObjectAdapter serviceAdapter=getAdapterManager().recreateAdapter(oid,servicePojo);
+  if (serviceAdapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    serviceAdapter.changeState(ResolveState.RESOLVING);
+    serviceAdapter.changeState(ResolveState.RESOLVED);
+  }
+  return serviceAdapter;
 }

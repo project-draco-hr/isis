@@ -1,12 +1,12 @@
 {
   final String parentOidStr;
-  if (oid instanceof OidWithSpecification) {
-    OidWithSpecification ows=(OidWithSpecification)oid;
+  if (oid instanceof RootOid) {
+    RootOid ows=(RootOid)oid;
     parentOidStr=enString(ows);
   }
- else   if (oid instanceof SerialOid) {
-    final SerialOid parentSerialOid=(SerialOid)oid;
-    parentOidStr=Long.toString(parentSerialOid.getSerialNo(),16);
+ else   if (oid instanceof RootOidDefault) {
+    final RootOidDefault parentSerialOid=(RootOidDefault)oid;
+    parentOidStr=parentSerialOid.getIdentifier();
   }
  else {
     throw new ScimpiException("Unsupported OID type " + oid);

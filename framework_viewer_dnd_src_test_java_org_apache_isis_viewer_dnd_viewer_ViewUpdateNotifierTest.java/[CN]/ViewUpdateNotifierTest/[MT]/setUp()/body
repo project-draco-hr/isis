@@ -1,16 +1,7 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
   servicesList=Collections.emptyList();
-  mockTemplateImageLoader=mockery.mock(TemplateImageLoader.class);
-  mockSpecificationLoader=mockery.mock(SpecificationLoader.class);
-  mockUserProfileLoader=mockery.mock(UserProfileLoader.class);
-  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
-  mockPersistenceSession=mockery.mock(PersistenceSession.class);
-  mockTransactionManager=mockery.mock(IsisTransactionManager.class);
-  mockTransaction=mockery.mock(IsisTransaction.class);
-  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
-  mockAuthorizationManager=mockery.mock(AuthorizationManager.class);
-  mockery.checking(new Expectations(){
+  context.checking(new Expectations(){
 {
       ignoring(mockTemplateImageLoader);
       ignoring(mockSpecificationLoader);
@@ -36,5 +27,4 @@
   IsisContextStatic.createRelaxedInstance(sessionFactory);
   IsisContext.openSession(new ExplorationSession());
   notifier=new ExposedViewUpdateNotifier();
-  object=new TestProxyAdapter();
 }

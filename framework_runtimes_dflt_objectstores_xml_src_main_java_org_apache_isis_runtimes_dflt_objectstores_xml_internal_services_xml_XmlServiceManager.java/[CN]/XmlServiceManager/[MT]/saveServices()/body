@@ -3,12 +3,12 @@
     @Override public void write(    final Writer writer) throws IOException {
       final String tag=SERVICES_FILE_NAME;
       writer.append("<" + tag + ">\n");
-      for (final Enumeration e=services.elements(); e.hasMoreElements(); ) {
-        final ServiceElement element=(ServiceElement)e.nextElement();
-        writer.append("  <service oid=\"");
-        writer.append(encodedOid(element.oid));
-        writer.append("\" id=\"");
-        writer.append(element.id);
+      for (      final ServiceElement element : services) {
+        writer.append("  <service");
+        writer.append("\" objectType=\"");
+        writer.append(element.oid.getObjectType());
+        writer.append(" id=\"");
+        writer.append(element.oid.getIdentifier());
         writer.append("\" />\n");
       }
       writer.append("</" + tag + ">\n");

@@ -4,7 +4,9 @@
   }
   final List<ObjectAssociation> fields=object.getSpecification().getAssociations();
   if (!object.getSpecification().isEncodeable() && fields.size() > 0) {
-    LOG.debug("make persistent " + object);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("make persistent " + object);
+    }
     CallbackUtils.callCallback(object,PersistingCallbackFacet.class);
     toPersistObjectSet.remapAsPersistent(object);
     object.changeState(ResolveState.SERIALIZING_RESOLVED);

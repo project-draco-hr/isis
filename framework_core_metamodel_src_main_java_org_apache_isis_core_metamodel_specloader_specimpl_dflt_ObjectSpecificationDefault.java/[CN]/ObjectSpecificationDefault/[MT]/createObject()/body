@@ -1,0 +1,11 @@
+{
+  if (getCorrespondingClass().isArray()) {
+    return Array.newInstance(getCorrespondingClass().getComponentType(),0);
+  }
+  try {
+    return getObjectInstantiator().instantiate(getCorrespondingClass());
+  }
+ catch (  final ObjectInstantiationException e) {
+    throw new IsisException("Failed to create instance of type " + getFullIdentifier(),e);
+  }
+}

@@ -5,13 +5,10 @@
       data.setLength(0);
     }
  else     if (tagName.equals("association")) {
-      final String fieldName=attributes.getValue("field");
-      final long id=Long.valueOf(attributes.getValue("ref"),16).longValue();
-      object.set(fieldName,SerialOid.createPersistent(id));
+      object.set(attributes.getValue("field"),oidFrom(attributes));
     }
  else     if (tagName.equals("element")) {
-      final long id=Long.valueOf(attributes.getValue("ref"),16).longValue();
-      object.addElement(fieldName,SerialOid.createPersistent(id));
+      object.addElement(fieldName,oidFrom(attributes));
     }
  else     if (tagName.equals("multiple-association")) {
       fieldName=attributes.getValue("field");
@@ -20,28 +17,21 @@
   }
  else   if (collection != null) {
     if (tagName.equals("element")) {
-      final long id=Long.valueOf(attributes.getValue("ref"),16).longValue();
-      collection.addElement(SerialOid.createPersistent(id));
+      collection.addElement(oidFrom(attributes));
     }
   }
  else {
     if (tagName.equals("isis")) {
-      final String typeName=attributes.getValue("type");
-      final long version=Long.valueOf(attributes.getValue("ver"),16).longValue();
-      final String user=attributes.getValue("user");
-      final long id=Long.valueOf(attributes.getValue("id"),16).longValue();
-      final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(typeName);
-      final SerialOid oid=SerialOid.createPersistent(id);
-      object=new ObjectData(spec,oid,new FileVersion(user,version));
+      final ObjectSpecification spec=objSpecFrom(attributes);
+      final RootOidDefault oid=oidFrom(attributes);
+      final FileVersion fileVersion=fileVersionFrom(attributes);
+      object=new ObjectData(spec,oid,fileVersion);
     }
  else     if (tagName.equals("collection")) {
-      final String type=attributes.getValue("type");
-      final long version=Long.valueOf(attributes.getValue("ver"),16).longValue();
-      final String user=attributes.getValue("user");
-      final long id=Long.valueOf(attributes.getValue("id"),16).longValue();
-      final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(type);
-      final SerialOid oid=SerialOid.createPersistent(id);
-      collection=new CollectionData(spec,oid,new FileVersion(user,version));
+      final ObjectSpecification spec=objSpecFrom(attributes);
+      final RootOidDefault oid=oidFrom(attributes);
+      final FileVersion fileVersion=fileVersionFrom(attributes);
+      collection=new CollectionData(spec,oid,fileVersion);
     }
  else {
       throw new SAXException("Invalid data");

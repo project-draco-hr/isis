@@ -3,7 +3,10 @@
   final ReferenceVector refs=collection.references();
   for (int i=0; i < refs.size(); i++) {
     final Object oid=refs.elementAt(i);
-    xml.append("  <element ");
-    xml.append("ref=\"" + encodedOid((SerialOid)oid) + "\"/>\n");
+    xml.append("  <element");
+    final RootOidDefault rootOidDefault=(RootOidDefault)oid;
+    xml.append(attribute("objectType",rootOidDefault.getObjectType()));
+    xml.append(attribute("id",rootOidDefault.getIdentifier()));
+    xml.append("/>\n");
   }
 }

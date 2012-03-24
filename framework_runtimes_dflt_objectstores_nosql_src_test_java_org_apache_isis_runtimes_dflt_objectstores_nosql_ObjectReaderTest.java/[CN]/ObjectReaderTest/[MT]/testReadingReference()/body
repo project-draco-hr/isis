@@ -3,7 +3,7 @@
   context.checking(new Expectations(){
 {
       one(reader2).readObjectType();
-      will(returnValue(ExampleReferencePojo.class.getName()));
+      will(returnValue(ExamplePojoWithReferences.class.getName()));
       one(reader2).readId();
       will(returnValue("4"));
       one(reader2).readEncrytionType();
@@ -33,8 +33,8 @@
   final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator,dataEncrypter);
   assertEquals(oid4,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
-  final ExampleReferencePojo pojo=(ExampleReferencePojo)readObject.getObject();
+  final ExamplePojoWithReferences pojo=(ExamplePojoWithReferences)readObject.getObject();
   assertEquals(null,pojo.getReference2());
-  assertThat(pojo.getReference1(),CoreMatchers.instanceOf(ExampleValuePojo.class));
+  assertThat(pojo.getReference1(),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
   context.assertIsSatisfied();
 }

@@ -1,0 +1,19 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  Locale.setDefault(Locale.UK);
+  persistor=new ObjectFixtureFilePersistor();
+  person=new Person();
+  person.setName("Fred Smith");
+  person.setDate(new Date(110,2,8,0,0));
+  context.checking(new Expectations(){
+{
+      allowing(mockEmbeddedContext).instantiate(Person.class);
+      will(returnValue(new Person()));
+      allowing(mockEmbeddedContext).getPersistenceState(with(any(String.class)));
+      will(returnValue(PersistenceState.STANDALONE));
+      allowing(mockEmbeddedContext).getAuthenticationSession();
+      will(returnValue(mockAuthenticationSession));
+    }
+  }
+);
+}

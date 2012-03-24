@@ -21,10 +21,10 @@
       final PersistenceState persistenceState=context.getPersistenceState(domainObject);
       return new StandaloneAdapter(domainObjectSpec,domainObject,persistenceState);
     }
-    @Override public ObjectAdapter adapterFor(    final Object domainObject,    final ObjectAdapter ownerAdapter,    final IdentifiedHolder identifiedHolder){
+    @Override public ObjectAdapter adapterFor(    final Object domainObject,    final ObjectAdapter ownerAdapter){
       return adapterFor(domainObject);
     }
-    @Override public ObjectAdapter adapterForAggregated(    final Object domainObject,    final ObjectAdapter parent){
+    @Override public ObjectAdapter adapterFor(    final Object domainObject,    final ObjectAdapter ownerAdapter,    final ObjectAssociation association){
       return adapterFor(domainObject);
     }
     @Override public ObjectAdapter getAdapterFor(    final Object domainObject){
@@ -64,8 +64,9 @@
 ;
   this.domainObjectServices=new DomainObjectServicesAbstract(){
     @Override public ObjectAdapter createTransientInstance(    final ObjectSpecification spec){
-      final Object domainObject=spec.createObject(CreationMode.INITIALIZE);
-      return adapterMap.adapterFor(domainObject);
+      final Object domainObject=spec.createObject();
+      final ObjectAdapter adapter=adapterMap.adapterFor(domainObject);
+      return spec.initialize(adapter);
     }
     @Override public ObjectAdapter createAggregatedInstance(    final ObjectSpecification spec,    final ObjectAdapter parent){
       throw new UnsupportedOperationException("Not yet supported by this implementation of RuntimeContext");

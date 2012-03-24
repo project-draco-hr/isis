@@ -1,0 +1,15 @@
+{
+  final String objectType=serviceSpec.getObjectType();
+  RootOid oid=servicesByObjectType.get(objectType);
+  if (oid == null) {
+    final String id=database.getService(objectType);
+    if (id == null) {
+      oid=null;
+    }
+ else {
+      oid=keyCreator.oid(serviceSpec,id);
+    }
+    servicesByObjectType.put(objectType,oid);
+  }
+  return oid;
+}

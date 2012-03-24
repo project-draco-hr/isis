@@ -1,0 +1,17 @@
+{
+  final String jdbcDriver=configuration.getString(SqlObjectStore.BASE_NAME + ".jdbc.driver");
+  if (jdbcDriver != null) {
+    return new SqlPersistorInstaller();
+  }
+  final String persistor=configuration.getString("isis.persistor");
+  if (persistor.equals(InMemoryPersistenceMechanismInstaller.NAME)) {
+    return new InMemoryPersistenceMechanismInstaller();
+  }
+  if (persistor.equals(XmlPersistenceMechanismInstaller.NAME)) {
+    return new XmlPersistenceMechanismInstaller();
+  }
+  if (persistor.equals(SqlPersistorInstaller.NAME)) {
+    return new SqlPersistorInstaller();
+  }
+  return new InMemoryPersistenceMechanismInstaller();
+}

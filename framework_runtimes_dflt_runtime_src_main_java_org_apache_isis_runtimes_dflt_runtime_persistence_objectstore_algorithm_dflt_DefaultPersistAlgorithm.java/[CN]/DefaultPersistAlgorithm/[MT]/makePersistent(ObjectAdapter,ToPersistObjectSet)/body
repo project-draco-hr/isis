@@ -1,20 +1,22 @@
 {
-  if (object.getSpecification().isCollection()) {
-    LOG.debug("persist " + object);
-    if (object.getResolveState() == ResolveState.GHOST) {
-      object.changeState(ResolveState.RESOLVING);
-      object.changeState(ResolveState.RESOLVED);
+  if (adapter.getSpecification().isCollection()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("persist " + adapter);
     }
- else     if (object.getResolveState() == ResolveState.TRANSIENT) {
-      object.changeState(ResolveState.RESOLVED);
+    if (adapter.getResolveState() == ResolveState.GHOST) {
+      adapter.changeState(ResolveState.RESOLVING);
+      adapter.changeState(ResolveState.RESOLVED);
     }
-    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(object);
-    for (    final ObjectAdapter element : facet.iterable(object)) {
+ else     if (adapter.getResolveState() == ResolveState.TRANSIENT) {
+      adapter.changeState(ResolveState.RESOLVED);
+    }
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(adapter);
+    for (    final ObjectAdapter element : facet.iterable(adapter)) {
       persist(element,toPersistObjectSet);
     }
   }
  else {
-    assertObjectNotPersistentAndPersistable(object);
-    persist(object,toPersistObjectSet);
+    assertObjectNotPersistentAndPersistable(adapter);
+    persist(adapter,toPersistObjectSet);
   }
 }

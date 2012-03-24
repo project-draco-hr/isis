@@ -6,12 +6,12 @@
     }
   }
 );
-  oidGenerator.convertTransientToPersistentOid(oid);
-  oidGenerator.convertTransientToPersistentOid(oid=oidGenerator.createTransientOid(new ExamplePojo()));
-  oidGenerator.convertTransientToPersistentOid(oid=oidGenerator.createTransientOid(new ExamplePojo()));
-  assertEquals(3,oid.getSerialNo());
-  oidGenerator.convertTransientToPersistentOid(oid=oidGenerator.createTransientOid(new ExamplePojo()));
-  assertEquals(4,oid.getSerialNo());
+  oidGenerator.asPersistent(oid);
+  oidGenerator.asPersistent(oid=(RootOidDefault)oidGenerator.createTransientOid(new ExamplePojo()));
+  oidGenerator.asPersistent(oid=(RootOidDefault)oidGenerator.createTransientOid(new ExamplePojo()));
+  assertEquals(3,oid.getIdentifier());
+  oidGenerator.asPersistent(oid=(RootOidDefault)oidGenerator.createTransientOid(new ExamplePojo()));
+  assertEquals(4,oid.getIdentifier());
   context.checking(new Expectations(){
 {
       one(db).nextSerialNumberBatch("_id",4);
@@ -19,8 +19,8 @@
     }
   }
 );
-  oidGenerator.convertTransientToPersistentOid(oid=oidGenerator.createTransientOid(new ExamplePojo()));
+  oidGenerator.asPersistent(oid=(RootOidDefault)oidGenerator.createTransientOid(new ExamplePojo()));
   assertFalse(oid.isTransient());
-  assertEquals(5,oid.getSerialNo());
+  assertEquals(5,oid.getIdentifier());
   context.assertIsSatisfied();
 }

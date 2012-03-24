@@ -1,0 +1,17 @@
+{
+  final Sequence tran=context.sequence("tran");
+  context.checking(new Expectations(){
+{
+      one(mockObjectStore).startTransaction();
+      inSequence(tran);
+      one(mockObjectStore).createDestroyObjectCommand(persistentAdapter);
+      inSequence(tran);
+      one(mockObjectStore).abortTransaction();
+      inSequence(tran);
+    }
+  }
+);
+  transactionManager.startTransaction();
+  persistenceSession.destroyObject(persistentAdapter);
+  transactionManager.abortTransaction();
+}

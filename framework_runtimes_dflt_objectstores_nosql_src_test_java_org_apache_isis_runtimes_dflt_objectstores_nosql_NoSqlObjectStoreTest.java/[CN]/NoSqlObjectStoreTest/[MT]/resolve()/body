@@ -2,13 +2,13 @@
   specification=IsisContext.getSpecificationLoader().loadSpecification(ExamplePojo.class);
   context.checking(new Expectations(){
 {
-      one(keyCreator).key(SerialOid.createPersistent(3));
+      one(keyCreator).key(RootOidDefault.create(objectType,"" + 3));
       will(returnValue("3"));
-      one(db).getInstance("3",specification.getFullIdentifier());
+      one(db).getInstance("3",specification.getObjectType());
     }
   }
 );
-  object=IsisContext.getPersistenceSession().recreateAdapter(SerialOid.createPersistent(3),specification);
+  object=IsisContext.getPersistenceSession().recreateAdapter(RootOidDefault.create(objectType,"" + 3),specification);
   assertEquals(ResolveState.GHOST,object.getResolveState());
   store.resolveImmediately(object);
   assertEquals(ResolveState.RESOLVED,object.getResolveState());

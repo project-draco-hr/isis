@@ -1,5 +1,5 @@
 {
-  final SerialNumberVersion version=(SerialNumberVersion)object.getVersion();
+  final SerialNumberVersion version=(SerialNumberVersion)adapter.getVersion();
   final long nextSequence;
   if (useVersioning) {
     nextSequence=version.getSequence() + 1;
@@ -10,27 +10,28 @@
   final StringBuffer sql=new StringBuffer();
   sql.append("UPDATE " + table + " SET ");
   for (  final FieldMapping mapping : fieldMappingByField.values()) {
-    mapping.appendUpdateValues(connector,sql,object);
+    mapping.appendUpdateValues(connector,sql,adapter);
     sql.append(", ");
   }
   sql.append(versionMapping.updateAssigment(connector,nextSequence));
   sql.append(", ");
-  titleMapping.appendUpdateAssignment(connector,sql,object);
+  titleMapping.appendUpdateAssignment(connector,sql,adapter);
   sql.append(" WHERE ");
-  idMapping.appendWhereClause(connector,sql,object.getOid());
+  final RootOid oid=(RootOid)adapter.getOid();
+  idMapping.appendWhereClause(connector,sql,oid);
   if (useVersioning) {
     sql.append(" AND ");
-    sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)object.getVersion()));
+    sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)adapter.getVersion()));
   }
   final int updateCount=connector.update(sql.toString());
   if (updateCount == 0) {
     LOG.info("concurrency conflict object " + this + "; no update performed");
-    throw new ConcurrencyException("",object.getOid());
+    throw new ConcurrencyException("",adapter.getOid());
   }
  else {
-    object.setOptimisticLock(createVersion(nextSequence));
+    adapter.setVersion(createVersion(nextSequence));
   }
   for (  final CollectionMapper collectionMapper : collectionMappers) {
-    collectionMapper.saveInternalCollection(connector,object);
+    collectionMapper.saveInternalCollection(connector,adapter);
   }
 }

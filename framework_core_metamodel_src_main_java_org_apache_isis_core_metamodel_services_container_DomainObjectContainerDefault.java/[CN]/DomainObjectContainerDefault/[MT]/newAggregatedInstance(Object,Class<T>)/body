@@ -1,13 +1,13 @@
 {
   final ObjectSpecification spec=getSpecificationLookup().loadSpecification(ofClass);
   if (!spec.isAggregated()) {
-    throw new IsisException("Cannot instantiate an object unless it is marked as Aggregated using the newAggregatedInstance method: " + ofClass);
+    throw new IsisException("Type must be annotated as @Aggregated: " + ofClass);
   }
   final ObjectAdapter adapter=doCreateAggregatedInstance(spec,parent);
   if (adapter.getOid() instanceof AggregatedOid) {
     return (T)adapter.getObject();
   }
  else {
-    throw new IsisException("Object instatiated but was not given a AggregatedOid: " + ofClass);
+    throw new IsisException("Object instantiated but was not given a AggregatedOid (does the configured object store support aggregates?): " + ofClass);
   }
 }

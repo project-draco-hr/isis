@@ -1,0 +1,11 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  fixtures=new Fixtures();
+  isisSystem=createIsisSystem();
+  isisSystem.init();
+  final AuthenticationManager authenticationManager=isisSystem.getSessionFactory().getAuthenticationManager();
+  authenticationSession=authenticationManager.authenticate(createAuthenticationRequest());
+  IsisContext.openSession(authenticationSession);
+  container=IsisContext.getPersistenceSession().getServicesInjector().getContainer();
+  fixtures.init(container);
+}

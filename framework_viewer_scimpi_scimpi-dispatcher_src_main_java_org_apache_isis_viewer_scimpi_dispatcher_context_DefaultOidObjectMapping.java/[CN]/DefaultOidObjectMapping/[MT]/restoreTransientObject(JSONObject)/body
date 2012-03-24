@@ -1,7 +1,7 @@
 {
   ObjectAdapter adapter=getAdapter(jsonObject);
-  final String clsName=jsonObject.getString("_class");
-  final ObjectSpecification specification=getSpecification(clsName);
+  final String objectType=jsonObject.getString("_objectType");
+  final ObjectSpecification specification=getSpecificationLoader().lookupByObjectType(objectType);
   for (  final ObjectAssociation association : specification.getAssociations()) {
     final String fieldName=association.getId();
     final Object fieldValue=jsonObject.has(fieldName) ? jsonObject.get(fieldName) : null;

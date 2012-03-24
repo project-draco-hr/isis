@@ -2,27 +2,21 @@
   final JSONObject data=new JSONObject();
   final Oid oid=adapter.getOid();
   data.put("_oidType",oid.getClass().getName());
-  if (oid instanceof OidWithSpecification) {
-    OidWithSpecification ows=(OidWithSpecification)oid;
-    data.put("_class",ows.getClassName());
+  if (oid instanceof RootOid) {
+    RootOid ows=(RootOid)oid;
+    data.put("_objectType",ows.getObjectType());
     data.put("_id",enString(ows));
     return data;
   }
   final ObjectSpecification objectSpec=adapter.getSpecification();
-  data.put("_class",objectSpec.getFullIdentifier());
-  String encodedOid;
-  if (oid instanceof AggregatedOid) {
-    final AggregatedOid aoid=(AggregatedOid)oid;
-    final Oid parentOid=aoid.getParentOid();
-    final String aggregatedId=aoid.getId();
-    encodedOid=enString(parentOid,aggregatedId);
-  }
- else   if (oid instanceof SerialOid) {
-    encodedOid=Long.toString(((SerialOid)oid).getSerialNo(),16);
-  }
- else {
+  data.put("_objectType",objectSpec.getObjectType());
+  if (!(oid instanceof AggregatedOid)) {
     throw new ScimpiException("Unsupported OID type " + oid);
   }
+  final AggregatedOid aoid=(AggregatedOid)oid;
+  final Oid parentOid=aoid.getParentOid();
+  final String aggregatedId=aoid.getLocalId();
+  String encodedOid=enString(parentOid,aggregatedId);
   data.put("_id",encodedOid);
   return data;
 }

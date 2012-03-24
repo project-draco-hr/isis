@@ -1,0 +1,21 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  TestSystemExpectations.allowingUserProfileLoaderToCreateUserProfile(context,mockUserProfileStore,mockUserProfile);
+  TestSystemExpectations.allowingUserProfileToReturnLocalization(context,mockUserProfile,mockLocalization);
+  isisMetaModel=new IsisMetaModel(mockEmbeddedContext,new TestPojoRepository(),new ExamplePojoRepository());
+  isisMetaModel.init();
+  system=new TestSystem(isisMetaModel);
+  final PersistenceMechanismInstaller persistenceMechanismInstaller=createPersistenceMechanismInstaller();
+  isisMetaModel.getConfiguration().injectInto(persistenceMechanismInstaller);
+  system.openSession(mockUserProfileStore,persistenceMechanismInstaller);
+  store=system.getObjectStore(ObjectStore.class);
+  specification=system.loadSpecification(TestPojo.class);
+  serviceSpecification=system.loadSpecification(TestPojoRepository.class);
+  testPojo1=new TestPojo();
+  testPojo1.setPropertyUsedForTitle("object 1");
+  adapter1=system.createTransient(testPojo1,RootOidDefault.createTransient("CUS|1"));
+  testPojo2=new TestPojo();
+  testPojo2.setPropertyUsedForTitle("object 2");
+  adapter2=system.recreateAdapter(testPojo2,RootOidDefault.create("CUS|2"));
+  adapter2.setVersion(new SerialNumberVersion(1,"USER",new Date(0)));
+}
