@@ -1,0 +1,14 @@
+{
+  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  allowingObjectSpecCorrespondingClassIs(String.class);
+  representation=new JsonRepresentation(TextNode.valueOf("aString"));
+  context.checking(new Expectations(){
+{
+      one(encodableFacet).fromEncodedString("aString");
+      will(returnValue(objectAdapter));
+    }
+  }
+);
+  final ObjectAdapter adapter=jsonValueEncoder.asAdapter(objectSpec,representation);
+  assertSame(objectAdapter,adapter);
+}

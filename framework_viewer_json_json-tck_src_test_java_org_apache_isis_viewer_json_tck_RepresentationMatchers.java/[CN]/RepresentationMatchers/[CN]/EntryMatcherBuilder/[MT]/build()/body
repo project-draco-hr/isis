@@ -1,0 +1,24 @@
+{
+  return new TypeSafeMatcher<JsonRepresentation>(){
+    @Override public void describeTo(    final Description description){
+      description.appendText("map with entry with key: " + key);
+      if (value != null) {
+        description.appendText(", and value: " + value);
+      }
+    }
+    @Override public boolean matchesSafely(    final JsonRepresentation item){
+      if (!item.isMap()) {
+        return false;
+      }
+      final String val=item.getString(key);
+      if (val == null) {
+        return false;
+      }
+      if (value != null && !value.equals(val)) {
+        return false;
+      }
+      return true;
+    }
+  }
+;
+}

@@ -1,0 +1,23 @@
+{
+  final DataOutputStreamExtended mockOutputImpl=mockery.mock(DataOutputStreamExtended.class);
+  final Oid oid1=element1.getOid();
+  final Oid oid2=element1.getOid();
+  mockery.checking(new Expectations(){
+{
+      one(mockOutputImpl).writeUTF(TestObject.class.getName());
+      one(mockOutputImpl).writeUTF(ResolveState.RESOLVED.name());
+      one(mockOutputImpl).writeEncodable(oid);
+      one(mockOutputImpl).writeUTF(TestObject[].class.getName());
+      one(mockOutputImpl).writeInt(2);
+      one(mockOutputImpl).writeUTF(TestObject.class.getName());
+      one(mockOutputImpl).writeUTF(ResolveState.TRANSIENT.name());
+      one(mockOutputImpl).writeEncodable(oid1);
+      one(mockOutputImpl).writeUTF(TestObject.class.getName());
+      one(mockOutputImpl).writeUTF(ResolveState.TRANSIENT.name());
+      one(mockOutputImpl).writeEncodable(oid2);
+    }
+  }
+);
+  memento.encodedData(mockOutputImpl);
+  mockery.assertIsSatisfied();
+}

@@ -1,0 +1,18 @@
+{
+  final View[] cells=new View[rows * columns];
+  for (int row=0; row < rows; row++) {
+    for (int column=0; column < columns; column++) {
+      final int cellNo=acrossThenDown ? row * columns + column : column * rows + row;
+      View cell;
+      if (cellContents[cellNo] == null) {
+        cell=new BlankView(new NullContent());
+      }
+ else {
+        cell=new CompositeViewUsingBuilder(cellContents[cellNo],null,new Axes(),new StackLayout(),new CollectionElementBuilder(new IconElementFactory()));
+        cell=new ScrollBorder(cell);
+      }
+      cells[cellNo]=cell;
+      addView(cell);
+    }
+  }
+}

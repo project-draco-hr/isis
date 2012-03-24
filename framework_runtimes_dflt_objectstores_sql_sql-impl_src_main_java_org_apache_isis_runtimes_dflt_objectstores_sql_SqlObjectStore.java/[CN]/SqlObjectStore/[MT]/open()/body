@@ -1,0 +1,33 @@
+{
+  Sql.setMetaData(connectionPool.acquire().getMetaData());
+  if (!isInitialized) {
+    Defaults.initialise(BASE_NAME,IsisContext.getConfiguration());
+    Defaults.setPkIdLabel(Sql.identifier(Defaults.getPkIdLabel()));
+    Defaults.setIdColumn(Sql.identifier(Defaults.getIdColumn()));
+  }
+  final DebugBuilder debug=new DebugString();
+  connectionPool.debug(debug);
+  LOG.info("Database: " + debug);
+  objectMappingLookup.init();
+  final DatabaseConnector connector=connectionPool.acquire();
+  final String tableIdentifier=Sql.tableIdentifier(TABLE_NAME);
+  isInitialized=connector.hasColumn(tableIdentifier,Defaults.getPkIdLabel());
+  if (!isInitialized) {
+    if (connector.hasTable(tableIdentifier)) {
+      final StringBuffer sql=new StringBuffer();
+      sql.append("drop table ");
+      sql.append(tableIdentifier);
+      connector.update(sql.toString());
+    }
+    final StringBuffer sql=new StringBuffer();
+    sql.append("create table ");
+    sql.append(tableIdentifier);
+    sql.append(" (");
+    sql.append(Defaults.getPkIdLabel());
+    sql.append(" int, ");
+    sql.append(Defaults.getIdColumn());
+    sql.append(" varchar(255)");
+    sql.append(")");
+    connector.update(sql.toString());
+  }
+}

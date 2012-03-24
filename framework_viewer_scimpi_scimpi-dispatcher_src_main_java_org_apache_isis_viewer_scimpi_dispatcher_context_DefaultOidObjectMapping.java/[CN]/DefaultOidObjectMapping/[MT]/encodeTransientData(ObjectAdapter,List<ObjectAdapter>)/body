@@ -1,0 +1,42 @@
+{
+  if (savedObject.contains(adapter)) {
+    return null;
+  }
+  savedObject.add(adapter);
+  final JSONObject data=createJsonObject(adapter);
+  final ObjectSpecification specification=adapter.getSpecification();
+  for (  final ObjectAssociation association : specification.getAssociations()) {
+    final ObjectAdapter fieldValue=association.get(adapter);
+    final String fieldName=association.getId();
+    if (fieldValue == null) {
+      data.put(fieldName,(Object)null);
+    }
+ else     if (association.getSpecification().isEncodeable()) {
+      final EncodableFacet encodeableFacet=fieldValue.getSpecification().getFacet(EncodableFacet.class);
+      data.put(fieldName,encodeableFacet.toEncodedString(fieldValue));
+    }
+ else     if (association instanceof OneToManyAssociation) {
+      final List<JSONObject> collection=new ArrayList<JSONObject>();
+      final CollectionFacet facet=fieldValue.getSpecification().getFacet(CollectionFacet.class);
+      for (      final ObjectAdapter element : facet.iterable(fieldValue)) {
+        collection.add(encodeTransientData(element,savedObject));
+      }
+      data.put(fieldName,collection);
+    }
+ else {
+      if (fieldValue.isTransient() || fieldValue.isAggregated()) {
+        final JSONObject saveData=encodeTransientData(fieldValue,savedObject);
+        if (saveData == null) {
+          data.put(fieldName,mapObject(fieldValue,Scope.INTERACTION));
+        }
+ else {
+          data.put(fieldName,saveData);
+        }
+      }
+ else {
+        data.put(fieldName,mapObject(fieldValue,Scope.INTERACTION));
+      }
+    }
+  }
+  return data;
+}

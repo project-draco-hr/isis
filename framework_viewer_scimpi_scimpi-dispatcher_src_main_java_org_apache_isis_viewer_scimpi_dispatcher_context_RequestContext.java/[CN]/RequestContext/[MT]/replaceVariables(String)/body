@@ -1,0 +1,57 @@
+{
+  final int start=value.indexOf("${");
+  if (start == -1) {
+    return value;
+  }
+ else {
+    final int end=value.indexOf('}');
+    if (end == -1) {
+      throw new PropertyException("No closing brace in " + value.substring(start));
+    }
+ else     if (end < start) {
+      throw new PropertyException("Closing brace before opening brace in " + value.substring(end));
+    }
+    final String name=value.substring(start + 2,end);
+    if (name != null) {
+      final int pos=name.indexOf(":");
+      final String variableName=pos == -1 ? name : name.substring(0,pos);
+      final String qualifier=pos == -1 ? "none" : name.substring(pos);
+      Object replacementValue;
+      final boolean embed=qualifier.indexOf("embed") > -1;
+      if (embed) {
+        replacementValue="${" + variableName + "}";
+      }
+ else {
+        replacementValue=getParameter(variableName);
+        if (replacementValue == null) {
+          replacementValue=getVariable(variableName);
+        }
+        if (replacementValue == null) {
+          replacementValue=getBuiltIn(variableName);
+        }
+        if (replacementValue == null) {
+          final boolean ensureExists=qualifier.indexOf("optional") == -1;
+          if (ensureExists) {
+            throw new PropertyException("No value for the variable " + value.substring(start,end + 1));
+          }
+ else {
+            replacementValue="";
+          }
+        }
+      }
+      final boolean repeat=qualifier.indexOf("repeat") > -1;
+      if (repeat) {
+        value=value.substring(0,start) + replacementValue + value.substring(end + 1);
+        return replaceVariables(value);
+      }
+ else {
+        final String remainder=replaceVariables(value.substring(end + 1));
+        value=value.substring(0,start) + replacementValue + remainder;
+        return value;
+      }
+    }
+ else {
+      throw new PropertyException("No variable name speceified");
+    }
+  }
+}

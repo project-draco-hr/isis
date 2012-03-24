@@ -1,0 +1,49 @@
+{
+  return new Parser<List<List<String>>>(){
+    @Override public List<List<String>> valueOf(    final List<String> str){
+      if (str == null) {
+        return null;
+      }
+      if (str.size() == 0) {
+        return null;
+      }
+      final List<List<String>> listOfLists=Lists.newArrayList();
+      for (      final String s : str) {
+        final Iterable<String> split=Splitter.on('.').split(s);
+        listOfLists.add(Lists.newArrayList(split));
+      }
+      return listOfLists;
+    }
+    @Override public List<List<String>> valueOf(    final String[] str){
+      if (str == null) {
+        return null;
+      }
+      if (str.length == 0) {
+        return null;
+      }
+      return valueOf(Arrays.asList(str));
+    }
+    @Override public List<List<String>> valueOf(    final String str){
+      if (str == null || str.isEmpty()) {
+        return Collections.emptyList();
+      }
+      final Iterable<String> listOfStrings=Splitter.on(',').split(str);
+      return Lists.transform(Lists.newArrayList(listOfStrings),new Function<String,List<String>>(){
+        @Override public List<String> apply(        final String input){
+          return Lists.newArrayList(Splitter.on('.').split(input));
+        }
+      }
+);
+    }
+    @Override public String asString(    final List<List<String>> listOfLists){
+      final List<String> listOfStrings=Lists.transform(listOfLists,new Function<List<String>,String>(){
+        @Override public String apply(        final List<String> listOfStrings){
+          return Joiner.on('.').join(listOfStrings);
+        }
+      }
+);
+      return Joiner.on(',').join(listOfStrings);
+    }
+  }
+;
+}

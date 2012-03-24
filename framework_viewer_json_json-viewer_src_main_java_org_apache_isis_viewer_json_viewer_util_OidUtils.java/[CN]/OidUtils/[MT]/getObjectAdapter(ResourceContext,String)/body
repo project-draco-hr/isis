@@ -1,0 +1,13 @@
+{
+  final String oidStr=UrlDecoderUtils.urlDecode(oidEncodedStr);
+  final Oid oid=resourceContext.getOidStringifier().deString(oidStr);
+  final ObjectAdapter adapterFor=resourceContext.getObjectAdapterLookup().getAdapterFor(oid);
+  if (adapterFor != null) {
+    return adapterFor;
+  }
+  if (!(oid instanceof OidWithSpecification)) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_IMPLEMENTED,"JSON viewer only supports objectstores that have Oids that are self-describing (implement OidWithSpecification)");
+  }
+  final OidWithSpecification oidWithSpec=(OidWithSpecification)oid;
+  return resourceContext.getPersistenceSession().recreateAdapter(oidWithSpec);
+}

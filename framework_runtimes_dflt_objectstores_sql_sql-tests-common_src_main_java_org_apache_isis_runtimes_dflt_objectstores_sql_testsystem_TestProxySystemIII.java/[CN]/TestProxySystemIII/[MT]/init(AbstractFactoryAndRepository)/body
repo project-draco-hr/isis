@@ -1,0 +1,40 @@
+{
+  servicesList=new ArrayList<Object>();
+  servicesList.add(factory);
+  final TemplateImageLoader mockTemplateImageLoader=mockery.mock(TemplateImageLoader.class);
+  final UserProfileLoader mockUserProfileLoader=mockery.mock(UserProfileLoader.class);
+  final AuthenticationManager mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
+  final AuthorizationManager mockAuthorizationManager=mockery.mock(AuthorizationManager.class);
+  mockery.checking(new Expectations(){
+{
+      ignoring(mockTemplateImageLoader);
+      ignoring(mockUserProfileLoader);
+      ignoring(mockAuthenticationManager);
+      ignoring(mockAuthorizationManager);
+    }
+  }
+);
+  SpecificationLoader mockSpecificationLoader;
+  final JavaReflectorInstaller javaReflectorInstaller=new JavaReflectorInstaller();
+  javaReflectorInstaller.setConfiguration(configuration);
+  mockSpecificationLoader=javaReflectorInstaller.createReflector();
+  ((ObjectReflectorDefault)mockSpecificationLoader).setRuntimeContext(new RuntimeContextFromSession());
+  if (configuration.getString(SqlObjectStore.BASE_NAME + ".jdbc.driver") == null) {
+    if (configuration.getString("isis.persistor") == "in-memory") {
+      persistenceMechanismInstaller=new InMemoryPersistenceMechanismInstaller();
+    }
+ else {
+      persistenceMechanismInstaller=new XmlPersistenceMechanismInstaller();
+    }
+  }
+ else {
+    persistenceMechanismInstaller=new SqlPersistorInstaller();
+  }
+  persistenceMechanismInstaller.setConfiguration(configuration);
+  final PersistenceSessionFactory persistenceSessionFactory=persistenceMechanismInstaller.createPersistenceSessionFactory(DeploymentType.PROTOTYPE);
+  sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,persistenceSessionFactory,servicesList);
+  context=IsisContextStatic.createRelaxedInstance(sessionFactory);
+  IsisContext.setConfiguration(sessionFactory.getConfiguration());
+  sessionFactory.init();
+  context.openSessionInstance(new SimpleSession("tester",new String[0],"001"));
+}

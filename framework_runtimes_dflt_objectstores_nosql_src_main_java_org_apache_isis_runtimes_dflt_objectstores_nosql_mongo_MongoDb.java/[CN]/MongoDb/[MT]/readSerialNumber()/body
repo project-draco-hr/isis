@@ -1,0 +1,12 @@
+{
+  final DBCollection system=db.getCollection(SERIALNUMBERS_COLLECTION_NAME);
+  final DBObject data=system.findOne();
+  if (data == null) {
+    return 0;
+  }
+ else {
+    final String number=(String)data.get("next-id");
+    LOG.info("serial number read: " + number);
+    return Long.valueOf(number);
+  }
+}

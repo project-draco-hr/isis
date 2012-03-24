@@ -1,0 +1,15 @@
+{
+  final PropertyChoicesFacet propertyChoicesFacet=getFacet(PropertyChoicesFacet.class);
+  final Object[] pojoOptions=propertyChoicesFacet == null ? null : propertyChoicesFacet.getChoices(ownerAdapter,getSpecificationLookup());
+  if (pojoOptions != null) {
+    final ObjectAdapter[] options=new ObjectAdapter[pojoOptions.length];
+    for (int i=0; i < options.length; i++) {
+      options[i]=getAdapterMap().adapterFor(pojoOptions[i]);
+    }
+    return options;
+  }
+ else   if (BoundedFacetUtils.isBoundedSet(getSpecification())) {
+    return options();
+  }
+  return null;
+}

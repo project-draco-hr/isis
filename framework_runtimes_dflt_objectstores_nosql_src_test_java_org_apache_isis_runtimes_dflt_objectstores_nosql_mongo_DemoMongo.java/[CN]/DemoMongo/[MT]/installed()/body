@@ -1,0 +1,26 @@
+{
+  final Mongo m=new Mongo();
+  for (  final String s : m.getDatabaseNames()) {
+    System.out.println(s);
+  }
+  m.dropDatabase("mydb");
+  System.out.println("\n...");
+  for (  final String s : m.getDatabaseNames()) {
+    System.out.println(s);
+  }
+  final DB db=m.getDB("mydb");
+  final DBCollection coll=db.getCollection("testCollection1");
+  final BasicDBObject doc=new BasicDBObject();
+  doc.put("name","MongoDB");
+  doc.put("type","database");
+  doc.put("count",1);
+  final BasicDBObject info=new BasicDBObject();
+  info.put("x",203);
+  info.put("y",102);
+  doc.put("info",info);
+  coll.insert(doc);
+  final Set<String> colls=db.getCollectionNames();
+  for (  final String s : colls) {
+    System.out.println(s);
+  }
+}

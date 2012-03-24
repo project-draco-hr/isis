@@ -1,0 +1,21 @@
+{
+  final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),targetId);
+  final ObjectAssociation objectField=object.getSpecification().getAssociation(attributeName);
+  IsisContext.getPersistenceSession().resolveField(object,objectField);
+  final ObjectAdapter fld=objectField.get(object);
+  if (fld != null) {
+    final Object fieldValue=fld.getObject();
+    if (fieldValue instanceof Boolean) {
+      return ((Boolean)fieldValue).booleanValue();
+    }
+ else     if (fld.getSpecification().containsFacet(CollectionFacet.class)) {
+      final CollectionFacet facet=fld.getSpecification().getFacet(CollectionFacet.class);
+      final boolean isEmpty=facet != null && facet.size(fld) == 0;
+      return !isEmpty;
+    }
+ else {
+      return true;
+    }
+  }
+  return false;
+}

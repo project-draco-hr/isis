@@ -1,0 +1,18 @@
+{
+  ClassLoader classLoader=Thread.currentThread().getContextClassLoader();
+  InputStream is=classLoader.getResourceAsStream(resource);
+  if (is != null) {
+    return is;
+  }
+  classLoader=Resources.class.getClassLoader();
+  is=classLoader.getResourceAsStream(resource);
+  if (is != null) {
+    return is;
+  }
+  try {
+    return ClassLoader.getSystemResourceAsStream(resource);
+  }
+ catch (  final NullPointerException ignore) {
+    return null;
+  }
+}

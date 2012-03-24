@@ -1,0 +1,16 @@
+{
+  ObjectAdapter parent=getParent().getContent().getAdapter();
+  if (!(parent instanceof ObjectAdapter)) {
+    parent=getParent().getParent().getContent().getAdapter();
+  }
+  if (getContent() instanceof FieldContent) {
+    final ObjectAssociation field=((FieldContent)getContent()).getField();
+    IsisContext.getPersistenceSession().resolveField(parent,field);
+  }
+ else   if (getContent() instanceof CollectionContent) {
+    IsisContext.getPersistenceSession().resolveImmediately(parent);
+  }
+ else   if (getContent() instanceof CollectionElement) {
+    IsisContext.getPersistenceSession().resolveImmediately(getContent().getAdapter());
+  }
+}

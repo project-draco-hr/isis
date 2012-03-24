@@ -1,0 +1,19 @@
+{
+  final ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") public void explorationAnActionWithExplorationPrefix(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"explorationAnActionWithExplorationPrefix");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  Facet facet=facetedMethod.getFacet(ExplorationFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ExplorationFacet);
+  facet=facetedMethod.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacet);
+  final NamedFacet namedFacet=(NamedFacet)facet;
+  assertEquals("An Action With Exploration Prefix",namedFacet.value());
+}

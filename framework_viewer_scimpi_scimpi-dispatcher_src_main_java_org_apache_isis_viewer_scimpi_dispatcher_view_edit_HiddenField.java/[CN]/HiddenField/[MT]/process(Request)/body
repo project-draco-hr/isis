@@ -1,0 +1,11 @@
+{
+  final BlockContent blockContent=request.getBlockContent();
+  if (!(blockContent instanceof FormFieldBlock)) {
+    throw new TagOrderException(request);
+  }
+  final String field=request.getOptionalProperty("name");
+  final String value=request.getRequiredProperty("value");
+  final FormFieldBlock block=(FormFieldBlock)blockContent;
+  block.value(field,value);
+  block.exclude(field);
+}

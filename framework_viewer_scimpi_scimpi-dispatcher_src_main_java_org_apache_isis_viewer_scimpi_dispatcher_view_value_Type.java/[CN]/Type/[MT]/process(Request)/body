@@ -1,0 +1,16 @@
+{
+  final RequestContext context=request.getContext();
+  final String showPlural=request.getOptionalProperty(PLURAL);
+  final String id=request.getOptionalProperty(OBJECT);
+  final String objectId=id != null ? id : (String)context.getVariable(RequestContext.RESULT);
+  ObjectAdapter object=context.getMappedObjectOrResult(objectId);
+  final String field=request.getOptionalProperty(FIELD);
+  if (field != null) {
+    final ObjectAssociation objectField=object.getSpecification().getAssociation(field);
+    object=objectField.get(object);
+  }
+  request.appendDebug(" for " + object);
+  final ObjectSpecification specification=object.getSpecification();
+  final String name=showPlural != null ? specification.getPluralName() : specification.getSingularName();
+  request.appendAsHtmlEncoded(name);
+}

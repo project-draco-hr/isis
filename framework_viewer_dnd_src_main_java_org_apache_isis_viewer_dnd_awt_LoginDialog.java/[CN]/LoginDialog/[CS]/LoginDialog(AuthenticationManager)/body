@@ -1,0 +1,29 @@
+{
+  super("Apache Isis Login");
+  this.authenticationManager=authenticationManager;
+  setBackground(new Color(0xe0e0e0));
+  AWTUtilities.addWindowIcon(this,"login-logo.png");
+  addWindowListener(new WindowAdapter(){
+    @Override public void windowClosing(    final WindowEvent e){
+      cancel(e.getComponent());
+    }
+  }
+);
+  setLayout(new BorderLayout(0,10));
+  createInstructionLabel();
+  createLoginFields();
+  createButtonsPanel();
+  setResizable(false);
+  pack();
+  final int height=getSize().height;
+  final int width=getFontMetrics(getFont()).charWidth('x') * 48;
+  setSize(width,height);
+  final Dimension screen=getToolkit().getScreenSize();
+  int x=(screen.width / 2) - (width / 2);
+  if ((screen.width / screen.height) >= 2) {
+    x=(screen.width / 4) - (width / 2);
+  }
+  final int y=(screen.height / 2) - (height / 2);
+  setLocation(x,y);
+  user.requestFocus();
+}

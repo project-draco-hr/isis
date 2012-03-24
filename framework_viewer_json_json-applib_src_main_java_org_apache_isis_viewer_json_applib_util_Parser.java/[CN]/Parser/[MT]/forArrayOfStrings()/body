@@ -1,0 +1,33 @@
+{
+  return new Parser<String[]>(){
+    @Override public String[] valueOf(    final List<String> strings){
+      if (strings == null) {
+        return new String[]{};
+      }
+      if (strings.size() == 1) {
+        return valueOf(strings.get(0));
+      }
+      return strings.toArray(new String[]{});
+    }
+    @Override public String[] valueOf(    final String[] strings){
+      if (strings == null) {
+        return new String[]{};
+      }
+      if (strings.length == 1) {
+        return valueOf(strings[0]);
+      }
+      return strings;
+    }
+    @Override public String[] valueOf(    final String str){
+      if (str == null) {
+        return new String[]{};
+      }
+      final Iterable<String> split=Splitter.on(",").split(str);
+      return Iterables.toArray(split,String.class);
+    }
+    @Override public String asString(    final String[] strings){
+      return Joiner.on(",").join(strings);
+    }
+  }
+;
+}

@@ -1,0 +1,27 @@
+{
+  final LinkRepresentation linkToSimpleEntity=givenLinkToSimpleEntity(0);
+  final JsonRepresentation givenAction=givenAction("simples","update");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  assertThat(invokeLink,is(not(nullValue())));
+  final JsonRepresentation args=invokeLink.getArguments();
+  assertThat(args.size(),is(0));
+  assertThat(args.mapHas("object"),is(true));
+  assertThat(args.mapHas("name"),is(true));
+  assertThat(args.mapHas("flag"),is(true));
+  assertThat(args.mapHas("Boolean"),is(true));
+  assertThat(args.mapHas("int"),is(true));
+  assertThat(args.mapHas("integer"),is(true));
+  assertThat(args.mapHas("long1"),is(true));
+  assertThat(args.mapHas("long2"),is(true));
+  assertThat(args.mapHas("double1"),is(true));
+  assertThat(args.mapHas("double2"),is(true));
+  assertThat(args.mapHas("bigInteger"),is(true));
+  assertThat(args.mapHas("bigDecimal"),is(true));
+  args.mapPut("name","New Name");
+  args.mapPut("flag",true);
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=client.followT(invokeLink,args);
+  final DomainObjectRepresentation objectRepr=restfulResponse.getEntity();
+  assertThat(objectRepr.getRepresentation("members[propertyId=%s].value","name").asString(),is("New Name"));
+  assertThat(objectRepr.getRepresentation("members[propertyId=%s].value","flag").asBoolean(),is(true));
+}

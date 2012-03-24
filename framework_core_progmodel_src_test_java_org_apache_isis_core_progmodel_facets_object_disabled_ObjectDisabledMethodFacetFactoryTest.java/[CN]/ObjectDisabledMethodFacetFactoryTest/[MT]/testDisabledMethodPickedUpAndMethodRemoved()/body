@@ -1,0 +1,17 @@
+{
+  final Class<?>[] params=new Class<?>[1];
+  params[0]=Identifier.Type.class;
+class Customer {
+    @SuppressWarnings("unused") public String disabled(    final Type type){
+      return null;
+    }
+  }
+  final Method disabledMethod=findMethod(Customer.class,"disabled",params);
+  assertNotNull(disabledMethod);
+  final ProcessClassContext processClassContext=new ProcessClassContext(Customer.class,methodRemover,facetHolder);
+  facetFactory.process(processClassContext);
+  final Facet facet=facetHolder.getFacet(DisabledObjectFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DisabledObjectFacetViaDisabledMethod);
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(disabledMethod));
+}

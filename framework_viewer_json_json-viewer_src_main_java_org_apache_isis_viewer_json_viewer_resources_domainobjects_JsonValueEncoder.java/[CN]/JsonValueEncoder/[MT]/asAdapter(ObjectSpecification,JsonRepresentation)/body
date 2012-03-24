@@ -1,0 +1,110 @@
+{
+  if (objectSpec == null) {
+    throw new IllegalArgumentException("objectSpec cannot be null");
+  }
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (encodableFacet == null) {
+    throw new IllegalArgumentException("objectSpec expected to have EncodableFacet");
+  }
+  if (representation == null) {
+    throw new IllegalArgumentException("representation cannot be null");
+  }
+  if (!representation.isValue()) {
+    throw new IllegalArgumentException("representation must be of a value");
+  }
+  if (isBoolean(objectSpec)) {
+    if (!representation.isBoolean()) {
+      throwIncompatibleException(objectSpec,representation);
+    }
+    final String argStr="" + representation.asBoolean();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isInteger(objectSpec)) {
+    if (representation.isInt()) {
+      final String argStr="" + representation.asInt();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isString()) {
+      final String argStr=representation.asString();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    throwIncompatibleException(objectSpec,representation);
+  }
+  if (isLong(objectSpec)) {
+    if (!representation.isLong()) {
+      throwIncompatibleException(objectSpec,representation);
+    }
+    final String argStr="" + representation.asLong();
+    return encodableFacet.fromEncodedString(argStr);
+  }
+  if (isBigInteger(objectSpec)) {
+    if (representation.isBigInteger()) {
+      final String argStr="" + representation.asBigInteger();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isLong()) {
+      final String argStr="" + representation.asLong();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isInt()) {
+      final String argStr="" + representation.asInt();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isString()) {
+      final String argStr=representation.asString();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    throwIncompatibleException(objectSpec,representation);
+  }
+  if (isBigDecimal(objectSpec)) {
+    if (representation.isBigDecimal()) {
+      final String argStr="" + representation.asBigDecimal();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isBigInteger()) {
+      final String argStr="" + representation.asBigInteger();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isDouble()) {
+      final String argStr="" + representation.asDouble();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isLong()) {
+      final String argStr="" + representation.asLong();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isInt()) {
+      final String argStr="" + representation.asInt();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isString()) {
+      final String argStr=representation.asString();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    throwIncompatibleException(objectSpec,representation);
+  }
+  if (isDouble(objectSpec)) {
+    if (representation.isDouble()) {
+      final String argStr="" + representation.asDouble();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isLong()) {
+      final String argStr="" + representation.asLong();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isInt()) {
+      final String argStr="" + representation.asInt();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    if (representation.isString()) {
+      final String argStr=representation.asString();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    throwIncompatibleException(objectSpec,representation);
+  }
+  if (!representation.isString()) {
+    throw new ExpectedStringRepresentingValueException();
+  }
+  final String argStr=representation.asString();
+  return encodableFacet.fromEncodedString(argStr);
+}

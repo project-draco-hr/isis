@@ -1,0 +1,41 @@
+{
+  final Step previousStep=currentStep();
+  if (previousStep.error != null) {
+    return;
+  }
+  final RestfulResponse<? extends JsonRepresentation> jsonResponse=previousStep.response;
+  JsonRepresentation entity;
+  try {
+    entity=jsonResponse.getEntity();
+  }
+ catch (  final Exception e) {
+    addStep(path,null,null,null,"exception: " + e.getMessage(),e);
+    return;
+  }
+  LinkRepresentation link;
+  try {
+    link=entity.getLink(path);
+  }
+ catch (  final Exception e) {
+    addStep(path,null,null,null,"exception: " + e.getMessage(),e);
+    return;
+  }
+  if (link == null) {
+    addStep(path,null,null,null,"no such link '" + path + "'",null);
+    return;
+  }
+  final RestfulResponse<JsonRepresentation> response;
+  try {
+    if (invokeBody != null) {
+      response=restfulClient.follow(link,invokeBody);
+    }
+ else {
+      response=restfulClient.follow(link);
+    }
+  }
+ catch (  final Exception e) {
+    addStep(path,link,null,null,"failed to follow link: " + e.getMessage(),e);
+    return;
+  }
+  addStep(path,link,null,response,null,null);
+}

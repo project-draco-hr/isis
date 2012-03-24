@@ -1,0 +1,30 @@
+{
+  super.draw(canvas);
+  final Size size=getSize();
+  final int width=size.getWidth();
+  final int height=size.getHeight();
+  final int left=3;
+  final int top=3;
+  final boolean hasFocus=containsFocus();
+  final Color lightColor=hasFocus ? Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY1) : Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY2);
+  clearBackground(canvas,Toolkit.getColor(ColorsAndFonts.COLOR_WINDOW));
+  canvas.drawRectangle(1,0,width - 2,height,lightColor);
+  canvas.drawRectangle(0,1,width,height - 2,lightColor);
+  for (int i=2; i < left; i++) {
+    canvas.drawRectangle(i,i,width - 2 * i,height - 2 * i,lightColor);
+  }
+  final ViewState state=getState();
+  if (state.isActive()) {
+    final int i=left;
+    canvas.drawRectangle(i,top,width - 2 * i,height - 2 * i - top,Toolkit.getColor(ColorsAndFonts.COLOR_ACTIVE));
+  }
+  final int bw=controls[0].getLocation().getX() - 3;
+  canvas.drawSolidRectangle(bw,top,width - bw - 3,height - top * 2,Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3));
+  canvas.drawLine(bw - 1,top,bw - 1,height - top * 2,lightColor);
+  for (int i=0; controls != null && i < controls.length; i++) {
+    final Canvas controlCanvas=canvas.createSubcanvas(controls[i].getBounds());
+    controls[i].draw(controlCanvas);
+  }
+  final Canvas c=canvas.createSubcanvas(iconView.getBounds());
+  iconView.draw(c);
+}

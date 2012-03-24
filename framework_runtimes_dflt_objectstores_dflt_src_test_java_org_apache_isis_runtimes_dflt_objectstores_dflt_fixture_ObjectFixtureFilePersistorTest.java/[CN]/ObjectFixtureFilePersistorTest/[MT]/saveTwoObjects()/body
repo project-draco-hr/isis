@@ -1,0 +1,24 @@
+{
+  final Set<Object> objects=new AbstractSet<Object>(){
+    @Override public Iterator<Object> iterator(){
+      final List<Object> list=new ArrayList<Object>();
+      final Person person=new Person();
+      person.setName("Fred Smith");
+      person.setDate(new Date(110,2,8,0,0));
+      list.add(person);
+      list.add(new Person());
+      return list.iterator();
+    }
+    @Override public int size(){
+      return 2;
+    }
+  }
+;
+  final StringWriter out=new StringWriter();
+  persistor.save(objects,out);
+  final String string1=PACKAGE_BASE + ".testdomain.Person#2\n  date: 08-Mar-2010 00:00\n  name: Fred Smith\n" + PACKAGE_BASE+ ".testdomain.Person#3\n  date: \n  name: \n";
+  final String string2=PACKAGE_BASE + ".testdomain.Person#2\r\n  date: 08-Mar-2010 00:00\r\n  name: Fred Smith\r\n" + PACKAGE_BASE+ ".testdomain.Person#3\r\n  date: \r\n  name: \r\n";
+  if ((out.toString().compareTo(string1) != 0) && (out.toString().compareTo(string2) != 0)) {
+    Assert.assertEquals(string1,out.toString());
+  }
+}

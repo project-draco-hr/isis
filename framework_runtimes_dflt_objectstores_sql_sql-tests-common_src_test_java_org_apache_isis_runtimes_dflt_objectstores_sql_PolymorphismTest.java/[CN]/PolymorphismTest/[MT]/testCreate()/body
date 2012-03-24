@@ -1,0 +1,57 @@
+{
+  SqlIntegrationTestSingleton.drop("ISIS_POLYTESTCLASS");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYBASECLASS");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYINTERFACE");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASS");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSONE");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSTWO");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSUBCLASSTHREE");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYINTERFACEIMPLA");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYINTERFACEIMPLB");
+  SqlIntegrationTestSingleton.drop("ISIS_POLYSELFREFCLASS");
+  final SqlDataClassFactory factory=SqlIntegrationTestSingleton.getSqlDataClassFactory();
+  final PolyTestClass polyTestClass=factory.newPolyTestClass();
+  polyTestClass.setString("polyTestClassString");
+  final PolySelfRefClass polySelfRefClassParent=factory.newPolySelfRefClass();
+  polySelfRefClassParent.setString("Parent");
+  final PolySelfRefClass polySelfRefClassChild1=factory.newPolySelfRefClass();
+  polySelfRefClassChild1.setString(CHILD_1);
+  polySelfRefClassParent.addToPolySelfRefClasses(polySelfRefClassChild1);
+  final PolySelfRefClass polySelfRefClassChild2=factory.newPolySelfRefClass();
+  polySelfRefClassChild2.setString("Child 2");
+  polySelfRefClassParent.addToPolySelfRefClasses(polySelfRefClassChild2);
+  factory.save(polySelfRefClassChild2);
+  final PolySelfRefClass polySelfRefClassChild3=factory.newPolySelfRefClass();
+  polySelfRefClassChild3.setString("Child 1 of Child 1");
+  polySelfRefClassChild1.addToPolySelfRefClasses(polySelfRefClassChild3);
+  factory.save(polySelfRefClassChild3);
+  factory.save(polySelfRefClassChild1);
+  factory.save(polySelfRefClassParent);
+  polyTestClass.setPolySelfRefClass(polySelfRefClassParent);
+  polyIntImpA=factory.newPolyInterfaceImplA();
+  polyIntImpA.setString(IMPL_A_STRING);
+  polyIntImpA.setSpecial("special");
+  factory.save(polyIntImpA);
+  polyTestClass.setPolyInterfaceType(polyIntImpA);
+  polyTestClass.getPolyInterfaces().add(polyIntImpA);
+  final PolySubClassOne polySubClassOne=factory.newPolySubClassOne();
+  polySubClassOne.setStringBase("PolySubClassOne 1");
+  polySubClassOne.setStringClassOne("Class 1");
+  final PolySubClassTwo polySubClassTwo=factory.newPolySubClassTwo();
+  polySubClassTwo.setStringBase("PolySubClassTwo 1");
+  polySubClassTwo.setStringClassTwo("Class 2");
+  final PolySubClassThree polySubClassThree=factory.newPolySubClassThree();
+  polySubClassThree.setStringBase("PolySubClassThree 1");
+  polySubClassThree.setStringClassThree("Another String");
+  polySubClassThree.setStringClassTwo("Class 3");
+  polyTestClass.getPolyBaseClasses().add(polySubClassOne);
+  polyTestClass.getPolyBaseClasses().add(polySubClassTwo);
+  polyTestClass.getPolyBaseClasses().add(polySubClassThree);
+  factory.save(polySubClassOne);
+  factory.save(polySubClassTwo);
+  factory.save(polySubClassThree);
+  factory.save(polyTestClass);
+  if (getProperties().getProperty("isis.persistor") == "in-memory") {
+    getSingletonInstance().setState(1);
+  }
+}

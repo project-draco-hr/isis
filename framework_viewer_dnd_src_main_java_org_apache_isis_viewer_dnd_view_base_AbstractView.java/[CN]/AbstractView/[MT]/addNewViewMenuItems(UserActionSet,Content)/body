@@ -1,0 +1,48 @@
+{
+  if (getContent() instanceof ObjectContent) {
+    options.add(new UserActionAbstract("Use as default view for objects",ActionType.USER){
+      @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
+        Properties.setStringOption("view.object-default",getSpecification().getName());
+      }
+    }
+);
+  }
+  if (getContent() instanceof CollectionContent) {
+    options.add(new UserActionAbstract("Use as default view for collection",ActionType.USER){
+      @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
+        Properties.setStringOption("view.collection-default",getSpecification().getName());
+      }
+    }
+);
+  }
+  if (getContent() instanceof ObjectContent && !getSpecification().isOpen()) {
+    options.add(new UserActionAbstract("Use as default view for icon",ActionType.USER){
+      @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
+        Properties.setStringOption("view.icon-default",getSpecification().getName());
+      }
+    }
+);
+  }
+  if (getContent() instanceof RootObject || getContent() instanceof RootCollection) {
+    options.add(new UserActionAbstract("Use as default view for " + getContent().getSpecification().getSingularName(),ActionType.USER){
+      @Override public void execute(      final Workspace workspace,      final View view,      final Location at){
+        final Options viewOptions=Properties.getViewConfigurationOptions(getSpecification());
+        getView().saveOptions(viewOptions);
+        final ObjectSpecification specification=content.getSpecification();
+        final Options settingsOptions=Properties.getDefaultViewOptions(specification);
+        settingsOptions.addOption("spec",getSpecification().getName());
+      }
+    }
+);
+  }
+  options.add(new UserActionAbstract("Save specification",ActionType.USER){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      final Options viewOptions=Properties.getViewConfigurationOptions(getSpecification());
+      getView().saveOptions(viewOptions);
+      Toolkit.getViewFactory().addSpecification(getSpecification());
+    }
+  }
+);
+  createOpenAsSubmenu(options,content);
+  createCreateViewSubmenu(options,content);
+}

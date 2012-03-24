@@ -1,0 +1,17 @@
+{
+  LOG.debug("build new view " + view + " for "+ actionContent);
+  final int noParameters=actionContent.getNoParameters();
+  View focusOn=null;
+  for (int f=0; f < noParameters; f++) {
+    final ParameterContent parameter=actionContent.getParameterContent(f);
+    final View fieldView=createFieldView(view,parameter,f);
+    final View decoratedSubview=decorateSubview(view.getViewAxes(),fieldView);
+    view.addView(decoratedSubview);
+    if (focusOn == null && parameter instanceof TextParseableParameter && fieldView.canFocus()) {
+      focusOn=decoratedSubview;
+    }
+  }
+  if (focusOn != null) {
+    view.getViewManager().setKeyboardFocus(focusOn);
+  }
+}

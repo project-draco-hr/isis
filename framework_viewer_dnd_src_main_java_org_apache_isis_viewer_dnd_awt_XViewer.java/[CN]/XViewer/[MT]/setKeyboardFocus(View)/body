@@ -1,0 +1,28 @@
+{
+  if (view == null) {
+    return;
+  }
+  final FocusManager currentFocusManager=keyboardManager.getFocusManager();
+  if (currentFocusManager != null && currentFocusManager.getFocus() != null && currentFocusManager.getFocus().getParent() != null) {
+    currentFocusManager.getFocus().getParent().markDamaged();
+  }
+  if (currentFocusManager != null) {
+    final View currentFocus=currentFocusManager.getFocus();
+    if (currentFocus != null && currentFocus != view) {
+      currentFocus.focusLost();
+    }
+  }
+  final FocusManager focusManager=view.getFocusManager();
+  if (focusManager != null) {
+    focusManager.setFocus(view);
+    if (view.getParent() != null) {
+      view.getParent().markDamaged();
+    }
+  }
+  if (focusManager == null) {
+    LOG.warn("No focus manager for " + view);
+  }
+ else {
+    keyboardManager.setFocusManager(focusManager);
+  }
+}

@@ -1,0 +1,13 @@
+{
+  final ObjectAdapter valueAdapter=objectMember.get(objectAdapter);
+  if (valueAdapter == null) {
+    return;
+  }
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(valueAdapter);
+  final List<JsonRepresentation> list=Lists.newArrayList();
+  for (  final ObjectAdapter elementAdapter : facet.iterable(valueAdapter)) {
+    final LinkBuilder newBuilder=DomainObjectReprRenderer.newLinkToBuilder(resourceContext,Rel.OBJECT,elementAdapter);
+    list.add(newBuilder.build());
+  }
+  representation.mapPut("value",list);
+}

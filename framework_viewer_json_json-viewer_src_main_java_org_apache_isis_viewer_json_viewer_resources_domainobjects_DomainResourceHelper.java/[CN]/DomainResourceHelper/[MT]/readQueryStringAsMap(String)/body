@@ -1,0 +1,14 @@
+{
+  if (queryString == null) {
+    return JsonRepresentation.newMap();
+  }
+  final String queryStringTrimmed=queryString.trim();
+  if (queryStringTrimmed.isEmpty()) {
+    return JsonRepresentation.newMap();
+  }
+  final String queryStringUrlDecoded=UrlEncodingUtils.urlDecode(queryStringTrimmed);
+  if (queryStringUrlDecoded.isEmpty()) {
+    return JsonRepresentation.newMap();
+  }
+  return read(queryStringUrlDecoded,"query string");
+}

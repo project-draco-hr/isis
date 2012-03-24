@@ -1,0 +1,10 @@
+{
+  final OneToManyField internalCollectionContent=(OneToManyField)getContent();
+  final OneToManyAssociation field=internalCollectionContent.getOneToManyAssociation();
+  final ObjectAdapter target=((ObjectContent)getParent().getContent()).getObject();
+  final Consent valid=field.isValidToAdd(target,result);
+  if (valid.isAllowed()) {
+    field.addElement(target,result);
+  }
+  super.objectActionResult(result,placement);
+}

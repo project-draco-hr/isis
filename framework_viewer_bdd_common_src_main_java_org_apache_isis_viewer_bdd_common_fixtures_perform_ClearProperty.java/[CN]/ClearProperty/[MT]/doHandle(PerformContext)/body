@@ -1,0 +1,15 @@
+{
+  final ObjectAdapter onAdapter=performContext.getOnAdapter();
+  final ObjectMember nakedObjectMember=performContext.getObjectMember();
+  final OneToOneAssociation otoa=(OneToOneAssociation)nakedObjectMember;
+  final PropertyClearFacet clearFacet=otoa.getFacet(PropertyClearFacet.class);
+  final CellBinding thatItBinding=performContext.getPeer().getThatItBinding();
+  if (clearFacet == null) {
+    throw ScenarioBoundValueException.current(thatItBinding,"(cannot clear)");
+  }
+  final Consent validConsent=otoa.isAssociationValid(onAdapter,null);
+  if (validConsent.isVetoed()) {
+    throw ScenarioBoundValueException.current(thatItBinding,validConsent.getReason());
+  }
+  clearFacet.clearProperty(onAdapter);
+}

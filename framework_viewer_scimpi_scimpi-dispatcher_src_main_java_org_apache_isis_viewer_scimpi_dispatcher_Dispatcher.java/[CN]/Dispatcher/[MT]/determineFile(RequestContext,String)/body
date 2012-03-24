@@ -1,0 +1,35 @@
+{
+  final String fileName=file.trim();
+  if (fileName.startsWith(GENERIC)) {
+    final Object result=context.getVariable(RequestContext.RESULT);
+    final ObjectAdapter mappedObject=MethodsUtils.findObject(context,(String)result);
+    if (mappedObject == null) {
+      throw new ScimpiException("No object mapping for " + result);
+    }
+    if (fileName.equals(GENERIC + "." + EXTENSION)) {
+      final Facet facet=mappedObject.getSpecification().getFacet(CollectionFacet.class);
+      if (facet != null) {
+        final ObjectSpecification specification=mappedObject.getSpecification();
+        final TypeOfFacet facet2=specification.getFacet(TypeOfFacet.class);
+        file=findFileForSpecification(context,facet2.valueSpec(),"collection",EXTENSION);
+      }
+ else {
+        final ObjectAdapter mappedObject2=mappedObject;
+        if (mappedObject2.isTransient()) {
+          file=findFileForSpecification(context,mappedObject.getSpecification(),"edit",EXTENSION);
+        }
+ else {
+          file=findFileForSpecification(context,mappedObject.getSpecification(),"object",EXTENSION);
+        }
+      }
+    }
+ else     if (fileName.equals(GENERIC + EDIT + "."+ EXTENSION)) {
+      file=findFileForSpecification(context,mappedObject.getSpecification(),"edit",EXTENSION);
+    }
+ else     if (fileName.equals(GENERIC + ACTION + "."+ EXTENSION)) {
+      final String method=context.getParameter("method");
+      file=findFileForSpecification(context,mappedObject.getSpecification(),method,"action",EXTENSION);
+    }
+  }
+  return file;
+}

@@ -1,0 +1,15 @@
+{
+  final ObjectAdapter value=getValue(view);
+  final Consent consent=view.canChangeValue();
+  if (consent.isVetoed()) {
+    return consent;
+  }
+  final Consent canClear=field.canClear();
+  if (canClear.isVetoed()) {
+    return new Veto(String.format("Can't clear %s values",value.getSpecification().getShortIdentifier()));
+  }
+  if (value == null || isEmpty(view)) {
+    return new Veto("Field is already empty");
+  }
+  return consent.setDescription(String.format("Clear value ",value.titleString()));
+}

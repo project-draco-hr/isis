@@ -1,0 +1,14 @@
+{
+  FileOutputStream output=null;
+  final File file=Util.dataFile(content.type,content.id);
+  if (!file.getParentFile().exists()) {
+    file.getParentFile().mkdir();
+  }
+  try {
+    output=new FileOutputStream(file);
+    content.write(output);
+  }
+  finally {
+    Util.closeSafely(output);
+  }
+}

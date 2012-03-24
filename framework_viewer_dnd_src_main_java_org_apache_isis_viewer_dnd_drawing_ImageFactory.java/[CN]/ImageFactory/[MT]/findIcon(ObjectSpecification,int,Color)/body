@@ -1,0 +1,22 @@
+{
+  Image loadIcon=null;
+  if (loadIcon == null) {
+    final String fullClassNameSlashes=specification.getFullIdentifier().replace(".","/");
+    loadIcon=loadIcon(fullClassNameSlashes,iconHeight,tint);
+  }
+  if (loadIcon == null) {
+    final String fullClassNameUnderscores=specification.getFullIdentifier().replace('.','_');
+    loadIcon=loadIcon(fullClassNameUnderscores,iconHeight,tint);
+  }
+  if (loadIcon == null) {
+    final String shortClassNameUnderscores=specification.getShortIdentifier().replace('.','_');
+    loadIcon=loadIcon(shortClassNameUnderscores,iconHeight,tint);
+  }
+  if (loadIcon == null) {
+    loadIcon=findIconForSuperClass(specification,iconHeight,tint);
+  }
+  if (loadIcon == null) {
+    loadIcon=findIconForInterfaces(specification,iconHeight,tint);
+  }
+  return loadIcon;
+}

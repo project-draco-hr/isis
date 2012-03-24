@@ -1,0 +1,21 @@
+{
+  connection.endCommand();
+  final String name=connection.getRequest();
+  final int batchSize=connection.getRequestAsInt();
+  long nextId;
+  final File file=Util.serialNumberFile(name);
+  if (!file.exists()) {
+    nextId=1;
+    LOG.info("Initial ID batch created at " + nextId);
+  }
+ else {
+    final BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),Util.ENCODING));
+    nextId=Long.valueOf(reader.readLine()).longValue();
+    reader.close();
+    LOG.info("New ID batch allocated, from " + nextId);
+  }
+  final long newBatchAt=nextId + batchSize;
+  logger.logNextSerialBatch(name,newBatchAt);
+  saveNextBatch(file,newBatchAt);
+  connection.response(nextId);
+}

@@ -1,0 +1,13 @@
+{
+  mt.addImage(image,1);
+  try {
+    mt.waitForAll();
+  }
+ catch (  final InterruptedException e) {
+    throw new IsisException(e);
+  }
+  final ImageValueFacet facet=((FieldContent)getContent()).getSpecification().getFacet(ImageValueFacet.class);
+  final ObjectAdapter object=facet.createValue(image);
+  ((OneToOneField)getContent()).setObject(object);
+  invalidateLayout();
+}

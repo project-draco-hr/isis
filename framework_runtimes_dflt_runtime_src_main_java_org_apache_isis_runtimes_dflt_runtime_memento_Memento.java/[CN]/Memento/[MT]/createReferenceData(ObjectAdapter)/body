@@ -1,0 +1,16 @@
+{
+  if (ref == null) {
+    return null;
+  }
+  final Oid refOid=ref.getOid();
+  if (refOid == null) {
+    return createStandaloneData(ref);
+  }
+  if ((ref.getSpecification().isAggregated() || refOid.isTransient()) && !transientObjects.contains(refOid)) {
+    transientObjects.add(refOid);
+    return createObjectData(ref);
+  }
+  final String resolvedState=ref.getResolveState().name();
+  final String specification=ref.getSpecification().getFullIdentifier();
+  return new Data(refOid,resolvedState,specification);
+}

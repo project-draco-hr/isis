@@ -1,0 +1,16 @@
+{
+  super(collectionToProxy,collectionName,handler,otma);
+  try {
+    intercept(getMethod(collectionToProxy,"containsKey",Object.class));
+    intercept(getMethod(collectionToProxy,"containsValue",Object.class));
+    intercept(getMethod(collectionToProxy,"size"));
+    intercept(getMethod(collectionToProxy,"isEmpty"));
+    veto(getMethod(collectionToProxy,"put",Object.class,Object.class));
+    veto(getMethod(collectionToProxy,"remove",Object.class));
+    veto(getMethod(collectionToProxy,"putAll",Map.class));
+    veto(getMethod(collectionToProxy,"clear"));
+  }
+ catch (  final NoSuchMethodException e) {
+    throw new RuntimeException("A Collection method could not be found: " + e.getMessage());
+  }
+}

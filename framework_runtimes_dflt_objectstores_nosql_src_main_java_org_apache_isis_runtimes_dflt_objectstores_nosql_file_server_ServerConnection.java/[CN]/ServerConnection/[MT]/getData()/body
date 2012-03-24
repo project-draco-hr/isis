@@ -1,0 +1,23 @@
+{
+  try {
+    final StringBuffer buffer=new StringBuffer();
+    String line;
+    while (true) {
+      line=reader.readLine();
+      if (line == null) {
+        logFailure();
+        throw new RemotingException("stream ended prematurely while reading data, aborting request");
+      }
+      if (line.length() == 0) {
+        break;
+      }
+      buffer.append(line);
+      buffer.append('\n');
+    }
+    return buffer.toString();
+  }
+ catch (  final IOException e) {
+    logFailure();
+    throw new RemotingException(e);
+  }
+}

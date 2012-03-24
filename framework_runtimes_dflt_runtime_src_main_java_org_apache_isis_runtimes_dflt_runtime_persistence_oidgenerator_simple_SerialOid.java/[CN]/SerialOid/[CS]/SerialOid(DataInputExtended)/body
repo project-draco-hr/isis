@@ -1,0 +1,11 @@
+{
+  this.serialNo=input.readLong();
+  this.state=input.readBoolean() ? State.TRANSIENT : State.PERSISTENT;
+  final boolean hasPrevious=input.readBoolean();
+  if (hasPrevious) {
+    final long previousSerialNo=input.readLong();
+    final State previousState=input.readBoolean() ? State.TRANSIENT : State.PERSISTENT;
+    this.previous=new SerialOid(previousSerialNo,previousState);
+  }
+  initialized();
+}

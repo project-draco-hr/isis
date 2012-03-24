@@ -1,0 +1,25 @@
+{
+  if (parameters.isEmpty()) {
+    return;
+  }
+  final Method actionMethod=processMethodContext.getMethod();
+  final Class<?>[] params=actionMethod.getParameterTypes();
+  for (int i=0; i < params.length; i++) {
+    final Class<?> arrayOfParamType=(Array.newInstance(params[i],0)).getClass();
+    Method choicesMethod=findChoicesNumMethodReturning(processMethodContext,i,arrayOfParamType);
+    if (choicesMethod == null) {
+      choicesMethod=findChoicesNumMethodReturning(processMethodContext,i,List.class);
+    }
+    if (choicesMethod == null) {
+      continue;
+    }
+    processMethodContext.removeMethod(choicesMethod);
+    final FacetedMethod facetedMethod=processMethodContext.getFacetHolder();
+    if (facetedMethod.containsDoOpFacet(ActionChoicesFacet.class)) {
+      final Class<?> cls=processMethodContext.getCls();
+      throw new MetaModelException(cls + " uses both old and new choices syntax - must use one or other");
+    }
+    final FacetedMethodParameter paramAsHolder=parameters.get(i);
+    FacetUtil.addFacet(new ActionParameterChoicesFacetViaMethod(choicesMethod,arrayOfParamType,paramAsHolder,getSpecificationLookup(),getAdapterMap()));
+  }
+}

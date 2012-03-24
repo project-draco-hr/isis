@@ -1,0 +1,16 @@
+{
+  final ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") @Named("Renamed an action with a named annotation") public void anActionWithNamedAnnotation(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"anActionWithNamedAnnotation");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NamedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NamedFacet);
+  final NamedFacet namedFacet=(NamedFacet)facet;
+  assertEquals("An Action With Named Annotation",namedFacet.value());
+}

@@ -1,0 +1,12 @@
+{
+class Customer {
+    @SuppressWarnings("unused") @Prototype public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PrototypeFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PrototypeFacetAbstract);
+  assertNoMethodsRemoved();
+}

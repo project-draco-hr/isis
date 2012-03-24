@@ -1,0 +1,26 @@
+{
+  final Block taskBar=context.getComponentFactory().createBlock("history",null);
+  taskBar.add(context.getComponentFactory().createHeading("History"));
+  for (int i=history.size() - 1; i >= 0; i--) {
+    try {
+      final HistoryEntry item=history.get(i);
+      Component icon;
+      if (item.type == HistoryEntry.OBJECT) {
+        final ObjectAdapter object=context.getMappedObject(item.id);
+        IsisContext.getPersistenceSession().resolveImmediately(object);
+        icon=context.getComponentFactory().createObjectIcon(object,item.id,"item");
+      }
+ else       if (item.type == HistoryEntry.COLLECTION) {
+        final ObjectAdapter object=context.getMappedCollection(item.id);
+        icon=context.getComponentFactory().createCollectionIcon(object,item.id);
+      }
+ else {
+        throw new UnknownTypeException(item);
+      }
+      taskBar.add(icon);
+    }
+ catch (    final IsisException e) {
+    }
+  }
+  navigation.add(taskBar);
+}

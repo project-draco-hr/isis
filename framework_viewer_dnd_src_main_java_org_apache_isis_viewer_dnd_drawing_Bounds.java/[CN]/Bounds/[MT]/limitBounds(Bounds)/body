@@ -1,0 +1,52 @@
+{
+  boolean limited=false;
+  final Location location=toLimit.getLocation();
+  final Size size=toLimit.getSize();
+  int viewLeft=location.getX();
+  int viewTop=location.getY();
+  int viewRight=viewLeft + size.getWidth();
+  int viewBottom=viewTop + size.getHeight();
+  final Size wd=getSize();
+  final int limitLeft=x;
+  final int limitTop=y;
+  final int limitRight=x + width;
+  final int limitBottom=y + height;
+  if (viewRight > limitRight) {
+    viewLeft=limitRight - size.getWidth();
+    limited=true;
+    LOG.info("right side oustide limits, moving left to " + viewLeft);
+  }
+  if (viewLeft < limitLeft) {
+    viewLeft=limitLeft;
+    limited=true;
+    LOG.info("left side outside limit, moving left to " + viewLeft);
+  }
+  if (viewBottom > limitBottom) {
+    viewTop=limitBottom - size.getHeight();
+    limited=true;
+    LOG.info("bottom outside limit, moving top to " + viewTop);
+  }
+  if (viewTop < limitTop) {
+    viewTop=limitTop;
+    limited=true;
+    LOG.info("top outside limit, moving top to " + viewTop);
+  }
+  toLimit.setX(viewLeft);
+  toLimit.setY(viewTop);
+  viewBottom=viewTop + size.getHeight();
+  viewRight=viewLeft + size.getWidth();
+  if (viewRight > limitRight) {
+    toLimit.width=wd.width;
+    limited=true;
+    LOG.info("width outside limit, reducing width to " + viewTop);
+  }
+  if (viewBottom > limitBottom) {
+    toLimit.height=wd.height;
+    limited=true;
+    LOG.info("height outside limit, reducing height to " + viewTop);
+  }
+  if (limited) {
+    LOG.info("limited " + toLimit);
+  }
+  return limited;
+}

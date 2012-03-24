@@ -1,0 +1,16 @@
+{
+  if (parentAction.isContributed() && adapter != null) {
+    if (adapter.getSpecification().isOfType(getSpecification())) {
+      return adapter;
+    }
+  }
+  final ActionParameterDefaultsFacet defaultsFacet=getFacet(ActionParameterDefaultsFacet.class);
+  if (defaultsFacet != null) {
+    final Object dflt=defaultsFacet.getDefault(parentAction.realTarget(adapter));
+    if (dflt == null) {
+      return null;
+    }
+    return getAdapterMap().adapterFor(dflt);
+  }
+  return null;
+}

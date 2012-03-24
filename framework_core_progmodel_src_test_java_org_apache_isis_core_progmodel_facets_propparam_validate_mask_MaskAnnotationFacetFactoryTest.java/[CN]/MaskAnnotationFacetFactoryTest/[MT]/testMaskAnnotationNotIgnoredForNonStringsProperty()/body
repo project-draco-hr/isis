@@ -1,0 +1,12 @@
+{
+  final MaskAnnotationForPropertyFacetFactory facetFactory=new MaskAnnotationForPropertyFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") @Mask("###") public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getNumberOfOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  assertNotNull(facetedMethod.getFacet(MaskFacet.class));
+}

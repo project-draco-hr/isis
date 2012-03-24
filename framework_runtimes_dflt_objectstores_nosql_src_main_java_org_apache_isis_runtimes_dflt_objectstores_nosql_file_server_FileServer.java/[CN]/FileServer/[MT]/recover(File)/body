@@ -1,0 +1,29 @@
+{
+  LineNumberReader reader=null;
+  try {
+    reader=new LineNumberReader(new InputStreamReader(new FileInputStream(file),Util.ENCODING));
+    while (true) {
+      final String line=reader.readLine();
+      if (line == null) {
+        break;
+      }
+      if (!line.startsWith("#transaction started")) {
+        throw new NoSqlStoreException("No transaction start found: " + line + " ("+ reader.getLineNumber()+ ")");
+      }
+      readTransaction(reader);
+    }
+  }
+ catch (  final IOException e) {
+    throw new NoSqlStoreException(e);
+  }
+ finally {
+    if (reader != null) {
+      try {
+        reader.close();
+      }
+ catch (      final IOException e) {
+        throw new NoSqlStoreException(e);
+      }
+    }
+  }
+}

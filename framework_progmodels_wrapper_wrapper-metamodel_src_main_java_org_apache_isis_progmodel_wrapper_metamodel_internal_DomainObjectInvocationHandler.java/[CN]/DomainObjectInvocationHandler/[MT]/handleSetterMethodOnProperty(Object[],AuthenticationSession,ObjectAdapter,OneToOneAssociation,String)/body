@@ -1,0 +1,20 @@
+{
+  if (args.length != 1) {
+    throw new IllegalArgumentException("Invoking a setter should only have a single argument");
+  }
+  resolveIfRequired(targetAdapter);
+  final Object argumentObj=underlying(args[0]);
+  final ObjectAdapter argumentNO=argumentObj != null ? getAdapterManager().adapterFor(argumentObj) : null;
+  final InteractionResult interactionResult=otoa.isAssociationValid(targetAdapter,argumentNO).getInteractionResult();
+  notifyListenersAndVetoIfRequired(interactionResult);
+  if (getExecutionMode() == ExecutionMode.EXECUTE) {
+    if (argumentNO != null) {
+      otoa.setAssociation(targetAdapter,argumentNO);
+    }
+ else {
+      otoa.clearAssociation(targetAdapter);
+    }
+  }
+  objectChangedIfRequired(targetAdapter);
+  return null;
+}

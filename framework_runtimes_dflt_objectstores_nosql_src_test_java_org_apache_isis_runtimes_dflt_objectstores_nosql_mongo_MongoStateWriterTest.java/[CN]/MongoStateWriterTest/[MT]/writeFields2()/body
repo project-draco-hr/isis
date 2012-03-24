@@ -1,0 +1,14 @@
+{
+  writer.writeId("3");
+  writer.writeType(SPEC_NAME);
+  writer.flush();
+  writer.writeField("number",1023);
+  writer.writeField("string","testing");
+  writer.flush();
+  final DBCollection instances=testDb.getCollection(SPEC_NAME);
+  assertEquals(1,instances.getCount());
+  final DBObject object=instances.findOne();
+  assertEquals(SPEC_NAME,object.get("_type"));
+  assertEquals("1023",object.get("number"));
+  assertEquals("testing",object.get("string"));
+}

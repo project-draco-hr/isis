@@ -1,0 +1,19 @@
+{
+  super.loadOptions(viewOptions);
+  final String elementsClass=viewOptions.getString("elements");
+  if (elementsClass != null) {
+    ViewSpecification specification;
+    if (elementsClass.startsWith("user:")) {
+      final String name=elementsClass.substring("user:".length());
+      final String wrappedSpecificationClass=Properties.getUserViewSpecificationOptions(name).getString("wrapped-specification");
+      final ViewSpecification wrappedSpectification=(ViewSpecification)InstanceUtil.createInstance(wrappedSpecificationClass);
+      specification=new UserViewSpecification(wrappedSpectification,name);
+    }
+ else {
+      specification=(ViewSpecification)InstanceUtil.createInstance(elementsClass);
+    }
+    if (specification != null) {
+      getViewAxes().getAxis(ConfigurationAxis.class).setElementSpecification(specification);
+    }
+  }
+}

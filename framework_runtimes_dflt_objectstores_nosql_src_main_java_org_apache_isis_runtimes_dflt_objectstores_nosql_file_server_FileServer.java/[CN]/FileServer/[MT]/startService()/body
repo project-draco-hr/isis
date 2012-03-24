@@ -1,0 +1,56 @@
+{
+  final String serviceHost=config.getString("fileserver.host",DEFAULT_HOST);
+  final int servicePort=config.getInt("fileserver.port",DEFAULT_SERVICE_PORT);
+  final int connectionTimeout=config.getInt("fileserver.connection.timeout",5000);
+  final int readTimeout=config.getInt("fileserver.read.timeout",5000);
+  ServerSocket socket=null;
+  try {
+    LOG.debug("setting up service socket on " + serviceHost + ":"+ servicePort);
+    final InetAddress address=InetAddress.getByName(serviceHost);
+    socket=new ServerSocket(servicePort,BACKLOG,address);
+    socket.setSoTimeout(connectionTimeout);
+    LOG.info("listenting on " + socket.getInetAddress().getHostAddress() + " port "+ socket.getLocalPort());
+    LOG.debug("listenting on " + socket);
+    final LogRange logFileRange=Util.logFileRange();
+    if (!logFileRange.noLogFile()) {
+      final long lastRecoveryFile=logFileRange.getLast();
+      final File file=Util.logFile(lastRecoveryFile);
+      LOG.info("replaying last recovery file: " + file.getAbsolutePath());
+      recover(file);
+    }
+    server.startup();
+  }
+ catch (  final UnknownHostException e) {
+    LOG.error("Unknown host " + serviceHost,e);
+    System.exit(0);
+  }
+catch (  final IOException e) {
+    LOG.error("start failure - networking not set up for " + serviceHost,e);
+    System.exit(0);
+  }
+catch (  final RuntimeException e) {
+    LOG.error("start failure",e);
+    System.exit(0);
+  }
+  do {
+    try {
+      while (isQuiescent) {
+        try {
+          Thread.sleep(300);
+        }
+ catch (        final InterruptedException ignore) {
+        }
+      }
+      final Socket connection=socket.accept();
+      LOG.debug("connection from " + connection);
+      connection.setSoTimeout(readTimeout);
+      serviceConnection(connection,readTimeout);
+    }
+ catch (    final SocketTimeoutException expected) {
+    }
+catch (    final IOException e) {
+      LOG.error("networking problem",e);
+    }
+  }
+ while (awaitConnections);
+}

@@ -1,0 +1,14 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public void clearDirty(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"clearDirty");
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ClearDirtyObjectFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ClearDirtyObjectFacetViaMethod);
+  final ClearDirtyObjectFacetViaMethod clearDirtyFacet=(ClearDirtyObjectFacetViaMethod)facet;
+  assertEquals(method,clearDirtyFacet.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(method));
+}

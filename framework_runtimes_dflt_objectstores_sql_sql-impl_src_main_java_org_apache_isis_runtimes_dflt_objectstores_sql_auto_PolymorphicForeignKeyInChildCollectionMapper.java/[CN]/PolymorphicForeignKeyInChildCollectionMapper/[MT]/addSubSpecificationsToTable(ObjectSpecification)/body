@@ -1,0 +1,14 @@
+{
+  if (objectSpecification.isAbstract() == false) {
+    final String tableNameFromSpecification=getTableNameFromSpecification(objectSpecification);
+    tables.add(tableNameFromSpecification);
+    tableSpecifications.add(objectSpecification);
+    final ObjectMapping autoMapper=objectMapperLookup.getMapping(objectSpecification,null);
+    subClassMappers.add(autoMapper);
+  }
+  if (objectSpecification.hasSubclasses()) {
+    for (    final ObjectSpecification subSpecification : objectSpecification.subclasses()) {
+      addSubSpecificationsToTable(subSpecification);
+    }
+  }
+}

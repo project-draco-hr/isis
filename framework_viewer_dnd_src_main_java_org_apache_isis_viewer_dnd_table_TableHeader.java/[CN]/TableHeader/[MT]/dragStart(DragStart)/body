@@ -1,0 +1,22 @@
+{
+  if (isOverColumnBorder(drag.getLocation())) {
+    resizeColumn=axis.getColumnBorderAt(drag.getLocation().getX());
+    final Bounds resizeArea=new Bounds(getView().getAbsoluteLocation(),getSize());
+    resizeArea.translate(getView().getPadding().getLeft(),getView().getPadding().getTop());
+    if (resizeColumn == 0) {
+      resizeArea.setWidth(axis.getHeaderOffset());
+    }
+ else {
+      resizeArea.translate(axis.getLeftEdge(resizeColumn - 1),0);
+      resizeArea.setWidth(axis.getColumnWidth(resizeColumn - 1));
+    }
+    final Size minimumSize=new Size(70,0);
+    return new ResizeDrag(this,resizeArea,ResizeDrag.RIGHT,minimumSize,null);
+  }
+ else   if (drag.getLocation().getY() <= height) {
+    return null;
+  }
+ else {
+    return super.dragStart(drag);
+  }
+}

@@ -1,0 +1,33 @@
+{
+  final ArrayList<FileContent> files=new ArrayList<FileContent>();
+  final DataFileWriter content=new DataFileWriter(files);
+  String header;
+  while ((header=reader.readLine()) != null) {
+    if (header.startsWith("#transaction ended")) {
+      LOG.debug("transaction read in (ending " + reader.getLineNumber() + ")");
+      content.writeData();
+      reader.readLine();
+      return;
+    }
+    if (header.startsWith("S")) {
+      final String[] split=header.substring(1).split(" ");
+      final String key=split[0];
+      final String name=split[1];
+      server.saveService(key,name);
+      reader.readLine();
+    }
+ else     if (header.startsWith("B")) {
+      final String[] split=header.substring(1).split(" ");
+      final String name=split[0];
+      final long nextBatch=Long.valueOf(split[1]);
+      server.saveNextBatch(name,nextBatch);
+      reader.readLine();
+    }
+ else {
+      FileContent elementData;
+      elementData=readElementData(header,reader);
+      files.add(elementData);
+    }
+  }
+  LOG.warn("transaction has no ending marker so is incomplete and will not be restored (ending " + reader.getLineNumber() + ")");
+}

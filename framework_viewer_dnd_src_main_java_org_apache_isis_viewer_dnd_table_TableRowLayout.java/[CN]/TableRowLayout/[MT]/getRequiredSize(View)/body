@@ -1,0 +1,14 @@
+{
+  int maxHeight=0;
+  int totalWidth=0;
+  final View[] cells=row.getSubviews();
+  final int maxBaseline=maxBaseline(cells);
+  for (int i=0; i < cells.length; i++) {
+    totalWidth+=axis.getColumnWidth(i);
+    final Size s=cells[i].getRequiredSize(Size.createMax());
+    final int b=cells[i].getBaseline();
+    final int baselineOffset=Math.max(0,maxBaseline - b);
+    maxHeight=Math.max(maxHeight,s.getHeight() + baselineOffset);
+  }
+  return new Size(totalWidth,maxHeight);
+}

@@ -1,0 +1,10 @@
+{
+  final ObjectData data=createData(Team.class,99,new FileVersion("user",13));
+  data.initCollection("Members");
+  manager.insertObject(data);
+  final ObjectData read=(ObjectData)manager.loadData(data.getOid());
+  assertEquals(data.getOid(),read.getOid());
+  assertEquals(data.getTypeName(),read.getTypeName());
+  final ReferenceVector c=read.elements("Members");
+  assertNull(c);
+}

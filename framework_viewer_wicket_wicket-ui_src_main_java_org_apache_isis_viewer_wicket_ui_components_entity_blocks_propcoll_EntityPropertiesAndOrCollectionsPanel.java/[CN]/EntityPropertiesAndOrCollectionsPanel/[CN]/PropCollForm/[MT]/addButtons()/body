@@ -1,0 +1,65 @@
+{
+  editButton=new AjaxButton(ID_EDIT_BUTTON,Model.of("Edit")){
+    private static final long serialVersionUID=1L;
+    @Override public void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
+      toEditMode(target);
+    }
+    @Override protected void onError(    final AjaxRequestTarget target,    final Form<?> form){
+      toEditMode(target);
+    }
+  }
+;
+  add(editButton);
+  okButton=new Button(ID_OK_BUTTON,Model.of("OK")){
+    private static final long serialVersionUID=1L;
+    @Override public void onSubmit(){
+      if (!getForm().hasError()) {
+        final ObjectAdapter object=getEntityModel().getObject();
+        final Memento snapshotToRollbackToIfInvalid=new Memento(object);
+        getEntityModel().apply();
+        final String invalidReasonIfAny=getEntityModel().getReasonInvalidIfAny();
+        if (invalidReasonIfAny != null) {
+          getForm().error(invalidReasonIfAny);
+          snapshotToRollbackToIfInvalid.recreateObject();
+          return;
+        }
+ else {
+          toViewMode(null);
+        }
+      }
+ else {
+      }
+    }
+  }
+;
+  add(okButton);
+  cancelButton=new AjaxButton(ID_CANCEL_BUTTON,Model.of("Cancel")){
+    private static final long serialVersionUID=1L;
+{
+      setDefaultFormProcessing(false);
+    }
+    @Override protected void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
+      Session.get().getFeedbackMessages().clear();
+      getForm().clearInput();
+      getForm().visitFormComponentsPostOrder(new IVisitor(){
+        @Override public Object formComponent(        final IFormVisitorParticipant formComponent){
+          if (formComponent instanceof CancelHintRequired) {
+            final CancelHintRequired cancelHintRequired=(CancelHintRequired)formComponent;
+            cancelHintRequired.onCancel();
+          }
+          return null;
+        }
+      }
+);
+      getEntityModel().resetPropertyModels();
+      toViewMode(target);
+    }
+    @Override protected void onError(    final AjaxRequestTarget target,    final Form<?> form){
+      toViewMode(target);
+    }
+  }
+;
+  add(cancelButton);
+  editButton.setOutputMarkupPlaceholderTag(true);
+  cancelButton.setOutputMarkupPlaceholderTag(true);
+}

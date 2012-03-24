@@ -1,0 +1,14 @@
+{
+  final DescribedAsAnnotationOnParameterFacetFactory facetFactory=new DescribedAsAnnotationOnParameterFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @DescribedAs("some description") final int x){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class});
+  facetFactory.processParams(new ProcessParameterContext(actionMethod,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(DescribedAsFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DescribedAsFacetAbstract);
+  final DescribedAsFacetAbstract describedAsFacetAbstract=(DescribedAsFacetAbstract)facet;
+  assertEquals("some description",describedAsFacetAbstract.value());
+}

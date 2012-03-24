@@ -1,0 +1,35 @@
+{
+  final TypeOf annotation=getAnnotation(processMethodContext.getMethod(),TypeOf.class);
+  final Class<?> methodReturnType=processMethodContext.getMethod().getReturnType();
+  if (!collectionTypeRegistry.isCollectionType(methodReturnType) && !collectionTypeRegistry.isArrayType(methodReturnType)) {
+    return;
+  }
+  final Class<?> returnType=processMethodContext.getMethod().getReturnType();
+  if (returnType.isArray()) {
+    final Class<?> componentType=returnType.getComponentType();
+    FacetUtil.addFacet(new TypeOfFacetInferredFromArray(componentType,processMethodContext.getFacetHolder(),getSpecificationLookup()));
+    return;
+  }
+  if (annotation != null) {
+    FacetUtil.addFacet(new TypeOfFacetAnnotationForAction(annotation.value(),processMethodContext.getFacetHolder(),getSpecificationLookup()));
+    return;
+  }
+  final Type type=processMethodContext.getMethod().getGenericReturnType();
+  if (!(type instanceof ParameterizedType)) {
+    return;
+  }
+  final ParameterizedType parameterizedType=(ParameterizedType)type;
+  final Type[] actualTypeArguments=parameterizedType.getActualTypeArguments();
+  if (actualTypeArguments.length == 0) {
+    return;
+  }
+  final Object actualTypeArgument=actualTypeArguments[0];
+  if (actualTypeArgument instanceof Class) {
+    final Class<?> actualType=(Class<?>)actualTypeArgument;
+    FacetUtil.addFacet(new TypeOfFacetInferredFromGenerics(actualType,processMethodContext.getFacetHolder(),getSpecificationLookup()));
+    return;
+  }
+  if (actualTypeArgument instanceof TypeVariable) {
+    return;
+  }
+}

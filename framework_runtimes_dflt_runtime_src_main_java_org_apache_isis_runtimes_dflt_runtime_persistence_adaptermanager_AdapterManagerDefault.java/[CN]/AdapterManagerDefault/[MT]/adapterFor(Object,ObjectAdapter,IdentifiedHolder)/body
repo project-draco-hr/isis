@@ -1,0 +1,17 @@
+{
+  final ObjectAdapter adapter=getAdapterFor(pojo);
+  if (adapter != null) {
+    return adapter;
+  }
+  final ObjectSpecification noSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
+  if (noSpec.containsFacet(ValueFacet.class)) {
+    return createStandaloneAdapter(pojo);
+  }
+  if (ownerAdapter != null && identifiedHolder != null) {
+    if (specIsAggregated(noSpec) || referenceIsAggregated(identifiedHolder)) {
+      final ObjectAdapter newAdapter=createAggregatedAdapter(pojo,ownerAdapter,identifiedHolder);
+      return mapAndInjectServices(newAdapter);
+    }
+  }
+  return map(createOrRecreateRootAdapter(pojo));
+}

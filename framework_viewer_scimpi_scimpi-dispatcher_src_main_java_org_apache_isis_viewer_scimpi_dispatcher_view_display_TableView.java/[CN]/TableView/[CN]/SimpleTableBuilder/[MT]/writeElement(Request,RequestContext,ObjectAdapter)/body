@@ -1,0 +1,69 @@
+{
+  final String rowId=context.mapObject(element,Scope.INTERACTION);
+  final String scope=linkRow == null ? "" : "&amp;" + SCOPE + "="+ linkRow.getScope();
+  String result="";
+  result=context.encodedInteractionParameters();
+  if (noColumns == 0) {
+    request.appendHtml("<td>");
+    if (linkRow != null) {
+      request.appendHtml("<td><a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">");
+      request.appendAsHtmlEncoded(element.titleString());
+      request.appendHtml("</a>");
+    }
+ else {
+      request.appendAsHtmlEncoded(element.titleString());
+    }
+    request.appendHtml("</td>");
+  }
+ else {
+    if (showTitle) {
+      request.appendHtml("<td>");
+      request.appendAsHtmlEncoded(element.titleString());
+      request.appendHtml("</td>");
+    }
+    for (int i=0; i < noColumns; i++) {
+      if (fields.get(i).isOneToManyAssociation()) {
+        continue;
+      }
+      request.appendHtml("<td>");
+      final ObjectAdapter field=fields.get(i).get(element);
+      if (field != null) {
+        if (showIcons && !fields.get(i).getSpecification().containsFacet(ParseableFacet.class)) {
+          request.appendHtml("<img class=\"" + "small-icon" + "\" src=\"" + request.getContext().imagePath(field) + "\" alt=\""+ fields.get(i).getSpecification().getShortIdentifier()+ "\"/>");
+        }
+        if (linkRow != null) {
+          request.appendHtml("<a href=\"" + linkRow.getForwardView() + "?"+ linkRow.getVariable()+ "="+ rowId+ result+ scope+ "\">");
+        }
+ else         if (linkedFields[i] != null) {
+          final ObjectAdapter fieldObject=fields.get(i).get(element);
+          final String id=context.mapObject(fieldObject,Scope.INTERACTION);
+          request.appendHtml("<a href=\"" + linkedFields[i].getForwardView() + "?"+ linkedFields[i].getVariable()+ "="+ id+ "\">");
+          context.mapObject(fieldObject,RequestContext.scope(linkedFields[i].getScope()));
+        }
+        try {
+          request.appendAsHtmlEncoded(field.titleString());
+        }
+ catch (        final ObjectNotFoundException e) {
+          request.appendAsHtmlEncoded(e.getMessage());
+        }
+        if (linkRow != null || linkedFields[i] != null) {
+          request.appendHtml("</a>");
+        }
+      }
+      request.appendHtml("</td>");
+    }
+  }
+  request.appendHtml("<td class=\"controls\">");
+  if (showSelectOption) {
+    request.appendHtml("<a class=\"button element-select\" href=\"" + "_generic." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">view</a>");
+  }
+  if (showEditOption) {
+    request.appendHtml(" <a class=\"button element-edit\" href=\"" + "_generic_edit." + Dispatcher.EXTENSION + "?"+ RequestContext.RESULT+ "="+ rowId+ result+ scope+ "\">edit</a>");
+  }
+  if (showDeleteOption && parent != null) {
+    String view=request.getViewPath();
+    view=context.fullFilePath(view == null ? context.getResourceFile() : view);
+    RemoveElement.write(request,context.getMappedObject(parent),fieldName,element,null,view,view,"delete","element-delete");
+  }
+  request.appendHtml("</td>");
+}

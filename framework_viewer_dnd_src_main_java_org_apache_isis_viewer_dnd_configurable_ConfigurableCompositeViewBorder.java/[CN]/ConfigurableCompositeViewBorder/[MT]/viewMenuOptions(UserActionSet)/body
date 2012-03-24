@@ -1,0 +1,11 @@
+{
+  super.viewMenuOptions(menuOptions);
+  final UserActionSet subOptions=menuOptions.addNewActionSet("Elements as");
+  final View firstSubview=getSubviews()[0];
+  final int status=ViewRequirement.OPEN | ViewRequirement.CLOSED | ViewRequirement.SUBVIEW| ViewRequirement.FIXED;
+  final ViewRequirement viewRequirement=new ViewRequirement(firstSubview.getContent(),status);
+  final Enumeration<ViewSpecification> possibleViews=Toolkit.getViewFactory().availableViews(viewRequirement);
+  while (possibleViews.hasMoreElements()) {
+    addElementAsOption(subOptions,possibleViews.nextElement());
+  }
+}

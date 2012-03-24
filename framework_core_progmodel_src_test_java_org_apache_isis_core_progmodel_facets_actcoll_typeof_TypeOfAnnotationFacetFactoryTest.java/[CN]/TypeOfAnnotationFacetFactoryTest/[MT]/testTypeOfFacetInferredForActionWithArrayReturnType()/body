@@ -1,0 +1,17 @@
+{
+class Order {
+  }
+class Customer {
+    @SuppressWarnings("unused") public Order[] someAction(){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TypeOfFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TypeOfFacetInferredFromArray);
+  final TypeOfFacetInferredFromArray typeOfFacetInferredFromArray=(TypeOfFacetInferredFromArray)facet;
+  assertEquals(Order.class,typeOfFacetInferredFromArray.value());
+  assertNoMethodsRemoved();
+}

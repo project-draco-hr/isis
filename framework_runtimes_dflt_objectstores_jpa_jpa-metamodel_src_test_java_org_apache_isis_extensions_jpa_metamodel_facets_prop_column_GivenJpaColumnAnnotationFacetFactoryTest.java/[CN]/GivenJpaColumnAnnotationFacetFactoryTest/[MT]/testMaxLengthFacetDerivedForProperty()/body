@@ -1,0 +1,8 @@
+{
+  final Class<?> cls=SimpleObjectWithColumnAnnotation.class;
+  final Method method=cls.getMethod("getSomeColumn");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(cls,method,methodRemover,facetedMethod));
+  final MaxLengthFacet facet=facetedMethod.getFacet(MaxLengthFacet.class);
+  assertNotNull(facet);
+  Assert.assertTrue(facet instanceof MaxLengthFacetDerivedFromJpaColumnAnnotation);
+}

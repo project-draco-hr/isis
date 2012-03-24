@@ -1,0 +1,19 @@
+{
+  for (  final ObjectAdapter objectToDispose : getUpdateNotifier().getDisposedObjects()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("dispose views for " + objectToDispose);
+    }
+    final Vector<View> viewsForObject=viewListByAdapter.get(objectToDispose);
+    if (viewsForObject == null) {
+      continue;
+    }
+    removeViews(viewsForObject);
+    final Vector<View> remainingViews=viewListByAdapter.get(objectToDispose);
+    if (remainingViews != null && remainingViews.size() > 0) {
+      getMessageBroker().addWarning("There are still views (within other views) for the disposed object " + objectToDispose.titleString() + ".  Only objects that are shown as root views can be properly disposed of");
+    }
+ else {
+      getAdapterManager().removeAdapter(objectToDispose);
+    }
+  }
+}

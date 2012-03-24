@@ -1,0 +1,14 @@
+{
+  final HomePageResource homePageResource=client.getHomePageResource();
+  final Response homePageResp=homePageResource.homePage();
+  final RepresentationWalker walker=client.createWalker(homePageResp);
+  walker.walk("services");
+  walker.walk("values[title=ApplibValues].links[rel=object]");
+  walker.walk("values[memberType=action].details");
+  final JsonRepresentation newEntityActionDetails=walker.getEntity();
+  final JsonRepresentation newEntityActionInvokeBody=newEntityActionDetails.getArray("invoke.body");
+  walker.walk("invoke",newEntityActionInvokeBody);
+  walker.walk("link");
+  final JsonRepresentation newEntityDomainObject=walker.getEntity();
+  assertThat(newEntityDomainObject.getString("_self.link.href"),matches(".+/objects/OID:[\\d]+$"));
+}

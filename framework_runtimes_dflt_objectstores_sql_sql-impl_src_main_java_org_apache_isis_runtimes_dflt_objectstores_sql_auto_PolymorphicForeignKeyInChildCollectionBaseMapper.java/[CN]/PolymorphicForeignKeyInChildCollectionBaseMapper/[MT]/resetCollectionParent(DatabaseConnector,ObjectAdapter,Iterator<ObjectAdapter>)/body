@@ -1,0 +1,27 @@
+{
+  LOG.debug("Saving polymorphic list");
+  ObjectSpecification elementSpecification;
+  while (elements.hasNext()) {
+    final ObjectAdapter thisAdapter=elements.next();
+    elementSpecification=thisAdapter.getSpecification();
+    final StringBuffer update=new StringBuffer();
+    update.append("INSERT INTO ");
+    update.append(table);
+    update.append(" (");
+    super.getIdMapping().appendColumnNames(update);
+    update.append("," + getForeignKeyName());
+    update.append(", " + itemIdColumnName);
+    update.append("," + classColumnName);
+    update.append(") VALUES (");
+    final Oid transientOid=oidGenerator.createTransientOid(thisAdapter.getObject());
+    oidGenerator.convertTransientToPersistentOid(transientOid);
+    polyIdMapper.appendObjectId(connector,update,transientOid);
+    update.append(",");
+    getForeignKeyMapping().appendInsertValues(connector,update,parent);
+    update.append(",");
+    getIdMapping().appendObjectId(connector,update,thisAdapter.getOid());
+    update.append(",?)");
+    connector.addToQueryValues(elementSpecification.getFullIdentifier());
+    connector.insert(update.toString());
+  }
+}

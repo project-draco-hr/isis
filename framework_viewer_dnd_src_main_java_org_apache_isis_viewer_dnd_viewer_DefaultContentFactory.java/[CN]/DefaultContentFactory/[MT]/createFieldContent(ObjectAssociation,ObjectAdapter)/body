@@ -1,0 +1,20 @@
+{
+  Content content;
+  final ObjectAdapter associatedObject=field.get(object);
+  if (field instanceof OneToManyAssociation) {
+    content=new OneToManyFieldImpl(object,associatedObject,(OneToManyAssociation)field);
+  }
+ else   if (field instanceof OneToOneAssociation) {
+    final ObjectSpecification fieldSpecification=field.getSpecification();
+    if (fieldSpecification.isParseable()) {
+      content=new TextParseableFieldImpl(object,associatedObject,(OneToOneAssociation)field);
+    }
+ else {
+      content=new OneToOneFieldImpl(object,associatedObject,(OneToOneAssociation)field);
+    }
+  }
+ else {
+    throw new IsisException();
+  }
+  return content;
+}

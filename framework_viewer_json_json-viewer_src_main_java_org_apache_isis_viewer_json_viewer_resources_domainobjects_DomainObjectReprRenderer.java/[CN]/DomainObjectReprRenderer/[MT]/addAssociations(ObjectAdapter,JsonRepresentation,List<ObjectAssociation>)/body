@@ -1,0 +1,31 @@
+{
+  final LinkFollower linkFollower=getLinkFollower().follow("members");
+  for (  final ObjectAssociation assoc : associations) {
+    if (!mode.isCutDown()) {
+      final Consent visibility=assoc.isVisible(getSession(),objectAdapter);
+      if (!visibility.isAllowed()) {
+        continue;
+      }
+    }
+    if (assoc instanceof OneToOneAssociation) {
+      final OneToOneAssociation property=(OneToOneAssociation)assoc;
+      final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.OBJECT_PROPERTY);
+      final ObjectPropertyReprRenderer renderer=(ObjectPropertyReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+      renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(linkToBuilder);
+      if (mode.isCutDown()) {
+        renderer.asArguments();
+      }
+      members.arrayAdd(renderer.render());
+    }
+    if (mode.isCutDown()) {
+      continue;
+    }
+    if (assoc instanceof OneToManyAssociation) {
+      final OneToManyAssociation collection=(OneToManyAssociation)assoc;
+      final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.OBJECT_COLLECTION);
+      final ObjectCollectionReprRenderer renderer=(ObjectCollectionReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+      renderer.with(new ObjectAndCollection(objectAdapter,collection)).usingLinkTo(linkToBuilder);
+      members.arrayAdd(renderer.render());
+    }
+  }
+}

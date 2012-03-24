@@ -1,0 +1,23 @@
+{
+  if (data == null || data.equals("NULL")) {
+    setValuesInternal(date,true,false);
+  }
+ else {
+    int year=Integer.valueOf(data.substring(0,4)).intValue();
+    int month=Integer.valueOf(data.substring(4,6)).intValue();
+    int day=Integer.valueOf(data.substring(6,8)).intValue();
+    int hour=Integer.valueOf(data.substring(8,10)).intValue();
+    int minute=Integer.valueOf(data.substring(10,12)).intValue();
+    int second=Integer.valueOf(data.substring(12,14)).intValue();
+    int millisecond=Integer.valueOf(data.substring(14,17)).intValue();
+    Calendar cal=createCalendar();
+    cal.set(Calendar.DAY_OF_MONTH,day);
+    cal.set(Calendar.MONTH,month - 1);
+    cal.set(Calendar.YEAR,year);
+    cal.set(Calendar.HOUR_OF_DAY,hour);
+    cal.set(Calendar.MINUTE,minute);
+    cal.set(Calendar.SECOND,second);
+    cal.set(Calendar.MILLISECOND,millisecond);
+    setValuesInternal(cal.getTime(),false,true);
+  }
+}

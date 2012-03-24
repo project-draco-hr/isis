@@ -1,0 +1,8 @@
+{
+  final ResponseBuilder builder=Response.status(ex.getHttpStatusCode().getJaxrsStatusType()).type(RestfulMediaType.APPLICATION_JSON_ERROR).entity(jsonFor(ex));
+  final String message=ex.getMessage();
+  if (message != null) {
+    builder.header(RestfulResponse.Header.WARNING.getName(),message);
+  }
+  return builder.build();
+}

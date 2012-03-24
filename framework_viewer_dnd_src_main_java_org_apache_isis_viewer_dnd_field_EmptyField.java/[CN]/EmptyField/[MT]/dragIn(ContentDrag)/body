@@ -1,0 +1,19 @@
+{
+  final Content sourceContent=drag.getSourceContent();
+  if (sourceContent instanceof ObjectContent) {
+    final ObjectAdapter source=((ObjectContent)sourceContent).getObject();
+    final Consent canDrop=canDrop(source);
+    if (canDrop.isAllowed()) {
+      getState().setCanDrop();
+    }
+ else {
+      getState().setCantDrop();
+    }
+    final String actionText=canDrop.isVetoed() ? canDrop.getReason() : "Set to " + sourceContent.title();
+    getFeedbackManager().setAction(actionText);
+  }
+ else {
+    getState().setCantDrop();
+  }
+  markDamaged();
+}

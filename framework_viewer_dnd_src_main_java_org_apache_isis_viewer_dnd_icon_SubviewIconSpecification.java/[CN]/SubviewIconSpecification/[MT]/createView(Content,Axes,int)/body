@@ -1,0 +1,14 @@
+{
+  final View view=super.createView(content,axes,sequence);
+  if (content instanceof OneToOneField && ((OneToOneField)content).isEditable().isVetoed()) {
+    return new ObjectBorder(view);
+  }
+ else {
+    if (content.isOptionEnabled()) {
+      return new ObjectBorder(new OpenObjectDropDownBorder(view,spec));
+    }
+ else {
+      return new ObjectBorder(view);
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  if (object.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    PersistorUtil.start(object,ResolveState.RESOLVING);
+    final List<ObjectAssociation> fields=object.getSpecification().getAssociations();
+    for (int i=0; i < fields.size(); i++) {
+      final ObjectAssociation field=fields.get(i);
+      if (field.isNotPersisted()) {
+        continue;
+      }
+      final ObjectSpecification fieldSpecification=field.getSpecification();
+      if (fieldSpecification.isEncodeable()) {
+        final EncodableFacet encoder=fieldSpecification.getFacet(EncodableFacet.class);
+        ObjectAdapter value;
+        final String valueData=data.value(field.getId());
+        if (valueData != null) {
+          if (valueData.equals("NULL")) {
+            value=null;
+          }
+ else {
+            value=encoder.fromEncodedString(valueData);
+          }
+          ((OneToOneAssociation)field).initAssociation(object,value);
+        }
+      }
+ else       if (field.isOneToManyAssociation()) {
+        initObjectSetupCollection(object,data,field);
+      }
+ else       if (field.isOneToOneAssociation()) {
+        initObjectSetupReference(object,data,field);
+      }
+    }
+    object.setOptimisticLock(data.getVersion());
+    PersistorUtil.end(object);
+  }
+}

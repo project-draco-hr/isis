@@ -1,0 +1,10 @@
+{
+  final JsonRepresentation link=LinkBuilder.newBuilder(resourceContext,Rel.SELF,getRepresentationType(),"").build();
+  final LinkFollower linkFollower=getLinkFollower().follow("links[rel=self]");
+  if (linkFollower.matches(link)) {
+    final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.HOME_PAGE);
+    final HomePageReprRenderer renderer=(HomePageReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+    link.mapPut("value",renderer.render());
+  }
+  getLinks().arrayAdd(link);
+}

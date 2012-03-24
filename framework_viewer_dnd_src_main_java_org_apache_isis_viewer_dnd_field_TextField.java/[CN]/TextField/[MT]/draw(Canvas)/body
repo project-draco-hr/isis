@@ -1,0 +1,36 @@
+{
+  super.draw(canvas);
+  final int width=getMaxFieldWidth();
+  align();
+  if (hasFocus() && selection.hasSelection()) {
+    drawHighlight(canvas,width);
+  }
+  Color textColor;
+  Color lineColor;
+  if (getState().isInvalid()) {
+    textColor=Toolkit.getColor(ColorsAndFonts.COLOR_INVALID);
+    lineColor=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3);
+  }
+ else   if (hasFocus()) {
+    if (isSaved) {
+      textColor=Toolkit.getColor(ColorsAndFonts.COLOR_TEXT_SAVED);
+      lineColor=Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY1);
+    }
+ else {
+      textColor=Toolkit.getColor(ColorsAndFonts.COLOR_TEXT_EDIT);
+      lineColor=Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY1);
+    }
+  }
+ else   if (identified) {
+    textColor=Toolkit.getColor(ColorsAndFonts.COLOR_IDENTIFIED);
+    lineColor=Toolkit.getColor(ColorsAndFonts.COLOR_IDENTIFIED);
+  }
+ else {
+    textColor=Toolkit.getColor(ColorsAndFonts.COLOR_BLACK);
+    lineColor=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY3);
+  }
+  if (showLines == true && canChangeValue().isAllowed()) {
+    drawLines(canvas,lineColor,width);
+  }
+  drawText(canvas,textColor,width);
+}

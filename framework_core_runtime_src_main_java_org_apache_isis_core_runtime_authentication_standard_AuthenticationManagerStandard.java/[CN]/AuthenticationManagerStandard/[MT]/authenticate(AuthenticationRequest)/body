@@ -1,0 +1,17 @@
+{
+  if (request == null) {
+    return null;
+  }
+  final Collection<Authenticator> compatibleAuthenticators=Collections2.filter(authenticators,AuthenticatorFuncs.compatibleWith(request));
+  if (compatibleAuthenticators.size() == 0) {
+    throw new NoAuthenticatorException("No authenticator available for processing " + request.getClass().getName());
+  }
+  for (  final Authenticator authenticator : compatibleAuthenticators) {
+    final AuthenticationSession authSession=authenticator.authenticate(request,getUnusedRandomCode());
+    if (authSession != null) {
+      userByValidationCode.put(authSession.getValidationCode(),authSession.getUserName());
+      return authSession;
+    }
+  }
+  return null;
+}

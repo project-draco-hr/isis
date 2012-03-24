@@ -1,0 +1,16 @@
+{
+  final RepresentationType representationType=RepresentationType.TYPE_ACTION_RESULT;
+  init();
+  final String subtype=domainTypeFor(subTypeStr,args,"subtype");
+  final ObjectSpecification domainTypeSpec=getSpecificationLoader().loadSpecification(domainType);
+  final ObjectSpecification subtypeSpec=getSpecificationLoader().loadSpecification(subtype);
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
+  final TypeActionResultReprRenderer renderer=(TypeActionResultReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final String url="domainTypes/" + domainTypeSpec.getFullIdentifier() + "/typeactions/isSupertypeOf/invoke";
+  final LinkBuilder linkBuilder=LinkBuilder.newBuilder(getResourceContext(),Rel.SELF,RepresentationType.TYPE_ACTION_RESULT,url);
+  final JsonRepresentation arguments=DomainTypeReprRenderer.argumentsTo(getResourceContext(),"subtype",subtypeSpec);
+  final JsonRepresentation selfLink=linkBuilder.withArguments(arguments).build();
+  final boolean value=subtypeSpec.isOfType(domainTypeSpec);
+  renderer.with(domainTypeSpec).withSelf(selfLink).withValue(value);
+  return responseOfOk(renderer,Caching.ONE_DAY).build();
+}

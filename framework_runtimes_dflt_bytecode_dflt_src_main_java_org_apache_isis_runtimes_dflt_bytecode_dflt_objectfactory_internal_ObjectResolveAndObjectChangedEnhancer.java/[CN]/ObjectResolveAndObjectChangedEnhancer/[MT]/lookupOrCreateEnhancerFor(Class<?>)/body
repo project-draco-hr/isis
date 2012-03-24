@@ -1,0 +1,11 @@
+{
+  Enhancer enhancer=enhancerByClass.get(cls);
+  if (enhancer == null) {
+    enhancer=new Enhancer();
+    enhancer.setSuperclass(cls);
+    enhancer.setInterfaces(ArrayUtils.combine(cls.getInterfaces(),new Class<?>[]{CglibEnhanced.class}));
+    enhancer.setCallback(callback);
+    enhancerByClass.put(cls,enhancer);
+  }
+  return enhancer;
+}

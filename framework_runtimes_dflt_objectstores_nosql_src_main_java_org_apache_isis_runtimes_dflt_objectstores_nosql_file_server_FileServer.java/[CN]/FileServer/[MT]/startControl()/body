@@ -1,0 +1,39 @@
+{
+  final String controlHost=config.getString("fileserver.control-host",DEFAULT_HOST);
+  final int controlPort=config.getInt("fileserver.control-port",DEFAULT_CONTROL_PORT);
+  final int connectionTimeout=config.getInt("fileserver.connection.timeout",5000);
+  ServerSocket socket=null;
+  try {
+    LOG.debug("setting up control socket on " + controlHost + ":"+ controlPort);
+    final InetAddress address=InetAddress.getByName(controlHost);
+    socket=new ServerSocket(controlPort,0,address);
+    socket.setSoTimeout(connectionTimeout);
+    LOG.info("listenting on " + socket.getInetAddress().getHostAddress() + " port "+ socket.getLocalPort());
+    LOG.debug("listenting on " + socket);
+  }
+ catch (  final UnknownHostException e) {
+    LOG.error("Unknown host " + controlHost,e);
+    System.exit(0);
+  }
+catch (  final IOException e) {
+    LOG.error("start failure - networking not set up for " + controlHost,e);
+    System.exit(0);
+  }
+catch (  final RuntimeException e) {
+    LOG.error("start failure",e);
+    System.exit(0);
+  }
+  do {
+    try {
+      final Socket connection=socket.accept();
+      LOG.info("control connection from " + connection);
+      controlConnection(connection);
+    }
+ catch (    final SocketTimeoutException expected) {
+    }
+catch (    final IOException e) {
+      LOG.error("networking problem",e);
+    }
+  }
+ while (awaitConnections);
+}

@@ -1,0 +1,8 @@
+{
+  final JsonRepresentation givenAction=givenAction("simples","list");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  final RestfulResponse<ListRepresentation> restfulResponse=client.followT(invokeLink);
+  final ListRepresentation listRepr=restfulResponse.getEntity();
+  return listRepr.getValues().arrayGet(num).asLink();
+}

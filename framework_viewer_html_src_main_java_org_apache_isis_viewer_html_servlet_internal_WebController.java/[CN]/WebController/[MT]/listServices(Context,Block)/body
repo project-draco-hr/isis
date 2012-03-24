@@ -1,0 +1,19 @@
+{
+  final Block taskBar=context.getComponentFactory().createBlock("services",null);
+  taskBar.add(context.getComponentFactory().createHeading("Services"));
+  final AdapterManager adapterManager=IsisContext.getPersistenceSession().getAdapterManager();
+  final List<Object> services=getUserProfile().getPerspective().getServices();
+  for (  final Object service : services) {
+    final ObjectAdapter serviceAdapter=adapterManager.adapterFor(service);
+    if (serviceAdapter == null) {
+      LOG.warn("unable to find service Id: " + service + "; skipping");
+      continue;
+    }
+    if (isHidden(serviceAdapter)) {
+      continue;
+    }
+    final String serviceMapId=context.mapObject(serviceAdapter);
+    taskBar.add(createServiceComponent(context,serviceMapId,serviceAdapter));
+  }
+  navigationBar.add(taskBar);
+}

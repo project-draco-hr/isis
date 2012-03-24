@@ -1,0 +1,35 @@
+{
+  request.appendHtml("<div" + classString + ">");
+  if (title != null) {
+    request.appendHtml("<div class=\"title\">");
+    request.appendAsHtmlEncoded(title);
+    request.appendHtml("</div>");
+    HelpLink.append(request,object.getSpecification().getDescription(),object.getSpecification().getHelp());
+  }
+  int row=1;
+  for (int i=0; i < fields.size(); i++) {
+    final ObjectAssociation field=fields.get(i);
+    if (ignoreField(field)) {
+      continue;
+    }
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+      continue;
+    }
+    final String description=field.getDescription().equals("") ? "" : "title=\"" + field.getDescription() + "\"";
+    String cls;
+    if (row++ % 2 == 1) {
+      cls=" class=\"field " + (oddRowClass == null ? ODD_ROW_CLASS : oddRowClass) + "\"";
+    }
+ else {
+      cls=" class=\"field " + (evenRowClass == null ? EVEN_ROW_CLASS : evenRowClass) + "\"";
+    }
+    request.appendHtml("<div " + cls + description+ "><span class=\"label\">");
+    request.appendAsHtmlEncoded(field.getName());
+    request.appendHtml(":</span>");
+    final LinkedObject linkedObject=linkFields[i];
+    addField(request,object,field,linkedObject,showIcons);
+    HelpLink.append(request,field.getDescription(),field.getHelp());
+    request.appendHtml("</div>");
+  }
+  request.appendHtml("</div>");
+}

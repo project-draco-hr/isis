@@ -1,0 +1,14 @@
+{
+  final File file=Util.dataFile(type,id);
+  reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),"utf-8"));
+  final String line=reader.readLine();
+  if (line == null || line.length() == 0) {
+    throw new FileServerException("No data in file: " + file.getAbsolutePath());
+  }
+  final String[] split=line.split(" ");
+  this.id=split[1];
+  if (!id.equals(id)) {
+    throw new FileServerException("Id in file (" + this.id + ") not the same as the file name: "+ file.getAbsolutePath());
+  }
+  version=split[2];
+}

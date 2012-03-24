@@ -1,0 +1,40 @@
+{
+  if (connection != null) {
+    LOG.info("close");
+  }
+  final String BASE=PROPERTY_BASE + ".jdbc.";
+  final IsisConfiguration params=IsisContext.getConfiguration().getProperties(BASE);
+  try {
+    final String driver=params.getString(BASE + "driver");
+    final String url=params.getString(BASE + "connection");
+    final String user=params.getString(BASE + "user");
+    final String password=params.getString(BASE + "password");
+    if (connection != null) {
+      throw new ApplicationException("Connection already established");
+    }
+    if (driver == null) {
+      throw new ApplicationException("No driver specified for database connection");
+    }
+    if (url == null) {
+      throw new ApplicationException("No connection URL specified to database");
+    }
+    if (user == null) {
+      throw new ApplicationException("No user specified for database connection");
+    }
+    if (password == null) {
+      throw new ApplicationException("No password specified for database connection");
+    }
+    Class.forName(driver);
+    LOG.info("Connecting to " + url + " as "+ user);
+    connection=DriverManager.getConnection(url,user,password);
+    if (connection == null) {
+      throw new ApplicationException("No connection established to " + url);
+    }
+  }
+ catch (  final SQLException e) {
+    throw new ApplicationException("Failed to start",e);
+  }
+catch (  final ClassNotFoundException e) {
+    throw new ApplicationException("Could not find database driver",e);
+  }
+}

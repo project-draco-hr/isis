@@ -1,0 +1,23 @@
+{
+  ensureInitialized();
+  if (loadedImages.containsKey(name)) {
+    return loadedImages.get(name);
+  }
+  if (missingImages.contains(name)) {
+    return null;
+  }
+  final List<String> candidates=getCandidates(name);
+  for (  final String candidate : candidates) {
+    final Image image=load(candidate);
+    final TemplateImageImpl templateImage=TemplateImageImpl.create(image);
+    if (templateImage != null) {
+      loadedImages.put(name,templateImage);
+      return templateImage;
+    }
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("failed to find image for " + name);
+  }
+  missingImages.addElement(name);
+  return null;
+}

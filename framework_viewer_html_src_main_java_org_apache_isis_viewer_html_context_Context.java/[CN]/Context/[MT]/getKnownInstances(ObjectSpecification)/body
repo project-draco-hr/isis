@@ -1,0 +1,13 @@
+{
+  final List<ObjectAdapter> instances=Lists.newArrayList();
+  for (  final String id : objectMap.keySet()) {
+    final ObjectAdapter adapter=getMappedObject(id);
+    getPersistenceSession().resolveImmediately(adapter);
+    if (adapter.getSpecification().isOfType(type)) {
+      instances.add(adapter);
+    }
+  }
+  final ObjectAdapter[] array=new ObjectAdapter[instances.size()];
+  instances.toArray(array);
+  return array;
+}

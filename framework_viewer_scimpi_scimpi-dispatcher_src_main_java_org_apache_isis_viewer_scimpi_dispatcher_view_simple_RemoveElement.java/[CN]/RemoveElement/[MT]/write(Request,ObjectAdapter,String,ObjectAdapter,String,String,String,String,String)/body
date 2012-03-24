@@ -1,0 +1,42 @@
+{
+  final ObjectAssociation field=adapter.getSpecification().getAssociation(fieldName);
+  if (field == null) {
+    throw new ScimpiException("No field " + fieldName + " in "+ adapter.getSpecification().getFullIdentifier());
+  }
+  if (!field.isOneToManyAssociation()) {
+    throw new ScimpiException("Field " + fieldName + " not a collection, in "+ adapter.getSpecification().getFullIdentifier());
+  }
+  if (field.isVisible(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
+    throw new ForbiddenException(field,ForbiddenException.VISIBLE);
+  }
+  IsisContext.getPersistenceSession().resolveField(adapter,field);
+  Consent usable=field.isUsable(IsisContext.getAuthenticationSession(),adapter);
+  if (usable.isAllowed()) {
+    usable=((OneToManyAssociation)field).isValidToRemove(adapter,element);
+  }
+  if (usable.isVetoed()) {
+    request.appendHtml("<span class=\"veto\">");
+    request.appendAsHtmlEncoded(usable.getReason());
+    request.appendHtml("</span>");
+  }
+ else {
+    if (valid(request,adapter)) {
+      final String classSegment=" class=\"" + cssClass + "\"";
+      final String objectId=request.getContext().mapObject(adapter,Scope.INTERACTION);
+      final String elementId=request.getContext().mapObject(element,Scope.INTERACTION);
+      final String action=RemoveAction.ACTION + Dispatcher.COMMAND_ROOT;
+      request.appendHtml("<form" + classSegment + " method=\"post\" action=\""+ action+ "\" >");
+      request.appendHtml("<input type=\"hidden\" name=\"" + OBJECT + "\" value=\""+ objectId+ "\" />");
+      request.appendHtml("<input type=\"hidden\" name=\"" + FIELD + "\" value=\""+ fieldName+ "\" />");
+      request.appendHtml("<input type=\"hidden\" name=\"" + ELEMENT + "\" value=\""+ elementId+ "\" />");
+      if (resultOverride != null) {
+        request.appendHtml("<input type=\"hidden\" name=\"" + RESULT_OVERRIDE + "\" value=\""+ resultOverride+ "\" />");
+      }
+      request.appendHtml("<input type=\"hidden\" name=\"" + VIEW + "\" value=\""+ view+ "\" />");
+      request.appendHtml("<input type=\"hidden\" name=\"" + ERROR + "\" value=\""+ error+ "\" />");
+      request.appendHtml(request.getContext().interactionFields());
+      request.appendHtml("<input class=\"button\" type=\"submit\" value=\"" + title + "\" />");
+      request.appendHtml("</form>");
+    }
+  }
+}

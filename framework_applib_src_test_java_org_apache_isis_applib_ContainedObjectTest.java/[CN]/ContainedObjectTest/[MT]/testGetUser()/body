@@ -1,0 +1,13 @@
+{
+  final UserMemento memento=new UserMemento("Harry");
+  context.checking(new Expectations(){
+{
+      one(container).getUser();
+      will(returnValue(memento));
+    }
+  }
+);
+  final UserMemento user=object.getUser();
+  assertEquals(memento,user);
+  context.assertIsSatisfied();
+}

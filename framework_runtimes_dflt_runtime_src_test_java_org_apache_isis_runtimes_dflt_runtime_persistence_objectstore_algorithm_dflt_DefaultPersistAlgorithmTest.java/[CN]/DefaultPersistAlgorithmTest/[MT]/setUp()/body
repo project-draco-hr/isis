@@ -1,0 +1,41 @@
+{
+  super.setUp();
+  algorithm=new DefaultPersistAlgorithm();
+  object=system.createTransientTestObject();
+  final TestProxySpecification spec=system.getSpecification(object);
+  final List<ObjectAssociation> fields=Arrays.asList((ObjectAssociation)new OneToOneAssociationTest(){
+    @Override public void initAssociation(    final ObjectAdapter inObject,    final ObjectAdapter associate){
+    }
+    @Override public Consent isAssociationValid(    final ObjectAdapter inObject,    final ObjectAdapter associate){
+      return null;
+    }
+    @Override public void setAssociation(    final ObjectAdapter inObject,    final ObjectAdapter associate){
+    }
+    @Override public void set(    final ObjectAdapter owner,    final ObjectAdapter newValue){
+    }
+    @Override public ObjectAdapter get(    final ObjectAdapter target){
+      return null;
+    }
+    @Override public ObjectSpecification getSpecification(){
+      return null;
+    }
+    @Override public String debugData(){
+      return null;
+    }
+    @Override public String getId(){
+      return null;
+    }
+    @Override public String getName(){
+      return null;
+    }
+    @Override public FeatureType getFeatureType(){
+      return FeatureType.PROPERTY;
+    }
+  }
+);
+  spec.setupFields(fields);
+  fieldsObject=new TestProxyAdapter();
+  fieldsObject.setupResolveState(ResolveState.TRANSIENT);
+  fieldsObject.setupSpecification(system.getSpecification(String.class));
+  adder=new PersistedObjectAdderSpy();
+}

@@ -1,0 +1,15 @@
+{
+  if (field == null || field.isTransient()) {
+    return "";
+  }
+  final ObjectSpecification specification=field.getSpecification();
+  if (specification.containsFacet(EnumFacet.class)) {
+    return String.valueOf(field.getObject());
+  }
+ else   if (specification.getFacet(ParseableFacet.class) == null) {
+    return context.mapObject(field,Scope.INTERACTION);
+  }
+ else {
+    return field.titleString();
+  }
+}

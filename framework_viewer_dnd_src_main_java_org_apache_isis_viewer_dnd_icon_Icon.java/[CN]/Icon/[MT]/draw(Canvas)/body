@@ -1,0 +1,23 @@
+{
+  super.draw(canvas);
+  ensureHasIcon();
+  int x=0;
+  int y=0;
+  icon.draw(canvas,x,getBaseline());
+  if (isVertical) {
+    final int w=title.getSize().getWidth();
+    x=(w > icon.getSize().getWidth()) ? x : getSize().getWidth() / 2 - w / 2;
+    y=icon.getSize().getHeight() + Toolkit.getText(ColorsAndFonts.TEXT_ICON).getAscent() + VPADDING;
+  }
+ else {
+    x+=icon.getSize().getWidth();
+    x+=View.HPADDING;
+    y=icon.getBaseline();
+  }
+  final int maxWidth=getSize().getWidth() - x;
+  title.draw(canvas,x,y,maxWidth);
+  if (getState().isActive()) {
+    final Image busyImage=ImageFactory.getInstance().loadIcon("busy",16,null);
+    canvas.drawImage(busyImage,icon.getSize().getWidth() - 16 - 4,4);
+  }
+}

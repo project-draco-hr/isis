@@ -1,0 +1,34 @@
+{
+  if (alreadyPersistedOrNotPersistableOrServiceOrStandalone(object)) {
+    LOG.warn("can't make object persistent - either already persistent, or transient only: " + object);
+    return;
+  }
+  final List<ObjectAssociation> fields=object.getSpecification().getAssociations();
+  if (!object.getSpecification().isEncodeable() && fields.size() > 0) {
+    LOG.info("persist " + object);
+    CallbackUtils.callCallback(object,PersistingCallbackFacet.class);
+    toPersistObjectSet.remapAsPersistent(object);
+    toPersistObjectSet.addPersistedObject(object);
+    CallbackUtils.callCallback(object,PersistedCallbackFacet.class);
+    for (int i=0; i < fields.size(); i++) {
+      final ObjectAssociation field=fields.get(i);
+      if (field.isNotPersisted()) {
+        continue;
+      }
+ else       if (field instanceof OneToManyAssociation) {
+        final ObjectAdapter collection=field.get(object);
+        if (collection == null) {
+          throw new ObjectPersistenceException("Collection " + field.getName() + " does not exist in "+ object.getSpecification().getFullIdentifier());
+        }
+        makePersistent(collection,toPersistObjectSet);
+      }
+ else {
+        final ObjectAdapter fieldValue=field.get(object);
+        if (fieldValue == null) {
+          continue;
+        }
+        makePersistent(fieldValue,toPersistObjectSet);
+      }
+    }
+  }
+}

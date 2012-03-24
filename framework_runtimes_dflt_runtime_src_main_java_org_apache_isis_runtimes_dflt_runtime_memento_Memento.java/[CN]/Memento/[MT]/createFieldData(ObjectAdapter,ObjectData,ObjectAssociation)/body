@@ -1,0 +1,20 @@
+{
+  Object fieldData;
+  if (field.isOneToManyAssociation()) {
+    final ObjectAdapter coll=field.get(object);
+    fieldData=createCollectionData(coll);
+  }
+ else   if (field.getSpecification().isEncodeable()) {
+    final EncodableFacet facet=field.getSpecification().getFacet(EncodableFacet.class);
+    final ObjectAdapter value=field.get(object);
+    fieldData=facet.toEncodedString(value);
+  }
+ else   if (field.isOneToOneAssociation()) {
+    final ObjectAdapter ref=((OneToOneAssociation)field).get(object);
+    fieldData=createReferenceData(ref);
+  }
+ else {
+    throw new UnknownTypeException(field);
+  }
+  data.addField(field.getId(),fieldData);
+}

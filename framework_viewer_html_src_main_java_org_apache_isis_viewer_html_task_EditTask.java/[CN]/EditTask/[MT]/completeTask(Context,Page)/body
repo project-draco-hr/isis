@@ -1,0 +1,17 @@
+{
+  final ObjectAdapter targetAdapter=getTarget(context);
+  final ObjectAdapter[] entryAdapters=getEntries(context);
+  if (targetAdapter.isTransient()) {
+    final ObjectAction action=targetAdapter.getSpecification().getObjectAction(ActionType.USER,"save",ObjectSpecification.EMPTY_LIST);
+    if (action == null) {
+      getPersistenceSession().makePersistent(targetAdapter);
+    }
+ else {
+      action.execute(targetAdapter,new ObjectAdapter[0]);
+    }
+  }
+ else {
+    saveState(targetAdapter,entryAdapters);
+  }
+  return targetAdapter;
+}

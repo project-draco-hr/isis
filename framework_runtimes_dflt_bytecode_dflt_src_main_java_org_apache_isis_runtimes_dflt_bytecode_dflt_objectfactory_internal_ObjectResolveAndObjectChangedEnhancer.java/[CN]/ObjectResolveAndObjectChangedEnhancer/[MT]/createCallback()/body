@@ -1,0 +1,22 @@
+{
+  this.callback=new MethodInterceptor(){
+    @Override public Object intercept(    final Object proxied,    final Method proxiedMethod,    final Object[] args,    final MethodProxy proxyMethod) throws Throwable {
+      final boolean ignore=proxiedMethod.getDeclaringClass().equals(Object.class);
+      ImperativeFacetFlags flags=null;
+      if (!ignore) {
+        final ObjectSpecificationDefault targetObjSpec=getJavaSpecificationOfOwningClass(proxiedMethod);
+        final ObjectMember member=targetObjSpec.getMember(proxiedMethod);
+        flags=ImperativeFacetUtils.getImperativeFacetFlags(member,proxiedMethod);
+        if (flags.impliesResolve()) {
+          objectResolver.resolve(proxied,member.getName());
+        }
+      }
+      final Object proxiedReturn=proxyMethod.invokeSuper(proxied,args);
+      if (!ignore && flags.impliesObjectChanged()) {
+        objectChanger.objectChanged(proxied);
+      }
+      return proxiedReturn;
+    }
+  }
+;
+}

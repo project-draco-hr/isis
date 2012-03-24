@@ -1,0 +1,11 @@
+{
+  final PersistenceSession persistenceSession=super.createPersistenceSession();
+  if (persistedObjects != null) {
+    final OidGenerator oidGenerator=persistenceSession.getOidGenerator();
+    if (oidGenerator instanceof SimpleOidGenerator) {
+      final SimpleOidGenerator simpleOidGenerator=(SimpleOidGenerator)oidGenerator;
+      simpleOidGenerator.resetTo(persistedObjects.getOidGeneratorMemento());
+    }
+  }
+  return persistenceSession;
+}

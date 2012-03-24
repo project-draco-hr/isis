@@ -1,0 +1,16 @@
+{
+  final int pos=data.indexOf('#');
+  if (pos == -1) {
+    throw new FixtureException("load failed - trying to read non-reference data as a reference: " + data);
+  }
+  final String id=data.substring(pos + 1);
+  ObjectAdapter object=idMap.get(id);
+  if (object == null) {
+    final String className=data.substring(0,pos);
+    final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(className);
+    object=IsisContext.getPersistenceSession().createInstance(specification);
+    idMap.put(id,object);
+    objects.add(object.getObject());
+  }
+  return object;
+}

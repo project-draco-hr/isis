@@ -1,0 +1,11 @@
+{
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TitleFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TitleFacetViaTitleAnnotation);
+  final TitleFacetViaTitleAnnotation titleFacetViaTitleAnnotation=(TitleFacetViaTitleAnnotation)facet;
+  final List<Method> titleMethods=Arrays.asList(Customer.class.getMethod("someTitle"));
+  for (int i=0; i < titleMethods.size(); i++) {
+    assertEquals(titleMethods.get(i),titleFacetViaTitleAnnotation.getComponents().get(i).getMethod());
+  }
+}

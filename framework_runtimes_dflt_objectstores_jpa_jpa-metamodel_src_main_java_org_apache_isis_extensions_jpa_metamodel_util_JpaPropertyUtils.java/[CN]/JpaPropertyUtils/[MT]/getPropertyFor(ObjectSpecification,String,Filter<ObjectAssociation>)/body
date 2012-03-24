@@ -1,0 +1,13 @@
+{
+  if (objSpec == null || !objSpec.containsFacet(JpaEntityFacet.class)) {
+    return null;
+  }
+  final List<? extends ObjectAssociation> propertyList=objSpec.getAssociations(filter);
+  if (propertyList.size() == 0) {
+    return JpaPropertyUtils.getPropertyFor(objSpec.superclass(),annotationName,filter);
+  }
+  if (propertyList.size() > 1) {
+    throw new IllegalStateException(MessageFormat.format("Shouldn''t have more than one property annotated with {0} (''{1}'')",annotationName,objSpec.getFullIdentifier()));
+  }
+  return (OneToOneAssociation)propertyList.get(0);
+}

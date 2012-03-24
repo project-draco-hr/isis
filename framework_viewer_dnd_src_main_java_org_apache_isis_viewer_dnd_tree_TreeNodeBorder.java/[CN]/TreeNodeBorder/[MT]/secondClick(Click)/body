@@ -1,0 +1,16 @@
+{
+  final int x=click.getLocation().getX();
+  final int y=click.getLocation().getY();
+  if (y < top && x > left) {
+    if (canOpen() == NodeSpecification.UNKNOWN) {
+      resolveContent();
+      markDamaged();
+    }
+    final Location location=getAbsoluteLocation();
+    location.translate(click.getLocation());
+    getWorkspace().addWindowFor(getContent().getAdapter(),new Placement(this));
+  }
+ else {
+    super.secondClick(click);
+  }
+}

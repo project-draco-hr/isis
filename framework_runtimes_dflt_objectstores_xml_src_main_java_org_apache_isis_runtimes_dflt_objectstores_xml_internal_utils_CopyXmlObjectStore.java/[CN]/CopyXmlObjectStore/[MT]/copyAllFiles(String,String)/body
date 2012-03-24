@@ -1,0 +1,14 @@
+{
+  final File from=new File(testDirectory);
+  final File to=new File(workingDirectory);
+  if (!to.exists()) {
+    to.mkdirs();
+  }
+  if (to.isFile()) {
+    throw new IsisException("To directory is actually a file " + to.getAbsolutePath());
+  }
+  final String list[]=from.list();
+  for (  final String element : list) {
+    copyFile(new File(from,element),new File(to,element));
+  }
+}

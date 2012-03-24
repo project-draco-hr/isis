@@ -1,0 +1,13 @@
+{
+  if (mode == Mode.STRICT && getServicesInjector() == null) {
+    throw new IllegalStateException("ServicesInjector has not been injected into ObjectFactory");
+  }
+  if (Modifier.isAbstract(cls.getModifiers())) {
+    throw new ObjectInstantiationException("Cannot create an instance of an abstract class: " + cls);
+  }
+  final T newInstance=doInstantiate(cls);
+  if (getServicesInjector() != null) {
+    getServicesInjector().injectDependencies(newInstance);
+  }
+  return newInstance;
+}

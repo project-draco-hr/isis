@@ -1,0 +1,42 @@
+{
+  frame=new ViewerFrame();
+  if (bounds == null) {
+    bounds=calculateInitialWindowSize(frame.getToolkit().getScreenSize());
+  }
+  frame.pack();
+  frame.setBounds(bounds.getX(),bounds.getY(),bounds.getWidth(),bounds.getHeight());
+  viewer=(XViewer)Toolkit.getViewer();
+  viewer.setRenderingArea(frame);
+  viewer.setUpdateNotifier(updateNotifier);
+  viewer.setListener(shutdownListener);
+  viewer.setExploration(isInExplorationMode());
+  viewer.setPrototype(isInPrototypeMode());
+  if (helpViewer == null) {
+    helpViewer=new InternalHelpViewer(viewer);
+  }
+  viewer.setHelpViewer(helpViewer);
+  frame.setViewer(viewer);
+  final AuthenticationSession currentSession=IsisContext.getAuthenticationSession();
+  if (currentSession == null) {
+    throw new NullPointerException("No session for " + this);
+  }
+  setupViewFactory();
+  final UserProfile userProfiler=IsisContext.getUserProfile();
+  final RootWorkspaceSpecification spec=new RootWorkspaceSpecification();
+  final PerspectiveContent content=new PerspectiveContent(userProfiler.getPerspective());
+  if (spec.canDisplay(new ViewRequirement(content,ViewRequirement.CLOSED))) {
+    final View view=spec.createView(content,new Axes(),-1);
+    viewer.setRootView(view);
+  }
+ else {
+    throw new IsisException();
+  }
+  viewer.init();
+  final String name=userProfiler.getPerspective().getName();
+  frame.setTitle(name);
+  frame.init();
+  viewer.initSize();
+  viewer.scheduleRepaint();
+  frame.setVisible(true);
+  frame.toFront();
+}

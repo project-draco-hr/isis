@@ -1,0 +1,26 @@
+{
+  final int baseline=getBaseline();
+  int top=baseline - style.getAscent();
+  final CursorPosition from=selection.from();
+  final CursorPosition to=selection.to();
+  final String[] lines=textContent.getDisplayLines();
+  final int displayFromLine=textContent.getDisplayFromLine();
+  final int displayToLine=displayFromLine + lines.length;
+  for (int i=displayFromLine; i <= displayToLine; i++) {
+    if ((i >= from.getLine()) && (i <= to.getLine())) {
+      final String line=textContent.getText(i);
+      int start=0;
+      int end=style.stringWidth(line);
+      if (from.getLine() == i) {
+        final int at=Math.min(from.getCharacter(),line.length());
+        start=style.stringWidth(line.substring(0,at));
+      }
+      if (to.getLine() == i) {
+        final int at=Math.min(to.getCharacter(),line.length());
+        end=style.stringWidth(line.substring(0,at));
+      }
+      canvas.drawSolidRectangle(start + (HPADDING),top,end - start,getText().getLineHeight(),Toolkit.getColor(ColorsAndFonts.COLOR_TEXT_HIGHLIGHT));
+    }
+    top+=getText().getLineHeight();
+  }
+}

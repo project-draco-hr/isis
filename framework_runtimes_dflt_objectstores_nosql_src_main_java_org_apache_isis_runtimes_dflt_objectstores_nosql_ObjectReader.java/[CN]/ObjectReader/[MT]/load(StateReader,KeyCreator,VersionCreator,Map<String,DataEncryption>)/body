@@ -1,0 +1,24 @@
+{
+  final String className=reader.readObjectType();
+  final ObjectSpecification specification=getSpecificationLoader().loadSpecification(className);
+  final String id=reader.readId();
+  final OidWithSpecification oid=keyCreator.oid(specification,id);
+  final ObjectAdapter object=getAdapter(oid);
+  if (object.getResolveState().isResolved()) {
+    Version version=null;
+    final String versionString=reader.readVersion();
+    if (!versionString.equals("")) {
+      final String user=reader.readUser();
+      final String time=reader.readTime();
+      version=versionCreator.version(versionString,user,time);
+    }
+    if (version.different(object.getVersion())) {
+      throw new UnexpectedCallException();
+    }
+ else {
+      return object;
+    }
+  }
+  loadState(reader,keyCreator,versionCreator,dataEncrypters,object);
+  return object;
+}

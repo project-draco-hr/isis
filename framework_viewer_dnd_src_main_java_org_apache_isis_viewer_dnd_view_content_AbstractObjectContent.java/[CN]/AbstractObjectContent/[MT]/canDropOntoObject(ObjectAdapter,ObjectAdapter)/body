@@ -1,0 +1,11 @@
+{
+  final ObjectAction action=dropAction(source,target);
+  if (action != null) {
+    final Consent parameterSetValid=action.isProposedArgumentSetValid(target,new ObjectAdapter[]{source});
+    parameterSetValid.setDescription("Execute '" + action.getName() + "' with "+ source.titleString());
+    return parameterSetValid;
+  }
+ else {
+    return setFieldOfMatchingType(target,source);
+  }
+}

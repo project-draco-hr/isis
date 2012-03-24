@@ -1,0 +1,25 @@
+{
+  setupHeader(onObject,aliasResultAs,perform,usingMember,thatIt,arg0);
+  final List<String> argumentCells=new ArrayList<String>();
+  getPeer().getOnObjectBinding().captureCurrent(new ScenarioCellDefault(onObject));
+  getPeer().getAliasResultAsBinding().captureCurrent(new ScenarioCellDefault(aliasResultAs));
+  getPeer().getPerformBinding().captureCurrent(new ScenarioCellDefault(perform));
+  getPeer().getOnMemberBinding().captureCurrent(new ScenarioCellDefault(usingMember));
+  if (getPeer().getThatItBinding().isFound()) {
+    getPeer().getThatItBinding().captureCurrent(new ScenarioCellDefault(thatIt));
+  }
+  if (getPeer().getArg0Binding().isFound()) {
+    getPeer().getArg0Binding().captureCurrent(new ScenarioCellDefault(arg0));
+    argumentCells.add(arg0);
+  }
+  for (  final String arg : remainingArgs) {
+    argumentCells.add(arg);
+  }
+  try {
+    execute(argumentCells);
+  }
+ catch (  final ScenarioBoundValueException ex) {
+    return ex.getMessage();
+  }
+  return "ok";
+}

@@ -1,0 +1,19 @@
+{
+  final String objectId=request.getOptionalProperty(OBJECT);
+  final String methodName=request.getRequiredProperty(METHOD);
+  final String field=request.getOptionalProperty(PARAMETER_NUMBER);
+  final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
+  final ObjectAction action=MethodsUtils.findAction(object,methodName);
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  int index;
+  if (field == null) {
+    index=0;
+  }
+ else {
+    index=Integer.valueOf(field).intValue() - 1;
+  }
+  if (index < 0 || index >= parameters.size()) {
+    throw new ScimpiException("Parameter numbers should be between 1 and " + parameters.size() + ": "+ index);
+  }
+  request.appendAsHtmlEncoded(parameters.get(index).getName());
+}

@@ -1,0 +1,16 @@
+{
+  final IsisConfigurationDefault subset=new IsisConfigurationDefault(resourceStreamSource);
+  String startsWith=prefix;
+  if (!startsWith.endsWith(".")) {
+    startsWith=startsWith + '.';
+  }
+  final int prefixLength=startsWith.length();
+  for (  Object keyObj : properties.keySet()) {
+    final String key=(String)keyObj;
+    if (key.startsWith(startsWith)) {
+      final String modifiedKey=key.substring(prefixLength);
+      subset.properties.put(modifiedKey,properties.get(key));
+    }
+  }
+  return subset;
+}

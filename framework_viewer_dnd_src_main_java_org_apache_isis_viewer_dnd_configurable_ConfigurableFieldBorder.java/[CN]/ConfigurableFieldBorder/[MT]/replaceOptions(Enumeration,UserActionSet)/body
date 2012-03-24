@@ -1,0 +1,21 @@
+{
+  if (possibleViews.hasMoreElements()) {
+    final UserActionSet suboptions=options.addNewActionSet("Replace with");
+    while (possibleViews.hasMoreElements()) {
+      final ViewSpecification specification=(ViewSpecification)possibleViews.nextElement();
+      if (specification != getSpecification()) {
+        final UserAction viewAs=new ReplaceViewOption(specification){
+          @Override protected void replace(          final View view,          final View withReplacement){
+            final View parent=wrappedView.getParent();
+            wrappedView=LabelBorder.createFieldLabelBorder(view.getParent().getViewAxes().getAxis(LabelAxis.class),withReplacement);
+            wrappedView.setParent(parent);
+            wrappedView.setView(ConfigurableFieldBorder.this);
+            invalidateLayout();
+          }
+        }
+;
+        suboptions.add(viewAs);
+      }
+    }
+  }
+}

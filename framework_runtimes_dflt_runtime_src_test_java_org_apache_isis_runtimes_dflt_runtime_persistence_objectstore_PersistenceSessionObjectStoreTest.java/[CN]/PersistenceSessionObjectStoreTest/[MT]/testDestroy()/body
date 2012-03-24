@@ -1,0 +1,12 @@
+{
+  objectStore.reset();
+  final String action="destroyObject " + testObjectAdapter;
+  transactionManager.startTransaction();
+  persistenceSession.destroyObject(testObjectAdapter);
+  transactionManager.endTransaction();
+  objectStore.assertAction(0,"startTransaction");
+  objectStore.assertAction(1,action);
+  objectStore.assertAction(2,"execute DestroyObjectCommand " + testObjectAdapter);
+  objectStore.assertAction(3,"endTransaction");
+  assertEquals(4,objectStore.getActions().size());
+}

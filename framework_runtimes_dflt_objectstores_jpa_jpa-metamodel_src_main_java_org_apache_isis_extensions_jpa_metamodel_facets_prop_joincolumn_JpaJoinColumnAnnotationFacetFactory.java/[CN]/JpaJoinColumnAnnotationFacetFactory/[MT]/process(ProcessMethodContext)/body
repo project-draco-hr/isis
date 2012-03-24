@@ -1,0 +1,11 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final JoinColumn annotation=getAnnotation(method,JoinColumn.class);
+  if (annotation == null) {
+    return;
+  }
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new JpaJoinColumnFacetAnnotation(annotation.name(),holder));
+  FacetUtil.addFacet(annotation.nullable() ? new OptionalFacetDerivedFromJpaJoinColumnAnnotation(holder) : new MandatoryFacetDerivedFromJpaJoinColumnAnnotation(holder));
+  return;
+}

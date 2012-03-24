@@ -1,0 +1,13 @@
+{
+  final HiddenFacetViaHideForSessionMethodFacetFactory facetFactory=new HiddenFacetViaHideForSessionMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOrders");
+  final Method hideMethod=findMethod(CustomerStatic.class,"hideOrders",new Class[]{UserMemento.class});
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,collectionAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(HideForSessionFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HideForSessionFacetViaMethod);
+  final HideForSessionFacetViaMethod hideForSessionFacetViaMethod=(HideForSessionFacetViaMethod)facet;
+  assertEquals(hideMethod,hideForSessionFacetViaMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(hideMethod));
+}

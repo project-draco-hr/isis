@@ -1,0 +1,14 @@
+{
+  if (getSingletonInstance().getState() == 0) {
+    final String sqlTeardownString=getSqlTeardownString();
+    if (sqlTeardownString != null) {
+      try {
+        getSingletonInstance().sqlExecute(sqlTeardownString);
+      }
+ catch (      final SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    getSingletonInstance().shutDown();
+  }
+}

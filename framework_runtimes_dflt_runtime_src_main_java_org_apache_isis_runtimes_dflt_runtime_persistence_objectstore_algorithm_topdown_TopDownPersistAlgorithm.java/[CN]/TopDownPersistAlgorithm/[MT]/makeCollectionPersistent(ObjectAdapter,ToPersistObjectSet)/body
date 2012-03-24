@@ -1,0 +1,11 @@
+{
+  LOG.info("persist " + collection);
+  if (collection.getResolveState() == ResolveState.TRANSIENT) {
+    collection.changeState(ResolveState.RESOLVED);
+  }
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+  final Enumeration elements=facet.elements(collection);
+  while (elements.hasMoreElements()) {
+    makePersistent((ObjectAdapter)elements.nextElement(),toPersistObjectSet);
+  }
+}

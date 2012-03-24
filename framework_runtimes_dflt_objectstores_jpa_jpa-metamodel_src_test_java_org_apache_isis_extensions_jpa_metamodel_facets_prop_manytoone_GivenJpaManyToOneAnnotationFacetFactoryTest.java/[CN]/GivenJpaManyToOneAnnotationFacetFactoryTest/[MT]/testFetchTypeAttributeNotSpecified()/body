@@ -1,0 +1,8 @@
+{
+  final Class<?> cls=SimpleObjectWithManyToOneAnnotation.class;
+  final Method method=cls.getMethod("getParent");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(cls,method,methodRemover,facetedMethod));
+  final JpaFetchTypeFacet facet=facetedMethod.getFacet(JpaFetchTypeFacet.class);
+  assertNotNull(facet);
+  assertEquals(FetchType.EAGER,facet.getFetchType());
+}

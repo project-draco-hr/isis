@@ -1,0 +1,46 @@
+{
+  if (request.getContext().isDebugDisabled()) {
+    return;
+  }
+  final String type=request.getOptionalProperty(TYPE,"page");
+  final boolean isForced=request.isRequested("force");
+  if (isForced || request.getContext().showDebugData()) {
+    request.appendHtml("<div class=\"debug\">");
+    if ("page".equals(type)) {
+      request.appendHtml("<pre>");
+      final RequestContext context=request.getContext();
+      request.appendHtml("URI:  " + context.getUri());
+      request.appendHtml("\n");
+      request.appendHtml("File: " + context.fullFilePath(context.getResourceFile()));
+      final String result=(String)request.getContext().getVariable(RequestContext.RESULT);
+      if (result != null) {
+        request.appendHtml("\n");
+        request.appendHtml("Object: " + result);
+      }
+      request.appendHtml("</pre>");
+    }
+ else     if ("session".equals(type)) {
+      request.appendHtml("<pre>");
+      final AuthenticationSession session=IsisContext.getAuthenticationSession();
+      request.appendHtml("Session:  " + session.getUserName() + " "+ session.getRoles());
+      request.appendHtml("</pre>");
+    }
+ else     if ("variables".equals(type)) {
+      final RequestContext context=request.getContext();
+      final DebugHtmlString debug=new DebugHtmlString();
+      debug.appendln("","");
+      context.append(debug,"variables");
+      debug.close();
+      request.appendHtml(debug.toString());
+    }
+ else     if ("processing".equals(type)) {
+      request.appendHtml("<pre>");
+      request.appendHtml(request.getContext().getDebugTrace());
+      request.appendHtml("</pre>");
+    }
+ else {
+      request.appendHtml("<i>No such type " + type + "</i>");
+    }
+    request.appendHtml("</div>");
+  }
+}

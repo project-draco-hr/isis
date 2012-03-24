@@ -1,0 +1,26 @@
+{
+  try {
+    final Method[] methods=type.getMethods();
+    for (    final Method method2 : methods) {
+      final Method method=method2;
+      final int modifiers=method.getModifiers();
+      if (!Modifier.isPublic(modifiers)) {
+        continue;
+      }
+      if (!methodScope.matchesScopeOf(method)) {
+        continue;
+      }
+      if (!method.getName().equals(name)) {
+        continue;
+      }
+      if (returnType != null && returnType != method.getReturnType()) {
+        continue;
+      }
+      return method;
+    }
+  }
+ catch (  final SecurityException e) {
+    return null;
+  }
+  return null;
+}

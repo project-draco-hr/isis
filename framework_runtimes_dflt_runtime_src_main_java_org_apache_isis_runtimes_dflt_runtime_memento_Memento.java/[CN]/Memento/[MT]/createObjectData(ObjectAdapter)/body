@@ -1,0 +1,19 @@
+{
+  transientObjects.add(adapter.getOid());
+  final ObjectSpecification cls=adapter.getSpecification();
+  final List<ObjectAssociation> fields=cls.getAssociations();
+  final ObjectData data=new ObjectData(adapter.getOid(),adapter.getResolveState().name(),cls.getFullIdentifier());
+  for (int i=0; i < fields.size(); i++) {
+    if (fields.get(i).isNotPersisted()) {
+      if (fields.get(i).isOneToManyAssociation()) {
+        continue;
+      }
+      if (fields.get(i).containsFacet(PropertyOrCollectionAccessorFacet.class) && !fields.get(i).containsFacet(PropertySetterFacet.class)) {
+        LOG.debug("ignoring not-settable field " + fields.get(i).getName());
+        continue;
+      }
+    }
+    createFieldData(adapter,data,fields.get(i));
+  }
+  return data;
+}

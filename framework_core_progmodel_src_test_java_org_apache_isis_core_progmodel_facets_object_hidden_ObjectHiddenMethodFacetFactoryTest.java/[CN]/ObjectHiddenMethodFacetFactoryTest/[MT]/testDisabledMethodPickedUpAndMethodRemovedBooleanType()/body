@@ -1,0 +1,14 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public boolean hidden(){
+      return true;
+    }
+  }
+  final Method hiddenMethod=findMethod(Customer.class,"hidden");
+  final ProcessClassContext processClassContext=new ProcessClassContext(Customer.class,methodRemover,facetHolder);
+  facetFactory.process(processClassContext);
+  final Facet facet=facetHolder.getFacet(HiddenObjectFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof HiddenObjectFacetViaHiddenMethod);
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(hiddenMethod));
+}

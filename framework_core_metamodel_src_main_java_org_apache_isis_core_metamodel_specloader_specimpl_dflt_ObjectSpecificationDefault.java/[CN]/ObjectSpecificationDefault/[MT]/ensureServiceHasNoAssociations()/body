@@ -1,0 +1,13 @@
+{
+  final List<ObjectAssociation> associations=getAssociations();
+  final StringBuilder buf=new StringBuilder();
+  for (  final ObjectAssociation association : associations) {
+    final String name=association.getId();
+    if (!isValidAssociationForService(name)) {
+      appendAssociationName(buf,name);
+    }
+  }
+  if (buf.length() > 0) {
+    throw new ObjectSpecificationException("Service object " + getFullIdentifier() + " should have no fields, but has: "+ buf);
+  }
+}

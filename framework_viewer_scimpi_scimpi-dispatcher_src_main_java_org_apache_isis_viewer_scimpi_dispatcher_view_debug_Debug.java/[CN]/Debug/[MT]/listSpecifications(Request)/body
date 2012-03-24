@@ -1,0 +1,11 @@
+{
+  request.appendHtml("<h1>Specifications</h1>");
+  final List<ObjectSpecification> fullIdentifierList=new ArrayList<ObjectSpecification>(getSpecificationLoader().allSpecifications());
+  Collections.sort(fullIdentifierList,ObjectSpecification.COMPARATOR_SHORT_IDENTIFIER_IGNORE_CASE);
+  final DebugHtmlString debug=new DebugHtmlString();
+  for (  final ObjectSpecification spec : fullIdentifierList) {
+    final String name=spec.getSingularName();
+    debug.appendln(name,specificationLink(spec));
+  }
+  request.appendHtml(debug.toString());
+}

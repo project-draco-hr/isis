@@ -1,0 +1,13 @@
+{
+  final OneToOneAssociation otoa=(OneToOneAssociation)performContext.getObjectMember();
+  final ObjectAdapter resultAdapter=otoa.get(performContext.getOnAdapter());
+  if (resultAdapter != null) {
+    String actualStr=performContext.getPeer().getAliasRegistry().getAlias(resultAdapter);
+    if (actualStr == null) {
+      actualStr=resultAdapter.titleString();
+    }
+    final CellBinding thatItBinding=performContext.getPeer().getThatItBinding();
+    throw ScenarioBoundValueException.current(thatItBinding,actualStr);
+  }
+  return null;
+}

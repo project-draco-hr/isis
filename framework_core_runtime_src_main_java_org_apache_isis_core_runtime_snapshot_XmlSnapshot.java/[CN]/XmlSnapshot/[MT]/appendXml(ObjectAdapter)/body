@@ -1,0 +1,33 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("appendXml(" + log("obj",object) + "')");
+  }
+  final String fullyQualifiedClassName=object.getSpecification().getFullIdentifier();
+  schema.setUri(fullyQualifiedClassName);
+  final Place place=objectToElement(object);
+  final Element element=place.getXmlElement();
+  final Element xsElementElement=place.getXsdElement();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("appendXml(NO): add as element to XML doc");
+  }
+  getXmlDocument().appendChild(element);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("appendXml(NO): add as xs:element to xs:schema of the XSD document");
+  }
+  getXsdElement().appendChild(xsElementElement);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("appendXml(NO): set target name in XSD, derived from FQCN of obj");
+  }
+  schema.setTargetNamespace(getXsdDocument(),fullyQualifiedClassName);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("appendXml(NO): set schema location file name to XSD, derived from FQCN of obj");
+  }
+  final String schemaLocationFileName=fullyQualifiedClassName + ".xsd";
+  schema.assignSchema(getXmlDocument(),fullyQualifiedClassName,schemaLocationFileName);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("appendXml(NO): copy into snapshot obj");
+  }
+  setXmlElement(element);
+  setSchemaLocationFileName(schemaLocationFileName);
+  return place;
+}

@@ -1,0 +1,12 @@
+{
+  if (drag.getLocation().getX() > getSize().getWidth() - right) {
+    final View dragOverlay=new DragViewOutline(getView());
+    return new ViewDragImpl(this,new Offset(drag.getLocation()),dragOverlay);
+  }
+ else   if (overBorder(drag.getLocation())) {
+    return Toolkit.getViewFactory().createDragContentOutline(this,drag.getLocation());
+  }
+ else {
+    return super.dragStart(drag);
+  }
+}

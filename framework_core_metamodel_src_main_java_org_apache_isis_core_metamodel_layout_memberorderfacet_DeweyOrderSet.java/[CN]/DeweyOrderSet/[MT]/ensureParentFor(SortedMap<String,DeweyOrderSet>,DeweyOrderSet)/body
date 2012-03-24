@@ -1,0 +1,15 @@
+{
+  final String parentGroup=deweyOrderSet.getGroupPath();
+  DeweyOrderSet parentOrderSet=(DeweyOrderSet)orderSetsByGroup.get(parentGroup);
+  if (parentOrderSet == null) {
+    parentOrderSet=new DeweyOrderSet(parentGroup);
+    orderSetsByGroup.put(parentGroup,parentOrderSet);
+    if (!parentGroup.equals("")) {
+      ensureParentFor(orderSetsByGroup,deweyOrderSet);
+    }
+  }
+  if (deweyOrderSet != parentOrderSet) {
+    deweyOrderSet.setParent(parentOrderSet);
+    parentOrderSet.addChild(deweyOrderSet);
+  }
+}
