@@ -1,0 +1,29 @@
+{
+  final Bounds contents=viewportArea();
+  final Offset offset=offset();
+  final int x=offset.getDeltaX();
+  final int y=offset.getDeltaY();
+  final int contentWidth=contents.getWidth();
+  final int contentHeight=contents.getHeight();
+  final Canvas headerCanvasLeft=canvas.createSubcanvas(0,top,left,contentHeight);
+  headerCanvasLeft.offset(0,-y);
+  leftHeader.draw(headerCanvasLeft);
+  final Canvas headerCanvasRight=canvas.createSubcanvas(left,0,contentWidth,top);
+  headerCanvasRight.offset(-x,0);
+  topHeader.draw(headerCanvasRight);
+  final Color thumbColor=Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY2);
+  drawVerticalScrollBar(canvas,contentWidth,contentHeight,thumbColor);
+  drawHorizontalScrollBar(canvas,contentWidth,contentHeight,thumbColor);
+  final Canvas contentCanvas=canvas.createSubcanvas(left,top,contentWidth,contentHeight);
+  contentCanvas.offset(-x,-y);
+  if (Toolkit.debug) {
+    canvas.drawRectangle(contents.getX(),contents.getY(),contents.getWidth(),contents.getHeight(),Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_DRAW));
+  }
+  wrappedView.draw(contentCanvas);
+  if (Toolkit.debug) {
+    final Size size=getSize();
+    canvas.drawRectangle(0,0,size.getWidth(),size.getHeight(),Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_VIEW));
+    canvas.drawLine(0,size.getHeight() / 2,size.getWidth() - 1,size.getHeight() / 2,Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_VIEW));
+    canvas.drawLine(0,getBaseline(),size.getWidth() - 1,getBaseline(),Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BASELINE));
+  }
+}

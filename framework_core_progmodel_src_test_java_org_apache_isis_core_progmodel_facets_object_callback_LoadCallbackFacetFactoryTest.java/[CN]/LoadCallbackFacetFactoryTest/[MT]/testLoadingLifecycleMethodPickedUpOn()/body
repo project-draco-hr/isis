@@ -1,0 +1,14 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public void loading(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"loading");
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(LoadingCallbackFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof LoadingCallbackFacetViaMethod);
+  final LoadingCallbackFacetViaMethod loadingCallbackFacetViaMethod=(LoadingCallbackFacetViaMethod)facet;
+  assertEquals(method,loadingCallbackFacetViaMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(method));
+}

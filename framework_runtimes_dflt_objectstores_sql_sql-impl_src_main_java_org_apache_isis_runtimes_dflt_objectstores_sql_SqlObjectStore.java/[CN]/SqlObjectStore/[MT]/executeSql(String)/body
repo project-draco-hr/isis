@@ -1,0 +1,11 @@
+{
+  final DatabaseConnector connector=connectionPool.acquire();
+  try {
+    connector.begin();
+    connector.update(sql);
+    connector.commit();
+  }
+  finally {
+    connectionPool.release(connector);
+  }
+}

@@ -1,0 +1,23 @@
+{
+  LOG.debug("loading data from SQL " + table + " for "+ object);
+  final StringBuffer sql=new StringBuffer();
+  sql.append("select ");
+  sql.append(columnList(fieldMappingByField));
+  sql.append(",");
+  sql.append(versionMapping.appendColumnNames());
+  sql.append(" from " + table + " WHERE ");
+  final RootOid oid=(RootOid)object.getOid();
+  idMapping.appendWhereClause(connector,sql,oid);
+  final Results rs=connector.select(sql.toString());
+  if (rs.next()) {
+    loadFields(object,rs);
+    rs.close();
+    for (    final CollectionMapper collectionMapper : collectionMappers) {
+      collectionMapper.loadInternalCollection(connector,object,true);
+    }
+  }
+ else {
+    rs.close();
+    throw new SqlObjectStoreException("Unable to load data from " + table + " with id "+ object.getOid().enString());
+  }
+}

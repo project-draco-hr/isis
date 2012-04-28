@@ -1,0 +1,16 @@
+{
+  final Frame frame=new Frame();
+  final PrintJob job=Toolkit.getDefaultToolkit().getPrintJob(frame,"Print object",null);
+  if (job != null) {
+    final Graphics pg=job.getGraphics();
+    final Dimension pageSize=job.getPageDimension();
+    if (pg != null) {
+      pg.translate(LEFT,HEIGHT);
+      pg.drawRect(0,0,pageSize.width - LEFT - 1,pageSize.height - HEIGHT - 1);
+      view.print(new PrintCanvas(pg,view));
+      pg.dispose();
+    }
+    job.end();
+  }
+  frame.dispose();
+}

@@ -1,0 +1,17 @@
+{
+  if (cls == String.class) {
+    final Clipboard cb=java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+    final Transferable content=cb.getContents(this);
+    String value="illegal value";
+    try {
+      value=((String)content.getTransferData(DataFlavor.stringFlavor));
+    }
+ catch (    final Throwable e) {
+      LOG.error("invalid clipboard operation " + e);
+    }
+    return value;
+  }
+ else {
+    return null;
+  }
+}

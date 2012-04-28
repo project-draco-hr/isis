@@ -1,0 +1,18 @@
+{
+  xmlFile.writeXml(name,new ContentWriter(){
+    @Override public void write(    final Writer writer) throws IOException {
+      writer.write("<instances");
+      Utils.appendAttribute(writer,"name",name);
+      writer.append(">\n");
+      for (      final RootOid elementAt : instances) {
+        writer.append("  <instance");
+        Utils.appendAttribute(writer,"type",elementAt.getObjectType());
+        Utils.appendAttribute(writer,"id",elementAt.getIdentifier());
+        writer.append("/>\n");
+      }
+      writer.append("</instances>");
+      writer.flush();
+    }
+  }
+);
+}

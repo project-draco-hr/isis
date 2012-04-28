@@ -1,0 +1,72 @@
+{
+  final RequestContext context=request.getContext();
+  final ObjectAdapter object=MethodsUtils.findObject(context,parameterObject.objectId);
+  final String version=request.getContext().mapVersion(object);
+  final ObjectAction action=MethodsUtils.findAction(object,parameterObject.methodName);
+  if (action.getParameterCount() == 0) {
+    throw new ScimpiException("Action form can only be used for actions with parameters");
+  }
+  if (parameterObject.showMessage && MethodsUtils.isVisible(object,action)) {
+    final String notUsable=MethodsUtils.isUsable(object,action);
+    if (notUsable != null) {
+      if (!withoutProcessing) {
+        request.skipUntilClose();
+      }
+      request.appendHtml("<div class=\"" + parameterObject.className + "-message\" >");
+      request.appendAsHtmlEncoded(notUsable);
+      request.appendHtml("</div>");
+      return;
+    }
+  }
+  if (!MethodsUtils.isVisibleAndUsable(object,action)) {
+    if (!withoutProcessing) {
+      request.skipUntilClose();
+    }
+    return;
+  }
+  final String objectId=context.mapObject(object,Scope.INTERACTION);
+  final String errorView=context.fullFilePath(parameterObject.forwardErrorTo == null ? context.getResourceFile() : parameterObject.forwardErrorTo);
+  final String voidView=context.fullFilePath(parameterObject.forwardVoidTo == null ? context.getResourceFile() : parameterObject.forwardVoidTo);
+  final HiddenInputField[] hiddenFields=new HiddenInputField[]{new HiddenInputField("_" + OBJECT,objectId),new HiddenInputField("_" + VERSION,version),new HiddenInputField("_" + FORM_ID,parameterObject.formId),new HiddenInputField("_" + METHOD,parameterObject.methodName),parameterObject.forwardResultTo == null ? null : new HiddenInputField("_" + VIEW,context.fullFilePath(parameterObject.forwardResultTo)),new HiddenInputField("_" + VOID,voidView),new HiddenInputField("_" + ERROR,errorView),parameterObject.completionMessage == null ? null : new HiddenInputField("_" + MESSAGE,parameterObject.completionMessage),parameterObject.scope == null ? null : new HiddenInputField("_" + SCOPE,parameterObject.scope),parameterObject.resultOverride == null ? null : new HiddenInputField("_" + RESULT_OVERRIDE,parameterObject.resultOverride),parameterObject.resultName == null ? null : new HiddenInputField("_" + RESULT_NAME,parameterObject.resultName),parameterObject.resultName == null ? null : new HiddenInputField(RequestContext.RESULT,(String)request.getContext().getVariable(RequestContext.RESULT))};
+  final FormFieldBlock containedBlock=new FormFieldBlock(){
+    @Override public boolean isNullable(    final String name){
+      final int index=Integer.parseInt(name.substring(5)) - 1;
+      final ObjectActionParameter param=action.getParameters().get(index);
+      return param.isOptional();
+    }
+  }
+;
+  request.setBlockContent(containedBlock);
+  if (!withoutProcessing) {
+    request.processUtilCloseTag();
+  }
+  final FormState entryState=(FormState)context.getVariable(ENTRY_FIELDS);
+  final InputField[] formFields=createFields(action,object);
+  containedBlock.hideExcludedParameters(formFields);
+  containedBlock.setUpValues(formFields);
+  initializeFields(context,object,action,formFields);
+  setDefaults(context,object,action,formFields,entryState,parameterObject.showIcon);
+  String errors=null;
+  if (entryState != null && entryState.isForForm(parameterObject.formId)) {
+    copyEntryState(context,object,action,formFields,entryState);
+    errors=entryState.getError();
+  }
+  overrideWithHtml(context,containedBlock,formFields);
+  String formTitle;
+  if (parameterObject.formTitle == null) {
+    formTitle=action.getName();
+  }
+ else {
+    formTitle=parameterObject.formTitle;
+  }
+  String buttonTitle=parameterObject.buttonTitle;
+  if (buttonTitle == null) {
+    buttonTitle=action.getName();
+  }
+ else   if (buttonTitle.equals("")) {
+    buttonTitle="Ok";
+  }
+  final String cancelTo=parameterObject.cancelTo == null ? "_generic.shtml?_result=" + objectId : parameterObject.cancelTo;
+  HtmlFormBuilder.createForm(request,ActionAction.ACTION + ".app",hiddenFields,formFields,parameterObject.className,parameterObject.id,formTitle,action.getDescription(),action.getHelp(),buttonTitle,errors,cancelTo);
+  request.popBlockContent();
+}

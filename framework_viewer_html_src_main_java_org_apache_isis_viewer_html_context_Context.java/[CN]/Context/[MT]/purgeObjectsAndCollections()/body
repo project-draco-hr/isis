@@ -1,0 +1,18 @@
+{
+  clearMessagesAndWarnings();
+  final Map<String,CollectionMapping> collMappingById=Maps.newHashMap();
+  final Map<String,ObjectMapping> objectMappingById=Maps.newHashMap();
+  for (  HistoryEntry entry : getObjectHistory()) {
+    if (entry.type == HistoryEntry.OBJECT) {
+      copyObjectMapping(objectMappingById,entry);
+    }
+ else     if (entry.type == HistoryEntry.COLLECTION) {
+      copyCollectionMapping(collMappingById,objectMappingById,entry);
+    }
+  }
+  collectionMap.clear();
+  collectionMap.putAll(collMappingById);
+  objectMap.clear();
+  objectMap.putAll(objectMappingById);
+  objectMap.putAll(serviceMap);
+}

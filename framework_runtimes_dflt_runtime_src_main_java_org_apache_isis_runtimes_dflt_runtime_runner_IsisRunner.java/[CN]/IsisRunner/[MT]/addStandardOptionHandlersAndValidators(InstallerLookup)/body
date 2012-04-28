@@ -1,0 +1,21 @@
+{
+  addOptionHandler(new OptionHandlerConfiguration());
+  OptionHandlerPersistor optionHandlerPersistor;
+  OptionHandlerViewer optionHandlerViewer;
+  addOptionHandler(optionHandlerPersistor=new OptionHandlerPersistor(installerLookup));
+  addOptionHandler(optionHandlerViewer=new OptionHandlerViewer(installerLookup));
+  addOptionHandler(new OptionHandlerReflector(installerLookup));
+  addOptionHandler(new OptionHandlerUserProfileStore(installerLookup));
+  addOptionHandler(new OptionHandlerFixture());
+  addOptionHandler(new OptionHandlerNoSplash());
+  addOptionHandler(new OptionHandlerAdditionalProperty());
+  addOptionHandler(new OptionHandlerDebug());
+  addOptionHandler(new OptionHandlerDiagnostics());
+  addOptionHandler(new OptionHandlerQuiet());
+  addOptionHandler(new OptionHandlerVerbose());
+  addOptionHandler(new OptionHandlerHelp());
+  addOptionHandler(new OptionHandlerVersion());
+  addValidator(new OptionValidatorForViewers(optionHandlerViewer));
+  addValidator(new OptionValidatorForPersistor(optionHandlerPersistor));
+  return optionHandlerViewer;
+}

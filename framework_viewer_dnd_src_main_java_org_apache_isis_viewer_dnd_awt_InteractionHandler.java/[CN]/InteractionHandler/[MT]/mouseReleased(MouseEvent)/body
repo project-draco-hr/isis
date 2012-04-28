@@ -1,0 +1,29 @@
+{
+  if (isBusy(identifiedView) || downAt == null) {
+    return;
+  }
+  try {
+    if (drag != null) {
+      mouseDragged(me);
+      final Location location=createLocation(me.getPoint());
+      final View target=viewer.identifyView(new Location(location),false);
+      drag.drag(target,location,me.getModifiers());
+      drag.end(viewer);
+      redraw();
+      drag=null;
+    }
+    final Click click=new ClickImpl(downAt,me.getModifiers());
+    if (me.isPopupTrigger()) {
+      if (identifiedView != null) {
+        fireMenuPopup(click);
+      }
+    }
+ else {
+      viewer.mouseUp(click);
+    }
+    redraw();
+  }
+ catch (  final Exception e) {
+    interactionException("mouseReleased",e);
+  }
+}

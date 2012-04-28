@@ -1,0 +1,16 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  boolean firstTime=isisSystem == null;
+  if (firstTime) {
+    isisSystem=createIsisSystem(services);
+    isisSystem.init();
+    IsisContext.closeSession();
+  }
+  final AuthenticationManager authenticationManager=isisSystem.getSessionFactory().getAuthenticationManager();
+  authenticationSession=authenticationManager.authenticate(authenticationRequest);
+  IsisContext.openSession(authenticationSession);
+  container=getContainer();
+  if (firstTime && fixturesInitialization == Fixtures.Initialization.INIT) {
+    fixtures.init(container);
+  }
+}

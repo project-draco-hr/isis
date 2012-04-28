@@ -1,0 +1,11 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,HIDDEN_PREFIX,returnType,NO_PARAMETERS_TYPES);
+  if (method == null) {
+    return false;
+  }
+  FacetUtil.addFacet(new HiddenObjectFacetViaHiddenMethod(method,facetHolder));
+  processClassContext.removeMethod(method);
+  return true;
+}

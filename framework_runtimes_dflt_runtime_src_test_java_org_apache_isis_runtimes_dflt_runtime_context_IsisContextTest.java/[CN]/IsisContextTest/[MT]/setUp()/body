@@ -1,0 +1,22 @@
+{
+  IsisContext.testReset();
+  servicesList=Collections.emptyList();
+  configuration=new IsisConfigurationDefault();
+  context.checking(new Expectations(){
+{
+      allowing(mockPersistenceSessionFactory).createPersistenceSession();
+      will(returnValue(mockPersistenceSession));
+      ignoring(mockPersistenceSession);
+      ignoring(mockReflector);
+      ignoring(mockPersistenceSessionFactory);
+      ignoring(mockUserProfileLoader);
+      ignoring(mockAuthenticationManager);
+      ignoring(mockAuthorizationManager);
+      ignoring(mockTemplateImageLoader);
+    }
+  }
+);
+  sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockReflector,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList);
+  authSession=new SimpleSession("tester",Collections.<String>emptyList());
+  IsisContext.setConfiguration(configuration);
+}

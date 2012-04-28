@@ -1,0 +1,18 @@
+{
+  final ObjectMapping mappedObject=getMappedInstance(objectMap,id);
+  final ObjectAdapter object=mappedObject.getObject();
+  if (object.isPersistent() && object.getResolveState().isGhost()) {
+    getPersistenceSession().resolveImmediately(object);
+  }
+  try {
+    mappedObject.checkVersion(object);
+  }
+ catch (  final ConcurrencyException e) {
+    LOG.info("concurrency conflict: " + e.getMessage());
+    messages.clear();
+    messages.add(e.getMessage());
+    messages.add("Reloaded object " + object.titleString());
+    updateVersion(object);
+  }
+  return object;
+}

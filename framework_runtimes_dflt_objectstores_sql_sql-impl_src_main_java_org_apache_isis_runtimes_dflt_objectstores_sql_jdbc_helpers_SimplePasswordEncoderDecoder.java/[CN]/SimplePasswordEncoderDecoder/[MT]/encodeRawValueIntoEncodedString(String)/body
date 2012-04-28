@@ -1,0 +1,25 @@
+{
+  if (passwordSeed == null) {
+    return value;
+  }
+  final int rawLength=value.length();
+  String length=Integer.toHexString(rawLength);
+  if (length.length() == 1) {
+    length="0" + length;
+  }
+  String encodePart1=length + value;
+  String encoded="";
+  for (int i=0; i < rawLength + 2; i++) {
+    int thisSeed=passwordSeed.charAt(i % seedLength);
+    int thisPassword=encodePart1.charAt(i);
+    int nextValue=(thisSeed + thisPassword) % 255;
+    encoded=encoded.concat(String.format("%2h",nextValue));
+  }
+  for (int i=rawLength; i < (dbLength / 2) - 2; i++) {
+    int thisSeed=passwordSeed.charAt(i % seedLength);
+    int thisPassword=passwordSeed.charAt((i - 2) % seedLength);
+    int nextValue=(thisSeed + thisPassword + i) % 255;
+    encoded=encoded.concat(String.format("%2h",nextValue));
+  }
+  return encoded;
+}

@@ -1,0 +1,26 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("compiling object data for " + adapter);
+  }
+  final ObjectSpecification adapterSpec=adapter.getSpecification();
+  final ObjectData data=new ObjectData((RootOidDefault)adapter.getOid(),(FileVersion)adapter.getVersion());
+  final List<ObjectAssociation> associations=adapterSpec.getAssociations();
+  for (  final ObjectAssociation association : associations) {
+    if (association.isNotPersisted()) {
+      continue;
+    }
+    final ObjectAdapter associatedObject=association.get(adapter);
+    final boolean isEmpty=association.isEmpty(adapter);
+    final String associationId=association.getId();
+    if (association.isOneToManyAssociation()) {
+      saveCollection(associationId,data,associatedObject,ensurePersistent);
+    }
+ else     if (association.getSpecification().isEncodeable()) {
+      saveEncoded(data,associationId,associatedObject,isEmpty);
+    }
+ else     if (association.isOneToOneAssociation()) {
+      saveReference(data,associationId,associatedObject,ensurePersistent);
+    }
+  }
+  return data;
+}

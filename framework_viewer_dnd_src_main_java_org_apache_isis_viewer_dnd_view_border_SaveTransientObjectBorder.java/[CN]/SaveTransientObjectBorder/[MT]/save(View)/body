@@ -1,0 +1,11 @@
+{
+  final ObjectAdapter transientObject=view.getContent().getAdapter();
+  try {
+    getPersistenceSession().makePersistent(transientObject);
+  }
+ catch (  final RuntimeException e) {
+    LOG.info("exception saving " + transientObject + ", aborting transaction"+ e.getMessage());
+    throw e;
+  }
+  return transientObject;
+}

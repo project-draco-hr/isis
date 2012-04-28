@@ -1,0 +1,13 @@
+{
+  final Set<Object> objects=Sets.newLinkedHashSet();
+  iswf.fixtures.epr1.setReference(iswf.fixtures.epv1);
+  objects.add(iswf.fixtures.epr1);
+  objects.add(iswf.fixtures.epv1);
+  final StringWriter out=new StringWriter();
+  persistor.save(objects,out);
+  final String actual=out.toString().replaceAll("\r\n","\n");
+  final String expected1=ExamplePojoWithReferences.class.getName() + "#2\n  aggregatedReference: \n  reference: " + ExamplePojoWithValues.class.getName()+ "#3";
+  final String expected2=ExamplePojoWithValues.class.getName() + "#3\n  date: 08-Mar-2010 00:00\n  name: Fred Smith\n";
+  assertThat(actual,IsisMatchers.contains(expected1));
+  assertThat(actual,IsisMatchers.contains(expected2));
+}

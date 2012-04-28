@@ -1,0 +1,20 @@
+{
+  super.setUp();
+  mockSpecificationLookup=context.mock(SpecificationLookup.class);
+  mockAdapterMap=context.mock(AdapterMap.class);
+  mockLocalizationProvider=context.mock(LocalizationProvider.class);
+  objectAdapter=context.mock(ObjectAdapter.class);
+  facetFactory=new TitleAnnotationFacetFactory();
+  facetFactory.setAdapterMap(mockAdapterMap);
+  facetFactory.setSpecificationLookup(mockSpecificationLookup);
+  facetFactory.setLocalizationProvider(mockLocalizationProvider);
+  context.checking(new Expectations(){
+{
+      allowing(mockAdapterMap);
+      allowing(mockSpecificationLookup);
+      allowing(mockLocalizationProvider).getLocalization();
+      will(returnValue(new LocalizationDefault()));
+    }
+  }
+);
+}

@@ -1,0 +1,20 @@
+{
+  Assert.assertNotNull("Class to instantiate must be specified",className);
+  Class<?> cls=null;
+  try {
+    cls=Thread.currentThread().getContextClassLoader().loadClass(className);
+    if (cls == null) {
+      throw new InstanceCreationClassException("Failed to load class '" + className + "'");
+    }
+    return createInstance(cls,defaultType,requiredType);
+  }
+ catch (  final ClassNotFoundException e) {
+    if (className.indexOf('.') == -1) {
+      throw new UnavailableClassException("The component '" + className + "' cannot be found");
+    }
+    throw new UnavailableClassException("The class '" + className + "' cannot be found");
+  }
+catch (  final NoClassDefFoundError e) {
+    throw new InstanceCreationClassException("Class '" + className + "' found , but is missing a dependent class: "+ e.getMessage(),e);
+  }
+}

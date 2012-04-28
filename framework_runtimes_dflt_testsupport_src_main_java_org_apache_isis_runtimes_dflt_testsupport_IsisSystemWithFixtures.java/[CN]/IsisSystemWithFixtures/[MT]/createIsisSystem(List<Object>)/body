@@ -1,0 +1,19 @@
+{
+  final IsisSystemDefault system=new IsisSystemDefault(DeploymentType.UNIT_TESTING,services){
+    @Override public IsisConfiguration getConfiguration(){
+      if (IsisSystemWithFixtures.this.configuration != null) {
+        return IsisSystemWithFixtures.this.configuration;
+      }
+ else {
+        return super.getConfiguration();
+      }
+    }
+    @Override protected PersistenceMechanismInstaller obtainPersistenceMechanismInstaller(    IsisConfiguration configuration){
+      final PersistenceMechanismInstaller installer=IsisSystemWithFixtures.this.persistenceMechanismInstaller;
+      configuration.injectInto(installer);
+      return installer;
+    }
+  }
+;
+  return system;
+}

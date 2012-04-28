@@ -1,0 +1,22 @@
+{
+  if (adapter.getSpecification().isParentedOrFreeCollection()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("persist " + adapter);
+    }
+    if (adapter.getResolveState() == ResolveState.GHOST) {
+      adapter.changeState(ResolveState.RESOLVING);
+      adapter.changeState(ResolveState.RESOLVED);
+    }
+ else     if (adapter.getResolveState() == ResolveState.TRANSIENT) {
+      adapter.changeState(ResolveState.RESOLVED);
+    }
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(adapter);
+    for (    final ObjectAdapter element : facet.iterable(adapter)) {
+      persist(element,toPersistObjectSet);
+    }
+  }
+ else {
+    assertObjectNotPersistentAndPersistable(adapter);
+    persist(adapter,toPersistObjectSet);
+  }
+}

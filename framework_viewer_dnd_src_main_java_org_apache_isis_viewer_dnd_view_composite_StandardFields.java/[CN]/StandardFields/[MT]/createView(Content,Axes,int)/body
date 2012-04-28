@@ -1,0 +1,23 @@
+{
+  final GlobalViewFactory factory=Toolkit.getViewFactory();
+  int requirement=0;
+  if (content.isObject()) {
+    requirement=objectRequirement();
+  }
+ else   if (content.isTextParseable()) {
+    requirement=textParseableRequirement();
+  }
+ else   if (content.isCollection()) {
+    requirement=collectionRequirement();
+  }
+ else {
+    throw new UnknownTypeException(content);
+  }
+  if (requirement != 0 && include(content,sequence)) {
+    final ViewRequirement viewRequirement=new ViewRequirement(content,requirement);
+    return factory.createView(viewRequirement);
+  }
+ else {
+    return null;
+  }
+}

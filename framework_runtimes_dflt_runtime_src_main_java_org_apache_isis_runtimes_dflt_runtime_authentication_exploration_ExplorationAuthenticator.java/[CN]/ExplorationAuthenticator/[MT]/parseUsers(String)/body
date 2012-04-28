@@ -1,0 +1,24 @@
+{
+  final List<SimpleSession> registeredUsers=new ArrayList<SimpleSession>();
+  final StringTokenizer st=new StringTokenizer(users,",");
+  while (st.hasMoreTokens()) {
+    final String token=st.nextToken();
+    final int end=token.indexOf(':');
+    final List<String> roles=new ArrayList<String>();
+    final String userName;
+    if (end == -1) {
+      userName=token.trim();
+    }
+ else {
+      userName=token.substring(0,end).trim();
+      final String roleList=token.substring(end + 1);
+      final StringTokenizer st2=new StringTokenizer(roleList,"|");
+      while (st2.hasMoreTokens()) {
+        final String role=st2.nextToken().trim();
+        roles.add(role);
+      }
+    }
+    registeredUsers.add(createSimpleSession(userName,roles));
+  }
+  return registeredUsers;
+}

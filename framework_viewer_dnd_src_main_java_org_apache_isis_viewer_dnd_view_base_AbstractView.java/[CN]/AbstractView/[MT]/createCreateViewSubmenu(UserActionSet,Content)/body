@@ -1,0 +1,39 @@
+{
+  final ViewRequirement requirements=new ViewRequirement(content,ViewRequirement.OPEN);
+  final Enumeration possibleViews=Toolkit.getViewFactory().availableDesigns(requirements);
+  if (possibleViews.hasMoreElements()) {
+    final UserActionSet submenu=options.addNewActionSet("Create view from");
+    while (possibleViews.hasMoreElements()) {
+      final ViewSpecification specification=(ViewSpecification)possibleViews.nextElement();
+      final UserActionAbstract viewAs=new UserActionAbstract(specification.getName(),ActionType.USER){
+        @Override public void execute(        final Workspace workspace,        final View view,        final Location at){
+          ViewSpecification newSpec;
+          try {
+            newSpec=specification.getClass().newInstance();
+          }
+ catch (          final InstantiationException e) {
+            throw new ViewerException(e);
+          }
+catch (          final IllegalAccessException e) {
+            throw new ViewerException(e);
+          }
+          Content content=view.getContent();
+          if (!(content instanceof FieldContent)) {
+            content=Toolkit.getContentFactory().createRootContent(content.getAdapter());
+          }
+          final View newView=newSpec.createView(content,view.getViewAxes(),-1);
+          LOG.debug("open view " + newView);
+          workspace.addWindow(newView,new Placement(view));
+          workspace.markDamaged();
+          Options viewOptions=Properties.getViewConfigurationOptions(newSpec);
+          newView.saveOptions(viewOptions);
+          viewOptions=Properties.getUserViewSpecificationOptions(newSpec.getName());
+          viewOptions.addOption("design",specification.getClass().getName());
+          Toolkit.getViewFactory().addSpecification(newSpec);
+        }
+      }
+;
+      submenu.add(viewAs);
+    }
+  }
+}

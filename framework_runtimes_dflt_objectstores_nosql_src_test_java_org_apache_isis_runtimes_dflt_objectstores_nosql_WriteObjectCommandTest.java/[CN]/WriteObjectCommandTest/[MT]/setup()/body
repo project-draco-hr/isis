@@ -1,0 +1,43 @@
+{
+  epv1=iswf.fixtures.epv1;
+  epv1.setName("Fred Smith");
+  epv1.setSize(108);
+  epv1Adapter=iswf.remapAsPersistent(RootOidDefault.create("EPV|1"),epv1);
+  epv2=iswf.fixtures.epv2;
+  epv2.setName("John Brown");
+  epv2Adapter=iswf.remapAsPersistent(RootOidDefault.create("EPV|2"),epv2);
+  epr1=iswf.fixtures.epr1;
+  epr1.setReference(epv1);
+  epr1Adapter=iswf.remapAsPersistent(RootOidDefault.create("EPR|1"),epr1);
+  epc1=iswf.fixtures.epc1;
+  epc1.getHomogeneousCollection().add(epv1);
+  epc1.getHomogeneousCollection().add(epv2);
+  epc1Adapter=iswf.remapAsPersistent(RootOidDefault.create("EPC|1"),epc1Adapter);
+  specification=epv1Adapter.getSpecification();
+  final Version version=new SerialNumberVersion(2,"username",null);
+  context.checking(new Expectations(){
+{
+      one(versionCreator).newVersion("tester");
+      will(returnValue(version));
+      one(versionCreator).versionString(version);
+      will(returnValue("2"));
+      one(versionCreator).timeString(version);
+      will(returnValue("1057"));
+    }
+  }
+);
+  dataEncrypter=new DataEncryption(){
+    @Override public String getType(){
+      return "etc1";
+    }
+    @Override public void init(    final IsisConfiguration configuration){
+    }
+    @Override public String encrypt(    final String plainText){
+      return "ENC" + plainText;
+    }
+    @Override public String decrypt(    final String encryptedText){
+      throw new UnexpectedCallException();
+    }
+  }
+;
+}

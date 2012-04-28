@@ -1,0 +1,40 @@
+{
+  final RequestContext context=request.getContext();
+  ObjectAdapter collection;
+  String parentObjectId=null;
+  boolean isFieldEditable=false;
+  final String field=request.getOptionalProperty(FIELD);
+  final String tableClass=request.getOptionalProperty(CLASS);
+  ObjectSpecification elementSpec;
+  if (field != null) {
+    final String objectId=request.getOptionalProperty(OBJECT);
+    final ObjectAdapter object=context.getMappedObjectOrResult(objectId);
+    if (object == null) {
+      throw new ScimpiException("No object for result or " + objectId);
+    }
+    final ObjectAssociation objectField=object.getSpecification().getAssociation(field);
+    if (!objectField.isOneToManyAssociation()) {
+      throw new ScimpiException("Field " + objectField.getId() + " is not a collection");
+    }
+    isFieldEditable=objectField.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
+    getPersistenceSession().resolveField(object,objectField);
+    collection=objectField.get(object);
+    final TypeOfFacet facet=objectField.getFacet(TypeOfFacet.class);
+    elementSpec=facet.valueSpec();
+    parentObjectId=objectId == null ? context.mapObject(object,Scope.REQUEST) : objectId;
+  }
+ else {
+    final String id=request.getOptionalProperty(COLLECTION);
+    collection=context.getMappedObjectOrResult(id);
+    elementSpec=collection.getElementSpecification();
+  }
+  final String summary=request.getOptionalProperty("summary");
+  final String rowClassesList=request.getOptionalProperty(ROW_CLASSES,ODD_ROW_CLASS + "|" + EVEN_ROW_CLASS);
+  String[] rowClasses=null;
+  if (rowClassesList.length() > 0) {
+    rowClasses=rowClassesList.split("[,|/]");
+  }
+  final List<ObjectAssociation> allFields=elementSpec.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
+  final TableContentWriter rowBuilder=createRowBuilder(request,context,isFieldEditable ? parentObjectId : null,allFields,collection);
+  write(request,collection,summary,rowBuilder,tableClass,rowClasses);
+}

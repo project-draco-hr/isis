@@ -1,0 +1,10 @@
+{
+  final ObjectData data=createData(Team.class,99,new FileVersion("user",13));
+  data.initCollection("Members");
+  manager.insertObject(data);
+  final ObjectData read=(ObjectData)manager.loadData(data.getRootOid());
+  assertEquals(data.getRootOid(),read.getRootOid());
+  assertEquals(data.getObjectType(),read.getObjectType());
+  final ListOfRootOid c=read.elements("Members");
+  assertNull(c);
+}

@@ -1,0 +1,13 @@
+{
+  super.appendUpdateValues(connector,sql,object);
+  sql.append(",");
+  sql.append(classnameColumn);
+  sql.append(" = ?");
+  final ObjectAdapter objectAdapter=field.get(object);
+  if (objectAdapter != null) {
+    connector.addToQueryValues(objectAdapter.getSpecification().getFullIdentifier());
+  }
+ else {
+    connector.addToQueryValues(null);
+  }
+}

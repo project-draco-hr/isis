@@ -1,0 +1,31 @@
+{
+  new Thread("control"){
+    @Override public void run(){
+      startControl();
+    }
+  }
+.start();
+  new Thread("service"){
+    @Override public void run(){
+      startService();
+    }
+  }
+.start();
+  new Thread("log-rolling"){
+    @Override public void run(){
+      startLogRolling();
+    }
+  }
+.start();
+  if (config.getBoolean("fileserver.sync",false)) {
+    new Thread("sync"){
+      @Override public void run(){
+        startSyncing();
+      }
+    }
+.start();
+  }
+ else {
+    LOG.info("not syncing to secondary server");
+  }
+}

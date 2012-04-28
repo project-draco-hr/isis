@@ -1,0 +1,11 @@
+{
+  Assert.assertNotNull(object);
+  final ObjectSpecification objectSpec=object.getSpecification();
+  if (objectSpec.isParentedOrFreeCollection()) {
+    return new RootCollection(object);
+  }
+  if (objectSpec.isNotCollection()) {
+    return new RootObject(object);
+  }
+  throw new IllegalArgumentException("Must be an object or collection: " + object);
+}

@@ -1,0 +1,15 @@
+{
+  iswf.persist(iswf.fixtures.epv1);
+  originalAdapter=getAdapterManager().adapterFor(iswf.fixtures.epv1);
+  final Oid oid=originalAdapter.getOid();
+  final String id=context.mapObject(originalAdapter);
+  final Version version=originalAdapter.getVersion();
+  iswf.fixtures.epv1.setName("changed date");
+  iswf.bounceSystem();
+  originalAdapter=getAdapterManager().getAdapterFor(oid);
+  final Version version2=originalAdapter.getVersion();
+  assertThat(version.different(version2),is(true));
+  restoredAdapter=context.getMappedObject(id);
+  final String message=context.getMessage(1);
+  assertEquals("Reloaded object " + restoredAdapter.titleString(),message);
+}

@@ -1,0 +1,19 @@
+{
+  final String[] files=imageDirectory.list(new FilenameFilter(){
+    @Override public boolean accept(    final File dir,    final String name){
+      final int dot=name.lastIndexOf('.');
+      if (dot > 0) {
+        final String nameWithoutExtension=name.substring(0,dot);
+        final String nameExtension=name.substring(dot + 1);
+        for (        final String extension : extensions) {
+          if (nameWithoutExtension.equalsIgnoreCase(imageName) && nameExtension.equalsIgnoreCase(extension)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+  }
+);
+  return files.length == 0 ? null : files[0];
+}

@@ -1,0 +1,20 @@
+{
+  final DisabledFacet disabledFacet=new DisabledFacetAlways(mockPasswordMember);
+  facets=Arrays.asList((Facet)disabledFacet,new PropertySetterFacetViaSetterMethod(setPasswordMethod,mockPasswordMember));
+  final Consent visibilityConsent=new Allow(new InteractionResult(new PropertyVisibilityEvent(employeeDO,null)));
+  final InteractionResult usabilityInteractionResult=new InteractionResult(new PropertyUsabilityEvent(employeeDO,null));
+  usabilityInteractionResult.advise("disabled",disabledFacet);
+  final Consent usabilityConsent=new Veto(usabilityInteractionResult);
+  context.checking(new Expectations(){
+{
+      allowing(mockPasswordMember).getFacets(with(any(Filter.class)));
+      will(returnValue(facets));
+      allowing(mockPasswordMember).isVisible(session,mockEmployeeAdapter);
+      will(returnValue(visibilityConsent));
+      allowing(mockPasswordMember).isUsable(session,mockEmployeeAdapter);
+      will(returnValue(usabilityConsent));
+    }
+  }
+);
+  employeeWO.setPassword(passwordValue);
+}

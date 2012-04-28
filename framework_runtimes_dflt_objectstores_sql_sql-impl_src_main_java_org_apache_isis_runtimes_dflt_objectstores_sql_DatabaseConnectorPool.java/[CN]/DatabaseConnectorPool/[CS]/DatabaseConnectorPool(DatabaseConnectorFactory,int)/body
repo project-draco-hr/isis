@@ -1,0 +1,11 @@
+{
+  this.factory=factory;
+  connectorPool=new Vector<DatabaseConnector>();
+  for (int i=0; i < size; i++) {
+    newConnector();
+  }
+  LOG.info("Created an intial pool of " + size + " database connections");
+  final DatabaseConnector connection=acquire();
+  Sql.setMetaData(connection.getMetaData());
+  release(connection);
+}

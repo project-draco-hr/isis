@@ -1,0 +1,19 @@
+{
+  final PojoAdapter rootAdapter=PojoAdapterBuilder.create().with(Type.ROOT).with(Persistence.TRANSIENT).with(objectSpec).build();
+  context.checking(new Expectations(){
+{
+      allowing(objectSpec).isService();
+      will(returnValue(false));
+      allowing(objectSpec).isParentedOrFreeCollection();
+      will(returnValue(false));
+      allowing(objectSpec).persistability();
+      will(returnValue(Persistability.USER_PERSISTABLE));
+      allowing(mockObjectAdapterLookup).getAdapterFor(with(any(Oid.class)));
+      will(returnValue(rootAdapter));
+      never(mockAdder);
+    }
+  }
+);
+  final PojoAdapter aggregatedAdapter=PojoAdapterBuilder.create().with(Type.AGGREGATED).with(Persistence.TRANSIENT).with(objectSpec).with(mockObjectAdapterLookup).build();
+  persistAlgorithm.makePersistent(aggregatedAdapter,mockAdder);
+}

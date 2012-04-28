@@ -1,0 +1,9 @@
+{
+  final FacetHolder facetHolder=processClassContaxt.getFacetHolder();
+  if (facetHolder.containsDoOpFacet(ObjectTypeFacet.class)) {
+    return;
+  }
+  final Class<?> originalClass=processClassContaxt.getCls();
+  final Class<?> substitutedClass=classSubstitutor.getClass(originalClass);
+  FacetUtil.addFacet(new ObjectTypeFacetDerivedFromClassName(substitutedClass.getCanonicalName(),facetHolder));
+}

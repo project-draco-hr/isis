@@ -1,0 +1,26 @@
+{
+  writer.print('\n');
+  writer.flush();
+  getReponseHeader();
+  final String status=readNext();
+  if (status.equals("error")) {
+    final String message=getResponseData();
+    throw new RemotingException(message);
+  }
+ else   if (status.equals("not-found")) {
+    final String message=getResponseData();
+    throw new ObjectNotFoundException(message);
+  }
+ else   if (status.equals("concurrency")) {
+    final String data=getResponseData();
+    if (data.startsWith("{")) {
+      throw new ConcurrencyException(data,(Throwable)null);
+    }
+ else {
+      throw new ConcurrencyException(data,(Throwable)null);
+    }
+  }
+ else   if (!status.equals("ok")) {
+    throw new RemotingException("Invalid status in response: " + status);
+  }
+}

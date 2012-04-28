@@ -1,0 +1,64 @@
+{
+  try {
+    ACCESS_LOG.info("request " + request.toString());
+    Request r=request;
+    final DebugString debug=new DebugString();
+    debug.startSection("Request");
+    debug.appendln("http",request.toString());
+    debug.endSection();
+    do {
+      final Action action=(Action)actions.get(r.getRequestType());
+      try {
+        action.execute(r,context,page);
+      }
+ catch (      final ObjectLookupException e) {
+        final String error="The object/service you selected has timed out.  Please navigate to the object via the history bar.";
+        displayError(context,page,error);
+      }
+catch (      final TaskLookupException e) {
+        final String error="The task you went back to has already been completed or cancelled.  Please start the task again.";
+        displayError(context,page,error);
+      }
+      r=r.getForward();
+      if (r != null) {
+        LOG.debug("forward to " + r);
+      }
+    }
+ while (r != null);
+    if (LOG.isDebugEnabled()) {
+      context.debug(debug);
+      debug.appendln();
+      if (IsisContext.inSession()) {
+        IsisContext.getSession(getExecutionContextId()).debugAll(debug);
+      }
+ else {
+        debug.appendln("No session");
+      }
+      LOG.debug(debug.toString());
+    }
+  }
+ catch (  final ActionException e) {
+    page.setTitle("Error");
+    page.getViewPane().setTitle("Error","Action Exception");
+    LOG.error("ActionException, executing action " + request.getRequestType(),e);
+    page.getViewPane().add(context.getComponentFactory().createErrorMessage(e,isDebug));
+  }
+catch (  final IsisApplicationException e) {
+    page.setTitle("Error");
+    page.getViewPane().setTitle("Error","Application Exception");
+    LOG.error("ApplicationException, executing action " + request.getRequestType(),e);
+    page.getViewPane().add(context.getComponentFactory().createErrorMessage(e,isDebug));
+  }
+catch (  final IsisException e) {
+    page.setTitle("Error");
+    page.getViewPane().setTitle("Error","System Exception");
+    LOG.error("ObjectAdapterRuntimeException, executing action " + request.getRequestType(),e);
+    page.getViewPane().add(context.getComponentFactory().createErrorMessage(e,true));
+  }
+catch (  final RuntimeException e) {
+    page.setTitle("Error");
+    page.getViewPane().setTitle("Error","System Exception");
+    LOG.error("RuntimeException, executing action " + request.getRequestType(),e);
+    page.getViewPane().add(context.getComponentFactory().createErrorMessage(e,true));
+  }
+}

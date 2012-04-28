@@ -1,0 +1,24 @@
+{
+  final ObjectAdapter[] defaultValues=action.getDefaults(object);
+  if (defaultValues == null) {
+    return;
+  }
+  for (int i=0; i < fields.length; i++) {
+    final InputField field=fields[i];
+    final ObjectAdapter defaultValue=defaultValues[i];
+    final String title=defaultValue == null ? "" : defaultValue.titleString();
+    if (field.getType() == InputField.REFERENCE) {
+      final ObjectSpecification objectSpecification=action.getParameters().get(i).getSpecification();
+      if (defaultValue != null) {
+        final String imageSegment=showIcon ? "<img class=\"small-icon\" src=\"" + context.imagePath(objectSpecification) + "\" alt=\""+ objectSpecification.getShortIdentifier()+ "\"/>" : "";
+        final String html=imageSegment + title;
+        final String value=context.mapObject(defaultValue,Scope.INTERACTION);
+        field.setValue(value);
+        field.setHtml(html);
+      }
+    }
+ else {
+      field.setValue(title);
+    }
+  }
+}

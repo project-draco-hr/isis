@@ -1,0 +1,12 @@
+{
+  final CollectionData collection=(CollectionData)data;
+  final ListOfRootOid refs=collection.references();
+  for (int i=0; i < refs.size(); i++) {
+    final Object oid=refs.elementAt(i);
+    writer.append("  <element");
+    final RootOid rootOid=(RootOid)oid;
+    Utils.appendAttribute(writer,"type",rootOid.getObjectType());
+    Utils.appendAttribute(writer,"id",rootOid.getIdentifier());
+    writer.append("/>\n");
+  }
+}

@@ -1,0 +1,35 @@
+{
+  if (patternData == null || candidateData == null) {
+    throw new NullPointerException("Can't match on nulls " + patternData + " "+ candidateData);
+  }
+  if (!candidateData.getSpecification(getSpecificationLoader()).isOfType(patternData.getSpecification(getSpecificationLoader()))) {
+    return false;
+  }
+  for (  final String field : patternData.fields()) {
+    final Object patternFieldValue=patternData.get(field);
+    final Object candidateFieldValue=candidateData.get(field);
+    if (candidateFieldValue instanceof ListOfRootOid) {
+      final ListOfRootOid patternElements=(ListOfRootOid)patternFieldValue;
+      for (int i=0; i < patternElements.size(); i++) {
+        final RootOid requiredElement=patternElements.elementAt(i);
+        boolean requiredFound=false;
+        final ListOfRootOid testElements=((ListOfRootOid)candidateFieldValue);
+        for (int j=0; j < testElements.size(); j++) {
+          if (requiredElement.equals(testElements.elementAt(j))) {
+            requiredFound=true;
+            break;
+          }
+        }
+        if (!requiredFound) {
+          return false;
+        }
+      }
+    }
+ else {
+      if (!patternFieldValue.equals(candidateFieldValue)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

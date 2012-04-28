@@ -1,0 +1,9 @@
+{
+  final String name=request.getOptionalProperty(NAME);
+  final String value=request.getOptionalProperty(VALUE);
+  final String defaultTo=request.getOptionalProperty(DEFAULT);
+  final String scopeName=request.getOptionalProperty(SCOPE);
+  final boolean isClear=request.getOptionalProperty("action","set").equals("clear");
+  final Scope scope=RequestContext.scope(scopeName,isClear ? Scope.SESSION : Scope.REQUEST);
+  process(request,name,value,defaultTo,isClear,scope);
+}

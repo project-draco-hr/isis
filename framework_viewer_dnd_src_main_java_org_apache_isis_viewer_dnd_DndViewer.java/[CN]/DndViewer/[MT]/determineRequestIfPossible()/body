@@ -1,0 +1,16 @@
+{
+  AuthenticationRequest request=getAuthenticationRequestViaArgs();
+  ;
+  if (request == null) {
+    if (getDeploymentType().isExploring()) {
+      request=new AuthenticationRequestExploration(getLogonFixture());
+    }
+  }
+  if (request == null) {
+    if (getLogonFixture() != null && !loggedInUsingLogonFixture) {
+      loggedInUsingLogonFixture=true;
+      request=new AuthenticationRequestLogonFixture(getLogonFixture());
+    }
+  }
+  return request;
+}

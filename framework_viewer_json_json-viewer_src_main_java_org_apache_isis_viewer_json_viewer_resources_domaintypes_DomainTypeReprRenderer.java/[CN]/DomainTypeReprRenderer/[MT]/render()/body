@@ -1,0 +1,16 @@
+{
+  if (objectSpecification == null) {
+    throw new IllegalStateException("ObjectSpecification not specified");
+  }
+  if (includesSelf) {
+    final JsonRepresentation selfLink=newLinkToBuilder(getResourceContext(),Rel.SELF,objectSpecification).build();
+    getLinks().arrayAdd(selfLink);
+  }
+  representation.mapPut("canonicalName",objectSpecification.getFullIdentifier());
+  addMembers();
+  addTypeActions();
+  putExtensionsNames();
+  putExtensionsDescriptionIfAvailable();
+  putExtensionsIfService();
+  return representation;
+}

@@ -1,0 +1,13 @@
+{
+  objectActionParameter=new ObjectActionParameterAbstractToTest(0,parentAction,actionParamPeer);
+  context.checking(new Expectations(){
+{
+      one(actionParamPeer).getFacet(NamedFacet.class);
+      will(returnValue(namedFacet));
+      atLeast(1).of(namedFacet).value();
+      will(returnValue("Some parameter name"));
+    }
+  }
+);
+  assertThat(objectActionParameter.getId(),is("someParameterName"));
+}

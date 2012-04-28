@@ -1,0 +1,17 @@
+{
+class Order {
+  }
+class Customer {
+    @SuppressWarnings({"unused","rawtypes"}) @TypeOf(Order.class) public Collection getOrders(){
+      return null;
+    }
+  }
+  final Method accessorMethod=findMethod(Customer.class,"getOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,accessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TypeOfFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TypeOfFacetAnnotationForCollection);
+  final TypeOfFacetAnnotationForCollection typeOfFacetAnnotationForCollection=(TypeOfFacetAnnotationForCollection)facet;
+  assertEquals(Order.class,typeOfFacetAnnotationForCollection.value());
+  assertNoMethodsRemoved();
+}

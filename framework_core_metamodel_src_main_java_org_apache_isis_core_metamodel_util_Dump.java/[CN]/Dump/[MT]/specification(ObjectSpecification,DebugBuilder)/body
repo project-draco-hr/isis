@@ -1,0 +1,58 @@
+{
+  try {
+    debugBuilder.appendTitle(specification.getClass().getName());
+    debugBuilder.appendAsHexln("Hash code",specification.hashCode());
+    debugBuilder.appendln("ID",specification.getIdentifier());
+    debugBuilder.appendln("Full Name",specification.getFullIdentifier());
+    debugBuilder.appendln("Short Name",specification.getShortIdentifier());
+    debugBuilder.appendln("Singular Name",specification.getSingularName());
+    debugBuilder.appendln("Plural Name",specification.getPluralName());
+    debugBuilder.appendln("Description",specification.getDescription());
+    debugBuilder.blankLine();
+    debugBuilder.appendln("Features",featureList(specification));
+    debugBuilder.appendln("Type",specification.isParentedOrFreeCollection() ? "Collection" : "Object");
+    if (specification.superclass() != null) {
+      debugBuilder.appendln("Superclass",specification.superclass().getFullIdentifier());
+    }
+    debugBuilder.appendln("Interfaces",specificationNames(specification.interfaces()));
+    debugBuilder.appendln("Subclasses",specificationNames(specification.subclasses()));
+    debugBuilder.blankLine();
+    debugBuilder.appendln("Service",specification.isService());
+    debugBuilder.appendln("Encodable",specification.isEncodeable());
+    debugBuilder.appendln("Parseable",specification.isParseable());
+    debugBuilder.appendln("Aggregated",specification.isValueOrIsParented());
+  }
+ catch (  final RuntimeException e) {
+    debugBuilder.appendException(e);
+  }
+  if (specification instanceof DebuggableWithTitle) {
+    ((DebuggableWithTitle)specification).debugData(debugBuilder);
+  }
+  debugBuilder.blankLine();
+  debugBuilder.appendln("Facets");
+  final Class<? extends Facet>[] facetTypes=specification.getFacetTypes();
+  debugBuilder.indent();
+  if (facetTypes.length == 0) {
+    debugBuilder.appendln("none");
+  }
+ else {
+    for (    final Class<? extends Facet> type : facetTypes) {
+      final Facet facet=specification.getFacet(type);
+      debugBuilder.appendln(facet.toString());
+    }
+  }
+  debugBuilder.unindent();
+  debugBuilder.blankLine();
+  debugBuilder.appendln("Fields");
+  debugBuilder.indent();
+  specificationFields(specification,debugBuilder);
+  debugBuilder.unindent();
+  debugBuilder.appendln("Object Actions");
+  debugBuilder.indent();
+  specificationActionMethods(specification,debugBuilder);
+  debugBuilder.unindent();
+  debugBuilder.appendln("Related Service Actions");
+  debugBuilder.indent();
+  specificationServiceMethods(specification,debugBuilder);
+  debugBuilder.unindent();
+}

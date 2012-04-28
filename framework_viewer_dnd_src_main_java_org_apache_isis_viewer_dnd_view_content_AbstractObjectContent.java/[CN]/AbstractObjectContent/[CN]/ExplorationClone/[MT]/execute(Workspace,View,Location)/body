@@ -1,0 +1,15 @@
+{
+  final ObjectAdapter original=view.getContent().getAdapter();
+  final ObjectSpecification spec=original.getSpecification();
+  final ObjectAdapter clone=getPersistenceSession().createInstance(spec);
+  final List<ObjectAssociation> fields=spec.getAssociations();
+  for (int i=0; i < fields.size(); i++) {
+    final ObjectAdapter fld=fields.get(i).get(original);
+    if (fields.get(i).isOneToOneAssociation()) {
+      ((OneToOneAssociation)fields.get(i)).setAssociation(clone,fld);
+    }
+ else     if (fields.get(i).isOneToManyAssociation()) {
+    }
+  }
+  workspace.objectActionResult(clone,new Placement(view));
+}

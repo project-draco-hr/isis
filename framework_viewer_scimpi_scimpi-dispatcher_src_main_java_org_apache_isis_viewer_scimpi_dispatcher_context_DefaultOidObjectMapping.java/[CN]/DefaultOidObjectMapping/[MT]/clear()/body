@@ -1,0 +1,14 @@
+{
+  requestTransients.clear();
+  final List<String> remove=Lists.newArrayList();
+  for (  final String id : sessionTransients.keySet()) {
+    final Oid oid=sessionTransients.get(id).getOid();
+    if (!oid.isTransient()) {
+      remove.add(id);
+      sessionTransients.put(id,null);
+    }
+  }
+  for (  final String id : remove) {
+    sessionTransients.remove(id);
+  }
+}

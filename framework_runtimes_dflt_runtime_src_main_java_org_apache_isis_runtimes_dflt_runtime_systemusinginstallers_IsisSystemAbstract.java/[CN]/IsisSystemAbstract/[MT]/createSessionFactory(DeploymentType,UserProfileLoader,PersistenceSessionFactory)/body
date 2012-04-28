@@ -1,0 +1,10 @@
+{
+  final IsisConfiguration configuration=getConfiguration();
+  final AuthenticationManager authenticationManager=obtainAuthenticationManager(deploymentType);
+  final AuthorizationManager authorizationManager=obtainAuthorizationManager(deploymentType);
+  final TemplateImageLoader templateImageLoader=obtainTemplateImageLoader();
+  final ObjectReflector reflector=obtainReflector(deploymentType);
+  final List<Object> servicesList=obtainServices();
+  reflector.setRuntimeContext(new RuntimeContextFromSession());
+  return new IsisSessionFactoryDefault(deploymentType,configuration,templateImageLoader,reflector,authenticationManager,authorizationManager,userProfileLoader,persistenceSessionFactory,servicesList);
+}

@@ -1,0 +1,30 @@
+{
+  final List<Method> methods=Arrays.asList(spec.getCorrespondingClass().getMethods());
+  final Method method=MethodFinderUtils.findMethod(methods,MethodScope.CLASS,(methodNamePrefix + "Order"),String.class,NO_PARAMETERS_TYPES);
+  if (method == null) {
+    return null;
+  }
+  if (!JavaClassUtils.isStatic(method)) {
+    LOG.warn("method " + spec.getFullIdentifier() + "."+ methodNamePrefix+ "Order() must be declared as static");
+    return null;
+  }
+  try {
+    final String s=(String)method.invoke(null,NO_PARAMETERS);
+    if (StringUtils.isNullOrEmpty(s)) {
+      return null;
+    }
+    return s;
+  }
+ catch (  final IllegalArgumentException e) {
+    LOG.warn("method " + spec.getFullIdentifier() + "#"+ method.getName()+ "() should accept no parameters");
+    return null;
+  }
+catch (  final IllegalAccessException e) {
+    LOG.warn("method " + spec.getFullIdentifier() + "#"+ method.getName()+ "() must be declared as public");
+    return null;
+  }
+catch (  final InvocationTargetException e) {
+    LOG.warn("method " + spec.getFullIdentifier() + "#"+ method.getName()+ "() has thrown an exception");
+    return null;
+  }
+}

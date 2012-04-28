@@ -1,0 +1,14 @@
+{
+  final StringBuffer sql=new StringBuffer();
+  sql.append("select ");
+  idMapping.appendColumnNames(sql);
+  sql.append(", ");
+  final String columnList=columnList(fieldMappingByField);
+  if (columnList.length() > 0) {
+    sql.append(columnList);
+    sql.append(", ");
+  }
+  sql.append(versionMapping.insertColumns());
+  sql.append(" from " + table);
+  return sql;
+}

@@ -1,0 +1,18 @@
+{
+  iswf.persist(iswf.fixtures.epv1);
+  iswf.persist(iswf.fixtures.epv2);
+  final List<ExamplePojoWithValues> collection=Lists.newArrayList();
+  collection.add(iswf.fixtures.epv1);
+  collection.add(iswf.fixtures.epv2);
+  final Oid oid1=getAdapterManager().adapterFor(iswf.fixtures.epv1).getOid();
+  final Oid oid2=getAdapterManager().adapterFor(iswf.fixtures.epv2).getOid();
+  final ObjectAdapter collectionAdapter=getAdapterManager().adapterFor(collection);
+  final String id=context.mapCollection(collectionAdapter);
+  iswf.bounceSystem();
+  final ObjectAdapter mappedCollection=context.getMappedCollection(id);
+  final List<?> list=(List<?>)mappedCollection.getObject();
+  final Oid oid1Remapped=getAdapterManager().adapterFor(list.get(0)).getOid();
+  final Oid oid2Remapped=getAdapterManager().adapterFor(list.get(1)).getOid();
+  assertEquals(oid1,oid1Remapped);
+  assertEquals(oid2,oid2Remapped);
+}

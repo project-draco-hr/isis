@@ -1,0 +1,16 @@
+{
+  super.draw(canvas);
+  final String message=((MessageContent)getContent()).getMessage();
+  final String heading=((MessageContent)getContent()).title();
+  clearBackground(canvas,Toolkit.getColor(ColorsAndFonts.COLOR_WHITE));
+  canvas.drawImage(errorIcon,LEFT,TOP);
+  final int x=LEFT + errorIcon.getWidth() + PADDING;
+  int y=TOP + 3 + Toolkit.getText(ColorsAndFonts.TEXT_NORMAL).getAscent();
+  final Color black=Toolkit.getColor(ColorsAndFonts.COLOR_BLACK);
+  if (!heading.equals("")) {
+    final Text title=Toolkit.getText(ColorsAndFonts.TEXT_TITLE);
+    canvas.drawText(heading,x,y,black,title);
+    y+=title.getLineHeight();
+  }
+  canvas.drawText(message,x,y,MAX_TEXT_WIDTH,black,Toolkit.getText(ColorsAndFonts.TEXT_NORMAL));
+}

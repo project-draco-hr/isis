@@ -1,0 +1,17 @@
+{
+  final Vector<RootOid> instances=loadInstances(pattern.getSpecification(getSpecificationLoader()));
+  if (instances == null) {
+    return new ObjectDataVector();
+  }
+  final ObjectDataVector matches=new ObjectDataVector();
+  for (  final RootOid oid : instances) {
+    final ObjectData instanceData=(ObjectData)loadData(oid);
+    if (instanceData == null) {
+      throw new IsisException("No data found for " + oid + " (possible missing file)");
+    }
+    if (matchesPattern(pattern,instanceData)) {
+      matches.addElement(instanceData);
+    }
+  }
+  return matches;
+}

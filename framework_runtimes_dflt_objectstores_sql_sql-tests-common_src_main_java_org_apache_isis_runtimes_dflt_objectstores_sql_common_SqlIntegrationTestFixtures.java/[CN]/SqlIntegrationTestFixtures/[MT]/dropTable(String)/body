@@ -1,0 +1,39 @@
+{
+  if (stmt == null) {
+    if (tableName.equalsIgnoreCase("sqldataclass")) {
+      final List<SqlDataClass> list=sqlDomainObjectRepository.allDataClasses();
+      for (      final SqlDataClass sqlDataClass : list) {
+        sqlDomainObjectRepository.delete(sqlDataClass);
+      }
+      return;
+    }
+    if (tableName.equalsIgnoreCase("simpleclass")) {
+      final List<SimpleClass> list=sqlDomainObjectRepository.allSimpleClasses();
+      for (      final SimpleClass sqlClass : list) {
+        sqlDomainObjectRepository.delete(sqlClass);
+      }
+      return;
+    }
+    if (tableName.equalsIgnoreCase("simpleclasstwo")) {
+      final List<SimpleClassTwo> list=sqlDomainObjectRepository.allSimpleClassTwos();
+      for (      final SimpleClassTwo sqlClass : list) {
+        sqlDomainObjectRepository.delete(sqlClass);
+      }
+      return;
+    }
+    if (tableName.equalsIgnoreCase("numerictestclass")) {
+      final List<NumericTestClass> list=sqlDomainObjectRepository.allNumericTestClasses();
+      for (      final NumericTestClass sqlClass : list) {
+        sqlDomainObjectRepository.delete(sqlClass);
+      }
+      return;
+    }
+    throw new IsisException("Unknown table: " + tableName);
+  }
+  try {
+    String tableIdentifier=Utils.tableIdentifierFor(tableName);
+    stmt.executeUpdate("DROP TABLE " + tableIdentifier);
+  }
+ catch (  final SQLException e) {
+  }
+}

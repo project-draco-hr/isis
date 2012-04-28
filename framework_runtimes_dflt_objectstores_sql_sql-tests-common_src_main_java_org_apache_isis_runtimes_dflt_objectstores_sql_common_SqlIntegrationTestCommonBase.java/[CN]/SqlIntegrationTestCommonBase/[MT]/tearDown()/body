@@ -1,0 +1,15 @@
+{
+  if (!getSqlIntegrationTestFixtures().getState().isInitialize()) {
+    return;
+  }
+  final String sqlTeardownString=getSqlTeardownString();
+  if (sqlTeardownString != null) {
+    try {
+      getSqlIntegrationTestFixtures().sqlExecute(sqlTeardownString);
+    }
+ catch (    final SQLException e) {
+      e.printStackTrace();
+    }
+  }
+  getSqlIntegrationTestFixtures().shutDown();
+}

@@ -1,0 +1,15 @@
+{
+  final int rollPeriod=config.getInt("fileserver.log-period",5);
+  final long sleepTime=rollPeriod * 60 * 1000;
+  while (awaitConnections) {
+    final LogWriter logger=server.getLogger();
+    if (logger != null) {
+      logger.startNewFile();
+    }
+    try {
+      Thread.sleep(sleepTime);
+    }
+ catch (    final InterruptedException ignore) {
+    }
+  }
+}

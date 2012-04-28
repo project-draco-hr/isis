@@ -1,0 +1,14 @@
+{
+  clearTestDirectory();
+  final String charset=Utils.lookupCharset(iswf.getIsisSystem().getConfiguration());
+  manager=new XmlDataManager(new XmlFile(charset,"tmp/tests"));
+  FileVersion.setClock(new DefaultClock());
+  oids=new RootOid[SIZE];
+  data=new ObjectData[SIZE];
+  pattern=new ObjectData(RootOidDefault.create("RLE|1"),new FileVersion("user",13));
+  for (int i=0; i < SIZE; i++) {
+    oids[i]=RootOidDefault.create("RLE","" + i);
+    data[i]=new ObjectData(oids[i],new FileVersion("user",13));
+    manager.insertObject(data[i]);
+  }
+}

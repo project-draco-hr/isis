@@ -1,0 +1,26 @@
+{
+  entityOidField=new TextField<ObjectAdapterMemento>(ID_ENTITY_OID,new Model<ObjectAdapterMemento>(){
+    private static final long serialVersionUID=1L;
+    @Override public ObjectAdapterMemento getObject(){
+      if (pending != null) {
+        return pending;
+      }
+      final ObjectAdapter adapter=EntityLink.this.getModelObject();
+      return ObjectAdapterMemento.createOrNull(adapter);
+    }
+    @Override public void setObject(    final ObjectAdapterMemento adapterMemento){
+      pending=adapterMemento;
+    }
+  }
+){
+    private static final long serialVersionUID=1L;
+    @Override protected void onModelChanged(){
+      super.onModelChanged();
+      syncWithInput();
+    }
+  }
+;
+  entityOidField.setType(ObjectAdapterMemento.class);
+  addOrReplace(entityOidField);
+  entityOidField.setVisible(false);
+}

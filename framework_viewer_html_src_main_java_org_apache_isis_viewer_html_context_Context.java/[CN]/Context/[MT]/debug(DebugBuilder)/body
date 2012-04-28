@@ -1,0 +1,42 @@
+{
+  debug.startSection("Web Session Context");
+  debug.appendAsHexln("hash",hashCode());
+  debug.appendln("session",session);
+  debug.appendln("is valid",isValid);
+  debug.appendln("next id",max);
+  debug.appendln("factory",componentFactory);
+  debug.appendln("is task",isTask());
+  debug.appendln("crumbs (" + crumbs.size() + ")");
+  debug.indent();
+  for (int i=0; i < crumbs.size(); i++) {
+    final Crumb crumb=crumbs.get(i);
+    debug.appendln(i + 1 + ". "+ crumb);
+    debug.indent();
+    crumb.debug(debug);
+    debug.unindent();
+  }
+  debug.unindent();
+  debug.startSection("Objects");
+  for (  final String id : objectMap.keySet()) {
+    final ObjectMapping object=objectMap.get(id);
+    debug.appendln(id + " -> " + object.getOid());
+    debug.indent();
+    object.debug(debug);
+    debug.unindent();
+  }
+  debug.endSection();
+  debug.startSection("Collections");
+  for (  final String id : collectionMap.keySet()) {
+    final CollectionMapping coll=collectionMap.get(id);
+    debug.appendln(id + " -> collection of " + coll.getElementSpecification().getPluralName());
+    coll.debug(debug);
+  }
+  debug.endSection();
+  debug.startSection("Actions");
+  debugMap(debug,actionMap);
+  debug.endSection();
+  debug.startSection("History");
+  getObjectHistory().debug(debug);
+  debug.endSection();
+  debug.endSection();
+}

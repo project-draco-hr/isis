@@ -1,0 +1,25 @@
+{
+  if (field.isNotPersisted()) {
+    return;
+  }
+  if (field.isOneToManyAssociation()) {
+    return;
+  }
+  if (field.getSpecification().isParented()) {
+    return;
+  }
+  if (field.getSpecification().isValue()) {
+    return;
+  }
+  final ObjectAdapter referenceAdapter=field.get(objectAdapter);
+  if (referenceAdapter == null || referenceAdapter.getResolveState().isResolved()) {
+    return;
+  }
+  if (!referenceAdapter.isPersistent()) {
+    return;
+  }
+  if (LOG.isInfoEnabled()) {
+    LOG.info("resolve field " + objectAdapter.getSpecification().getShortIdentifier() + "."+ field.getId()+ ": "+ referenceAdapter.getSpecification().getShortIdentifier()+ " "+ referenceAdapter.getResolveState().code()+ " "+ referenceAdapter.getOid());
+  }
+  resolveFieldFromPersistenceLayer(objectAdapter,field);
+}

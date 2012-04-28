@@ -1,0 +1,12 @@
+{
+  if (object.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    PersistorUtil.start(object,ResolveState.RESOLVING);
+    for (    final FieldMapping mapping : fieldMappingByField.values()) {
+      mapping.initializeField(object,rs);
+    }
+    object.setVersion(versionMapping.getLock(rs));
+    if (makeResolved) {
+      PersistorUtil.end(object);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  try {
+    final String string=set.getString(columnName);
+    final DateTimeFormatter formatter=DateTimeFormat.forPattern("HH:mm:ss");
+    final DateTimeZone defaultTimeZone=Defaults.getTimeZone();
+    final DateTime utcDate=formatter.withZone(defaultTimeZone).parseDateTime(string);
+    return new Time(utcDate);
+  }
+ catch (  final SQLException e) {
+    throw new SqlObjectStoreException(e);
+  }
+}

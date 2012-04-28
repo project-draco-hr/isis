@@ -1,0 +1,14 @@
+{
+  if (!objSpec.containsFacet(JpaEntityFacet.class)) {
+    return;
+  }
+  final String classFullName=objSpec.getFullIdentifier();
+  final Class<?> cls=Class.forName(classFullName);
+  if (cls.isInterface()) {
+    return;
+  }
+  final OneToOneAssociation idProperty=JpaPropertyUtils.getIdPropertyFor(objSpec);
+  if (idProperty == null) {
+    throw new MetaModelInvalidException(MessageFormat.format("Class {0} does not have a single property with IdFacet",classFullName));
+  }
+}

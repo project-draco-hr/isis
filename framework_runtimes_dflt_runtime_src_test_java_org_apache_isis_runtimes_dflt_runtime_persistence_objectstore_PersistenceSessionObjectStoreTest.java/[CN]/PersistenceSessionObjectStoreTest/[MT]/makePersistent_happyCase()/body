@@ -1,0 +1,17 @@
+{
+  final Sequence tran=context.sequence("tran");
+  context.checking(new Expectations(){
+{
+      one(mockObjectStore).startTransaction();
+      inSequence(tran);
+      one(mockPersistAlgorithm).makePersistent(transientAdapter,persistenceSession);
+      inSequence(tran);
+      one(mockObjectStore).endTransaction();
+      inSequence(tran);
+    }
+  }
+);
+  transactionManager.startTransaction();
+  persistenceSession.makePersistent(transientAdapter);
+  transactionManager.endTransaction();
+}

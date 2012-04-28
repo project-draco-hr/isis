@@ -1,0 +1,25 @@
+{
+  final String servletPath=StringUtils.stripLeadingSlash(request.getServletPath());
+  if (LOG.isInfoEnabled()) {
+    LOG.info("request: " + servletPath);
+  }
+  final InputStream is2=getRealPath(request);
+  if (is2 != null) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("request: " + servletPath + " loaded from filesystem");
+    }
+    IoUtils.copy(is2,response.getOutputStream());
+    is2.close();
+    return;
+  }
+  final InputStream is=Resources.getResourceAsStream(servletPath);
+  if (is != null) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("request: " + servletPath + " loaded from classpath");
+    }
+    IoUtils.copy(is,response.getOutputStream());
+    is.close();
+    return;
+  }
+  LOG.warn("failed to load resource from classpath or file system: " + servletPath);
+}

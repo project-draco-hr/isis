@@ -1,0 +1,14 @@
+{
+  final String id=association.getId();
+  final StateReader aggregateReader=reader.readAggregate(id);
+  final ObjectAdapter fieldObject;
+  if (aggregateReader != null) {
+    final String localId=aggregateReader.readId();
+    final AggregatedOid oid=new AggregatedOid(parentAdapter.getOid(),localId);
+    fieldObject=restoreAggregatedObject(aggregateReader,oid,keyCreator,dataEncrypter);
+  }
+ else {
+    fieldObject=null;
+  }
+  association.initAssociation(parentAdapter,fieldObject);
+}

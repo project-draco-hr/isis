@@ -1,0 +1,28 @@
+{
+  final SwfTag tag=getTag();
+  if (tag.getType() == SwfTag.EMPTY) {
+    if (context.isDebug()) {
+      appendHtml("<!-- " + "skipped " + tag + " -->");
+    }
+    return;
+  }
+  int depth=1;
+  while (index < snippets.size() - 1) {
+    index++;
+    final Snippet snippet=snippets.get(index);
+    if (snippet instanceof SwfTag) {
+      final SwfTag nextTag=(SwfTag)snippet;
+      if (tag.getName().equals(nextTag.getName())) {
+        if (nextTag.getType() == SwfTag.START) {
+          depth++;
+        }
+ else {
+          depth--;
+          if (depth == 0) {
+            return;
+          }
+        }
+      }
+    }
+  }
+}

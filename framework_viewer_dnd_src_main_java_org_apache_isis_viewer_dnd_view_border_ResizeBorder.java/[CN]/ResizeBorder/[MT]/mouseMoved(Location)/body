@@ -1,0 +1,30 @@
+{
+  final int onBorder=onBorder(at);
+  if (this.onBorder != onBorder) {
+switch (onBorder) {
+case ResizeDrag.RIGHT:
+      getFeedbackManager().showResizeRightCursor();
+    resizing=true;
+  markDamaged();
+break;
+case ResizeDrag.BOTTOM:
+getFeedbackManager().showResizeDownCursor();
+resizing=true;
+markDamaged();
+break;
+case ResizeDrag.BOTTOM_RIGHT:
+getFeedbackManager().showResizeDownRightCursor();
+resizing=true;
+markDamaged();
+break;
+default :
+getFeedbackManager().showDefaultCursor();
+super.mouseMoved(at);
+resizing=false;
+markDamaged();
+break;
+}
+UI_LOG.debug("on resize border " + onBorder + " "+ resizing);
+}
+this.onBorder=onBorder;
+}

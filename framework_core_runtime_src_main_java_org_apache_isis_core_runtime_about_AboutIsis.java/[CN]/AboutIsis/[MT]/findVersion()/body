@@ -1,0 +1,17 @@
+{
+  try {
+    final String moduleId="org.apache.isis.plugins:dndviewer";
+    final String module=moduleId.replace(":","/");
+    final InputStream resourceAsStream=AboutIsis.class.getClassLoader().getResourceAsStream("META-INF/maven/" + module + "/pom.properties");
+    if (resourceAsStream == null) {
+      return "no version";
+    }
+    final Properties p=new Properties();
+    p.load(resourceAsStream);
+    final String version=p.getProperty("version");
+    return version;
+  }
+ catch (  final IOException e) {
+    throw new IsisException(e);
+  }
+}

@@ -1,0 +1,38 @@
+{
+  if (object != null) {
+    if (tagName.equals("value")) {
+      fieldName=attributes.getValue("field");
+      data.setLength(0);
+    }
+ else     if (tagName.equals("association")) {
+      object.set(attributes.getValue("field"),oidFrom(attributes));
+    }
+ else     if (tagName.equals("element")) {
+      object.addElement(fieldName,oidFrom(attributes));
+    }
+ else     if (tagName.equals("multiple-association")) {
+      fieldName=attributes.getValue("field");
+      object.initCollection(fieldName);
+    }
+  }
+ else   if (collection != null) {
+    if (tagName.equals("element")) {
+      collection.addElement(oidFrom(attributes));
+    }
+  }
+ else {
+    if (tagName.equals("isis")) {
+      final RootOidDefault oid=oidFrom(attributes);
+      final FileVersion fileVersion=fileVersionFrom(attributes);
+      object=new ObjectData(oid,fileVersion);
+    }
+ else     if (tagName.equals("collection")) {
+      final RootOidDefault oid=oidFrom(attributes);
+      final FileVersion fileVersion=fileVersionFrom(attributes);
+      collection=new CollectionData(oid,fileVersion);
+    }
+ else {
+      throw new SAXException("Invalid data");
+    }
+  }
+}

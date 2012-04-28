@@ -1,0 +1,15 @@
+{
+  final Map<String,ObjectSpecification> specByObjectType=Maps.newHashMap();
+  for (  final ObjectSpecification objSpec : allSpecifications()) {
+    final String objectType=objSpec.getObjectType();
+    if (objectType == null) {
+      continue;
+    }
+    final ObjectSpecification existingSpec=specByObjectType.put(objectType,objSpec);
+    if (existingSpec == null) {
+      continue;
+    }
+    throw new MetaModelInvalidException(MessageFormat.format("Cannot have two entities with same object type (@ObjectType facet or equivalent) Value; " + "both {0} and {1} are annotated with value of ''{2}''.",existingSpec.getFullIdentifier(),objSpec.getFullIdentifier(),objectType));
+  }
+  getCache().setCacheByObjectType(specByObjectType);
+}

@@ -1,0 +1,13 @@
+{
+  final AdapterManager adapterManager=getAdapterManager();
+  final List<Object> services=getUserProfile().getPerspective().getServices();
+  for (  final Object service : services) {
+    final ObjectAdapter serviceAdapter=adapterManager.adapterFor(service);
+    if (serviceAdapter == null) {
+      LOG.warn("unable to find service: " + service + "; skipping");
+      continue;
+    }
+    mapObject(serviceAdapter);
+  }
+  serviceMap.putAll(objectMap);
+}

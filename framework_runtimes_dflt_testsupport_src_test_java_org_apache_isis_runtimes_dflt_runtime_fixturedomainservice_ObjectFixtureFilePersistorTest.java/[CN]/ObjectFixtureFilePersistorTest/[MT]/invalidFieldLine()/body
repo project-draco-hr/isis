@@ -1,0 +1,11 @@
+{
+  try {
+    final StringReader reader=new StringReader(ExamplePojoWithValues.class.getName() + "#1\n  name Fred Smith");
+    persistor.loadData(reader);
+    Assert.fail();
+  }
+ catch (  final FixtureException e) {
+    Assert.assertEquals("failed to load data at line 2",e.getMessage());
+    Assert.assertEquals("no colon (:) in: name Fred Smith",e.getCause().getMessage());
+  }
+}

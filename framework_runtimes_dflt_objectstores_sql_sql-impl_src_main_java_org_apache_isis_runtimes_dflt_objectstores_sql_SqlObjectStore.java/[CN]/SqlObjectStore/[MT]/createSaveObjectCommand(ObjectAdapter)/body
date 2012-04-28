@@ -1,0 +1,48 @@
+{
+  return new SaveObjectCommand(){
+    @Override public void execute(    final PersistenceCommandContext context){
+      final DatabaseConnector connection=((SqlExecutionContext)context).getConnection();
+      LOG.debug("  save object " + adapter.toString());
+      try {
+        final ObjectSpecification adapterSpec=adapter.getSpecification();
+        if (!adapterSpec.isParented()) {
+          saveRootAdapter(adapter,connection);
+        }
+ else         if (adapterSpec.isParentedOrFreeCollection()) {
+          saveParentedCollectionAdapter(adapter,connection);
+        }
+ else {
+          throw new NotYetImplementedException("cannot yet persist aggregated objects: " + adapter.toString());
+        }
+      }
+  finally {
+        connectionPool.release(connection);
+      }
+    }
+    private void saveRootAdapter(    final ObjectAdapter adapter,    final DatabaseConnector connection){
+      final ObjectMapping mapping=objectMappingLookup.getMapping(adapter,connection);
+      mapping.save(connection,adapter);
+    }
+    private void saveParentedCollectionAdapter(    final ObjectAdapter collectionAdapter,    final DatabaseConnector connection){
+      final ObjectAdapter parent=collectionAdapter.getAggregateRoot();
+      LOG.debug("change to internal collection being persisted through parent");
+      final Oid oid=collectionAdapter.getOid();
+      final CollectionOid collectionOid=(CollectionOid)oid;
+      if (!(oid instanceof CollectionOid)) {
+        throw new IsisAssertException("object should have a CollectionOid");
+      }
+      final ObjectMapping mapping=objectMappingLookup.getMapping(parent,connection);
+      if (!mapping.saveCollection(connection,parent,collectionOid.getName())) {
+        final ObjectMapping parentMapping=objectMappingLookup.getMapping(parent,connection);
+        parentMapping.save(connection,collectionAdapter);
+      }
+    }
+    @Override public ObjectAdapter onObject(){
+      return adapter;
+    }
+    @Override public String toString(){
+      return "SaveObjectCommand [object=" + adapter + "]";
+    }
+  }
+;
+}

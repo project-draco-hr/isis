@@ -1,0 +1,17 @@
+{
+  Logger.getRootLogger().setLevel(Level.INFO);
+  if (!getSqlIntegrationTestFixtures().getState().isInitialize()) {
+    return;
+  }
+  final Properties properties=getProperties();
+  if (properties == null) {
+    getSqlIntegrationTestFixtures().initSystem("src/test/config",getPropertiesFilename());
+  }
+ else {
+    getSqlIntegrationTestFixtures().initSystem(properties);
+  }
+  final String sqlSetupString=getSqlSetupString();
+  if (sqlSetupString != null) {
+    getSqlIntegrationTestFixtures().sqlExecute(sqlSetupString);
+  }
+}

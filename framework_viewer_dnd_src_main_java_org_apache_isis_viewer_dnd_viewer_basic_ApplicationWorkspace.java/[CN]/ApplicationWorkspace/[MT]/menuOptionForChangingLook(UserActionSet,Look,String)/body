@@ -1,0 +1,13 @@
+{
+  set.add(new UserActionAbstract(name){
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      LookFactory.setLook(look);
+      ApplicationWorkspace.this.invalidateLayout();
+      ApplicationWorkspace.this.markDamaged();
+    }
+    @Override public Consent disabled(    final View view){
+      return LookFactory.getInstalledLook() == look ? new Veto("Current look") : Allow.DEFAULT;
+    }
+  }
+);
+}

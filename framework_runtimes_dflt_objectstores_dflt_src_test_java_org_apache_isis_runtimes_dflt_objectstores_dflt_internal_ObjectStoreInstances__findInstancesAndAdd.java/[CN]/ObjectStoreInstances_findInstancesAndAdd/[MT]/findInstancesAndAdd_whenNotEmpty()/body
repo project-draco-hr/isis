@@ -1,0 +1,20 @@
+{
+  context.ignoring(mockAdapter1,mockAdapter2);
+  context.checking(new Expectations(){
+{
+      one(mockPersistenceQueryBuiltIn).matches(mockAdapter1);
+      will(returnValue(false));
+      one(mockPersistenceQueryBuiltIn).matches(mockAdapter2);
+      will(returnValue(true));
+      allowing(mockAdapterManager).getAdapterFor(with(any(Object.class)));
+      will(IsisActions.returnEach(mockAdapter1,mockAdapter2));
+    }
+  }
+);
+  instances.save(mockAdapter1);
+  instances.save(mockAdapter2);
+  final List<ObjectAdapter> foundInstances=Lists.newArrayList();
+  instances.findInstancesAndAdd(mockPersistenceQueryBuiltIn,foundInstances);
+  assertThat(foundInstances.size(),is(1));
+  assertThat(foundInstances,IsisMatchers.listContaining(mockAdapter2));
+}

@@ -1,0 +1,15 @@
+{
+  final String titleString=epv2Adapter.titleString();
+  ObjectAdapter[] retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,titleString));
+  assertEquals(0,retrievedInstance.length);
+  iswf.persist(iswf.fixtures.epv2);
+  iswf.bounceSystem();
+  retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,titleString));
+  assertEquals(1,retrievedInstance.length);
+  final ObjectAdapter retrievedAdapter=retrievedInstance[0];
+  assertNotSame(epv2Adapter,retrievedAdapter);
+  assertEquals(((ExamplePojoWithValues)epv2Adapter.getObject()).getName(),((ExamplePojoWithValues)retrievedAdapter.getObject()).getName());
+  assertEquals(epv2Adapter.getOid(),retrievedAdapter.getOid());
+  retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,"some other title"));
+  assertEquals(0,retrievedInstance.length);
+}

@@ -1,0 +1,27 @@
+{
+  xmlFile.writeXml(filename(data.getRootOid()),new ContentWriter(){
+    @Override public void write(    final Writer writer) throws IOException {
+      final boolean isObject=data instanceof ObjectData;
+      final String tag=isObject ? "isis" : "collection";
+      writer.write("<");
+      writer.write(tag);
+      final RootOid oid=data.getRootOid();
+      Utils.appendAttribute(writer,"type",oid.getObjectType());
+      Utils.appendAttribute(writer,"id",oid.getIdentifier());
+      Utils.appendAttribute(writer,"user","" + getAuthenticationSession().getUserName());
+      final long sequence=data.getVersion().getSequence();
+      final String sequenceString=Long.toHexString(sequence).toUpperCase();
+      Utils.appendAttribute(writer,"ver","" + sequenceString);
+      writer.append(">\n");
+      if (isObject) {
+        writeObject(data,writer);
+      }
+ else {
+        writeCollection(data,writer);
+      }
+      writer.append("</" + tag + ">\n");
+      writer.flush();
+    }
+  }
+);
+}

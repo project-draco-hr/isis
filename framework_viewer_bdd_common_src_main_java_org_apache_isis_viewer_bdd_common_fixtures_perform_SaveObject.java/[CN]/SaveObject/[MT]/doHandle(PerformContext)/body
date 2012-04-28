@@ -1,0 +1,12 @@
+{
+  final ObjectAdapter onAdapter=performContext.getOnAdapter();
+  final Consent valid=onAdapter.getSpecification().isValid(onAdapter);
+  final CellBinding performBinding=performContext.getPeer().getPerformBinding();
+  if (valid.isVetoed()) {
+    throw ScenarioBoundValueException.current(performBinding,valid.getReason());
+  }
+  if (onAdapter.isPersistent()) {
+    throw ScenarioBoundValueException.current(performBinding,"(already persistent)");
+  }
+  getPersistenceSession().makePersistent(onAdapter);
+}

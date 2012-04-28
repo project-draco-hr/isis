@@ -1,0 +1,15 @@
+{
+  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  allowingObjectSpecCorrespondingClassIs(correspondingClass);
+  final long value=1234567890L;
+  representation=new JsonRepresentation(LongNode.valueOf(value));
+  context.checking(new Expectations(){
+{
+      one(encodableFacet).fromEncodedString("" + value);
+      will(returnValue(objectAdapter));
+    }
+  }
+);
+  final ObjectAdapter adapter=jsonValueEncoder.asAdapter(objectSpec,representation);
+  assertSame(objectAdapter,adapter);
+}

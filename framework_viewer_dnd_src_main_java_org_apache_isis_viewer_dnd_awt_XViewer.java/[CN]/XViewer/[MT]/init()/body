@@ -1,0 +1,20 @@
+{
+  if (updateNotifier == null) {
+    throw new NullPointerException("No update notifier set for " + this);
+  }
+  if (rootView == null) {
+    throw new NullPointerException("No root view set for " + this);
+  }
+  insets=new Insets(0,0,0,0);
+  spy=new InteractionSpy(new SpyWindow());
+  keyboardManager=new KeyboardManager(this);
+  final InteractionHandler interactionHandler=new InteractionHandler(this,feedbackManager,keyboardManager,spy);
+  renderingArea.addMouseMotionListener(interactionHandler);
+  renderingArea.addMouseListener(interactionHandler);
+  renderingArea.addKeyListener(interactionHandler);
+  if (IsisContext.getConfiguration().getBoolean(Properties.PROPERTY_BASE + "show-mouse-spy",false)) {
+    spy.open();
+  }
+  setKeyboardFocus(rootView);
+  APPLICATION_OPTIONS=new ApplicationOptions(listener);
+}

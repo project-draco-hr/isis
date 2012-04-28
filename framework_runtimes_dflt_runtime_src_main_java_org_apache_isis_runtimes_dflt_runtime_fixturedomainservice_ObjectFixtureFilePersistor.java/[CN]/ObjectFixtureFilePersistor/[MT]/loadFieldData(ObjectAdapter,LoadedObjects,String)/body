@@ -1,0 +1,41 @@
+{
+  final int pos=line.indexOf(':');
+  if (pos == -1) {
+    throw new FixtureException("no colon (:) in: " + line.trim());
+  }
+  final String name=line.substring(0,pos).trim();
+  String data=line.substring(pos + 1).trim();
+  try {
+    final ObjectAssociation association=object.getSpecification().getAssociation(name);
+    if (data.trim().length() == 0) {
+      if (!association.isEmpty(object) && association instanceof OneToOneAssociation) {
+        ((OneToOneAssociation)association).clearAssociation(object);
+      }
+    }
+ else {
+      if (association.isOneToManyAssociation()) {
+        final String[] ids=data.split(" ");
+        final ObjectAdapter[] elements=new ObjectAdapter[ids.length];
+        for (int i=0; i < ids.length; i++) {
+          elements[i]=loaded.get(ids[i]);
+        }
+        final ObjectAdapter collection=association.get(object);
+        final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+        facet.init(collection,elements);
+      }
+ else       if (association.getSpecification().isParseable()) {
+        data=data.replaceAll("\\n","\n");
+        final ParseableFacet facet=association.getSpecification().getFacet(ParseableFacet.class);
+        final ObjectAdapter value=facet.parseTextEntry(null,data);
+        ((OneToOneAssociation)association).initAssociation(object,value);
+      }
+ else       if (association.isOneToOneAssociation()) {
+        final ObjectAdapter value=loaded.get(data);
+        ((OneToOneAssociation)association).initAssociation(object,value);
+      }
+    }
+  }
+ catch (  final ObjectSpecificationException e) {
+    LOG.info("no field for '" + name + "', skipping entry: "+ data);
+  }
+}

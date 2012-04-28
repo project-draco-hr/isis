@@ -1,0 +1,37 @@
+{
+  final SerialNumberVersion version=(SerialNumberVersion)adapter.getVersion();
+  final long nextSequence;
+  if (useVersioning) {
+    nextSequence=version.getSequence() + 1;
+  }
+ else {
+    nextSequence=version.getSequence();
+  }
+  final StringBuffer sql=new StringBuffer();
+  sql.append("UPDATE " + table + " SET ");
+  for (  final FieldMapping mapping : fieldMappingByField.values()) {
+    mapping.appendUpdateValues(connector,sql,adapter);
+    sql.append(", ");
+  }
+  sql.append(versionMapping.updateAssigment(connector,nextSequence));
+  sql.append(", ");
+  titleMapping.appendUpdateAssignment(connector,sql,adapter);
+  sql.append(" WHERE ");
+  final RootOid oid=(RootOid)adapter.getOid();
+  idMapping.appendWhereClause(connector,sql,oid);
+  if (useVersioning) {
+    sql.append(" AND ");
+    sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)adapter.getVersion()));
+  }
+  final int updateCount=connector.update(sql.toString());
+  if (updateCount == 0) {
+    LOG.info("concurrency conflict object " + this + "; no update performed");
+    throw new ConcurrencyException("",adapter.getOid());
+  }
+ else {
+    adapter.setVersion(createVersion(nextSequence));
+  }
+  for (  final CollectionMapper collectionMapper : collectionMappers) {
+    collectionMapper.saveInternalCollection(connector,adapter);
+  }
+}

@@ -1,0 +1,9 @@
+{
+  expectJpaNamedQueryFacet();
+  facetFactory.process(new FacetFactory.ProcessClassContext(SimpleObjectWithNamedQuery.class,methodRemover,objSpec));
+  final List<NamedQuery> namedQueries=facet.getNamedQueries();
+  assertEquals(1,namedQueries.size());
+  final NamedQuery namedQuery=namedQueries.get(0);
+  assertEquals("searchById",namedQuery.getName());
+  assertEquals("from SimpleObjectWithNameQuery where id=?",namedQuery.getQuery());
+}

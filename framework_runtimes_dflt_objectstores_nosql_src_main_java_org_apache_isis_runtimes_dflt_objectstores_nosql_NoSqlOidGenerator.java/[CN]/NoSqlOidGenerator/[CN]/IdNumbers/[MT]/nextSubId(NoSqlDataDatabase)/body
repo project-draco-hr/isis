@@ -1,0 +1,12 @@
+{
+  if (nextSubId > newSubIdBatchAt) {
+    final String message="ID exception, last id (" + nextSubId + ") past new batch boundary ("+ newSubIdBatchAt+ ")";
+    throw new NoSqlStoreException(message);
+  }
+  if (nextSubId == newSubIdBatchAt) {
+    nextSubId=connectionPool.nextSerialNumberBatch("_sub-id",batchSize);
+    newSubIdBatchAt=nextSubId + batchSize;
+    LOG.debug("New Sub-ID batch created, from " + nextSubId + " to "+ newSubIdBatchAt);
+  }
+  return nextSubId++;
+}

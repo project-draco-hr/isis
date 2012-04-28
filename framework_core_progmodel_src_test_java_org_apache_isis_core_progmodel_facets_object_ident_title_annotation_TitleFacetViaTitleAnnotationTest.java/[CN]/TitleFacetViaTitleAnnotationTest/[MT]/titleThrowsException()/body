@@ -1,0 +1,15 @@
+{
+  final List<Method> methods=MethodFinderUtils.findMethodsWithAnnotation(DomainObjectWithProblemInItsAnnotatedTitleMethod.class,MethodScope.OBJECT,Title.class);
+  final List<TitleComponent> components=Lists.transform(methods,TitleComponent.FROM_METHOD);
+  final TitleFacetViaTitleAnnotation facet=new TitleFacetViaTitleAnnotation(components,mockFacetHolder,mockAdapterMap,mockLocalizationProvider);
+  final DomainObjectWithProblemInItsAnnotatedTitleMethod screwedPojo=new DomainObjectWithProblemInItsAnnotatedTitleMethod();
+  context.checking(new Expectations(){
+{
+      allowing(mockObjectAdapter).getObject();
+      will(returnValue(screwedPojo));
+    }
+  }
+);
+  final String title=facet.title(mockObjectAdapter,null);
+  assertThat(title,is("Failed Title"));
+}

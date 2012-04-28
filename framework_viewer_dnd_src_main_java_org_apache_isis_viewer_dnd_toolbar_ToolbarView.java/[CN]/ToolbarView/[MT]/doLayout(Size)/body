@@ -1,0 +1,17 @@
+{
+  int x=ViewConstants.HPADDING;
+  int y=0;
+  int lineHeight=0;
+  for (  final View button : getSubviews()) {
+    final Size buttonSize=button.getRequiredSize(Size.createMax());
+    if (x + buttonSize.getWidth() >= maximumSize.getWidth()) {
+      x=ViewConstants.HPADDING;
+      y+=lineHeight + ViewConstants.VPADDING;
+      lineHeight=0;
+    }
+    button.setSize(buttonSize);
+    button.setLocation(new Location(x,y));
+    x+=buttonSize.getWidth() + ViewConstants.HPADDING;
+    lineHeight=Math.max(lineHeight,buttonSize.getHeight());
+  }
+}

@@ -1,0 +1,34 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  context.ignoring(mockRuntimeContext);
+  isisMetaModel=new IsisMetaModel(mockRuntimeContext,new ProgrammingModelFacetsJava5(),new CustomerRepository());
+  isisMetaModel.init();
+  context.checking(new Expectations(){
+{
+      ignoring(mockObjectStore).open();
+      ignoring(mockObjectStore).close();
+      ignoring(mockObjectStore).name();
+      ignoring(mockPersistAlgorithm).name();
+      ignoring(createObjectCommand);
+      ignoring(saveObjectCommand);
+      ignoring(destroyObjectCommand);
+      ignoring(mockVersion);
+    }
+  }
+);
+  final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
+  final DomainObjectContainerDefault container=new DomainObjectContainerDefault();
+  runtimeContext.injectInto(container);
+  runtimeContext.setContainer(container);
+  servicesInjector=new ServicesInjectorDefault();
+  servicesInjector.setContainer(container);
+  adapterManager=new AdapterManagerDefault();
+  adapterFactory=new PojoAdapterFactory();
+  persistenceSession=new PersistenceSessionObjectStore(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new RootOidGenerator(),adapterManager,mockPersistAlgorithm,mockObjectStore);
+  transactionManager=new ObjectStoreTransactionManager(persistenceSession,mockObjectStore);
+  transactionManager.injectInto(persistenceSession);
+  servicesInjector.setServices(Collections.emptyList());
+  persistenceSession.setSpecificationLoader(isisMetaModel.getSpecificationLoader());
+  persistentAdapter=PojoAdapterBuilder.create().withOid("CUS|1").withPojo(new Customer()).with(Persistence.PERSISTENT).with(mockVersion).with(isisMetaModel.getSpecificationLoader()).build();
+  transientAdapter=PojoAdapterBuilder.create().withOid("CUS|2").withPojo(new Customer()).with(Persistence.TRANSIENT).with(isisMetaModel.getSpecificationLoader()).build();
+}

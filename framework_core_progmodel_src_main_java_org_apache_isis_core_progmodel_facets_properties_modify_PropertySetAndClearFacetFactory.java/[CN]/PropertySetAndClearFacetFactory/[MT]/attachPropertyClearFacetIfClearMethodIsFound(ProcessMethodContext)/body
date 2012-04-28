@@ -1,0 +1,13 @@
+{
+  final Class<?> cls=processMethodContext.getCls();
+  final Method getMethod=processMethodContext.getMethod();
+  final FacetHolder property=processMethodContext.getFacetHolder();
+  final String capitalizedName=NameUtils.javaBaseName(getMethod.getName());
+  final Method clearMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.CLEAR_PREFIX + capitalizedName,void.class,NO_PARAMETERS_TYPES);
+  if (clearMethod == null) {
+    return null;
+  }
+  processMethodContext.removeMethod(clearMethod);
+  FacetUtil.addFacet(new PropertyClearFacetViaClearMethod(clearMethod,property));
+  return clearMethod;
+}

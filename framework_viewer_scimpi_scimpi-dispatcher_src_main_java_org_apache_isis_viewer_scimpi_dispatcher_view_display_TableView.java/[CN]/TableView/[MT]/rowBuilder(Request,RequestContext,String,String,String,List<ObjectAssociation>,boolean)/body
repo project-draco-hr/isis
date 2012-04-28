@@ -1,0 +1,45 @@
+{
+  final String linkRowView=request.getOptionalProperty(LINK);
+  final String linkObjectName=request.getOptionalProperty(ELEMENT_NAME,RequestContext.RESULT);
+  final String linkObjectScope=request.getOptionalProperty(SCOPE,Scope.INTERACTION.toString());
+  final LinkedObject linkRow=linkRowView == null ? null : new LinkedObject(linkObjectName,linkObjectScope,context.fullUriPath(linkRowView));
+  final boolean includeHeader=request.isRequested(HEADER,true);
+  final boolean includeFooter=request.isRequested(FOOTER,false);
+  final boolean linkFields=request.isRequested("link-fields",true);
+  final boolean showTitle=request.isRequested(SHOW_TITLE,false);
+  final boolean showIcons=request.isRequested(SHOW_ICON,showIconByDefault);
+  final boolean showSelectOption=request.isRequested(SHOW_SELECT,true);
+  final boolean showEditOption=request.isRequested(SHOW_EDIT,true);
+  final boolean showDeleteOption=request.isRequested(SHOW_DELETE,true);
+  final String noColumnsString=request.getOptionalProperty("no-columns","3");
+  final LinkedFieldsBlock block=new LinkedFieldsBlock();
+  request.setBlockContent(block);
+  request.processUtilCloseTag();
+  final List<ObjectAssociation> fields=block.includedFields(allFields);
+  final LinkedObject[] linkedFields=block.linkedFields(fields);
+  for (int i=0; i < linkedFields.length; i++) {
+    if (linkedFields[i] == null && linkFields && !fields.get(i).getSpecification().containsFacet(ParseableFacet.class)) {
+      linkedFields[i]=new LinkedObject("_generic.shtml");
+    }
+    if (linkedFields[i] != null) {
+      linkedFields[i].setForwardView(context.fullUriPath(linkedFields[i].getForwardView()));
+    }
+  }
+  int noColumns;
+  if (noColumnsString.equalsIgnoreCase("all")) {
+    noColumns=fields.size();
+  }
+ else {
+    noColumns=Math.min(fields.size(),Integer.valueOf(noColumnsString));
+  }
+  final String headers[]=new String[noColumns];
+  int h=0;
+  for (int i=0; i < noColumns; i++) {
+    if (fields.get(i).isOneToManyAssociation()) {
+      continue;
+    }
+    headers[h++]=fields.get(i).getName();
+  }
+  request.popBlockContent();
+  return new SimpleTableBuilder(object,includeHeader,includeFooter,title,noColumns,headers,fields,showTitle,showIcons,showSelectOption,showDeleteOption,showEditOption,fieldName,linkedFields,linkRow);
+}

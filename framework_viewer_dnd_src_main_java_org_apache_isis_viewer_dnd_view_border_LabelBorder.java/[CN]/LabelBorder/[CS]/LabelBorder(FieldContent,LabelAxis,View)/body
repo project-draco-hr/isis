@@ -1,0 +1,22 @@
+{
+  super(wrappedView);
+  this.axis=axis;
+  if (fieldContent.isEditable().isVetoed()) {
+    setDisabledStyling();
+  }
+ else   if (fieldContent.isMandatory()) {
+    setMandatoryStyling();
+  }
+ else {
+    setOptionalStyling();
+  }
+  final String name=fieldContent.getFieldName();
+  this.label=name + ":";
+  final int width=ViewConstants.HPADDING + style.stringWidth(this.label) + ViewConstants.HPADDING;
+  if (axis == null) {
+    left=width;
+  }
+ else {
+    axis.accommodateWidth(width);
+  }
+}

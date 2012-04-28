@@ -1,0 +1,25 @@
+{
+  iswf.fixtures.epv1.setName("Fred");
+  iswf.fixtures.epv2.setName("Harry");
+  iswf.fixtures.epr1_a1.setName("Tom");
+  iswf.fixtures.epr1.setReference(iswf.fixtures.epv1);
+  iswf.fixtures.epr1.setAggregatedReference(iswf.fixtures.epr1_a1);
+  iswf.fixtures.epc1.getHomogeneousCollection().add(iswf.fixtures.epv1);
+  iswf.fixtures.epc1.getHomogeneousCollection().add(iswf.fixtures.epv2);
+  iswf.fixtures.epc1.getHeterogeneousCollection().add(iswf.fixtures.epv1);
+  iswf.fixtures.epc1.getHeterogeneousCollection().add(iswf.fixtures.epr1);
+  originalAdapterForEpv1=iswf.adapterFor(iswf.fixtures.epv1);
+  originalAdapterForEpr1=iswf.adapterFor(iswf.fixtures.epr1);
+  originalAdapterForEpc1=iswf.adapterFor(iswf.fixtures.epc1);
+  mementoForEpv1=new Memento(originalAdapterForEpv1);
+  mementoForEpr1=new Memento(originalAdapterForEpr1);
+  mementoForEpc1=new Memento(originalAdapterForEpc1);
+  bytesForEpv1=toBytes(mementoForEpv1);
+  bytesForEpr1=toBytes(mementoForEpr1);
+  bytesForEpc1=toBytes(mementoForEpc1);
+  iswf.tearDownSystem();
+  iswf.setUpSystem();
+  mementoForEpv1=fromBytes(bytesForEpv1);
+  mementoForEpr1=fromBytes(bytesForEpr1);
+  mementoForEpc1=fromBytes(bytesForEpc1);
+}

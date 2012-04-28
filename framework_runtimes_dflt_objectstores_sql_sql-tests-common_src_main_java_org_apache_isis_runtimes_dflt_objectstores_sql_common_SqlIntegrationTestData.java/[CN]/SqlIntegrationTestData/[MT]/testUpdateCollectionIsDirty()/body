@@ -1,0 +1,11 @@
+{
+  final List<SqlDataClass> sqlDataClasses=factory.allDataClasses();
+  final SqlDataClass sqlDataClass=sqlDataClasses.get(0);
+  final List<SimpleClass> collection=sqlDataClass.getSimpleClasses1();
+  final SimpleClass simpleClass1=collection.get(0);
+  collection.remove(simpleClass1);
+  if (!persistenceMechanismIs("xml")) {
+    factory.update(collection);
+  }
+  factory.update(sqlDataClass);
+}

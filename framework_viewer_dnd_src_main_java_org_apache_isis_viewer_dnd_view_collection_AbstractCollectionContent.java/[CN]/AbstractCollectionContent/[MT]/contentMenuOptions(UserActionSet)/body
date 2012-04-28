@@ -1,0 +1,13 @@
+{
+  final ObjectAdapter collection=getCollection();
+  options.addObjectMenuOptions(collection);
+  options.add(new UserActionAbstract("Clear resolved",ActionType.DEBUG){
+    @Override public Consent disabled(    final View component){
+      return ConsentAbstract.allowIf(collection == null || collection.getResolveState() != ResolveState.TRANSIENT || collection.getResolveState() == ResolveState.GHOST);
+    }
+    @Override public void execute(    final Workspace workspace,    final View view,    final Location at){
+      collection.changeState(ResolveState.GHOST);
+    }
+  }
+);
+}

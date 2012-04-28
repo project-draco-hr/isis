@@ -1,0 +1,13 @@
+{
+  final String jdbcClassName=isisConfiguration.getString(SqlObjectStore.BASE_NAME + ".jdbc.driver");
+  if (jdbcClassName == null) {
+    conn=null;
+    stmt=null;
+    return;
+  }
+  final Class<Driver> driverClass=(Class<Driver>)Class.forName(jdbcClassName);
+  final Driver driver=driverClass.newInstance();
+  DriverManager.registerDriver(driver);
+  conn=DriverManager.getConnection(isisConfiguration.getString(SqlObjectStore.BASE_NAME + ".jdbc.connection"),isisConfiguration.getString(SqlObjectStore.BASE_NAME + ".jdbc.user"),isisConfiguration.getString(SqlObjectStore.BASE_NAME + ".jdbc.password"));
+  stmt=conn.createStatement();
+}

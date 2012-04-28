@@ -1,0 +1,48 @@
+{
+  debug.append(view.getView());
+  debug.blankLine();
+  debug.blankLine();
+  debug.appendTitle("VIEW");
+  view.debug(debug);
+  debug.appendln();
+  final Content content=view.getContent();
+  debug.appendTitle("CONTENT");
+  if (content != null) {
+    String type=content.getClass().getName();
+    type=type.substring(type.lastIndexOf('.') + 1);
+    debug.appendln("Content",type);
+    content.debugDetails(debug);
+    debug.indent();
+    debug.appendln("Icon name",content.getIconName());
+    debug.appendln("Icon ",content.getIconPicture(32));
+    debug.appendln("Window title",content.windowTitle());
+    debug.appendln("Persistable",content.isPersistable());
+    debug.appendln("Object",content.isObject());
+    debug.appendln("Collection",content.isCollection());
+    debug.appendln("Parseable",content.isTextParseable());
+    debug.unindent();
+  }
+ else {
+    debug.appendln("Content","none");
+  }
+  debug.blankLine();
+  if (content instanceof ObjectContent) {
+    final ObjectAdapter object=((ObjectContent)content).getObject();
+    dumpObject(object,debug);
+    debug.blankLine();
+    dumpSpecification(object,debug);
+    debug.blankLine();
+    dumpGraph(object,debug);
+  }
+ else   if (content instanceof CollectionContent) {
+    final ObjectAdapter collection=((CollectionContent)content).getCollection();
+    debug.blankLine();
+    dumpObject(collection,debug);
+    dumpSpecification(collection,debug);
+    debug.blankLine();
+    dumpGraph(collection,debug);
+  }
+  debug.append("\n\nDRAWING\n");
+  debug.append("------\n");
+  view.draw(new DebugCanvas(debug,new Bounds(view.getBounds())));
+}

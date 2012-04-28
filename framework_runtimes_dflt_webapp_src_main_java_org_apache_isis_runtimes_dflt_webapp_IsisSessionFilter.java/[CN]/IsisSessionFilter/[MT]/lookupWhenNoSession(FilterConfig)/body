@@ -1,0 +1,20 @@
+{
+  final String whenNoSessionStr=config.getInitParameter(WHEN_NO_SESSION_KEY);
+  final String logonPage=config.getInitParameter(LOGON_PAGE_KEY);
+  if (logonPage != null) {
+    if (whenNoSessionStr != null) {
+      throw new IllegalStateException("The init-param '" + LOGON_PAGE_KEY + "' is only provided for backwards compatibility; remove if the init-param '"+ WHEN_NO_SESSION_KEY+ "' has been specified");
+    }
+    whenNoSession=WhenNoSession.RESTRICTED;
+    this.restrictedPaths=Lists.newArrayList(logonPage);
+    return;
+  }
+  whenNoSession=WhenNoSession.lookup(whenNoSessionStr);
+  if (whenNoSession == WhenNoSession.RESTRICTED) {
+    final String restrictedPathsStr=config.getInitParameter(RESTRICTED_KEY);
+    if (restrictedPathsStr == null) {
+      throw new IllegalStateException("Require an init-param of '" + RESTRICTED_KEY + "' key to be set.");
+    }
+    this.restrictedPaths=Lists.newArrayList(Splitter.on(",").split(restrictedPathsStr));
+  }
+}

@@ -1,0 +1,13 @@
+{
+  final Country[] values=new Country[]{countryUsaDO,null};
+  for (  final Country value : values) {
+    try {
+      custJsWO.setAlwaysHiddenAssociation(value);
+      fail("Should have thrown exception");
+    }
+ catch (    final HiddenException ex) {
+      assertThat(ex.getAdvisorClass(),classEqualTo(HiddenFacetForMemberAnnotation.class));
+      assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("Always Hidden Association"));
+    }
+  }
+}

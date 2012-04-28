@@ -1,0 +1,16 @@
+{
+class Customer {
+  }
+class CustomerRepository {
+    @SuppressWarnings("unused") public List<Customer> findCustomers(){
+      return null;
+    }
+  }
+  final Class<?> clazz=CustomerRepository.class;
+  final Method method=clazz.getMethod("findCustomers");
+  final TypeExtractorMethodReturn extractor=new TypeExtractorMethodReturn(method);
+  final List<Class<?>> classes=extractor.getClasses();
+  assertThat(classes.size(),is(2));
+  assertThat(classes,containsElementThat(equalTo((Class<?>)java.util.List.class)));
+  assertThat(classes,containsElementThat(equalTo((Class<?>)Customer.class)));
+}

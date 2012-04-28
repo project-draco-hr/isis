@@ -1,0 +1,20 @@
+{
+  LOG.info("request: " + request.getServletPath() + "?"+ request.getQueryString());
+  final Request req=new ServletRequest(request);
+  if (req.getRequestType() == null) {
+    throw new ServletException("No action specified");
+  }
+ else   if (!controller.actionExists(req)) {
+    throw new ServletException("No such action " + req.getRequestType());
+  }
+ else {
+    try {
+      final Context context=getContextForRequest(request);
+      processRequest(request,response,req,context);
+    }
+ catch (    final Exception e) {
+      LOG.error("exception during request handling",e);
+      throw new ServletException("Internal exception",e);
+    }
+  }
+}

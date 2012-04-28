@@ -1,0 +1,17 @@
+{
+  try {
+    final ResultSet set=connection.getMetaData().getColumns(null,null,tableName,columnName);
+    if (set.next()) {
+      LOG.debug("Found " + set.getString("COLUMN_NAME") + " in "+ set.getString("TABLE_NAME"));
+      set.close();
+      return true;
+    }
+ else {
+      set.close();
+      return false;
+    }
+  }
+ catch (  final SQLException e) {
+    throw new SqlObjectStoreException(e);
+  }
+}

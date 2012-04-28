@@ -1,0 +1,16 @@
+{
+  context.checking(new Expectations(){
+{
+      allowing(objectSpec).isService();
+      will(returnValue(false));
+      allowing(objectSpec).isParentedOrFreeCollection();
+      will(returnValue(false));
+      allowing(objectSpec).persistability();
+      will(returnValue(Persistability.TRANSIENT));
+      never(mockAdder);
+    }
+  }
+);
+  final PojoAdapter rootAdapter=PojoAdapterBuilder.create().with(Type.ROOT).with(Persistence.TRANSIENT).with(objectSpec).build();
+  persistAlgorithm.makePersistent(rootAdapter,mockAdder);
+}

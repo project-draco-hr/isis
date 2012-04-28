@@ -1,0 +1,17 @@
+{
+  startNewFileIfNeeded();
+  try {
+    writer.write(("#transaction started - " + new Date().toString() + "\n").getBytes());
+    writer.write('B');
+    writer.write(name.getBytes(Util.ENCODING));
+    writer.write(' ');
+    writer.write(Long.toString(newBatchAt).getBytes(Util.ENCODING));
+    writer.write('\n');
+    writer.write('\n');
+    writer.write("#transaction ended\n\n".getBytes());
+    writer.flush();
+  }
+ catch (  final IOException e) {
+    throw new NoSqlStoreException("Failed to write serial number data to log file",e);
+  }
+}

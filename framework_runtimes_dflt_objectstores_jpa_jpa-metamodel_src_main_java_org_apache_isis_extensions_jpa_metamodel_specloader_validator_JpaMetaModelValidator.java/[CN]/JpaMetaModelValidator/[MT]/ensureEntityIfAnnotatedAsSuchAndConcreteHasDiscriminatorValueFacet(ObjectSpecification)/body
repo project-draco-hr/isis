@@ -1,0 +1,10 @@
+{
+  if (!objSpec.containsFacet(JpaEntityFacet.class)) {
+    return;
+  }
+  if (objSpec.isAbstract() || objSpec.containsFacet(ObjectTypeFacet.class)) {
+    return;
+  }
+  final String classFullName=objSpec.getFullIdentifier();
+  throw new MetaModelInvalidException(MessageFormat.format("JPA Objects requires that concrete class {0} mapped by @Entity " + "must also have an @DiscriminatorValue annotation",classFullName));
+}

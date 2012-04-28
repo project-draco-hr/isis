@@ -1,0 +1,29 @@
+{
+  final SwfTag tag=getTag();
+  if (tag.getType() == SwfTag.EMPTY) {
+    return;
+  }
+  while (index < snippets.size() - 1) {
+    index++;
+    final Snippet snippet=snippets.get(index);
+    if (snippet instanceof HtmlSnippet) {
+      appendSnippet((HtmlSnippet)snippet);
+    }
+ else {
+      final SwfTag nextTag=(SwfTag)snippet;
+      if (tag.getName().equals(nextTag.getName())) {
+        if (nextTag.getType() == SwfTag.START) {
+        }
+ else {
+          return;
+        }
+      }
+      final String name=nextTag.getName();
+      if (nextTag.getType() == SwfTag.END && !tag.getName().equals(name)) {
+        throw new TagProcessingException("Expected " + nextTag.getName().toLowerCase() + " tag but found "+ tag.getName().toLowerCase()+ " tag at "+ nextTag.errorAt(),tag.toString());
+      }
+      final ElementProcessor processor=processors.getFor(name);
+      process(nextTag,processor);
+    }
+  }
+}

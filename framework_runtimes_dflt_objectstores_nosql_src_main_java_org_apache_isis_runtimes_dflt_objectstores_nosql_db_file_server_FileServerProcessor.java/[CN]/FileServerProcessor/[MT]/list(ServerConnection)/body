@@ -1,0 +1,31 @@
+{
+  try {
+    connection.endCommand();
+    final String type=connection.getRequest();
+    int limit=connection.getRequestAsInt();
+    if (limit == 0) {
+      limit=Integer.MAX_VALUE;
+    }
+    final File[] listFiles=listFiles(type);
+    if (listFiles != null) {
+      connection.ok();
+      for (      final File file : listFiles) {
+        final String fileName=file.getName();
+        final String id=fileName.substring(0,fileName.length() - 5);
+        final DataFileReader reader=findInstance(type,id,connection);
+        readInstance(reader,connection);
+        locks.release(id,getTransactionId());
+        if (limit-- < 0) {
+          break;
+        }
+      }
+      connection.endBlock();
+    }
+ else {
+      connection.response("");
+    }
+  }
+ catch (  final IOException e) {
+    throw new NoSqlStoreException(Util.READ_ERROR,e);
+  }
+}

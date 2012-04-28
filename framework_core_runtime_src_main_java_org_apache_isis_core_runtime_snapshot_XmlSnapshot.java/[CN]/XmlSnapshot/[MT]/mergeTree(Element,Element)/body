@@ -1,0 +1,38 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("mergeTree(" + log("parent",parentElement) + andlog("child",childElement));
+  }
+  final String childElementOid=isisMetaModel.getAttribute(childElement,"oid");
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("mergeTree(El,El): " + log("childOid",childElementOid));
+  }
+  if (childElementOid != null) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("mergeTree(El,El): check if child already there");
+    }
+    final Vector existingChildElements=elementsUnder(parentElement,childElement.getLocalName());
+    for (final Enumeration childEnum=existingChildElements.elements(); childEnum.hasMoreElements(); ) {
+      final Element possibleMatchingElement=(Element)childEnum.nextElement();
+      final String possibleMatchOid=isisMetaModel.getAttribute(possibleMatchingElement,"oid");
+      if (possibleMatchOid == null || !possibleMatchOid.equals(childElementOid)) {
+        continue;
+      }
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("mergeTree(El,El): child already there; merging grandchildren");
+      }
+      final Element existingChildElement=possibleMatchingElement;
+      final Vector grandchildrenElements=elementsUnder(childElement,"*");
+      for (final Enumeration grandchildEnum=grandchildrenElements.elements(); grandchildEnum.hasMoreElements(); ) {
+        final Element grandchildElement=(Element)grandchildEnum.nextElement();
+        childElement.removeChild(grandchildElement);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("mergeTree(El,El): merging " + log("grandchild",grandchildElement));
+        }
+        mergeTree(existingChildElement,grandchildElement);
+      }
+      return existingChildElement;
+    }
+  }
+  parentElement.appendChild(childElement);
+  return childElement;
+}

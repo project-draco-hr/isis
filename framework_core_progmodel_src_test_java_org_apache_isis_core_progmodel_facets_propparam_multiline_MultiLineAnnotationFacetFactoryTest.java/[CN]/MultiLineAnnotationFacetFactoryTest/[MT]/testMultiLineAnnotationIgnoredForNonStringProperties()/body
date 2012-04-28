@@ -1,0 +1,12 @@
+{
+  final MultiLineAnnotationOnPropertyFacetFactory facetFactory=new MultiLineAnnotationOnPropertyFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") @MultiLine(numberOfLines=8,preventWrapping=false) public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getNumberOfOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MultiLineFacet.class);
+  assertNull(facet);
+}

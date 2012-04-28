@@ -1,0 +1,21 @@
+{
+  final NamedFacet facet=getFacet(NamedFacet.class);
+  if (facet != null && facet.value() != null) {
+    return StringUtils.camelLowerFirst(facet.value());
+  }
+  final String name=getSpecification().getSingularName();
+  final List<ObjectActionParameter> parameters=this.getAction().getParameters(new Filter<ObjectActionParameter>(){
+    @Override public boolean accept(    final ObjectActionParameter t){
+      return equalsShortIdentifier(t.getSpecification(),getSpecification());
+    }
+    protected boolean equalsShortIdentifier(    final ObjectSpecification spec1,    final ObjectSpecification spec2){
+      return spec1.getShortIdentifier().toLowerCase().equals(spec2.getShortIdentifier().toLowerCase());
+    }
+  }
+);
+  if (parameters.size() == 1) {
+    return StringUtils.camelLowerFirst(name);
+  }
+  final int indexOf=parameters.indexOf(this);
+  return StringUtils.camelLowerFirst(name + (indexOf + 1));
+}

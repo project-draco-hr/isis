@@ -1,0 +1,10 @@
+{
+  if (!(persistenceQuery instanceof PersistenceQueryBuiltIn)) {
+    throw new IllegalArgumentException(MessageFormat.format("Provided PersistenceQuery not supported; was {0}; " + "the in-memory object store only supports {1}",persistenceQuery.getClass().getName(),PersistenceQueryBuiltIn.class.getName()));
+  }
+  final PersistenceQueryBuiltIn builtIn=(PersistenceQueryBuiltIn)persistenceQuery;
+  final Vector<ObjectAdapter> instances=new Vector<ObjectAdapter>();
+  final ObjectSpecification spec=persistenceQuery.getSpecification();
+  findInstances(spec,builtIn,instances);
+  return toInstancesArray(instances);
+}

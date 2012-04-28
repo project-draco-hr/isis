@@ -1,0 +1,26 @@
+{
+  if (view.getContent().getAdapter() != forObject) {
+    return;
+  }
+  final View[] subviews=view.getSubviews();
+  for (  final View fieldView : subviews) {
+    final Content content=fieldView.getContent();
+    if (content instanceof RootObject) {
+      checkFields(saveState,fieldView,forObject);
+    }
+ else     if (content instanceof FieldContent) {
+      final boolean isMandatory=((FieldContent)content).isMandatory();
+      final boolean isEditable=((FieldContent)content).isEditable().isAllowed();
+      final ObjectAdapter field=content.getAdapter();
+      final boolean isFieldEmpty=field == null;
+      if (isMandatory && isEditable && isFieldEmpty) {
+        final String parameterName=((FieldContent)content).getFieldName();
+        saveState.addMissingField(parameterName);
+      }
+ else       if (fieldView.getState().isInvalid()) {
+        final String parameterName=((FieldContent)content).getFieldName();
+        saveState.addInvalidField(parameterName);
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  context.checking(new Expectations(){
+{
+      one(mockAuthMgr).authenticate(with(any(AuthenticationRequest.class)));
+    }
+  }
+);
+  webSession=new AuthenticatedWebSessionForIsis(stubRequest){
+    private static final long serialVersionUID=1L;
+    @Override protected AuthenticationManager getAuthenticationManager(){
+      return mockAuthMgr;
+    }
+  }
+;
+  webSession.signIn("john","secret");
+  assertThat(webSession.isSignedIn(),is(true));
+}

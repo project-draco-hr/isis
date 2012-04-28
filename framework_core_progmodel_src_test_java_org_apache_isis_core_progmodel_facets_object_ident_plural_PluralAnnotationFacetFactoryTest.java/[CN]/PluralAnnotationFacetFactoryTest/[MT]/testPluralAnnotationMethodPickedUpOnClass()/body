@@ -1,0 +1,11 @@
+{
+@Plural("Some plural name") class Customer {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PluralFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PluralFacetAnnotation);
+  final PluralFacetAnnotation pluralFacet=(PluralFacetAnnotation)facet;
+  assertEquals("Some plural name",pluralFacet.value());
+  assertNoMethodsRemoved();
+}

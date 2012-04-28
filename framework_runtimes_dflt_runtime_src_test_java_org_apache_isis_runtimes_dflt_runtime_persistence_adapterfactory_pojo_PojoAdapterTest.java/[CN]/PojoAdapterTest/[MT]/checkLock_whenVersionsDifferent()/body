@@ -1,0 +1,11 @@
+{
+  adapter=PojoAdapterBuilder.create().with(mockSpecificationLoader).withTitleString("some pojo").with(mockVersion).build();
+  context.checking(new Expectations(){
+{
+      one(mockVersion).different(mockVersion2);
+      will(returnValue(true));
+    }
+  }
+);
+  adapter.checkLock(mockVersion2);
+}

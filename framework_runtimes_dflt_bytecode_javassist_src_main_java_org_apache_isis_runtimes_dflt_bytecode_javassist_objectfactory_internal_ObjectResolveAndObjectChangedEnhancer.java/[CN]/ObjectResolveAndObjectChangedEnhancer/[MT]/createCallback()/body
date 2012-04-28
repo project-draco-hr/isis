@@ -1,0 +1,22 @@
+{
+  this.methodHandler=new MethodHandler(){
+    @Override public Object invoke(    final Object proxied,    final Method proxyMethod,    final Method proxiedMethod,    final Object[] args) throws Throwable {
+      final boolean ignore=proxyMethod.getDeclaringClass().equals(Object.class);
+      ImperativeFacetFlags flags=null;
+      if (!ignore) {
+        final ObjectSpecificationDefault targetObjSpec=getJavaSpecificationOfOwningClass(proxiedMethod);
+        final ObjectMember member=targetObjSpec.getMember(proxiedMethod);
+        flags=ImperativeFacetUtils.getImperativeFacetFlags(member,proxiedMethod);
+        if (flags.impliesResolve()) {
+          objectResolver.resolve(proxied,member.getName());
+        }
+      }
+      final Object proxiedReturn=proxiedMethod.invoke(proxied,args);
+      if (!ignore && flags.impliesObjectChanged()) {
+        objectChanger.objectChanged(proxied);
+      }
+      return proxiedReturn;
+    }
+  }
+;
+}

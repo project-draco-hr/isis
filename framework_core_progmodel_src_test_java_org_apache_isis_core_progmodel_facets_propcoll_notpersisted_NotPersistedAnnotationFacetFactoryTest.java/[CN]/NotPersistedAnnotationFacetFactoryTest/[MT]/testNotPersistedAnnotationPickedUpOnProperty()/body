@@ -1,0 +1,14 @@
+{
+  final NotPersistedAnnotationForPropertyFacetFactory facetFactory=new NotPersistedAnnotationForPropertyFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") @NotPersisted() public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotPersistedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NotPersistedFacetAnnotationForProperty);
+  assertNoMethodsRemoved();
+}

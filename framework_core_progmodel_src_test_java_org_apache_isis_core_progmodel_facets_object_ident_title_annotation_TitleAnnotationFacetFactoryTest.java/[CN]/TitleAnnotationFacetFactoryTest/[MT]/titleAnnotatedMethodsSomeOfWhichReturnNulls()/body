@@ -1,0 +1,15 @@
+{
+  facetFactory.process(new ProcessClassContext(Customer4.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(TitleFacet.class);
+  final TitleFacetViaTitleAnnotation titleFacetViaTitleAnnotation=(TitleFacetViaTitleAnnotation)facet;
+  final Customer4 customer=new Customer4();
+  context.checking(new Expectations(){
+{
+      allowing(objectAdapter).getObject();
+      will(returnValue(customer));
+    }
+  }
+);
+  final String title=titleFacetViaTitleAnnotation.title(objectAdapter,mockLocalizationProvider.getLocalization());
+  assertThat(title,is("titleElement1 titleElement3 titleElement5 3 this needs to be trimmed"));
+}

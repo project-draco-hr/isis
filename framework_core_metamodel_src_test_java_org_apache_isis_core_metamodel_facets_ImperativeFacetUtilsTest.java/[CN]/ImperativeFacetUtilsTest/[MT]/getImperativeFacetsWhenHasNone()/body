@@ -1,0 +1,13 @@
+{
+  context.checking(new Expectations(){
+{
+      one(mockObjectMember).getFacets(with(any(Filter.class)));
+      will(returnValue(Lists.newArrayList()));
+    }
+  }
+);
+  final ImperativeFacetFlags flags=ImperativeFacetUtils.getImperativeFacetFlags(mockObjectMember,method);
+  assertThat(flags,is(not(nullValue())));
+  assertThat(flags.impliesResolve(),is(false));
+  assertThat(flags.impliesObjectChanged(),is(false));
+}

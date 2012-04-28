@@ -1,0 +1,16 @@
+{
+  try {
+    LOG.debug("processing " + processor.getName() + " "+ tag);
+    appendDebug("\n" + tag.debug());
+    if (tag.getType() == SwfTag.END) {
+      throw new TagProcessingException(tag.errorAt() + " - end tag mistaken for a start tag",tag.toString());
+    }
+    processor.process(this);
+  }
+ catch (  final TagProcessingException e) {
+    throw e;
+  }
+catch (  final RuntimeException e) {
+    throw new TagProcessingException("Error while processing " + tag.getName().toLowerCase() + " element at "+ tag.errorAt()+ " - "+ e.getMessage(),tag.toString(),e);
+  }
+}

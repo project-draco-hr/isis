@@ -1,0 +1,26 @@
+{
+  final StringBuffer xml=new StringBuffer();
+  xml.append("<profile>\n");
+  final Options options=userProfile.getOptions();
+  writeOptions(xml,options,null,0);
+  xml.append("  <perspectives>\n");
+  for (  final String perspectiveName : userProfile.list()) {
+    final PerspectiveEntry perspective=userProfile.getPerspective(perspectiveName);
+    xml.append("    <perspective" + attribute("name",perspectiveName) + ">\n");
+    xml.append("      <services>\n");
+    for (    final Object service : perspective.getServices()) {
+      xml.append("        <service " + attribute("id",ServiceUtil.id(service)) + "/>\n");
+    }
+    xml.append("      </services>\n");
+    xml.append("      <objects>\n");
+    for (    final Object object : perspective.getObjects()) {
+      final ObjectAdapter adapter=getPersistenceSession().getAdapterManager().adapterFor(object);
+      xml.append("        <object>" + adapter.getOid().enString() + "</object>\n");
+    }
+    xml.append("      </objects>\n");
+    xml.append("    </perspective>\n");
+  }
+  xml.append("  </perspectives>\n");
+  xml.append("</profile>\n");
+  writer.write(xml.toString());
+}

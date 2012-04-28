@@ -1,0 +1,12 @@
+{
+  final OptionalAnnotationForParameterFacetFactory facetFactory=new OptionalAnnotationForParameterFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @Optional final String foo){
+    }
+  }
+  final Method method=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  facetFactory.processParams(new ProcessParameterContext(method,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(MandatoryFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MandatoryFacetInvertedByOptionalForParameter);
+}

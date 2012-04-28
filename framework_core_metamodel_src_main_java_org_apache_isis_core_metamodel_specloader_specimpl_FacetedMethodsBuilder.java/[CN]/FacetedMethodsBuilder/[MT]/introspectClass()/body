@@ -1,0 +1,25 @@
+{
+  LOG.info("introspecting " + getClassName());
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("introspecting " + getClassName() + ": class-level details");
+  }
+  getFacetProcessor().process(introspectedClass,methodRemover,spec);
+  final FacetsFacet facetsFacet=spec.getFacet(FacetsFacet.class);
+  if (facetsFacet != null) {
+    final Class<? extends FacetFactory>[] facetFactories=facetsFacet.facetFactories();
+    for (    final Class<? extends FacetFactory> facetFactorie : facetFactories) {
+      FacetFactory facetFactory=null;
+      try {
+        facetFactory=facetFactorie.newInstance();
+      }
+ catch (      final InstantiationException e) {
+        throw new IsisException(e);
+      }
+catch (      final IllegalAccessException e) {
+        throw new IsisException(e);
+      }
+      getFacetProcessor().injectDependenciesInto(facetFactory);
+      facetFactory.process(new ProcessClassContext(introspectedClass,methodRemover,spec));
+    }
+  }
+}

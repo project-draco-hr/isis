@@ -1,0 +1,16 @@
+{
+  final MultiLineAnnotationOnPropertyFacetFactory facetFactory=new MultiLineAnnotationOnPropertyFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") @MultiLine(numberOfLines=12,preventWrapping=true) public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MultiLineFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MultiLineFacetAnnotationOnProperty);
+  final MultiLineFacetAnnotationOnProperty multiLineFacetAnnotation=(MultiLineFacetAnnotationOnProperty)facet;
+  assertEquals(12,multiLineFacetAnnotation.numberOfLines());
+  assertEquals(true,multiLineFacetAnnotation.preventWrapping());
+}

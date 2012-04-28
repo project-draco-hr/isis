@@ -1,0 +1,9 @@
+{
+  PersistenceMechanismInstaller installer=obtainPersistenceMechanismInstaller(getConfiguration());
+  if (installer == null) {
+    final InMemoryPersistenceMechanismInstaller inMemoryPersistenceMechanismInstaller=new InMemoryPersistenceMechanismInstaller();
+    inMemoryPersistenceMechanismInstaller.setConfiguration(getConfiguration());
+    installer=inMemoryPersistenceMechanismInstaller;
+  }
+  return installer.createPersistenceSessionFactory(deploymentType);
+}

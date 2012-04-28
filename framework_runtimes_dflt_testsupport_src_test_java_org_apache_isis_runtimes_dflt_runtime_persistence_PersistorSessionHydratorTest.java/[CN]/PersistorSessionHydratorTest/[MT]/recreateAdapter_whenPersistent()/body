@@ -1,0 +1,14 @@
+{
+  iswf.fixtures.epv1=iswf.container.newTransientInstance(ExamplePojoWithValues.class);
+  iswf.fixtures.epv1.setName("Fred");
+  iswf.persist(iswf.fixtures.epv1);
+  iswf.tearDownSystem();
+  iswf.setUpSystem();
+  final RootOidDefault oid=RootOidDefault.create("EPV|1");
+  final ObjectAdapter adapter=iswf.recreateAdapter(oid);
+  assertEquals(oid,adapter.getOid());
+  assertEquals(ResolveState.GHOST,adapter.getResolveState());
+  final ExamplePojoWithValues epv=(ExamplePojoWithValues)adapter.getObject();
+  assertEquals("Fred",epv.getName());
+  assertNotNull(adapter.getVersion());
+}

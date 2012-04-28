@@ -1,0 +1,15 @@
+{
+  for (  final ObjectAdapter object : getUpdateNotifier().getChangedObjects()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("invalidate views for " + object);
+    }
+    final List<View> viewsVector=viewListByAdapter.get(object);
+    if (viewsVector == null) {
+      continue;
+    }
+    for (    View view : viewsVector) {
+      LOG.debug("   - " + view);
+      view.getView().invalidateContent();
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  final Calendar d=Calendar.getInstance();
+  d.setTime(date.getTime());
+  int y=firstRowBaseline;
+  for (int row=0; row < ROWS; row++) {
+    int x=labelWidth;
+    for (int column=0; column < COLUMNS; column++) {
+      final String day="" + d.get(Calendar.DAY_OF_MONTH);
+      if (currentDate != null && currentDate.equals(d)) {
+        canvas.drawSolidRectangle(x,headerHeight + row * cellHeight,cellWidth,cellHeight,Toolkit.getColor(ColorsAndFonts.COLOR_PRIMARY2));
+      }
+      if (today.getTime().equals(d.getTime())) {
+        canvas.drawRectangle(x,headerHeight + row * cellHeight,cellWidth,cellHeight,Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY2));
+      }
+      canvas.drawText(day,x - PADDING / 2 + cellWidth - style.stringWidth(day),y,mainTextColor,style);
+      x+=cellWidth;
+      d.add(Calendar.DAY_OF_MONTH,1);
+    }
+    y+=cellHeight;
+  }
+  return y;
+}

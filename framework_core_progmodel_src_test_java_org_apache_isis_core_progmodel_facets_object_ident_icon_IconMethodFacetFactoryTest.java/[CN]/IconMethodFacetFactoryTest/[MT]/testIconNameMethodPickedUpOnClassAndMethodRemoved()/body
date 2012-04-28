@@ -1,0 +1,13 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public String iconName(){
+      return null;
+    }
+  }
+  final Method iconNameMethod=findMethod(Customer.class,"iconName");
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(IconFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof IconFacetViaMethod);
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(iconNameMethod));
+}

@@ -1,0 +1,46 @@
+{
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(ExamplePojoWithValues.class);
+  reader2=context.mock(StateReader.class,"reader 2");
+  context.checking(new Expectations(){
+{
+      one(reader2).readObjectType();
+      will(returnValue(ExamplePojoWithCollections.class.getName()));
+      one(reader2).readId();
+      will(returnValue("5"));
+      one(reader2).readEncrytionType();
+      will(returnValue("etc1"));
+      one(reader2).readVersion();
+      will(returnValue("3"));
+      one(reader2).readUser();
+      will(returnValue("username"));
+      one(reader2).readTime();
+      will(returnValue("1020"));
+      one(versionCreator).version("3","username","1020");
+      one(keyCreator).oid(exampleCollectionPojoSpec,"5");
+      will(returnValue(oid5));
+      ;
+      one(reader2).readField("hetrogenousCollection");
+      will(returnValue(null));
+      one(reader2).readField("homogenousCollection");
+      will(returnValue("ref@3|ref@4|"));
+      one(keyCreator).specificationFromReference("ref@3");
+      will(returnValue(specification));
+      one(keyCreator).oidFromReference("ref@3");
+      will(returnValue(oid3));
+      one(keyCreator).specificationFromReference("ref@4");
+      will(returnValue(specification));
+      one(keyCreator).oidFromReference("ref@4");
+      will(returnValue(oid4));
+    }
+  }
+);
+  final ObjectAdapter readObject=objectReader.load(reader2,keyCreator,versionCreator,dataEncrypter);
+  assertEquals(oid5,readObject.getOid());
+  assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
+  final ExamplePojoWithCollections pojo=(ExamplePojoWithCollections)readObject.getObject();
+  final List<ExamplePojoWithValues> collection2=pojo.getHomogeneousCollection();
+  assertEquals(2,collection2.size());
+  assertThat(collection2.get(0),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
+  assertThat(collection2.get(1),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
+  context.assertIsSatisfied();
+}

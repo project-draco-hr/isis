@@ -1,0 +1,19 @@
+{
+  super.encode(output);
+  output.writeInt(fields.size());
+  for (  final String key : fields.keySet()) {
+    final Object value=fields.get(key);
+    output.writeUTF(key);
+    if (value instanceof Data) {
+      As.OBJECT.writeTo(output);
+      output.writeEncodable(value);
+    }
+ else     if (value instanceof Null) {
+      As.NULL.writeTo(output);
+    }
+ else {
+      As.STRING.writeTo(output);
+      output.writeUTF((String)value);
+    }
+  }
+}

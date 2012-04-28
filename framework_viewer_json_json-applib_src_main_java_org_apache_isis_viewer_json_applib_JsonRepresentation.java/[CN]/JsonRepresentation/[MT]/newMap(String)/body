@@ -1,0 +1,17 @@
+{
+  final JsonRepresentation repr=new JsonRepresentation(new ObjectNode(JsonNodeFactory.instance));
+  String key=null;
+  for (  final String keyOrValue : keyValuePairs) {
+    if (key != null) {
+      repr.mapPut(key,keyOrValue);
+      key=null;
+    }
+ else {
+      key=keyOrValue;
+    }
+  }
+  if (key != null) {
+    throw new IllegalArgumentException("must provide an even number of keys and values");
+  }
+  return repr;
+}

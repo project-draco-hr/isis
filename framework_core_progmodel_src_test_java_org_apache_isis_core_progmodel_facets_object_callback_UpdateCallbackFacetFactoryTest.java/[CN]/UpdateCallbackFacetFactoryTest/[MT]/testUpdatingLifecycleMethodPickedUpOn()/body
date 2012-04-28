@@ -1,0 +1,14 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public void updating(){
+    }
+  }
+  final Method method=findMethod(Customer.class,"updating");
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(UpdatingCallbackFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof UpdatingCallbackFacetViaMethod);
+  final UpdatingCallbackFacetViaMethod updatingCallbackFacetViaMethod=(UpdatingCallbackFacetViaMethod)facet;
+  assertEquals(method,updatingCallbackFacetViaMethod.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(method));
+}

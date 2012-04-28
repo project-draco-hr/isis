@@ -1,0 +1,15 @@
+{
+class CustomerRepository {
+    @SuppressWarnings("unused") public void someAction(){
+    }
+    @SuppressWarnings("unused") public boolean notInServiceMenuSomeAction(){
+      return true;
+    }
+  }
+  final Method actionMethod=findMethod(CustomerRepository.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(CustomerRepository.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotInServiceMenuFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NotInServiceMenuFacetAbstract);
+  assertEquals(1,methodRemover.getRemovedMethodMethodCalls().size());
+}

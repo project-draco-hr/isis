@@ -1,0 +1,32 @@
+{
+  final String cls=request.getOptionalProperty(CLASS,"form");
+  final String classString=" class=\"" + cls + "\"";
+  String title=request.getOptionalProperty(FORM_TITLE);
+  final String oddRowClass=request.getOptionalProperty(ODD_ROW_CLASS);
+  final String evenRowClass=request.getOptionalProperty(EVEN_ROW_CLASS);
+  final boolean showIcons=request.isRequested(SHOW_ICON,showIconByDefault());
+  final LinkedFieldsBlock tag=new LinkedFieldsBlock();
+  request.setBlockContent(tag);
+  request.processUtilCloseTag();
+  if (object != null) {
+    final List<ObjectAssociation> fields=tag.includedFields(object.getSpecification().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS));
+    final LinkedObject[] linkFields=tag.linkedFields(fields);
+    String linkAllView=request.getOptionalProperty(LINK);
+    if (linkAllView != null) {
+      linkAllView=request.getContext().fullUriPath(linkAllView);
+      for (int i=0; i < linkFields.length; i++) {
+        final boolean isObject=fields.get(i).isOneToOneAssociation();
+        final boolean isNotParseable=!fields.get(i).getSpecification().containsFacet(ParseableFacet.class);
+        linkFields[i]=isObject && isNotParseable ? new LinkedObject(linkAllView) : null;
+      }
+    }
+    if (title == null) {
+      title=object.getSpecification().getSingularName();
+    }
+ else     if (title.equals("")) {
+      title=null;
+    }
+    write(request,object,fields,linkFields,classString,title,oddRowClass,evenRowClass,showIcons);
+  }
+  request.popBlockContent();
+}

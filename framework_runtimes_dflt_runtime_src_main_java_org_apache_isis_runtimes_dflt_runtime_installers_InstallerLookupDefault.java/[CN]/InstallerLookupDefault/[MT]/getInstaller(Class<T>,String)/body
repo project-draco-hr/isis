@@ -1,0 +1,11 @@
+{
+  Assert.assertNotNull("No name specified",implName);
+  for (  final Installer installer : installerList) {
+    if (cls.isAssignableFrom(installer.getClass()) && installer.getName().equals(implName)) {
+      mergeConfigurationFor(installer);
+      injectDependenciesInto(installer);
+      return (T)installer;
+    }
+  }
+  return (T)getInstaller(implName);
+}

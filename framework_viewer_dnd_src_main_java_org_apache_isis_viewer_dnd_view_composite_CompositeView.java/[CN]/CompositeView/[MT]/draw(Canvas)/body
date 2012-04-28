@@ -1,0 +1,20 @@
+{
+  final View views[]=getSubviews();
+  for (  final View subview : views) {
+    final Bounds bounds=subview.getBounds();
+    if (Toolkit.debug) {
+      LOG.debug("compare: " + bounds + "  "+ canvas);
+    }
+    if (canvas.overlaps(bounds)) {
+      final Canvas subCanvas=canvas.createSubcanvas(bounds.getX(),bounds.getY(),bounds.getWidth() - 0,bounds.getSize().getHeight());
+      if (Toolkit.debug) {
+        LOG.debug("-- repainting " + subview);
+        LOG.debug("subcanvas " + subCanvas);
+      }
+      subview.draw(subCanvas);
+      if (Toolkit.debug) {
+        canvas.drawRectangle(subview.getBounds().getX(),subview.getBounds().getY(),subview.getBounds().getWidth() - 1,subview.getBounds().getHeight() - 1,Toolkit.getColor(ColorsAndFonts.COLOR_DEBUG_BOUNDS_BORDER));
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  final JsonRepresentation asList=new JsonRepresentation(jsonNode);
+  final Iterable<JsonNode> filtered=Iterables.filter(asList.arrayIterable(JsonNode.class),new Predicate<JsonNode>(){
+    @Override public boolean apply(    final JsonNode input){
+      return pathNode.matches(new JsonRepresentation(input));
+    }
+  }
+);
+  final List<JsonNode> matching=Lists.newArrayList(filtered);
+  return toJsonNode(matching);
+}

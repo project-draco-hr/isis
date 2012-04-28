@@ -1,0 +1,14 @@
+{
+  allowingObjectSpecCorrespondingClassIs(BigDecimal.class);
+  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  never(encodableFacet);
+  final BigDecimal value=new BigDecimal("1234567890.1234567890");
+  context.checking(new Expectations(){
+{
+      one(objectAdapter).getObject();
+      will(returnValue(value));
+    }
+  }
+);
+  assertEquals(value,jsonValueEncoder.asObject(objectAdapter));
+}

@@ -1,0 +1,16 @@
+{
+  OutputStreamWriter pw;
+  try {
+    final File file=file(name);
+    createDirectoryIfRequired(file);
+    pw=new OutputStreamWriter(new FileOutputStream(file),charset);
+    pw.write("<?xml version=\"1.0\" encoding=\"" + charset + "\" ?>\n");
+    pw.write("\n");
+    writer.write(pw);
+    pw.write("\n");
+    pw.close();
+  }
+ catch (  final IOException e) {
+    throw new IsisException("Problems writing data files",e);
+  }
+}

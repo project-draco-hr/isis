@@ -1,0 +1,9 @@
+{
+  final RepresentationType representationType=RepresentationType.VERSION;
+  init(representationType);
+  fakeRuntimeExceptionIfXFail();
+  final RendererFactory factory=rendererFactoryRegistry.find(representationType);
+  final VersionReprRenderer renderer=(VersionReprRenderer)factory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  renderer.includesSelf();
+  return responseOfOk(renderer,Caching.ONE_DAY).build();
+}

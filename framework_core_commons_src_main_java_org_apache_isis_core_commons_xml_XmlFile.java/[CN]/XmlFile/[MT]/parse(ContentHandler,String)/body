@@ -1,0 +1,40 @@
+{
+  XMLReader parser;
+  try {
+    parser=XMLReaderFactory.createXMLReader();
+  }
+ catch (  final SAXException e) {
+    try {
+      parser=XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+    }
+ catch (    final SAXException e2) {
+      try {
+        parser=XMLReaderFactory.createXMLReader("org.apache.crimson.parser.XMLReaderImpl");
+      }
+ catch (      final SAXException failed) {
+        throw new IsisException("Couldn't locate a SAX parser");
+      }
+    }
+  }
+  final File file=file(fileName);
+  try {
+    parser.setContentHandler(handler);
+    final FileInputStream fis=new FileInputStream(file);
+    final InputStreamReader isr=new InputStreamReader(fis,charset);
+    final InputSource is=new InputSource(isr);
+    parser.parse(is);
+    return true;
+  }
+ catch (  final FileNotFoundException e) {
+    return false;
+  }
+catch (  final IOException e) {
+    throw new IsisException("Error reading XML file",e);
+  }
+catch (  final SAXParseException e) {
+    throw new IsisException("Error while parsing: " + e.getMessage() + " in "+ file+ ")",e);
+  }
+catch (  final SAXException e) {
+    throw new IsisException("Error in file " + file + " ",e);
+  }
+}

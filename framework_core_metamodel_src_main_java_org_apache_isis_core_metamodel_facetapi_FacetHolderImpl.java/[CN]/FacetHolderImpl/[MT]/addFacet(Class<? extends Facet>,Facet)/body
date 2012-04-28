@@ -1,0 +1,15 @@
+{
+  final Facet existingFacet=getFacet(facetType);
+  if (existingFacet == null || existingFacet.isNoop()) {
+    facetsByClass.put(facetType,facet);
+    return;
+  }
+  if (!facet.alwaysReplace()) {
+    return;
+  }
+  if (facet.isDerived() && !existingFacet.isDerived()) {
+    return;
+  }
+  facet.setUnderlyingFacet(existingFacet);
+  facetsByClass.put(facetType,facet);
+}

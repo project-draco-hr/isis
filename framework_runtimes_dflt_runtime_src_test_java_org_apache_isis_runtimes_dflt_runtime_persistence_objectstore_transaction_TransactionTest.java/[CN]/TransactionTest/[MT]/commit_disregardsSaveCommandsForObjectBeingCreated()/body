@@ -1,0 +1,13 @@
+{
+  command=createCreateCommand(transientAdapter1,"command 1");
+  command2=createSaveCommandThatAborts(transientAdapter1,"command 2");
+  context.checking(new Expectations(){
+{
+      one(mockObjectStore).execute(with(IsisMatchers.listContainingAll(command)));
+    }
+  }
+);
+  transaction.addCommand(command);
+  transaction.addCommand(command2);
+  transaction.commit();
+}

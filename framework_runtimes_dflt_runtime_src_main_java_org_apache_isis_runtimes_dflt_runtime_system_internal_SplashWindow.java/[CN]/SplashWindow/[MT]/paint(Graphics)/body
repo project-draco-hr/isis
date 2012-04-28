@@ -1,0 +1,37 @@
+{
+  g.setColor(Color.black);
+  g.drawRect(0,0,width - 1,height - 1);
+  if (logo != null) {
+    g.drawImage(logo,PADDING,PADDING,this);
+  }
+ else {
+    g.setFont(logoFont);
+    final FontMetrics fm=g.getFontMetrics();
+    g.drawString(LOGO_TEXT,PADDING,PADDING + fm.getAscent());
+  }
+  int baseline=height - PADDING - getFontMetrics(textFont).getDescent();
+  g.setFont(textFont);
+  g.drawString(frameworkVersion(),left,baseline);
+  baseline-=textLineHeight;
+  g.drawString(AboutIsis.getFrameworkCopyrightNotice(),left,baseline);
+  baseline-=textLineHeight;
+  g.setFont(titleFont);
+  g.drawString(AboutIsis.getFrameworkName(),left,baseline);
+  baseline-=titleLineHeight;
+  g.setFont(textFont);
+  final String applicationVersion=AboutIsis.getApplicationVersion();
+  if (applicationVersion != null) {
+    g.drawString(applicationVersion,left,baseline);
+    baseline-=textLineHeight;
+  }
+  final String applicationCopyrightNotice=AboutIsis.getApplicationCopyrightNotice();
+  if (applicationCopyrightNotice != null) {
+    g.drawString(applicationCopyrightNotice,left,baseline);
+    baseline-=textLineHeight;
+  }
+  final String applicationName=AboutIsis.getApplicationName();
+  if (applicationName != null) {
+    g.setFont(titleFont);
+    g.drawString(applicationName,left,baseline);
+  }
+}

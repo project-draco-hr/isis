@@ -1,0 +1,31 @@
+{
+  final DomainObjectRepresentation domainObjectRepr=givenDomainObjectRepresentationFor("OID:32");
+  final LinkRepresentation self=domainObjectRepr.getSelf();
+  final JsonRepresentation actions=domainObjectRepr.getActions();
+  assertThat(actions.size(),is(2));
+  final JsonRepresentation listAction=actions.getRepresentation("list");
+  assertThat(listAction.getString("memberType"),is("action"));
+  assertThat(listAction.getString("actionId"),is("list"));
+  assertThat(listAction.getString("actionType"),is("USER"));
+  assertThat(listAction.getInt("numParameters"),is(0));
+  final LinkRepresentation listActionType=listAction.getLink("type");
+  assertThat(listActionType.getRel(),is("type"));
+  assertThat(listActionType.getHref(),matches(".+vnd\\.list\\+json"));
+  assertThat(listActionType.getHttpMethod(),is(HttpMethod.GET));
+  final LinkRepresentation listActionDetails=listAction.getLink("details");
+  assertThat(listActionDetails.getRel(),is("action"));
+  assertThat(listActionDetails.getHref(),is(self.getHref() + "/actions/list"));
+  assertThat(listActionDetails.getHttpMethod(),is(HttpMethod.GET));
+  final JsonRepresentation newEntityAction=actions.getRepresentation("newEntity");
+  assertThat(newEntityAction.getString("memberType"),is("action"));
+  assertThat(newEntityAction.getString("actionType"),is("USER"));
+  assertThat(newEntityAction.getInt("numParameters"),is(0));
+  final LinkRepresentation newEntityActionType=newEntityAction.getLink("type");
+  assertThat(newEntityActionType.getRel(),is("type"));
+  assertThat(newEntityActionType.getHref(),matches(".+vnd\\." + ApplibValuedEntity.class.getName() + "\\+json"));
+  assertThat(newEntityActionType.getHttpMethod(),is(HttpMethod.GET));
+  final LinkRepresentation newEntityActionDetails=newEntityAction.getLink("details");
+  assertThat(newEntityActionDetails.getRel(),is("action"));
+  assertThat(newEntityActionDetails.getHref(),is(self.getHref() + "/actions/newEntity"));
+  assertThat(newEntityActionDetails.getHttpMethod(),is(HttpMethod.GET));
+}

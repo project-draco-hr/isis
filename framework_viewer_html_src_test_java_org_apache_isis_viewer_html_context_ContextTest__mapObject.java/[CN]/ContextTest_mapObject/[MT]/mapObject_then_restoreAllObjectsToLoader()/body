@@ -1,0 +1,15 @@
+{
+  originalAdapter=getAdapterManager().adapterFor(iswf.fixtures.epv1);
+  oid=originalAdapter.getOid();
+  context.mapObject(originalAdapter);
+  iswf.bounceSystem();
+  context.restoreAllObjectsToLoader();
+  restoredAdapter=getAdapterManager().getAdapterFor(oid);
+  assertNotNull("loaders is missing the object",getAdapterManager().getAdapterFor(oid));
+  assertNotSame("expect the loader to have a new adapter",originalAdapter,restoredAdapter);
+  assertEquals(originalAdapter.getOid(),restoredAdapter.getOid());
+  assertNotSame(originalAdapter,restoredAdapter);
+  assertEquals(originalAdapter.getObject().getClass(),restoredAdapter.getObject().getClass());
+  assertEquals(originalAdapter.getVersion(),restoredAdapter.getVersion());
+  assertEquals(ResolveState.TRANSIENT,restoredAdapter.getResolveState());
+}

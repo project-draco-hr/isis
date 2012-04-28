@@ -1,0 +1,31 @@
+{
+  final String className=configuration.getString("isis.authentication.authenticator");
+  if (className == null) {
+    return new SqlAuthenticator(configuration);
+  }
+  try {
+    final Class<?> authenticatorClass=Class.forName(className);
+    return (Authenticator)authenticatorClass.getConstructor(IsisConfiguration.class).newInstance(configuration);
+  }
+ catch (  final ClassNotFoundException e) {
+    throw new ApplicationException("Unable to find authenticator class",e);
+  }
+catch (  final IllegalArgumentException e) {
+    throw new ApplicationException("IllegalArgumentException creating authenticator class",e);
+  }
+catch (  final SecurityException e) {
+    throw new ApplicationException("SecurityException creating authenticator class",e);
+  }
+catch (  final InstantiationException e) {
+    throw new ApplicationException("InstantiationException creating authenticator class",e);
+  }
+catch (  final IllegalAccessException e) {
+    throw new ApplicationException("IllegalAccessException creating authenticator class",e);
+  }
+catch (  final InvocationTargetException e) {
+    throw new ApplicationException("InvocationTargetException creating authenticator class",e);
+  }
+catch (  final NoSuchMethodException e) {
+    throw new ApplicationException("NoSuchMethodException creating authenticator class",e);
+  }
+}

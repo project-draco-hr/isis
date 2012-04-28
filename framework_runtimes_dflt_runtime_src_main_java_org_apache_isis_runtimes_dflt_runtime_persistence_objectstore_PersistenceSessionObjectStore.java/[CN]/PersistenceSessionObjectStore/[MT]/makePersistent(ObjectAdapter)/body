@@ -1,0 +1,13 @@
+{
+  if (adapter.isPersistent()) {
+    throw new NotPersistableException("Object already persistent: " + adapter);
+  }
+  if (!adapter.getSpecification().persistability().isPersistable()) {
+    throw new NotPersistableException("Object is not persistable: " + adapter);
+  }
+  final ObjectSpecification specification=adapter.getSpecification();
+  if (specification.isService()) {
+    throw new NotPersistableException("Cannot persist services: " + adapter);
+  }
+  makePersistentInPersistenceLayer(adapter);
+}

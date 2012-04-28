@@ -1,0 +1,20 @@
+{
+  final List<ObjectAssociation> associations=adapter.getSpecification().getAssociations();
+  writer.writeType(specName);
+  for (  final ObjectAssociation association : associations) {
+    if (association.isNotPersisted()) {
+      continue;
+    }
+    final ObjectAdapter fieldAdapter=association.get(adapter);
+    if (association.isOneToManyAssociation()) {
+      final OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)association;
+      final ObjectAdapter collectionAdapter=fieldAdapter;
+      writeCollection(writer,oneToManyAssociation,collectionAdapter,keyCreator);
+    }
+ else {
+      final OneToOneAssociation oneToOneAssociation=(OneToOneAssociation)association;
+      final ObjectAdapter propertyAdapter=fieldAdapter;
+      writeProperty(writer,oneToOneAssociation,propertyAdapter);
+    }
+  }
+}

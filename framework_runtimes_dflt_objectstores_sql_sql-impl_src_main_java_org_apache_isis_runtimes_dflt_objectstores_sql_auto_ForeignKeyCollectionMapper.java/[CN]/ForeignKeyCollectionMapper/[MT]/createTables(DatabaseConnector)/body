@@ -1,0 +1,21 @@
+{
+  if (connection.hasTable(table)) {
+    final StringBuffer sql=new StringBuffer();
+    sql.append("alter table ");
+    sql.append(table);
+    sql.append(" add ");
+    appendColumnDefinitions(sql);
+    connection.update(sql.toString());
+  }
+ else {
+    final StringBuffer sql=new StringBuffer();
+    sql.append("create table ");
+    sql.append(table);
+    sql.append(" (");
+    idMapping.appendCreateColumnDefinitions(sql);
+    sql.append(", ");
+    appendColumnDefinitions(sql);
+    sql.append(")");
+    connection.update(sql.toString());
+  }
+}

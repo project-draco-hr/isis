@@ -1,0 +1,19 @@
+{
+  final String queryString=request.getQueryString();
+  final String query=queryString == null ? "Overview" : URLDecoder.decode(queryString,"UTF-8");
+  response.setContentType("text/html");
+  final PrintWriter writer=new PrintWriter(new OutputStreamWriter(response.getOutputStream()));
+  if (query.equals("Sessions")) {
+    writer.println("<HTML><HEAD><TITLE>NOF System Monitor - " + "Sessions" + "</TITLE></HEAD>");
+    writer.println("<BODY>");
+    writer.println("<h1>" + "Sessions" + "</h1>");
+    writer.println("<pre>");
+    writer.println(listSessions());
+    writer.println("</pre>");
+    writer.println("</BODY></HTML>");
+  }
+ else {
+    monitor.writeHtmlPage(query,writer);
+  }
+  writer.flush();
+}

@@ -1,0 +1,25 @@
+{
+  if (map.isEmpty()) {
+    return defaultIfEmpty;
+  }
+  List<String> roles;
+  roles=rolesFor(map,identifier.toIdentityString(Identifier.CLASS_MEMBERNAME_PARAMETERS));
+  if (roles == null) {
+    roles=rolesFor(map,identifier.toIdentityString(Identifier.CLASS_MEMBERNAME));
+  }
+  if (roles == null) {
+    roles=rolesFor(map,identifier.toIdentityString(Identifier.CLASS));
+  }
+  if (roles == null) {
+    roles=rolesFor(map,"*#" + identifier.toIdentityString(Identifier.MEMBERNAME_ONLY));
+  }
+  if (roles != null) {
+    for (    final String qualifier : qualifiers) {
+      final String qualifiedRole=role + qualifier;
+      if (roles.contains(qualifiedRole)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

@@ -1,0 +1,25 @@
+{
+  String details="";
+  if (Validating.class.isAssignableFrom(getClass())) {
+    details+="Validating";
+  }
+  if (Disabling.class.isAssignableFrom(getClass())) {
+    details+=(details.length() > 0 ? ";" : "") + "Disabling";
+  }
+  if (Hiding.class.isAssignableFrom(getClass())) {
+    details+=(details.length() > 0 ? ";" : "") + "Hiding";
+  }
+  if (!"".equals(details)) {
+    details="interaction=" + details + ",";
+  }
+  final String className=getClass().getName();
+  final String stringValues=toStringValues();
+  if (getClass() != facetType()) {
+    final String facetType=facetType().getName();
+    details+="type=" + facetType.substring(facetType.lastIndexOf('.') + 1);
+  }
+  if (!"".equals(stringValues)) {
+    details+=",";
+  }
+  return className.substring(className.lastIndexOf('.') + 1) + "[" + details+ stringValues+ "]";
+}

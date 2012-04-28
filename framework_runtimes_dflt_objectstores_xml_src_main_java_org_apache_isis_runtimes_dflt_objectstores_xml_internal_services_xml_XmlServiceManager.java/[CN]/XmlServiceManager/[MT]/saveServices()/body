@@ -1,0 +1,16 @@
+{
+  xmlFile.writeXml(SERVICES_FILE_NAME,new ContentWriter(){
+    @Override public void write(    final Writer writer) throws IOException {
+      final String tag=SERVICES_FILE_NAME;
+      writer.append("<" + tag + ">\n");
+      for (      final ServiceElement element : services) {
+        writer.append("  <service");
+        Utils.appendAttribute(writer,"type",element.oid.getObjectType());
+        Utils.appendAttribute(writer,"id",element.oid.getIdentifier());
+        writer.append("/>\n");
+      }
+      writer.append("</" + tag + ">\n");
+    }
+  }
+);
+}

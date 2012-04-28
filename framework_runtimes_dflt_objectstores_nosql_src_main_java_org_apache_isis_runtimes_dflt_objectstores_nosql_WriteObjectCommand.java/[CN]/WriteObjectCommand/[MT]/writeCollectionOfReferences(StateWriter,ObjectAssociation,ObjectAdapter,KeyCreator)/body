@@ -1,0 +1,13 @@
+{
+  final CollectionFacet collectionFacet=collectionAdapter.getSpecification().getFacet(CollectionFacet.class);
+  final StringBuilder buf=new StringBuilder();
+  for (  final ObjectAdapter elementAdapter : collectionFacet.iterable(collectionAdapter)) {
+    if (elementAdapter.isParented()) {
+      throw new DomainModelException("Can't store an aggregated object within a collection that is not expected aggregates: " + elementAdapter + " ("+ collectionAdapter+ ")");
+    }
+    buf.append(keyCreator.reference(elementAdapter)).append("|");
+  }
+  if (buf.length() > 0) {
+    writer.writeField(association.getId(),buf.toString());
+  }
+}

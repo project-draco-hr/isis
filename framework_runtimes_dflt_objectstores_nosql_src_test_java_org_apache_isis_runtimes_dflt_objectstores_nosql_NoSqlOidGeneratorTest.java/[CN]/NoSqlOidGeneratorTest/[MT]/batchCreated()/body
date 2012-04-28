@@ -1,0 +1,13 @@
+{
+  context.checking(new Expectations(){
+{
+      one(db).nextSerialNumberBatch("_id",4);
+      will(returnValue(1L));
+    }
+  }
+);
+  oidGenerator.asPersistent(oid);
+  assertFalse(oid.isTransient());
+  assertEquals(1,oid.getIdentifier());
+  context.assertIsSatisfied();
+}

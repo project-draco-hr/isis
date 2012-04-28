@@ -1,0 +1,19 @@
+{
+  final ObjectMember nakedObjectMember=performContext.getObjectMember();
+  final CellBinding thatBinding=performContext.getPeer().getThatItBinding();
+  final CellBinding arg0Binding=performContext.getPeer().getArg0Binding();
+  if (!arg0Binding.isFound()) {
+    throw ScenarioBoundValueException.current(thatBinding,"(requires argument)");
+  }
+  final ScenarioCell arg0Cell=arg0Binding.getCurrentCell();
+  final String toValidate=arg0Cell.getText();
+  if (StringUtils.isNullOrEmpty(toValidate)) {
+    throw ScenarioBoundValueException.current(arg0Binding,"(required)");
+  }
+  final ObjectAdapter toValidateAdapter=performContext.getPeer().getAdapter(null,nakedObjectMember.getSpecification(),arg0Binding,arg0Cell);
+  final Consent validityConsent=determineConsent(performContext,toValidateAdapter);
+  if (!getAssertion().satisfiedBy(validityConsent)) {
+    throw ScenarioBoundValueException.current(getAssertion().colorBinding(arg0Binding,thatBinding),getAssertion().getReason(validityConsent));
+  }
+  return toValidateAdapter;
+}

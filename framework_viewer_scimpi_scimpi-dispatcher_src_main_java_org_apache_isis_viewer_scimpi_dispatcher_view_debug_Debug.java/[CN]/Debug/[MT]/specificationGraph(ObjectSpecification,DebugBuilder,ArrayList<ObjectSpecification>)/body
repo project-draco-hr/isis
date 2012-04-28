@@ -1,0 +1,24 @@
+{
+  final List<ObjectAssociation> fields=new ArrayList<ObjectAssociation>(spec.getAssociations());
+  Collections.sort(fields,new Comparator<ObjectAssociation>(){
+    @Override public int compare(    final ObjectAssociation o1,    final ObjectAssociation o2){
+      return o1.getName().compareTo(o2.getName());
+    }
+  }
+);
+  for (int i=0; i < fields.size(); i++) {
+    final ObjectAssociation field=fields.get(i);
+    final ObjectSpecification specification=field.getSpecification();
+    if (!specification.isValue()) {
+      final boolean contains=visited.contains(specification);
+      final String aggregated=specification.isParented() ? "++" : "";
+      view.appendln(aggregated + field.getName() + "  (<a href=\"./debug.shtml?type=specification-graph&value="+ specification.getFullIdentifier()+ "\">"+ specification.getFullIdentifier()+ "</a>"+ (contains ? "..." : "")+ ")");
+      if (!contains) {
+        visited.add(specification);
+        view.indent();
+        specificationGraph(specification,view,visited);
+        view.unindent();
+      }
+    }
+  }
+}

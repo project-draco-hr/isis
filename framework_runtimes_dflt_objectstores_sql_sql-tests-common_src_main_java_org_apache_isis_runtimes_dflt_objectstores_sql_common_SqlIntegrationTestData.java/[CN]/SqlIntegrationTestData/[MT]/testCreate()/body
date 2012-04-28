@@ -1,0 +1,63 @@
+{
+  for (  final String tableName : Data.getTableNames()) {
+    getSqlIntegrationTestFixtures().dropTable(tableName);
+  }
+  sqlDataClass=factory.newDataClass();
+  sqlDataClass.setString("Test String");
+  sqlDataClass.setDate(Data.applibDate);
+  sqlDataClass.setSqlDate(Data.sqlDate);
+  sqlDataClass.setMoney(Data.money);
+  sqlDataClass.setDateTime(Data.dateTime);
+  sqlDataClass.setTimeStamp(Data.timeStamp);
+  sqlDataClass.setTime(Data.time);
+  sqlDataClass.setColor(Data.color);
+  sqlDataClass.setImage(Data.image);
+  sqlDataClass.setPassword(Data.password);
+  sqlDataClass.setPercentage(Data.percentage);
+  simpleClassTwoA=factory.newSimpleClassTwo();
+  simpleClassTwoA.setText("A");
+  simpleClassTwoA.setIntValue(999);
+  simpleClassTwoA.setBooleanValue(true);
+  simpleClassTwoB=factory.newSimpleClassTwo();
+  simpleClassTwoB.setText("B");
+  sqlDataClass.setSimpleClassTwo(simpleClassTwoA);
+  numericTestClassMin=factory.newNumericTestClass();
+  LOG.log(Level.INFO,"Bits to represent Double: " + Double.SIZE);
+  numericTestClassMin.setIntValue(Data.intMinValue);
+  numericTestClassMin.setShortValue(Data.shortMinValue);
+  numericTestClassMin.setLongValue(Data.longMinValue);
+  numericTestClassMin.setDoubleValue(Data.doubleMinValue);
+  numericTestClassMin.setFloatValue(Data.floatMinValue);
+  sqlDataClass.setNumericTestClassMin(numericTestClassMin);
+  numericTestClassMax=factory.newNumericTestClass();
+  numericTestClassMax.setIntValue(Data.intMaxValue);
+  numericTestClassMax.setShortValue(Data.shortMaxValue);
+  numericTestClassMax.setLongValue(Data.longMaxValue);
+  numericTestClassMax.setDoubleValue(Data.doubleMaxValue);
+  numericTestClassMax.setFloatValue(Data.floatMaxValue);
+  sqlDataClass.setNumericTestClassMax(numericTestClassMax);
+  boolean bMustAdd=false;
+  if (simpleClassList1.size() == 0) {
+    bMustAdd=true;
+  }
+  for (  final String string : Data.stringList1) {
+    final SimpleClass simpleClass=factory.newSimpleClass();
+    simpleClass.setString(string);
+    simpleClass.setSimpleClassTwoA(simpleClassTwoA);
+    sqlDataClass.addToSimpleClasses1(simpleClass);
+    if (bMustAdd) {
+      simpleClassList1.add(simpleClass);
+    }
+  }
+  for (  final String string : Data.stringList2) {
+    final SimpleClass simpleClass=factory.newSimpleClass();
+    simpleClass.setString(string);
+    simpleClass.setSimpleClassTwoA(simpleClassTwoB);
+    sqlDataClass.addToSimpleClasses2(simpleClass);
+    if (bMustAdd) {
+      simpleClassList2.add(simpleClass);
+    }
+  }
+  factory.save(sqlDataClass);
+  setFixtureInitializationState(State.DONT_INITIALIZE,"in-memory");
+}

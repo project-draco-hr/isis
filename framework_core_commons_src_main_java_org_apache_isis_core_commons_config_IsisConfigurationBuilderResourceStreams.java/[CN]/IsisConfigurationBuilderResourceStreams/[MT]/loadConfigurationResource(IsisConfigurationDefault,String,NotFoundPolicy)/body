@@ -1,0 +1,22 @@
+{
+  try {
+    final PropertiesReader propertiesReader=loadConfigurationResource(resourceStreamSource,configurationResource);
+    addProperties(configuration,propertiesReader.getProperties());
+    configurationResourcesFound.add(configurationResource);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("'" + configurationResource + "' FOUND");
+    }
+    return;
+  }
+ catch (  final IOException ex) {
+  }
+  if (notFoundPolicy == NotFoundPolicy.FAIL_FAST) {
+    throw new IsisException("failed to load '" + configurationResource + "'; tried using: "+ resourceStreamSource.getName());
+  }
+ else {
+    configurationResourcesNotFound.add(configurationResource);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("'" + configurationResource + "' not found, but not needed");
+    }
+  }
+}

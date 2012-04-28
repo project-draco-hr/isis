@@ -1,0 +1,12 @@
+{
+class CustomerRepository {
+    @SuppressWarnings("unused") @NotContributed public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(CustomerRepository.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(CustomerRepository.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotContributedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NotContributedFacetAbstract);
+  assertNoMethodsRemoved();
+}

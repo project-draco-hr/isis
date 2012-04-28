@@ -1,0 +1,16 @@
+{
+  final Method getMethod=processMethodContext.getMethod();
+  final String capitalizedName=NameUtils.javaBaseName(getMethod.getName());
+  final Class<?> cls=processMethodContext.getCls();
+  final Class<?>[] paramTypes=MethodFinderUtils.paramTypesOrNull(collectionType);
+  Method validateAddToMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.VALIDATE_ADD_TO_PREFIX + capitalizedName,String.class,paramTypes);
+  if (validateAddToMethod == null) {
+    validateAddToMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.VALIDATE_ADD_TO_PREFIX_2 + capitalizedName,String.class,MethodFinderUtils.paramTypesOrNull(collectionType));
+  }
+  if (validateAddToMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(validateAddToMethod);
+  final FacetHolder collection=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new CollectionValidateAddToFacetViaMethod(validateAddToMethod,collection));
+}

@@ -1,0 +1,28 @@
+{
+  icon.draw(canvas,0,getBaseline());
+  final ObjectAdapter collection=getContent().getAdapter();
+  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+  final ViewState state=getState();
+  final Color color;
+  if (state.canDrop()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_VALID);
+  }
+ else   if (state.cantDrop()) {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_INVALID);
+  }
+ else {
+    color=Toolkit.getColor(ColorsAndFonts.COLOR_SECONDARY2);
+  }
+  if (collection == null || facet.size(collection) == 0) {
+    canvas.drawText("empty",left,getBaseline(),color,Toolkit.getText(ColorsAndFonts.TEXT_NORMAL));
+  }
+ else {
+    final int x=icon.getSize().getWidth() / 2;
+    final int x2=x + 4;
+    final int y=icon.getSize().getHeight() + 1;
+    final int y2=getSize().getHeight() - 5;
+    canvas.drawLine(x,y,x,y2,color);
+    canvas.drawLine(x,y2,x2,y2,color);
+  }
+  super.draw(canvas);
+}

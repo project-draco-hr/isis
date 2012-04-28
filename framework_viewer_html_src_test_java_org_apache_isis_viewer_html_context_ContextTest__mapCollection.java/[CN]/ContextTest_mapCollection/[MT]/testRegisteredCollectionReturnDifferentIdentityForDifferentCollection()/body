@@ -1,0 +1,13 @@
+{
+  iswf.persist(iswf.fixtures.epv1);
+  iswf.persist(iswf.fixtures.epv2);
+  final List<ExamplePojoWithValues> collection1=Lists.newArrayList();
+  collection1.add(iswf.fixtures.epv1);
+  final ObjectAdapter collection1Adapter=getAdapterManager().adapterFor(collection1);
+  final List<ExamplePojoWithValues> collection2=Lists.newArrayList();
+  collection2.add(iswf.fixtures.epv2);
+  final ObjectAdapter collection2Adapter=getAdapterManager().adapterFor(collection2);
+  final String id=context.mapCollection(collection1Adapter);
+  final String id2=context.mapCollection(collection2Adapter);
+  assertThat(id,not(equalTo(id2)));
+}

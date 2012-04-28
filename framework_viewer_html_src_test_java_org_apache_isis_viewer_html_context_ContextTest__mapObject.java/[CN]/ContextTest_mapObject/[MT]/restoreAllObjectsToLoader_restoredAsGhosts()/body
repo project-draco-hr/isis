@@ -1,0 +1,10 @@
+{
+  iswf.persist(iswf.fixtures.epv1);
+  originalAdapter=getAdapterManager().adapterFor(iswf.fixtures.epv1);
+  oid=originalAdapter.getOid();
+  iswf.bounceSystem();
+  context.restoreAllObjectsToLoader();
+  restoredAdapter=getAdapterManager().getAdapterFor(oid);
+  assertEquals("expect versions to match",originalAdapter.getVersion(),restoredAdapter.getVersion());
+  assertEquals(ResolveState.GHOST,restoredAdapter.getResolveState());
+}

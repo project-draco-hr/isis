@@ -1,0 +1,12 @@
+{
+  String data;
+  if (valueAdapter == null) {
+    data=null;
+  }
+ else {
+    final EncodableFacet encodeableFacet=valueAdapter.getSpecification().getFacet(EncodableFacet.class);
+    data=encodeableFacet.toEncodedString(valueAdapter);
+    data=dataEncrypter.encrypt(data);
+  }
+  writer.writeField(otoa.getId(),data);
+}

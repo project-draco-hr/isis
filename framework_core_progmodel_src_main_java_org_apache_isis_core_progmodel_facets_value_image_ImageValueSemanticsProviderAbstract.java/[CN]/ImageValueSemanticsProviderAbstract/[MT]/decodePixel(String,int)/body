@@ -1,0 +1,13 @@
+{
+  final int offset=item * 4;
+  int pixel=0;
+  for (int i=0; i < 4; i++) {
+    final char c=data.charAt(offset + i);
+    final byte b=REVERSE_BASE_64_CHARS[c];
+    if (i == 0 && b >= 32) {
+      pixel=0xff;
+    }
+    pixel=(pixel << 6) + b;
+  }
+  return pixel;
+}

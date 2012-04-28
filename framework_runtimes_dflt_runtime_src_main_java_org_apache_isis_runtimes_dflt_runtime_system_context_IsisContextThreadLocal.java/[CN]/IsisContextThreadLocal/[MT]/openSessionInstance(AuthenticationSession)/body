@@ -1,0 +1,11 @@
+{
+  final Thread thread=Thread.currentThread();
+synchronized (sessionsByThread) {
+    applySessionClosePolicy();
+    final IsisSession session=getSessionFactoryInstance().openSession(authenticationSession);
+    LOG.debug("  opening session " + session + " (count "+ sessionsByThread.size()+ ") for "+ authenticationSession.getUserName());
+    saveSession(thread,session);
+    session.open();
+    return session;
+  }
+}

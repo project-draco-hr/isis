@@ -1,0 +1,12 @@
+{
+  final MaskAnnotationForTypeFacetFactory facetFactory=new MaskAnnotationForTypeFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+@Mask("###") class Customer {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MaskFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MaskFacetAnnotationForType);
+  final MaskFacetAnnotationForType maskFacet=(MaskFacetAnnotationForType)facet;
+  assertEquals("###",maskFacet.value());
+}

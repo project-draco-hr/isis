@@ -1,0 +1,26 @@
+{
+  final LinkRepresentation link=jsonRepresentation.getLink("aLink");
+  final String href=link.getHref();
+  context.checking(new Expectations(){
+{
+      one(mockExecutor).createRequest(with(any(UriBuilderImpl.class)));
+      will(returnValue(mockClientRequest));
+      one(mockExecutor).execute(mockClientRequest);
+      will(returnValue(mockClientResponse));
+      one(mockClientRequest).accept(MediaType.APPLICATION_JSON_TYPE);
+      atLeast(1).of(mockClientRequest).setHttpMethod("GET");
+      allowing(mockClientRequest).getHttpMethod();
+      will(returnValue("GET"));
+      one(mockClientRequest).execute();
+      will(returnValue(mockClientResponse));
+      one(mockClientResponse).setReturnType(String.class);
+      allowing(mockClientResponse);
+      final MultiValueMap result=new MultiValueMap();
+      result.put("Content-Type","application/json");
+      allowing(mockClientResponse).getMetadata();
+      will(returnValue(result));
+    }
+  }
+);
+  final RestfulResponse<JsonRepresentation> response=client.follow(link);
+}

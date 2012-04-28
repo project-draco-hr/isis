@@ -1,0 +1,34 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  isisMetaModel=IsisMetaModel.builder(mockRuntimeContext,new ProgrammingModelFacetsJava5()).withServices(new ExamplePojoRepository()).build();
+  specification=isisMetaModel.getSpecificationLoader().loadSpecification(ExamplePojoWithReferences.class);
+  object=IsisContext.getPersistenceSession().createInstance(specification);
+  final RootOidDefault rootOidDefault=(RootOidDefault)object.getOid();
+  rootOidDefault.asPersistent("" + 3);
+  context.checking(new Expectations(){
+{
+      one(db).open();
+      one(db).containsData();
+      will(returnValue(false));
+      one(db).close();
+    }
+  }
+);
+  final Map<String,DataEncryption> dataEncrypter=new HashMap<String,DataEncryption>();
+  final DataEncryption dataEncrypter1=new DataEncryption(){
+    @Override public String getType(){
+      return "etc";
+    }
+    @Override public void init(    final IsisConfiguration configuration){
+    }
+    @Override public String encrypt(    final String plainText){
+      throw new UnexpectedCallException();
+    }
+    @Override public String decrypt(    final String encryptedText){
+      return encryptedText.substring(3);
+    }
+  }
+;
+  dataEncrypter.put(dataEncrypter1.getType(),dataEncrypter1);
+  store=new NoSqlObjectStore(db,new NoSqlOidGenerator(db),keyCreator,versionCreator,null,dataEncrypter);
+}

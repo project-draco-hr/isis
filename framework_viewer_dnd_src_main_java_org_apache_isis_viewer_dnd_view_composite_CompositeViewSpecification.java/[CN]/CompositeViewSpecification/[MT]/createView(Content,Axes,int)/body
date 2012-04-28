@@ -1,0 +1,15 @@
+{
+  resolveObject(content);
+  createAxes(content,axes);
+  builder.createAxes(axes,content);
+  final Layout layout=createLayout(content,axes);
+  if (layout instanceof ViewAxis) {
+    axes.add((ViewAxis)layout);
+  }
+  final CompositeViewUsingBuilder view=new CompositeViewUsingBuilder(content,this,axes,layout,builder);
+  view.setCanDragView(builder.canDragView());
+  final View decoratedView=decorateView(view,view.getViewAxes());
+  final Options options=Properties.getViewConfigurationOptions(this);
+  decoratedView.loadOptions(options);
+  return decoratedView;
+}

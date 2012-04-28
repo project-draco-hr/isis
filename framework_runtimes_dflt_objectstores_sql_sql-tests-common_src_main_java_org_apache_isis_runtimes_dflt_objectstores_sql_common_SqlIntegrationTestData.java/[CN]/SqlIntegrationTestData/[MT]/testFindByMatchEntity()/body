@@ -1,0 +1,12 @@
+{
+  final List<SimpleClassTwo> classTwos=factory.allSimpleClassTwos();
+  final SimpleClass simpleClassMatch=new SimpleClass();
+  simpleClassMatch.setSimpleClassTwoA(classTwos.get(0));
+  final List<SimpleClass> classes=factory.allSimpleClassesThatMatch(simpleClassMatch);
+  if (!getProperties().getProperty("isis.persistor").equals("in-memory")) {
+    assertEquals(Data.stringList1.size(),classes.size());
+  }
+ else {
+    assertEquals(Data.stringList1.size() + 2,classes.size());
+  }
+}
