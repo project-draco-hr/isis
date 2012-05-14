@@ -1,10 +1,10 @@
 {
-  writer.writeId("D01");
+  writer.writeOid(RootOidDefault.deString(SPEC_NAME + ":" + "D01"));
   writer.flush();
   final DBCollection instances=testDb.getCollection(SPEC_NAME);
   assertEquals(1,instances.getCount());
   final DBObject object=instances.findOne();
-  assertNotNull(object.get("_id"));
+  assertEquals(SPEC_NAME + ":" + "D01",object.get("_oid"));
   assertEquals("D01",object.get("_id"));
-  assertEquals(1,object.keySet().size());
+  assertEquals(2,object.keySet().size());
 }

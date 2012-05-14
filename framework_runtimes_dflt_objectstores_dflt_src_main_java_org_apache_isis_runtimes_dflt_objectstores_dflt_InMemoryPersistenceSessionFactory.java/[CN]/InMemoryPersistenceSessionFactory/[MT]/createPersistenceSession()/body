@@ -2,9 +2,10 @@
   final PersistenceSession persistenceSession=super.createPersistenceSession();
   if (persistedObjects != null) {
     final OidGenerator oidGenerator=persistenceSession.getOidGenerator();
-    if (oidGenerator instanceof RootOidGenerator) {
-      final RootOidGenerator rootOidGenerator=(RootOidGenerator)oidGenerator;
-      rootOidGenerator.resetTo(persistedObjects.getOidGeneratorMemento());
+    final IdentifierGenerator identifierGenerator=oidGenerator.getIdentifierGenerator();
+    if (identifierGenerator instanceof IdentifierGeneratorDefault) {
+      final IdentifierGeneratorDefault identifierGeneratorDefault=(IdentifierGeneratorDefault)identifierGenerator;
+      identifierGeneratorDefault.resetTo(persistedObjects.getOidGeneratorMemento());
     }
   }
   return persistenceSession;

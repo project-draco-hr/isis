@@ -1,0 +1,11 @@
+{
+  final ObjectSpecification specification=getSpecificationLoader().lookupBySpecId(aggregatedOid.getObjectSpecId());
+  final ObjectAdapter fieldObject=getAdapter(specification,aggregatedOid);
+  if (fieldObject.getResolveState().isGhost()) {
+    final ResolveState resolveState=ResolveState.RESOLVING;
+    fieldObject.changeState(resolveState);
+    readFields(aggregateReader,fieldObject,dataEncrypter);
+    fieldObject.changeState(resolveState.getEndState());
+  }
+  return fieldObject;
+}

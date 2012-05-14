@@ -1,13 +1,13 @@
 {
   final ObjectData data=createData(Role.class,99,new FileVersion("user",13));
-  data.set("Person",RootOidDefault.create("RLE","" + 101));
+  data.set("Person",RootOidDefault.create(ObjectSpecId.of("RLE"),"" + 101));
   assertNotNull(data.get("Person"));
   data.set("Name","Harry");
   assertNotNull(data.get("Name"));
   manager.insertObject(data);
   final ObjectData read=(ObjectData)manager.loadData(data.getRootOid());
   assertEquals(data.getRootOid(),read.getRootOid());
-  assertEquals(data.getObjectType(),read.getObjectType());
+  assertEquals(data.getObjectSpecId(),read.getObjectSpecId());
   assertEquals(data.get("Person"),read.get("Person"));
   assertEquals(data.get("Name"),read.get("Name"));
 }

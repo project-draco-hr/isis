@@ -1,0 +1,32 @@
+{
+  ensureNotOpened();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("opening " + this);
+  }
+  ensureThatState(specificationLoader,is(not(nullValue())),"SpecificationLoader missing");
+  ensureThatState(transactionManager,is(not(nullValue())),"TransactionManager missing");
+  this.injectInto(objectFactory);
+  specificationLoader.injectInto(objectFactory);
+  servicesInjector.injectInto(objectFactory);
+  adapterFactory.injectInto(adapterManager);
+  specificationLoader.injectInto(adapterManager);
+  oidGenerator.injectInto(adapterManager);
+  servicesInjector.injectInto(adapterManager);
+  specificationLoader.injectInto(oidGenerator);
+  servicesInjector.open();
+  adapterFactory.open();
+  objectFactory.open();
+  adapterManager.open();
+  oidGenerator.open();
+  ensureThatState(objectStore,is(notNullValue()),"object store required");
+  ensureThatState(getTransactionManager(),is(notNullValue()),"transaction manager required");
+  ensureThatState(persistAlgorithm,is(notNullValue()),"persist algorithm required");
+  this.injectInto(objectStore);
+  getAdapterManager().injectInto(objectStore);
+  getSpecificationLoader().injectInto(objectStore);
+  getTransactionManager().injectInto(objectStore);
+  getOidGenerator().injectInto(objectStore);
+  objectStore.open();
+  createServiceAdapters();
+  setState(State.OPEN);
+}

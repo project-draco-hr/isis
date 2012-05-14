@@ -13,9 +13,10 @@
     update.append(", " + itemIdColumnName);
     update.append("," + classColumnName);
     update.append(") VALUES (");
-    final RootOid transientOid=oidGenerator.createTransientOid(thisAdapter.getObject());
-    oidGenerator.asPersistent(transientOid);
-    polyIdMapper.appendObjectId(connector,update,transientOid);
+    final Object pojo=thisAdapter.getObject();
+    final RootOid transientRootOid=oidGenerator.createTransientOid(pojo);
+    final RootOid persistentRootOid=oidGenerator.createPersistent(pojo,transientRootOid);
+    polyIdMapper.appendObjectId(connector,update,persistentRootOid);
     update.append(",");
     getForeignKeyMapping().appendInsertValues(connector,update,parent);
     update.append(",");

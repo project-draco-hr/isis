@@ -1,17 +1,11 @@
 {
   context.checking(new Expectations(){
 {
-      one(commandContext).createStateWriter(epc1Adapter.getSpecification().getFullIdentifier());
+      one(commandContext).createStateWriter(epc1Adapter.getSpecification().getSpecId());
       will(returnValue(writer));
-      one(keyCreator).key(RootOidDefault.create("EPC|1"));
-      will(returnValue("6"));
-      one(writer).writeId("6");
-      one(writer).writeType(epc1Adapter.getSpecification().getFullIdentifier());
-      one(keyCreator).reference(epv1Adapter);
-      will(returnValue("ref@3"));
-      one(keyCreator).reference(epv2Adapter);
-      will(returnValue("ref@4"));
-      one(writer).writeField("homogenousCollection","ref@3|ref@4|");
+      final RootOidDefault oid=RootOidDefault.create(epc1Adapter.getSpecification().getSpecId(),"1");
+      exactly(2).of(writer).writeOid(oid);
+      one(writer).writeField("homogeneousCollection","EPV:1|EPV:2|");
       one(writer).writeVersion(null,"2");
       one(writer).writeUser("username");
       one(writer).writeTime("1057");
@@ -20,6 +14,6 @@
     }
   }
 );
-  new WriteObjectCommand(false,keyCreator,versionCreator,dataEncrypter,epc1Adapter).execute(commandContext);
-  context.assertIsSatisfied();
+  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,epc1Adapter);
+  command.execute(commandContext);
 }

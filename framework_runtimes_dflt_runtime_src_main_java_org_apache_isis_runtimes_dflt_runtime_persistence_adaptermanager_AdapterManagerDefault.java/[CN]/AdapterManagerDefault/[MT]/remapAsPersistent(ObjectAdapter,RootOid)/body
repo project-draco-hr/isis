@@ -1,0 +1,75 @@
+{
+  final ObjectAdapter rootAdapter=adapter.getAggregateRoot();
+  final RootOid transientRootOid=(RootOid)rootAdapter.getOid();
+  Ensure.ensureThatArg(rootAdapter.isTransient(),is(true),"root adapter should be transient; oid:" + transientRootOid);
+  Ensure.ensureThatArg(transientRootOid.isTransient(),is(true),"root adapter's OID should be transient; oid:" + transientRootOid);
+  final RootAndCollectionAdapters rootAndCollectionAdapters=new RootAndCollectionAdapters(adapter,this);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("remapAsPersistent: " + transientRootOid);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("removing root adapter from oid map");
+  }
+  boolean removed=getOidAdapterMap().remove(transientRootOid);
+  if (!removed) {
+    LOG.warn("could not remove oid: " + transientRootOid);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("removing collection adapter(s) from oid map");
+  }
+  for (  final ObjectAdapter collectionAdapter : rootAndCollectionAdapters) {
+    final Oid collectionOid=collectionAdapter.getOid();
+    removed=getOidAdapterMap().remove(collectionOid);
+    if (!removed) {
+      LOG.warn("could not remove collectionOid: " + collectionOid);
+    }
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("updating the Oid");
+  }
+  final RootOid persistedRootOid;
+  if (hintRootOid != null) {
+    if (hintRootOid.isTransient()) {
+      throw new IsisAssertException("hintRootOid must be persistent");
+    }
+    final ObjectSpecId hintRootOidObjectSpecId=hintRootOid.getObjectSpecId();
+    final ObjectSpecId adapterObjectSpecId=adapter.getSpecification().getSpecId();
+    if (!hintRootOidObjectSpecId.equals(adapterObjectSpecId)) {
+      throw new IsisAssertException("hintRootOid's objectType must be same as that of adapter " + "(was: '" + hintRootOidObjectSpecId + "'; adapter's is "+ adapterObjectSpecId+ "'");
+    }
+    persistedRootOid=hintRootOid;
+  }
+ else {
+    persistedRootOid=getOidGenerator().createPersistent(adapter.getObject(),transientRootOid);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("replacing Oid for root adapter and re-adding into maps; oid is now: " + persistedRootOid.enString() + " (was: "+ transientRootOid.enString()+ ")");
+  }
+  adapter.replaceOid(persistedRootOid);
+  getOidAdapterMap().add(persistedRootOid,adapter);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("replacing Oids for collection adapter(s) and re-adding into maps");
+  }
+  for (  final ObjectAdapter collectionAdapter : rootAndCollectionAdapters) {
+    final CollectionOid previousCollectionOid=(CollectionOid)collectionAdapter.getOid();
+    final CollectionOid persistedCollectionOid=previousCollectionOid.asPersistent(persistedRootOid);
+    getOidAdapterMap().add(persistedCollectionOid,collectionAdapter);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("synchronizing collection pojos, remapping in pojo map if required");
+  }
+  for (  final OneToManyAssociation otma : rootAndCollectionAdapters.getCollections()) {
+    final ObjectAdapter collectionAdapter=rootAndCollectionAdapters.getCollectionAdapter(otma);
+    final Object collectionPojoWrappedByAdapter=collectionAdapter.getObject();
+    final Object collectionPojoActuallyOnPojo=getCollectionPojo(otma,adapter);
+    if (collectionPojoActuallyOnPojo != collectionPojoWrappedByAdapter) {
+      getPojoAdapterMap().remove(collectionAdapter);
+      collectionAdapter.replacePojo(collectionPojoActuallyOnPojo);
+      getPojoAdapterMap().add(collectionPojoActuallyOnPojo,collectionAdapter);
+    }
+  }
+  adapter.changeState(ResolveState.RESOLVED);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("made persistent " + adapter + "; was "+ transientRootOid);
+  }
+}

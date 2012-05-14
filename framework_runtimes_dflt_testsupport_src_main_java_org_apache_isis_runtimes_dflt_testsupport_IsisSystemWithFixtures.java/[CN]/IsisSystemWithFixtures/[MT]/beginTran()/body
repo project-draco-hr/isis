@@ -1,0 +1,22 @@
+{
+  final IsisTransactionManager transactionManager=IsisContext.getPersistenceSession().getTransactionManager();
+  final IsisTransaction transaction=transactionManager.getTransaction();
+  if (transaction == null) {
+    transactionManager.startTransaction();
+    return;
+  }
+  final State state=transaction.getState();
+switch (state) {
+case COMMITTED:
+case ABORTED:
+    transactionManager.startTransaction();
+  break;
+case IN_PROGRESS:
+break;
+case MUST_ABORT:
+Assert.fail("Transaction is in state of '" + state + "'");
+break;
+default :
+Assert.fail("Unknown transaction state '" + state + "'");
+}
+}

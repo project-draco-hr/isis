@@ -1,0 +1,12 @@
+{
+  final DBCollection services=db.getCollection("services");
+  final DBObject object=services.findOne(new BasicDBObject().append("name",objectSpecId.asString()));
+  if (object == null) {
+    return null;
+  }
+ else {
+    final String id=(String)object.get("key");
+    LOG.info("service found " + objectSpecId + ":"+ id);
+    return id;
+  }
+}

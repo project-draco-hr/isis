@@ -1,7 +1,11 @@
 {
-  iswf.persist(iswf.fixtures.epv2);
+  resetPersistenceStore();
+  ObjectAdapter adapter=iswf.persist(iswf.fixtures.epv2);
+  final RootOid oid=(RootOid)adapter.getOid();
   iswf.bounceSystem();
-  iswf.destroy(iswf.fixtures.epv2);
+  adapter=iswf.reload(oid);
+  ExamplePojoWithValues epv=(ExamplePojoWithValues)adapter.getObject();
+  iswf.destroy(epv);
   iswf.bounceSystem();
   assertEquals(false,getStore().hasInstances(epvSpecification));
 }

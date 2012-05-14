@@ -1,10 +1,8 @@
 {
-  final AdapterManager objectLoader=IsisContext.getPersistenceSession().getAdapterManager();
+  final AdapterManager objectLoader=getPersistenceSession().getAdapterManager();
   final ObjectAdapter adapter=objectLoader.getAdapterFor(oid);
   if (adapter != null) {
     return adapter;
   }
- else {
-    return IsisContext.getPersistenceSession().recreateAdapter(oid,specification);
-  }
+  return getPersistenceSession().recreateAdapter(specification,oid);
 }

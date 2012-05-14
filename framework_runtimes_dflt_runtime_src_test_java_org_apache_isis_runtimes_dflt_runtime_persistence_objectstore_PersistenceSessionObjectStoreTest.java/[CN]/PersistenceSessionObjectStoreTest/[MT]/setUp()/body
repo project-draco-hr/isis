@@ -24,8 +24,8 @@
   servicesInjector.setContainer(container);
   adapterManager=new AdapterManagerDefault();
   adapterFactory=new PojoAdapterFactory();
-  persistenceSession=new PersistenceSessionObjectStore(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new RootOidGenerator(),adapterManager,mockPersistAlgorithm,mockObjectStore);
-  transactionManager=new ObjectStoreTransactionManager(persistenceSession,mockObjectStore);
+  persistenceSession=new PersistenceSession(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new OidGenerator(new IdentifierGeneratorDefault()),adapterManager,mockPersistAlgorithm,mockObjectStore);
+  transactionManager=new IsisTransactionManager(persistenceSession,mockObjectStore);
   transactionManager.injectInto(persistenceSession);
   servicesInjector.setServices(Collections.emptyList());
   persistenceSession.setSpecificationLoader(isisMetaModel.getSpecificationLoader());

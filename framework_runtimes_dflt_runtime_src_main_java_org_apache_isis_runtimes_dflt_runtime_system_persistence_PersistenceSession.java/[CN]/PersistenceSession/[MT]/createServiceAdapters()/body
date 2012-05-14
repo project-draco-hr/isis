@@ -1,0 +1,27 @@
+{
+  getTransactionManager().startTransaction();
+  for (  final Object service : servicesInjector.getRegisteredServices()) {
+    final ObjectSpecification serviceSpecification=specificationLoader.loadSpecification(service.getClass());
+    serviceSpecification.markAsService();
+    final RootOid existingOid=getOidForService(serviceSpecification);
+    ObjectAdapter serviceAdapter;
+    if (existingOid == null) {
+      serviceAdapter=getAdapterManager().adapterFor(service);
+    }
+ else {
+      serviceAdapter=getAdapterManager().recreateAdapter(existingOid,service);
+    }
+    if (serviceAdapter.getOid().isTransient()) {
+      adapterManager.remapAsPersistent(serviceAdapter,null);
+    }
+    if (serviceAdapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+      serviceAdapter.changeState(ResolveState.RESOLVING);
+      serviceAdapter.changeState(ResolveState.RESOLVED);
+    }
+    if (existingOid == null) {
+      final RootOid persistentOid=(RootOid)serviceAdapter.getOid();
+      registerService(persistentOid);
+    }
+  }
+  getTransactionManager().endTransaction();
+}

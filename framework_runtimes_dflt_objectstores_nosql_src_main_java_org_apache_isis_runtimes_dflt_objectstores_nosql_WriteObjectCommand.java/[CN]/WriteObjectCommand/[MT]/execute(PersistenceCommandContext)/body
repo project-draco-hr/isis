@@ -1,14 +1,14 @@
 {
   final NoSqlCommandContext noSqlCommandContext=(NoSqlCommandContext)context;
-  final String specName=object.getSpecification().getFullIdentifier();
-  final StateWriter writer=noSqlCommandContext.createStateWriter(specName);
-  final String key=keyCreator.key(object.getOid());
-  writer.writeId(key);
-  writeFields(writer,specName,object);
+  final ObjectSpecification objectSpec=adapter.getSpecification();
+  final StateWriter writer=noSqlCommandContext.createStateWriter(objectSpec.getSpecId());
+  final TypedOid typedOid=(TypedOid)adapter.getOid();
+  writer.writeOid(typedOid);
+  writeFields(writer,adapter);
   final String user=getAuthenticationSession().getUserName();
-  final Version currentVersion=object.getVersion();
-  final Version newVersion=isUpdate ? versionCreator.nextVersion(currentVersion) : versionCreator.newVersion(user);
-  object.setVersion(newVersion);
+  final Version currentVersion=adapter.getVersion();
+  final Version newVersion=mode.isUpdate() ? versionCreator.nextVersion(currentVersion) : versionCreator.newVersion(user);
+  adapter.setVersion(newVersion);
   if (newVersion != null) {
     final String version=currentVersion == null ? null : versionCreator.versionString(currentVersion);
     writer.writeVersion(version,versionCreator.versionString(newVersion));
@@ -16,7 +16,7 @@
     writer.writeTime(versionCreator.timeString(newVersion));
     writer.writeEncryptionType(dataEncrypter.getType());
   }
-  if (isUpdate) {
+  if (mode.isUpdate()) {
     noSqlCommandContext.update(writer);
   }
  else {

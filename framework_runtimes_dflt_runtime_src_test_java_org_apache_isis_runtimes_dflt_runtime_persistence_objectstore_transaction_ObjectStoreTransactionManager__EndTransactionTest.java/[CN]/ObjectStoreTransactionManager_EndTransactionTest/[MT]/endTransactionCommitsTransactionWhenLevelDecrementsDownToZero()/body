@@ -1,13 +1,13 @@
 {
   ignoreCallsToObjectStore();
   transactionManager.startTransaction();
-  mockery.checking(new Expectations(){
+  context.checking(new Expectations(){
 {
       one(mockPersistenceSession).objectChangedAllDirty();
     }
   }
 );
-  assertThat(transactionManager.transactionLevel,is(1));
+  assertThat(transactionManager.getTransactionLevel(),is(1));
   transactionManager.endTransaction();
-  assertThat(transactionManager.transactionLevel,is(0));
+  assertThat(transactionManager.getTransactionLevel(),is(0));
 }

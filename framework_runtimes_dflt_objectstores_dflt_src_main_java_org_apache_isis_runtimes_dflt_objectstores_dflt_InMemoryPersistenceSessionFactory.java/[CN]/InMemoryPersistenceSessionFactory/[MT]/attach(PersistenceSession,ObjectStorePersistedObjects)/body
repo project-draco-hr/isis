@@ -1,8 +1,9 @@
 {
   final OidGenerator oidGenerator=persistenceSession.getOidGenerator();
-  if (oidGenerator instanceof RootOidGenerator) {
-    final RootOidGenerator rootOidGenerator=(RootOidGenerator)oidGenerator;
-    persistedObjects.saveOidGeneratorMemento(rootOidGenerator.getMemento());
+  final IdentifierGenerator identifierGenerator=oidGenerator.getIdentifierGenerator();
+  if (identifierGenerator instanceof IdentifierGeneratorDefault) {
+    final IdentifierGeneratorDefault identifierGeneratorDefault=(IdentifierGeneratorDefault)identifierGenerator;
+    persistedObjects.saveOidGeneratorMemento(identifierGeneratorDefault.getMemento());
   }
   this.persistedObjects=persistedObjects;
 }

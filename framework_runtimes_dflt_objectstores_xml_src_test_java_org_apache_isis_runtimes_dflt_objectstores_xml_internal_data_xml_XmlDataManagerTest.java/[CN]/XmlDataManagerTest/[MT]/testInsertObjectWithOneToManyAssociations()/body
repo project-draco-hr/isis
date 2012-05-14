@@ -3,13 +3,13 @@
   data.initCollection("Members");
   final RootOidDefault oid[]=new RootOidDefault[3];
   for (int i=0; i < oid.length; i++) {
-    oid[i]=RootOidDefault.create("TEA","" + (104 + i));
+    oid[i]=RootOidDefault.create(ObjectSpecId.of("TEA"),"" + (104 + i));
     data.addElement("Members",oid[i]);
   }
   manager.insertObject(data);
   final ObjectData read=(ObjectData)manager.loadData(data.getRootOid());
   assertEquals(data.getRootOid(),read.getRootOid());
-  assertEquals(data.getObjectType(),read.getObjectType());
+  assertEquals(data.getObjectSpecId(),read.getObjectSpecId());
   final ListOfRootOid c=read.elements("Members");
   for (int i=0; i < oid.length; i++) {
     assertEquals(oid[i],c.elementAt(i));

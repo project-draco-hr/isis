@@ -2,14 +2,12 @@
   final String versionStr="3";
   context.checking(new Expectations(){
 {
-      one(keyCreator).key(oid);
-      will(returnValue(keyStr));
       one(versionCreator).versionString(version);
       will(returnValue(versionStr));
-      one(commandContext).delete(specification.getFullIdentifier(),keyStr,versionStr);
+      one(commandContext).delete(specification.getSpecId(),keyStr,versionStr);
     }
   }
 );
-  command=new NoSqlDestroyObjectCommand(keyCreator,versionCreator,adapter);
+  command=new NoSqlDestroyObjectCommand(versionCreator,adapter);
   command.execute(commandContext);
 }

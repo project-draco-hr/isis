@@ -1,0 +1,28 @@
+{
+  debug.appendTitle(getClass().getName());
+  debug.appendln("container",servicesInjector);
+  debug.appendln();
+  adapterManager.debugData(debug);
+  debug.appendln();
+  debug.appendln("manually dirtiable support (isDirty flag)?",dirtiableSupport);
+  debug.appendTitle("OID Generator");
+  oidGenerator.debugData(debug);
+  debug.appendln();
+  debug.appendTitle("Services");
+  for (  final Object servicePojo : servicesInjector.getRegisteredServices()) {
+    final String id=ServiceUtil.id(servicePojo);
+    final Class<? extends Object> serviceClass=servicePojo.getClass();
+    final ObjectSpecification serviceSpecification=getSpecificationLoader().loadSpecification(serviceClass);
+    final String serviceClassName=serviceClass.getName();
+    final Oid oidForService=getOidForService(serviceSpecification);
+    final String serviceId=id + (id.equals(serviceClassName) ? "" : " (" + serviceClassName + ")");
+    debug.appendln(oidForService != null ? oidForService.toString() : "[NULL]",serviceId);
+  }
+  debug.appendln();
+  debug.appendTitle("Persistor");
+  getTransactionManager().debugData(debug);
+  debug.appendln("Persist Algorithm",persistAlgorithm);
+  debug.appendln("Object Store",objectStore);
+  debug.appendln();
+  objectStore.debugData(debug);
+}

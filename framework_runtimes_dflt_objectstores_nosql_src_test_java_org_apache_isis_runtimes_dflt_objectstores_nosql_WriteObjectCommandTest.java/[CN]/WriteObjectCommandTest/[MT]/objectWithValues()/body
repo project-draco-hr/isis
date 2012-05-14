@@ -1,14 +1,13 @@
 {
   context.checking(new Expectations(){
 {
-      one(commandContext).createStateWriter(specification.getFullIdentifier());
+      one(commandContext).createStateWriter(epv1Adapter.getSpecification().getSpecId());
       will(returnValue(writer));
-      one(keyCreator).key(RootOidDefault.create("EPV|1"));
-      will(returnValue("1"));
-      one(writer).writeId("3");
-      one(writer).writeType(specification.getFullIdentifier());
+      final RootOidDefault oid=RootOidDefault.create(epv1Adapter.getSpecification().getSpecId(),"1");
+      exactly(2).of(writer).writeOid(oid);
       one(writer).writeField("name","ENCFred Smith");
       one(writer).writeField("size","ENC108");
+      one(writer).writeField("date",null);
       one(writer).writeField("nullable",null);
       one(writer).writeVersion(null,"2");
       one(writer).writeUser("username");
@@ -18,6 +17,6 @@
     }
   }
 );
-  new WriteObjectCommand(false,keyCreator,versionCreator,dataEncrypter,epv1Adapter).execute(commandContext);
-  context.assertIsSatisfied();
+  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,epv1Adapter);
+  command.execute(commandContext);
 }

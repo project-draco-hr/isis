@@ -1,0 +1,19 @@
+{
+  final Sequence changingState=context.sequence("changingState");
+  context.checking(new Expectations(){
+{
+      one(db).getInstance("3",cusSpecId);
+      allowing(cusAdapter).getResolveState();
+      inSequence(changingState);
+      will(returnValue(ResolveState.GHOST));
+      ignoring(cusSpecification);
+      one(cusAdapter).changeState(ResolveState.RESOLVING);
+      inSequence(changingState);
+      one(cusAdapter).changeState(ResolveState.RESOLVED);
+      inSequence(changingState);
+      one(cusAdapter).setVersion(null);
+    }
+  }
+);
+  store.resolveImmediately(cusAdapter);
+}

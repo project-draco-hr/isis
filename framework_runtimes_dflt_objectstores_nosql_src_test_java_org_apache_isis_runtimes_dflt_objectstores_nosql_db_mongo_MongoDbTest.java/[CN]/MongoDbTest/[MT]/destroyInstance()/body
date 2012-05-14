@@ -1,10 +1,9 @@
 {
   db.close();
-  final String specificationName=specification.getFullIdentifier();
-  final DBCollection instances=testDb.getCollection(specificationName);
+  final DBCollection instances=testDb.getCollection(specification.getSpecId().asString());
   final BasicDBObject dbObject=new BasicDBObject().append("test","test");
   instances.insert(dbObject);
   db.open();
-  db.delete(specificationName,dbObject.getString("_id"));
-  assertFalse(db.hasInstances(specificationName));
+  db.delete(specification.getSpecId(),dbObject.getString("_id"));
+  assertFalse(db.hasInstances(specification.getSpecId()));
 }

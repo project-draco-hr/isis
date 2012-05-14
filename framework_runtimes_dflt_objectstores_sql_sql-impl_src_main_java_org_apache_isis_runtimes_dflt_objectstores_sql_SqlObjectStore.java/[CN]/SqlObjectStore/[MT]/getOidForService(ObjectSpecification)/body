@@ -9,13 +9,13 @@
     sql.append(" where ");
     sql.append(Defaults.getIdColumn());
     sql.append(" = ?");
-    connector.addToQueryValues(serviceSpec.getObjectType());
+    connector.addToQueryValues(serviceSpec.getSpecId());
     final Results results=connector.select(sql.toString());
     if (!results.next()) {
       return null;
     }
     final int id=results.getInt(Defaults.getPkIdLabel());
-    return RootOidDefault.create(serviceSpec.getObjectType(),"" + id);
+    return RootOidDefault.create(serviceSpec.getSpecId(),"" + id);
   }
   finally {
     connectionPool.release(connector);

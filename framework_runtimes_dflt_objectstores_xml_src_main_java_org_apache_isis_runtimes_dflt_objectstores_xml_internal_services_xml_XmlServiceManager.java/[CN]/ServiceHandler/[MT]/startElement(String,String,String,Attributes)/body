@@ -1,8 +1,8 @@
 {
   if (tagName.equals("service")) {
-    final String objectType=attrs.getValue("type");
-    final String identifier=attrs.getValue("id");
-    final ServiceElement service=new ServiceElement(RootOidDefault.create(objectType,identifier));
+    final String oidStr=attrs.getValue("oid");
+    RootOid rootOid=getOidMarshaller().unmarshal(oidStr,RootOid.class);
+    final ServiceElement service=new ServiceElement(rootOid);
     services.add(service);
   }
 }

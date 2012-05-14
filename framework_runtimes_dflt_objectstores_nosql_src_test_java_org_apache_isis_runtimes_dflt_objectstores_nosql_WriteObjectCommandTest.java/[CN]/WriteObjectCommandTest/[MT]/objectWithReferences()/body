@@ -1,16 +1,12 @@
 {
   context.checking(new Expectations(){
 {
-      one(commandContext).createStateWriter(epr1Adapter.getSpecification().getFullIdentifier());
+      one(commandContext).createStateWriter(epr1Adapter.getSpecification().getSpecId());
       will(returnValue(writer));
-      one(keyCreator).key(RootOidDefault.create("EPR|1"));
-      will(returnValue("5"));
-      one(keyCreator).reference(epv1Adapter);
-      will(returnValue("ref@3"));
-      one(writer).writeId("5");
-      one(writer).writeType(epr1Adapter.getSpecification().getFullIdentifier());
-      one(writer).writeField("reference1","ref@3");
-      one(writer).writeField("reference2",null);
+      final RootOidDefault oid=RootOidDefault.create(epr1Adapter.getSpecification().getSpecId(),"1");
+      exactly(2).of(writer).writeOid(oid);
+      one(writer).writeField("reference","EPV:1");
+      one(writer).writeField("aggregatedReference",null);
       one(writer).writeVersion(null,"2");
       one(writer).writeUser("username");
       one(writer).writeTime("1057");
@@ -19,6 +15,6 @@
     }
   }
 );
-  new WriteObjectCommand(false,keyCreator,versionCreator,dataEncrypter,epr1Adapter).execute(commandContext);
-  context.assertIsSatisfied();
+  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,epr1Adapter);
+  command.execute(commandContext);
 }

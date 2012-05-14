@@ -1,0 +1,19 @@
+{
+  final ClientConnection connection=getConnection();
+  String data;
+  try {
+    final String request=objectSpecId + " " + key;
+    connection.request('R',request);
+    connection.validateRequest();
+    data=connection.getResponseData();
+  }
+ catch (  final RuntimeException e) {
+    LOG.error("aborting getInstance",e);
+    abortConnection(connection);
+    throw e;
+  }
+  data=checkData(data);
+  final JsonStateReader reader=new JsonStateReader(data);
+  returnConnection(connection);
+  return reader;
+}

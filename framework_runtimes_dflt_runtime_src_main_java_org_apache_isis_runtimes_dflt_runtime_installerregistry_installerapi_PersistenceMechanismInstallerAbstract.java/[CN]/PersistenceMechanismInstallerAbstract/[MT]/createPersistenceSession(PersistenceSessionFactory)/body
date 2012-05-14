@@ -5,7 +5,7 @@
   final AdapterManagerExtended adapterManager=createAdapterManager(getConfiguration());
   final ObjectAdapterFactory adapterFactory=createAdapterFactory(getConfiguration());
   final ObjectFactory objectFactory=createObjectFactory(getConfiguration());
-  final OidGenerator oidGenerator=createOidGenerator(getConfiguration());
+  final IdentifierGenerator identifierGenerator=createIdentifierGenerator(getConfiguration());
   final RuntimeContext runtimeContext=createRuntimeContext(getConfiguration());
   final DomainObjectContainer container=createContainer(getConfiguration());
   final ServicesInjector servicesInjector=createServicesInjector(getConfiguration());
@@ -13,7 +13,7 @@
   ensureThatArg(adapterManager,is(not(nullValue())));
   ensureThatArg(adapterFactory,is(not(nullValue())));
   ensureThatArg(objectFactory,is(not(nullValue())));
-  ensureThatArg(oidGenerator,is(not(nullValue())));
+  ensureThatArg(identifierGenerator,is(not(nullValue())));
   ensureThatArg(runtimeContext,is(not(nullValue())));
   ensureThatArg(container,is(not(nullValue())));
   ensureThatArg(serviceList,is(not(nullValue())));
@@ -23,10 +23,6 @@
   servicesInjector.setContainer(container);
   servicesInjector.setServices(serviceList);
   persistenceSessionFactory.getSpecificationLoader().injectInto(runtimeContext);
-  PersistenceSession persistenceSession=createPersistenceSession(persistenceSessionFactory,adapterManager,adapterFactory,objectFactory,oidGenerator,servicesInjector);
-  if (getConfiguration().getBoolean(LOGGING_PROPERTY,false)) {
-    final String level=getConfiguration().getString(LOGGING_PROPERTY + ".level","debug");
-    persistenceSession=new PersistenceSessionLogger(persistenceSession,level);
-  }
+  final PersistenceSession persistenceSession=createPersistenceSession(persistenceSessionFactory,adapterManager,adapterFactory,objectFactory,identifierGenerator,servicesInjector);
   return persistenceSession;
 }

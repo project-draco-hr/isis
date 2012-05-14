@@ -1,0 +1,15 @@
+{
+  context.checking(new Expectations(){
+{
+      one(db).nextSerialNumberBatch(sequenceNumbersSpecId,4);
+      will(returnValue(1L));
+    }
+  }
+);
+  RootOid transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-998");
+  String identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("1",identifier);
+  transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-997");
+  identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("2",identifier);
+}

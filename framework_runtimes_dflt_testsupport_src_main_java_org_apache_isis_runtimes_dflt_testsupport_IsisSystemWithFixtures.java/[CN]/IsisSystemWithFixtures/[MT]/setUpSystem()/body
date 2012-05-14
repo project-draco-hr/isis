@@ -1,6 +1,7 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
   boolean firstTime=isisSystem == null;
+  firePreSetupSystem(firstTime);
   if (firstTime) {
     isisSystem=createIsisSystem(services);
     isisSystem.init();
@@ -13,4 +14,5 @@
   if (firstTime && fixturesInitialization == Fixtures.Initialization.INIT) {
     fixtures.init(container);
   }
+  firePostSetupSystem(firstTime);
 }

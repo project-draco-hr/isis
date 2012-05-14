@@ -1,0 +1,21 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  context.checking(new Expectations(){
+{
+      one(db).open();
+      one(db).containsData();
+      will(returnValue(false));
+      one(db).close();
+      allowing(cusAdapter).getOid();
+      will(returnValue(cusRootOid));
+      allowing(cusAdapter).getSpecification();
+      will(returnValue(cusSpecification));
+      allowing(cusSpecification).getSpecId();
+      will(returnValue(cusSpecId));
+      allowing(serviceSpecification).getSpecId();
+      will(returnValue(serviceSpecId));
+    }
+  }
+);
+  store=new NoSqlObjectStore(db,new OidGenerator(new NoSqlIdentifierGenerator(db)),versionCreator,null,dataEncrypter);
+}

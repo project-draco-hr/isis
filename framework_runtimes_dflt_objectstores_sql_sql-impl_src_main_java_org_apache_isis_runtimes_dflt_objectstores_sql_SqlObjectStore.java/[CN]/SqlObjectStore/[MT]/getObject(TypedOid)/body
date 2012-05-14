@@ -1,0 +1,8 @@
+{
+  final DatabaseConnector connection=connectionPool.acquire();
+  final ObjectSpecification objectSpec=getSpecificationLookup().lookupBySpecId(oid.getObjectSpecId());
+  final ObjectMapping mapper=objectMappingLookup.getMapping(objectSpec,connection);
+  final ObjectAdapter object=mapper.getObject(connection,oid);
+  connectionPool.release(connection);
+  return object;
+}

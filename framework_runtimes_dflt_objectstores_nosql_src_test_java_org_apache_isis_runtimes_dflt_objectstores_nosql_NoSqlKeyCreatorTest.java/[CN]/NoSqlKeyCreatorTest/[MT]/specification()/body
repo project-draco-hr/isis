@@ -1,4 +1,13 @@
 {
-  final ObjectSpecification spec=keyCreatorDefault.specificationFromReference(reference);
-  assertEquals(specification,spec);
+  context.checking(new Expectations(){
+{
+      one(mockOidMarshaller).unmarshal(oidStr,TypedOid.class);
+      will(returnValue(oid));
+      one(mockSpecificationLoader).lookupBySpecId(oid.getObjectSpecId());
+      will(returnValue(mockSpecification));
+    }
+  }
+);
+  final ObjectSpecification spec=keyCreatorDefault.specificationFromOidStr(oidStr);
+  assertEquals(mockSpecification,spec);
 }

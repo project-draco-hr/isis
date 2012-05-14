@@ -1,0 +1,31 @@
+{
+  context.checking(new Expectations(){
+{
+      one(db).nextSerialNumberBatch(sequenceNumbersSpecId,4);
+      will(returnValue(1L));
+    }
+  }
+);
+  RootOid transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-998");
+  String identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("1",identifier);
+  transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-997");
+  identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("2",identifier);
+  transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-996");
+  identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("3",identifier);
+  transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-995");
+  identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("4",identifier);
+  context.checking(new Expectations(){
+{
+      one(db).nextSerialNumberBatch(sequenceNumbersSpecId,4);
+      will(returnValue(5L));
+    }
+  }
+);
+  transientRootOid=RootOidDefault.createTransient(sequenceNumbersSpecId,"-994");
+  identifier=identifierGenerator.createPersistentIdentifierFor(sequenceNumbersSpecId,new ExamplePojo(),transientRootOid);
+  assertEquals("5",identifier);
+}

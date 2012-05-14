@@ -1,0 +1,29 @@
+{
+  final ObjectAdapter adapter=getAdapterFor(pojo);
+  if (adapter != null) {
+    return adapter;
+  }
+  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
+  if (objSpec.containsFacet(ValueFacet.class)) {
+    return createStandaloneAdapterAndSetResolveState(pojo);
+  }
+  final ObjectAdapter newAdapter;
+  if (parentAdapter != null) {
+    if (collection == null) {
+      if (isAggregated(objSpec)) {
+        final AggregatedOid aggregatedOid=getOidGenerator().createAggregateOid(pojo,parentAdapter);
+        newAdapter=createAggregatedAdapter(pojo,aggregatedOid);
+      }
+ else {
+        newAdapter=createTransientRootAdapter(pojo);
+      }
+    }
+ else {
+      newAdapter=createCollectionAdapter(pojo,parentAdapter,collection);
+    }
+  }
+ else {
+    newAdapter=createTransientRootAdapter(pojo);
+  }
+  return mapAndInjectServices(newAdapter);
+}

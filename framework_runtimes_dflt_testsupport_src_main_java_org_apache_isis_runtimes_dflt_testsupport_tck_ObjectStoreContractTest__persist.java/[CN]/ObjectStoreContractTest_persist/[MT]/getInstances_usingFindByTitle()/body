@@ -1,10 +1,15 @@
 {
-  final String titleString=epv2Adapter.titleString();
-  ObjectAdapter[] retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,titleString));
-  assertEquals(0,retrievedInstance.length);
-  iswf.persist(iswf.fixtures.epv2);
+  resetPersistenceStore();
+  boolean hasInstances=getStore().hasInstances(epvSpecification);
+  assertFalse(hasInstances);
+  final ExamplePojoWithValues epv2=iswf.fixtures.epv2;
+  epv2.setName("foo");
+  epv2.setDate(new Date());
+  epv2.setNullable(1234567890L);
+  epv2.setSize(123);
+  iswf.persist(epv2);
   iswf.bounceSystem();
-  retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,titleString));
+  ObjectAdapter[] retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,epv2Adapter.titleString()));
   assertEquals(1,retrievedInstance.length);
   final ObjectAdapter retrievedAdapter=retrievedInstance[0];
   assertNotSame(epv2Adapter,retrievedAdapter);

@@ -1,9 +1,8 @@
 {
   if (objectStore == null) {
-    final KeyCreator keyCreator=createKeyCreator();
     final VersionCreator versionCreator=createVersionCreator();
     final NoSqlDataDatabase db=createNoSqlDatabase(configuration);
-    final NoSqlOidGenerator oidGenerator=createOidGenerator(db);
+    final OidGenerator oidGenerator=createOidGenerator(db);
     final Map<String,DataEncryption> availableDataEncryption=new HashMap<String,DataEncryption>();
     try {
       final String[] encryptionClasses=getConfiguration().getList(NAKEDOBJECTS_ENCRYPTION_CLASSES);
@@ -25,7 +24,7 @@
         availableDataEncryption.put(encryption.getType(),encryption);
         writeWithEncryption=encryption;
       }
-      objectStore=new NoSqlObjectStore(db,oidGenerator,keyCreator,versionCreator,writeWithEncryption,availableDataEncryption);
+      objectStore=new NoSqlObjectStore(db,oidGenerator,versionCreator,writeWithEncryption,availableDataEncryption);
     }
  catch (    final IllegalArgumentException e) {
       throw new IsisException(e);

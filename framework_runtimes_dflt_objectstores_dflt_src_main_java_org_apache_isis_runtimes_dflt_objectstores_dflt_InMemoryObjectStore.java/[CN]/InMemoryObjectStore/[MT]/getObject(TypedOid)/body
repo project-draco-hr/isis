@@ -1,0 +1,12 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("getObject " + oid);
+  }
+  final ObjectSpecification objectSpec=getSpecificationLookup().lookupBySpecId(oid.getObjectSpecId());
+  final ObjectStoreInstances ins=instancesFor(objectSpec);
+  final ObjectAdapter object=ins.retrieveObject(oid);
+  if (object == null) {
+    throw new ObjectNotFoundException(oid);
+  }
+  return object;
+}

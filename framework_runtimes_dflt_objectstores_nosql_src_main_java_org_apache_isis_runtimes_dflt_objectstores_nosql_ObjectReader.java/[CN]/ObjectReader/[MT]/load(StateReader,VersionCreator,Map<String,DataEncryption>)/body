@@ -1,0 +1,22 @@
+{
+  final String oidStr=reader.readOid();
+  final RootOid rootOid=getOidMarshaller().unmarshal(oidStr,RootOid.class);
+  final ObjectAdapter object=getAdapter(rootOid);
+  if (object.getResolveState().isResolved()) {
+    Version version=null;
+    final String versionString=reader.readVersion();
+    if (!versionString.equals("")) {
+      final String user=reader.readUser();
+      final String time=reader.readTime();
+      version=versionCreator.version(versionString,user,time);
+    }
+    if (version.different(object.getVersion())) {
+      throw new UnexpectedCallException();
+    }
+ else {
+      return object;
+    }
+  }
+  loadState(reader,versionCreator,dataEncrypters,object);
+  return object;
+}

@@ -1,0 +1,17 @@
+{
+  final Sequence constructor=context.sequence("<init>");
+  context.checking(new Expectations(){
+{
+      one(db).open();
+      inSequence(constructor);
+      one(db).containsData();
+      will(returnValue(false));
+      inSequence(constructor);
+      one(db).close();
+      inSequence(constructor);
+    }
+  }
+);
+  store=new NoSqlObjectStore(db,new OidGenerator(new NoSqlIdentifierGenerator(db)),versionCreator,null,dataEncrypter);
+  assertFalse(store.isFixturesInstalled());
+}
