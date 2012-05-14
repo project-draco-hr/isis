@@ -1,0 +1,47 @@
+{
+  final Matcher matcher=OIDSTR_PATTERN.matcher(oidStr);
+  if (!matcher.matches()) {
+    throw new IllegalArgumentException("Could not parse OID '" + oidStr + "'; should match pattern: "+ OIDSTR_PATTERN.pattern());
+  }
+  final int groupCount=matcher.groupCount();
+  final String isTransientStr=getGroup(matcher,3);
+  boolean isTransient="!".equals(isTransientStr);
+  final String oidStrWithoutCollectionName=getGroup(matcher,1);
+  final String rootOidStr=getGroup(matcher,2);
+  final String rootObjectType=getGroup(matcher,4);
+  final String rootIdentifier=getGroup(matcher,5);
+  final String aggregateOidPart=getGroup(matcher,6);
+  final List<AggregateOidPart> aggregateOidParts=Lists.newArrayList();
+  final Splitter tildaSplitter=Splitter.on("~");
+  final Splitter colonSplitter=Splitter.on(":");
+  if (aggregateOidPart != null) {
+    final Iterable<String> tildaSplitIter=tildaSplitter.split(aggregateOidPart);
+    for (    String str : tildaSplitIter) {
+      if (Strings.isNullOrEmpty(str)) {
+        continue;
+      }
+      final Iterator<String> colonSplitIter=colonSplitter.split(str).iterator();
+      final String objectType=colonSplitIter.next();
+      final String localId=colonSplitIter.next();
+      aggregateOidParts.add(new AggregateOidPart(objectType,localId));
+    }
+  }
+  final String collectionName=getGroup(matcher,groupCount);
+  if (collectionName == null) {
+    if (aggregateOidParts.isEmpty()) {
+      ensureCorrectType(oidStr,requestedType,RootOidDefault.class);
+      return (T)new RootOidDefault(ObjectSpecId.of(rootObjectType),rootIdentifier,State.valueOf(isTransient));
+    }
+ else {
+      ensureCorrectType(oidStr,requestedType,AggregatedOid.class);
+      final AggregateOidPart lastPart=aggregateOidParts.remove(aggregateOidParts.size() - 1);
+      final TypedOid parentOid=parentOidFor(rootOidStr,aggregateOidParts);
+      return (T)new AggregatedOid(ObjectSpecId.of(lastPart.objectType),parentOid,lastPart.localId);
+    }
+  }
+ else {
+    TypedOid parentOid=this.unmarshal(oidStrWithoutCollectionName,TypedOid.class);
+    ensureCorrectType(oidStr,requestedType,CollectionOid.class);
+    return (T)new CollectionOid(parentOid,collectionName);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  final String oidStr="CUS:123~ADR:2~CTY:LON";
+  final AggregatedOid aggregatedOid=oidMarshaller.unmarshal(oidStr,AggregatedOid.class);
+  assertThat(aggregatedOid.isTransient(),is(false));
+  assertThat(aggregatedOid.getParentOid(),is((TypedOid)oidMarshaller.unmarshal("CUS:123~ADR:2",AggregatedOid.class)));
+  assertThat(aggregatedOid.getObjectSpecId(),is(ObjectSpecId.of("CTY")));
+  assertThat(aggregatedOid.getLocalId(),is("LON"));
+  final Oid oid=oidMarshaller.unmarshal(oidStr,Oid.class);
+  assertThat(oid,equalTo((Oid)aggregatedOid));
+}

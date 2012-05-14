@@ -1,0 +1,17 @@
+{
+  final String canonicalPath=file.getCanonicalPath();
+  return new TypeSafeMatcher<File>(){
+    @Override public void describeTo(    Description arg0){
+      arg0.appendText("file '" + canonicalPath + "'");
+    }
+    @Override public boolean matchesSafely(    File arg0){
+      try {
+        return arg0.getCanonicalPath().equals(canonicalPath);
+      }
+ catch (      IOException e) {
+        return false;
+      }
+    }
+  }
+;
+}

@@ -1,0 +1,14 @@
+{
+  final File cusIdxFile=new File("xml/objects/CUS.xml");
+  final File cus1File=new File("xml/objects/CUS/1.xml");
+  final File cus2File=new File("xml/objects/CUS/2.xml");
+  context.checking(new Expectations(){
+{
+      one(deleter).deleteFile(with(equalsFile(cusIdxFile)));
+      one(deleter).deleteFile(with(equalsFile(cus1File)));
+      one(deleter).deleteFile(with(equalsFile(cus2File)));
+    }
+  }
+);
+  Files.deleteFiles(new File("xml/objects"),Files.filterFileNameExtension(".xml"),Recursion.DO_RECURSE,deleter);
+}

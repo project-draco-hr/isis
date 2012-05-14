@@ -1,8 +1,4 @@
 {
-class CustomerAsManufacturedByCglibByteCodeEnhancer {
-  }
-class Customer {
-  }
   expectNoMethodsRemoved();
   context.checking(new Expectations(){
 {
@@ -12,8 +8,8 @@ class Customer {
   }
 );
   facetFactory.process(new ProcessClassContext(CustomerAsManufacturedByCglibByteCodeEnhancer.class,methodRemover,facetHolderImpl));
-  final ObjectTypeFacet facet=facetHolderImpl.getFacet(ObjectTypeFacet.class);
+  final ObjectSpecIdFacet facet=facetHolderImpl.getFacet(ObjectSpecIdFacet.class);
   assertThat(facet,is(not(nullValue())));
-  assertThat(facet instanceof ObjectTypeFacetDerivedFromClassName,is(true));
-  assertThat(facet.value(),is(Customer.class.getCanonicalName()));
+  assertThat(facet instanceof ObjectSpecIdFacetDerivedFromClassName,is(true));
+  assertThat(facet.value(),is(ObjectSpecId.of(Customer.class.getCanonicalName())));
 }

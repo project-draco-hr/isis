@@ -1,0 +1,9 @@
+{
+  final String oidStr="!CUS:123$items";
+  final CollectionOid collectionOid=oidMarshaller.unmarshal(oidStr,CollectionOid.class);
+  assertThat(collectionOid.isTransient(),is(true));
+  assertThat(collectionOid.getParentOid(),is((TypedOid)oidMarshaller.unmarshal("!CUS:123",RootOidDefault.class)));
+  assertThat(collectionOid.getName(),is("items"));
+  final Oid oid=oidMarshaller.unmarshal(oidStr,Oid.class);
+  assertThat(oid,equalTo((Oid)collectionOid));
+}
