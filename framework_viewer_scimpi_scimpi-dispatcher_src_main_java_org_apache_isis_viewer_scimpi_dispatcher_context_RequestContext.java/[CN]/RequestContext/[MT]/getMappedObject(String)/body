@@ -1,15 +1,13 @@
 {
-  if (id == null || id.trim().equals("") || id.trim().equals("null")) {
+  if (oidStr == null || oidStr.trim().equals("") || oidStr.trim().equals("null")) {
     return null;
   }
-  if (id.equals("collection")) {
+  if (oidStr.equals("collection")) {
     return collection;
   }
-  final ObjectAdapter object=mappedObject(id);
-  if (object == null) {
-    throw new ScimpiException("No object for " + id);
+  final ObjectAdapter adapter=mappedObject(oidStr);
+  if (adapter == null) {
+    throw new ScimpiException("No object for " + oidStr);
   }
- else {
-    return object;
-  }
+  return adapter;
 }

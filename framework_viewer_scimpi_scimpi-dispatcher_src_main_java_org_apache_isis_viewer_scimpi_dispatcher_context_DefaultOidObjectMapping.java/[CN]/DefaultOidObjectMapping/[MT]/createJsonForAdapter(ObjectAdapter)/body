@@ -1,0 +1,12 @@
+{
+  final JSONObject data=new JSONObject();
+  final Oid oid=adapter.getOid();
+  data.put("_oid",oid.enString());
+  if (oid instanceof RootOid) {
+    return data;
+  }
+  if (!(oid instanceof AggregatedOid)) {
+    throw new ScimpiException("Unsupported OID type " + oid);
+  }
+  return data;
+}

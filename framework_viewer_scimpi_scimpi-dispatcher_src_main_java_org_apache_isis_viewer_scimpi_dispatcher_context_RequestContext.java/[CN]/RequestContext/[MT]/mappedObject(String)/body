@@ -1,30 +1,30 @@
 {
-  if (id != null && id.equals("")) {
+  if (dataOrOid != null && dataOrOid.equals("")) {
     return null;
   }
-  if (id == null) {
-    id=RESULT;
+  if (dataOrOid == null) {
+    dataOrOid=RESULT;
   }
-  if (id.startsWith("D")) {
-    return objectMapping.mappedTransientObject(StringEscapeUtils.unescapeHtml(id.substring(1)));
+  if (dataOrOid.startsWith("D")) {
+    return objectMapping.mappedTransientObject(StringEscapeUtils.unescapeHtml(dataOrOid.substring(1)));
   }
-  final String[] idParts=id.split("@");
-  if (idParts.length == 2) {
-    final ObjectAdapter mappedObject=objectMapping.mappedObject(id);
-    if (mappedObject instanceof ObjectAdapter) {
-      IsisContext.getPersistenceSession().resolveImmediately(mappedObject);
+  final String oidStr=dataOrOid;
+  final TypedOid typedOid=getOidMarshaller().unmarshal(oidStr,TypedOid.class);
+  if (typedOid instanceof RootOid) {
+    final ObjectAdapter mappedObject=objectMapping.mappedObject(oidStr);
+    if (mappedObject != null) {
+      getPersistenceSession().resolveImmediately(mappedObject);
     }
     return mappedObject;
   }
-  final ObjectAdapter parentObject=objectMapping.mappedObject(idParts[0] + "@" + idParts[1]);
-  if (parentObject instanceof ObjectAdapter) {
-    IsisContext.getPersistenceSession().resolveImmediately(parentObject);
-  }
-  final AggregatedOid aggregatedOid=new AggregatedOid(parentObject.getOid(),idParts[2]);
+  AggregatedOid aggregatedOid=(AggregatedOid)typedOid;
+  final TypedOid parentOid=aggregatedOid.getParentOid();
+  final ObjectAdapter parentAdapter=objectMapping.mappedObject(parentOid.enString());
+  getPersistenceSession().resolveImmediately(parentAdapter);
   ObjectAdapter aggregatedAdapter=null;
-  outer:   for (  final ObjectAssociation association : parentObject.getSpecification().getAssociations()) {
+  outer:   for (  final ObjectAssociation association : parentAdapter.getSpecification().getAssociations()) {
     if (association.getSpecification().isParented()) {
-      final ObjectAdapter objectAdapter=association.get(parentObject);
+      final ObjectAdapter objectAdapter=association.get(parentAdapter);
       if (objectAdapter == null) {
         continue;
       }
@@ -46,8 +46,8 @@
       }
     }
  else     if (association.isOneToManyAssociation()) {
-      if (association.getId().equals(idParts[2])) {
-        return association.get(parentObject);
+      if (association.getId().equals(aggregatedOid.getLocalId())) {
+        return association.get(parentAdapter);
       }
     }
   }

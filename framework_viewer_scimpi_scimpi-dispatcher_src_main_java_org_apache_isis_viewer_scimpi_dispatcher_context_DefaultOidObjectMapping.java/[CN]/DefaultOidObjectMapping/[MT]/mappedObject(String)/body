@@ -1,42 +1,31 @@
 {
-  final char type=id.charAt(0);
-  final String[] split=id.split("@");
-  final String oidData=split[1];
-  final String[] oidDataArray=oidData.split(":");
-  final String objectType=oidDataArray[1];
-  final String aggregatedId=split.length > 2 ? split[2] : null;
-  if (oidType == null) {
-    oidType=getPersistenceSession().getServices().get(0).getOid().getClass();
-  }
-  final ObjectSpecification spec=getSpecificationLoader().lookupByObjectType(objectType);
-  if ((type == 'T')) {
-    TransientObjectMapping mapping=sessionTransients.get(id);
+  final TypedOid typedOid=new OidMarshaller().unmarshal(oidStr,TypedOid.class);
+  final ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(typedOid.getObjectSpecId());
+  if (typedOid.isTransient()) {
+    TransientRootAdapterMapping mapping=sessionTransients.get(oidStr);
     if (mapping == null) {
-      mapping=requestTransients.get(id);
+      mapping=requestTransients.get(oidStr);
     }
     if (mapping == null) {
       final Object pojo=spec.createObject();
-      Oid oid=deString(objectType,oidData,State.TRANSIENT);
-      return getPersistenceSession().recreateAdapter(oid,pojo);
+      return getPersistenceSession().recreateAdapter(typedOid,pojo);
     }
     final ObjectAdapter mappedTransientObject=mapping.getObject();
-    LOG.debug("retrieved " + mappedTransientObject.getOid() + " for "+ id);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("retrieved " + mappedTransientObject.getOid() + " for "+ oidStr);
+    }
     return mappedTransientObject;
   }
- else {
-    try {
-      LOG.debug("decoding " + oidData);
-      if (aggregatedId != null) {
-        final RootOid parentOid=deString(objectType,oidData,State.PERSISTENT);
-        Oid oid=new AggregatedOid(parentOid,aggregatedId);
-        getPersistenceSession().loadObject(parentOid,spec);
-        return getAdapterManager().getAdapterFor(oid);
-      }
-      Oid oid=deString(objectType,oidData,State.PERSISTENT);
-      return getPersistenceSession().loadObject(oid,spec);
+  try {
+    if (typedOid instanceof AggregatedOid) {
+      AggregatedOid aggregatedOid=(AggregatedOid)typedOid;
+      final TypedOid parentOid=aggregatedOid.getParentOid();
+      getPersistenceSession().loadObject(parentOid);
+      return getAdapterManager().getAdapterFor(aggregatedOid);
     }
- catch (    final SecurityException e) {
-      throw new IsisException(e);
-    }
+    return getPersistenceSession().loadObject(typedOid);
+  }
+ catch (  final SecurityException e) {
+    throw new IsisException(e);
   }
 }

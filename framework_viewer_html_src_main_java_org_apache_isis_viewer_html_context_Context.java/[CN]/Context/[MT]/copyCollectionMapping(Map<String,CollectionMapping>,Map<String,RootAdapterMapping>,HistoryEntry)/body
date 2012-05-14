@@ -1,0 +1,13 @@
+{
+  final CollectionMapping coll=collectionMap.get(entry.id);
+  collMappingById.put(entry.id,coll);
+  LOG.debug("copied collection map for " + coll);
+  for (  String elementId : coll) {
+    final RootAdapterMapping objMapping=objectMap.get(elementId);
+    if (objMapping != null) {
+      objectMappingById.put(elementId,objMapping);
+      LOG.debug("copied object map " + elementId + " for "+ objMapping);
+      objMapping.updateVersion();
+    }
+  }
+}

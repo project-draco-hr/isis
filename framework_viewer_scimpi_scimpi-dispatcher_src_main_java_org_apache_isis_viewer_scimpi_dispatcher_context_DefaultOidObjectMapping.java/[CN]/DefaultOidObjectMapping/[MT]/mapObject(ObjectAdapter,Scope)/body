@@ -1,42 +1,11 @@
 {
-  ObjectAdapter adapter=inObject;
   final Oid oid=adapter.getOid();
-  if (oidType == null) {
-    oidType=oid.getClass();
-  }
   String encodedOid;
-  if (oid instanceof RootOid) {
-    RootOid ows=(RootOid)oid;
-    encodedOid=enString(ows);
-  }
- else   if (oid instanceof AggregatedOid) {
-    final AggregatedOid aoid=(AggregatedOid)oid;
-    final String aggregatedId=aoid.getLocalId();
-    final Oid parentOid=aoid.getParentOid();
-    adapter=getAdapterManager().getAdapterFor(parentOid);
-    encodedOid=enString(parentOid,aggregatedId);
-  }
- else   if (oid instanceof RootOidDefault) {
-    final RootOidDefault rootOidDefault=(RootOidDefault)oid;
-    encodedOid=rootOidDefault.getIdentifier();
-  }
- else {
-    throw new ScimpiException("Unsupported OID type " + oid);
-  }
-  final boolean isTransient=adapter.isTransient();
-  final String transferableId=(isTransient ? "T" : "P") + adapter.getSpecification().getFullIdentifier() + "@"+ encodedOid;
-  LOG.debug("encoded " + oid + " as "+ transferableId+ " ~ "+ encodedOid);
-  if (inObject.isTransient()) {
-    final TransientObjectMapping mapping=new TransientObjectMapping(inObject);
-    if (scope == Scope.REQUEST) {
-      requestTransients.put(transferableId,mapping);
-    }
- else     if (scope == Scope.INTERACTION || scope == Scope.SESSION) {
-      sessionTransients.put(transferableId,mapping);
-    }
- else {
-      throw new ScimpiException("Can't hold globally transient object");
-    }
+  encodedOid=oid.enString();
+  final String transferableId=encodedOid;
+  if (adapter.isTransient()) {
+    final TransientRootAdapterMapping mapping=new TransientRootAdapterMapping(adapter);
+    mappingFor(scope).put(transferableId,mapping);
   }
   return transferableId;
 }

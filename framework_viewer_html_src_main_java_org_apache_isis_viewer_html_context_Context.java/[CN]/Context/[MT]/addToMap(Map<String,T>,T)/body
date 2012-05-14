@@ -1,8 +1,17 @@
 {
-  max++;
-  final String id="" + max;
+  String id;
+  if (object instanceof RootAdapterMapping) {
+    RootAdapterMapping adapterMapping=(RootAdapterMapping)object;
+    id=adapterMapping.getOidStr();
+  }
+ else {
+    max++;
+    id="" + max;
+  }
   map.put(id,object);
   final String mapName=map == objectMap ? "object" : (map == collectionMap ? "collection" : "action");
-  LOG.debug("add " + object + " to "+ mapName+ " as #"+ id);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("add " + object + " to "+ mapName+ " as #"+ id);
+  }
   return id;
 }
