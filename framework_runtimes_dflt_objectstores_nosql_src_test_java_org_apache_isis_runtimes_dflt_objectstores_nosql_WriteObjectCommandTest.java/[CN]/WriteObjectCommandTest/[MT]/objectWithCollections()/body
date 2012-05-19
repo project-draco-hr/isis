@@ -1,11 +1,12 @@
 {
   context.checking(new Expectations(){
 {
-      one(commandContext).createStateWriter(epc1Adapter.getSpecification().getSpecId());
+      one(commandContext).createStateWriter(prnt1Adapter.getSpecification().getSpecId());
       will(returnValue(writer));
-      final RootOidDefault oid=RootOidDefault.create(epc1Adapter.getSpecification().getSpecId(),"1");
+      final RootOidDefault oid=RootOidDefault.create(prnt1Adapter.getSpecification().getSpecId(),"1");
       exactly(2).of(writer).writeOid(oid);
-      one(writer).writeField("homogeneousCollection","EPV:1|EPV:2|");
+      one(writer).writeField("name",null);
+      one(writer).writeField("homogeneousCollection","SMPL:1|SMPL:2|");
       one(writer).writeVersion(null,"2");
       one(writer).writeUser("username");
       one(writer).writeTime("1057");
@@ -14,6 +15,6 @@
     }
   }
 );
-  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,epc1Adapter);
+  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,prnt1Adapter);
   command.execute(commandContext);
 }

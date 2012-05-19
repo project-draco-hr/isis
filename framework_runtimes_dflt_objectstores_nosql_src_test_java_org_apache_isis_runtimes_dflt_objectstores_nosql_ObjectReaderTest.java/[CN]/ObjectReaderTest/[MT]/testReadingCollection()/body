@@ -2,7 +2,7 @@
   context.checking(new Expectations(){
 {
       one(reader2).readOid();
-      will(returnValue("EPC:5"));
+      will(returnValue("PRNT:5"));
       one(reader2).readEncrytionType();
       will(returnValue("etc1"));
       one(reader2).readVersion();
@@ -12,20 +12,24 @@
       one(reader2).readTime();
       will(returnValue("1020"));
       one(versionCreator).version("3","username","1020");
+      one(reader2).readField("name");
+      will(returnValue(null));
+      one(reader2).readField("children");
+      will(returnValue(null));
       one(reader2).readField("heterogeneousCollection");
       will(returnValue(null));
       one(reader2).readField("homogeneousCollection");
-      will(returnValue("EPV:3|EPV:4|"));
+      will(returnValue("SMPL:3|SMPL:4|"));
     }
   }
 );
   final ObjectAdapter readObject=objectReader.load(reader2,versionCreator,dataEncrypter);
   assertEquals(oid5,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
-  final ExamplePojoWithCollections pojo=(ExamplePojoWithCollections)readObject.getObject();
-  final List<ExamplePojoWithValues> collection2=pojo.getHomogeneousCollection();
+  final ParentEntity pojo=(ParentEntity)readObject.getObject();
+  final List<SimpleEntity> collection2=pojo.getHomogeneousCollection();
   assertEquals(2,collection2.size());
-  assertThat(collection2.get(0),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
-  assertThat(collection2.get(1),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
+  assertThat(collection2.get(0),CoreMatchers.instanceOf(SimpleEntity.class));
+  assertThat(collection2.get(1),CoreMatchers.instanceOf(SimpleEntity.class));
   context.assertIsSatisfied();
 }

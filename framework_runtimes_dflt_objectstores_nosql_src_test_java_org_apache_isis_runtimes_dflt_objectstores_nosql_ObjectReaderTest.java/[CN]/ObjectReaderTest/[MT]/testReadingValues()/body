@@ -3,7 +3,7 @@
   context.checking(new Expectations(){
 {
       one(reader1).readOid();
-      will(returnValue("EPV:3"));
+      will(returnValue("SMPL:3"));
       one(reader1).readEncrytionType();
       will(returnValue("etc1"));
       one(reader1).readVersion();
@@ -20,7 +20,7 @@
   final ObjectAdapter readObject=objectReader.load(reader1,versionCreator,dataEncrypter);
   assertEquals(oid3,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
-  final ExamplePojoWithValues pojo=(ExamplePojoWithValues)readObject.getObject();
+  final SimpleEntity pojo=(SimpleEntity)readObject.getObject();
   assertEquals("Fred Smith",pojo.getName());
   assertEquals(34,pojo.getSize());
   context.assertIsSatisfied();

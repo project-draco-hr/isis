@@ -2,7 +2,7 @@
   context.checking(new Expectations(){
 {
       one(reader2).readOid();
-      will(returnValue("EPR:4"));
+      will(returnValue("RFCG:4"));
       one(reader2).readEncrytionType();
       will(returnValue("etc1"));
       one(reader2).readVersion();
@@ -13,7 +13,7 @@
       will(returnValue("1020"));
       one(versionCreator).version("3","username","1020");
       one(reader2).readField("reference");
-      will(returnValue("EPV:3"));
+      will(returnValue("SMPL:3"));
       one(reader2).readAggregate("aggregatedReference");
       will(returnValue(null));
     }
@@ -22,8 +22,8 @@
   final ObjectAdapter readObject=objectReader.load(reader2,versionCreator,dataEncrypter);
   assertEquals(oid4,readObject.getOid());
   assertEquals(ResolveState.RESOLVED,readObject.getResolveState());
-  final ExamplePojoWithReferences pojo=(ExamplePojoWithReferences)readObject.getObject();
+  final ReferencingEntity pojo=(ReferencingEntity)readObject.getObject();
   assertEquals(null,pojo.getAggregatedReference());
-  assertThat(pojo.getReference(),CoreMatchers.instanceOf(ExamplePojoWithValues.class));
+  assertThat(pojo.getReference(),CoreMatchers.instanceOf(SimpleEntity.class));
   context.assertIsSatisfied();
 }

@@ -1,17 +1,19 @@
 {
   final Set<Object> objects=Sets.newLinkedHashSet();
-  iswf.fixtures.epc1.getHomogeneousCollection().add(iswf.fixtures.epv1);
-  iswf.fixtures.epc1.getHomogeneousCollection().add(iswf.fixtures.epv2);
-  objects.add(iswf.fixtures.epc1);
-  objects.add(iswf.fixtures.epv1);
-  objects.add(iswf.fixtures.epv2);
+  iswf.fixtures.prnt1.getHomogeneousCollection().add(iswf.fixtures.smpl1);
+  iswf.fixtures.prnt1.getHomogeneousCollection().add(iswf.fixtures.smpl2);
+  objects.add(iswf.fixtures.prnt1);
+  objects.add(iswf.fixtures.smpl1);
+  objects.add(iswf.fixtures.smpl2);
   final StringWriter out=new StringWriter();
   persistor.save(objects,out);
   final String actual=out.toString().replaceAll("\r\n","\n");
-  final String expected1=ExamplePojoWithCollections.class.getName() + "#2\n  heterogeneousCollection: \n  homogeneousCollection: " + ExamplePojoWithValues.class.getName()+ "#3 "+ ExamplePojoWithValues.class.getName()+ "#4 "+ "\n";
-  final String expected2=ExamplePojoWithValues.class.getName() + "#3\n  date: 08-Mar-2010 01:00 UTC\n  name: Fred Smith\n";
-  final String expected3=ExamplePojoWithValues.class.getName() + "#4\n  date: 09-Apr-2011 02:10 UTC\n  name: Joe Bloggs\n";
-  assertThat(actual.replaceAll("\n","###"),IsisMatchers.contains(expected1.replaceAll("\n","###")));
+  final String expected1a=ParentEntity.class.getName() + "#2\n";
+  final String expected1b="heterogeneousCollection: \n  homogeneousCollection: " + SimpleEntity.class.getName() + "#3 "+ SimpleEntity.class.getName()+ "#4 "+ "\n";
+  final String expected2=SimpleEntity.class.getName() + "#3\n  date: 08-Mar-2010 01:00 UTC\n  name: Fred Smith\n";
+  final String expected3=SimpleEntity.class.getName() + "#4\n  date: 09-Apr-2011 02:10 UTC\n  name: Joe Bloggs\n";
+  assertThat(actual.replaceAll("\n","###"),IsisMatchers.contains(expected1a.replaceAll("\n","###")));
+  assertThat(actual.replaceAll("\n","###"),IsisMatchers.contains(expected1b.replaceAll("\n","###")));
   assertThat(actual,IsisMatchers.contains(expected2));
   assertThat(actual,IsisMatchers.contains(expected3));
 }

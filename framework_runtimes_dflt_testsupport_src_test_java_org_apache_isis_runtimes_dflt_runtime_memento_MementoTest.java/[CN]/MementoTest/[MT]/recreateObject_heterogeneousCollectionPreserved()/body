@@ -1,13 +1,13 @@
 {
   recreatedAdapter=mementoForEpc1.recreateObject();
-  final ExamplePojoWithCollections recreatedObject=(ExamplePojoWithCollections)recreatedAdapter.getObject();
-  final List<ExamplePojo> hetrogenousCollection=recreatedObject.getHeterogeneousCollection();
+  final ParentEntity recreatedObject=(ParentEntity)recreatedAdapter.getObject();
+  final List<BaseEntity> hetrogenousCollection=recreatedObject.getHeterogeneousCollection();
   assertNotNull(hetrogenousCollection);
   assertThat(hetrogenousCollection.size(),is(2));
-  final ExamplePojoWithValues firstObj=(ExamplePojoWithValues)hetrogenousCollection.get(0);
+  final SimpleEntity firstObj=(SimpleEntity)hetrogenousCollection.get(0);
   assertThat(firstObj.getName(),is("Fred"));
-  final ExamplePojoWithReferences secondObj=(ExamplePojoWithReferences)hetrogenousCollection.get(1);
-  final ExamplePojoWithValues reference1=secondObj.getReference();
+  final ReferencingEntity secondObj=(ReferencingEntity)hetrogenousCollection.get(1);
+  final SimpleEntity reference1=secondObj.getReference();
   assertThat(reference1.getName(),is("Fred"));
   assertSame(firstObj,reference1);
 }

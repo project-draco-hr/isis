@@ -14,10 +14,10 @@
     }
   }
 );
-  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(ExamplePojoWithValues.class);
+  final ObjectSpecification specification=IsisContext.getSpecificationLoader().loadSpecification(SimpleEntity.class);
   final ObjectAdapter readObject=IsisContext.getPersistenceSession().recreateAdapter(specification,RootOidDefault.create(ObjectSpecId.of("EVP"),"" + 4));
   objectReader.update(reader1,versionCreator,dataEncrypter,readObject);
-  final ExamplePojoWithValues pojo=(ExamplePojoWithValues)readObject.getObject();
+  final SimpleEntity pojo=(SimpleEntity)readObject.getObject();
   assertEquals("Fred Smith",pojo.getName());
   assertEquals(34,pojo.getSize());
   context.assertIsSatisfied();

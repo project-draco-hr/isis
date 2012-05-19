@@ -2,7 +2,7 @@
   resetPersistenceStore();
   boolean hasInstances=getStore().hasInstances(epvSpecification);
   assertFalse(hasInstances);
-  final ExamplePojoWithValues epv2=iswf.fixtures.epv2;
+  final SimpleEntity epv2=iswf.fixtures.smpl2;
   epv2.setName("foo");
   epv2.setDate(new Date());
   epv2.setNullable(1234567890L);
@@ -13,7 +13,7 @@
   assertEquals(1,retrievedInstance.length);
   final ObjectAdapter retrievedAdapter=retrievedInstance[0];
   assertNotSame(epv2Adapter,retrievedAdapter);
-  assertEquals(((ExamplePojoWithValues)epv2Adapter.getObject()).getName(),((ExamplePojoWithValues)retrievedAdapter.getObject()).getName());
+  assertEquals(((SimpleEntity)epv2Adapter.getObject()).getName(),((SimpleEntity)retrievedAdapter.getObject()).getName());
   assertEquals(epv2Adapter.getOid(),retrievedAdapter.getOid());
   retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,"some other title"));
   assertEquals(0,retrievedInstance.length);

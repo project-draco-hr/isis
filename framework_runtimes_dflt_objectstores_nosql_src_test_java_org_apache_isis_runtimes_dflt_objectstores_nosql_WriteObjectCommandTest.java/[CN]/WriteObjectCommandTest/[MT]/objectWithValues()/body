@@ -1,9 +1,9 @@
 {
   context.checking(new Expectations(){
 {
-      one(commandContext).createStateWriter(epv1Adapter.getSpecification().getSpecId());
+      one(commandContext).createStateWriter(smpl1Adapter.getSpecification().getSpecId());
       will(returnValue(writer));
-      final RootOidDefault oid=RootOidDefault.create(epv1Adapter.getSpecification().getSpecId(),"1");
+      final RootOidDefault oid=RootOidDefault.create(smpl1Adapter.getSpecification().getSpecId(),"1");
       exactly(2).of(writer).writeOid(oid);
       one(writer).writeField("name","ENCFred Smith");
       one(writer).writeField("size","ENC108");
@@ -17,6 +17,6 @@
     }
   }
 );
-  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,epv1Adapter);
+  final WriteObjectCommand command=new WriteObjectCommand(WriteObjectCommand.Mode.NON_UPDATE,versionCreator,dataEncrypter,smpl1Adapter);
   command.execute(commandContext);
 }

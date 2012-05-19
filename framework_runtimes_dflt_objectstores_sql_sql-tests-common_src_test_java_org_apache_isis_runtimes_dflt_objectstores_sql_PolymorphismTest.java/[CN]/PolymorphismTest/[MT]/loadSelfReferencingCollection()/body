@@ -1,16 +1,16 @@
 {
-  final PolySelfRefClass polySelfRefParent=polyTestClass.getPolySelfRefClass();
-  final List<PolySelfRefClass> list=polySelfRefParent.getPolySelfRefClasses();
+  final SelfReferencingEntity polySelfRefParent=referencingPolyTypesEntity.getPolySelfRefClass();
+  final List<SelfReferencingEntity> list=polySelfRefParent.getPolySelfRefClasses();
   assertEquals(2,list.size());
-  PolySelfRefClass polySelfRefChild1=null;
-  for (  final PolySelfRefClass polySelfRefClass : list) {
-    if (polySelfRefClass.getString().equals(CHILD_1)) {
-      polySelfRefChild1=polySelfRefClass;
+  SelfReferencingEntity polySelfRefChild1=null;
+  for (  final SelfReferencingEntity selfReferencingEntity : list) {
+    if (selfReferencingEntity.getString().equals(CHILD_1)) {
+      polySelfRefChild1=selfReferencingEntity;
     }
   }
   assertNotNull(polySelfRefChild1);
   assertEquals(CHILD_1,polySelfRefChild1.title());
-  List<PolySelfRefClass> list2=polySelfRefChild1.getPolySelfRefClasses();
+  List<SelfReferencingEntity> list2=polySelfRefChild1.getPolySelfRefClasses();
   factory.resolve(polySelfRefChild1);
   list2=polySelfRefChild1.getPolySelfRefClasses();
   assertEquals(1,list2.size());

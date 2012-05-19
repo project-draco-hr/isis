@@ -1,16 +1,16 @@
 {
   resetPersistenceStore();
-  ObjectAdapter adapter=iswf.persist(iswf.fixtures.epv2);
+  ObjectAdapter adapter=iswf.persist(iswf.fixtures.smpl2);
   final RootOid oid=(RootOid)adapter.getOid();
   iswf.bounceSystem();
   adapter=iswf.reload(oid);
-  ExamplePojoWithValues epv=(ExamplePojoWithValues)adapter.getObject();
+  SimpleEntity epv=(SimpleEntity)adapter.getObject();
   epv.setName("changed");
   iswf.bounceSystem();
   ObjectAdapter[] retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,adapter.titleString()));
   assertEquals(1,retrievedInstance.length);
   final ObjectAdapter retrievedAdapter=retrievedInstance[0];
   assertNotSame(adapter,retrievedAdapter);
-  assertEquals(((ExamplePojoWithValues)adapter.getObject()).getName(),((ExamplePojoWithValues)retrievedAdapter.getObject()).getName());
+  assertEquals(((SimpleEntity)adapter.getObject()).getName(),((SimpleEntity)retrievedAdapter.getObject()).getName());
   assertEquals(adapter.getOid(),retrievedAdapter.getOid());
 }
