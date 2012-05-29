@@ -1,0 +1,11 @@
+{
+  return new IsisSystemWithFixtures.ListenerAdapter(){
+    @Override public void postSetupSystem(    boolean firstTime) throws Exception {
+      final OpenJpaObjectStore objectStore=(OpenJpaObjectStore)IsisContext.getPersistenceSession().getObjectStore();
+      Connection connection=objectStore.getConnection();
+      Statement statement=connection.createStatement();
+      statement.executeUpdate("DELETE FROM JPAPRIMITIVEVALUEDENTITY");
+    }
+  }
+;
+}
