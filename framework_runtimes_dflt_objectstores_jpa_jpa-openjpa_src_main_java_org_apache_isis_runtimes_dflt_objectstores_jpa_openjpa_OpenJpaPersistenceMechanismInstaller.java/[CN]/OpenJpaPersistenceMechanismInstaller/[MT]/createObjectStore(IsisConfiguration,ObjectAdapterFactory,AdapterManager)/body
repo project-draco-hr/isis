@@ -1,0 +1,18 @@
+{
+  if (entityManagerFactory == null) {
+    Map<String,String> props=Maps.newHashMap();
+    props.put("openjpa.jdbc.SynchronizeMappings","buildSchema");
+    props.put("openjpa.ConnectionURL","jdbc:hsqldb:db/test");
+    props.put("openjpa.ConnectionDriverName","org.hsqldb.jdbcDriver");
+    props.put("openjpa.ConnectionUserName","sa");
+    props.put("openjpa.ConnectionPassword","");
+    props.put("openjpa.Log","DefaultLevel=WARN, Tool=INFO");
+    props.put("openjpa.RuntimeUnenhancedClasses","supported");
+    final String typeList=entityTypeList();
+    props.put("openjpa.MetaDataFactory","org.apache.openjpa.persistence.jdbc.PersistenceMappingFactory(types=" + typeList + ")");
+    entityManagerFactory=javax.persistence.Persistence.createEntityManagerFactory(null,props);
+    namedQueryByName=Collections.unmodifiableMap(catalogNamedQueries());
+  }
+  final OpenJpaObjectStore objectStore=new OpenJpaObjectStore(configuration,adapterFactory,adapterManager,entityManagerFactory,namedQueryByName);
+  return objectStore;
+}

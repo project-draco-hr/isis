@@ -1,0 +1,14 @@
+{
+  ensureOpened();
+  ensureInTransaction();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("hasInstances: class=" + specification.getFullIdentifier());
+  }
+  if (!specification.persistability().isPersistable()) {
+    LOG.warn("hasInstances: trying to run for non-persistent class " + specification);
+    return false;
+  }
+  final Query query=QueryUtil.createQuery(getEntityManager(),"o","select o.id",specification,null);
+  query.setMaxResults(1);
+  return !query.getResultList().isEmpty();
+}

@@ -1,0 +1,12 @@
+{
+  final StringBuilder buf=new StringBuilder();
+  final Collection<ObjectSpecification> allSpecifications=getSpecificationLoader().allSpecifications();
+  for (  ObjectSpecification objSpec : allSpecifications) {
+    if (objSpec.containsFacet(JpaEntityFacet.class)) {
+      final String fqcn=objSpec.getFullIdentifier();
+      buf.append(fqcn).append(";");
+    }
+  }
+  final String typeList=buf.toString();
+  return typeList;
+}

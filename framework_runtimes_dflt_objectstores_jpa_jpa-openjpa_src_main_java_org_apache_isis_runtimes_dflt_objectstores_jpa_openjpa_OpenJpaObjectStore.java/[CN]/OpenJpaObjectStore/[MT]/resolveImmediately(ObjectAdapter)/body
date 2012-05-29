@@ -1,0 +1,41 @@
+{
+  ensureOpened();
+  ensureInTransaction();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("resolveImmediately; oid=" + adapter.getOid().enString());
+  }
+  if (adapter.getResolveState().isResolved()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("; already resolved - ignoring");
+    }
+    return;
+  }
+  if (!adapter.isPersistent()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("; not persistent - ignoring");
+    }
+    return;
+  }
+  final Oid oid=adapter.getOid();
+  if (oid instanceof AggregatedOid) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("; aggregated - resolving parent");
+    }
+    final AggregatedOid aggregatedOid=(AggregatedOid)oid;
+    final TypedOid parentOid=aggregatedOid.getParentOid();
+    final ObjectAdapter parentAdapter=this.getObject(parentOid);
+    resolveImmediately(parentAdapter);
+    return;
+  }
+  JpaPropertyUtils.setPropertyIdFromOid(adapter,getAdapterFactory());
+  try {
+    final Object domainObject=adapter.getObject();
+    getEntityManager().refresh(domainObject);
+  }
+ catch (  final RuntimeException e) {
+    throw new ObjectNotFoundException(adapter.getOid(),e);
+  }
+  if (adapter.getObject() == null) {
+    throw new ObjectNotFoundException(adapter.getOid());
+  }
+}
