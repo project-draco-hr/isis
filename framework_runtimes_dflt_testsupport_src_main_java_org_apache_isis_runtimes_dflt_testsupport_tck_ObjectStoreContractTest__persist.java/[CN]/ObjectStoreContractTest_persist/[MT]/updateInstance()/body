@@ -7,9 +7,9 @@
   SimpleEntity epv=(SimpleEntity)adapter.getObject();
   epv.setName("changed");
   iswf.bounceSystem();
-  ObjectAdapter[] retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,adapter.titleString()));
-  assertEquals(1,retrievedInstance.length);
-  final ObjectAdapter retrievedAdapter=retrievedInstance[0];
+  List<ObjectAdapter> retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,adapter.titleString()));
+  assertEquals(1,retrievedInstance.size());
+  final ObjectAdapter retrievedAdapter=retrievedInstance.get(0);
   assertNotSame(adapter,retrievedAdapter);
   assertEquals(((SimpleEntity)adapter.getObject()).getName(),((SimpleEntity)retrievedAdapter.getObject()).getName());
   assertEquals(adapter.getOid(),retrievedAdapter.getOid());

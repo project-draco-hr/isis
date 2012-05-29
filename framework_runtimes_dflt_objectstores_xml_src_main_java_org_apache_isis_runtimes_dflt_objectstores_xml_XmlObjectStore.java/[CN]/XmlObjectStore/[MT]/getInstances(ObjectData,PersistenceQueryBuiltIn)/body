@@ -1,20 +1,21 @@
 {
   final ObjectDataVector data=dataManager.getInstances(patternData);
-  final ObjectAdapter[] instances=new ObjectAdapter[data.size()];
-  int count=0;
+  final List<ObjectAdapter> instances=Lists.newArrayList();
   for (int i=0; i < data.size(); i++) {
     final ObjectData instanceData=data.element(i);
-    LOG.debug("instance data " + instanceData);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("instance data " + instanceData);
+    }
     final RootOid oid=instanceData.getRootOid();
     final ObjectSpecification spec=specFor(instanceData);
-    final ObjectAdapter instance=getPersistenceSession().recreateAdapter(spec,oid);
-    LOG.debug("recreated instance " + instance);
-    initObject(instance,instanceData);
-    if (persistenceQuery == null || persistenceQuery.matches(instance)) {
-      instances[count++]=instance;
+    final ObjectAdapter adapter=getPersistenceSession().recreateAdapter(spec,oid);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("recreated instance " + adapter);
+    }
+    initObject(adapter,instanceData);
+    if (persistenceQuery == null || persistenceQuery.matches(adapter)) {
+      instances.add(adapter);
     }
   }
-  final ObjectAdapter[] array=new ObjectAdapter[count];
-  System.arraycopy(instances,0,array,0,count);
-  return array;
+  return instances;
 }

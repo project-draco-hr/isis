@@ -2,11 +2,9 @@
   final ObjectSpecification specification=query.getSpecification();
   final DatabaseConnector connector=connectionPool.acquire();
   try {
-    final Vector<ObjectAdapter> matchingInstances=new Vector<ObjectAdapter>();
+    final List<ObjectAdapter> matchingInstances=Lists.newArrayList();
     addSpecQueryInstances(specification,connector,query,matchingInstances);
-    final ObjectAdapter[] instanceArray=new ObjectAdapter[matchingInstances.size()];
-    matchingInstances.copyInto(instanceArray);
-    return instanceArray;
+    return matchingInstances;
   }
   finally {
     connectionPool.release(connector);
