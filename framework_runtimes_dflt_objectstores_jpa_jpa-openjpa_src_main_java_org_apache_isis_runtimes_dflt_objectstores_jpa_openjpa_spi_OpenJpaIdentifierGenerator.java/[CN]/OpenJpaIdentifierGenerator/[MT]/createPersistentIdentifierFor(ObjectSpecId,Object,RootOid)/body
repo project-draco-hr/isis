@@ -1,10 +1,7 @@
 {
-  final ObjectAdapter adapter=adapterMap.adapterFor(pojo);
-  final OneToOneAssociation idPropertyFor=JpaPropertyUtils.getIdPropertyFor(adapter.getSpecification());
-  if (idPropertyFor == null) {
-    throw new IllegalStateException("cannot find id property for pojo");
+  final Object identifier=getPersistenceUnitUtil().getIdentifier(pojo);
+  if (identifier == null) {
+    return "1";
   }
-  final PropertyOrCollectionAccessorFacet facet=idPropertyFor.getFacet(PropertyOrCollectionAccessorFacet.class);
-  final Object propertyValue=facet.getProperty(adapter);
-  return propertyValue.toString();
+  return identifier.toString();
 }

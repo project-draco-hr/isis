@@ -1,0 +1,14 @@
+{
+  configuration.add("foo.foz","fozValue");
+  configuration.add("foo.faz","fazValue");
+  configuration.add("bar.baz","bazValue");
+  final IsisConfiguration subset=configuration.createSubset("foo");
+  assertThat(subset.getString("foz"),is("fozValue"));
+  assertThat(subset.getString("faz"),is("fazValue"));
+  final Iterator<String> iterator=subset.iterator();
+  assertThat(iterator.hasNext(),is(true));
+  iterator.next();
+  assertThat(iterator.hasNext(),is(true));
+  iterator.next();
+  assertThat(iterator.hasNext(),is(false));
+}

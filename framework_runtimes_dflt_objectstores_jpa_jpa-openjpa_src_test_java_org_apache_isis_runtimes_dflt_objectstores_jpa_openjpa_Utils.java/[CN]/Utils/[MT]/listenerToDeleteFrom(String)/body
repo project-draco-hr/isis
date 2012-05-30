@@ -1,0 +1,16 @@
+{
+  return new IsisSystemWithFixtures.ListenerAdapter(){
+    @Override public void postSetupSystem(    boolean firstTime) throws Exception {
+      final Statement statement=createStatement();
+      for (      String table : tables) {
+        statement.executeUpdate("DELETE FROM " + table);
+      }
+    }
+    private Statement createStatement() throws SQLException {
+      final OpenJpaObjectStore objectStore=(OpenJpaObjectStore)IsisContext.getPersistenceSession().getObjectStore();
+      Connection connection=objectStore.getConnection();
+      return connection.createStatement();
+    }
+  }
+;
+}

@@ -1,12 +1,5 @@
 {
-  if (entityManagerFactory == null) {
-    final IsisConfiguration openJpaConfig=configuration.createSubset("isis.persistor.openjpa.impl");
-    final Map<String,String> props=openJpaConfig.asMap();
-    final String typeList=entityTypeList();
-    props.put("openjpa.MetaDataFactory","org.apache.openjpa.persistence.jdbc.PersistenceMappingFactory(types=" + typeList + ")");
-    entityManagerFactory=javax.persistence.Persistence.createEntityManagerFactory(null,props);
-    namedQueryByName=Collections.unmodifiableMap(catalogNamedQueries());
-  }
+  createEntityManagerFactoryIfRequired(configuration);
   final OpenJpaObjectStore objectStore=new OpenJpaObjectStore(configuration,adapterFactory,adapterManager,entityManagerFactory,namedQueryByName);
   return objectStore;
 }

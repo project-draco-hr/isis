@@ -1,0 +1,13 @@
+{
+  if (entityManagerFactory != null) {
+    return;
+  }
+  final IsisConfiguration openJpaConfig=configuration.createSubset("isis.persistor.openjpa.impl");
+  final Map<String,String> props=openJpaConfig.asMap();
+  final String typeList=entityTypeList();
+  props.put("openjpa.MetaDataFactory","org.apache.openjpa.persistence.jdbc.PersistenceMappingFactory(types=" + typeList + ")");
+  entityManagerFactory=javax.persistence.Persistence.createEntityManagerFactory(null,props);
+  OpenJPAEntityManagerFactorySPI emfSpi=(OpenJPAEntityManagerFactorySPI)entityManagerFactory;
+  emfSpi.addLifecycleListener(new IsisLifecycleListener(),(Class[])null);
+  namedQueryByName=Collections.unmodifiableMap(catalogNamedQueries());
+}
