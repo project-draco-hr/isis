@@ -5,13 +5,13 @@
   entity=repo.newEntity();
   entity.setId(2);
   iswf.commitTran();
+  iswf.beginTran();
+  List<PrimitiveValuedEntity> list=repo.list();
+  assertThat(list.size(),is(2));
+  iswf.commitTran();
   iswf.bounceSystem();
   iswf.beginTran();
-  final List<PrimitiveValuedEntity> list=repo.list();
+  list=repo.list();
   assertThat(list.size(),is(2));
-  ObjectAdapter adapter=iswf.adapterFor(list.get(0));
-  assertThat(adapter.getOid().enString(),is("PRMV:1"));
-  adapter=iswf.adapterFor(list.get(1));
-  assertThat(adapter.getOid().enString(),is("PRMV:2"));
   iswf.commitTran();
 }
