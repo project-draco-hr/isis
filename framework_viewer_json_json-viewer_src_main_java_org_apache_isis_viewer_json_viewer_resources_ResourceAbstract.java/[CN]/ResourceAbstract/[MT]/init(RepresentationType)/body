@@ -1,5 +1,8 @@
 {
-  if (!IsisContext.inSession() || getAuthenticationSession() == null) {
+  if (!IsisContext.inSession()) {
+    throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED);
+  }
+  if (getAuthenticationSession() == null) {
     throw JsonApplicationException.create(HttpStatusCode.UNAUTHORIZED);
   }
   this.resourceContext=new ResourceContext(representationType,httpHeaders,uriInfo,request,httpServletRequest,httpServletResponse,securityContext,getOidStringifier(),getLocalization(),getAuthenticationSession(),getPersistenceSession(),getAdapterManager(),getSpecificationLoader(),getConfiguration());
