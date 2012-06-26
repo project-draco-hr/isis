@@ -4,5 +4,10 @@
   }
   ParentedOid parentedOid=(ParentedOid)oid;
   final Oid parentOid=parentedOid.getParentOid();
-  return objectAdapterLookup.getAdapterFor(parentOid);
+  ObjectAdapter parentAdapter=objectAdapterLookup.getAdapterFor(parentOid);
+  if (parentAdapter == null) {
+    final Oid parentOidNowPersisted=IsisContext.getPersistenceSession().remappedFrom(parentOid);
+    parentAdapter=objectAdapterLookup.getAdapterFor(parentOidNowPersisted);
+  }
+  return parentAdapter;
 }
