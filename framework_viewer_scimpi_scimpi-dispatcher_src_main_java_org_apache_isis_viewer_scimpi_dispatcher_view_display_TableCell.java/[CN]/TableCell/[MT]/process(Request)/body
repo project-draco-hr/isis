@@ -1,6 +1,7 @@
 {
   final String id=request.getOptionalProperty(OBJECT);
   final String fieldName=request.getRequiredProperty(FIELD);
+  final String linkView=request.getOptionalProperty(LINK);
   String className=request.getOptionalProperty(CLASS);
   className=className == null ? "" : " class=\"" + className + "\"";
   final ObjectAdapter object=request.getContext().getMappedObjectOrVariable(id,ELEMENT);
@@ -14,6 +15,10 @@
     final String source=fieldReference == null ? "" : request.getContext().mapObject(fieldReference,Scope.REQUEST);
     final String name=request.getOptionalProperty(RESULT_NAME,fieldName);
     request.getContext().addVariable(name,Request.getEncoder().encoder(source),Scope.REQUEST);
+    if (linkView != null) {
+      String linkId=request.getContext().mapObject(object,Scope.REQUEST);
+      request.appendHtml("<a href=\"" + linkView + "?"+ RequestContext.RESULT+ "="+ linkId+ "\">");
+    }
     request.pushNewBuffer();
     request.processUtilCloseTag();
     final String buffer=request.popBuffer();
@@ -22,6 +27,9 @@
     }
  else {
       request.appendHtml(buffer);
+    }
+    if (linkView != null) {
+      request.appendHtml("</a>");
     }
   }
  else {
