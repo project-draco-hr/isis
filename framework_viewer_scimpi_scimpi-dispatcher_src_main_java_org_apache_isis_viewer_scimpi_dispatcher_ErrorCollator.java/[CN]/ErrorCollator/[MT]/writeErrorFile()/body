@@ -1,0 +1,19 @@
+{
+  LOG.error(message + "\n" + debugText.toString());
+  PrintWriter writer;
+  try {
+    final String directory=IsisContext.getConfiguration().getString(ConfigurationConstants.ROOT + "scimpi.error-snapshots",".");
+    File dir=new File(directory);
+    if (!dir.exists()) {
+      dir.mkdirs();
+    }
+    writer=new PrintWriter(new File(dir,"error_" + errorRef + ".html"));
+    final DebugWriter writer2=new DebugWriter(writer,true);
+    writer2.concat(debugHtml);
+    writer2.close();
+    writer.close();
+  }
+ catch (  final FileNotFoundException e) {
+    LOG.error("Failed to archive error page",e);
+  }
+}

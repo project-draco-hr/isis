@@ -1,0 +1,19 @@
+{
+  DebugBuilder debug=error.getDebug();
+  error.message(e);
+  error.message(ex);
+  final Identifier identifier=((ForbiddenException)ex).getIdentifier();
+  final List<String> roles=((ForbiddenException)ex).getRoles();
+  final StringBuffer roleList=new StringBuffer();
+  for (  final String role : roles) {
+    if (roleList.length() > 0) {
+      roleList.append("|");
+    }
+    roleList.append(role);
+  }
+  debug.appendln("Class",identifier.toClassIdentityString() + ":" + roleList);
+  debug.appendln("Member",identifier.toClassAndNameIdentityString() + ":" + roleList);
+  debug.appendln("Other",identifier.toFullIdentityString() + ":" + roleList);
+  error.compileError(context);
+  context.raiseError(403,error);
+}
