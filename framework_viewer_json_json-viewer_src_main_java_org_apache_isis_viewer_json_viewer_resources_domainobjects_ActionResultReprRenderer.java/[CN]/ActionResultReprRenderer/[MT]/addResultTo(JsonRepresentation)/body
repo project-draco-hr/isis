@@ -1,0 +1,30 @@
+{
+  final ObjectSpecification returnType=this.action.getReturnType();
+  if (returnType.getCorrespondingClass() == void.class) {
+    return ResultType.VOID;
+  }
+  final CollectionFacet collectionFacet=returnType.getFacet(CollectionFacet.class);
+  if (collectionFacet != null) {
+    final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
+    final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.LIST);
+    final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(resourceContext,null,result);
+    renderer.with(collectionAdapters).withReturnType(action.getReturnType()).withElementType(returnedAdapter.getElementSpecification());
+    renderer.render();
+    return ResultType.LIST;
+  }
+  final EncodableFacet encodableFacet=returnType.getFacet(EncodableFacet.class);
+  if (encodableFacet != null) {
+    final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.SCALAR_VALUE);
+    final ScalarValueReprRenderer renderer=(ScalarValueReprRenderer)factory.newRenderer(resourceContext,null,result);
+    renderer.with(returnedAdapter).withReturnType(action.getReturnType());
+    renderer.render();
+    return ResultType.SCALAR_VALUE;
+  }
+{
+    final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.DOMAIN_OBJECT);
+    final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(resourceContext,null,result);
+    renderer.with(returnedAdapter).includesSelf();
+    renderer.render();
+    return ResultType.DOMAIN_OBJECT;
+  }
+}

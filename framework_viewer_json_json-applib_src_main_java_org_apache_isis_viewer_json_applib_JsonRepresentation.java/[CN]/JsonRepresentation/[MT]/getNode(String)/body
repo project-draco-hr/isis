@@ -1,0 +1,26 @@
+{
+  JsonNode jsonNode=this.jsonNode;
+  final String[] keys=path.split("\\.");
+  for (  final String key : keys) {
+    final PathNode pathNode=PathNode.parse(key);
+    if (!pathNode.getKey().isEmpty()) {
+      jsonNode=jsonNode.path(pathNode.getKey());
+    }
+ else {
+    }
+    if (jsonNode.isNull()) {
+      return jsonNode;
+    }
+    if (!pathNode.hasCriteria()) {
+      continue;
+    }
+    if (!jsonNode.isArray()) {
+      return NullNode.getInstance();
+    }
+    jsonNode=matching(jsonNode,pathNode);
+    if (jsonNode.isNull()) {
+      return jsonNode;
+    }
+  }
+  return jsonNode;
+}

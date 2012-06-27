@@ -1,0 +1,12 @@
+{
+  httpStatusCode=getHttpStatusCodeIfAny(ex);
+  this.message=ex.getMessage();
+  final StackTraceElement[] stackTraceElements=ex.getStackTrace();
+  for (  final StackTraceElement stackTraceElement : stackTraceElements) {
+    this.stackTrace.add(format(stackTraceElement));
+  }
+  final Throwable cause=ex.getCause();
+  if (cause != null && cause != ex) {
+    this.causedBy=new ExceptionPojo(cause);
+  }
+}

@@ -1,0 +1,28 @@
+{
+  final ObjectSpecification objectSpec=objectAdapter.getSpecification();
+  final List<ObjectAssociation> properties=objectSpec.getAssociations(ObjectAssociationFilters.PROPERTIES);
+  boolean allOk=true;
+  for (  final ObjectAssociation association : properties) {
+    final OneToOneAssociation property=(OneToOneAssociation)association;
+    final ObjectSpecification propertySpec=property.getSpecification();
+    final String id=property.getId();
+    final JsonRepresentation propertyRepr=propertiesList.getRepresentation("[id=%s]",id);
+    final JsonRepresentation valueRepr=propertyRepr.getRepresentation("value");
+    final ObjectAdapter valueAdapter=objectAdapterFor(resourceContext,propertySpec,valueRepr);
+    final Consent consent=property.isAssociationValid(objectAdapter,valueAdapter);
+    if (consent.isAllowed()) {
+      try {
+        property.set(objectAdapter,valueAdapter);
+      }
+ catch (      final IllegalArgumentException ex) {
+        propertyRepr.mapPut("invalidReason",ex.getMessage());
+        allOk=false;
+      }
+    }
+ else {
+      propertyRepr.mapPut("invalidReason",consent.getReason());
+      allOk=false;
+    }
+  }
+  return allOk;
+}

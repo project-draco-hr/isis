@@ -1,0 +1,31 @@
+{
+  final List<ObjectAdapter> argAdapters=parseArguments(action,arguments);
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  for (int i=0; i < parameters.size(); i++) {
+    final ObjectActionParameter parameter=parameters.get(i);
+    final ObjectAdapter argAdapter=argAdapters.get(i);
+    if (argAdapter == null) {
+      continue;
+    }
+    if (argAdapter.getSpecification().containsFacet(ValueFacet.class)) {
+      final Object arg=argAdapter.getObject();
+      final String reasonNotValid=parameter.isValid(objectAdapter,arg);
+      if (reasonNotValid != null) {
+        throw JsonApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,reasonNotValid);
+      }
+    }
+  }
+  final ObjectAdapter[] argArray=argAdapters.toArray(new ObjectAdapter[0]);
+  final Consent consent=action.isProposedArgumentSetValid(objectAdapter,argArray);
+  if (consent.isVetoed()) {
+    throw JsonApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,consent.getReason());
+  }
+  final ObjectAdapter returnedAdapter=action.execute(objectAdapter,argArray);
+  final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.ACTION_RESULT);
+  final ActionResultReprRenderer renderer=(ActionResultReprRenderer)factory.newRenderer(resourceContext,null,JsonRepresentation.newMap());
+  renderer.with(new ObjectAndActionInvocation(objectAdapter,action,arguments,returnedAdapter)).using(adapterLinkTo);
+  final ResponseBuilder respBuilder=ResourceAbstract.responseOfOk(renderer,Caching.NONE);
+  final Version version=objectAdapter.getVersion();
+  ResourceAbstract.addLastModifiedAndETagIfAvailable(respBuilder,version);
+  return respBuilder.build();
+}

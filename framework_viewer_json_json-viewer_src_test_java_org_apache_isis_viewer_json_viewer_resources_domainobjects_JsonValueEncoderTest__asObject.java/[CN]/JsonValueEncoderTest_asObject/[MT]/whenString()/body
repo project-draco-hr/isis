@@ -1,0 +1,12 @@
+{
+  allowingObjectSpecCorrespondingClassIs(String.class);
+  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  context.checking(new Expectations(){
+{
+      one(encodableFacet).toEncodedString(objectAdapter);
+      will(returnValue("encodedString"));
+    }
+  }
+);
+  assertSame("encodedString",jsonValueEncoder.asObject(objectAdapter));
+}

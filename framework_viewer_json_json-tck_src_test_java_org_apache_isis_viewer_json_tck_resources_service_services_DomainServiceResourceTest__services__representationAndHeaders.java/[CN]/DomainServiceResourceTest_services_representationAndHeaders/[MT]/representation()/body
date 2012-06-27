@@ -1,0 +1,13 @@
+{
+  final Response response=resource.services();
+  final RestfulResponse<ListRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.CONTENT_TYPE),is(RepresentationType.LIST.getMediaType()));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.CACHE_CONTROL).getMaxAge(),is(24 * 60 * 60));
+  final ListRepresentation repr=restfulResponse.getEntity();
+  assertThat(repr,isMap());
+  assertThat(repr.getSelf(),isLink().httpMethod(HttpMethod.GET));
+  assertThat(repr.getValues(),isArray());
+  assertThat(repr.getLinks(),isArray());
+  assertThat(repr.getExtensions(),isMap());
+}

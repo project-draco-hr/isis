@@ -1,0 +1,32 @@
+{
+  return new Parser<List<String>>(){
+    @Override public List<String> valueOf(    final List<String> strings){
+      if (strings == null) {
+        return Collections.emptyList();
+      }
+      if (strings.size() == 1) {
+        return valueOf(strings.get(0));
+      }
+      return strings;
+    }
+    @Override public List<String> valueOf(    final String[] strings){
+      if (strings == null) {
+        return Collections.emptyList();
+      }
+      if (strings.length == 1) {
+        return valueOf(strings[0]);
+      }
+      return Arrays.asList(strings);
+    }
+    @Override public List<String> valueOf(    final String str){
+      if (str == null) {
+        return Collections.emptyList();
+      }
+      return Lists.newArrayList(Splitter.on(",").split(str));
+    }
+    @Override public String asString(    final List<String> strings){
+      return Joiner.on(",").join(strings);
+    }
+  }
+;
+}

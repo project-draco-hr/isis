@@ -1,0 +1,16 @@
+{
+  final JsonRepresentation givenAction=givenAction("simples","newPersistentEntity");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  assertThat(invokeLink,is(not(nullValue())));
+  final JsonRepresentation args=invokeLink.getArguments();
+  assertThat(args.size(),is(2));
+  assertThat(args.mapHas("name"),is(true));
+  assertThat(args.mapHas("flag"),is(true));
+  args.mapPut("name","New Name");
+  args.mapPut("flag",true);
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=client.followT(invokeLink,args);
+  final DomainObjectRepresentation objectRepr=restfulResponse.getEntity();
+  assertThat(objectRepr.getProperty("name").getString("value"),is("New Name"));
+  assertThat(objectRepr.getProperty("flag").getBoolean("value"),is(true));
+}
