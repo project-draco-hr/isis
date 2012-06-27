@@ -1,5 +1,5 @@
 {
-  final String objectId=request.getOptionalProperty(OBJECT);
+  String objectId=request.getOptionalProperty(OBJECT);
   final String method=request.getOptionalProperty(METHOD);
   final String forwardResultTo=request.getOptionalProperty(VIEW);
   final String forwardVoidTo=request.getOptionalProperty(VOID);
@@ -17,6 +17,7 @@
   final ObjectAdapter object=MethodsUtils.findObject(context,objectId);
   final String version=context.mapVersion(object);
   final ObjectAction action=MethodsUtils.findAction(object,method);
+  objectId=request.getContext().mapObject(object,Scope.REQUEST);
   final ActionContent parameterBlock=new ActionContent(action);
   request.setBlockContent(parameterBlock);
   request.pushNewBuffer();
