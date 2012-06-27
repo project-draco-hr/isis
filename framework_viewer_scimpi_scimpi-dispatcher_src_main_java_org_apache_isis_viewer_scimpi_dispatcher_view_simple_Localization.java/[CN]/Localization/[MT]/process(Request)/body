@@ -1,0 +1,17 @@
+{
+  request.closeEmpty();
+  org.apache.isis.applib.profiles.Localization localization=IsisContext.getLocalization();
+  if (localization != null) {
+    Locale locale=localization.getLocale();
+    String country=locale.getDisplayName();
+    String timeZone=localization.getTimeZone().getDisplayName();
+    request.appendAsHtmlEncoded(country + ", " + timeZone);
+  }
+ else {
+    request.appendAsHtmlEncoded("No localization data!");
+  }
+  Locale locale=Locale.getDefault();
+  String country=locale.getDisplayName();
+  String timeZone=TimeZone.getDefault().getDisplayName();
+  request.appendAsHtmlEncoded("\n (Default " + country + ", "+ timeZone+ ")");
+}

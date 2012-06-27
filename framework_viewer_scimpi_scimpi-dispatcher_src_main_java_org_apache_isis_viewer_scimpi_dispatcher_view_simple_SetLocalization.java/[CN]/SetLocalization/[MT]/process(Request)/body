@@ -1,0 +1,19 @@
+{
+  request.closeEmpty();
+  final String localeCode=request.getRequiredProperty("locale");
+  final String timeZone=request.getRequiredProperty("time-zone");
+  String country;
+  String language;
+  int pos=localeCode.indexOf('_');
+  if (pos == 1) {
+    language=localeCode;
+    country="";
+  }
+ else {
+    language=localeCode.substring(0,pos);
+    country=localeCode.substring(pos + 1);
+  }
+  Locale l=new Locale(language,country);
+  TimeZone t=TimeZone.getTimeZone(timeZone);
+  IsisContext.getUserProfile().setLocalization(new UserLocalization(l,t));
+}
