@@ -1,0 +1,8 @@
+{
+  final ClientRequest clientRequest=client.getClientRequestFactory().createRelativeRequest("/");
+  clientRequest.accept(MediaType.APPLICATION_ATOM_XML_TYPE);
+  final ClientResponse<?> resp=clientRequest.get();
+  final RestfulResponse<JsonRepresentation> restfulResp=RestfulResponse.of(resp);
+  final String entity=restfulResp.getEntity().toString();
+  assertThat(restfulResp.getStatus(),is(HttpStatusCode.NOT_ACCEPTABLE));
+}

@@ -1,0 +1,11 @@
+{
+  final ListRepresentation repr=givenRepresentation();
+  final JsonRepresentation values=repr.getValues();
+  for (  final LinkRepresentation link : values.arrayIterable(LinkRepresentation.class)) {
+    final RestfulResponse<JsonRepresentation> followJsonResp=client.follow(link);
+    assertThat(followJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
+    final JsonRepresentation followRepr=followJsonResp.getEntity();
+    final LinkRepresentation self=followRepr.getLink("links[rel=self]");
+    assertThat(self.getHref(),is(link.getHref()));
+  }
+}
