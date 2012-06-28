@@ -9,7 +9,9 @@
   request.setBlockContent(tag);
   request.processUtilCloseTag();
   if (object != null) {
-    final List<ObjectAssociation> fields=tag.includedFields(object.getSpecification().getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS));
+    final AuthenticationSession session=IsisContext.getAuthenticationSession();
+    List<ObjectAssociation> associations=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object));
+    final List<ObjectAssociation> fields=tag.includedFields(associations);
     final LinkedObject[] linkFields=tag.linkedFields(fields);
     String linkAllView=request.getOptionalProperty(LINK);
     if (linkAllView != null) {
