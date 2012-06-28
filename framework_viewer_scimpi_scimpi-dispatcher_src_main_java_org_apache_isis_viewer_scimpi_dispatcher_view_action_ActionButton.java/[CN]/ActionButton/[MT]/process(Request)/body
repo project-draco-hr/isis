@@ -43,24 +43,16 @@
     if (usable.isVetoed()) {
       final String notUsable=usable.getReason();
       if (notUsable != null) {
-        if (className == null) {
-          className="access";
-        }
-        request.appendHtml("<div class=\"" + className + "-message\" >");
-        request.appendAsHtmlEncoded(notUsable);
-        request.appendHtml("</div>");
+        String title=buttonTitle == null ? action.getName() : buttonTitle;
+        disabledButton(request,title,notUsable,className);
       }
     }
  else {
       final Consent valid=action.isProposedArgumentSetValid(object,objectParameters);
       final String notValid=valid.getReason();
       if (notValid != null) {
-        if (className == null) {
-          className="access";
-        }
-        request.appendHtml("<div class=\"" + className + "-message\" >");
-        request.appendAsHtmlEncoded(notValid);
-        request.appendHtml("</div>");
+        String title=buttonTitle == null ? action.getName() : buttonTitle;
+        disabledButton(request,title,notValid,className);
       }
     }
   }
