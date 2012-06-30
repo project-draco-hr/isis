@@ -1,0 +1,17 @@
+{
+  final RepresentationType representationType=RepresentationType.ACTION_DESCRIPTION;
+  init(representationType);
+  final ObjectSpecification parentSpec=getSpecificationLoader().loadSpecification(domainType);
+  if (parentSpec == null) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  final ObjectMember objectMember=parentSpec.getObjectAction(actionId);
+  if (objectMember == null) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_FOUND);
+  }
+  final ObjectAction action=(ObjectAction)objectMember;
+  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
+  final ActionDescriptionReprRenderer renderer=(ActionDescriptionReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  renderer.with(new ParentSpecAndAction(parentSpec,action)).includesSelf();
+  return responseOfOk(renderer,Caching.ONE_DAY).build();
+}

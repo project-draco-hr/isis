@@ -1,0 +1,21 @@
+{
+  final List<JsonRepresentation> argList=argListFor(action,arguments);
+  final List<ObjectAdapter> argAdapters=Lists.newArrayList();
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  for (int i=0; i < argList.size(); i++) {
+    final String paramName=parameters.get(i).getName();
+    final JsonRepresentation arg=argList.get(i);
+    final ObjectSpecification paramSpec=parameters.get(i).getSpecification();
+    try {
+      final ObjectAdapter objectAdapter=objectAdapterFor(resourceContext,paramSpec,arg);
+      argAdapters.add(objectAdapter);
+    }
+ catch (    final ExpectedStringRepresentingValueException e) {
+      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s', argument %s should be a URL encoded string representing a value of type %s",action.getId(),paramName,resourceFor(paramSpec));
+    }
+catch (    final ExpectedMapRepresentingLinkException e) {
+      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s', argument %s should be a map representing a link to reference of type %s",action.getId(),paramName,resourceFor(paramSpec));
+    }
+  }
+  return argAdapters;
+}

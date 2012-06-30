@@ -1,0 +1,19 @@
+{
+  final List<JsonRepresentation> argList=Lists.newArrayList();
+  for (  final Entry<String,JsonRepresentation> arg : arguments.mapIterable()) {
+    final String argName=arg.getKey();
+    if (action.getParameterById(argName) == null) {
+      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' does not have a parameter %s but an argument of that name was provided",action.getId(),argName);
+    }
+  }
+  final List<ObjectActionParameter> parameters=action.getParameters();
+  for (  final ObjectActionParameter param : parameters) {
+    final String paramId=param.getId();
+    final JsonRepresentation argRepr=arguments.getRepresentation(paramId);
+    if (argRepr == null && !param.isOptional()) {
+      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s', no argument found for (mandatory) parameter '%s'",action.getId(),paramId);
+    }
+    argList.add(argRepr);
+  }
+  return argList;
+}

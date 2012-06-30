@@ -1,0 +1,18 @@
+{
+  try {
+    final JsonRepresentation jsonRepr=JsonMapper.instance().read(args);
+    if (!jsonRepr.isMap()) {
+      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"could not read %s as a JSON map",argsNature);
+    }
+    return jsonRepr;
+  }
+ catch (  final JsonParseException e) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,e,"could not parse %s",argsNature);
+  }
+catch (  final JsonMappingException e) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,e,"could not read %s as JSON",argsNature);
+  }
+catch (  final IOException e) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,e,"could not parse %s",argsNature);
+  }
+}
