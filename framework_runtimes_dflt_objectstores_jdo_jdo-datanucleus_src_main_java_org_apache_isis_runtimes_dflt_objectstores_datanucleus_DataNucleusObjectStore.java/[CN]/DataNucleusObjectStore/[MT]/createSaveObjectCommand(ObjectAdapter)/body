@@ -1,0 +1,11 @@
+{
+  ensureOpened();
+  ensureInSession();
+  if (!adapter.isPersistent()) {
+    throw new IllegalArgumentException("Adapter is not persistent; adapter: " + adapter);
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("save object - creating command for: " + adapter);
+  }
+  return new DataNucleusUpdateObjectCommand(adapter,getPersistenceManager());
+}

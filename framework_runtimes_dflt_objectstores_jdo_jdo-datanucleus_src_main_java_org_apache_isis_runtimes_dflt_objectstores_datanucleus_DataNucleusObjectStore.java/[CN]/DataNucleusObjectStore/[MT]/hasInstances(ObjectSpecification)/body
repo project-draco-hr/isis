@@ -1,0 +1,13 @@
+{
+  ensureOpened();
+  ensureInTransaction();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("hasInstances: class=" + specification.getFullIdentifier());
+  }
+  if (!specification.persistability().isPersistable()) {
+    LOG.warn("hasInstances: trying to run for non-persistent class " + specification);
+    return false;
+  }
+  final Query query=QueryUtil.createQuery(getPersistenceManager(),"o","select o.id",specification,null);
+  throw new NotYetImplementedException();
+}

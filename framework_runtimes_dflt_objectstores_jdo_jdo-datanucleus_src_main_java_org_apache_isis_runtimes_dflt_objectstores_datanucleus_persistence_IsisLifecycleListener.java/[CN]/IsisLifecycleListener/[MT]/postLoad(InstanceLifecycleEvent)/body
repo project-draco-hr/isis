@@ -1,0 +1,16 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug(logString(Phase.POST,event));
+  }
+  if (isSuspended()) {
+    LOG.debug(" [currently suspended - ignoring]");
+    return;
+  }
+  ensureRootObject(event);
+  final Object pojo=persistenceCapableFor(event);
+  final OidGenerator oidGenerator=getOidGenerator();
+  final RootOid oid=oidGenerator.createPersistent(pojo,null);
+  PersistenceSessionHydrator hydrator=getPersistenceSession();
+  hydrator.recreateAdapter(oid,pojo);
+  ensureFrameworksInAgreement(event);
+}

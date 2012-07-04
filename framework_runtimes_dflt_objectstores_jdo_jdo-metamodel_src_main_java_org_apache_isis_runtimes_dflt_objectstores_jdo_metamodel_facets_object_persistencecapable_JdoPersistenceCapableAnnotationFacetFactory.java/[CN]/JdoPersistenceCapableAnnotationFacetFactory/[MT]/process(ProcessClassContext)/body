@@ -1,0 +1,13 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final PersistenceCapable annotation=getAnnotation(cls,PersistenceCapable.class);
+  if (annotation == null) {
+    return;
+  }
+  String annotationTableAttribute=annotation.table();
+  if (StringUtils.isNullOrEmpty(annotationTableAttribute)) {
+    annotationTableAttribute=cls.getSimpleName();
+  }
+  FacetUtil.addFacet(new JdoPersistenceCapableFacetAnnotation(annotationTableAttribute,processClassContext.getFacetHolder()));
+  return;
+}

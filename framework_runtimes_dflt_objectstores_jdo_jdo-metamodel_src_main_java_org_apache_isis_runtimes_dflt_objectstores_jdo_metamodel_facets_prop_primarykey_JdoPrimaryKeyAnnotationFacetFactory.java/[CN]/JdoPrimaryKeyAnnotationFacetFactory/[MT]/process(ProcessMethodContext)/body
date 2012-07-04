@@ -1,0 +1,10 @@
+{
+  final PrimaryKey annotation=getAnnotation(processMethodContext.getMethod(),PrimaryKey.class);
+  if (annotation == null) {
+    return;
+  }
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new JdoPrimaryKeyFacetAnnotation(holder));
+  FacetUtil.addFacet(new OptionalFacetDerivedFromJdoPrimaryKeyAnnotation(holder));
+  FacetUtil.addFacet(new DisabledFacetDerivedFromJdoPrimaryKeyAnnotation(holder));
+}

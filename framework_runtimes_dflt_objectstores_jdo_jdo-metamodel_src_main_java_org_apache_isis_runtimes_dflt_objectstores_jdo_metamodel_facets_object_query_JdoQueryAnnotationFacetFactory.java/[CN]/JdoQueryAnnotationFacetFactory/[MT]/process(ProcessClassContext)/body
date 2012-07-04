@@ -1,0 +1,13 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final Queries namedQueriesAnnotation=getAnnotation(cls,Queries.class);
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  if (namedQueriesAnnotation != null) {
+    FacetUtil.addFacet(new JdoQueriesFacetAnnotation(namedQueriesAnnotation.value(),facetHolder));
+    return;
+  }
+  final Query namedQueryAnnotation=getAnnotation(cls,Query.class);
+  if (namedQueryAnnotation != null) {
+    FacetUtil.addFacet(new JdoQueryFacetAnnotation(namedQueryAnnotation,facetHolder));
+  }
+}

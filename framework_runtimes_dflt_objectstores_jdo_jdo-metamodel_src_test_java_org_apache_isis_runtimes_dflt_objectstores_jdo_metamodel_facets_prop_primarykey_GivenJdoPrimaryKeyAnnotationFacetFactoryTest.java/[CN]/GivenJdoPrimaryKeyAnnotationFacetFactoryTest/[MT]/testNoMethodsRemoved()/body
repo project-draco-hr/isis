@@ -1,0 +1,15 @@
+{
+class Customer {
+    private Long id;
+    @SuppressWarnings("unused") @PrimaryKey public Long getId(){
+      return id;
+    }
+    @SuppressWarnings("unused") public void setId(    final Long id){
+      this.id=id;
+    }
+  }
+  final Class<?> cls=Customer.class;
+  final Method method=cls.getMethod("getId");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(cls,method,methodRemover,facetedMethod));
+  assertNoMethodsRemoved();
+}

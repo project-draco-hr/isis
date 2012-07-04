@@ -1,0 +1,21 @@
+{
+  final PersistenceCapable pojo=persistenceCapableFor(event);
+  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+  final Oid oid=adapter.getOid();
+  if (!pojo.jdoIsPersistent()) {
+    if (!adapter.getResolveState().isTransient()) {
+      throw new IsisException(MessageFormat.format("adapter is in invalid state; should be {0} but is {1}",ResolveState.TRANSIENT,adapter.getResolveState()));
+    }
+    if (!oid.isTransient()) {
+      throw new IsisException(MessageFormat.format("Not transient: oid={0}, for {1}",oid,pojo));
+    }
+  }
+ else {
+    if (!adapter.getResolveState().isPersistent()) {
+      throw new IsisException(MessageFormat.format("adapter is in invalid state; should be in a persistent state but is {1}",ResolveState.RESOLVED,adapter.getResolveState()));
+    }
+    if (oid.isTransient()) {
+      throw new IsisException(MessageFormat.format("Transient: oid={0}, for {1}",oid,pojo));
+    }
+  }
+}

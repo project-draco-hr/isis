@@ -1,0 +1,11 @@
+{
+  ensureOpened();
+  ensureInSession();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("create object - creating command for: " + adapter);
+  }
+  if (adapter.isPersistent()) {
+    throw new IllegalArgumentException("Adapter is persistent; adapter: " + adapter);
+  }
+  return new DataNucleusCreateObjectCommand(adapter,getPersistenceManager());
+}

@@ -1,0 +1,15 @@
+{
+  final Version annotation=getAnnotation(processClassContext.getCls(),Version.class);
+  if (annotation == null) {
+    return;
+  }
+  final ObjectSpecification objSpec=(ObjectSpecification)processClassContext.getFacetHolder();
+  String propertyId=annotation.column();
+  ObjectAssociation otoa=objSpec.getAssociation(propertyId);
+  if (otoa == null) {
+    throw new RuntimeException("No such property '" + propertyId + "'");
+  }
+  FacetUtil.addFacet(new JdoVersionFacetAnnotation(otoa));
+  FacetUtil.addFacet(new DisabledFacetDerivedFromJdoVersionAnnotation(otoa));
+  FacetUtil.addFacet(new OptionalFacetDerivedFromJdoVersionAnnotation(otoa));
+}

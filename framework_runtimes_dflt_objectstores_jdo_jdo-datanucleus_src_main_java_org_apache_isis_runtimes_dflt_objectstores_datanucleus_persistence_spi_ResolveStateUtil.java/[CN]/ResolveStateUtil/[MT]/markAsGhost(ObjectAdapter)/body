@@ -1,0 +1,31 @@
+{
+  if (adapter.getResolveState().isValue()) {
+  }
+  if (adapter.getResolveState().isDestroyed()) {
+  }
+  if (adapter.isTransient()) {
+    adapter.changeState(ResolveState.RESOLVED);
+    adapter.changeState(ResolveState.GHOST);
+  }
+ else   if (adapter.getResolveState().isNew()) {
+    adapter.changeState(ResolveState.GHOST);
+  }
+ else   if (adapter.getResolveState().isPartlyResolved()) {
+    adapter.changeState(ResolveState.RESOLVING);
+    adapter.changeState(ResolveState.RESOLVED);
+    adapter.changeState(ResolveState.GHOST);
+  }
+ else   if (adapter.getResolveState().isResolving()) {
+    adapter.changeState(ResolveState.RESOLVED);
+    adapter.changeState(ResolveState.GHOST);
+  }
+ else   if (adapter.getResolveState().isUpdating()) {
+    adapter.changeState(ResolveState.RESOLVED);
+    adapter.changeState(ResolveState.GHOST);
+  }
+ else   if (adapter.getResolveState().isResolved()) {
+    adapter.changeState(ResolveState.GHOST);
+  }
+ else   if (adapter.getResolveState().isGhost()) {
+  }
+}

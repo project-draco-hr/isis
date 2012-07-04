@@ -1,0 +1,11 @@
+{
+  final StringBuilder buf=new StringBuilder(128);
+  appendSelect(buf,select,alias);
+  appendFrom(buf,specification,alias);
+  appendWhere(buf,whereClause);
+  final String queryString=buf.toString();
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("creating query: " + queryString);
+  }
+  return persistenceManager.newQuery(queryString);
+}

@@ -1,0 +1,9 @@
+{
+  final Discriminator annotation=getAnnotation(processClassContext.getCls(),Discriminator.class);
+  if (annotation == null) {
+    return;
+  }
+  final String annotationValueAttribute=annotation.value();
+  FacetUtil.addFacet(new ObjectSpecIdFacetInferredFromJdoDiscriminatorValueAnnotation(annotationValueAttribute,processClassContext.getFacetHolder()));
+  FacetUtil.addFacet(new JdoDiscriminatorFacetDefault(annotationValueAttribute,processClassContext.getFacetHolder()));
+}

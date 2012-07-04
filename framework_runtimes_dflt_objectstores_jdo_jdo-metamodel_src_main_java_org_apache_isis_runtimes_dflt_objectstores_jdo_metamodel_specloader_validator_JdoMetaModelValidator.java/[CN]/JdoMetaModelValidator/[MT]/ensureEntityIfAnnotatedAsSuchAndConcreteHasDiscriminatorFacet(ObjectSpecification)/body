@@ -1,0 +1,10 @@
+{
+  if (!objSpec.containsFacet(JdoPersistenceCapableFacet.class)) {
+    return;
+  }
+  if (objSpec.isAbstract() || objSpec.containsFacet(JdoDiscriminatorFacet.class)) {
+    return;
+  }
+  final String classFullName=objSpec.getFullIdentifier();
+  throw new MetaModelInvalidException(MessageFormat.format("OpenJpa object store requires that concrete class {0} mapped by @Entity " + "must also have an @DiscriminatorValue annotation",classFullName));
+}

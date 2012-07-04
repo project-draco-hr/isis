@@ -1,0 +1,17 @@
+{
+  super.setUp();
+  objectSpec=context.mock(ObjectSpecification.class);
+  versionOtoa=context.mock(OneToOneAssociation.class);
+  context.checking(new Expectations(){
+{
+      allowing(objectSpec).getAssociation("versionColumn");
+      will(returnValue(versionOtoa));
+      allowing(objectSpec).getAssociation("nonExistentColumn");
+      will(returnValue(null));
+      allowing(versionOtoa).getId();
+      will(returnValue("versionColumn"));
+    }
+  }
+);
+  facetFactory=new JdoVersionAnnotationFacetFactory();
+}

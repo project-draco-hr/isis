@@ -1,0 +1,10 @@
+{
+  ensureOpened();
+  ensureThatState(persistenceManager,is(notNullValue()));
+  final IsisTransaction currentTransaction=getTransactionManager().getTransaction();
+  if (currentTransaction != null && currentTransaction.getState().canCommit()) {
+    getTransactionManager().endTransaction();
+  }
+  persistenceManager.close();
+  state=State.CLOSED;
+}
