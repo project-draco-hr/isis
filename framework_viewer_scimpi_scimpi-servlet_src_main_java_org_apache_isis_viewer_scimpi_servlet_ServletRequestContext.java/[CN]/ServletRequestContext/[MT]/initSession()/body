@@ -1,0 +1,13 @@
+{
+  final HttpSession httpSession=request.getSession(true);
+  if (httpSession.getAttribute("scimpi-context") == null) {
+    final Map<String,Object> sessionData=getSessionData();
+    httpSession.setAttribute("scimpi-context",sessionData);
+  }
+ else {
+    final HashMap<String,Object> data=(HashMap<String,Object>)httpSession.getAttribute("scimpi-context");
+    if (data != null) {
+      setSessionData(data);
+    }
+  }
+}

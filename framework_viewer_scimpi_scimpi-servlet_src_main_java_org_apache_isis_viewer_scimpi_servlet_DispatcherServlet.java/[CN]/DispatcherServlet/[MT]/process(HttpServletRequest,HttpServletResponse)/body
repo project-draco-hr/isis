@@ -1,13 +1,6 @@
 {
   try {
     final ServletRequestContext context=new ServletRequestContext(debugUsers);
-    final HttpSession httpSession=request.getSession(false);
-    if (httpSession != null) {
-      @SuppressWarnings("unchecked") final HashMap<String,Object> data=(HashMap<String,Object>)httpSession.getAttribute("scimpi-context");
-      if (data != null) {
-        context.setSessionData(data);
-      }
-    }
     context.startRequest(request,response,getServletContext());
     dispatcher.process(context,request.getServletPath());
   }
