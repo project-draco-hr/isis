@@ -6,6 +6,7 @@
   final String field=request.getOptionalProperty(FIELD);
   final String tableClass=request.getOptionalProperty(CLASS);
   ObjectSpecification elementSpec;
+  String tableId;
   if (field != null) {
     final String objectId=request.getOptionalProperty(OBJECT);
     final ObjectAdapter object=context.getMappedObjectOrResult(objectId);
@@ -22,11 +23,13 @@
     final TypeOfFacet facet=objectField.getFacet(TypeOfFacet.class);
     elementSpec=facet.valueSpec();
     parentObjectId=objectId == null ? context.mapObject(object,Scope.REQUEST) : objectId;
+    tableId=request.getOptionalProperty(CLASS,field);
   }
  else {
     final String id=request.getOptionalProperty(COLLECTION);
     collection=context.getMappedObjectOrResult(id);
     elementSpec=collection.getElementSpecification();
+    tableId=request.getOptionalProperty(CLASS,collection.getElementSpecification().getShortIdentifier());
   }
   final String summary=request.getOptionalProperty("summary");
   final String rowClassesList=request.getOptionalProperty(ROW_CLASSES,ODD_ROW_CLASS + "|" + EVEN_ROW_CLASS);
@@ -36,5 +39,5 @@
   }
   final List<ObjectAssociation> allFields=elementSpec.getAssociations(ObjectAssociationFilters.STATICALLY_VISIBLE_ASSOCIATIONS);
   final TableContentWriter rowBuilder=createRowBuilder(request,context,isFieldEditable ? parentObjectId : null,allFields,collection);
-  write(request,collection,summary,rowBuilder,tableClass,rowClasses);
+  write(request,collection,summary,rowBuilder,tableId,tableClass,rowClasses);
 }

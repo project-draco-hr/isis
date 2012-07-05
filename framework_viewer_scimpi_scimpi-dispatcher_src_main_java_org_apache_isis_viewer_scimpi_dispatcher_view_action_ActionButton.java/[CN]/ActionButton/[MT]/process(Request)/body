@@ -9,7 +9,7 @@
   final String buttonTitle=request.getOptionalProperty(BUTTON_TITLE);
   final String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
   final String idName=request.getOptionalProperty(ID,methodName);
-  String className=request.getOptionalProperty(CLASS);
+  final String className=request.getOptionalProperty(CLASS);
   final boolean showMessage=request.isRequested(SHOW_MESSAGE,false);
   final String completionMessage=request.getOptionalProperty(MESSAGE);
   final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
@@ -44,7 +44,7 @@
       final String notUsable=usable.getReason();
       if (notUsable != null) {
         String title=buttonTitle == null ? action.getName() : buttonTitle;
-        disabledButton(request,title,notUsable,className);
+        disabledButton(request,title,notUsable,idName,className);
       }
     }
  else {
@@ -52,7 +52,7 @@
       final String notValid=valid.getReason();
       if (notValid != null) {
         String title=buttonTitle == null ? action.getName() : buttonTitle;
-        disabledButton(request,title,notValid,className);
+        disabledButton(request,title,notValid,idName,className);
       }
     }
   }
