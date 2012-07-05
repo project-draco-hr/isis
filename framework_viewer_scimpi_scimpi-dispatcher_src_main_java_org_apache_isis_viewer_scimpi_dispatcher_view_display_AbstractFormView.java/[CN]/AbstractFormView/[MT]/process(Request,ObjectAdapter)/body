@@ -1,7 +1,5 @@
 {
   final LinkedFieldsBlock tag=new LinkedFieldsBlock();
-  request.setBlockContent(tag);
-  request.processUtilCloseTag();
   if (object != null) {
     final String id=request.getOptionalProperty(ID,object.getSpecification().getShortIdentifier());
     final String cls=request.getOptionalProperty(CLASS,"form");
@@ -10,6 +8,8 @@
     final String oddRowClass=request.getOptionalProperty(ODD_ROW_CLASS);
     final String evenRowClass=request.getOptionalProperty(EVEN_ROW_CLASS);
     final boolean showIcons=request.isRequested(SHOW_ICON,true);
+    request.setBlockContent(tag);
+    request.processUtilCloseTag();
     final AuthenticationSession session=IsisContext.getAuthenticationSession();
     List<ObjectAssociation> associations=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object));
     final List<ObjectAssociation> fields=tag.includedFields(associations);
@@ -30,6 +30,9 @@
       title=null;
     }
     write(request,object,fields,linkFields,classString,title,oddRowClass,evenRowClass,showIcons);
+    request.popBlockContent();
   }
-  request.popBlockContent();
+ else {
+    request.skipUntilClose();
+  }
 }
