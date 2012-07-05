@@ -1,10 +1,20 @@
 {
   final List<String> messages=IsisContext.getMessageBroker().getMessages();
-  if (messages.size() > 0) {
-    context.getWriter().println("Note - messages existed but where not displayed");
-  }
-  final List<String> warnings=IsisContext.getMessageBroker().getWarnings();
-  if (warnings.size() > 0) {
-    context.getWriter().println("Note - warnings existed but where not displayed");
+  if (showUnshownMessages) {
+    if (messages.size() > 0) {
+      context.getWriter().println("<ol class=\"messages forced\">");
+      for (      String message : messages) {
+        context.getWriter().println("<li>" + message + "</li>");
+      }
+      context.getWriter().println("</ol>");
+    }
+    final List<String> warnings=IsisContext.getMessageBroker().getWarnings();
+    if (warnings.size() > 0) {
+      context.getWriter().println("<ol class=\"warnings forced\">");
+      for (      String message : warnings) {
+        context.getWriter().println("<li>" + message + "</li>");
+      }
+      context.getWriter().println("</ol>");
+    }
   }
 }
