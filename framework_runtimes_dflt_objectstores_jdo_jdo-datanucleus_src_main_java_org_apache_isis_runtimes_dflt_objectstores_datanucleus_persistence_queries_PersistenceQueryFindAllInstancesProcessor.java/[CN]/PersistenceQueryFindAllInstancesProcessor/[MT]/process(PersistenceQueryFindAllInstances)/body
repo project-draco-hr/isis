@@ -3,7 +3,8 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("getInstances: class=" + specification.getFullIdentifier());
   }
-  final Query query=QueryUtil.createQuery(getPersistenceManager(),"o",null,specification,null);
+  Class<?> cls=specification.getCorrespondingClass();
+  final Query query=getPersistenceManager().newQuery(cls);
   final List<?> pojos=(List<?>)query.execute();
   return loadAdapters(specification,pojos);
 }

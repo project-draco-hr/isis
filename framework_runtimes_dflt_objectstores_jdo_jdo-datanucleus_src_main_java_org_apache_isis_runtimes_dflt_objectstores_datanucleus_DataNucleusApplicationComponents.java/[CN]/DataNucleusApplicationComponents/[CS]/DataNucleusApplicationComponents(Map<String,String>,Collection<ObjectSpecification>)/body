@@ -1,5 +1,8 @@
 {
   persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(props);
+  final Set<String> classesToBePersisted=catalogClassesToBePersisted(objectSpecs);
+  enhanceClasses(classesToBePersisted.toArray(new String[0]));
+  createSchema(props,classesToBePersisted);
   namedQueryByName=Collections.unmodifiableMap(catalogNamedQueries(objectSpecs));
   lifecycleListener=new IsisLifecycleListener();
 }
