@@ -1,0 +1,19 @@
+{
+  if (objectAdapter.getResolveState().isValidToChangeTo(targetState)) {
+    PersistorUtil.startStateTransition(objectAdapter,targetState);
+    updateFields(objectAdapter,data);
+    PersistorUtil.endStateTransition(objectAdapter);
+  }
+ else   if (objectAdapter.isTransient() && targetState == ResolveState.TRANSIENT) {
+    updateFields(objectAdapter,data);
+  }
+ else   if (objectAdapter.isParented()) {
+    updateFields(objectAdapter,data);
+  }
+ else {
+    final ObjectData od=(ObjectData)data;
+    if (od.containsField()) {
+      throw new IsisException("Resolve state (for " + objectAdapter + ") inconsistent with fact that data exists for fields");
+    }
+  }
+}

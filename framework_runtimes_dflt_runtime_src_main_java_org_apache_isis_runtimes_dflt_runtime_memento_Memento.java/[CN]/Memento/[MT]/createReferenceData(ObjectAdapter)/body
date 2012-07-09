@@ -1,16 +1,16 @@
 {
-  if (ref == null) {
+  if (referencedAdapter == null) {
     return null;
   }
-  final Oid refOid=ref.getOid();
+  final Oid refOid=referencedAdapter.getOid();
   if (refOid == null) {
-    return createStandaloneData(ref);
+    return createStandaloneData(referencedAdapter);
   }
-  if ((ref.getSpecification().isParented() || refOid.isTransient()) && !transientObjects.contains(refOid)) {
+  if ((referencedAdapter.getSpecification().isParented() || refOid.isTransient()) && !transientObjects.contains(refOid)) {
     transientObjects.add(refOid);
-    return createObjectData(ref);
+    return createObjectData(referencedAdapter);
   }
-  final String resolvedState=ref.getResolveState().name();
-  final String specification=ref.getSpecification().getFullIdentifier();
+  final String resolvedState=referencedAdapter.getResolveState().name();
+  final String specification=referencedAdapter.getSpecification().getFullIdentifier();
   return new Data(refOid,resolvedState,specification);
 }

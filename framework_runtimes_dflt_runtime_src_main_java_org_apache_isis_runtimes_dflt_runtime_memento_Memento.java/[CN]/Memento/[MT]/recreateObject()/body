@@ -1,23 +1,23 @@
 {
-  if (state == null) {
+  if (data == null) {
     return null;
   }
-  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(state.getClassName());
+  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(data.getClassName());
   ObjectAdapter adapter;
   ResolveState targetState;
   if (getOid().isTransient()) {
     adapter=getHydrator().recreateAdapter(spec,getOid());
-    targetState=ResolveState.SERIALIZING_TRANSIENT;
+    targetState=ResolveState.TRANSIENT;
   }
  else {
     adapter=getHydrator().recreateAdapter(spec,getOid());
     targetState=ResolveState.UPDATING;
   }
   if (adapter.getSpecification().isParentedOrFreeCollection()) {
-    populateCollection(adapter,(CollectionData)state,targetState);
+    populateCollection(adapter,(CollectionData)data,targetState);
   }
  else {
-    updateObject(adapter,state,targetState);
+    updateObject(adapter,data,targetState);
   }
   if (LOG.isDebugEnabled()) {
     LOG.debug("recreated object " + adapter.getOid());

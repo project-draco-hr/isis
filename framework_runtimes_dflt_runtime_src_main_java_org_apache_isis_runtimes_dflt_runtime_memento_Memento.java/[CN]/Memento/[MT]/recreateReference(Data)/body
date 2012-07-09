@@ -9,17 +9,16 @@
     if (oid == null) {
       return null;
     }
-    ObjectAdapter ref;
-    ref=getHydrator().recreateAdapter(spec,oid);
+    ObjectAdapter referencedAdapter=getHydrator().recreateAdapter(spec,oid);
     if (data instanceof ObjectData) {
       if (oid.isTransient() || spec.isParented()) {
         final ResolveState resolveState=spec.isParented() ? ResolveState.GHOST : ResolveState.TRANSIENT;
-        if (ref.getResolveState().isValidToChangeTo(resolveState)) {
-          ref.changeState(resolveState);
+        if (referencedAdapter.getResolveState().isValidToChangeTo(resolveState)) {
+          referencedAdapter.changeState(resolveState);
         }
-        updateObject(ref,data,resolveState);
+        updateObject(referencedAdapter,data,resolveState);
       }
     }
-    return ref;
+    return referencedAdapter;
   }
 }

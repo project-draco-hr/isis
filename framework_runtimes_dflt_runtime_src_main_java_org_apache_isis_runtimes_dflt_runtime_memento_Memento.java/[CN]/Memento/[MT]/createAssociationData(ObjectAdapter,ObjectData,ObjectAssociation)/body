@@ -1,0 +1,20 @@
+{
+  Object assocData;
+  if (objectAssoc.isOneToManyAssociation()) {
+    final ObjectAdapter collAdapter=objectAssoc.get(adapter);
+    assocData=createCollectionData(collAdapter);
+  }
+ else   if (objectAssoc.getSpecification().isEncodeable()) {
+    final EncodableFacet facet=objectAssoc.getSpecification().getFacet(EncodableFacet.class);
+    final ObjectAdapter value=objectAssoc.get(adapter);
+    assocData=facet.toEncodedString(value);
+  }
+ else   if (objectAssoc.isOneToOneAssociation()) {
+    final ObjectAdapter referencedAdapter=((OneToOneAssociation)objectAssoc).get(adapter);
+    assocData=createReferenceData(referencedAdapter);
+  }
+ else {
+    throw new UnknownTypeException(objectAssoc);
+  }
+  data.addField(objectAssoc.getId(),assocData);
+}

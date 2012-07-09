@@ -1,17 +1,13 @@
 {
-  final Object oid=object.getOid();
-  if (oid != null && !oid.equals(state.getOid())) {
-    throw new IllegalArgumentException("This memento can only be used to update the ObjectAdapter with the Oid " + state.getOid() + " but is "+ oid);
+  final Object oid=adapter.getOid();
+  if (oid != null && !oid.equals(data.getOid())) {
+    throw new IllegalArgumentException("This memento can only be used to update the ObjectAdapter with the Oid " + data.getOid() + " but is "+ oid);
   }
- else {
-    if (!(state instanceof ObjectData)) {
-      throw new IsisException("Expected an ObjectData but got " + state.getClass());
-    }
- else {
-      updateObject(object,resolveState,state);
-    }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("object updated " + object.getOid());
-    }
+  if (!(data instanceof ObjectData)) {
+    throw new IsisException("Expected an ObjectData but got " + data.getClass());
+  }
+  updateFieldsAndResolveState(adapter,data,targetState);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("object updated " + adapter.getOid());
   }
 }

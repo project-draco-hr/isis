@@ -1,14 +1,14 @@
 {
-  final Object fieldData=od.getEntry(field.getId());
-  if (field.isOneToManyAssociation()) {
-    updateOneToManyAssociation(object,(OneToManyAssociation)field,(CollectionData)fieldData);
+  final Object fieldData=objectData.getEntry(objectAssoc.getId());
+  if (objectAssoc.isOneToManyAssociation()) {
+    updateOneToManyAssociation(objectAdapter,(OneToManyAssociation)objectAssoc,(CollectionData)fieldData);
   }
- else   if (field.getSpecification().containsFacet(EncodableFacet.class)) {
-    final EncodableFacet facet=field.getSpecification().getFacet(EncodableFacet.class);
+ else   if (objectAssoc.getSpecification().containsFacet(EncodableFacet.class)) {
+    final EncodableFacet facet=objectAssoc.getSpecification().getFacet(EncodableFacet.class);
     final ObjectAdapter value=facet.fromEncodedString((String)fieldData);
-    ((OneToOneAssociation)field).initAssociation(object,value);
+    ((OneToOneAssociation)objectAssoc).initAssociation(objectAdapter,value);
   }
- else   if (field.isOneToOneAssociation()) {
-    updateOneToOneAssociation(object,(OneToOneAssociation)field,(Data)fieldData);
+ else   if (objectAssoc.isOneToOneAssociation()) {
+    updateOneToOneAssociation(objectAdapter,(OneToOneAssociation)objectAssoc,(Data)fieldData);
   }
 }
