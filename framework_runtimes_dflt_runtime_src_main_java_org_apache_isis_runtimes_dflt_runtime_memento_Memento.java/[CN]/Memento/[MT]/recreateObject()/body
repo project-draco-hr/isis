@@ -3,21 +3,12 @@
     return null;
   }
   final ObjectSpecification spec=getSpecificationLoader().loadSpecification(data.getClassName());
-  ObjectAdapter adapter;
-  ResolveState targetState;
-  if (getOid().isTransient()) {
-    adapter=getHydrator().recreateAdapter(spec,getOid());
-    targetState=ResolveState.TRANSIENT;
-  }
- else {
-    adapter=getHydrator().recreateAdapter(spec,getOid());
-    targetState=ResolveState.RESOLVING;
-  }
+  ObjectAdapter adapter=getHydrator().recreateAdapter(spec,getOid());
   if (adapter.getSpecification().isParentedOrFreeCollection()) {
-    populateCollection(adapter,(CollectionData)data,targetState);
+    populateCollection(adapter,(CollectionData)data);
   }
  else {
-    updateObject(adapter,data,targetState);
+    updateObject(adapter,data);
   }
   if (LOG.isDebugEnabled()) {
     LOG.debug("recreated object " + adapter.getOid());

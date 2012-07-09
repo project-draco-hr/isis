@@ -1,10 +1,11 @@
 {
-  if (objectAdapter.getResolveState().isValidToChangeTo(targetState)) {
-    PersistorUtil.startStateTransition(objectAdapter,targetState);
+  boolean dataIsTransient=data.getOid().isTransient();
+  if (!dataIsTransient) {
+    PersistorUtil.startStateTransition(objectAdapter,ResolveState.RESOLVING);
     updateFields(objectAdapter,data);
     PersistorUtil.endStateTransition(objectAdapter);
   }
- else   if (objectAdapter.isTransient() && targetState == ResolveState.TRANSIENT) {
+ else   if (objectAdapter.isTransient() && dataIsTransient) {
     updateFields(objectAdapter,data);
   }
  else   if (objectAdapter.isParented()) {
