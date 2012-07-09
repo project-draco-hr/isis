@@ -7,7 +7,7 @@
   if (!spec.isOfType(targetType)) {
     return new Veto(String.format("Can only drop objects of type %s",targetType.getSingularName()));
   }
-  if (getParent().isPersistent() && adapter.representsTransient()) {
+  if (getParent().representsPersistent() && adapter.isTransient()) {
     return new Veto("Can't drop a non-persistent into this persistent object");
   }
   final Consent perm=getOneToOneAssociation().isAssociationValid(getParent(),adapter);

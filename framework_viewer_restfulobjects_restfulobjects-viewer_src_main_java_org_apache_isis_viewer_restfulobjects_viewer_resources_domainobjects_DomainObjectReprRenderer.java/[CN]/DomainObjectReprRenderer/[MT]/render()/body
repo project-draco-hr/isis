@@ -1,6 +1,6 @@
 {
   if (!mode.isCutDown()) {
-    if (objectAdapter.isPersistent()) {
+    if (objectAdapter.representsPersistent()) {
       if (includesSelf) {
         final JsonRepresentation self=linkToBuilder.with(objectAdapter).builder(Rel.SELF).build();
         getLinks().arrayAdd(self);
@@ -27,7 +27,7 @@
     addUpdatePropertiesLinkIfPersistent();
     final boolean isService=objectAdapter.getSpecification().isService();
     getExtensions().mapPut("isService",isService);
-    getExtensions().mapPut("isPersistent",objectAdapter.isPersistent());
+    getExtensions().mapPut("isPersistent",objectAdapter.representsPersistent());
   }
   return representation;
 }

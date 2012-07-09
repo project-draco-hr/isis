@@ -1,16 +1,16 @@
 {
-  if (adapter.representsTransient() || (adapter.isParented() && adapter.getAggregateRoot().representsTransient())) {
+  if (adapter.isTransient() || (adapter.isParented() && adapter.getAggregateRoot().isTransient())) {
     addObjectChangedForPresentationLayer(adapter);
     return;
   }
-  if (adapter.getResolveState().respondToChangesInPersistentObjects()) {
+  if (adapter.respondToChangesInPersistentObjects()) {
     if (isImmutable(adapter)) {
       return;
     }
     addObjectChangedForPersistenceLayer(adapter);
     addObjectChangedForPresentationLayer(adapter);
   }
-  if (adapter.getResolveState().respondToChangesInPersistentObjects() || adapter.representsTransient()) {
+  if (adapter.respondToChangesInPersistentObjects() || adapter.isTransient()) {
     addObjectChangedForPresentationLayer(adapter);
   }
 }
