@@ -4,21 +4,18 @@
     final StandaloneData standaloneData=(StandaloneData)data;
     return standaloneData.getAdapter();
   }
- else {
-    final Oid oid=data.getOid();
-    if (oid == null) {
-      return null;
-    }
-    ObjectAdapter referencedAdapter=getHydrator().recreateAdapter(spec,oid);
-    if (data instanceof ObjectData) {
-      if (oid.isTransient() || spec.isParented()) {
-        final ResolveState resolveState=spec.isParented() ? ResolveState.GHOST : ResolveState.TRANSIENT;
-        if (referencedAdapter.getResolveState().isValidToChangeTo(resolveState)) {
-          referencedAdapter.changeState(resolveState);
-        }
-        updateObject(referencedAdapter,data,resolveState);
-      }
-    }
-    return referencedAdapter;
+  final Oid oid=data.getOid();
+  if (oid == null) {
+    return null;
   }
+  ObjectAdapter referencedAdapter=getHydrator().recreateAdapter(spec,oid);
+  if (data instanceof ObjectData) {
+    if (spec.isParented()) {
+      updateObject(referencedAdapter,data,ResolveState.RESOLVING);
+    }
+ else     if (oid.isTransient()) {
+      updateObject(referencedAdapter,data,ResolveState.TRANSIENT);
+    }
+  }
+  return referencedAdapter;
 }
