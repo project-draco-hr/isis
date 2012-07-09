@@ -1,10 +1,11 @@
 {
   if (adapter.canTransitionToResolving()) {
-    LOG.debug("resolve " + adapter);
-    PersistorUtil.startStateTransition(adapter,ResolveState.RESOLVING);
-    PersistorUtil.endStateTransition(adapter);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("resolve " + adapter);
+    }
   }
  else {
     LOG.warn("resolveImmediately ignored, " + "adapter's current state is: " + adapter.getResolveState() + " ; oid: "+ adapter.getOid());
   }
+  adapter.markAsResolvedIfPossible();
 }

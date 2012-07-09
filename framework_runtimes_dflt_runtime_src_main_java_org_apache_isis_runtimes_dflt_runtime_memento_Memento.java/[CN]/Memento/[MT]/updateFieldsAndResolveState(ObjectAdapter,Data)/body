@@ -1,9 +1,13 @@
 {
   boolean dataIsTransient=data.getOid().isTransient();
   if (!dataIsTransient) {
-    PersistorUtil.startStateTransition(objectAdapter,ResolveState.RESOLVING);
-    updateFields(objectAdapter,data);
-    PersistorUtil.endStateTransition(objectAdapter);
+    try {
+      PersistorUtil.startResolving(objectAdapter);
+      updateFields(objectAdapter,data);
+    }
+  finally {
+      PersistorUtil.endResolving(objectAdapter);
+    }
   }
  else   if (objectAdapter.isTransient() && dataIsTransient) {
     updateFields(objectAdapter,data);

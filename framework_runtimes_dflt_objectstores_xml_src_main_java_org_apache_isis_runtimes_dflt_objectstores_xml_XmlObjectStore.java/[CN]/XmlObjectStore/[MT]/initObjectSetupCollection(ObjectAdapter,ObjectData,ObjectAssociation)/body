@@ -4,19 +4,23 @@
   if (!collectionAdapter.canTransitionToResolving()) {
     return;
   }
-  PersistorUtil.startStateTransition(collectionAdapter,ResolveState.RESOLVING);
-  final int size=refs == null ? 0 : refs.size();
-  final ObjectAdapter[] elements=new ObjectAdapter[size];
-  for (int j=0; j < size; j++) {
-    final RootOid elementOid=refs.elementAt(j);
-    ObjectAdapter adapter;
-    adapter=getAdapterManager().getAdapterFor(elementOid);
-    if (adapter == null) {
-      adapter=getObject(elementOid);
+  try {
+    PersistorUtil.startResolving(collectionAdapter);
+    final int size=refs == null ? 0 : refs.size();
+    final ObjectAdapter[] elements=new ObjectAdapter[size];
+    for (int j=0; j < size; j++) {
+      final RootOid elementOid=refs.elementAt(j);
+      ObjectAdapter adapter;
+      adapter=getAdapterManager().getAdapterFor(elementOid);
+      if (adapter == null) {
+        adapter=getObject(elementOid);
+      }
+      elements[j]=adapter;
     }
-    elements[j]=adapter;
+    final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collectionAdapter);
+    facet.init(collectionAdapter,elements);
   }
-  final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collectionAdapter);
-  facet.init(collectionAdapter,elements);
-  PersistorUtil.endStateTransition(collectionAdapter);
+  finally {
+    PersistorUtil.endResolving(collectionAdapter);
+  }
 }

@@ -1,0 +1,24 @@
+{
+  final ObjectAdapter collectionAdapter=field.get(parentAdapter);
+  if (!collectionAdapter.canTransitionToResolving()) {
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("loading internal collection " + field);
+  }
+  final List<ObjectAdapter> list=new ArrayList<ObjectAdapter>();
+  try {
+    PersistorUtil.startResolving(collectionAdapter);
+    loadCollectionIntoList(connector,parentAdapter,table,specification,getIdMapping(),fieldMappingByField,versionMapping,list);
+    final CollectionFacet collectionFacet=collectionAdapter.getSpecification().getFacet(CollectionFacet.class);
+    collectionFacet.init(collectionAdapter,list.toArray(new ObjectAdapter[list.size()]));
+  }
+  finally {
+    PersistorUtil.endResolving(collectionAdapter);
+  }
+  for (  final ObjectAdapter field : list) {
+    if (field.getSpecification().isOfType(parentAdapter.getSpecification())) {
+      loadInternalCollection(connector,field);
+    }
+  }
+}
