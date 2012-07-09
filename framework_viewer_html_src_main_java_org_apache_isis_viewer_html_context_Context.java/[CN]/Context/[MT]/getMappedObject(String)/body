@@ -1,18 +1,18 @@
 {
   final RootAdapterMapping mappedObject=getMappedInstance(objectMap,id);
-  final ObjectAdapter object=mappedObject.getObject();
-  if (object.isPersistent() && object.getResolveState().isGhost()) {
-    getPersistenceSession().resolveImmediately(object);
+  final ObjectAdapter adapter=mappedObject.getObject();
+  if (adapter.isPersistent() && adapter.isGhost()) {
+    getPersistenceSession().resolveImmediately(adapter);
   }
   try {
-    mappedObject.checkVersion(object);
+    mappedObject.checkVersion(adapter);
   }
  catch (  final ConcurrencyException e) {
     LOG.info("concurrency conflict: " + e.getMessage());
     messages.clear();
     messages.add(e.getMessage());
-    messages.add("Reloaded object " + object.titleString());
-    updateVersion(object);
+    messages.add("Reloaded object " + adapter.titleString());
+    updateVersion(adapter);
   }
-  return object;
+  return adapter;
 }

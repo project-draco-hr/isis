@@ -1,18 +1,21 @@
 {
-  final ObjectAdapter collection=field.get(parent);
-  if (collection.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+  final ObjectAdapter collectionAdapter=field.get(parentAdapter);
+  if (!collectionAdapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
     LOG.debug("loading internal collection " + field);
-    PersistorUtil.start(collection,ResolveState.RESOLVING);
-    final List<ObjectAdapter> list=new ArrayList<ObjectAdapter>();
-    loadCollectionIntoList(connector,parent,makeResolved,table,specification,getIdMapping(),fieldMappingByField,versionMapping,list);
-    final CollectionFacet collectionFacet=collection.getSpecification().getFacet(CollectionFacet.class);
-    collectionFacet.init(collection,list.toArray(new ObjectAdapter[list.size()]));
-    PersistorUtil.end(collection);
-    if (makeResolved) {
-      for (      final ObjectAdapter field : list) {
-        if (field.getSpecification().isOfType(parent.getSpecification())) {
-          loadInternalCollection(connector,field,true);
-        }
+  }
+  PersistorUtil.startStateTransition(collectionAdapter,ResolveState.RESOLVING);
+  final List<ObjectAdapter> list=new ArrayList<ObjectAdapter>();
+  loadCollectionIntoList(connector,parentAdapter,makeResolved,table,specification,getIdMapping(),fieldMappingByField,versionMapping,list);
+  final CollectionFacet collectionFacet=collectionAdapter.getSpecification().getFacet(CollectionFacet.class);
+  collectionFacet.init(collectionAdapter,list.toArray(new ObjectAdapter[list.size()]));
+  PersistorUtil.endStateTransition(collectionAdapter);
+  if (makeResolved) {
+    for (    final ObjectAdapter field : list) {
+      if (field.getSpecification().isOfType(parentAdapter.getSpecification())) {
+        loadInternalCollection(connector,field,true);
       }
     }
   }

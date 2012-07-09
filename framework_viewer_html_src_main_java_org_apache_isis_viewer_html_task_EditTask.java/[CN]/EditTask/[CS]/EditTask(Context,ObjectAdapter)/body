@@ -1,19 +1,19 @@
 {
-  super(context,"Edit","",object,size(object));
-  final List<ObjectAssociation> allFields=object.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(getAuthenticationSession(),object));
+  super(context,"Edit","",adapter,size(adapter));
+  final List<ObjectAssociation> allFields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(getAuthenticationSession(),adapter));
   fields=new ObjectAssociation[names.length];
   for (int i=0, j=0; j < allFields.size(); j++) {
     final ObjectAssociation fld=allFields.get(j);
     fields[i]=fld;
     names[i]=fld.getName();
     descriptions[i]=fld.getDescription();
-    final Consent usableByUser=fld.isUsable(getAuthenticationSession(),object);
+    final Consent usableByUser=fld.isUsable(getAuthenticationSession(),adapter);
     if (usableByUser.isVetoed()) {
       descriptions[i]=usableByUser.getReason();
     }
     fieldSpecifications[i]=fld.getSpecification();
-    initialState[i]=fld.get(object);
-    if (skipField(object,fld)) {
+    initialState[i]=fld.get(adapter);
+    if (skipField(adapter,fld)) {
       readOnly[i]=true;
     }
  else {
@@ -31,6 +31,6 @@
     }
     i++;
   }
-  final boolean isNew=object.getResolveState() == ResolveState.TRANSIENT;
-  newType=isNew ? getTarget(context).getSpecification().getSingularName() : null;
+  final boolean isTransient=adapter.isTransient();
+  newType=isTransient ? getTarget(context).getSpecification().getSingularName() : null;
 }

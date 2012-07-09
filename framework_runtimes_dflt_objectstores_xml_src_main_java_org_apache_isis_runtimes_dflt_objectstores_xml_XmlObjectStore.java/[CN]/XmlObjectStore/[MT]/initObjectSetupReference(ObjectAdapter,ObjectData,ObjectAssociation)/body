@@ -1,13 +1,15 @@
 {
   final RootOidDefault referenceOid=(RootOidDefault)data.get(field.getId());
-  LOG.debug("setting up field " + field + " with "+ referenceOid);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("setting up field " + field + " with "+ referenceOid);
+  }
   if (referenceOid == null) {
     return;
   }
   final Data fieldData=dataManager.loadData(referenceOid);
   if (fieldData == null) {
     final ObjectAdapter adapter=getPersistenceSession().recreateAdapter(field.getSpecification(),referenceOid);
-    if (!adapter.getResolveState().isDestroyed()) {
+    if (!adapter.isDestroyed()) {
       adapter.changeState(ResolveState.DESTROYED);
     }
     ((OneToOneAssociation)field).initAssociation(object,adapter);

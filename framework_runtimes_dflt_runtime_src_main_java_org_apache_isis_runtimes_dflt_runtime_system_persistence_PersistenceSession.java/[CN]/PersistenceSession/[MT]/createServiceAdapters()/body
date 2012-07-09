@@ -14,10 +14,7 @@
     if (serviceAdapter.getOid().isTransient()) {
       adapterManager.remapAsPersistent(serviceAdapter,null);
     }
-    if (serviceAdapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
-      serviceAdapter.changeState(ResolveState.RESOLVING);
-      serviceAdapter.changeState(ResolveState.RESOLVED);
-    }
+    serviceAdapter.markAsResolvedIfPossible();
     if (existingOid == null) {
       final RootOid persistentOid=(RootOid)serviceAdapter.getOid();
       registerService(persistentOid);

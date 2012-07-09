@@ -1,12 +1,13 @@
 {
-  if (object.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
-    PersistorUtil.start(object,ResolveState.RESOLVING);
-    for (    final FieldMapping mapping : fieldMappingByField.values()) {
-      mapping.initializeField(object,rs);
-    }
-    object.setVersion(versionMapping.getLock(rs));
-    if (makeResolved) {
-      PersistorUtil.end(object);
-    }
+  if (!adapter.getResolveState().canChangeTo(ResolveState.RESOLVING)) {
+    return;
+  }
+  PersistorUtil.startStateTransition(adapter,ResolveState.RESOLVING);
+  for (  final FieldMapping mapping : fieldMappingByField.values()) {
+    mapping.initializeField(adapter,rs);
+  }
+  adapter.setVersion(versionMapping.getLock(rs));
+  if (makeResolved) {
+    PersistorUtil.endStateTransition(adapter);
   }
 }

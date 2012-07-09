@@ -3,7 +3,7 @@
   final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
   final Oid oid=adapter.getOid();
   if (!pojo.jdoIsPersistent()) {
-    if (!adapter.getResolveState().isTransient()) {
+    if (!adapter.getResolveState().representsTransient()) {
       throw new IsisException(MessageFormat.format("adapter is in invalid state; should be {0} but is {1}",ResolveState.TRANSIENT,adapter.getResolveState()));
     }
     if (!oid.isTransient()) {
@@ -11,7 +11,7 @@
     }
   }
  else {
-    if (!adapter.getResolveState().isPersistent()) {
+    if (!adapter.getResolveState().representsPersistent()) {
       throw new IsisException(MessageFormat.format("adapter is in invalid state; should be in a persistent state but is {1}",ResolveState.RESOLVED,adapter.getResolveState()));
     }
     if (oid.isTransient()) {
