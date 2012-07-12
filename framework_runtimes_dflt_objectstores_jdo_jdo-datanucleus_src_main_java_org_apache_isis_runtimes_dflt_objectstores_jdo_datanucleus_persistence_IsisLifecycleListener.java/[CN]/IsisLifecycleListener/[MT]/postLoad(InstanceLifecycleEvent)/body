@@ -1,0 +1,26 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug(logString(Phase.POST,event));
+  }
+  if (isSuspended()) {
+    LOG.debug(" [currently suspended - ignoring]");
+    return;
+  }
+  final PersistenceCapable pojo1=persistenceCapableFor(event);
+  final RootOid oid;
+  final ObjectAdapter existingAdapterIfAny=getAdapterManager().getAdapterFor(pojo1);
+  if (existingAdapterIfAny != null) {
+    ensureRootObject(event);
+    oid=(RootOid)existingAdapterIfAny.getOid();
+  }
+ else {
+    final Object pojo=persistenceCapableFor(event);
+    final OidGenerator oidGenerator=getOidGenerator();
+    oid=oidGenerator.createPersistent(pojo,null);
+    PersistenceSessionHydrator hydrator=getPersistenceSession();
+    ObjectAdapter adapter=hydrator.recreateAdapter(oid,pojo);
+    PersistorUtil.startResolving(adapter);
+    PersistorUtil.endResolving(adapter);
+  }
+  ensureFrameworksInAgreement(event);
+}

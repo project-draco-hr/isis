@@ -1,0 +1,18 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug(logString(Phase.POST,event));
+  }
+  if (isSuspended()) {
+    LOG.debug(" [currently suspended - ignoring]");
+    return;
+  }
+  ensureRootObject(event);
+  final PersistenceCapable pojo=persistenceCapableFor(event);
+  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+  final RootOid transientOid=(RootOid)adapter.getOid();
+  final RootOid persistentOid=getOidGenerator().createPersistent(pojo,transientOid);
+  getAdapterManager().remapAsPersistent(adapter,persistentOid);
+  clearDirtyFor(adapter);
+  CallbackUtils.callCallback(adapter,PersistedCallbackFacet.class);
+  ensureFrameworksInAgreement(event);
+}

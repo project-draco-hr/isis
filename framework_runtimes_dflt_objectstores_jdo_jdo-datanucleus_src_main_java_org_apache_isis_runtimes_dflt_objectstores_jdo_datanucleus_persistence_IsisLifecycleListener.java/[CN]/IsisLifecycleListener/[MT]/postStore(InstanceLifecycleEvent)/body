@@ -1,0 +1,15 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug(logString(Phase.POST,event));
+  }
+  if (isSuspended()) {
+    LOG.debug(" [currently suspended - ignoring]");
+    return;
+  }
+  ensureRootObject(event);
+  final PersistenceCapable pojo=persistenceCapableFor(event);
+  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+  clearDirtyFor(adapter);
+  CallbackUtils.callCallback(adapter,UpdatedCallbackFacet.class);
+  ensureFrameworksInAgreement(event);
+}
