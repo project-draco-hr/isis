@@ -1,0 +1,10 @@
+{
+  final PersistenceManager persistenceManager=getJdoObjectStore().getPersistenceManager();
+  final Class<?> cls=objectSpec.getCorrespondingClass();
+  final Query jdoQuery=persistenceManager.newNamedQuery(cls,queryName);
+  final List<?> results=(List<?>)jdoQuery.executeWithMap(argumentsByParameterName);
+  if (cardinality == QueryCardinality.MULTIPLE) {
+    return results;
+  }
+  return results.isEmpty() ? Collections.emptyList() : results.subList(0,1);
+}

@@ -2,6 +2,21 @@
   final String queryName=persistenceQuery.getQueryName();
   final Map<String,Object> map=unwrap(persistenceQuery.getArgumentsAdaptersByParameterName());
   final QueryCardinality cardinality=persistenceQuery.getCardinality();
-  final List<?> results=getResults(queryName,map,cardinality);
-  return loadAdapters(persistenceQuery.getSpecification(),results);
+  final ObjectSpecification objectSpec=persistenceQuery.getSpecification();
+  final List<?> results;
+  if ((objectSpec.getFullIdentifier() + "#pk").equals(queryName)) {
+    final Class<?> cls=objectSpec.getCorrespondingClass();
+    final OneToOneAssociation pkOtoa=JdoPropertyUtils.getPrimaryKeyPropertyFor(objectSpec);
+    if (pkOtoa == null) {
+      throw new UnsupportedOperationException("cannot search by primary key for DataStore-assigned entities");
+    }
+    String pkOtoaId=pkOtoa.getId();
+    final String filter=pkOtoaId + "==" + map.get(pkOtoaId);
+    final Query jdoQuery=getPersistenceManager().newQuery(cls,filter);
+    results=(List<?>)jdoQuery.execute();
+  }
+ else {
+    results=getResults(objectSpec,queryName,map,cardinality);
+  }
+  return loadAdapters(objectSpec,results);
 }

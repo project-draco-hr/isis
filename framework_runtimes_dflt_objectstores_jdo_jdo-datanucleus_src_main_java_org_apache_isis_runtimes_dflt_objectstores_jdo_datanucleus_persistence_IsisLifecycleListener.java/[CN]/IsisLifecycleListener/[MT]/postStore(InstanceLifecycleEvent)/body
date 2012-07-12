@@ -8,8 +8,21 @@
   }
   ensureRootObject(event);
   final PersistenceCapable pojo=persistenceCapableFor(event);
+  if (!pojo.jdoIsPersistent()) {
+    throw new IllegalStateException("Pojo JDO state is not persistent! pojo dnOid: " + JDOHelper.getObjectId(pojo));
+  }
   final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+  final RootOid isisOid=(RootOid)adapter.getOid();
+  Class<? extends CallbackFacet> callbackFacetClass;
+  if (isisOid.isTransient()) {
+    final RootOid persistentOid=getOidGenerator().createPersistent(pojo,isisOid);
+    getAdapterManager().remapAsPersistent(adapter,persistentOid);
+    callbackFacetClass=PersistedCallbackFacet.class;
+  }
+ else {
+    callbackFacetClass=UpdatedCallbackFacet.class;
+  }
   clearDirtyFor(adapter);
-  CallbackUtils.callCallback(adapter,UpdatedCallbackFacet.class);
+  CallbackUtils.callCallback(adapter,callbackFacetClass);
   ensureFrameworksInAgreement(event);
 }
