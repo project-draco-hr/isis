@@ -2,6 +2,7 @@
   final ListRepresentation repr=givenRepresentation();
   final JsonRepresentation values=repr.getValues();
   for (  final LinkRepresentation link : values.arrayIterable(LinkRepresentation.class)) {
+    assertThat("HiddenRepository should not show up in services list",false,is(link.getHref().endsWith("HiddenRepository")));
     final RestfulResponse<JsonRepresentation> followJsonResp=client.follow(link);
     assertThat(followJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
     final JsonRepresentation followRepr=followJsonResp.getEntity();
