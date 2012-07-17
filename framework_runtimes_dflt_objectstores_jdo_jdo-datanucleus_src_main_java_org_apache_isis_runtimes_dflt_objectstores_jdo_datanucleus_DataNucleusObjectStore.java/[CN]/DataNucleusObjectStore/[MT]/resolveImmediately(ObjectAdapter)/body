@@ -27,10 +27,17 @@
     resolveImmediately(parentAdapter);
     return;
   }
-  JdoPropertyUtils.setPropertyIdFromOid(adapter,getAdapterFactory());
   try {
-    final Object domainObject=adapter.getObject();
-    getPersistenceManager().refresh(domainObject);
+    if (JdoPropertyUtils.hasPrimaryKeyProperty(adapter)) {
+      JdoPropertyUtils.setPropertyIdFromOid(adapter,getAdapterFactory());
+      final Object domainObject=adapter.getObject();
+      getPersistenceManager().refresh(domainObject);
+    }
+ else {
+      RootOid rootOid=(RootOid)adapter.getOid();
+      Object dnOid=new OIDImpl(adapter.getSpecification().getFullIdentifier(),Long.parseLong(rootOid.getIdentifier()));
+      getPersistenceManager().getObjectById(dnOid);
+    }
   }
  catch (  final RuntimeException e) {
     throw new ObjectNotFoundException(adapter.getOid(),e);

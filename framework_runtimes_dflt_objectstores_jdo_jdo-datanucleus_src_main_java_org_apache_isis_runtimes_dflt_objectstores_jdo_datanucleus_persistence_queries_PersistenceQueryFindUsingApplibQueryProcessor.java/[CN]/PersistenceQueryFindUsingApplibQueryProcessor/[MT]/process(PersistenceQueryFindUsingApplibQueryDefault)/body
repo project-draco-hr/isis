@@ -6,10 +6,10 @@
   final List<?> results;
   if ((objectSpec.getFullIdentifier() + "#pk").equals(queryName)) {
     final Class<?> cls=objectSpec.getCorrespondingClass();
-    final OneToOneAssociation pkOtoa=JdoPropertyUtils.getPrimaryKeyPropertyFor(objectSpec);
-    if (pkOtoa == null) {
+    if (!JdoPropertyUtils.hasPrimaryKeyProperty(objectSpec)) {
       throw new UnsupportedOperationException("cannot search by primary key for DataStore-assigned entities");
     }
+    final OneToOneAssociation pkOtoa=JdoPropertyUtils.getPrimaryKeyPropertyFor(objectSpec);
     String pkOtoaId=pkOtoa.getId();
     final String filter=pkOtoaId + "==" + map.get(pkOtoaId);
     final Query jdoQuery=getPersistenceManager().newQuery(cls,filter);
