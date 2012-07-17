@@ -1,0 +1,13 @@
+{
+  iswf.beginTran();
+  ApplibValuedEntity entity=repo.newEntity();
+  entity.setStringProperty("1");
+  Date date=new Date();
+  entity.setDateProperty(date);
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  ApplibValuedEntity entityRetrieved=repo.list().get(0);
+  assertThat(entityRetrieved.getDateProperty().dateValue(),is(date.dateValue()));
+  iswf.commitTran();
+}
