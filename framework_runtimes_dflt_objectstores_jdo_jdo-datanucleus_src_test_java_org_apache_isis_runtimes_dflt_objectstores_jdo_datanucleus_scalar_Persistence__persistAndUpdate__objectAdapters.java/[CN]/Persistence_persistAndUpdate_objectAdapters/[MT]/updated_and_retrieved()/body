@@ -1,0 +1,20 @@
+{
+  iswf.beginTran();
+  PrimitiveValuedEntity entity=repo.newEntity();
+  ObjectAdapter adapter=iswf.adapterFor(entity);
+  entity.setId(1);
+  entity.setCharProperty('X');
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  entity=repo.list().get(0);
+  entity.setCharProperty('Y');
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  entity=repo.list().get(0);
+  assertThat(entity.getCharProperty(),is('Y'));
+  adapter=iswf.adapterFor(entity);
+  assertThat(adapter.getResolveState(),is(ResolveState.RESOLVED));
+  iswf.commitTran();
+}

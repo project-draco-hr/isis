@@ -1,0 +1,22 @@
+{
+  iswf.beginTran();
+  referencedRepo.newEntity().setName("Referenced 1");
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  UnidirReferencedEntity referencedEntity1=referencedRepo.list().get(0);
+  UnidirReferencingEntity referencingEntity1=referencingRepo.newEntity();
+  referencingEntity1.setName("Referencing 1");
+  referencingEntity1.setReferenced(referencedEntity1);
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  List<UnidirReferencingEntity> list=referencingRepo.list();
+  referencingEntity1=list.get(0);
+  assertThat(referencingEntity1.referenced,is(nullValue()));
+  UnidirReferencedEntity referenced=referencingEntity1.getReferenced();
+  ObjectAdapter referencedAdapter=iswf.adapterFor(referenced);
+  assertThat(referencedAdapter.getResolveState(),is(ResolveState.RESOLVED));
+  assertThat(referenced,is(not(nullValue())));
+  iswf.commitTran();
+}
