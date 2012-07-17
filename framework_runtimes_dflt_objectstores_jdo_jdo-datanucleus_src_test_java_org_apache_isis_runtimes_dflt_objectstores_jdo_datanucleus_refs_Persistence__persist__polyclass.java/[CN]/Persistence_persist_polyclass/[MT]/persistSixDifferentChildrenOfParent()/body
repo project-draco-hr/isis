@@ -1,0 +1,22 @@
+{
+  iswf.beginTran();
+  repo.newEntity().setName("Parent 1");
+  repo.newEntity().setName("Parent 2");
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  PolyClassParentEntity retrievedEntity=repo.list().get(0);
+  retrievedEntity.newSubtype1("Child 1 of Parent 1",123);
+  retrievedEntity.newSubtype1("Child 2 of Parent 1",456);
+  retrievedEntity.newSubtype2("Child 3 of Parent 1","abc");
+  retrievedEntity.newSubtype2("Child 4 of Parent 1","def");
+  retrievedEntity.newSubtype3("Child 5 of Parent 1",BigDecimal.ONE);
+  retrievedEntity.newSubtype3("Child 6 of Parent 1",BigDecimal.TEN);
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  retrievedEntity=repo.list().get(0);
+  Set<PolyClassChildEntity> children=retrievedEntity.getChildren();
+  assertThat(children.size(),is(6));
+  iswf.commitTran();
+}

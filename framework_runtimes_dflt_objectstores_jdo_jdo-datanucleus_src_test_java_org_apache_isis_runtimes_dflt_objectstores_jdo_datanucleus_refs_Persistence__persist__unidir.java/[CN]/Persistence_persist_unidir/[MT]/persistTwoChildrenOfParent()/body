@@ -1,0 +1,19 @@
+{
+  iswf.beginTran();
+  repo.newEntity().setName("Parent 1");
+  repo.newEntity().setName("Parent 2");
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  UnidirFkParentEntity retrievedEntity=repo.list().get(0);
+  retrievedEntity.newChild("Child 1 of Parent 1");
+  retrievedEntity.newChild("Child 2 of Parent 1");
+  retrievedEntity.newChild("Child 3 of Parent 1");
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  retrievedEntity=repo.list().get(0);
+  Set<UnidirFkChildEntity> children=retrievedEntity.getChildren();
+  assertThat(children.size(),is(3));
+  iswf.commitTran();
+}

@@ -1,0 +1,30 @@
+{
+  iswf.beginTran();
+  UnidirFkParentEntity parent1=repo.newEntity();
+  parent1.setName("Parent 1");
+  UnidirFkParentEntity parent2=repo.newEntity();
+  parent2.setName("Parent 2");
+  parent1.newChild("Child 1 of Parent 1");
+  parent1.newChild("Child 2 of Parent 1");
+  parent1.newChild("Child 3 of Parent 1");
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  parent1=repo.list().get(0);
+  parent2=repo.list().get(0);
+  Set<UnidirFkChildEntity> children=parent1.getChildren();
+  assertThat(children.size(),is(3));
+  UnidirFkChildEntity child1=parent1.getChildren().iterator().next();
+  parent1.removeChild(child1);
+  parent2.addChild(child1);
+  iswf.commitTran();
+  iswf.bounceSystem();
+  iswf.beginTran();
+  parent1=repo.list().get(0);
+  parent2=repo.list().get(0);
+  children=parent1.getChildren();
+  assertThat(children.size(),is(2));
+  children=parent2.getChildren();
+  assertThat(children.size(),is(1));
+  iswf.commitTran();
+}
