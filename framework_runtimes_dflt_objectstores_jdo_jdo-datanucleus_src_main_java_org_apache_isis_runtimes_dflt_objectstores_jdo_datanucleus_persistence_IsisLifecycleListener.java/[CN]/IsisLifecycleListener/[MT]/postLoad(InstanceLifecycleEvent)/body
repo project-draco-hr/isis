@@ -8,26 +8,27 @@
   }
   final PersistenceCapable pojo=persistenceCapableFor(event);
   final RootOid oid;
-  ObjectAdapter existingAdapterIfAny=getAdapterManager().getAdapterFor(pojo);
-  if (existingAdapterIfAny != null) {
+  ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+  if (adapter != null) {
     ensureRootObject(event);
-    oid=(RootOid)existingAdapterIfAny.getOid();
+    oid=(RootOid)adapter.getOid();
   }
  else {
     final OidGenerator oidGenerator=getOidGenerator();
     oid=oidGenerator.createPersistent(pojo,null);
-    existingAdapterIfAny=getAdapterManager().getAdapterFor(oid);
-    if (existingAdapterIfAny != null) {
-      getAdapterManager().removeAdapter(existingAdapterIfAny);
-      existingAdapterIfAny.replacePojo(pojo);
-      getAdapterManager().addExistingAdapter(existingAdapterIfAny);
+    adapter=getAdapterManager().getAdapterFor(oid);
+    if (adapter != null) {
+      getAdapterManager().removeAdapter(adapter);
+      adapter.replacePojo(pojo);
+      getAdapterManager().addExistingAdapter(adapter);
     }
  else {
       PersistenceSessionHydrator hydrator=getPersistenceSession();
-      ObjectAdapter adapter=hydrator.recreateAdapter(oid,pojo);
+      adapter=hydrator.recreateAdapter(oid,pojo);
       PersistorUtil.startResolving(adapter);
       PersistorUtil.endResolving(adapter);
     }
   }
+  adapter.setVersion(getVersionIfAny(pojo));
   ensureFrameworksInAgreement(event);
 }
