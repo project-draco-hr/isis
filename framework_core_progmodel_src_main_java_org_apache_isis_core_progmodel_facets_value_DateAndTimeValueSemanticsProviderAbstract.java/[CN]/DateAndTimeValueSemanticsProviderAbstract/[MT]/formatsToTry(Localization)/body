@@ -1,0 +1,18 @@
+{
+  List<DateFormat> formats=new ArrayList<DateFormat>();
+  Locale locale=localization == null ? Locale.getDefault() : localization.getLocale();
+  formats.add(DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,locale));
+  formats.add(createDateFormat("yyyy-MM-dd HH:mm:ss.SSS"));
+  formats.add(createDateFormat("yyyyMMdd'T'HHmmssSSS"));
+  formats.add(DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,locale));
+  formats.add(createDateFormat("yyyy-MM-dd HH:mm:ss"));
+  formats.add(DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,locale));
+  formats.add(createDateFormat("yyyyMMdd'T'HHmmss"));
+  formats.add(createDateFormat("yyyy-MM-dd HH:mm"));
+  formats.add(createDateFormat("yyyyMMdd'T'HHmm"));
+  formats.add(createDateFormat("dd-MMM-yyyy HH:mm"));
+  for (  DateFormat format : formats) {
+    format.setTimeZone(localization == null ? TimeZone.getDefault() : localization.getTimeZone());
+  }
+  return formats;
+}

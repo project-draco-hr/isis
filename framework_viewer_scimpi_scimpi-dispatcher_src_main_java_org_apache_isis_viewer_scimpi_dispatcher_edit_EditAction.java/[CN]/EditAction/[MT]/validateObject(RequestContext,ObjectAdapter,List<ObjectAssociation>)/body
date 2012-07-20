@@ -35,7 +35,8 @@
       try {
         final ParseableFacet facet=field.getSpecification().getFacet(ParseableFacet.class);
         final ObjectAdapter originalValue=field.get(object);
-        final ObjectAdapter newValue=facet.parseTextEntry(originalValue,newEntry);
+        Localization localization=IsisContext.getLocalization();
+        final ObjectAdapter newValue=facet.parseTextEntry(originalValue,newEntry,localization);
         consent=((OneToOneAssociation)field).isAssociationValid(object,newValue);
         fieldState.setValue(newValue);
       }

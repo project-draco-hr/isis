@@ -24,10 +24,11 @@
       if (parameters.length != 2) {
         throw new ScimpiException("Expected two parameters for the log-on method: " + methodName);
       }
+      Localization localization=IsisContext.getLocalization();
       ParseableFacet facet=parameters2.get(0).getSpecification().getFacet(ParseableFacet.class);
-      parameters[0]=facet.parseTextEntry(null,username);
+      parameters[0]=facet.parseTextEntry(null,username,localization);
       facet=parameters2.get(1).getSpecification().getFacet(ParseableFacet.class);
-      parameters[1]=facet.parseTextEntry(null,password);
+      parameters[1]=facet.parseTextEntry(null,password,localization);
       final ObjectAdapter result=action.execute(object,parameters);
       isValid=result != null;
       if (isValid) {
