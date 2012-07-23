@@ -9,10 +9,15 @@
     final String id=request.getOptionalProperty("object");
     final ObjectAdapter object=context.getMappedObjectOrResult(id);
     final ObjectSpecification specification=object.getSpecification();
-    request.appendHtml(specification.getSingularName() + " (" + specification.getFullIdentifier()+ ") \n");
-    final List<ObjectAssociation> fields=specification.getAssociations();
-    for (int i=0; i < fields.size(); i++) {
-      request.appendHtml("    " + fields.get(i).getName() + " ("+ fields.get(i).getSpecification().getSingularName()+ ") \n");
+    String type=request.getOptionalProperty(TYPE,"details");
+    if (type.equals("graph")) {
+      specificationGraph(request,specification,null,new ArrayList<ObjectSpecification>(),0);
+    }
+ else     if (type.equals("details")) {
+      specificationDetails(request,specification);
+    }
+ else {
+      request.appendHtml("invalid type: " + type);
     }
     request.appendHtml("</pre>");
     request.appendHtml("</div>");
