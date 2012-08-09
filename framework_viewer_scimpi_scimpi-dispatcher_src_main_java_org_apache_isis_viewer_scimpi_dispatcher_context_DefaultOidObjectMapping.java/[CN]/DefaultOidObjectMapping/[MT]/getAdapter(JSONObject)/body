@@ -2,7 +2,7 @@
   final String oidStr=jsonObject.getString("_oid");
   final TypedOid typedOid=new OidMarshaller().unmarshal(oidStr,TypedOid.class);
   if (!typedOid.isTransient()) {
-    return getPersistenceSession().recreateAdapter(typedOid);
+    return getAdapterManager().recreatePersistentAdapter(typedOid);
   }
  else {
     return mappedObject(oidStr);

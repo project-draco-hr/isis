@@ -2,6 +2,12 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug(logString(Phase.POST,event));
   }
+  if (isSuspended()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(" [currently suspended - ignoring]");
+    }
+    return;
+  }
   ensureRootObject(event);
   ensureFrameworksInAgreement(event);
 }

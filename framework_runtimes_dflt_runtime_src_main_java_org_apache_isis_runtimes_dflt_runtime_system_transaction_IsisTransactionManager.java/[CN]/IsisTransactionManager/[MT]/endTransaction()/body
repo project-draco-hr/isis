@@ -4,10 +4,30 @@
   }
   transactionLevel--;
   if (transactionLevel == 0) {
-    LOG.debug("endTransaction: committing");
-    objectPersistor.objectChangedAllDirty();
-    getTransaction().commit();
-    objectStore.endTransaction();
+    List<ObjectPersistenceException> exceptions=this.getTransaction().getExceptionsIfAny();
+    if (exceptions.isEmpty()) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("endTransaction: committing");
+      }
+      objectPersistor.objectChangedAllDirty();
+      exceptions=this.getTransaction().getExceptionsIfAny();
+    }
+    if (exceptions.isEmpty()) {
+      getTransaction().commit();
+      exceptions=this.getTransaction().getExceptionsIfAny();
+    }
+    if (exceptions.isEmpty()) {
+      objectStore.endTransaction();
+      exceptions=this.getTransaction().getExceptionsIfAny();
+    }
+    if (!exceptions.isEmpty()) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("endTransaction: aborting instead, " + exceptions.size() + " exception(s) have been raised");
+      }
+      abortTransaction();
+      exceptions=this.getTransaction().getExceptionsIfAny();
+      throw exceptionToThrowFrom(exceptions);
+    }
   }
  else   if (transactionLevel < 0) {
     LOG.error("endTransaction: transactionLevel=" + transactionLevel);

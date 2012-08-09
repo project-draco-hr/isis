@@ -8,7 +8,9 @@
   }
   final Data fieldData=dataManager.loadData(referenceOid);
   if (fieldData == null) {
-    final ObjectAdapter adapter=getPersistenceSession().recreateAdapter(field.getSpecification(),referenceOid);
+    ObjectSpecification spec=field.getSpecification();
+    final Object recreatedPojo=spec.createObject();
+    final ObjectAdapter adapter=getAdapterManager().mapRecreatedPojo(referenceOid,recreatedPojo);
     if (!adapter.isDestroyed()) {
       adapter.changeState(ResolveState.DESTROYED);
     }
@@ -16,7 +18,9 @@
     LOG.warn("No data found for " + referenceOid + " so field '"+ field.getName()+ "' not set in object '"+ object.titleString()+ "'");
   }
  else {
-    final ObjectAdapter reference=getPersistenceSession().recreateAdapter(specFor(fieldData),referenceOid);
+    ObjectSpecification spec=specFor(fieldData);
+    final Object recreatedPojo=spec.createObject();
+    final ObjectAdapter reference=getAdapterManager().mapRecreatedPojo(referenceOid,recreatedPojo);
     ((OneToOneAssociation)field).initAssociation(object,reference);
   }
 }

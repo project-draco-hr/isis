@@ -1,7 +1,8 @@
 {
   final RootOid oid=data.getRootOid();
   final ObjectSpecification spec=specFor(data);
-  final ObjectAdapter object=getPersistenceSession().recreateAdapter(spec,oid);
+  final Object recreatedPojo=spec.createObject();
+  final ObjectAdapter object=getAdapterManager().mapRecreatedPojo(oid,recreatedPojo);
   initObject(object,data);
   return object;
 }

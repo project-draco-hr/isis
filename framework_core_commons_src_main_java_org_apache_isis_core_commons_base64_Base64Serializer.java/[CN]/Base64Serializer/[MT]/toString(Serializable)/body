@@ -1,0 +1,22 @@
+{
+  final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  ObjectOutputStream oos=null;
+  try {
+    oos=new ObjectOutputStream(baos);
+    oos.writeObject(serializable);
+    return new String(Base64.encodeBase64(baos.toByteArray()));
+  }
+ catch (  IOException e) {
+    throw new Base64Serializer.Exception(e);
+  }
+ finally {
+    try {
+      if (oos != null) {
+        oos.close();
+      }
+    }
+ catch (    IOException e) {
+      throw new Base64Serializer.Exception(e);
+    }
+  }
+}

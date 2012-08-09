@@ -8,7 +8,8 @@
   if (oid == null) {
     return null;
   }
-  ObjectAdapter referencedAdapter=getHydrator().recreateAdapter(spec,oid);
+  final Object recreatedPojo=spec.createObject();
+  ObjectAdapter referencedAdapter=getAdapterManager().mapRecreatedPojo(oid,recreatedPojo);
   if (data instanceof ObjectData) {
     if (spec.isParented()) {
       updateObject(referencedAdapter,data);

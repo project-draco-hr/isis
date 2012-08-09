@@ -3,7 +3,8 @@
     return null;
   }
   final ObjectSpecification spec=getSpecificationLoader().loadSpecification(data.getClassName());
-  ObjectAdapter adapter=getHydrator().recreateAdapter(spec,getOid());
+  final Object recreatedPojo=spec.createObject();
+  ObjectAdapter adapter=getAdapterManager().mapRecreatedPojo(getOid(),recreatedPojo);
   if (adapter.getSpecification().isParentedOrFreeCollection()) {
     populateCollection(adapter,(CollectionData)data);
   }

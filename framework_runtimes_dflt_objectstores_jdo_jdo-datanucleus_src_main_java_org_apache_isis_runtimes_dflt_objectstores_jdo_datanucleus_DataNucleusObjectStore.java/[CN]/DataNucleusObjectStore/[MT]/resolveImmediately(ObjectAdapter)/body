@@ -27,22 +27,15 @@
     resolveImmediately(parentAdapter);
     return;
   }
+  if (adapter.getObject() == null) {
+    throw new ObjectNotFoundException(adapter.getOid());
+  }
   try {
-    if (JdoPropertyUtils.hasPrimaryKeyProperty(adapter)) {
-      JdoPropertyUtils.setPropertyIdFromOid(adapter,getAdapterFactory());
-      final Object domainObject=adapter.getObject();
-      getPersistenceManager().refresh(domainObject);
-    }
- else {
-      RootOid rootOid=(RootOid)adapter.getOid();
-      Object dnOid=new OIDImpl(adapter.getSpecification().getFullIdentifier(),Long.parseLong(rootOid.getIdentifier()));
-      getPersistenceManager().getObjectById(dnOid);
-    }
+    final Object domainObject=adapter.getObject();
+    getPersistenceManager().refresh(domainObject);
   }
  catch (  final RuntimeException e) {
     throw new ObjectNotFoundException(adapter.getOid(),e);
   }
-  if (adapter.getObject() == null) {
-    throw new ObjectNotFoundException(adapter.getOid());
-  }
+  lifecycleListener.postLoadProcessingFor((PersistenceCapable)adapter.getObject());
 }

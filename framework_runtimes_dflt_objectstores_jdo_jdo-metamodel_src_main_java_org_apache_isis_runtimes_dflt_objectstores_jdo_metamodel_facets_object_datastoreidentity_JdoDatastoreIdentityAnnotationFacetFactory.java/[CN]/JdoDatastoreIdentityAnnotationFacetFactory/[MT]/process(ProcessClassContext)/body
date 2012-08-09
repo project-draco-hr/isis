@@ -1,0 +1,10 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final DatastoreIdentity annotation=getAnnotation(cls,DatastoreIdentity.class);
+  if (annotation == null) {
+    return;
+  }
+  IdGeneratorStrategy strategyAttribute=annotation.strategy();
+  FacetUtil.addFacet(new JdoDatastoreIdentityFacetAnnotation(strategyAttribute,processClassContext.getFacetHolder()));
+  return;
+}

@@ -2,12 +2,6 @@
   if (!(pojo instanceof PersistenceCapable)) {
     return "1";
   }
-  Object identifierObj=getPersistenceManager().getObjectId(pojo);
-  if (identifierObj instanceof org.datanucleus.identity.OID) {
-    org.datanucleus.identity.OID dnOid=(org.datanucleus.identity.OID)identifierObj;
-    return dnOid.getKeyValue().toString();
-  }
- else {
-    return identifierObj.toString();
-  }
+  final Object jdoOid=getPersistenceManager().getObjectId(pojo);
+  return JdoOidSerializer.toString(jdoOid);
 }

@@ -1,14 +1,12 @@
 {
   final TypedOid typedOid=new OidMarshaller().unmarshal(oidStr,TypedOid.class);
-  final ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(typedOid.getObjectSpecId());
   if (typedOid.isTransient()) {
     TransientRootAdapterMapping mapping=sessionTransients.get(oidStr);
     if (mapping == null) {
       mapping=requestTransients.get(oidStr);
     }
     if (mapping == null) {
-      final Object pojo=spec.createObject();
-      return getPersistenceSession().recreateAdapter(typedOid,pojo);
+      return getAdapterManager().recreatePersistentAdapter(typedOid);
     }
     final ObjectAdapter mappedTransientObject=mapping.getObject();
     if (LOG.isDebugEnabled()) {
