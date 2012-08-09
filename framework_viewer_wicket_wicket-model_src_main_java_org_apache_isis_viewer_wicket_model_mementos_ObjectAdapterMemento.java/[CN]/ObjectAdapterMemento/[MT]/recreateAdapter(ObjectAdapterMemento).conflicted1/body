@@ -1,4 +1,6 @@
 {
-  TypedOid oid=oidMarshaller.unmarshal(oam.persistentOidStr,TypedOid.class);
-  return getAdapterManager().recreatePersistentAdapter(oid);
+  ObjectSpecId objectSpecId=oam.objectSpecId;
+  ObjectSpecification objectSpec=SpecUtils.getSpecificationFor(objectSpecId);
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  return encodableFacet.fromEncodedString(oam.encodableValue);
 }

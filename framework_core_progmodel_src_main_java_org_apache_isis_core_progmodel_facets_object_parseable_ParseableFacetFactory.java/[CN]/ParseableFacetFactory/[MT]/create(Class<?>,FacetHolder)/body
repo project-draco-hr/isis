@@ -1,14 +1,14 @@
 {
   final Parseable annotation=getAnnotation(cls,Parseable.class);
   if (annotation != null) {
-    final ParseableFacetAnnotation facet=new ParseableFacetAnnotation(cls,getIsisConfiguration(),holder,authenticationSessionProvider,adapterManager,dependencyInjector);
+    final ParseableFacetAnnotation facet=new ParseableFacetAnnotation(cls,getIsisConfiguration(),holder,authenticationSessionProvider,adapterManager,servicesInjector);
     if (facet.isValid()) {
       return facet;
     }
   }
   final String parserName=ParserUtil.parserNameFromConfiguration(cls,getIsisConfiguration());
   if (!StringUtils.isNullOrEmpty(parserName)) {
-    final ParseableFacetFromConfiguration facet=new ParseableFacetFromConfiguration(parserName,holder,authenticationSessionProvider,dependencyInjector,adapterManager);
+    final ParseableFacetFromConfiguration facet=new ParseableFacetFromConfiguration(parserName,holder,authenticationSessionProvider,servicesInjector,adapterManager);
     if (facet.isValid()) {
       return facet;
     }

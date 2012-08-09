@@ -2,15 +2,15 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("installing " + this.getClass().getName());
   }
-  final AdapterManagerExtended adapterManager=createAdapterManager(getConfiguration());
+  final PojoRecreator pojoRecreator=createPojoRecreator(getConfiguration());
   final ObjectAdapterFactory adapterFactory=createAdapterFactory(getConfiguration());
   final ObjectFactory objectFactory=createObjectFactory(getConfiguration());
   final IdentifierGenerator identifierGenerator=createIdentifierGenerator(getConfiguration());
   final RuntimeContext runtimeContext=createRuntimeContext(getConfiguration());
   final DomainObjectContainer container=createContainer(getConfiguration());
-  final ServicesInjector servicesInjector=createServicesInjector(getConfiguration());
+  final ServicesInjectorSpi servicesInjector=createServicesInjector(getConfiguration());
   final List<Object> serviceList=persistenceSessionFactory.getServices();
-  ensureThatArg(adapterManager,is(not(nullValue())));
+  ensureThatArg(pojoRecreator,is(not(nullValue())));
   ensureThatArg(adapterFactory,is(not(nullValue())));
   ensureThatArg(objectFactory,is(not(nullValue())));
   ensureThatArg(identifierGenerator,is(not(nullValue())));
@@ -22,6 +22,6 @@
   runtimeContext.setContainer(container);
   servicesInjector.setContainer(container);
   servicesInjector.setServices(serviceList);
-  persistenceSessionFactory.getSpecificationLoader().injectInto(runtimeContext);
-  return createPersistenceSession(persistenceSessionFactory,adapterManager,adapterFactory,objectFactory,identifierGenerator,servicesInjector);
+  getSpecificationLoader().injectInto(runtimeContext);
+  return createPersistenceSession(persistenceSessionFactory,adapterFactory,objectFactory,pojoRecreator,identifierGenerator,servicesInjector);
 }

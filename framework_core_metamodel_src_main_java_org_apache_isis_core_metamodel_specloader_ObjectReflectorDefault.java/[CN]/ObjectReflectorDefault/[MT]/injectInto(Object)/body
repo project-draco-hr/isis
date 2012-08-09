@@ -1,11 +1,11 @@
 {
   final Class<?> candidateClass=candidate.getClass();
+  if (SpecificationLoaderSpiAware.class.isAssignableFrom(candidateClass)) {
+    final SpecificationLoaderSpiAware cast=SpecificationLoaderSpiAware.class.cast(candidate);
+    cast.setSpecificationLoaderSpi(this);
+  }
   if (SpecificationLoaderAware.class.isAssignableFrom(candidateClass)) {
     final SpecificationLoaderAware cast=SpecificationLoaderAware.class.cast(candidate);
-    cast.setSpecificationLoader(this);
-  }
-  if (SpecificationLookupAware.class.isAssignableFrom(candidateClass)) {
-    final SpecificationLookupAware cast=SpecificationLookupAware.class.cast(candidate);
     cast.setSpecificationLookup(this);
   }
   getClassSubstitutor().injectInto(candidate);

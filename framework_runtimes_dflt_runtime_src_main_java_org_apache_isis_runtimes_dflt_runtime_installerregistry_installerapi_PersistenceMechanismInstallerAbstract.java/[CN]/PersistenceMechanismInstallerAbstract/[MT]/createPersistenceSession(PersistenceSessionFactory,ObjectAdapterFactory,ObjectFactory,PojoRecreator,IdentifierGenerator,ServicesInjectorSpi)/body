@@ -1,0 +1,18 @@
+{
+  final PersistAlgorithm persistAlgorithm=createPersistAlgorithm(getConfiguration());
+  final AdapterManagerDefault adapterManager=new AdapterManagerDefault(pojoRecreator);
+  ObjectStoreSpi objectStore=createObjectStore(getConfiguration(),objectAdapterFactory,adapterManager);
+  ensureThatArg(persistAlgorithm,is(not(nullValue())));
+  ensureThatArg(objectStore,is(not(nullValue())));
+  if (getConfiguration().getBoolean(LOGGING_PROPERTY,false)) {
+    final String level=getConfiguration().getString(LOGGING_PROPERTY + ".level","debug");
+    objectStore=new IsisObjectStoreLogger(objectStore,level);
+  }
+  final PersistenceSession persistenceSession=new PersistenceSession(persistenceSessionFactory,objectAdapterFactory,objectFactory,servicesInjector,identifierGenerator,adapterManager,persistAlgorithm,objectStore);
+  final IsisTransactionManager transactionManager=createTransactionManager(persistenceSession,objectStore);
+  ensureThatArg(persistenceSession,is(not(nullValue())));
+  ensureThatArg(transactionManager,is(not(nullValue())));
+  persistenceSession.setDirtiableSupport(true);
+  transactionManager.injectInto(persistenceSession);
+  return persistenceSession;
+}

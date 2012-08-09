@@ -22,13 +22,17 @@
   runtimeContext.setContainer(container);
   servicesInjector=new ServicesInjectorDefault();
   servicesInjector.setContainer(container);
-  adapterManager=new AdapterManagerDefault();
+  adapterManager=new AdapterManagerDefault(new PojoRecreatorDefault());
   adapterFactory=new PojoAdapterFactory();
-  persistenceSession=new PersistenceSession(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new OidGenerator(new IdentifierGeneratorDefault()),adapterManager,mockPersistAlgorithm,mockObjectStore);
+  persistenceSession=new PersistenceSession(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new OidGenerator(new IdentifierGeneratorDefault()),adapterManager,mockPersistAlgorithm,mockObjectStore){
+    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
+      return isisMetaModel.getSpecificationLoader();
+    }
+  }
+;
   transactionManager=new IsisTransactionManager(persistenceSession,mockObjectStore);
   transactionManager.injectInto(persistenceSession);
   servicesInjector.setServices(Collections.emptyList());
-  persistenceSession.setSpecificationLoader(isisMetaModel.getSpecificationLoader());
   persistentAdapter=PojoAdapterBuilder.create().withOid("CUS|1").withPojo(new Customer()).with(Persistence.PERSISTENT).with(mockVersion).with(isisMetaModel.getSpecificationLoader()).build();
   transientAdapter=PojoAdapterBuilder.create().withOid("CUS|2").withPojo(new Customer()).with(Persistence.TRANSIENT).with(isisMetaModel.getSpecificationLoader()).build();
 }

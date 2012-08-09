@@ -10,7 +10,7 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("removing root adapter from oid map");
   }
-  boolean removed=getOidAdapterMap().remove(transientRootOid);
+  boolean removed=oidAdapterMap.remove(transientRootOid);
   if (!removed) {
     LOG.warn("could not remove oid: " + transientRootOid);
   }
@@ -19,7 +19,7 @@
   }
   for (  final ObjectAdapter collectionAdapter : rootAndCollectionAdapters) {
     final Oid collectionOid=collectionAdapter.getOid();
-    removed=getOidAdapterMap().remove(collectionOid);
+    removed=oidAdapterMap.remove(collectionOid);
     if (!removed) {
       LOG.warn("could not remove collectionOid: " + collectionOid);
     }
@@ -46,14 +46,14 @@
     LOG.debug("replacing Oid for root adapter and re-adding into maps; oid is now: " + persistedRootOid.enString() + " (was: "+ transientRootOid.enString()+ ")");
   }
   adapter.replaceOid(persistedRootOid);
-  getOidAdapterMap().add(persistedRootOid,adapter);
+  oidAdapterMap.add(persistedRootOid,adapter);
   if (LOG.isDebugEnabled()) {
     LOG.debug("replacing Oids for collection adapter(s) and re-adding into maps");
   }
   for (  final ObjectAdapter collectionAdapter : rootAndCollectionAdapters) {
     final CollectionOid previousCollectionOid=(CollectionOid)collectionAdapter.getOid();
     final CollectionOid persistedCollectionOid=previousCollectionOid.asPersistent(persistedRootOid);
-    getOidAdapterMap().add(persistedCollectionOid,collectionAdapter);
+    oidAdapterMap.add(persistedCollectionOid,collectionAdapter);
   }
   if (LOG.isDebugEnabled()) {
     LOG.debug("synchronizing collection pojos, remapping in pojo map if required");
@@ -63,9 +63,9 @@
     final Object collectionPojoWrappedByAdapter=collectionAdapter.getObject();
     final Object collectionPojoActuallyOnPojo=getCollectionPojo(otma,adapter);
     if (collectionPojoActuallyOnPojo != collectionPojoWrappedByAdapter) {
-      getPojoAdapterMap().remove(collectionAdapter);
+      pojoAdapterMap.remove(collectionAdapter);
       collectionAdapter.replacePojo(collectionPojoActuallyOnPojo);
-      getPojoAdapterMap().add(collectionPojoActuallyOnPojo,collectionAdapter);
+      pojoAdapterMap.add(collectionPojoActuallyOnPojo,collectionAdapter);
     }
   }
   for (  final ObjectAssociation association : adapter.getSpecification().getAssociations()) {

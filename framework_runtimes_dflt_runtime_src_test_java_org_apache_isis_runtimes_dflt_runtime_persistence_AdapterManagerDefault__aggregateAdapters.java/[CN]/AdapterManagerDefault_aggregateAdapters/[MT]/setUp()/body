@@ -3,25 +3,30 @@
   context.ignoring(mockRuntimeContext);
   isisMetaModel=IsisMetaModel.builder(mockRuntimeContext,new ProgrammingModelFacetsJava5()).withServices(new CustomerRepository()).build();
   isisMetaModel.init();
-  adapterManager=new AdapterManagerDefault();
   adapterFactory=new PojoAdapterFactory(){
     @Override protected Localization getLocalization(){
       return mockLocalization;
     }
-    @Override protected SpecificationLoader getSpecificationLoader(){
+    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
       return isisMetaModel.getSpecificationLoader();
-    }
-    @Override protected ObjectAdapterLookup getObjectAdapterLookup(){
-      return adapterManager;
     }
   }
 ;
-  adapterManager.setPojoAdapterMap(new PojoAdapterHashMap());
-  adapterManager.setOidAdapterMap(new OidAdapterHashMap());
-  adapterManager.setAdapterFactory(adapterFactory);
-  adapterManager.setDependencyInjector(isisMetaModel.getDependencyInjector());
-  adapterManager.setSpecificationLoader(isisMetaModel.getSpecificationLoader());
-  adapterManager.setOidGenerator(mockOidGenerator);
+  adapterManager=new AdapterManagerDefault(new PojoRecreatorDefault()){
+    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
+      return isisMetaModel.getSpecificationLoader();
+    }
+    @Override protected ObjectAdapterFactory getObjectAdapterFactory(){
+      return adapterFactory;
+    }
+    @Override public OidGenerator getOidGenerator(){
+      return mockOidGenerator;
+    }
+    @Override protected ServicesInjector getServicesInjector(){
+      return isisMetaModel.getDependencyInjector();
+    }
+  }
+;
   rootObject=new Customer();
   aggregatedObject=new Name();
   persistentParentAdapter=adapterManager.mapRecreatedPojo(RootOidDefault.create(ObjectSpecId.of("CUS"),"1"),rootObject);
