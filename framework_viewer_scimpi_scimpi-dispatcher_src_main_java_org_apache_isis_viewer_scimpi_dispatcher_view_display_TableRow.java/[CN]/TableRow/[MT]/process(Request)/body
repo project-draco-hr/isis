@@ -2,5 +2,10 @@
   final TableBlock block=(TableBlock)request.getBlockContent();
   final RepeatMarker start=request.createMarker();
   block.setMarker(start);
+  final String linkView=request.getOptionalProperty(LINK_VIEW);
+  if (linkView != null) {
+    block.setlinkView(linkView);
+    block.setlinkName(request.getOptionalProperty(LINK_NAME,RequestContext.RESULT));
+  }
   request.skipUntilClose();
 }
