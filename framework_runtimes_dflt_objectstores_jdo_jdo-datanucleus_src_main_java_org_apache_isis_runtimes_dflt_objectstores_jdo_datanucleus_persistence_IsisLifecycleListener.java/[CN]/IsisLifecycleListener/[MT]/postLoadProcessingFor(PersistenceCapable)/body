@@ -6,9 +6,7 @@
     ensureRootObject(pojo);
     oid=(RootOid)adapter.getOid();
     final Version previousVersion=adapter.getVersion();
-    getAdapterManager().removeAdapter(adapter);
-    adapter.replacePojo(pojo);
-    getAdapterManager().addExistingAdapter(adapter);
+    getPersistenceSession().remapRecreatedPojo(adapter,pojo);
     if (previousVersion != null && pojoVersion != null) {
       if (previousVersion.different(pojoVersion)) {
         getCurrentTransaction().addException(new ConcurrencyException(adapter,pojoVersion));
@@ -20,12 +18,10 @@
     oid=oidGenerator.createPersistent(pojo,null);
     adapter=getAdapterManager().getAdapterFor(oid);
     if (adapter != null) {
-      getAdapterManager().removeAdapter(adapter);
-      adapter.replacePojo(pojo);
-      getAdapterManager().addExistingAdapter(adapter);
+      getPersistenceSession().remapRecreatedPojo(adapter,pojo);
     }
  else {
-      adapter=getAdapterManager().mapRecreatedPojo(oid,pojo);
+      adapter=getPersistenceSession().mapRecreatedPojo(oid,pojo);
     }
   }
   if (!adapter.isResolved()) {

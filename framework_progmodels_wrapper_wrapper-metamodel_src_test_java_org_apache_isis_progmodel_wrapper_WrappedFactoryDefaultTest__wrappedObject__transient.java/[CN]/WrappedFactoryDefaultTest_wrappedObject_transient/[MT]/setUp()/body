@@ -4,15 +4,15 @@
   getPasswordMethod=Employee.class.getMethod("getPassword");
   setPasswordMethod=Employee.class.getMethod("setPassword",String.class);
   wrapperFactory=new WrapperFactoryDefault();
-  wrapperFactory.setAdapterManager(mockAdapterMap);
+  wrapperFactory.setAdapterManager(mockAdapterManager);
   wrapperFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
   wrapperFactory.setObjectPersistor(mockObjectPersistor);
   wrapperFactory.setSpecificationLookup(mockSpecificationLookup);
   context.checking(new Expectations(){
 {
-      allowing(mockAdapterMap).getAdapterFor(employeeDO);
+      allowing(mockAdapterManager).getAdapterFor(employeeDO);
       will(returnValue(mockEmployeeAdapter));
-      allowing(mockAdapterMap).adapterFor(passwordValue);
+      allowing(mockAdapterManager).adapterFor(passwordValue);
       will(returnValue(mockPasswordAdapter));
       allowing(mockEmployeeAdapter).getSpecification();
       will(returnValue(mockEmployeeSpec));

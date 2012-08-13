@@ -10,7 +10,7 @@
   if (fieldData == null) {
     ObjectSpecification spec=field.getSpecification();
     final Object recreatedPojo=spec.createObject();
-    final ObjectAdapter adapter=getAdapterManager().mapRecreatedPojo(referenceOid,recreatedPojo);
+    final ObjectAdapter adapter=getPersistenceSession().mapRecreatedPojo(referenceOid,recreatedPojo);
     if (!adapter.isDestroyed()) {
       adapter.changeState(ResolveState.DESTROYED);
     }
@@ -20,7 +20,7 @@
  else {
     ObjectSpecification spec=specFor(fieldData);
     final Object recreatedPojo=spec.createObject();
-    final ObjectAdapter reference=getAdapterManager().mapRecreatedPojo(referenceOid,recreatedPojo);
+    final ObjectAdapter reference=getPersistenceSession().mapRecreatedPojo(referenceOid,recreatedPojo);
     ((OneToOneAssociation)field).initAssociation(object,reference);
   }
 }

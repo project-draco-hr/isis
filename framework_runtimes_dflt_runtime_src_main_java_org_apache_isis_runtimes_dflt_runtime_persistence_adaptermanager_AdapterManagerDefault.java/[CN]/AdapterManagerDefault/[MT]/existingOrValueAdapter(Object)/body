@@ -1,0 +1,12 @@
+{
+  final ObjectAdapter adapter=getAdapterFor(pojo);
+  if (adapter != null) {
+    return adapter;
+  }
+  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
+  if (objSpec.containsFacet(ValueFacet.class)) {
+    ObjectAdapter valueAdapter=createStandaloneAdapterAndSetResolveState(pojo);
+    return valueAdapter;
+  }
+  return null;
+}

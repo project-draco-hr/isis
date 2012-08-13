@@ -3,7 +3,7 @@
     throw new IllegalArgumentException("An entry must be provided");
   }
   if (getFacetHolder().containsFacet(ValueFacet.class)) {
-    final ObjectAdapter entryAdapter=getAdapterMap().adapterFor(entry);
+    final ObjectAdapter entryAdapter=getAdapterManager().adapterFor(entry);
     final ParseValueContext parseValueContext=new ParseValueContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
     validate(parseValueContext);
   }
@@ -14,7 +14,7 @@
     if (parsed == null) {
       return null;
     }
-    final ObjectAdapter adapter=getAdapterMap().adapterFor(parsed);
+    final ObjectAdapter adapter=getAdapterManager().adapterFor(parsed);
     final ObjectSpecification specification=adapter.getSpecification();
     final ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
     validate(validateContext);

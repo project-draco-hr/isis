@@ -1,29 +1,10 @@
 {
-  final ObjectAdapter adapter=getAdapterFor(pojo);
-  if (adapter != null) {
-    return adapter;
+  Ensure.ensureThatArg(parentAdapter,is(not(nullValue())));
+  Ensure.ensureThatArg(collection,is(not(nullValue())));
+  final ObjectAdapter existingOrValueAdapter=existingOrValueAdapter(pojo);
+  if (existingOrValueAdapter != null) {
+    return existingOrValueAdapter;
   }
-  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
-  if (objSpec.containsFacet(ValueFacet.class)) {
-    return createStandaloneAdapterAndSetResolveState(pojo);
-  }
-  final ObjectAdapter newAdapter;
-  if (parentAdapter != null) {
-    if (collection == null) {
-      if (isAggregated(objSpec)) {
-        final AggregatedOid aggregatedOid=getOidGenerator().createAggregateOid(pojo,parentAdapter);
-        newAdapter=createAggregatedAdapter(pojo,aggregatedOid);
-      }
- else {
-        newAdapter=createTransientRootAdapter(pojo);
-      }
-    }
- else {
-      newAdapter=createCollectionAdapter(pojo,parentAdapter,collection);
-    }
-  }
- else {
-    newAdapter=createTransientRootAdapter(pojo);
-  }
+  final ObjectAdapter newAdapter=createCollectionAdapter(pojo,parentAdapter,collection);
   return mapAndInjectServices(newAdapter);
 }

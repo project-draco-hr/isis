@@ -1,3 +1,17 @@
 {
-  return adapterFor(pojo,parentAdapter,null);
+  Ensure.ensureThatArg(parentAdapter,is(not(nullValue())));
+  final ObjectAdapter existingOrValueAdapter=existingOrValueAdapter(pojo);
+  if (existingOrValueAdapter != null) {
+    return existingOrValueAdapter;
+  }
+  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
+  final ObjectAdapter newAdapter;
+  if (isAggregated(objSpec)) {
+    final AggregatedOid aggregatedOid=getOidGenerator().createAggregateOid(pojo,parentAdapter);
+    newAdapter=createAggregatedAdapter(pojo,aggregatedOid);
+  }
+ else {
+    newAdapter=createTransientRootAdapter(pojo);
+  }
+  return mapAndInjectServices(newAdapter);
 }
