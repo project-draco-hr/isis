@@ -2,6 +2,7 @@
   Logger.getRootLogger().setLevel(Level.OFF);
   configuration=new IsisConfigurationDefault();
   servicesList=Collections.emptyList();
+  oidMarshaller=new OidMarshaller();
   context.checking(new Expectations(){
 {
       ignoring(mockSpecificationLoader);
@@ -20,7 +21,7 @@
     }
   }
 ;
-  final IsisSessionFactoryDefault sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList);
+  final IsisSessionFactoryDefault sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList,oidMarshaller);
   IsisContext.setConfiguration(sessionFactory.getConfiguration());
   IsisContextStatic.createRelaxedInstance(sessionFactory);
   IsisContextStatic.openSession(new ExplorationSession());

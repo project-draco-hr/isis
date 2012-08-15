@@ -1,0 +1,8 @@
+{
+  Object jdoOid=new OIDImpl(Customer.class.getName(),123L);
+  String id=JdoObjectIdSerializer.toOidIdentifier(jdoOid);
+  assertThat(id,is("L_123"));
+  RootOidDefault oid=RootOidDefault.create(ObjectSpecId.of("CUS"),id);
+  Object jdoOidRecreated=JdoObjectIdSerializer.toJdoObjectId(oid);
+  assertThat(jdoOidRecreated,is((Object)("123" + "[OID]" + Customer.class.getName())));
+}

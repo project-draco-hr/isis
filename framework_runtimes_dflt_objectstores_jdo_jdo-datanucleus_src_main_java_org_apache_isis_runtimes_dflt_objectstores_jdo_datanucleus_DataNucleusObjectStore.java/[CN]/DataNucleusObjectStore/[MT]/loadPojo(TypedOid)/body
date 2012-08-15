@@ -1,0 +1,19 @@
+{
+  if (oid instanceof AggregatedOid) {
+    throw new UnsupportedOperationException("Cannot retrieve aggregated objects directly, oid: " + oid.enString(getOidMarshaller()));
+  }
+  final RootOid rootOid=(RootOid)oid;
+  Object result=null;
+  try {
+    final Class<?> cls=clsOf(rootOid);
+    final Object jdoObjectId=JdoObjectIdSerializer.toJdoObjectId(rootOid);
+    result=getPersistenceManager().getObjectById(cls,jdoObjectId);
+  }
+ catch (  final RuntimeException e) {
+    throw e;
+  }
+  if (result == null) {
+    throw new ObjectNotFoundException(oid);
+  }
+  return result;
+}

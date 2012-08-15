@@ -1,0 +1,8 @@
+{
+  RootOid parentOid=RootOidDefault.create(ObjectSpecId.of("CUS"),"123",90807L);
+  AggregatedOid oid=new AggregatedOid(ObjectSpecId.of("CUS"),parentOid,"456");
+  final String enString=oid.enString(oidMarshaller);
+  final AggregatedOid deString=AggregatedOid.deString(enString,oidMarshaller);
+  assertThat(deString,is(oid));
+  assertThat(deString.getVersion(),is(oid.getVersion()));
+}

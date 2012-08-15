@@ -9,12 +9,12 @@
   epv2.setSize(123);
   iswf.persist(epv2);
   iswf.bounceSystem();
-  List<ObjectAdapter> retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,epv2Adapter.titleString()));
+  List<ObjectAdapter> retrievedInstance=getStore().loadInstancesAndAdapt(new PersistenceQueryFindByTitle(epvSpecification,epv2Adapter.titleString()));
   assertEquals(1,retrievedInstance.size());
   final ObjectAdapter retrievedAdapter=retrievedInstance.get(0);
   assertNotSame(epv2Adapter,retrievedAdapter);
   assertEquals(((SimpleEntity)epv2Adapter.getObject()).getName(),((SimpleEntity)retrievedAdapter.getObject()).getName());
   assertEquals(epv2Adapter.getOid(),retrievedAdapter.getOid());
-  retrievedInstance=getStore().getInstances(new PersistenceQueryFindByTitle(epvSpecification,"some other title"));
+  retrievedInstance=getStore().loadInstancesAndAdapt(new PersistenceQueryFindByTitle(epvSpecification,"some other title"));
   assertEquals(0,retrievedInstance.size());
 }

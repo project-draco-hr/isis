@@ -2,7 +2,7 @@
   ensureOpened();
   ensureInTransaction();
   if (LOG.isDebugEnabled()) {
-    LOG.debug("resolveImmediately; oid=" + adapter.getOid().enString());
+    LOG.debug("resolveImmediately; oid=" + adapter.getOid().enString(getOidMarshaller()));
   }
   if (adapter.isResolved()) {
     if (LOG.isDebugEnabled()) {
@@ -23,19 +23,19 @@
     }
     final AggregatedOid aggregatedOid=(AggregatedOid)oid;
     final TypedOid parentOid=aggregatedOid.getParentOid();
-    final ObjectAdapter parentAdapter=this.getObject(parentOid);
+    final ObjectAdapter parentAdapter=loadInstanceAndAdapt(parentOid);
     resolveImmediately(parentAdapter);
     return;
   }
-  if (adapter.getObject() == null) {
+  final Object domainObject=adapter.getObject();
+  if (domainObject == null) {
     throw new ObjectNotFoundException(adapter.getOid());
   }
   try {
-    final Object domainObject=adapter.getObject();
     getPersistenceManager().refresh(domainObject);
   }
  catch (  final RuntimeException e) {
     throw new ObjectNotFoundException(adapter.getOid(),e);
   }
-  lifecycleListener.postLoadProcessingFor((PersistenceCapable)adapter.getObject());
+  lifecycleListener.postLoadProcessingFor((PersistenceCapable)domainObject);
 }

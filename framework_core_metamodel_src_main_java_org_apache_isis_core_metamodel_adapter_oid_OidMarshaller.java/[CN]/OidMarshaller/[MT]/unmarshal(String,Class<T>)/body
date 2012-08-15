@@ -5,42 +5,46 @@
   }
   final int groupCount=matcher.groupCount();
   final String isTransientStr=getGroup(matcher,3);
-  boolean isTransient="!".equals(isTransientStr);
-  final String oidStrWithoutCollectionName=getGroup(matcher,1);
+  boolean isTransient=TRANSIENT_INDICATOR.equals(isTransientStr);
   final String rootOidStr=getGroup(matcher,2);
   final String rootObjectType=getGroup(matcher,4);
   final String rootIdentifier=getGroup(matcher,5);
   final String aggregateOidPart=getGroup(matcher,6);
   final List<AggregateOidPart> aggregateOidParts=Lists.newArrayList();
-  final Splitter tildaSplitter=Splitter.on("~");
-  final Splitter colonSplitter=Splitter.on(":");
+  final Splitter nestingSplitter=Splitter.on(SEPARATOR_NESTING);
+  final Splitter partsSplitter=Splitter.on(SEPARATOR);
   if (aggregateOidPart != null) {
-    final Iterable<String> tildaSplitIter=tildaSplitter.split(aggregateOidPart);
+    final Iterable<String> tildaSplitIter=nestingSplitter.split(aggregateOidPart);
     for (    String str : tildaSplitIter) {
       if (Strings.isNullOrEmpty(str)) {
         continue;
       }
-      final Iterator<String> colonSplitIter=colonSplitter.split(str).iterator();
+      final Iterator<String> colonSplitIter=partsSplitter.split(str).iterator();
       final String objectType=colonSplitIter.next();
       final String localId=colonSplitIter.next();
       aggregateOidParts.add(new AggregateOidPart(objectType,localId));
     }
   }
-  final String collectionName=getGroup(matcher,groupCount);
+  final String collectionPart=getGroup(matcher,groupCount - 1);
+  String collectionName=collectionPart != null ? collectionPart.substring(1) : null;
+  final String versionPart=getGroup(matcher,groupCount);
+  Long version=versionPart != null ? Long.parseLong(versionPart.substring(1)) : null;
   if (collectionName == null) {
     if (aggregateOidParts.isEmpty()) {
       ensureCorrectType(oidStr,requestedType,RootOidDefault.class);
-      return (T)new RootOidDefault(ObjectSpecId.of(rootObjectType),rootIdentifier,State.valueOf(isTransient));
+      return (T)new RootOidDefault(ObjectSpecId.of(rootObjectType),rootIdentifier,State.valueOf(isTransient),version);
     }
  else {
       ensureCorrectType(oidStr,requestedType,AggregatedOid.class);
       final AggregateOidPart lastPart=aggregateOidParts.remove(aggregateOidParts.size() - 1);
-      final TypedOid parentOid=parentOidFor(rootOidStr,aggregateOidParts);
+      final TypedOid parentOid=parentOidFor(rootOidStr,aggregateOidParts,version);
       return (T)new AggregatedOid(ObjectSpecId.of(lastPart.objectType),parentOid,lastPart.localId);
     }
   }
  else {
-    TypedOid parentOid=this.unmarshal(oidStrWithoutCollectionName,TypedOid.class);
+    final String oidStrWithoutCollectionName=getGroup(matcher,1);
+    final String parentOidStr=oidStrWithoutCollectionName + (version != null ? SEPARATOR_VERSION + version : "");
+    TypedOid parentOid=this.unmarshal(parentOidStr,TypedOid.class);
     ensureCorrectType(oidStr,requestedType,CollectionOid.class);
     return (T)new CollectionOid(parentOid,collectionName);
   }

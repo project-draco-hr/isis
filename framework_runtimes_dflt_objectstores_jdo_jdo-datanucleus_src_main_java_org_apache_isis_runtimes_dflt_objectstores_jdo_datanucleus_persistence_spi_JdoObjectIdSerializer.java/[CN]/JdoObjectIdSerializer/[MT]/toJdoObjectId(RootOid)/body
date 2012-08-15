@@ -1,0 +1,48 @@
+{
+  String idStr=oid.getIdentifier();
+  final int colonIdx=idStr.indexOf(SEPARATOR);
+  final String keyStr=idStr.substring(colonIdx + 1);
+  final String firstPart=idStr.substring(0,colonIdx);
+  if ("s".equals(firstPart)) {
+    return new StringIdentity(objectTypeClassFor(oid),keyStr);
+  }
+  if ("i".equals(firstPart)) {
+    return new IntIdentity(objectTypeClassFor(oid),keyStr);
+  }
+  if ("l".equals(firstPart)) {
+    return new LongIdentity(objectTypeClassFor(oid),keyStr);
+  }
+  if (dnPrefixes.contains(firstPart)) {
+    ObjectSpecId objectSpecId=oid.getObjectSpecId();
+    ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(objectSpecId);
+    return keyStr + "[OID]" + spec.getFullIdentifier();
+  }
+  final String clsName=firstPart;
+  try {
+    final Class<?> cls=Thread.currentThread().getContextClassLoader().loadClass(clsName);
+    final Constructor<?> cons=cls.getConstructor(String.class);
+    final Object dnOid=cons.newInstance(keyStr);
+    return dnOid.toString();
+  }
+ catch (  ClassNotFoundException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+catch (  IllegalArgumentException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+catch (  InstantiationException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+catch (  IllegalAccessException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+catch (  InvocationTargetException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+catch (  SecurityException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+catch (  NoSuchMethodException e) {
+    throw new JdoObjectIdSerializer.Exception(e);
+  }
+}

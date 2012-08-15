@@ -6,18 +6,18 @@
   final ObjectAction action=actionMemento.getAction();
   final int parameterCount=action.getParameterCount();
   final Map.Entry<Integer,String> mapEntry=parse(paramContext);
-  Oid oid;
   final int paramNum=mapEntry.getKey();
   if (paramNum >= parameterCount) {
     return false;
   }
+  RootOid oid;
   try {
-    oid=RootOidDefault.deStringEncoded(mapEntry.getValue());
+    oid=RootOidDefault.deStringEncoded(mapEntry.getValue(),getOidMarshaller());
   }
  catch (  final Exception e) {
     return false;
   }
-  final ObjectAdapter argumentAdapter=getAdapterManager().getAdapterFor(oid);
+  final ObjectAdapter argumentAdapter=getAdapterManager().adapterFor(oid);
   if (argumentAdapter == null) {
     return false;
   }

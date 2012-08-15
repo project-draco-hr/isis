@@ -2,6 +2,7 @@
   IsisContext.testReset();
   servicesList=Collections.emptyList();
   configuration=new IsisConfigurationDefault();
+  oidMarshaller=new OidMarshaller();
   context.checking(new Expectations(){
 {
       allowing(mockPersistenceSessionFactory).createPersistenceSession();
@@ -16,7 +17,7 @@
     }
   }
 );
-  sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList);
+  sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,servicesList,oidMarshaller);
   authSession=new SimpleSession("tester",Collections.<String>emptyList());
   IsisContext.setConfiguration(configuration);
 }

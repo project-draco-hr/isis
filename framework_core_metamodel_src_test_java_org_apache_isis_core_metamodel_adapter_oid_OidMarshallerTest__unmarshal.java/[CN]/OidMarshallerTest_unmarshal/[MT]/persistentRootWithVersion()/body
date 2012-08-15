@@ -1,0 +1,10 @@
+{
+  final String oidStr="CUS:123^90809";
+  final RootOidDefault rootOid=oidMarshaller.unmarshal(oidStr,RootOidDefault.class);
+  assertThat(rootOid.isTransient(),is(false));
+  assertThat(rootOid.getObjectSpecId(),is(ObjectSpecId.of("CUS")));
+  assertThat(rootOid.getIdentifier(),is("123"));
+  assertThat(rootOid.getVersion(),is(90809L));
+  final Oid oid=oidMarshaller.unmarshal(oidStr,Oid.class);
+  assertThat(oid,equalTo((Oid)rootOid));
+}

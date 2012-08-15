@@ -1,0 +1,8 @@
+{
+  Object jdoObjectId=new javax.jdo.identity.LongIdentity(Customer.class,123L);
+  String id=JdoObjectIdSerializer.toOidIdentifier(jdoObjectId);
+  assertThat(id,is("l_123"));
+  RootOidDefault oid=RootOidDefault.create(ObjectSpecId.of("CUS"),id);
+  Object jdoObjectIdRecreated=JdoObjectIdSerializer.toJdoObjectId(oid);
+  assertThat(jdoObjectIdRecreated,is(jdoObjectId));
+}
