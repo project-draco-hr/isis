@@ -1,26 +1,18 @@
 {
-  final RootOidDefault referenceOid=(RootOidDefault)data.get(field.getId());
+  final RootOid referencedOid=(RootOidDefault)data.get(field.getId());
   if (LOG.isDebugEnabled()) {
-    LOG.debug("setting up field " + field + " with "+ referenceOid);
+    LOG.debug("setting up field " + field + " with "+ referencedOid);
   }
-  if (referenceOid == null) {
+  if (referencedOid == null) {
     return;
   }
-  final Data fieldData=dataManager.loadData(referenceOid);
+  final Data fieldData=dataManager.loadData(referencedOid);
+  final ObjectAdapter referencedAdapter=getAdapterManager().adapterFor(referencedOid);
   if (fieldData == null) {
-    ObjectSpecification spec=field.getSpecification();
-    final Object recreatedPojo=spec.createObject();
-    final ObjectAdapter adapter=getPersistenceSession().mapRecreatedPojo(referenceOid,recreatedPojo);
-    if (!adapter.isDestroyed()) {
-      adapter.changeState(ResolveState.DESTROYED);
+    if (!referencedAdapter.isDestroyed()) {
+      referencedAdapter.changeState(ResolveState.DESTROYED);
     }
-    ((OneToOneAssociation)field).initAssociation(object,adapter);
-    LOG.warn("No data found for " + referenceOid + " so field '"+ field.getName()+ "' not set in object '"+ object.titleString()+ "'");
+    LOG.warn("No data found for " + referencedOid + " so field '"+ field.getName()+ "' not set in object '"+ object.titleString()+ "'");
   }
- else {
-    ObjectSpecification spec=specFor(fieldData);
-    final Object recreatedPojo=spec.createObject();
-    final ObjectAdapter reference=getPersistenceSession().mapRecreatedPojo(referenceOid,recreatedPojo);
-    ((OneToOneAssociation)field).initAssociation(object,reference);
-  }
+  ((OneToOneAssociation)field).initAssociation(object,referencedAdapter);
 }

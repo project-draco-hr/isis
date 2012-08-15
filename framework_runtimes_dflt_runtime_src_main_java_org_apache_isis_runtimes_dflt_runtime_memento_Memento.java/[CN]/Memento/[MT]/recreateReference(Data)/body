@@ -1,20 +1,20 @@
 {
-  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(data.getClassName());
   if (data instanceof StandaloneData) {
     final StandaloneData standaloneData=(StandaloneData)data;
     return standaloneData.getAdapter();
   }
-  final Oid oid=data.getOid();
-  if (oid == null) {
+  Oid oid=data.getOid();
+  Assert.assertTrue("can only create a reference to an entity",oid instanceof TypedOid);
+  final TypedOid typedOid=(TypedOid)oid;
+  if (typedOid == null) {
     return null;
   }
-  final Object recreatedPojo=spec.createObject();
-  ObjectAdapter referencedAdapter=getPersistenceSession().mapRecreatedPojo(oid,recreatedPojo);
+  final ObjectAdapter referencedAdapter=getAdapterManager().adapterFor(typedOid);
   if (data instanceof ObjectData) {
-    if (spec.isParented()) {
+    if (typedOid instanceof ParentedOid) {
       updateObject(referencedAdapter,data);
     }
- else     if (oid.isTransient()) {
+ else     if (typedOid.isTransient()) {
       updateObject(referencedAdapter,data);
     }
   }

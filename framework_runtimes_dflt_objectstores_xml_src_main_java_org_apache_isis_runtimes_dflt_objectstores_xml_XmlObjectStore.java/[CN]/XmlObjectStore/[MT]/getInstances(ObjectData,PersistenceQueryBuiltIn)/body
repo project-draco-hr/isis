@@ -7,9 +7,7 @@
       LOG.debug("instance data " + instanceData);
     }
     final RootOid oid=instanceData.getRootOid();
-    final ObjectSpecification spec=specFor(instanceData);
-    final Object recreatedPojo=spec.createObject();
-    final ObjectAdapter adapter=getPersistenceSession().mapRecreatedPojo(oid,recreatedPojo);
+    final ObjectAdapter adapter=getAdapterManager().adapterFor(oid);
     if (LOG.isDebugEnabled()) {
       LOG.debug("recreated instance " + adapter);
     }

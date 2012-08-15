@@ -1,0 +1,39 @@
+{
+  String idStr=oid.getIdentifier();
+  final int colonIdx=idStr.indexOf(SEPARATOR);
+  final String oidAsString=idStr.substring(colonIdx + 1);
+  final String firstPart=idStr.substring(0,colonIdx);
+  if (prefixes.contains(firstPart)) {
+    ObjectSpecId objectSpecId=oid.getObjectSpecId();
+    ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(objectSpecId);
+    return oidAsString + "[OID]" + spec.getFullIdentifier();
+  }
+  final String clsName=firstPart;
+  try {
+    final Class<?> cls=Thread.currentThread().getContextClassLoader().loadClass(clsName);
+    final Constructor<?> cons=cls.getConstructor(String.class);
+    final Object dnOid=cons.newInstance(oidAsString);
+    return dnOid.toString();
+  }
+ catch (  ClassNotFoundException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+catch (  IllegalArgumentException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+catch (  InstantiationException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+catch (  IllegalAccessException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+catch (  InvocationTargetException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+catch (  SecurityException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+catch (  NoSuchMethodException e) {
+    throw new JdoOidSerializer.Exception(e);
+  }
+}

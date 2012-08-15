@@ -1,9 +1,24 @@
 {
+  if (jdoOid instanceof javax.jdo.identity.IntIdentity) {
+    return "i" + SEPARATOR + jdoOid;
+  }
+  if (jdoOid instanceof javax.jdo.identity.StringIdentity) {
+    return "s" + SEPARATOR + jdoOid;
+  }
+  if (jdoOid instanceof javax.jdo.identity.LongIdentity) {
+    return "l" + SEPARATOR + jdoOid;
+  }
   if (jdoOid instanceof OID) {
     OID dnOid=(OID)jdoOid;
     Object keyValue=dnOid.getKeyValue();
     if (keyValue instanceof String) {
       return "S" + SEPARATOR + keyValue;
+    }
+    if (keyValue instanceof Long) {
+      return "L" + SEPARATOR + keyValue;
+    }
+    if (keyValue instanceof BigInteger) {
+      return "B" + SEPARATOR + keyValue;
     }
     if (keyValue instanceof Integer) {
       return "I" + SEPARATOR + keyValue;

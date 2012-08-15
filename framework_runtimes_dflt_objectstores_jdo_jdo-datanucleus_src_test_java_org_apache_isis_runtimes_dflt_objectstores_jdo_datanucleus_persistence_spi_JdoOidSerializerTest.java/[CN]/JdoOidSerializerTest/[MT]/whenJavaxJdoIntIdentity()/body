@@ -1,0 +1,8 @@
+{
+  Object jdoOid=new javax.jdo.identity.IntIdentity(Customer.class,123);
+  String id=JdoOidSerializer.toString(jdoOid);
+  assertThat(id,is("i~123"));
+  RootOidDefault oid=RootOidDefault.create(ObjectSpecId.of("CUS"),id);
+  String oidStr=JdoOidSerializer.toOidStr(oid);
+  assertThat(oidStr,is("123" + "[OID]" + Customer.class.getName()));
+}

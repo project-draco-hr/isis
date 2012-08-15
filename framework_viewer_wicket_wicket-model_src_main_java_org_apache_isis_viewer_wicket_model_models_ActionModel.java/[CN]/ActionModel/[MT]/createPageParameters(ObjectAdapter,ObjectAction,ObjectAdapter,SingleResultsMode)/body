@@ -1,0 +1,16 @@
+{
+  final PageParameters pageParameters=EntityModel.createPageParameters(adapter);
+  final String actionType=noAction.getType().name();
+  final String actionNameParmsId=determineActionId(noAction);
+  final Mode actionMode=determineActionMode(noAction,contextAdapter);
+  PageParameterNames.ACTION_TYPE.addTo(pageParameters,actionType);
+  final ObjectSpecification actionOnTypeSpec=noAction.getOnType();
+  if (actionOnTypeSpec != null) {
+    PageParameterNames.ACTION_OWNING_SPEC.addTo(pageParameters,actionOnTypeSpec.getFullIdentifier());
+  }
+  PageParameterNames.ACTION_NAME_PARMS.addTo(pageParameters,actionNameParmsId);
+  PageParameterNames.ACTION_MODE.addTo(pageParameters,actionMode.name());
+  PageParameterNames.ACTION_SINGLE_RESULTS_MODE.addTo(pageParameters,singleResultsMode.name());
+  addActionParamContextIfPossible(noAction,contextAdapter,pageParameters);
+  return pageParameters;
+}

@@ -1,0 +1,9 @@
+{
+  Date key=new Date();
+  Object jdoOid=new OIDImpl(Customer.class.getName(),key);
+  String id=JdoOidSerializer.toString(jdoOid);
+  assertThat(id,IsisMatchers.startsWith(OIDImpl.class.getName() + "~" + key.toString()));
+  RootOidDefault oid=RootOidDefault.create(ObjectSpecId.of("CUS"),id);
+  String oidStr=JdoOidSerializer.toOidStr(oid);
+  assertThat(oidStr,is(key.toString() + "[OID]" + Customer.class.getName()));
+}

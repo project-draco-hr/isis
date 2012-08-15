@@ -3,12 +3,17 @@
     return null;
   }
   final ObjectSpecification spec=getSpecificationLoader().loadSpecification(data.getClassName());
-  final Object recreatedPojo=spec.createObject();
-  ObjectAdapter adapter=getPersistenceSession().mapRecreatedPojo(getOid(),recreatedPojo);
-  if (adapter.getSpecification().isParentedOrFreeCollection()) {
+  ObjectAdapter adapter;
+  final Oid oid=getOid();
+  if (spec.isParentedOrFreeCollection()) {
+    final Object recreatedPojo=spec.createObject();
+    adapter=getPersistenceSession().mapRecreatedPojo(oid,recreatedPojo);
     populateCollection(adapter,(CollectionData)data);
   }
  else {
+    Assert.assertTrue("oid must be a TypedOid representing an object because spec is not a collection and cannot be a value",oid instanceof TypedOid);
+    TypedOid typedOid=(TypedOid)oid;
+    adapter=getAdapterManager().adapterFor(typedOid);
     updateObject(adapter,data);
   }
   if (LOG.isDebugEnabled()) {

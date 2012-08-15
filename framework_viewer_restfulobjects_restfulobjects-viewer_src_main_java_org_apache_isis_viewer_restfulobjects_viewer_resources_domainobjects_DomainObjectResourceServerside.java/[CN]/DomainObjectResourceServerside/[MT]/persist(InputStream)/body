@@ -17,7 +17,7 @@
   if (domainTypeSpec == null) {
     throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Could not determine type of domain object to persist (no such class '%s')",domainTypeStr);
   }
-  final ObjectAdapter objectAdapter=getResourceContext().getPersistenceSession().createInstance(domainTypeSpec);
+  final ObjectAdapter objectAdapter=getResourceContext().getPersistenceSession().createTransientInstance(domainTypeSpec);
   final JsonRepresentation propertiesList=objectRepr.getArrayEnsured("members[memberType=property]");
   if (propertiesList == null) {
     throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[memberType=property]); got %s",objectRepr);
