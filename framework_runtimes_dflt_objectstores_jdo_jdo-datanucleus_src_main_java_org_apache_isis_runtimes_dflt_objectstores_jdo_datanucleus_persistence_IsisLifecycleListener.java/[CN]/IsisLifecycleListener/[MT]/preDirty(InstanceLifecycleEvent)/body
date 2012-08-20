@@ -8,6 +8,10 @@
     }
     return;
   }
+  final PersistenceCapable pojo=persistenceCapableFor(event);
+  final IsisTransaction transaction=getCurrentTransaction();
+  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+  transaction.auditDirty(adapter);
   ensureRootObject(event);
   ensureFrameworksInAgreement(event);
 }

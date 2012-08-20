@@ -3,7 +3,6 @@
   if (!matcher.matches()) {
     throw new IllegalArgumentException("Could not parse OID '" + oidStr + "'; should match pattern: "+ OIDSTR_PATTERN.pattern());
   }
-  final int groupCount=matcher.groupCount();
   final String isTransientStr=getGroup(matcher,3);
   boolean isTransient=TRANSIENT_INDICATOR.equals(isTransientStr);
   final String rootOidStr=getGroup(matcher,2);
@@ -25,10 +24,12 @@
       aggregateOidParts.add(new AggregateOidPart(objectType,localId));
     }
   }
-  final String collectionPart=getGroup(matcher,groupCount - 1);
-  String collectionName=collectionPart != null ? collectionPart.substring(1) : null;
-  final String versionPart=getGroup(matcher,groupCount);
-  Long version=versionPart != null ? Long.parseLong(versionPart.substring(1)) : null;
+  final String collectionPart=getGroup(matcher,8);
+  final String collectionName=collectionPart != null ? collectionPart.substring(1) : null;
+  final String versionSequence=getGroup(matcher,10);
+  final String versionUser=getGroup(matcher,11);
+  final String versionUtcTimestamp=getGroup(matcher,12);
+  final Version version=Version.create(versionSequence,versionUser,versionUtcTimestamp);
   if (collectionName == null) {
     if (aggregateOidParts.isEmpty()) {
       ensureCorrectType(oidStr,requestedType,RootOidDefault.class);
@@ -43,7 +44,7 @@
   }
  else {
     final String oidStrWithoutCollectionName=getGroup(matcher,1);
-    final String parentOidStr=oidStrWithoutCollectionName + (version != null ? SEPARATOR_VERSION + version : "");
+    final String parentOidStr=oidStrWithoutCollectionName + marshal(version);
     TypedOid parentOid=this.unmarshal(parentOidStr,TypedOid.class);
     ensureCorrectType(oidStr,requestedType,CollectionOid.class);
     return (T)new CollectionOid(parentOid,collectionName);

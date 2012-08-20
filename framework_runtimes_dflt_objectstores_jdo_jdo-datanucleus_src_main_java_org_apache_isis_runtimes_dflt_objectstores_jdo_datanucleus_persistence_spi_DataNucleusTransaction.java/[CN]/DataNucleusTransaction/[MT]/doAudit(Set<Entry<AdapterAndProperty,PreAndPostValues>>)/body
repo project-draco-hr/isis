@@ -1,0 +1,11 @@
+{
+  if (auditService == null) {
+    super.doAudit(auditEntries);
+    return;
+  }
+  final String currentUser=getAuthenticationSession().getUserName();
+  final long currentTimestampEpoch=currentTimestampEpoch();
+  for (  Entry<AdapterAndProperty,PreAndPostValues> auditEntry : auditEntries) {
+    audit(currentUser,currentTimestampEpoch,auditEntry);
+  }
+}

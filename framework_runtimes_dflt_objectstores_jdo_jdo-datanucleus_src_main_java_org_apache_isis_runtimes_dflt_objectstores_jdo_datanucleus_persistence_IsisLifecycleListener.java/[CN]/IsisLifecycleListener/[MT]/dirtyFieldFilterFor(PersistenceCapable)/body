@@ -1,0 +1,12 @@
+{
+  String[] dirtyFields=NucleusJDOHelper.getDirtyFields(pojo,JDOHelper.getPersistenceManager(pojo));
+  final List<String> dirtyFieldList=Arrays.asList(dirtyFields);
+  Filter<ObjectAssociation> dirtyFieldsFilter=new Filter<ObjectAssociation>(){
+    @Override public boolean accept(    final ObjectAssociation t){
+      String id=t.getId();
+      return dirtyFieldList.contains(id);
+    }
+  }
+;
+  return dirtyFieldsFilter;
+}

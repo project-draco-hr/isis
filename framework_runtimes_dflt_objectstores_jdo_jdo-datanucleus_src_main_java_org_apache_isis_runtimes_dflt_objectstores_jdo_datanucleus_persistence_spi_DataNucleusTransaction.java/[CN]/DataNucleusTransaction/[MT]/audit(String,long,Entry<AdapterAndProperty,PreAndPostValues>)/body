@@ -1,0 +1,15 @@
+{
+  final AdapterAndProperty aap=auditEntry.getKey();
+  final ObjectAdapter adapter=aap.getAdapter();
+  final Object pojo=adapter.getObject();
+  if (!(pojo instanceof Auditable)) {
+    return;
+  }
+  final RootOid oid=(RootOid)adapter.getOid();
+  final String objectType=oid.getObjectSpecId().asString();
+  final String identifier=oid.getIdentifier();
+  final PreAndPostValues papv=auditEntry.getValue();
+  final String preValue=asString(papv.getPre());
+  final String postValue=asString(papv.getPost());
+  auditService.audit(currentUser,currentTimestampEpoch,objectType,identifier,preValue,postValue);
+}
