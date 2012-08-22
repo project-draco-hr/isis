@@ -1,10 +1,11 @@
 {
   LOG.info("installing " + this.getClass().getName());
-  final Object[] common=createServices(getConfiguration(),null);
-  final Object[] specific=createServices(getConfiguration(),deploymentType.name());
-  final Object[] combined=ArrayUtils.combine(common,specific);
-  if (combined.length == 0) {
+  final List<Object> serviceList=Lists.newArrayList();
+  appendServices(getConfiguration(),null,serviceList);
+  appendServices(getConfiguration(),deploymentType.name(),serviceList);
+  if (serviceList.size() == 0) {
     throw new InitialisationException("No services specified");
   }
-  return ListUtils.asList(combined);
+  appendBookmarkService(serviceList);
+  return Collections.unmodifiableList(serviceList);
 }

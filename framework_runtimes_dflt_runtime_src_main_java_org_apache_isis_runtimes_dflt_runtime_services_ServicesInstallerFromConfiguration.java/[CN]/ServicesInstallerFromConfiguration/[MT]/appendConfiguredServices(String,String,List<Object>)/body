@@ -1,0 +1,24 @@
+{
+  if (configuredServices == null) {
+    return;
+  }
+  final StringTokenizer services=new StringTokenizer(configuredServices,ConfigurationConstants.LIST_SEPARATOR);
+  if (!services.hasMoreTokens()) {
+    throw new InitialisationException("Services specified, but none loaded");
+  }
+  while (services.hasMoreTokens()) {
+    final String serviceName=services.nextToken().trim();
+    if (serviceName.equals("")) {
+      continue;
+    }
+    LOG.info("creating service " + serviceName);
+    Object service;
+    if (serviceName.indexOf(DELIMITER) == -1) {
+      service=createService(servicePrefix + serviceName);
+    }
+ else {
+      service=createSimpleRepository(servicePrefix,serviceName);
+    }
+    serviceList.add(service);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  if (searchedForAuditService) {
+    return;
+  }
+  List<Object> services=persistenceSessionFactory.getServices();
+  final Optional<Object> optionalService=Iterables.tryFind(services,LOCATE_AUDIT_SERVICE);
+  if (optionalService.isPresent()) {
+    auditService=(AuditService)optionalService.get();
+  }
+  searchedForAuditService=true;
+}

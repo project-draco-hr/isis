@@ -1,0 +1,11 @@
+{
+  RootOid oid=RootOidDefault.create(ObjectSpecId.of(bookmark.getObjectType()),bookmark.getIdentifier());
+  final ObjectAdapter adapter=adapterFor(oid);
+  if (adapter == null) {
+    return null;
+  }
+  if (adapter.canTransitionToResolving()) {
+    getPersistenceSession().resolveImmediately(adapter);
+  }
+  return adapter.getObject();
+}
