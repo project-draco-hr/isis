@@ -1,5 +1,5 @@
 {
-  final SerialNumberVersion version=(SerialNumberVersion)adapter.getVersion();
+  final Version version=adapter.getVersion();
   final long nextSequence;
   if (useVersioning) {
     nextSequence=version.getSequence() + 1;
@@ -21,7 +21,7 @@
   idMapping.appendWhereClause(connector,sql,oid);
   if (useVersioning) {
     sql.append(" AND ");
-    sql.append(versionMapping.whereClause(connector,(SerialNumberVersion)adapter.getVersion()));
+    sql.append(versionMapping.whereClause(connector,adapter.getVersion()));
   }
   final int updateCount=connector.update(sql.toString());
   if (updateCount == 0) {
