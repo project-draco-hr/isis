@@ -1,6 +1,6 @@
 {
-  doAudit(getAuditEntries());
-  if (commands.size() > 0) {
+  try {
+    doAudit(getAuditEntries());
     objectStore.execute(Collections.unmodifiableList(commands));
     for (    final PersistenceCommand command : commands) {
       if (command instanceof DestroyObjectCommand) {
@@ -9,6 +9,8 @@
         adapter.changeState(ResolveState.DESTROYED);
       }
     }
+  }
+  finally {
     commands.clear();
   }
 }

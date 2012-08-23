@@ -1,21 +1,23 @@
 {
-  ensureThatState(getState().canCommit(),is(true),"state is: " + getState());
-  ensureThatState(exceptions.isEmpty(),is(true),"cannot commit: " + exceptions.size() + " exceptions have been raised");
-  if (LOG.isDebugEnabled()) {
-    LOG.debug("commit transaction " + this);
-  }
-  if (getState() == State.COMMITTED) {
-    if (LOG.isInfoEnabled()) {
-      LOG.info("already committed; ignoring");
+synchronized (IsisContext.getSession()) {
+    ensureThatState(getState().canCommit(),is(true),"state is: " + getState());
+    ensureThatState(exceptions.isEmpty(),is(true),"cannot commit: " + exceptions.size() + " exceptions have been raised");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("commit transaction " + this);
     }
-    return;
-  }
-  try {
-    doFlush();
-    setState(State.COMMITTED);
-  }
- catch (  final RuntimeException ex) {
-    setAbortCause(ex);
-    throw ex;
+    if (getState() == State.COMMITTED) {
+      if (LOG.isInfoEnabled()) {
+        LOG.info("already committed; ignoring");
+      }
+      return;
+    }
+    try {
+      doFlush();
+      setState(State.COMMITTED);
+    }
+ catch (    final RuntimeException ex) {
+      setAbortCause(ex);
+      throw ex;
+    }
   }
 }
