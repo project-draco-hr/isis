@@ -2,6 +2,7 @@
   Logger.getRootLogger().setLevel(Level.OFF);
   context.ignoring(mockRuntimeContext);
   context.ignoring(mockAuthenticationSession);
+  context.ignoring(mockConfiguration);
   isisMetaModel=IsisMetaModel.builder(mockRuntimeContext,new ProgrammingModelFacetsJava5()).withServices(new CustomerRepository()).build();
   isisMetaModel.init();
   adapterFactory=new PojoAdapterFactory(){
@@ -16,7 +17,7 @@
     }
   }
 ;
-  adapterManager=new AdapterManagerDefault(new PojoRecreatorDefault()){
+  adapterManager=new AdapterManagerDefault(mockConfiguration,new PojoRecreatorDefault()){
     @Override protected SpecificationLoaderSpi getSpecificationLoader(){
       return isisMetaModel.getSpecificationLoader();
     }

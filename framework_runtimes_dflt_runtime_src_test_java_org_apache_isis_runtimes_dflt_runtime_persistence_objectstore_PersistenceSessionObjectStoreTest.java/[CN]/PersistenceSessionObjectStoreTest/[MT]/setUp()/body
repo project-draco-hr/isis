@@ -1,6 +1,7 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
   context.ignoring(mockRuntimeContext);
+  context.ignoring(mockConfiguration);
   isisMetaModel=new IsisMetaModel(mockRuntimeContext,new ProgrammingModelFacetsJava5(),new CustomerRepository());
   isisMetaModel.init();
   context.checking(new Expectations(){
@@ -22,7 +23,7 @@
   runtimeContext.setContainer(container);
   servicesInjector=new ServicesInjectorDefault();
   servicesInjector.setContainer(container);
-  adapterManager=new AdapterManagerDefault(new PojoRecreatorDefault());
+  adapterManager=new AdapterManagerDefault(mockConfiguration,new PojoRecreatorDefault());
   adapterFactory=new PojoAdapterFactory();
   persistenceSession=new PersistenceSession(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new OidGenerator(new IdentifierGeneratorDefault()),adapterManager,mockPersistAlgorithm,mockObjectStore){
     @Override protected SpecificationLoaderSpi getSpecificationLoader(){
