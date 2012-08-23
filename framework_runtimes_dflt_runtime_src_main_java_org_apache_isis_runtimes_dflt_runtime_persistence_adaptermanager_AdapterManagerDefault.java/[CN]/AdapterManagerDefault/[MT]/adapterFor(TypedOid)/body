@@ -4,5 +4,12 @@
     return adapterLookedUpByOid;
   }
   final Object pojo=pojoRecreator.recreatePojo(typedOid);
-  return mapRecreatedPojo(typedOid,pojo);
+  ObjectAdapter adapter=mapRecreatedPojo(typedOid,pojo);
+  Oid adapterOid=adapter.getOid();
+  if (adapterOid instanceof RootOid) {
+    final RootOid recreatedOid=(RootOid)adapterOid;
+    final RootOid originalOid=(RootOid)typedOid;
+    recreatedOid.checkLock(getAuthenticationSession().getUserName(),originalOid);
+  }
+  return adapter;
 }

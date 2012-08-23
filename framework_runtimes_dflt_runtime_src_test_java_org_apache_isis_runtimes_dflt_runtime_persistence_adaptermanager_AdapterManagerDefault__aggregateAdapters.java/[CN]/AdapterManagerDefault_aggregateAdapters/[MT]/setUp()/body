@@ -1,0 +1,37 @@
+{
+  Logger.getRootLogger().setLevel(Level.OFF);
+  context.ignoring(mockRuntimeContext);
+  context.ignoring(mockAuthenticationSession);
+  isisMetaModel=IsisMetaModel.builder(mockRuntimeContext,new ProgrammingModelFacetsJava5()).withServices(new CustomerRepository()).build();
+  isisMetaModel.init();
+  adapterFactory=new PojoAdapterFactory(){
+    @Override protected Localization getLocalization(){
+      return mockLocalization;
+    }
+    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
+      return isisMetaModel.getSpecificationLoader();
+    }
+    @Override protected AuthenticationSession getAuthenticationSession(){
+      return mockAuthenticationSession;
+    }
+  }
+;
+  adapterManager=new AdapterManagerDefault(new PojoRecreatorDefault()){
+    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
+      return isisMetaModel.getSpecificationLoader();
+    }
+    @Override protected ObjectAdapterFactory getObjectAdapterFactory(){
+      return adapterFactory;
+    }
+    @Override public OidGenerator getOidGenerator(){
+      return mockOidGenerator;
+    }
+    @Override protected ServicesInjector getServicesInjector(){
+      return isisMetaModel.getDependencyInjector();
+    }
+  }
+;
+  rootObject=new Customer();
+  aggregatedObject=new Name();
+  persistentParentAdapter=adapterManager.mapRecreatedPojo(RootOidDefault.create(ObjectSpecId.of("CUS"),"1"),rootObject);
+}

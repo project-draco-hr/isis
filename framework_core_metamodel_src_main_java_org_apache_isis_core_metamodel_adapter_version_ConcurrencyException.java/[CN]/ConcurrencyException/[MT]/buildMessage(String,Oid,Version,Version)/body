@@ -1,0 +1,14 @@
+{
+  final StringBuilder buf=new StringBuilder();
+  buf.append(currentUser != null ? currentUser + " " : "");
+  buf.append(" attempted to update ").append(oid.enStringNoVersion(getOidMarshaller()));
+  buf.append(", however this object has since been modified");
+  if (datastoreVersion.getUser() != null) {
+    buf.append(" by ").append(datastoreVersion.getUser());
+  }
+  if (datastoreVersion.getTime() != null) {
+    buf.append(" at ").append(datastoreVersion.getTime());
+  }
+  buf.append(" [").append(staleVersion.getSequence()).append(" vs ").append(datastoreVersion.getSequence()).append("]");
+  return buf.toString();
+}

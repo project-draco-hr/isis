@@ -1,5 +1,5 @@
 {
-  final Version pojoVersion=getVersionIfAny(pojo);
+  final Version datastoreVersion=getVersionIfAny(pojo);
   final RootOid oid;
   ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
   if (adapter != null) {
@@ -7,9 +7,9 @@
     oid=(RootOid)adapter.getOid();
     final Version previousVersion=adapter.getVersion();
     getPersistenceSession().remapRecreatedPojo(adapter,pojo);
-    if (previousVersion != null && pojoVersion != null) {
-      if (previousVersion.different(pojoVersion)) {
-        getCurrentTransaction().addException(new ConcurrencyException(adapter,pojoVersion));
+    if (previousVersion != null && datastoreVersion != null) {
+      if (previousVersion.different(datastoreVersion)) {
+        getCurrentTransaction().addException(new ConcurrencyException(getAuthenticationSession().getUserName(),oid,previousVersion,datastoreVersion));
       }
     }
   }
@@ -28,6 +28,6 @@
     PersistorUtil.startResolving(adapter);
     PersistorUtil.endResolving(adapter);
   }
-  adapter.setVersion(pojoVersion);
+  adapter.setVersion(datastoreVersion);
   ensureFrameworksInAgreement(pojo);
 }

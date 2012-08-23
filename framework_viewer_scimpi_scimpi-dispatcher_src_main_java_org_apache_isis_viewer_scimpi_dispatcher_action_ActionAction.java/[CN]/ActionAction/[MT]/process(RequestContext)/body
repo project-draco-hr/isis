@@ -31,7 +31,7 @@
       }
       context.setRequestPath(view);
       if (message != null) {
-        final MessageBroker messageBroker=IsisContext.getMessageBroker();
+        final MessageBroker messageBroker=getMessageBroker();
         messageBroker.addMessage(message);
       }
       if (override != null) {
@@ -51,16 +51,15 @@
       final String error=entryState.getError();
       final String view=context.getParameter("_" + ERROR);
       context.setRequestPath(view,Dispatcher.ACTION);
-      final MessageBroker messageBroker=IsisContext.getMessageBroker();
+      final MessageBroker messageBroker=getMessageBroker();
       messageBroker.addWarning(error);
     }
   }
  catch (  final ConcurrencyException e) {
-    ObjectAdapter object=IsisContext.getPersistenceSession().getAdapterManager().getAdapterFor(e.getSource());
-    String exceptionMessage=e.getMessage();
-    String user=exceptionMessage.substring(0,exceptionMessage.indexOf(" "));
-    String errorMessage="The data for '" + object.titleString() + "' was changed by "+ user+ ". Please repeat the action based on those changes.";
-    IsisContext.getMessageBroker().addMessage(errorMessage);
+    final ObjectAdapter adapter=getAdapterManager().getAdapterFor(e.getOid());
+    String user=adapter.getOid().getVersion().getUser();
+    String errorMessage="The data for '" + adapter.titleString() + "' was changed by "+ user+ ". Please repeat the action based on those changes.";
+    getMessageBroker().addMessage(errorMessage);
     entryState.setForm(formId);
     context.addVariable(ENTRY_FIELDS,entryState,Scope.REQUEST);
     context.addVariable(resultName,objectId,Scope.REQUEST);
@@ -75,8 +74,8 @@
     context.setRequestPath(view,Dispatcher.ACTION);
   }
 catch (  final RuntimeException e) {
-    IsisContext.getMessageBroker().getMessages();
-    IsisContext.getMessageBroker().getWarnings();
+    getMessageBroker().getMessages();
+    getMessageBroker().getWarnings();
     IsisContext.getUpdateNotifier().clear();
     IsisContext.getUpdateNotifier().clear();
     throw e;
