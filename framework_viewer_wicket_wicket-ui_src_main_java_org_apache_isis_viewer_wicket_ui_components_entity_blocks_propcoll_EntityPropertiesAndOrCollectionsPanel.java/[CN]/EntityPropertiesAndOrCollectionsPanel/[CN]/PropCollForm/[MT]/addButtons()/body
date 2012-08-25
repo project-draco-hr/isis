@@ -1,7 +1,11 @@
 {
-  editButton=new AjaxButton(ID_EDIT_BUTTON,Model.of("Edit")){
+  editButton=new AjaxButtonWithPreSubmitHook(ID_EDIT_BUTTON,Model.of("Edit")){
     private static final long serialVersionUID=1L;
+    @Override public void preSubmit(){
+      getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+    }
     @Override public void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
+      getEntityModel().resetPropertyModels();
       toEditMode(target);
     }
     @Override protected void onError(    final AjaxRequestTarget target,    final Form<?> form){
@@ -10,8 +14,16 @@
   }
 ;
   add(editButton);
-  okButton=new Button(ID_OK_BUTTON,Model.of("OK")){
+  okButton=new ButtonWithPreSubmitHook(ID_OK_BUTTON,Model.of("OK")){
     private static final long serialVersionUID=1L;
+    @Override public void preSubmit(){
+      try {
+        getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
+      }
+ catch (      ConcurrencyException ex) {
+        Session.get().getFeedbackMessages().add(new FeedbackMessage(EntityPropertiesAndOrCollectionsPanel.PropCollForm.this,ex.getMessage(),FeedbackMessage.ERROR));
+      }
+    }
     @Override public void onSubmit(){
       if (!getForm().hasError()) {
         final ObjectAdapter object=getEntityModel().getObject();
@@ -24,6 +36,7 @@
           return;
         }
  else {
+          getEntityModel().resetPropertyModels();
           toViewMode(null);
         }
       }
@@ -33,10 +46,13 @@
   }
 ;
   add(okButton);
-  cancelButton=new AjaxButton(ID_CANCEL_BUTTON,Model.of("Cancel")){
+  cancelButton=new AjaxButtonWithPreSubmitHook(ID_CANCEL_BUTTON,Model.of("Cancel")){
     private static final long serialVersionUID=1L;
 {
       setDefaultFormProcessing(false);
+    }
+    @Override public void preSubmit(){
+      getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
     }
     @Override protected void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
       Session.get().getFeedbackMessages().clear();

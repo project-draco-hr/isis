@@ -6,12 +6,18 @@
     }
     @Override public void validate(    final Form<?> form){
       final EntityModel entityModel=(EntityModel)getModel();
-      final ObjectAdapter adapter=entityModel.getObject();
-      final ValidateObjectFacet facet=adapter.getSpecification().getFacet(ValidateObjectFacet.class);
-      if (facet == null) {
-        return;
+      String invalidReasonIfAny;
+      try {
+        final ObjectAdapter adapter=entityModel.getObject();
+        final ValidateObjectFacet facet=adapter.getSpecification().getFacet(ValidateObjectFacet.class);
+        if (facet == null) {
+          return;
+        }
+        invalidReasonIfAny=facet.invalidReason(adapter);
       }
-      final String invalidReasonIfAny=facet.invalidReason(adapter);
+ catch (      ConcurrencyException ex) {
+        invalidReasonIfAny=ex.getMessage();
+      }
       if (invalidReasonIfAny != null) {
         Session.get().getFeedbackMessages().add(new FeedbackMessage(form,invalidReasonIfAny,FeedbackMessage.ERROR));
       }

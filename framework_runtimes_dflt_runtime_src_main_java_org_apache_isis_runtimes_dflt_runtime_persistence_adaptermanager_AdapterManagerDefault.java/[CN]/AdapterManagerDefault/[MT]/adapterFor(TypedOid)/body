@@ -1,17 +1,3 @@
 {
-  final ObjectAdapter adapterLookedUpByOid=getAdapterFor(typedOid);
-  if (adapterLookedUpByOid != null) {
-    return adapterLookedUpByOid;
-  }
-  final Object pojo=pojoRecreator.recreatePojo(typedOid);
-  ObjectAdapter adapter=mapRecreatedPojo(typedOid,pojo);
-  if (concurrencyChecking) {
-    final Oid adapterOid=adapter.getOid();
-    if (adapterOid instanceof RootOid) {
-      final RootOid recreatedOid=(RootOid)adapterOid;
-      final RootOid originalOid=(RootOid)typedOid;
-      recreatedOid.checkLock(getAuthenticationSession().getUserName(),originalOid);
-    }
-  }
-  return adapter;
+  return adapterFor(typedOid,ConcurrencyChecking.NO_CHECK);
 }

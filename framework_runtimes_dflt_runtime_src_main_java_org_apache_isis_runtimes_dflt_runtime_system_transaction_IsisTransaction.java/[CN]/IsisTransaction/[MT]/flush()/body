@@ -1,16 +1,14 @@
 {
-synchronized (IsisContext.getSession()) {
-    ensureThatState(getState().canFlush(),is(true),"state is: " + getState());
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("flush transaction " + this);
-    }
-    try {
-      doFlush();
-    }
- catch (    final RuntimeException ex) {
-      setState(State.MUST_ABORT);
-      setAbortCause(ex);
-      throw ex;
-    }
+  ensureThatState(getState().canFlush(),is(true),"state is: " + getState());
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("flush transaction " + this);
+  }
+  try {
+    doFlush();
+  }
+ catch (  final RuntimeException ex) {
+    setState(State.MUST_ABORT);
+    setAbortCause(ex);
+    throw ex;
   }
 }

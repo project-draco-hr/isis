@@ -5,14 +5,17 @@
     parseableFacet=property.getSpecification().getFacet(ParseableFacet.class);
   }
   try {
-    final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter();
+    final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
     final ObjectAdapter currentValue=property.get(parentAdapter);
     Localization localization=IsisContext.getLocalization();
     final ObjectAdapter proposedAdapter=parseableFacet.parseTextEntry(currentValue,proposedPojoAsStr,localization);
     final Consent valid=property.isAssociationValid(parentAdapter,proposedAdapter);
     return valid.isAllowed() ? null : valid.getReason();
   }
- catch (  final Exception ex) {
+ catch (  final ConcurrencyException ex) {
+    return null;
+  }
+catch (  final Exception ex) {
     return ex.getLocalizedMessage();
   }
 }
