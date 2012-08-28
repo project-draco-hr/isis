@@ -1,13 +1,13 @@
 {
   final AuthenticationSession session=getAuthenticationSession();
   final CssMenuItem parentMenuItem=this;
-  final ObjectAdapter adapter=adapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final ObjectAdapter adapter=adapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
   final Consent visibility=noAction.isVisible(session,adapter);
   if (visibility.isVetoed()) {
     return null;
   }
   final LinkAndLabel linkAndLabel=cssMenuLinkFactory.newLink(adapterMemento,noAction,PageAbstract.ID_MENU_LINK);
-  final Link<?> link=linkAndLabel.getLink();
+  final AbstractLink link=linkAndLabel.getLink();
   final String actionLabel=linkAndLabel.getLabel();
   final Consent usability=noAction.isUsable(session,adapter);
   final String reasonDisabledIfAny=usability.getReason();

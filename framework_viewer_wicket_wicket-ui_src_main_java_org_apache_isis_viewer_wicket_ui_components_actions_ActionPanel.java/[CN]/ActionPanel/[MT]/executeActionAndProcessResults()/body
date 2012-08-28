@@ -1,15 +1,26 @@
 {
-  final ObjectAdapter targetAdapter=getModel().getTargetAdapter();
-  final ActionModel actionModel=getActionModel();
-  final String invalidReasonIfAny=actionModel.getReasonInvalidIfAny();
-  if (invalidReasonIfAny != null) {
-    error(invalidReasonIfAny);
+  ObjectAdapter targetAdapter=null;
+  try {
+    targetAdapter=getModel().getTargetAdapter();
+    final ActionModel actionModel=getActionModel();
+    final String invalidReasonIfAny=actionModel.getReasonInvalidIfAny();
+    if (invalidReasonIfAny != null) {
+      error(invalidReasonIfAny);
+      return;
+    }
+    ObjectAdapter resultAdapter=actionModel.getObject();
+    if (resultAdapter == null) {
+      resultAdapter=targetAdapter;
+    }
+    final ResultType resultType=ResultType.determineFor(resultAdapter);
+    resultType.addResults(this,resultAdapter);
+  }
+ catch (  ConcurrencyException ex) {
+    if (targetAdapter == null) {
+      targetAdapter=getModel().getTargetAdapter();
+    }
+    final ResultType resultType=ResultType.determineFor(targetAdapter);
+    resultType.addResults(this,targetAdapter,ex);
     return;
   }
-  ObjectAdapter resultAdapter=actionModel.getObject();
-  if (resultAdapter == null) {
-    resultAdapter=targetAdapter;
-  }
-  final ResultType resultType=ResultType.determineFor(resultAdapter);
-  resultType.addResults(this,resultAdapter);
 }
