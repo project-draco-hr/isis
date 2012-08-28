@@ -1,15 +1,10 @@
 {
   Version otherVersion=otherOid.getVersion();
-  try {
-    if (version == null || otherVersion == null) {
-      return;
-    }
-    if (version.different(otherVersion)) {
-      LOG.info("concurrency conflict on " + this + " ("+ otherVersion+ ")");
-      throw new ConcurrencyException(currentUser,this,version,otherVersion);
-    }
+  if (version == null || otherVersion == null) {
+    return;
   }
-  finally {
-    setVersion(otherVersion);
+  if (version.different(otherVersion)) {
+    LOG.info("concurrency conflict on " + this + " ("+ otherVersion+ ")");
+    throw new ConcurrencyException(currentUser,this,version,otherVersion);
   }
 }
