@@ -4,15 +4,14 @@
   }
   facetedMethodsBuilder.introspectClass();
   addNamedFacetAndPluralFacetIfRequired();
-  final Class<?> superclass=getCorrespondingClass().getSuperclass();
-  setSuperclass(superclass);
-  final boolean skipFurtherIntrospection=JavaClassUtils.isJavaClass(getCorrespondingClass()) || isAppLibValue(getCorrespondingClass());
-  if (skipFurtherIntrospection) {
+  if (this.containsFacet(ValueFacet.class)) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("skipping introspection of interfaces, properties, actions and interfaces for " + getFullIdentifier() + " (java.xxx or applib value class)");
+      LOG.debug("skipping full introspection for value type " + getFullIdentifier());
     }
     return;
   }
+  final Class<?> superclass=getCorrespondingClass().getSuperclass();
+  setSuperclass(superclass);
   final Class<?>[] interfaceTypes=getCorrespondingClass().getInterfaces();
   final List<ObjectSpecification> interfaceSpecList=Lists.newArrayList();
   for (  final Class<?> interfaceType : interfaceTypes) {
