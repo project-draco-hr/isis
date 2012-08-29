@@ -1,0 +1,27 @@
+{
+  withLogging(pojo,new Runnable(){
+    @Override public void run(){
+      ensureRootObject(pojo);
+      if (!pojo.jdoIsPersistent()) {
+        throw new IllegalStateException("Pojo JDO state is not persistent! pojo dnOid: " + JDOHelper.getObjectId(pojo));
+      }
+      final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      final RootOid isisOid=(RootOid)adapter.getOid();
+      Class<? extends CallbackFacet> callbackFacetClass;
+      if (isisOid.isTransient()) {
+        final RootOid persistentOid=getOidGenerator().createPersistent(pojo,isisOid);
+        getPersistenceSession().remapAsPersistent(adapter,persistentOid);
+        callbackFacetClass=PersistedCallbackFacet.class;
+      }
+ else {
+        callbackFacetClass=UpdatedCallbackFacet.class;
+      }
+      Utils.clearDirtyFor(adapter);
+      Version versionIfAny=getVersionIfAny(pojo);
+      adapter.setVersion(versionIfAny);
+      CallbackUtils.callCallback(adapter,callbackFacetClass);
+      ensureFrameworksInAgreement(pojo);
+    }
+  }
+,calledFrom);
+}

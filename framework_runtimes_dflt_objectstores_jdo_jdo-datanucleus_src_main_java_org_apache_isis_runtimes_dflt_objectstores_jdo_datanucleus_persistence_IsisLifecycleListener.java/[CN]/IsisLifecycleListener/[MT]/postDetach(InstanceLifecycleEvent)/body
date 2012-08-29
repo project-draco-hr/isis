@@ -1,11 +1,3 @@
 {
-  if (LOG.isDebugEnabled()) {
-    LOG.debug(logString(Phase.POST,event));
-  }
-  if (isSuspended()) {
-    LOG.debug(" [currently suspended - ignoring]");
-    return;
-  }
-  ensureRootObject(event);
-  ensureFrameworksInAgreement(event);
+  withLogging(Phase.POST,event,new RunnableEnsureFrameworksInAgreement(event));
 }

@@ -1,0 +1,12 @@
+{
+  withLogging(pojo,new Runnable(){
+    @Override public void run(){
+      final IsisTransaction transaction=getCurrentTransaction();
+      final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      transaction.auditDirty(adapter);
+      ensureRootObject(pojo);
+      ensureFrameworksInAgreement(pojo);
+    }
+  }
+,calledFrom);
+}

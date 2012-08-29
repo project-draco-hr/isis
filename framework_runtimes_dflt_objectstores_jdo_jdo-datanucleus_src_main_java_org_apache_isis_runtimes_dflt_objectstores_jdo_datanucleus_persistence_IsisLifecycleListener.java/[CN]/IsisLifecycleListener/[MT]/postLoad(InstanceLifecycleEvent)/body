@@ -1,13 +1,9 @@
 {
-  if (LOG.isDebugEnabled()) {
-    LOG.debug(logString(Phase.POST,event));
-  }
-  if (isSuspended()) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(" [currently suspended - ignoring]");
+  withLogging(Phase.POST,event,new RunnableAbstract(event){
+    @Override protected void doRun(){
+      final PersistenceCapable pojo=Utils.persistenceCapableFor(event);
+      synchronizer.postLoadProcessingFor(pojo,CalledFrom.EVENT_LOAD);
     }
-    return;
   }
-  final PersistenceCapable pojo=persistenceCapableFor(event);
-  postLoadProcessingFor(pojo);
+);
 }

@@ -1,17 +1,9 @@
 {
-  if (LOG.isDebugEnabled()) {
-    LOG.debug(logString(Phase.PRE,event));
-  }
-  if (isSuspended()) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(" [currently suspended - ignoring]");
+  withLogging(Phase.PRE,event,new RunnableAbstract(event){
+    @Override protected void doRun(){
+      final PersistenceCapable pojo=Utils.persistenceCapableFor(event);
+      synchronizer.preDirtyProcessingFor(pojo,CalledFrom.EVENT_PREDIRTY);
     }
-    return;
   }
-  final PersistenceCapable pojo=persistenceCapableFor(event);
-  final IsisTransaction transaction=getCurrentTransaction();
-  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
-  transaction.auditDirty(adapter);
-  ensureRootObject(event);
-  ensureFrameworksInAgreement(event);
+);
 }

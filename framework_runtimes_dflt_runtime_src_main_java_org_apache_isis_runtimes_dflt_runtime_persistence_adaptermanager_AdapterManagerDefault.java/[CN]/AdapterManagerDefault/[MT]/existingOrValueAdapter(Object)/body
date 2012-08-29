@@ -3,6 +3,10 @@
   if (adapter != null) {
     return adapter;
   }
+  final ObjectAdapter lazilyLoadedAdapter=pojoRecreator.lazilyLoaded(pojo);
+  if (lazilyLoadedAdapter != null) {
+    return lazilyLoadedAdapter;
+  }
   final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
   if (objSpec.containsFacet(ValueFacet.class)) {
     ObjectAdapter valueAdapter=createStandaloneAdapterAndSetResolveState(pojo);
