@@ -3,6 +3,9 @@
     @Override public void run(){
       final IsisTransaction transaction=getCurrentTransaction();
       final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      if (adapter.isTransient()) {
+        return;
+      }
       transaction.auditDirty(adapter);
       ensureRootObject(pojo);
       ensureFrameworksInAgreement(pojo);

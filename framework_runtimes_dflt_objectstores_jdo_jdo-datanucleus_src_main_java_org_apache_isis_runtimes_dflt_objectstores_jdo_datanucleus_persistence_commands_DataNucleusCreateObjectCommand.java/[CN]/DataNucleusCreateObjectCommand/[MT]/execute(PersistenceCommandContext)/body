@@ -3,6 +3,9 @@
     LOG.debug("create object - executing command for: " + onAdapter());
   }
   final ObjectAdapter adapter=onAdapter();
+  if (!adapter.isTransient()) {
+    return;
+  }
   final Object domainObject=adapter.getObject();
   getPersistenceManager().makePersistent(domainObject);
 }
