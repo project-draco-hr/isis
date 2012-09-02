@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Disabled(where=Where.COLLECTION_TABLE) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(DisabledFacet.class);
+  final DisabledFacetAbstract disabledFacetAbstract=(DisabledFacetAbstract)facet;
+  assertEquals(When.ALWAYS,disabledFacetAbstract.when());
+  assertEquals(Where.COLLECTION_TABLE,disabledFacetAbstract.where());
+}

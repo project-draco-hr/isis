@@ -1,0 +1,13 @@
+{
+class Customer {
+    @SuppressWarnings("unused") public void someAction(){
+    }
+  }
+  final Facet existing=new ActionSemanticsFacetAnnotation(ActionSemantics.Of.SAFE,facetedMethod);
+  facetedMethod.addFacet(existing);
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionSemanticsFacet.class);
+  assertThat(facet,is(existing));
+  assertNoMethodsRemoved();
+}

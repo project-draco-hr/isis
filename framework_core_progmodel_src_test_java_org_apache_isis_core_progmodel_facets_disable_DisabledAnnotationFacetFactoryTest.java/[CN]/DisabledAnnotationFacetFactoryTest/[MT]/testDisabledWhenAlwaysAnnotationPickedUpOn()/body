@@ -1,11 +1,11 @@
 {
 class Customer {
-    @SuppressWarnings("unused") @Disabled(When.ALWAYS) public void someAction(){
+    @Disabled(when=When.ALWAYS) public void someAction(){
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
   facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(DisabledFacet.class);
   final DisabledFacetAbstract disabledFacetAbstract=(DisabledFacetAbstract)facet;
-  assertEquals(org.apache.isis.core.metamodel.facets.When.ALWAYS,disabledFacetAbstract.value());
+  assertEquals(When.ALWAYS,disabledFacetAbstract.when());
 }
