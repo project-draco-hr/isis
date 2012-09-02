@@ -1,12 +1,12 @@
 {
 class Customer {
-    @Hidden(where=Where.COLLECTION_TABLE,when=When.UNTIL_PERSISTED) public void someAction(){
+    @Hidden(where=Where.PARENTED_TABLE,when=When.UNTIL_PERSISTED) public void someAction(){
     }
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
   facetFactory.process(new ProcessMethodContext(Customer.class,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(HiddenFacet.class);
   final HiddenFacetAbstract hiddenFacetAbstract=(HiddenFacetAbstract)facet;
-  assertEquals(Where.COLLECTION_TABLE,hiddenFacetAbstract.where());
+  assertEquals(Where.PARENTED_TABLE,hiddenFacetAbstract.where());
   assertEquals(When.UNTIL_PERSISTED,hiddenFacetAbstract.when());
 }

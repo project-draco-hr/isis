@@ -3,7 +3,8 @@
   if (getModel().hasSelectionHandler()) {
     return;
   }
-  final List<? extends ObjectAssociation> propertyList=typeOfSpec.getAssociations(STATICALLY_VISIBLE_PROPERTIES);
+  @SuppressWarnings("unchecked") final Filter<ObjectAssociation> filter=Filters.and(ObjectAssociationFilters.PROPERTIES,ObjectAssociationFilters.visibleWhere(getModel().isParented() ? Where.PARENTED_TABLE : Where.STANDALONE_TABLE));
+  final List<? extends ObjectAssociation> propertyList=typeOfSpec.getAssociations(filter);
   for (  final ObjectAssociation property : propertyList) {
     final ColumnAbstract<ObjectAdapter> nopc=createObjectAdapterPropertyColumn(property);
     columns.add(nopc);

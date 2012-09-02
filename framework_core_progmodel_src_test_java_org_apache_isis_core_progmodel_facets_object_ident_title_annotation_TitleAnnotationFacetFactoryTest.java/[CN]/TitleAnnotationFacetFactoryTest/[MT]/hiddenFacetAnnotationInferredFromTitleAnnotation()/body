@@ -1,0 +1,15 @@
+{
+  final Method propertyMethod=findMethod(Customer5.class,"titleProperty");
+  facetFactory.process(new ProcessMethodContext(Customer5.class,propertyMethod,methodRemover,facetedMethod));
+  final Customer5 customer=new Customer5();
+  context.checking(new Expectations(){
+{
+      allowing(objectAdapter).getObject();
+      will(returnValue(customer));
+    }
+  }
+);
+  final HiddenFacet facet=facetedMethod.getFacet(HiddenFacet.class);
+  assertNotNull(facet);
+  assertThat(facet.where(),is(Where.ALL_TABLES));
+}
