@@ -1,7 +1,7 @@
 {
-  init(RepresentationType.ACTION_RESULT);
+  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLE);
   final JsonRepresentation arguments=getResourceContext().getQueryStringAsJsonRepr();
   final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),serviceAdapter).using(new DomainServiceLinkTo());
-  return helper.invokeActionQueryOnly(actionId,arguments);
+  return helper.invokeActionQueryOnly(actionId,arguments,getResourceContext().getWhere());
 }

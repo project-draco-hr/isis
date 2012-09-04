@@ -15,7 +15,7 @@
       if (content.getAdapter() instanceof ImageValueFacet) {
         return new BlankView(content);
       }
-      if (!field.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed()) {
+      if (!field.isVisible(IsisContext.getAuthenticationSession(),object,where).isAllowed()) {
         return new BlankView(content);
       }
       if (((TextParseableContent)content).getNoLines() > 0) {
@@ -32,7 +32,7 @@
     }
  else {
       content=new OneToOneFieldImpl(object,value,(OneToOneAssociation)field);
-      if (!field.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed()) {
+      if (!field.isVisible(IsisContext.getAuthenticationSession(),object,where).isAllowed()) {
         return new BlankView(content);
       }
       return factory.createView(new ViewRequirement(content,ViewRequirement.CLOSED | ViewRequirement.SUBVIEW));

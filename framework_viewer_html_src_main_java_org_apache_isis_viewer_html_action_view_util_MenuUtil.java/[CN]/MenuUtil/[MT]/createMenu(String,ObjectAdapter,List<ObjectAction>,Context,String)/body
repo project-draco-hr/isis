@@ -9,7 +9,7 @@
       menuItem=context.getComponentFactory().createSubmenu(name,components);
     }
  else {
-      if (!action.isVisible(IsisContext.getAuthenticationSession(),target).isAllowed()) {
+      if (!action.isVisible(IsisContext.getAuthenticationSession(),target,where).isAllowed()) {
         continue;
       }
       if (action.getType() == ActionType.USER) {
@@ -46,7 +46,7 @@
  else {
         collectParameters=true;
       }
-      final Consent consent=action.isUsable(IsisContext.getAuthenticationSession(),target);
+      final Consent consent=action.isUsable(IsisContext.getAuthenticationSession(),target,where);
       final String consentReason=consent.getReason();
       menuItem=context.getComponentFactory().createMenuItem(actionId,action.getName(),action.getDescription(),consentReason,action.getType(),collectParameters,targetObjectId);
     }

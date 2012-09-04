@@ -23,8 +23,8 @@
   final FormFieldBlock containedBlock=new FormFieldBlock(){
     @Override public boolean isVisible(    final String name){
       final ObjectAssociation fld=specification.getAssociation(name);
-      final boolean isVisible=fld.isVisible(IsisContext.getAuthenticationSession(),object).isAllowed();
-      final boolean isUseable=fld.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
+      final boolean isVisible=fld.isVisible(IsisContext.getAuthenticationSession(),object,where).isAllowed();
+      final boolean isUseable=fld.isUsable(IsisContext.getAuthenticationSession(),object,where).isAllowed();
       return isVisible && isUseable;
     }
     @Override public ObjectAdapter getCurrent(    final String name){
@@ -48,7 +48,7 @@
   request.setBlockContent(containedBlock);
   request.processUtilCloseTag();
   final AuthenticationSession session=IsisContext.getAuthenticationSession();
-  List<ObjectAssociation> viewFields=specification.getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object));
+  List<ObjectAssociation> viewFields=specification.getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object,where));
   viewFields=containedBlock.includedFields(viewFields);
   final InputField[] formFields=createFields(viewFields);
   initializeFields(context,object,formFields,entryState,!hideNonEditableFields);

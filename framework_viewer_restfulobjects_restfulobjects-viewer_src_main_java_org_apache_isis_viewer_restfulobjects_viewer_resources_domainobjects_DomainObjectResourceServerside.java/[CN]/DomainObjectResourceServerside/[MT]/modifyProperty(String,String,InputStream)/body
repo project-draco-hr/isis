@@ -1,8 +1,8 @@
 {
-  init();
+  init(Where.OBJECT_FORM);
   final ObjectAdapter objectAdapter=getObjectAdapter(oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
-  final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(propertyId,Intent.MUTATE);
+  final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(propertyId,Intent.MUTATE,getResourceContext().getWhere());
   final ObjectSpecification propertySpec=property.getSpecification();
   final String bodyAsString=DomainResourceHelper.asStringUtf8(body);
   final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(propertySpec,bodyAsString);
@@ -11,5 +11,5 @@
     throw RestfulObjectsApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   property.set(objectAdapter,argAdapter);
-  return helper.propertyDetails(objectAdapter,propertyId,MemberMode.MUTATING,Caching.NONE);
+  return helper.propertyDetails(objectAdapter,propertyId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());
 }

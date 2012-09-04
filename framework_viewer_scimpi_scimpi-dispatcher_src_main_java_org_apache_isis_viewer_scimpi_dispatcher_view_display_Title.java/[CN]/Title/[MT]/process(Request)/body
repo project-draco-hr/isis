@@ -8,7 +8,7 @@
   ObjectAdapter object=MethodsUtils.findObject(request.getContext(),id);
   if (fieldName != null) {
     final ObjectAssociation field=object.getSpecification().getAssociation(fieldName);
-    if (field.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+    if (field.isVisible(IsisContext.getAuthenticationSession(),object,Where.ANYWHERE).isVetoed()) {
       throw new ForbiddenException(field,ForbiddenException.VISIBLE);
     }
     object=field.get(object);

@@ -1,0 +1,12 @@
+{
+  return new Filter<ObjectAssociation>(){
+    @Override public boolean accept(    final ObjectAssociation association){
+      final HiddenFacet facet=association.getFacet(HiddenFacet.class);
+      if (facet == null) {
+        return true;
+      }
+      return !(facet.where().includes(context) && facet.when() == When.ALWAYS);
+    }
+  }
+;
+}

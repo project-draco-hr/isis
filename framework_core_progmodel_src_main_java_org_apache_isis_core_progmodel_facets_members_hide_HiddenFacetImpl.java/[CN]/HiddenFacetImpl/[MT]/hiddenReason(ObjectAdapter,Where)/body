@@ -1,0 +1,21 @@
+{
+  if (!where().includes(whereContext)) {
+    return null;
+  }
+  if (when() == When.ALWAYS) {
+    return "Always hidden";
+  }
+  if (when() == When.NEVER) {
+    return null;
+  }
+  if (targetAdapter == null) {
+    return null;
+  }
+  if (when() == When.UNTIL_PERSISTED) {
+    return targetAdapter.isTransient() ? "Hidden until persisted" : null;
+  }
+ else   if (when() == When.ONCE_PERSISTED) {
+    return targetAdapter.representsPersistent() ? "Hidden once persisted" : null;
+  }
+  return null;
+}

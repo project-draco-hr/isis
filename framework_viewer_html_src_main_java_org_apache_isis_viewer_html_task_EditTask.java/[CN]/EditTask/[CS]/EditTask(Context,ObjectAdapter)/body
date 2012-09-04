@@ -1,13 +1,13 @@
 {
   super(context,"Edit","",adapter,size(adapter));
-  final List<ObjectAssociation> allFields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(getAuthenticationSession(),adapter));
+  final List<ObjectAssociation> allFields=adapter.getSpecification().getAssociations(ObjectAssociationFilters.dynamicallyVisible(getAuthenticationSession(),adapter,where));
   fields=new ObjectAssociation[names.length];
   for (int i=0, j=0; j < allFields.size(); j++) {
     final ObjectAssociation fld=allFields.get(j);
     fields[i]=fld;
     names[i]=fld.getName();
     descriptions[i]=fld.getDescription();
-    final Consent usableByUser=fld.isUsable(getAuthenticationSession(),adapter);
+    final Consent usableByUser=fld.isUsable(getAuthenticationSession(),adapter,where);
     if (usableByUser.isVetoed()) {
       descriptions[i]=usableByUser.getReason();
     }

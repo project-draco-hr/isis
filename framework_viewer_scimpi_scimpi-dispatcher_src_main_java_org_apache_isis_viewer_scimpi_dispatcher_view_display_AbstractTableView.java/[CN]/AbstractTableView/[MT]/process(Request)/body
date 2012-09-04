@@ -17,7 +17,7 @@
     if (!objectField.isOneToManyAssociation()) {
       throw new ScimpiException("Field " + objectField.getId() + " is not a collection");
     }
-    isFieldEditable=objectField.isUsable(IsisContext.getAuthenticationSession(),object).isAllowed();
+    isFieldEditable=objectField.isUsable(IsisContext.getAuthenticationSession(),object,where).isAllowed();
     getPersistenceSession().resolveField(object,objectField);
     collection=objectField.get(object);
     final TypeOfFacet facet=objectField.getFacet(TypeOfFacet.class);

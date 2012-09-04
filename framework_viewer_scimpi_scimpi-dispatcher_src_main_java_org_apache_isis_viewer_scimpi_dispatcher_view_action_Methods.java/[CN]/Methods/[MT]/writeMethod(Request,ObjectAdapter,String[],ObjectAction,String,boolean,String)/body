@@ -1,13 +1,13 @@
 {
-  if (action.isVisible(IsisContext.getAuthenticationSession(),adapter).isAllowed()) {
+  if (action.isVisible(IsisContext.getAuthenticationSession(),adapter,where).isAllowed()) {
     request.appendHtml("<div class=\"action\">");
     if (IsisContext.getSession() == null) {
       request.appendHtml("<span class=\"disabled\" title=\"no user logged in\">");
       request.appendAsHtmlEncoded(action.getName());
       request.appendHtml("</span>");
     }
- else     if (action.isUsable(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
-      request.appendHtml("<span class=\"disabled\" title=\"" + action.isUsable(IsisContext.getAuthenticationSession(),adapter).getReason() + "\">");
+ else     if (action.isUsable(IsisContext.getAuthenticationSession(),adapter,where).isVetoed()) {
+      request.appendHtml("<span class=\"disabled\" title=\"" + action.isUsable(IsisContext.getAuthenticationSession(),adapter,where).getReason() + "\">");
       request.appendAsHtmlEncoded(action.getName());
       request.appendHtml("</span>");
     }

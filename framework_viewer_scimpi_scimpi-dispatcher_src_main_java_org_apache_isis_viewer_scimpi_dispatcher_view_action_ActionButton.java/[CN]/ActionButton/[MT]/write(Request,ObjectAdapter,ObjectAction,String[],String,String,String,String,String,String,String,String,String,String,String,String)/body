@@ -1,11 +1,11 @@
 {
   final RequestContext context=request.getContext();
   buttonTitle=buttonTitle != null ? buttonTitle : action.getName();
-  if (action.isVisible(IsisContext.getAuthenticationSession(),object).isVetoed()) {
+  if (action.isVisible(IsisContext.getAuthenticationSession(),object,where).isVetoed()) {
     LOG.info("action not visible " + action.getName());
     return;
   }
-  final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+  final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object,where);
   if (usable.isVetoed()) {
     LOG.info("action not available: " + usable.getReason());
     return;

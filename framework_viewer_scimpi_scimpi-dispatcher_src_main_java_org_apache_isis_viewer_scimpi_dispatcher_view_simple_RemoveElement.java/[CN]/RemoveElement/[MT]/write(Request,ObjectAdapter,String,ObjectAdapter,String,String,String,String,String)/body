@@ -6,11 +6,11 @@
   if (!field.isOneToManyAssociation()) {
     throw new ScimpiException("Field " + fieldName + " not a collection, in "+ adapter.getSpecification().getFullIdentifier());
   }
-  if (field.isVisible(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
+  if (field.isVisible(IsisContext.getAuthenticationSession(),adapter,where).isVetoed()) {
     throw new ForbiddenException(field,ForbiddenException.VISIBLE);
   }
   IsisContext.getPersistenceSession().resolveField(adapter,field);
-  Consent usable=field.isUsable(IsisContext.getAuthenticationSession(),adapter);
+  Consent usable=field.isUsable(IsisContext.getAuthenticationSession(),adapter,where);
   if (usable.isAllowed()) {
     usable=((OneToManyAssociation)field).isValidToRemove(adapter,element);
   }

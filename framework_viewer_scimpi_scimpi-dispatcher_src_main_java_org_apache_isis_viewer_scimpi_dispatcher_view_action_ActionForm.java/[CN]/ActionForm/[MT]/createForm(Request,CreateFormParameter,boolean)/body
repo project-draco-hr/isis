@@ -6,8 +6,8 @@
   if (action.getParameterCount() == 0) {
     throw new ScimpiException("Action form can only be used for actions with parameters");
   }
-  if (parameterObject.showMessage && MethodsUtils.isVisible(object,action)) {
-    final String notUsable=MethodsUtils.isUsable(object,action);
+  if (parameterObject.showMessage && MethodsUtils.isVisible(object,action,where)) {
+    final String notUsable=MethodsUtils.isUsable(object,action,where);
     if (notUsable != null) {
       if (!withoutProcessing) {
         request.skipUntilClose();
@@ -18,7 +18,7 @@
       return;
     }
   }
-  if (!MethodsUtils.isVisibleAndUsable(object,action)) {
+  if (!MethodsUtils.isVisibleAndUsable(object,action,where)) {
     if (!withoutProcessing) {
       request.skipUntilClose();
     }

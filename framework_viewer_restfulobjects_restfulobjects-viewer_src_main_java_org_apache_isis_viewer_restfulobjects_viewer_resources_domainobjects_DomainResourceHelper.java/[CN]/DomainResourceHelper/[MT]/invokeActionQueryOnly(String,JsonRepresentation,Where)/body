@@ -1,0 +1,8 @@
+{
+  final ObjectAction action=getObjectActionThatIsVisibleAndUsable(actionId,Intent.ACCESS,where);
+  final ActionSemantics.Of actionSemantics=action.getSemantics();
+  if (actionSemantics != ActionSemantics.Of.SAFE) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not query only",action.getId());
+  }
+  return invokeActionUsingAdapters(action,arguments);
+}

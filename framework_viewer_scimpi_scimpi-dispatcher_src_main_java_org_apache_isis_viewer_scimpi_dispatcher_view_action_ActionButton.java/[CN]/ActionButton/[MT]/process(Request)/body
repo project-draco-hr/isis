@@ -36,11 +36,11 @@
     }
     i++;
   }
-  if (MethodsUtils.isVisibleAndUsable(object,action) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
+  if (MethodsUtils.isVisibleAndUsable(object,action,where) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
     write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
   }
   if (showMessage) {
-    final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object);
+    final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object,where);
     if (usable.isVetoed()) {
       final String notUsable=usable.getReason();
       if (notUsable != null) {

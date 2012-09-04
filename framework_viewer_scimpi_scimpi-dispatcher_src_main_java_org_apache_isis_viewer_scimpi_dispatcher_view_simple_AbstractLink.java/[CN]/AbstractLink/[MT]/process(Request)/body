@@ -14,7 +14,8 @@
     if (field == null) {
       throw new ScimpiException("No field " + fieldName + " in "+ adapter.getSpecification().getFullIdentifier());
     }
-    if (field.isVisible(IsisContext.getAuthenticationSession(),adapter).isVetoed()) {
+    final Where where=Where.ANYWHERE;
+    if (field.isVisible(IsisContext.getAuthenticationSession(),adapter,where).isVetoed()) {
       throw new ForbiddenException(field,ForbiddenException.VISIBLE);
     }
     IsisContext.getPersistenceSession().resolveField(adapter,field);

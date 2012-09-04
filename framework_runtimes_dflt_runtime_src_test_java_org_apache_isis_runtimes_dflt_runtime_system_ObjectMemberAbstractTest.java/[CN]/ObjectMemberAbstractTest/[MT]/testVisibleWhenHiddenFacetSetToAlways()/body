@@ -1,11 +1,11 @@
 {
   testMember.addFacet(new HideForContextFacetNone(testMember));
-  testMember.addFacet(new HiddenFacetAbstract(When.ALWAYS,Where.EVERYWHERE,testMember){
-    @Override public String hiddenReason(    final ObjectAdapter target){
+  testMember.addFacet(new HiddenFacetAbstract(When.ALWAYS,Where.ANYWHERE,testMember){
+    @Override public String hiddenReason(    final ObjectAdapter target,    final Where whereContext){
       return null;
     }
   }
 );
-  final Consent visible=testMember.isVisible(null,persistentAdapter);
+  final Consent visible=testMember.isVisible(null,persistentAdapter,Where.ANYWHERE);
   assertTrue(visible.isAllowed());
 }
