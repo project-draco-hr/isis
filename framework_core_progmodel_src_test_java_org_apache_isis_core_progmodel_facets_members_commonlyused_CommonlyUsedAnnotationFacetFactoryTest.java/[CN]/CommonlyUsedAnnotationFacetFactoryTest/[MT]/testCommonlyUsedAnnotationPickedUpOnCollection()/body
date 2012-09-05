@@ -1,0 +1,13 @@
+{
+class Customer {
+    @CommonlyUsed public Collection<?> getOrders(){
+      return null;
+    }
+  }
+  facetedMethod=FacetedMethod.createForCollection(Customer.class,"orders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,facetedMethod.getMethod(),methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CommonlyUsedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CommonlyUsedFacetAnnotation);
+  assertNoMethodsRemoved();
+}

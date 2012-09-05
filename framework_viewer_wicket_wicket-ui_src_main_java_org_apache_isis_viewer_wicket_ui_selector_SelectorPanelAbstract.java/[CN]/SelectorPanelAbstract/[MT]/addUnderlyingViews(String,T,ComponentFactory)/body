@@ -1,9 +1,9 @@
 {
   final List<ComponentFactory> componentFactories=findOtherComponentFactories(model,factory);
-  final ComponentFactory firstComponentFactory=componentFactories.get(0);
-  final Model<ComponentFactory> componentFactoryModel=new Model<ComponentFactory>();
-  componentFactoryModel.setObject(firstComponentFactory);
+  final ComponentFactory selectedComponentFactory=Iterables.find(componentFactories,determineInitialFactory(model));
   if (componentFactories.size() > 1) {
+    final Model<ComponentFactory> componentFactoryModel=new Model<ComponentFactory>();
+    componentFactoryModel.setObject(selectedComponentFactory);
     final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
     final DropDownChoiceComponentFactory viewsDropDown=new DropDownChoiceComponentFactory(ID_VIEWS_DROP_DOWN,componentFactoryModel,componentFactories,this,underlyingId,model);
     views.addOrReplace(viewsDropDown);
@@ -12,5 +12,5 @@
  else {
     permanentlyHide(ID_VIEWS);
   }
-  addOrReplace(firstComponentFactory.createComponent(underlyingId,model));
+  addOrReplace(selectedComponentFactory.createComponent(underlyingId,model));
 }

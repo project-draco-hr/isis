@@ -1,5 +1,12 @@
 {
-  final Label labelIfCompact=new Label(ID_SCALAR_IF_COMPACT,getModel().getObjectAsString());
+  final ScalarModel scalarModel=getModel();
+  final String name=scalarModel.getName();
+  entityLink=(EntityLink)getComponentFactoryRegistry().createComponent(ComponentType.ENTITY_LINK,getModel());
+  entityLink.setOutputMarkupId(true);
+  entityLink.setLabel(Model.of(name));
+  final FormComponentLabel labelIfCompact=new FormComponentLabel(ID_SCALAR_IF_COMPACT,entityLink);
+  labelIfCompact.add(entityLink);
   addOrReplace(labelIfCompact);
+  addOrReplace(new ComponentFeedbackPanel(ID_FEEDBACK,entityLink));
   return labelIfCompact;
 }

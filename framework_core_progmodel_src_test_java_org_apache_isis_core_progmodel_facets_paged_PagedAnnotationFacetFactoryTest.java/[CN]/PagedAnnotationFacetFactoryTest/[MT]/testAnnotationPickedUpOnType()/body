@@ -1,0 +1,9 @@
+{
+  final ProcessClassContext processClassContext=new ProcessClassContext(Customer.class,methodRemover,facetHolder);
+  facetFactory.process(processClassContext);
+  final Facet facet=facetHolder.getFacet(PagedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PagedFacetAnnotation);
+  PagedFacet pagedFacet=(PagedFacet)facet;
+  assertThat(pagedFacet.value(),is(20));
+}
