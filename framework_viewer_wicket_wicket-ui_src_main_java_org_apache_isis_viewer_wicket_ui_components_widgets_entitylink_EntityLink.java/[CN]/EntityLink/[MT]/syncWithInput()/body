@@ -4,7 +4,9 @@
   final IModel<List<? extends ObjectAdapterMemento>> choicesMementos=getChoicesModel();
   if (choicesMementos != null) {
     final IModel<ObjectAdapterMemento> modelObject=entityOidField.getModel();
-    addOrReplace(new DropDownChoicesForObjectAdapterMementos(ID_CHOICES,modelObject,choicesMementos));
+    final DropDownChoicesForObjectAdapterMementos dropDownChoices=new DropDownChoicesForObjectAdapterMementos(ID_CHOICES,modelObject,choicesMementos);
+    addOrReplace(dropDownChoices);
+    dropDownChoices.setEnabled(getEntityModel().isEditMode());
     permanentlyHide(ID_ENTITY_LINK_WRAPPER);
     permanentlyHide(ID_ENTITY_TITLE_NULL);
   }
@@ -15,5 +17,5 @@
   }
   syncEntityDetailsButtonWithInput(adapter);
   syncEntityDetailsWithInput(adapter);
-  syncFindUsingVisibility();
+  syncFindUsingAndEntityDetailsLinkVisibility();
 }

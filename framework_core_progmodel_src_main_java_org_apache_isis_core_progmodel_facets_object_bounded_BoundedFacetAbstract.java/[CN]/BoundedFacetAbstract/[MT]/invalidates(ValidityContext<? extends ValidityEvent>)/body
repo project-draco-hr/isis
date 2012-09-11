@@ -3,5 +3,12 @@
     return null;
   }
   final ObjectAdapter target=context.getTarget();
-  return disabledReason(target);
+  if (target == null) {
+    return null;
+  }
+  if (!(getFacetHolder() instanceof ObjectSpecification)) {
+    return null;
+  }
+  final ObjectSpecification objectSpec=(ObjectSpecification)getFacetHolder();
+  return objectSpec == target.getSpecification() ? null : "Invalid type";
 }
