@@ -1,8 +1,8 @@
 {
-  entityOidField=new TextField<ObjectAdapterMemento>(ID_ENTITY_OID,new Model<ObjectAdapterMemento>(){
+  pendingOid=new TextField<ObjectAdapterMemento>(ID_ENTITY_OID,new Model<ObjectAdapterMemento>(){
     private static final long serialVersionUID=1L;
     @Override public ObjectAdapterMemento getObject(){
-      if (pending != null) {
+      if (hasPending) {
         return pending;
       }
       final ObjectAdapter adapter=EntityLink.this.getModelObject();
@@ -10,6 +10,7 @@
     }
     @Override public void setObject(    final ObjectAdapterMemento adapterMemento){
       pending=adapterMemento;
+      hasPending=true;
     }
   }
 ){
@@ -20,7 +21,7 @@
     }
   }
 ;
-  entityOidField.setType(ObjectAdapterMemento.class);
-  addOrReplace(entityOidField);
-  entityOidField.setVisible(false);
+  pendingOid.setType(ObjectAdapterMemento.class);
+  addOrReplace(pendingOid);
+  pendingOid.setVisible(false);
 }
