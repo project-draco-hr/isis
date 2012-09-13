@@ -5,14 +5,11 @@
   final AbstractLink link=newLink(ID_ENTITY_LINK,pageClass,pageParameters);
   label=new Label(ID_ENTITY_TITLE,determineTitle());
   link.add(label);
-  final PackageResource imageResource=entityModel.lookupImageResource(getImageCache());
-  if (imageResource != null) {
-    image=new Image(ID_ENTITY_ICON,imageResource);
-    link.addOrReplace(image);
-  }
- else {
-    permanentlyHide(ID_ENTITY_ICON);
-  }
+  final Class<?> correspondingClass=entityModel.getObject().getSpecification().getCorrespondingClass();
+  final String specName=correspondingClass.getSimpleName();
+  final ResourceReference imageResource=new ResourceReference(correspondingClass,specName + ".png");
+  image=new Image(ID_ENTITY_ICON,imageResource);
+  link.addOrReplace(image);
   final WebMarkupContainer entityLinkWrapper=new WebMarkupContainer(ID_ENTITY_LINK_WRAPPER);
   entityLinkWrapper.addOrReplace(link);
   return entityLinkWrapper;
