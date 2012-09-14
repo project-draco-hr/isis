@@ -1,9 +1,13 @@
 {
   final String name=getModel().getName();
   valueField.setLabel(Model.of(name));
-  final FormComponentLabel scalarNameAndValue=new FormComponentLabel(ID_SCALAR_IF_REGULAR,valueField);
+  final FormComponentLabel labelIfRegular=new FormComponentLabel(ID_SCALAR_IF_REGULAR,valueField);
+  final String describedAs=getModel().getDescribedAs();
+  if (describedAs != null) {
+    labelIfRegular.add(new AttributeModifier("title",true,Model.of(describedAs)));
+  }
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(valueField));
-  scalarNameAndValue.add(scalarName);
-  scalarNameAndValue.add(valueField);
-  return scalarNameAndValue;
+  labelIfRegular.add(scalarName);
+  labelIfRegular.add(valueField);
+  return labelIfRegular;
 }
