@@ -8,13 +8,31 @@
     dropDownChoices.setEnabled(getEntityModel().isEditMode());
     permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
     permanentlyHide(ID_ENTITY_TITLE_NULL);
-    permanentlyHide(ID_FIND_USING,ID_ENTITY_CLEAR_LINK);
+    permanentlyHide(ID_FIND_USING,ID_ENTITY_CLEAR_LINK,ID_AUTOCOMPLETE);
   }
  else {
     permanentlyHide(ID_CHOICES);
     syncLinkWithInput(adapter);
     syncEntityTitleNullWithInput(adapter);
     syncEntityClearLinksWithInput(adapter);
+  }
+  AutoCompleteFacet autoCompleteFacet=null;
+  final ObjectSpecification typeOfSpecification=getEntityModel().getTypeOfSpecification();
+  if (typeOfSpecification != null) {
+    autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
+  }
+  if (autoCompleteFacet != null) {
+    autoCompleteTextField=new AutoCompleteTextField<String>(ID_AUTOCOMPLETE){
+      private static final long serialVersionUID=1L;
+      @Override protected Iterator<String> getChoices(      String input){
+        return Iterators.forArray("foo","bar");
+      }
+    }
+;
+    addOrReplace(autoCompleteTextField);
+  }
+ else {
+    permanentlyHide(ID_AUTOCOMPLETE);
   }
   syncEntityDetailsLinksWithInput(adapter);
   syncEntityDetailsWithInput(adapter);
