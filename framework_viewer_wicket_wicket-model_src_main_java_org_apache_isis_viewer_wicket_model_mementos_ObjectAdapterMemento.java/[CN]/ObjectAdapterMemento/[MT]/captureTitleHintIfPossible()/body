@@ -2,8 +2,10 @@
   if (this.titleHint != null) {
     return;
   }
-  ObjectAdapter objectAdapter=this.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-  if (objectAdapter.isTitleAvailable()) {
-    this.titleHint=objectAdapter.titleString();
+  if (IsisContext.inSession()) {
+    ObjectAdapter objectAdapter=this.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+    if (objectAdapter.isTitleAvailable()) {
+      this.titleHint=objectAdapter.titleString();
+    }
   }
 }

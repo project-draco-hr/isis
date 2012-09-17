@@ -1,12 +1,25 @@
 {
   final AuthenticatedWebSessionForIsis webSession=(AuthenticatedWebSessionForIsis)Session.get();
-  final boolean shouldClose=webSession.deregisterUseByThread();
-  final IsisSession isisSession=sessionMap.get(webSession);
-  if (isisSession == null) {
-    return;
-  }
-  if (shouldClose) {
-    isisSession.close();
-    sessionMap.remove(webSession);
+synchronized (webSession) {
+    final String webSessionId=webSession.getId();
+    final int before=webSession.getThreadUsage();
+    final boolean shouldClose=webSession.deregisterUseByThread();
+    final int after=webSession.getThreadUsage();
+    final IsisSession isisSession=sessionMap.get(webSession);
+    final String logMsg;
+    if (isisSession == null) {
+      logMsg="NO_SESSION";
+    }
+ else {
+      if (shouldClose) {
+        isisSession.close();
+        sessionMap.remove(webSession);
+        logMsg="DISCARDING";
+      }
+ else {
+        logMsg="BUMP_DOWN ";
+      }
+    }
+    LOG.debug(String.format("webSession: %s CLOSE %d -> %d %s %s",webSessionId,before,after,logMsg,(isisSession != null ? isisSession.getId() : "[null]")));
   }
 }

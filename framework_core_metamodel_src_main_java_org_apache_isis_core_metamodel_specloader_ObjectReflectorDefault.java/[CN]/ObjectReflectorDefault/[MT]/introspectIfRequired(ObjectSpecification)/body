@@ -1,0 +1,20 @@
+{
+  final ObjectSpecificationAbstract specSpi=(ObjectSpecificationAbstract)spec;
+  final IntrospectionState introspectionState=specSpi.getIntrospectionState();
+  if (introspectionState == IntrospectionState.NOT_INTROSPECTED) {
+    specSpi.setIntrospectionState(IntrospectionState.BEING_INTROSPECTED);
+    specSpi.introspectTypeHierarchyAndMembers();
+    facetDecoratorSet.decorate(spec);
+    specSpi.updateFromFacetValues();
+    specSpi.setIntrospectionState(IntrospectionState.INTROSPECTED);
+  }
+ else   if (introspectionState == IntrospectionState.BEING_INTROSPECTED) {
+    specSpi.introspectTypeHierarchyAndMembers();
+    facetDecoratorSet.decorate(spec);
+    specSpi.updateFromFacetValues();
+    specSpi.setIntrospectionState(IntrospectionState.INTROSPECTED);
+  }
+ else   if (introspectionState == IntrospectionState.INTROSPECTED) {
+  }
+  return spec;
+}

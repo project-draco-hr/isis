@@ -1,11 +1,22 @@
 {
   final AuthenticatedWebSessionForIsis webSession=(AuthenticatedWebSessionForIsis)Session.get();
-  webSession.registerUseByThread();
-  IsisSession isisSession=sessionMap.get(webSession);
-  if (isisSession == null) {
-    isisSession=getSessionFactoryInstance().openSession(authSession);
-    sessionMap.put(webSession,isisSession);
-    isisSession.open();
+synchronized (webSession) {
+    final String webSessionId=webSession.getId();
+    final int before=webSession.getThreadUsage();
+    webSession.registerUseByThread();
+    final int after=webSession.getThreadUsage();
+    final String logMsg;
+    IsisSession isisSession=sessionMap.get(webSession);
+    if (isisSession == null) {
+      isisSession=getSessionFactoryInstance().openSession(authSession);
+      sessionMap.put(webSession,isisSession);
+      isisSession.open();
+      logMsg="NEW    ";
+    }
+ else {
+      logMsg="BUMP_UP";
+    }
+    LOG.debug(String.format("webSession: %s OPEN  %d -> %d %s %s",webSessionId,before,after,logMsg,isisSession.getId()));
+    return isisSession;
   }
-  return isisSession;
 }

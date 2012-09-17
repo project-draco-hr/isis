@@ -1,17 +1,20 @@
 {
-  if (facetedMethodsBuilder == null) {
-    throw new MetaModelException("Introspection already taken place, cannot introspect again");
+  if (isNotIntrospected()) {
+    facetedMethodsBuilder.introspectClass();
   }
-  facetedMethodsBuilder.introspectClass();
-  addNamedFacetAndPluralFacetIfRequired();
+  if (isNotIntrospected()) {
+    addNamedFacetAndPluralFacetIfRequired();
+  }
   if (this.containsFacet(ValueFacet.class)) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("skipping full introspection for value type " + getFullIdentifier());
     }
     return;
   }
-  final Class<?> superclass=getCorrespondingClass().getSuperclass();
-  setSuperclass(superclass);
+  if (isNotIntrospected()) {
+    final Class<?> superclass=getCorrespondingClass().getSuperclass();
+    updateSuperclass(superclass);
+  }
   final Class<?>[] interfaceTypes=getCorrespondingClass().getInterfaces();
   final List<ObjectSpecification> interfaceSpecList=Lists.newArrayList();
   for (  final Class<?> interfaceType : interfaceTypes) {
@@ -21,16 +24,26 @@
       interfaceSpecList.add(interfaceSpec);
     }
   }
-  addAsSubclassTo(interfaceSpecList);
-  addInterfaces(interfaceSpecList);
+  if (isNotIntrospected()) {
+    updateAsSubclassTo(interfaceSpecList);
+  }
+  if (isNotIntrospected()) {
+    updateInterfaces(interfaceSpecList);
+  }
   final List<FacetedMethod> associationFacetedMethods=facetedMethodsBuilder.getAssociationFacetedMethods();
   final List<FacetedMethod> actionFacetedMethods=facetedMethodsBuilder.getActionFacetedMethods();
-  final OrderSet associationOrderSet=getMemberLayoutArranger().createAssociationOrderSetFor(this,associationFacetedMethods);
-  addAssociations(asAssociations(associationOrderSet));
-  final OrderSet actionOrderSet=getMemberLayoutArranger().createActionOrderSetFor(this,actionFacetedMethods);
-  addObjectActions(asObjectActions(actionOrderSet));
-  facetedMethodsBuilder.introspectClassPostProcessing();
-  updateFromFacetValues();
-  facetedMethodsBuilder=null;
-  setIntrospected(true);
+  if (isNotIntrospected()) {
+    final OrderSet associationOrderSet=getMemberLayoutArranger().createAssociationOrderSetFor(this,associationFacetedMethods);
+    updateAssociations(asAssociations(associationOrderSet));
+  }
+  if (isNotIntrospected()) {
+    final OrderSet actionOrderSet=getMemberLayoutArranger().createActionOrderSetFor(this,actionFacetedMethods);
+    updateObjectActions(asObjectActions(actionOrderSet));
+  }
+  if (isNotIntrospected()) {
+    facetedMethodsBuilder.introspectClassPostProcessing();
+  }
+  if (isNotIntrospected()) {
+    updateFromFacetValues();
+  }
 }

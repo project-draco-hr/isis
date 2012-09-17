@@ -3,7 +3,9 @@
     return null;
   }
   Class<?> repositoryClass=annotation.repository();
+  String actionName=annotation.action();
   final ObjectSpecification repositorySpec=getSpecificationLookup().loadSpecification(repositoryClass);
-  String action=annotation.action();
-  return annotation == null ? null : new AutoCompleteFacetAnnotation(holder,repositorySpec,action);
+  getSpecificationLookup().introspectIfRequired(repositorySpec);
+  final List<ObjectAction> objectActions=repositorySpec.getObjectActions(ActionType.USER,Contributed.EXCLUDED,ObjectActionFilters.withId(actionName));
+  return objectActions.size() != 1 ? null : new AutoCompleteFacetAnnotation(holder,objectActions.get(0));
 }
