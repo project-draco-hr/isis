@@ -8,7 +8,7 @@
     dropDownChoices.setEnabled(getEntityModel().isEditMode());
     permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
     permanentlyHide(ID_ENTITY_TITLE_NULL);
-    permanentlyHide(ID_FIND_USING,ID_ENTITY_CLEAR_LINK,ID_AUTOCOMPLETE);
+    permanentlyHide(ID_FIND_USING,ID_ENTITY_CLEAR_LINK,ID_AUTO_COMPLETE);
   }
  else {
     permanentlyHide(ID_CHOICES);
@@ -16,25 +16,55 @@
     syncEntityTitleNullWithInput(adapter);
     syncEntityClearLinksWithInput(adapter);
   }
-  AutoCompleteFacet autoCompleteFacet=null;
-  final ObjectSpecification typeOfSpecification=getEntityModel().getTypeOfSpecification();
-  if (typeOfSpecification != null) {
-    autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
-  }
-  if (autoCompleteFacet != null) {
-    autoCompleteTextField=new AutoCompleteTextField<String>(ID_AUTOCOMPLETE){
+  if (hasAutoComplete()) {
+    final EntityModel entityModel=getEntityModel();
+    ChoiceProvider<ObjectAdapter> provider=new TextChoiceProvider<ObjectAdapter>(){
       private static final long serialVersionUID=1L;
-      @Override protected Iterator<String> getChoices(      String input){
-        return Iterators.forArray("foo","bar");
+      @Override protected String getDisplayText(      ObjectAdapter choice){
+        return choice.titleString();
+      }
+      @Override protected Object getId(      ObjectAdapter choice){
+        final RootOid oid=(RootOid)choice.getOid();
+        return oid.asBookmark().toString();
+      }
+      @Override public void query(      String term,      int page,      com.vaynberg.wicket.select2.Response<ObjectAdapter> response){
+        final ObjectSpecification typeOfSpecification=entityModel.getTypeOfSpecification();
+        final AutoCompleteFacet autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
+        final List<ObjectAdapter> results=autoCompleteFacet.execute(term);
+        response.addAll(results);
+      }
+      @Override public Collection<ObjectAdapter> toChoices(      Collection<String> ids){
+        Function<String,ObjectAdapter> function=new Function<String,ObjectAdapter>(){
+          @Override public ObjectAdapter apply(          String input){
+            final Bookmark bookmark=new Bookmark(input);
+            final RootOid oid=RootOidDefault.create(bookmark);
+            final ObjectSpecification typeOfSpecification=entityModel.getTypeOfSpecification();
+            final AutoCompleteFacet autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
+            return autoCompleteFacet.lookup(oid);
+          }
+        }
+;
+        return Collections2.transform(ids,function);
       }
     }
 ;
-    addOrReplace(autoCompleteTextField);
+    final ModelAbstract<ObjectAdapter> model=new ModelAbstract<ObjectAdapter>(){
+      private static final long serialVersionUID=1L;
+      @Override protected ObjectAdapter load(){
+        return getPendingElseCurrentAdapter();
+      }
+    }
+;
+    autoCompleteField=new Select2Choice<ObjectAdapter>(ID_AUTO_COMPLETE,model,provider);
+    addOrReplace(autoCompleteField);
+    permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
+    permanentlyHide(ID_ENTITY_TITLE_NULL);
+    permanentlyHide(ID_FIND_USING,ID_ENTITY_CLEAR_LINK,ID_ENTITY_DETAILS_LINK_LABEL);
   }
  else {
-    permanentlyHide(ID_AUTOCOMPLETE);
+    permanentlyHide(ID_AUTO_COMPLETE);
   }
   syncEntityDetailsLinksWithInput(adapter);
   syncEntityDetailsWithInput(adapter);
-  syncVisibility();
+  syncVisibilityAndUsability();
 }

@@ -76,6 +76,9 @@
     @Override public Object lookup(    Bookmark bookmark){
       return new DomainObjectContainerResolve().lookup(bookmark);
     }
+    @Override public Bookmark bookmarkFor(    Object domainObject){
+      return new DomainObjectContainerResolve().bookmarkFor(domainObject);
+    }
     @Override public void resolve(    final Object parent){
       new DomainObjectContainerResolve().resolve(parent);
     }
@@ -117,12 +120,15 @@
     }
   }
 ;
-  this.dependencyInjector=new ServicesInjector(){
+  this.servicesInjector=new ServicesInjector(){
     @Override public void injectServicesInto(    final Object object){
       getPersistenceSession().getServicesInjector().injectServicesInto(object);
     }
     @Override public void injectServicesInto(    List<Object> objects){
       getPersistenceSession().getServicesInjector().injectServicesInto(objects);
+    }
+    @Override public Object lookupService(    Class<?> serviceClass){
+      return getPersistenceSession().getServicesInjector().lookupService(serviceClass);
     }
     @Override public void injectInto(    Object candidate){
       if (ServicesInjectorAware.class.isAssignableFrom(candidate.getClass())) {

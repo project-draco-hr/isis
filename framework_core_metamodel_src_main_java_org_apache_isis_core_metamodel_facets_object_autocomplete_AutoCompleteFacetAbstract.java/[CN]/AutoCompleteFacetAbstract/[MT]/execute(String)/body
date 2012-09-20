@@ -1,0 +1,13 @@
+{
+  cacheRepositoryAndRepositoryActionIfRequired();
+  if (repositoryAction == null || repository == null) {
+    return Collections.<ObjectAdapter>emptyList();
+  }
+  final ObjectAdapter repositoryAdapter=adapterManager.getAdapterFor(repository);
+  final ObjectAdapter searchAdapter=adapterManager.adapterFor(search);
+  final ObjectAdapter resultAdapter=repositoryAction.execute(repositoryAdapter,new ObjectAdapter[]{searchAdapter});
+  if (CollectionFacetUtils.getCollectionFacetFromSpec(resultAdapter) == null) {
+    return Collections.<ObjectAdapter>emptyList();
+  }
+  return CollectionFacetUtils.convertToAdapterList(resultAdapter);
+}
