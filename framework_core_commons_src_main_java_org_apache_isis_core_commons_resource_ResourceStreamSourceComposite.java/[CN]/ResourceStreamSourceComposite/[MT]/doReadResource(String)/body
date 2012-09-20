@@ -1,0 +1,16 @@
+{
+  Vector<InputStream> compositionStreams=new Vector<InputStream>();
+  for (  final ResourceStreamSource rss : resourceStreamSources) {
+    final InputStream resourceStream=rss.readResource(resourcePath);
+    if (resourceStream != null) {
+      compositionStreams.add(resourceStream);
+    }
+  }
+  if (!compositionStreams.isEmpty()) {
+    return new SequenceInputStream(compositionStreams.elements());
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("could not load resource path '" + resourcePath + "' from "+ getName());
+  }
+  return null;
+}
