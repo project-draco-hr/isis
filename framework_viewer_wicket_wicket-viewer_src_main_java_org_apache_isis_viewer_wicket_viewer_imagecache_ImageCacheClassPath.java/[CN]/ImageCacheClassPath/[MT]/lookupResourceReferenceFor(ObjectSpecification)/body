@@ -1,0 +1,13 @@
+{
+  final Class<?> correspondingClass=spec.getCorrespondingClass();
+  final String specName=correspondingClass.getSimpleName();
+  final ResourceReference resourceReference=resourceReferenceFor(specName);
+  if (resourceReference != null) {
+    return resourceReference;
+  }
+  final ObjectSpecification superSpec=spec.superclass();
+  if (superSpec != null) {
+    return resourceReferenceFor(superSpec);
+  }
+  return newPackageResourceReference(FALLBACK_IMAGE);
+}

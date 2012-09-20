@@ -5,10 +5,14 @@
   final AbstractLink link=newLink(ID_ENTITY_LINK,pageClass,pageParameters);
   label=new Label(ID_ENTITY_TITLE,determineTitle());
   link.add(label);
-  final Class<?> correspondingClass=entityModel.getObject().getSpecification().getCorrespondingClass();
-  final String specName=correspondingClass.getSimpleName();
-  final ResourceReference imageResource=new PackageResourceReference(correspondingClass,specName + ".png");
-  image=new Image(ID_ENTITY_ICON,imageResource);
+  final ResourceReference imageResource=imageCache.resourceReferenceFor(adapter);
+  image=new Image(ID_ENTITY_ICON,imageResource){
+    private static final long serialVersionUID=1L;
+    @Override protected boolean shouldAddAntiCacheParameter(){
+      return false;
+    }
+  }
+;
   link.addOrReplace(image);
   final WebMarkupContainer entityLinkWrapper=new WebMarkupContainer(ID_ENTITY_LINK_WRAPPER);
   entityLinkWrapper.addOrReplace(link);
