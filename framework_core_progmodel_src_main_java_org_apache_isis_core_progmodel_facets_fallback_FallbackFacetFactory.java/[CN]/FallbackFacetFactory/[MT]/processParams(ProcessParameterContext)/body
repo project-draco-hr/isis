@@ -1,14 +1,12 @@
 {
   final List<Facet> facets=new ArrayList<Facet>();
-  if (processParameterContext.getFacetHolder() instanceof TypedHolder) {
-    final TypedHolder typedHolder=processParameterContext.getFacetHolder();
-    if (typedHolder.getFeatureType().isActionParameter()) {
-      facets.add(new NamedFacetNone(processParameterContext.getFacetHolder()));
-      facets.add(new DescribedAsFacetNone(processParameterContext.getFacetHolder()));
-      facets.add(new HelpFacetNone(processParameterContext.getFacetHolder()));
-      facets.add(new MultiLineFacetNone(false,processParameterContext.getFacetHolder()));
-      facets.add(new MaxLengthFacetUnlimited(processParameterContext.getFacetHolder()));
-    }
+  final TypedHolder typedHolder=processParameterContext.getFacetHolder();
+  if (typedHolder.getFeatureType().isActionParameter()) {
+    facets.add(new NamedFacetNone(typedHolder));
+    facets.add(new DescribedAsFacetNone(typedHolder));
+    facets.add(new HelpFacetNone(typedHolder));
+    facets.add(new MultiLineFacetNone(false,typedHolder));
+    facets.add(new MaxLengthFacetUnlimited(typedHolder));
   }
   FacetUtil.addFacets(facets);
 }
