@@ -1,0 +1,15 @@
+{
+class Customer {
+    @Resolve public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  facetedMethod=FacetedMethod.createForProperty(Customer.class,"numberOfOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,facetedMethod.getMethod(),methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ResolveFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ResolveFacetAnnotation);
+  ResolveFacet resolveFacet=(ResolveFacet)facet;
+  assertThat(resolveFacet.value(),is(Resolve.Type.EAGERLY));
+  assertNoMethodsRemoved();
+}
