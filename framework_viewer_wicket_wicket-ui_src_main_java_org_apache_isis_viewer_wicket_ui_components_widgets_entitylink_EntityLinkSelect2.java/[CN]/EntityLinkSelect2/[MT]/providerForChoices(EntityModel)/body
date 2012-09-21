@@ -1,0 +1,14 @@
+{
+  return new ObjectAdapterMementoProviderAbstract(){
+    private static final long serialVersionUID=1L;
+    @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
+      final ScalarModel scalarModel=(ScalarModel)entityModel;
+      final List<ObjectAdapter> choices=scalarModel.getChoices();
+      if (choices.size() == 0) {
+        return null;
+      }
+      return Lists.newArrayList(Lists.transform(choices,Mementos.fromAdapter()));
+    }
+  }
+;
+}

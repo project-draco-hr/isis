@@ -1,0 +1,19 @@
+{
+  final boolean mutability=isEnableAllowed() && !getEntityModel().isViewMode();
+  findUsing.setVisible(mutability);
+  if (entityClearLink != null) {
+    entityClearLink.setVisible(mutability);
+  }
+  if (entityDetailsLink != null) {
+    entityDetailsLink.setVisible(getEntityModel().getRenderingHint() == RenderingHint.REGULAR);
+  }
+  if (autoCompleteField != null) {
+    autoCompleteField.setEnabled(mutability);
+  }
+  if (hasAutoCompleteOrChoicesAndNotCompactRendering()) {
+    permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
+    if (getEntityModel().isEditMode()) {
+      permanentlyHide(ID_ENTITY_DETAILS_LINK);
+    }
+  }
+}

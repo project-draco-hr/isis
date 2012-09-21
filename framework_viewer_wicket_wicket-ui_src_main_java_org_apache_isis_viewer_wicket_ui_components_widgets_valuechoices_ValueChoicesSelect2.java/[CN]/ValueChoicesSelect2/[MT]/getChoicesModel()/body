@@ -1,0 +1,14 @@
+{
+  final List<ObjectAdapter> choices=scalarModel.getChoices();
+  if (choices.size() == 0) {
+    return null;
+  }
+  final List<ObjectAdapterMemento> choicesMementos=Lists.newArrayList(Lists.transform(choices,Mementos.fromAdapter()));
+  return new ModelAbstract<List<ObjectAdapterMemento>>(choicesMementos){
+    private static final long serialVersionUID=1L;
+    @Override protected List<ObjectAdapterMemento> load(){
+      return getObject();
+    }
+  }
+;
+}

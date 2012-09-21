@@ -1,0 +1,19 @@
+{
+  if (!hasAutoCompleteOrChoicesAndNotCompactRendering()) {
+    permanentlyHide(ID_AUTO_COMPLETE);
+    return;
+  }
+  final ChoiceProvider<ObjectAdapterMemento> provider=hasChoices() ? providerForChoices(getEntityModel()) : providerForAutoComplete(getEntityModel());
+  final ModelAbstract<ObjectAdapterMemento> model=new ModelAbstract<ObjectAdapterMemento>(){
+    private static final long serialVersionUID=1L;
+    @Override protected ObjectAdapterMemento load(){
+      return ObjectAdapterMemento.createOrNull(getPendingElseCurrentAdapter());
+    }
+  }
+;
+  autoCompleteField=new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE,model,provider);
+  addOrReplace(autoCompleteField);
+  permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
+  permanentlyHide(ID_ENTITY_TITLE_NULL);
+  permanentlyHide(ID_FIND_USING);
+}
