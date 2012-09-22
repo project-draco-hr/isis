@@ -4,7 +4,18 @@
     final String webappDir=servletContext.getRealPath("/");
     final String webInfDir=servletContext.getRealPath("/WEB-INF");
     loggingConfigurer.configureLogging(webInfDir,new String[0]);
-    final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(new ResourceStreamSourceForWebInf(servletContext),ResourceStreamSourceContextLoaderClassPath.create());
+    String configLocation=servletContext.getInitParameter(WebAppConstants.CONFIG_DIR_PARAM);
+    ResourceStreamSourceComposite compositeSource=null;
+    if (configLocation == null) {
+      LOG.info("Config override location: No override location configured!");
+      compositeSource=new ResourceStreamSourceComposite(ResourceStreamSourceContextLoaderClassPath.create(),new ResourceStreamSourceForWebInf(servletContext));
+    }
+ else {
+      LOG.info("Config override location: " + configLocation);
+      ResourceStreamSource configSourceStream=ResourceStreamSourceFileSystem.create(configLocation);
+      compositeSource=new ResourceStreamSourceComposite(ResourceStreamSourceContextLoaderClassPath.create(),new ResourceStreamSourceForWebInf(servletContext),configSourceStream);
+    }
+    final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(compositeSource);
     primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
     final DeploymentType deploymentType=determineDeploymentType(isisConfigurationBuilder,servletContext);
     addConfigurationResourcesForWebApps(isisConfigurationBuilder);
