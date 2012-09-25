@@ -16,6 +16,7 @@
     }
     final ResultType resultType=ResultType.determineFor(resultAdapter);
     resultType.addResults(this,resultAdapter);
+    bookmarkPage(actionModel);
   }
  catch (  ConcurrencyException ex) {
     if (targetAdapter == null) {
@@ -24,5 +25,9 @@
     final ResultType resultType=ResultType.determineFor(targetAdapter);
     resultType.addResults(this,targetAdapter,ex);
     return;
+  }
+ finally {
+    final ActionModel actionModel=getActionModel();
+    actionModel.clearArguments();
   }
 }

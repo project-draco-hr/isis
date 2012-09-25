@@ -1,0 +1,17 @@
+{
+  final PageParameters pageParameters=new PageParameters();
+  final String oidStr=adapter.getOid().enString(getOidMarshaller());
+  PageParameterNames.OBJECT_OID.addStringTo(pageParameters,oidStr);
+  final ActionType actionType=objectAction.getType();
+  final String actionId=determineActionId(objectAction);
+  PageParameterNames.PAGE_TYPE.addEnumTo(pageParameters,PageType.ACTION);
+  PageParameterNames.ACTION_TYPE.addEnumTo(pageParameters,actionType);
+  final ObjectSpecification actionOnTypeSpec=objectAction.getOnType();
+  if (actionOnTypeSpec != null) {
+    PageParameterNames.ACTION_OWNING_SPEC.addStringTo(pageParameters,actionOnTypeSpec.getFullIdentifier());
+  }
+  PageParameterNames.ACTION_ID.addStringTo(pageParameters,actionId);
+  PageParameterNames.ACTION_SINGLE_RESULTS_MODE.addEnumTo(pageParameters,singleResultsMode);
+  PageParameterNames.PAGE_TITLE.addStringTo(pageParameters,actionId);
+  return pageParameters;
+}

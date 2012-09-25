@@ -1,0 +1,17 @@
+{
+  final BookmarkedPagesModel bookmarkedPagesModel=getModel();
+  final ListView<PageParameters> listView=new ListView<PageParameters>(BOOKMARKED_PAGE_ITEM,bookmarkedPagesModel){
+    private static final long serialVersionUID=1L;
+    @Override protected void populateItem(    ListItem<PageParameters> item){
+      final PageParameters pageParameters=item.getModelObject();
+      final PageType pageType=PageParameterNames.PAGE_TYPE.getEnumFrom(pageParameters,PageType.class);
+      final Class<? extends Page> pageClass=pageClassRegistry.getPageClass(pageType);
+      final AbstractLink link=Links.newBookmarkablePageLink(BOOKMARKED_PAGE_LINK,pageParameters,pageClass);
+      link.add(new Label(BOOKMARKED_PAGE_TITLE,BookmarkedPagesModel.titleFrom(pageParameters)));
+      item.add(link);
+      link.setEnabled(!bookmarkedPagesModel.isCurrent(pageParameters));
+    }
+  }
+;
+  add(listView);
+}

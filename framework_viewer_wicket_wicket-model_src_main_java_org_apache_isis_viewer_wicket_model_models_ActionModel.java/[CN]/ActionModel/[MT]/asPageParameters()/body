@@ -1,0 +1,11 @@
+{
+  final ObjectAdapter adapter=getTargetAdapter();
+  final ObjectAction objectAction=getActionMemento().getAction();
+  final PageParameters pageParameters=createPageParameters(adapter,objectAction,SingleResultsMode.REDIRECT);
+  ObjectAdapter[] argumentsAsArray=getArgumentsAsArray();
+  for (  ObjectAdapter argumentAdapter : argumentsAsArray) {
+    final String encodedArg=encodeArg(argumentAdapter);
+    PageParameterNames.ACTION_ARGS.addStringTo(pageParameters,encodedArg);
+  }
+  return pageParameters;
+}

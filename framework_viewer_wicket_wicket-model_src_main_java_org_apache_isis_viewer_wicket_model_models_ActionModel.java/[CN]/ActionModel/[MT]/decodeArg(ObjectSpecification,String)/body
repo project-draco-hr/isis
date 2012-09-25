@@ -1,0 +1,16 @@
+{
+  if (NULL_ARG.equals(encoded)) {
+    return null;
+  }
+  if (objSpec.isEncodeable()) {
+    EncodableFacet encodeable=objSpec.getFacet(EncodableFacet.class);
+    return encodeable.fromEncodedString(encoded);
+  }
+  try {
+    final RootOid oid=RootOidDefault.deStringEncoded(encoded,getOidMarshaller());
+    return getAdapterManager().adapterFor(oid);
+  }
+ catch (  final Exception e) {
+    return null;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  if (adapter == null) {
+    return NULL_ARG;
+  }
+  ObjectSpecification objSpec=adapter.getSpecification();
+  if (objSpec.isEncodeable()) {
+    EncodableFacet encodeable=objSpec.getFacet(EncodableFacet.class);
+    return encodeable.toEncodedString(adapter);
+  }
+  return adapter.getOid().enString(getOidMarshaller());
+}

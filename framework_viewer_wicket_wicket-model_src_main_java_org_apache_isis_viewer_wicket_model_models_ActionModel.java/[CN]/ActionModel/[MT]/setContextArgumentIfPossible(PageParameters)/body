@@ -1,29 +1,17 @@
 {
-  final String paramContext=PageParameterNames.ACTION_PARAM_CONTEXT.getFrom(pageParameters);
+  final String paramContext=PageParameterNames.ACTION_PARAM_CONTEXT.getStringFrom(pageParameters);
   if (paramContext == null) {
     return false;
   }
   final ObjectAction action=actionMemento.getAction();
-  final int parameterCount=action.getParameterCount();
+  final List<ObjectSpecification> parameterTypes=action.getParameterTypes();
+  final int parameterCount=parameterTypes.size();
   final Map.Entry<Integer,String> mapEntry=parse(paramContext);
   final int paramNum=mapEntry.getKey();
   if (paramNum >= parameterCount) {
     return false;
   }
-  RootOid oid;
-  try {
-    oid=RootOidDefault.deStringEncoded(mapEntry.getValue(),getOidMarshaller());
-  }
- catch (  final Exception e) {
-    return false;
-  }
-  final ObjectAdapter argumentAdapter=getAdapterManager().adapterFor(oid);
-  if (argumentAdapter == null) {
-    return false;
-  }
-  final ObjectActionParameter actionParam=action.getParameters().get(paramNum);
-  final ActionParameterMemento apm=new ActionParameterMemento(actionParam);
-  final ScalarModel argumentModel=getArgumentModel(apm);
-  argumentModel.setObject(argumentAdapter);
+  final String encoded=mapEntry.getValue();
+  setArgument(paramNum,parameterTypes.get(paramNum),encoded);
   return true;
 }
