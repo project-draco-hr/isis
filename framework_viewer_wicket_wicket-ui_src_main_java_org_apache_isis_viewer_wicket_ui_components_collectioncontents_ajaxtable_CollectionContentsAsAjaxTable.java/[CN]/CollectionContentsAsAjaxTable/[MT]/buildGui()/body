@@ -1,10 +1,12 @@
 {
   final EntityCollectionModel model=getModel();
+  buildEntityActionsGui();
   final List<IColumn<ObjectAdapter,String>> columns=Lists.newArrayList();
+  addToggleboxColumnIfRequired(columns);
   addTitleColumn(columns);
   addPropertyColumnsIfRequired(columns);
   addSelectedButtonIfRequired(columns);
   final SortableDataProvider<ObjectAdapter,String> dataProvider=new CollectionContentsSortableDataProvider(model);
-  final AjaxFallbackDefaultDataTable<ObjectAdapter,String> dataTable=new AjaxFallbackDefaultDataTable<ObjectAdapter,String>("table",columns,dataProvider,model.getPageSize());
+  dataTable=new AjaxFallbackDefaultDataTable<ObjectAdapter,String>(ID_TABLE,columns,dataProvider,model.getPageSize());
   add(dataTable);
 }
