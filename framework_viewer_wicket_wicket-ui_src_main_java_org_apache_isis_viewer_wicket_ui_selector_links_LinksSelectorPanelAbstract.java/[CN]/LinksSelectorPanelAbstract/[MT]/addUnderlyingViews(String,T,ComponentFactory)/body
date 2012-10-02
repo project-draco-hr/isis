@@ -1,0 +1,42 @@
+{
+  final List<ComponentFactory> componentFactories=findOtherComponentFactories(model,factory);
+  final ComponentFactory selectedComponentFactory=Iterables.find(componentFactories,determineInitialFactory(model));
+  if (componentFactories.size() > 1) {
+    final Model<ComponentFactory> componentFactoryModel=new Model<ComponentFactory>();
+    componentFactoryModel.setObject(selectedComponentFactory);
+    final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
+    final WebMarkupContainer container=new WebMarkupContainer(ID_VIEW_LIST);
+    views.addOrReplace(container);
+    views.setOutputMarkupId(true);
+    this.setOutputMarkupId(true);
+    final ListView<ComponentFactory> listView=new ListView<ComponentFactory>(ID_VIEW_ITEM,componentFactories){
+      private static final long serialVersionUID=1L;
+      @Override protected void populateItem(      ListItem<ComponentFactory> item){
+        final ComponentFactory componentFactory=item.getModelObject();
+        final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
+          private static final long serialVersionUID=1L;
+          @Override public void onClick(          AjaxRequestTarget target){
+            LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
+            selectorPanel.select(underlyingId,model,componentFactory);
+            target.add(selectorPanel,views);
+          }
+        }
+;
+        link.add(new Label(ID_VIEW_TITLE,nameFor(componentFactory)));
+        item.add(link);
+        LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
+        link.setEnabled(selectorPanel.selectedComponentFactory != componentFactory);
+      }
+      private String nameFor(      final ComponentFactory componentFactory){
+        return componentFactory instanceof CollectionContentsAsUnresolvedFactory ? "hide" : componentFactory.getName();
+      }
+    }
+;
+    container.add(listView);
+    addOrReplace(views);
+  }
+ else {
+    permanentlyHide(ID_VIEWS);
+  }
+  select(underlyingId,model,selectedComponentFactory);
+}
