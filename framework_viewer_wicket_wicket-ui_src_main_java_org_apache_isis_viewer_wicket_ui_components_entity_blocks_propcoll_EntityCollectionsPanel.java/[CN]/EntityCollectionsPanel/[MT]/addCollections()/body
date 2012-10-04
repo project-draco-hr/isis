@@ -1,0 +1,15 @@
+{
+  final EntityModel entityModel=(EntityModel)getModel();
+  final ObjectAdapter adapter=entityModel.getObject();
+  final ObjectSpecification noSpec=adapter.getSpecification();
+  final List<ObjectAssociation> associations=visibleAssociations(adapter,noSpec);
+  final RepeatingView collectionRv=new RepeatingView(ID_COLLECTIONS);
+  final EvenOrOddCssClassAppenderFactory eo=new EvenOrOddCssClassAppenderFactory();
+  add(collectionRv);
+  for (  final ObjectAssociation association : associations) {
+    final WebMarkupContainer collectionRvContainer=new WebMarkupContainer(collectionRv.newChildId());
+    collectionRv.add(collectionRvContainer);
+    collectionRvContainer.add(eo.nextClass());
+    addCollectionToForm(entityModel,association,collectionRvContainer);
+  }
+}

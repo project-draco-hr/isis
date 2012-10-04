@@ -1,0 +1,11 @@
+{
+  final WebMarkupContainer fieldset=new WebMarkupContainer(ID_COLLECTION_GROUP);
+  collectionRvContainer.add(fieldset);
+  final String name=association.getName();
+  fieldset.add(new Label(ID_COLLECTION_NAME,name));
+  final OneToManyAssociation otma=(OneToManyAssociation)association;
+  final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(entityModel,otma);
+  final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
+  fieldset.addOrReplace(collectionPanel);
+  getComponentFactoryRegistry().addOrReplaceComponent(fieldset,ID_COLLECTION,ComponentType.COLLECTION_NAME_AND_CONTENTS,entityCollectionModel);
+}
