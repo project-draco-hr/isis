@@ -1,0 +1,16 @@
+{
+  final EntityModel model=getModel();
+  final ObjectSpecification adapterSpec=model.getTypeOfSpecification();
+  final ObjectAdapter adapter=model.getObject();
+  final ObjectAdapterMemento adapterMemento=model.getObjectAdapterMemento();
+  @SuppressWarnings("unchecked") final List<ObjectAction> userActions=adapterSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.and(memberOrderOf(association),dynamicallyVisibleFor(adapter)));
+  final CssMenuLinkFactory linkFactory=new EntityActionLinkFactory(getEntityModel());
+  if (!userActions.isEmpty()) {
+    final CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(adapterMemento,getServiceAdapters(),userActions,linkFactory);
+    final CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ID_GROUPED_ACTIONS,"Actions");
+    collectionRvContainer.addOrReplace(cssMenuPanel);
+  }
+ else {
+    Components.permanentlyHide(collectionRvContainer,ID_GROUPED_ACTIONS);
+  }
+}

@@ -1,28 +1,13 @@
 {
   final EntityCollectionModel model=getModel();
+  if (model.isParented()) {
+    permanentlyHide(ID_ENTITY_ACTIONS);
+    return;
+  }
   final ObjectSpecification typeSpec=model.getTypeOfSpecification();
   @SuppressWarnings("unchecked") final List<ObjectAction> userActions=typeSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.and(ObjectActionFilters.withNoBusinessRules(),ObjectActionFilters.contributedAnd1ParamAndVoid()));
-  final CssMenuLinkFactory linkFactory=new CssMenuLinkFactory(){
-    private static final long serialVersionUID=1L;
-    @Override public LinkAndLabel newLink(    final ObjectAdapterMemento adapter,    final ObjectAction objectAction,    final String linkId){
-      final ActionMemento actionMemento=new ActionMemento(objectAction);
-      AbstractLink link=new AjaxLink<Void>(linkId){
-        private static final long serialVersionUID=1L;
-        @Override public void onClick(        AjaxRequestTarget target){
-          final ObjectAction objectAction=actionMemento.getAction();
-          for (          ObjectAdapterMemento adapterMemento : model.getToggleMementosList()) {
-            objectAction.execute(adapter.getObjectAdapter(ConcurrencyChecking.NO_CHECK),new ObjectAdapter[]{adapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK)});
-          }
-          model.clearToggleMementosList();
-          target.add(dataTable);
-        }
-      }
-;
-      return new LinkAndLabel(link,objectAction.getName());
-    }
-  }
-;
   if (!userActions.isEmpty()) {
+    final CssMenuLinkFactory linkFactory=new BulkCollectionsLinkFactory(model,dataTable);
     final CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(null,getServiceAdapters(),userActions,linkFactory);
     final CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ID_ENTITY_ACTIONS,"Actions");
     this.addOrReplace(cssMenuPanel);

@@ -4,7 +4,7 @@
   final ObjectAdapterMemento adapterMemento=model.getObjectAdapterMemento();
   if (adapter != null) {
     final ObjectSpecification adapterSpec=adapter.getSpecification();
-    final List<ObjectAction> userActions=adapterSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,ObjectActionFilters.dynamicallyVisible(getAuthenticationSession(),adapter,Where.ANYWHERE));
+    @SuppressWarnings("unchecked") final List<ObjectAction> userActions=adapterSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.and(memberOrderNameNotCollection(adapterSpec),dynamicallyVisibleFor(adapter)));
     if (!userActions.isEmpty()) {
       final CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(adapterMemento,getServiceAdapters(),userActions,linkFactory);
       final CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ID_ENTITY_ACTIONS,"Actions");

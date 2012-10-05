@@ -1,0 +1,16 @@
+{
+  final List<ObjectAssociation> associations=adapterSpec.getAssociations();
+  final List<String> associationNames=Lists.transform(associations,ObjectAssociations.toName());
+  final List<String> associationIds=Lists.transform(associations,ObjectAssociations.toId());
+  return new Filter<ObjectAction>(){
+    @Override public boolean accept(    ObjectAction t){
+      final MemberOrderFacet memberOrderFacet=t.getFacet(MemberOrderFacet.class);
+      if (memberOrderFacet == null || Strings.isNullOrEmpty(memberOrderFacet.name())) {
+        return true;
+      }
+      String memberOrderName=memberOrderFacet.name();
+      return !associationNames.contains(memberOrderName) && !associationIds.contains(memberOrderName);
+    }
+  }
+;
+}
