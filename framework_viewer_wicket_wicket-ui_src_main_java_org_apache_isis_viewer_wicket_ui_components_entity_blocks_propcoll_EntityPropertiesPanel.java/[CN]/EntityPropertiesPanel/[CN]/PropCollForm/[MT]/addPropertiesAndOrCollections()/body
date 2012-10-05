@@ -1,20 +1,26 @@
 {
   final EntityModel entityModel=(EntityModel)getModel();
   final ObjectAdapter adapter=entityModel.getObject();
-  final ObjectSpecification noSpec=adapter.getSpecification();
-  final List<ObjectAssociation> associations=visibleAssociations(adapter,noSpec,Where.OBJECT_FORMS);
+  final ObjectSpecification objSpec=adapter.getSpecification();
+  final List<ObjectAssociation> associations=visibleAssociations(adapter,objSpec,Where.OBJECT_FORMS);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   add(memberGroupRv);
-  final WebMarkupContainer memberGroupRvContainer=new WebMarkupContainer(memberGroupRv.newChildId());
-  memberGroupRv.add(memberGroupRvContainer);
-  final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
-  final EvenOrOddCssClassAppenderFactory eo=new EvenOrOddCssClassAppenderFactory();
-  memberGroupRvContainer.add(propertyRv);
-  @SuppressWarnings("unused") Component component;
-  for (  final ObjectAssociation association : associations) {
-    final WebMarkupContainer propertyRvContainer=new WebMarkupContainer(propertyRv.newChildId());
-    propertyRv.add(propertyRvContainer);
-    propertyRvContainer.add(eo.nextClass());
-    addPropertyToForm(entityModel,association,propertyRvContainer);
+  Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociations.groupByMemberOrderName(associations);
+  final List<String> groupNames=ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet());
+  for (  String groupName : groupNames) {
+    final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
+    final WebMarkupContainer memberGroupRvContainer=new WebMarkupContainer(memberGroupRv.newChildId());
+    memberGroupRv.add(memberGroupRvContainer);
+    memberGroupRvContainer.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
+    final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
+    final EvenOrOddCssClassAppenderFactory eo=new EvenOrOddCssClassAppenderFactory();
+    memberGroupRvContainer.add(propertyRv);
+    @SuppressWarnings("unused") Component component;
+    for (    final ObjectAssociation association : associationsInGroup) {
+      final WebMarkupContainer propertyRvContainer=new WebMarkupContainer(propertyRv.newChildId());
+      propertyRv.add(propertyRvContainer);
+      propertyRvContainer.add(eo.nextClass());
+      addPropertyToForm(entityModel,association,propertyRvContainer);
+    }
   }
 }

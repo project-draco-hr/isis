@@ -1,8 +1,4 @@
 {
-  if (orderSet == null) {
-    return null;
-  }
-  final List<ObjectAssociation> associations=Lists.newArrayList();
   for (  final Object element : orderSet) {
     if (element instanceof FacetedMethod) {
       final FacetedMethod facetMethod=(FacetedMethod)element;
@@ -14,10 +10,11 @@
       }
     }
  else     if (element instanceof OrderSet) {
+      OrderSet childOrderSet=(OrderSet)element;
+      addAssociations(childOrderSet,associations);
     }
  else {
       throw new UnknownTypeException(element);
     }
   }
-  return associations;
 }
