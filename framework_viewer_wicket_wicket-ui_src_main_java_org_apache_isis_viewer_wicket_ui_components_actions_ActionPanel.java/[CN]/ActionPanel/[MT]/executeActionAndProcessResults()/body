@@ -13,7 +13,9 @@
     ObjectAdapter resultAdapter=actionModel.getObject();
     final ResultType resultType=ResultType.determineFor(resultAdapter);
     resultType.addResults(this,resultAdapter);
-    bookmarkPage(actionModel);
+    if (actionModel.hasSafeActionSemantics()) {
+      bookmarkPage(actionModel);
+    }
   }
  catch (  ConcurrencyException ex) {
     if (targetAdapter == null) {
