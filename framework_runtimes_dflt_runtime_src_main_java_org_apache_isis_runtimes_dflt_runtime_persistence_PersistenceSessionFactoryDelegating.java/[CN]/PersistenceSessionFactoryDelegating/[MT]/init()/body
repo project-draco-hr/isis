@@ -3,5 +3,27 @@
   if (!deploymentType.isProduction() && !Clock.isInitialized()) {
     FixtureClock.initialize();
   }
-  doInit();
+  pojoRecreator=persistenceSessionFactoryDelegate.createPojoRecreator(getConfiguration());
+  adapterFactory=persistenceSessionFactoryDelegate.createAdapterFactory(getConfiguration());
+  objectFactory=persistenceSessionFactoryDelegate.createObjectFactory(getConfiguration());
+  identifierGenerator=persistenceSessionFactoryDelegate.createIdentifierGenerator(getConfiguration());
+  ensureThatState(pojoRecreator,is(not(nullValue())));
+  ensureThatState(adapterFactory,is(not(nullValue())));
+  ensureThatState(objectFactory,is(not(nullValue())));
+  ensureThatState(identifierGenerator,is(not(nullValue())));
+  servicesInjector=persistenceSessionFactoryDelegate.createServicesInjector(getConfiguration());
+  container=persistenceSessionFactoryDelegate.createContainer(getConfiguration());
+  ensureThatState(servicesInjector,is(not(nullValue())));
+  ensureThatState(container,is(not(nullValue())));
+  runtimeContext=persistenceSessionFactoryDelegate.createRuntimeContext(getConfiguration());
+  ensureThatState(runtimeContext,is(not(nullValue())));
+  getSpecificationLoader().injectInto(runtimeContext);
+  runtimeContext.injectInto(container);
+  runtimeContext.setContainer(container);
+  for (  Object service : serviceList) {
+    runtimeContext.injectInto(service);
+  }
+  servicesInjector.setContainer(container);
+  servicesInjector.setServices(serviceList);
+  servicesInjector.init();
 }

@@ -1,0 +1,10 @@
+{
+  if (reflectorInstaller == null) {
+    final String fromCmdLine=getConfiguration().getString(SystemConstants.REFLECTOR_KEY);
+    reflectorInstaller=installerLookup.reflectorInstaller(fromCmdLine);
+  }
+  ensureThatState(reflectorInstaller,is(not(nullValue())),"reflector installer has not been injected and could not be looked up");
+  reflectorInstaller.addFacetDecoratorInstaller(installerLookup.getInstaller(TransactionFacetDecoratorInstaller.class));
+  final SpecificationLoaderSpi reflector=reflectorInstaller.createReflector(programmingModelAdjuster);
+  return reflector;
+}
