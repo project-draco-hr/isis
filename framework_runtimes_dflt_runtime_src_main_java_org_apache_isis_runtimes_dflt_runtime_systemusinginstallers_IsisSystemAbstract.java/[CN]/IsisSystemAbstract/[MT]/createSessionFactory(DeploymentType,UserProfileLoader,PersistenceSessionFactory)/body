@@ -3,8 +3,9 @@
   final AuthenticationManager authenticationManager=obtainAuthenticationManager(deploymentType);
   final AuthorizationManager authorizationManager=obtainAuthorizationManager(deploymentType);
   final TemplateImageLoader templateImageLoader=obtainTemplateImageLoader();
-  final SpecificationLoaderSpi reflector=obtainSpecificationLoaderSpi(deploymentType,persistenceSessionFactory);
   final OidMarshaller oidMarshaller=obtainOidMarshaller();
+  final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,templateImageLoader,persistenceSessionFactory);
+  final SpecificationLoaderSpi reflector=obtainSpecificationLoaderSpi(deploymentType,persistenceSessionFactory,metaModelRefiners);
   final List<Object> servicesList=obtainServices();
   RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
   runtimeContext.injectInto(reflector);
