@@ -1,3 +1,4 @@
 {
-  return allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_similarTo","ownedBy",toDoItem.getOwnedBy(),"category",toDoItem.getCategory()));
+  final List<ToDoItem> similarToDoItems=allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_similarTo","ownedBy",thisToDoItem.getOwnedBy(),"category",thisToDoItem.getCategory()));
+  return Lists.newArrayList(Iterables.filter(similarToDoItems,excluding(thisToDoItem)));
 }
