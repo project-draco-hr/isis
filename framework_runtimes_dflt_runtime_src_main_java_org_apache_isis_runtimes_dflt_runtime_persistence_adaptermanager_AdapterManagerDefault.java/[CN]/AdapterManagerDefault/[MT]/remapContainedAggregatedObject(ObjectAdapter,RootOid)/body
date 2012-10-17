@@ -1,0 +1,18 @@
+{
+  for (  final ObjectAssociation association : adapter.getSpecification().getAssociations()) {
+    if (association.isOneToManyAssociation() && !association.isNotPersisted()) {
+      final ObjectAdapter collection=association.get(adapter);
+      final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
+      for (      final ObjectAdapter element : facet.iterable(collection)) {
+        remapAggregatedObject(element,persistedRootOid);
+      }
+    }
+ else     if (association.getSpecification().isParented()) {
+      final ObjectAdapter referencedAdapter=association.get(adapter);
+      if (referencedAdapter == null) {
+        continue;
+      }
+      remapAggregatedObject(referencedAdapter,persistedRootOid);
+    }
+  }
+}

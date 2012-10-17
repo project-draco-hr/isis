@@ -1,0 +1,10 @@
+{
+  final Oid oid=adapter.getOid();
+  if (!(oid instanceof AggregatedOid) || !oid.isTransient()) {
+    return;
+  }
+  AggregatedOid aoid=(AggregatedOid)oid;
+  AggregatedOid childOid=new AggregatedOid(aoid.getObjectSpecId(),persistedRootOid,aoid.getLocalId());
+  adapter.replaceOid(childOid);
+  remapContainedAggregatedObject(adapter,persistedRootOid);
+}

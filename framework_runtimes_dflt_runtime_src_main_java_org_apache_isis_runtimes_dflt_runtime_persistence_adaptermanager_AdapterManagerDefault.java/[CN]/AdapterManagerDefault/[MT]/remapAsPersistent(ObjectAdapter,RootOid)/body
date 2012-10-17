@@ -68,20 +68,7 @@
       pojoAdapterMap.add(collectionPojoActuallyOnPojo,collectionAdapter);
     }
   }
-  for (  final ObjectAssociation association : adapter.getSpecification().getAssociations()) {
-    if (association.getSpecification().isParented()) {
-      final ObjectAdapter referencedAdapter=association.get(adapter);
-      if (referencedAdapter == null) {
-        continue;
-      }
-      final Oid oid=referencedAdapter.getOid();
-      if (oid instanceof AggregatedOid) {
-        AggregatedOid aoid=(AggregatedOid)oid;
-        AggregatedOid childOid=new AggregatedOid(aoid.getObjectSpecId(),persistedRootOid,aoid.getLocalId());
-        referencedAdapter.replaceOid(childOid);
-      }
-    }
-  }
+  remapContainedAggregatedObject(adapter,persistedRootOid);
   adapter.changeState(ResolveState.RESOLVED);
   if (LOG.isDebugEnabled()) {
     LOG.debug("made persistent " + adapter + "; was "+ transientRootOid);
