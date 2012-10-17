@@ -1,5 +1,7 @@
 {
   String objectId=request.getOptionalProperty(OBJECT);
+  final String view=request.getOptionalProperty(VIEW,"_generic_action." + Dispatcher.EXTENSION);
+  final String cancelTo=request.getOptionalProperty(CANCEL_TO);
   final boolean showForms=request.isRequested(FORMS,false);
   final ObjectAdapter object=MethodsUtils.findObject(request.getContext(),objectId);
   if (objectId == null) {
@@ -14,7 +16,7 @@
     request.appendHtml("<a class=\"button\" href=\"_generic_edit." + Dispatcher.EXTENSION + "?_result="+ objectId+ "\">Edit...</a>");
     request.appendHtml("</div>");
   }
-  writeMethods(request,objectId,object,showForms,inclusionList,"_generic.shtml?_result=" + objectId);
+  writeMethods(request,objectId,object,showForms,inclusionList,view,"_generic.shtml?_result=" + objectId);
   request.popBlockContent();
   request.appendHtml("</div>");
 }

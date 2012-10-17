@@ -4,7 +4,7 @@
     final ObjectAction action=actions.get(j);
     if (action instanceof ObjectActionSet) {
       request.appendHtml("<div class=\"actions\">");
-      writeMethods(request,adapter,action.getActions(),objectId,showForms,inclusionList,cancelTo);
+      writeMethods(request,adapter,action.getActions(),objectId,showForms,inclusionList,view,cancelTo);
       request.appendHtml("</div>");
     }
  else     if (action.isContributed()) {
@@ -13,7 +13,7 @@
           final ObjectAdapter target=request.getContext().getMappedObject(objectId);
           final ObjectAdapter realTarget=action.realTarget(target);
           final String realTargetId=request.getContext().mapObject(realTarget,Scope.INTERACTION);
-          writeMethod(request,adapter,new String[]{objectId},action,realTargetId,showForms,cancelTo);
+          writeMethod(request,adapter,new String[]{objectId},action,realTargetId,showForms,view,cancelTo);
         }
  else {
           request.appendHtml("<div class=\"action\">");
@@ -22,11 +22,11 @@
         }
       }
  else       if (!adapter.getSpecification().isService()) {
-        writeMethod(request,adapter,new String[0],action,objectId,showForms,cancelTo);
+        writeMethod(request,adapter,new String[0],action,objectId,showForms,view,cancelTo);
       }
     }
  else {
-      writeMethod(request,adapter,new String[0],action,objectId,showForms,cancelTo);
+      writeMethod(request,adapter,new String[0],action,objectId,showForms,view,cancelTo);
     }
   }
 }
