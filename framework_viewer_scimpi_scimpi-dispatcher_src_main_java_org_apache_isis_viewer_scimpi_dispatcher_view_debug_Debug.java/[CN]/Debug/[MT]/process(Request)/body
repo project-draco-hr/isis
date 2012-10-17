@@ -8,6 +8,46 @@
     if (type.equals("system")) {
       displaySystem(request);
     }
+ else     if (type.equals("session")) {
+      displaySession(request);
+    }
+ else     if (type.equals("test")) {
+      final DebugBuilder debug=new DebugHtmlString();
+      debug.appendTitle("Title");
+      debug.appendln("boolean",true);
+      debug.appendln("number",213);
+      debug.startSection("Section 1");
+      debug.appendln("boolean",false);
+      debug.appendln("number",12348);
+      debug.endSection();
+      debug.startSection("Section 2");
+      debug.appendln("boolean",false);
+      debug.appendln("number",12348);
+      debug.appendTitle("Another title");
+      debug.appendln("boolean",false);
+      debug.appendln("number",12348);
+      debug.endSection();
+      debug.startSection("Section 3");
+      debug.appendln("boolean",false);
+      debug.appendln("number",89878);
+      debug.endSection();
+      debug.startSection("Subsection 2");
+      debug.appendln("boolean",false);
+      debug.appendln("number",12348);
+      debug.endSection();
+      debug.startSection("Section 4");
+      debug.appendln("boolean",false);
+      debug.indent();
+      debug.appendln("boolean",false);
+      debug.appendln("number",12348);
+      debug.unindent();
+      debug.appendln("number",12348);
+      debug.appendPreformatted("code","line 1\nline 2\nline 3");
+      debug.appendln("A lot of text etc.");
+      debug.endSection();
+      request.appendHtml(debug.toString());
+      debug.close();
+    }
  else     if (type.equals("variables")) {
       displayVariables(request);
     }
