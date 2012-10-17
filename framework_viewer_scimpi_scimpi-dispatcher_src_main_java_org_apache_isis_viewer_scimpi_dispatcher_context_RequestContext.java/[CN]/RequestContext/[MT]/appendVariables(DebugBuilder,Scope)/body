@@ -2,7 +2,7 @@
   final Map<String,Object> map=variables.get(scope);
   final Iterator<String> names=new TreeSet(map.keySet()).iterator();
   if (names.hasNext()) {
-    content.appendTitle(scope.toString());
+    debug.startSection(scope.toString());
     while (names.hasNext()) {
       final String name=names.next();
       try {
@@ -14,11 +14,12 @@
             details=mappedObject.toString();
           }
         }
-        content.appendln(name,object + "  " + details);
+        debug.appendln(name,object + "  " + details);
       }
  catch (      final Exception e) {
-        content.appendln(name,map.get(name));
+        debug.appendln(name,map.get(name));
       }
     }
+    debug.endSection();
   }
 }
