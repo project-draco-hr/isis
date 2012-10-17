@@ -1,8 +1,19 @@
 {
   final String name=request.getRequiredProperty("name");
-  final String value=request.getRequiredProperty("value");
+  final String value=request.getOptionalProperty("value");
+  final boolean isClear=request.getOptionalProperty("action","set").equals("clear");
   final String expiresString=request.getOptionalProperty("expires","-1");
-  if (value.length() > 0) {
-    request.getContext().addCookie(name,value,Integer.valueOf(expiresString));
+  if (!isClear && value == null) {
+    throw new RequiredPropertyException("Property not set: " + value);
+  }
+  if (isClear) {
+    request.appendDebug("cookie: " + name + " (cleared)");
+    request.getContext().addCookie(name,null,0);
+  }
+ else {
+    if (value.length() > 0) {
+      request.appendDebug("cookie: " + name + " set to"+ value);
+      request.getContext().addCookie(name,value,Integer.valueOf(expiresString));
+    }
   }
 }
