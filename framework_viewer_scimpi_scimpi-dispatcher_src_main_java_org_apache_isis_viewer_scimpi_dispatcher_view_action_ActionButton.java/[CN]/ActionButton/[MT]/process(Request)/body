@@ -7,7 +7,7 @@
   final String variable=request.getOptionalProperty(RESULT_NAME);
   final String scope=request.getOptionalProperty(SCOPE);
   final String buttonTitle=request.getOptionalProperty(BUTTON_TITLE);
-  final String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
+  String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
   final String idName=request.getOptionalProperty(ID,methodName);
   final String className=request.getOptionalProperty(CLASS);
   final boolean showMessage=request.isRequested(SHOW_MESSAGE,false);
@@ -19,25 +19,39 @@
   request.setBlockContent(parameterBlock);
   request.processUtilCloseTag();
   final String[] parameters=parameterBlock.getParameters();
-  final ObjectAdapter[] objectParameters=new ObjectAdapter[parameters.length];
-  int i=0;
-  for (  final ObjectActionParameter spec : action.getParameters()) {
-    final ObjectSpecification typ=spec.getSpecification();
-    if (parameters[i] == null) {
-      objectParameters[i]=null;
+  final ObjectAdapter[] objectParameters;
+  final ObjectAdapter target;
+  if (action.isContributed()) {
+    objectParameters=null;
+    System.arraycopy(parameters,0,parameters,1,parameters.length - 1);
+    parameters[0]=request.getContext().mapObject(object,Scope.REQUEST);
+    target=action.realTarget(object);
+    if (!action.hasReturn() && resultOverride == null) {
+      resultOverride=parameters[0];
     }
- else     if (typ.getFacet(ParseableFacet.class) != null) {
-      final ParseableFacet facet=typ.getFacet(ParseableFacet.class);
-      Localization localization=IsisContext.getLocalization();
-      objectParameters[i]=facet.parseTextEntry(null,parameters[i],localization);
-    }
+  }
  else {
-      objectParameters[i]=MethodsUtils.findObject(request.getContext(),parameters[i]);
+    objectParameters=new ObjectAdapter[parameters.length];
+    target=object;
+    int i=0;
+    for (    final ObjectActionParameter spec : action.getParameters()) {
+      final ObjectSpecification type=spec.getSpecification();
+      if (parameters[i] == null) {
+        objectParameters[i]=null;
+      }
+ else       if (type.getFacet(ParseableFacet.class) != null) {
+        final ParseableFacet facet=type.getFacet(ParseableFacet.class);
+        Localization localization=IsisContext.getLocalization();
+        objectParameters[i]=facet.parseTextEntry(null,parameters[i],localization);
+      }
+ else {
+        objectParameters[i]=MethodsUtils.findObject(request.getContext(),parameters[i]);
+      }
+      i++;
     }
-    i++;
   }
   if (MethodsUtils.isVisibleAndUsable(object,action,where) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
-    write(request,object,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
+    write(request,target,action,parameters,objectId,version,forwardResultTo,forwardVoidTo,forwardErrorTo,variable,scope,buttonTitle,completionMessage,resultOverride,idName,className);
   }
   if (showMessage) {
     final Consent usable=action.isUsable(IsisContext.getAuthenticationSession(),object,where);

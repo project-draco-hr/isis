@@ -3,8 +3,7 @@
   final String method=request.getOptionalProperty(METHOD);
   final String forwardResultTo=request.getOptionalProperty(VIEW);
   final String forwardVoidTo=request.getOptionalProperty(VOID);
-  final String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
-  @SuppressWarnings("unused") final String resultOverrideSegment=resultOverride == null ? "" : "&amp;" + RESULT_OVERRIDE + "="+ resultOverride;
+  String resultOverride=request.getOptionalProperty(RESULT_OVERRIDE);
   final String resultName=request.getOptionalProperty(RESULT_NAME);
   final String resultNameSegment=resultName == null ? "" : "&amp;" + RESULT_NAME + "="+ resultName;
   final String scope=request.getOptionalProperty(SCOPE);
@@ -23,8 +22,21 @@
   request.pushNewBuffer();
   request.processUtilCloseTag();
   final String text=request.popBuffer();
+  final String[] parameters=parameterBlock.getParameters();
+  final String target;
+  if (action.isContributed()) {
+    System.arraycopy(parameters,0,parameters,1,parameters.length - 1);
+    parameters[0]=request.getContext().mapObject(object,Scope.REQUEST);
+    target=request.getContext().mapObject(action.realTarget(object),Scope.REQUEST);
+    if (!action.hasReturn() && resultOverride == null) {
+      resultOverride=parameters[0];
+    }
+  }
+ else {
+    target=objectId;
+  }
   if (MethodsUtils.isVisibleAndUsable(object,action,where)) {
-    writeLink(request,objectId,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,scopeSegment,confirmSegment,messageSegment,context,action,parameterBlock,text);
+    writeLink(request,target,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,resultOverride,scopeSegment,confirmSegment,messageSegment,context,action,parameters,text);
   }
   request.popBlockContent();
 }
