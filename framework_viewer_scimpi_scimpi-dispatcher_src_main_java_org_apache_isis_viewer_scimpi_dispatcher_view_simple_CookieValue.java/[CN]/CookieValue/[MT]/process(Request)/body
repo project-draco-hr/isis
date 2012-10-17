@@ -1,0 +1,9 @@
+{
+  String name=request.getRequiredProperty(NAME);
+  String resultName=request.getOptionalProperty(RESULT_NAME,name);
+  final String scopeName=request.getOptionalProperty(SCOPE);
+  final Scope scope=RequestContext.scope(scopeName,Scope.REQUEST);
+  String cookieString=request.getContext().getCookie(name);
+  request.appendDebug("    " + resultName + " ("+ scope+ ") set to "+ cookieString+ " from cookie "+ name);
+  request.getContext().addVariable(resultName,cookieString,scope);
+}
