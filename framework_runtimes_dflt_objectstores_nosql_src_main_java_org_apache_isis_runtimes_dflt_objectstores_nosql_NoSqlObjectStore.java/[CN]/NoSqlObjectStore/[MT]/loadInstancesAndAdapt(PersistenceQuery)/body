@@ -1,6 +1,14 @@
 {
-  final ObjectSpecification specification=persistenceQuery.getSpecification();
-  final List<ObjectAdapter> instances=Lists.newArrayList();
-  appendInstances(persistenceQuery,specification,instances);
-  return instances;
+  if (persistenceQuery instanceof PersistenceQueryFindByTitle) {
+    return getAllInstances((PersistenceQueryFindByTitle)persistenceQuery);
+  }
+ else   if (persistenceQuery instanceof PersistenceQueryFindAllInstances) {
+    return getAllInstances((PersistenceQueryFindAllInstances)persistenceQuery);
+  }
+ else   if (persistenceQuery instanceof PersistenceQueryFindByPattern) {
+    return findByPattern((PersistenceQueryFindByPattern)persistenceQuery);
+  }
+ else {
+    return findDefaultr(persistenceQuery);
+  }
 }

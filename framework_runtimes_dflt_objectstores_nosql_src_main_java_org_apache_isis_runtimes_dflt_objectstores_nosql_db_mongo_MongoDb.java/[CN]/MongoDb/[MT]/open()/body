@@ -1,9 +1,14 @@
 {
   try {
-    mongo=new Mongo(host,port);
-    db=mongo.getDB(dbName);
-    db.setWriteConcern(WriteConcern.STRICT);
-    LOG.info("opened database (" + dbName + "): "+ db);
+    if (mongo == null) {
+      mongo=new Mongo(host,port);
+      db=mongo.getDB(dbName);
+      db.setWriteConcern(com.mongodb.WriteConcern.SAFE);
+      LOG.info("opened database (" + dbName + "): "+ mongo);
+    }
+ else {
+      LOG.info(" using opened database " + db);
+    }
   }
  catch (  final UnknownHostException e) {
     throw new NoSqlStoreException(e);

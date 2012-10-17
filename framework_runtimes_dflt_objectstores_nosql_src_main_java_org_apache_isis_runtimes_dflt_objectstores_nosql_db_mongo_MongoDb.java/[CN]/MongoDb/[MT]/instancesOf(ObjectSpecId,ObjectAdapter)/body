@@ -1,0 +1,29 @@
+{
+  final DBCollection instances=db.getCollection(objectSpecId.asString());
+  final BasicDBObject query=new BasicDBObject();
+  for (  ObjectAssociation association : pattern.getSpecification().getAssociations()) {
+    ObjectAdapter field=association.get(pattern);
+    if (!association.isEmpty(pattern)) {
+      if (field.isValue()) {
+        query.put(association.getIdentifier().getMemberName(),field.titleString());
+      }
+ else       if (association.isOneToOneAssociation()) {
+        query.put(association.getIdentifier().getMemberName(),field.getOid());
+      }
+    }
+  }
+  final DBCursor cursor=instances.find(query);
+  LOG.info("searching for instances of: " + objectSpecId);
+  return new Iterator<StateReader>(){
+    @Override public boolean hasNext(){
+      return cursor.hasNext();
+    }
+    @Override public StateReader next(){
+      return new MongoStateReader(cursor.next());
+    }
+    @Override public void remove(){
+      throw new NoSqlStoreException("Can't remove elements");
+    }
+  }
+;
+}

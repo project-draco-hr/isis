@@ -1,0 +1,11 @@
+{
+  final List<ObjectAdapter> instances=Lists.newArrayList();
+  final ObjectSpecification specification=persistenceQuery.getSpecification();
+  final Iterator<StateReader> instanceData=database.instancesOf(specification.getSpecId());
+  while (instanceData.hasNext()) {
+    final StateReader reader=instanceData.next();
+    final ObjectAdapter instance=objectReader.load(reader,versionCreator,availableDataEncrypters);
+    instances.add(instance);
+  }
+  return instances;
+}
