@@ -1,0 +1,9 @@
+{
+  final DBCollection instances=db.getCollection(objectSpecId.asString());
+  final DBObject object=instances.findOne(mongoId);
+  if (!object.get(PropertyNames.VERSION).equals(version)) {
+    throw new ConcurrencyException("Could not delete object of different version",oid);
+  }
+  instances.remove(object);
+  LOG.info("removed " + oid);
+}
