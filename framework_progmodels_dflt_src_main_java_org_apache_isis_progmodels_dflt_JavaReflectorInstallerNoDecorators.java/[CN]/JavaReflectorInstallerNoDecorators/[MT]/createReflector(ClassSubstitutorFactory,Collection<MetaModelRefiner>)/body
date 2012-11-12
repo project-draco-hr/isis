@@ -1,15 +1,6 @@
 {
-  final CollectionTypeRegistry collectionTypeRegistry=createCollectionTypeRegistry(getConfiguration());
-  final SpecificationTraverser specificationTraverser=createSpecificationTraverser(getConfiguration());
-  final MemberLayoutArranger memberLayoutArranger=createMemberLayoutArranger(getConfiguration());
+  final ProgrammingModel programmingModel=createProgrammingModel(getConfiguration());
   final Set<FacetDecorator> facetDecorators=createFacetDecorators(getConfiguration());
-  final ClassSubstitutor classSubstitutor=classSubstitutorFactory.createClassSubstitutor(getConfiguration());
-  ProgrammingModel programmingModel=createProgrammingModel(getConfiguration());
-  MetaModelValidatorComposite metaModelValidator=asComposite(createMetaModelValidator(getConfiguration()));
-  for (  MetaModelRefiner metaModelRefiner : metaModelRefiners) {
-    metaModelRefiner.refineProgrammingModel(programmingModel,getConfiguration());
-    metaModelRefiner.refineMetaModelValidator(metaModelValidator,getConfiguration());
-  }
-  final ObjectReflectorDefault reflector=doCreateReflector(getConfiguration(),classSubstitutor,collectionTypeRegistry,specificationTraverser,memberLayoutArranger,programmingModel,facetDecorators,metaModelValidator);
-  return reflector;
+  final MetaModelValidator mmv=createMetaModelValidator(getConfiguration());
+  return JavaReflectorHelper.createObjectReflector(programmingModel,classSubstitutorFactory,metaModelRefiners,facetDecorators,mmv,getConfiguration());
 }

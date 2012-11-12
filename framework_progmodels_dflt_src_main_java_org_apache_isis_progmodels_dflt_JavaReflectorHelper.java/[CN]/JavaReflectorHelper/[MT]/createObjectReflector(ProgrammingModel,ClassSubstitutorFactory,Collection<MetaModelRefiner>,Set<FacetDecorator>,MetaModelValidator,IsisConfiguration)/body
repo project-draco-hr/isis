@@ -1,0 +1,12 @@
+{
+  final MemberLayoutArranger memberLayoutArranger=new MemberLayoutArrangerDefault();
+  final SpecificationTraverser specificationTraverser=new SpecificationTraverserDefault();
+  final CollectionTypeRegistry collectionTypeRegistry=new CollectionTypeRegistryDefault();
+  final ClassSubstitutor classSubstitutor=classSubstitutorFactory.createClassSubstitutor(configuration);
+  MetaModelValidatorComposite metaModelValidator=MetaModelValidatorComposite.asComposite(mmv);
+  for (  MetaModelRefiner metaModelRefiner : metaModelRefiners) {
+    metaModelRefiner.refineProgrammingModel(programmingModel,configuration);
+    metaModelRefiner.refineMetaModelValidator(metaModelValidator,configuration);
+  }
+  return new ObjectReflectorDefault(configuration,classSubstitutor,collectionTypeRegistry,specificationTraverser,memberLayoutArranger,programmingModel,facetDecorators,metaModelValidator);
+}
