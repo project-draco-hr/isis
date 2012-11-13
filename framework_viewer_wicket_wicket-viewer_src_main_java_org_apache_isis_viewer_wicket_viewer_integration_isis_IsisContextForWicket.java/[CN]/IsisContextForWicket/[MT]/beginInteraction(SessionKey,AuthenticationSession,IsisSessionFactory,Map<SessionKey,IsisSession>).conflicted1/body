@@ -1,0 +1,15 @@
+{
+  endInteraction(sessionKey,sessionMap);
+  final String threadName=sessionKey.thread.getName();
+  final IsisSession isisSession=sessionFactory.openSession(authSession);
+  try {
+    sessionMap.put(sessionKey,isisSession);
+    isisSession.open();
+    return isisSession;
+  }
+  finally {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(String.format("threadSession: %s OPEN  %s %s",threadName,authSession.getUserName(),isisSession.getId()));
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  final IsisSession isisSession=sessionMap.get(sessionKey);
+  if (isisSession == null) {
+    return;
+  }
+  final String threadName=sessionKey.thread.getName();
+  final AuthenticationSession authSession=isisSession.getAuthenticationSession();
+  try {
+    isisSession.close();
+    sessionMap.remove(sessionKey);
+  }
+  finally {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(String.format("threadSession: %s CLOSE %s %s",threadName,authSession.getUserName(),isisSession.getId()));
+    }
+  }
+}

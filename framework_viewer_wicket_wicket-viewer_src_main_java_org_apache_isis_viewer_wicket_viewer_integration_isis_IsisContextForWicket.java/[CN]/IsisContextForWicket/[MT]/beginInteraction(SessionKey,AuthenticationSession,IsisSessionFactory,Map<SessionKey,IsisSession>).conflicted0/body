@@ -1,0 +1,28 @@
+{
+  final AuthenticatedWebSessionForIsis wicketSession=sessionKey.wicketSession;
+synchronized (wicketSession) {
+    final String wicketSessionId=wicketSession.getId();
+    final int before=wicketSession.getThreadUsage();
+    wicketSession.registerUseByThread();
+    final int after=wicketSession.getThreadUsage();
+    String logMsg="";
+    IsisSession isisSession=sessionMap.get(sessionKey);
+    try {
+      if (isisSession != null) {
+        logMsg="BUMP_UP";
+      }
+ else {
+        isisSession=sessionFactory.openSession(authSession);
+        sessionMap.put(sessionKey,isisSession);
+        isisSession.open();
+        logMsg="NEW    ";
+      }
+      return isisSession;
+    }
+  finally {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(String.format("wicketSession: %s OPEN  %d -> %d %s %s %s",wicketSessionId,before,after,logMsg,authSession.getUserName(),isisSession.getId()));
+      }
+    }
+  }
+}
