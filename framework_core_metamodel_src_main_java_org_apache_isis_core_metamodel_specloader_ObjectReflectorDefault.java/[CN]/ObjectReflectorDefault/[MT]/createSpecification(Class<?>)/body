@@ -3,14 +3,14 @@
   final SpecificationLoader specificationLookup=getRuntimeContext().getSpecificationLoader();
   final ServicesProvider servicesProvider=getRuntimeContext().getServicesProvider();
   final ObjectInstantiator objectInstantiator=getRuntimeContext().getObjectInstantiator();
-  final SpecificationContext specContext=new SpecificationContext(authenticationSessionProvider,servicesProvider,objectInstantiator,specificationLookup);
+  final SpecificationContext specContext=new SpecificationContext(getDeploymentCategory(),authenticationSessionProvider,servicesProvider,objectInstantiator,specificationLookup);
   if (FreeStandingList.class.isAssignableFrom(cls)) {
     return new ObjectSpecificationForFreeStandingList(specContext);
   }
  else {
     final SpecificationLoaderSpi specificationLoader=this;
     final AdapterManager adapterMap=getRuntimeContext().getAdapterManager();
-    final ObjectMemberContext objectMemberContext=new ObjectMemberContext(authenticationSessionProvider,specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),collectionTypeRegistry);
+    final ObjectMemberContext objectMemberContext=new ObjectMemberContext(getDeploymentCategory(),authenticationSessionProvider,specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),collectionTypeRegistry);
     final IntrospectionContext introspectionContext=new IntrospectionContext(getClassSubstitutor(),getMemberLayoutArranger());
     final ServicesInjector dependencyInjector=getRuntimeContext().getDependencyInjector();
     final CreateObjectContext createObjectContext=new CreateObjectContext(adapterMap,dependencyInjector);

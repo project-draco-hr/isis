@@ -4,7 +4,7 @@
   }
   if (getFacetHolder().containsFacet(ValueFacet.class)) {
     final ObjectAdapter entryAdapter=getAdapterManager().adapterFor(entry);
-    final ParseValueContext parseValueContext=new ParseValueContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
+    final ParseValueContext parseValueContext=new ParseValueContext(deploymentCategory,getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,contextAdapter,getIdentified().getIdentifier(),entryAdapter);
     validate(parseValueContext);
   }
   final Object context=AdapterUtils.unwrap(contextAdapter);
@@ -16,7 +16,7 @@
     }
     final ObjectAdapter adapter=getAdapterManager().adapterFor(parsed);
     final ObjectSpecification specification=adapter.getSpecification();
-    final ObjectValidityContext validateContext=specification.createValidityInteractionContext(getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
+    final ObjectValidityContext validateContext=specification.createValidityInteractionContext(deploymentCategory,getAuthenticationSessionProvider().getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter);
     validate(validateContext);
     return adapter;
   }
