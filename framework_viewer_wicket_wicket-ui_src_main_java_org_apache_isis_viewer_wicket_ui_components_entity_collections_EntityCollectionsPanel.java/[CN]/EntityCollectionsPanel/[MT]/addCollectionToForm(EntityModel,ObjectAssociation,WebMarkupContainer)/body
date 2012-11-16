@@ -3,10 +3,8 @@
   collectionRvContainer.add(fieldset);
   final String name=association.getName();
   fieldset.add(new Label(ID_COLLECTION_NAME,name));
-  buildEntityActionsGui(fieldset,association);
   final OneToManyAssociation otma=(OneToManyAssociation)association;
-  final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(entityModel,otma);
-  final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
+  final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityModel,otma);
   fieldset.addOrReplace(collectionPanel);
-  getComponentFactoryRegistry().addOrReplaceComponent(fieldset,ID_COLLECTION,ComponentType.COLLECTION_NAME_AND_CONTENTS,entityCollectionModel);
+  getComponentFactoryRegistry().addOrReplaceComponent(fieldset,ID_COLLECTION,ComponentType.COLLECTION_NAME_AND_CONTENTS,collectionPanel.getModel());
 }
