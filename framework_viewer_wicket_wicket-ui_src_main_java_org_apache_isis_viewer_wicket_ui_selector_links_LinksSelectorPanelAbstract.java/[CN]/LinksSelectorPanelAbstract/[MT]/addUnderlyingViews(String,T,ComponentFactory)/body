@@ -1,7 +1,10 @@
 {
   final List<ComponentFactory> componentFactories=findOtherComponentFactories(model,factory);
   final ComponentFactory selectedComponentFactory=Iterables.find(componentFactories,determineInitialFactory(model));
-  if (componentFactories.size() > 1) {
+  if (componentFactories.size() <= 1) {
+    permanentlyHide(ID_VIEWS);
+  }
+ else {
     final Model<ComponentFactory> componentFactoryModel=new Model<ComponentFactory>();
     componentFactoryModel.setObject(selectedComponentFactory);
     final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
@@ -37,9 +40,6 @@
 ;
     container.add(listView);
     addOrReplace(views);
-  }
- else {
-    permanentlyHide(ID_VIEWS);
   }
   select(underlyingId,model,selectedComponentFactory);
 }

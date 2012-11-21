@@ -1,0 +1,13 @@
+{
+  final ObjectSpecification adapterSpec=entityModel.getTypeOfSpecification();
+  final ObjectAdapter adapter=entityModel.getObject();
+  final ObjectAdapterMemento adapterMemento=entityModel.getObjectAdapterMemento();
+  @SuppressWarnings("unchecked") final List<ObjectAction> userActions=adapterSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.and(memberOrderOf(otma),dynamicallyVisibleFor(adapter)));
+  final CssMenuLinkFactory linkFactory=new EntityActionLinkFactory(entityModel);
+  return Lists.transform(userActions,new Function<ObjectAction,LinkAndLabel>(){
+    @Override public LinkAndLabel apply(    ObjectAction arg0){
+      return linkFactory.newLink(adapterMemento,arg0,LinksSelectorPanelAbstract.ID_ADDITIONAL_LINK);
+    }
+  }
+);
+}
