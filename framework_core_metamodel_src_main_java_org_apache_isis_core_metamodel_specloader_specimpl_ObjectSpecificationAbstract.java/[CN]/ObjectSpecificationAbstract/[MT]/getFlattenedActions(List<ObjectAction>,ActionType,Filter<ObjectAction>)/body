@@ -1,16 +1,4 @@
 {
-  final List<ObjectAction> actions=Lists.newArrayList();
-  for (  final ObjectAction action : objectActions) {
-    if (action.getType().isSet()) {
-      final ObjectActionSet actionSet=(ObjectActionSet)action;
-      final List<ObjectAction> subActions=actionSet.getActions();
-      for (      final ObjectAction subAction : subActions) {
-        addAction(type,actions,subAction,filter);
-      }
-    }
- else {
-      addAction(type,actions,action,filter);
-    }
-  }
-  return actions;
+  final List<ObjectAction> actions=ObjectActions.flattenedActions(objectActions);
+  return Lists.newArrayList(Iterables.filter(actions,Filters.asPredicate(Filters.and(ObjectActionFilters.filterOfType(type),filter))));
 }
