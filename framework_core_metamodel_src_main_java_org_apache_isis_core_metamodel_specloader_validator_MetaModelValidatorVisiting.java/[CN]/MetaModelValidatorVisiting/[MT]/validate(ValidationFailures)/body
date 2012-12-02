@@ -1,0 +1,12 @@
+{
+  final Collection<ObjectSpecification> objectSpecs=getSpecificationLoaderSpi().allSpecifications();
+  for (  final ObjectSpecification objSpec : objectSpecs) {
+    if (!visitor.visit(objSpec,validationFailures)) {
+      break;
+    }
+  }
+  if (visitor instanceof SummarizingVisitor) {
+    SummarizingVisitor summarizingVisitor=(SummarizingVisitor)visitor;
+    summarizingVisitor.summarize(validationFailures);
+  }
+}
