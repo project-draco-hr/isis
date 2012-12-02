@@ -1,0 +1,12 @@
+{
+  Enumeration<?> appenders=LogManager.getRootLogger().getAllAppenders();
+  if (appenders.hasMoreElements()) {
+    return true;
+  }
+  Enumeration<?> loggers=LogManager.getCurrentLoggers();
+  while (loggers.hasMoreElements()) {
+    Logger c=(Logger)loggers.nextElement();
+    if (c.getAllAppenders().hasMoreElements())     return true;
+  }
+  return false;
+}

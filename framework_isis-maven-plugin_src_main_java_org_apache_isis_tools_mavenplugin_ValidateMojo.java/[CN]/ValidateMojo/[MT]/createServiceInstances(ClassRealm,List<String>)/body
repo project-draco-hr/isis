@@ -1,0 +1,22 @@
+{
+  final List<Object> serviceList=Lists.newArrayList();
+  final List<String> logMessages=Lists.newArrayList();
+  for (  String serviceClassName : serviceClassNames) {
+    try {
+      serviceList.add(isisRealm.loadClass(serviceClassName).newInstance());
+    }
+ catch (    ClassNotFoundException e) {
+      logMessages.add("Error loading class '" + serviceClassName + "' from classrealm");
+    }
+catch (    InstantiationException e) {
+      logMessages.add("Error instantiating loaded class '" + serviceClassName + "'");
+    }
+catch (    IllegalAccessException e) {
+      logMessages.add("Error instantiating loaded class '" + serviceClassName + "'");
+    }
+  }
+  if (!logMessages.isEmpty()) {
+    throwFailureException("Unable to load configured services",logMessages);
+  }
+  return serviceList;
+}

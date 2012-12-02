@@ -1,0 +1,20 @@
+{
+  ClassWorld classWorld=null;
+  IsisMetaModel isisMetaModel=null;
+  try {
+    classWorld=new ClassWorld();
+    final ClassRealm isisRealm=classWorld.newRealm(ISIS_REALM);
+    addClassesToRealm(isisRealm);
+    List<Object> serviceList=createServicesFromConfiguration(isisRealm);
+    isisMetaModel=bootstrapIsis(isisRealm,serviceList);
+    return isisMetaModel.getValidationFailures();
+  }
+ catch (  DuplicateRealmException e) {
+    throwExecutionException("Error building classworld",e);
+    return null;
+  }
+ finally {
+    ClassWorlds.disposeSafely(classWorld,ISIS_REALM);
+    IsisMetaModels.disposeSafely(isisMetaModel);
+  }
+}

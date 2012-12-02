@@ -1,0 +1,15 @@
+{
+  final Xpp3Dom configuration=(Xpp3Dom)MavenProjects.lookupPlugin(mavenProject,CURRENT_PLUGIN_KEY).getConfiguration();
+  if (configuration == null) {
+    throwFailureException("Configuration error","No <configuration> element found");
+  }
+  final Xpp3Dom servicesEl=configuration.getChild("services");
+  if (servicesEl == null) {
+    throwFailureException("Configuration error","No <configuration>/<services> element found");
+  }
+  final Xpp3Dom[] serviceEls=servicesEl.getChildren("service");
+  if (serviceEls == null || serviceEls.length == 0) {
+    throwFailureException("Configuration error","No <configuration>/<services>/<service> elements found");
+  }
+  return Lists.transform(Arrays.asList(serviceEls),Xpp3Doms.GET_VALUE);
+}

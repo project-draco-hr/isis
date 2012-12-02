@@ -1,0 +1,35 @@
+{
+  Set<Artifact> artifacts=mavenProject.getArtifacts();
+  for (  Artifact artifact : artifacts) {
+    File file=artifact.getFile();
+    try {
+      ClassRealms.addFileToRealm(isisRealm,file,getLog());
+    }
+ catch (    MalformedURLException e) {
+      throwExecutionException("Error adding classes for artifact '" + artifact + "' to class realm",e);
+    }
+catch (    IOException e) {
+      throwExecutionException("Error adding classes for artifact '" + artifact + "' to class realm",e);
+    }
+  }
+  List<String> classpathElements;
+  try {
+    classpathElements=mavenProject.getRuntimeClasspathElements();
+  }
+ catch (  DependencyResolutionRequiredException e) {
+    throwExecutionException("Error obtaining runtime classpath",e);
+    return;
+  }
+  for (  String classpathElement : classpathElements) {
+    final File file=new File(classpathElement);
+    try {
+      ClassRealms.addFileToRealm(isisRealm,file,getLog());
+    }
+ catch (    MalformedURLException e) {
+      throwExecutionException("Error adding classes for classpath element '" + classpathElement + "' to class realm",e);
+    }
+catch (    IOException e) {
+      throwExecutionException("Error adding classes for classpath element '" + classpathElement + "' to class realm",e);
+    }
+  }
+}
