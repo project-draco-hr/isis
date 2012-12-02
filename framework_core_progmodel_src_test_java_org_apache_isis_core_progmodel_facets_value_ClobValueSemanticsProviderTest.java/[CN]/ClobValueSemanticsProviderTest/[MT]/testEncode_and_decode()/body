@@ -1,0 +1,9 @@
+{
+  String encoded=value.toEncodedString(clob);
+  assertEquals("myfile1.xml:application/xml:abcdef",encoded);
+  Clob decoded=value.fromEncodedString(encoded);
+  assertThat(decoded.getName(),is("myfile1.xml"));
+  assertThat(decoded.getMimeType().getPrimaryType(),is("application"));
+  assertThat(decoded.getMimeType().getSubType(),is("xml"));
+  assertThat(decoded.getChars(),is((CharSequence)"abcdef"));
+}

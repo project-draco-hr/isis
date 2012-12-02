@@ -1,0 +1,13 @@
+{
+  final int colonIdx=data.indexOf(':');
+  final String name=data.substring(0,colonIdx);
+  final int colon2Idx=data.indexOf(":",colonIdx + 1);
+  final String mimeTypeBase=data.substring(colonIdx + 1,colon2Idx);
+  final byte[] bytes=Base64.decodeBase64(data.substring(colon2Idx + 1));
+  try {
+    return new Blob(name,new MimeType(mimeTypeBase),bytes);
+  }
+ catch (  MimeTypeParseException e) {
+    throw new RuntimeException(e);
+  }
+}

@@ -1,0 +1,9 @@
+{
+  String encoded=value.toEncodedString(blob);
+  assertEquals("myfile1.docx:application/vnd.ms-word:AQIDBA==",encoded);
+  Blob decoded=value.fromEncodedString(encoded);
+  assertThat(decoded.getName(),is("myfile1.docx"));
+  assertThat(decoded.getMimeType().getPrimaryType(),is("application"));
+  assertThat(decoded.getMimeType().getSubType(),is("vnd.ms-word"));
+  assertThat(decoded.getBytes().length,is(4));
+}

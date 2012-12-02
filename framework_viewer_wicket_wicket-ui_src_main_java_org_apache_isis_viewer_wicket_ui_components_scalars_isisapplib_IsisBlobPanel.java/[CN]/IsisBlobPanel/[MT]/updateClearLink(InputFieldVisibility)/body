@@ -1,0 +1,17 @@
+{
+  final MarkupContainer formComponent=(MarkupContainer)getComponentForRegular();
+  formComponent.setOutputMarkupId(true);
+  final AjaxLink<Void> ajaxLink=new AjaxLink<Void>(ID_SCALAR_IF_REGULAR_CLEAR){
+    private static final long serialVersionUID=1L;
+    @Override public void onClick(    AjaxRequestTarget target){
+      setEnabled(false);
+      getModel().setObject(null);
+      target.add(formComponent);
+    }
+  }
+;
+  ajaxLink.setOutputMarkupId(true);
+  formComponent.addOrReplace(ajaxLink);
+  final Blob blob=getBlob(getModel());
+  formComponent.get(ID_SCALAR_IF_REGULAR_CLEAR).setVisible(blob != null && visibility == InputFieldVisibility.VISIBLE);
+}
