@@ -1,30 +1,4 @@
 {
-  final MetaModelValidatorVisiting.SummarizingVisitor ensurePersistenceCapables=new MetaModelValidatorVisiting.SummarizingVisitor(){
-    private boolean found=false;
-    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
-      return !(found=objectSpec.containsFacet(JdoPersistenceCapableFacet.class));
-    }
-    @Override public void summarize(    ValidationFailures validationFailures){
-      if (!found) {
-        validationFailures.add("DataNucleus object store: no @PersistenceCapable found. " + "(Are the entities referenced by the registered services? " + "are all services registered? "+ "are you using the JDO programming model facets?)");
-      }
-    }
-  }
-;
-  add(new MetaModelValidatorVisiting(ensurePersistenceCapables));
-  MetaModelValidatorVisiting.Visitor ensureIdentityType=new MetaModelValidatorVisiting.Visitor(){
-    @Override public boolean visit(    ObjectSpecification objSpec,    ValidationFailures validationFailures){
-      final JdoPersistenceCapableFacet jpcf=objSpec.getFacet(JdoPersistenceCapableFacet.class);
-      if (jpcf == null) {
-        return true;
-      }
-      final IdentityType identityType=jpcf.getIdentityType();
-      if (identityType != IdentityType.DATASTORE && identityType != IdentityType.UNSPECIFIED) {
-        validationFailures.add("DataNucleus object store: {0} must be annotated with @PersistenceCapable, with an identityType of either DATASTORE or UNSPECIFIED (has an identityType of {1})",objSpec.getFullIdentifier(),identityType);
-      }
-      return true;
-    }
-  }
-;
-  add(new MetaModelValidatorVisiting(ensureIdentityType));
+  addValidatorToEnsurePersistenceCapables();
+  addValidatorToEnsureIdentityType();
 }
