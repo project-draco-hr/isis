@@ -1,9 +1,16 @@
 {
+  if (value == null) {
+    LOG.debug("ignoring " + key + " as value is null");
+    return;
+  }
   if (key == null) {
     return;
   }
   if (properties.containsKey(key)) {
-    LOG.info("replacing " + key + "="+ properties.get(key)+ " with "+ value);
+    LOG.info("skipping " + key + "="+ value+ " as value already set (with "+ properties.get(key)+ ")");
   }
-  properties.put(key,value);
+ else {
+    LOG.info("adding " + key + "="+ value);
+    properties.put(key,value);
+  }
 }

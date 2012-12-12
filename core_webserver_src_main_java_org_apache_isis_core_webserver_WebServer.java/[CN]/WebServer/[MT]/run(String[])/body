@@ -1,13 +1,13 @@
 {
   final IsisRunner runner=new IsisRunner(args,new OptionHandlerDeploymentTypeWebServer());
-  runner.addOptionHandler(new OptionHandlerPort());
-  runner.addOptionHandler(new OptionHandlerAddress());
-  runner.addOptionHandler(new OptionHandlerResourceBase());
-  runner.addOptionHandler(new OptionHandlerStartupMode());
+  addOptionHandlersAndValidators(runner);
   if (!runner.parseAndValidate()) {
     return;
   }
+  runner.setConfigurationBuilder(new IsisConfigurationBuilderDefault());
+  runner.primeConfigurationWithCommandLineOptions();
+  runner.loadInitialProperties();
   final WebServerBootstrapper bootstrapper=new WebServerBootstrapper(runner);
-  runner.bootstrap(bootstrapper);
+  bootstrapper.bootstrap(null);
   jettyServer=bootstrapper.getJettyServer();
 }

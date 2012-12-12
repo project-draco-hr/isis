@@ -1,10 +1,6 @@
 {
-  if (key == null || value == null) {
-    return;
+  if (locked) {
+    throw new IsisException("Configuration has been locked and cannot be changed");
   }
-  additionalProperties.setProperty(key,value);
-  if (LOG.isInfoEnabled()) {
-    LOG.info("added " + key + "="+ value);
-  }
-  invalidateCache();
+  configuration.add(key,value);
 }

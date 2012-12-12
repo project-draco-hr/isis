@@ -17,6 +17,7 @@
     }
     final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(compositeSource);
     primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
+    isisConfigurationBuilder.addDefaultConfigurationResources();
     final DeploymentType deploymentType=determineDeploymentType(isisConfigurationBuilder,servletContext);
     addConfigurationResourcesForWebApps(isisConfigurationBuilder);
     addConfigurationResourcesForDeploymentType(isisConfigurationBuilder,deploymentType);
@@ -26,6 +27,7 @@
     final InstallerLookup installerLookup=new InstallerLookupDefault();
     injector=createGuiceInjector(isisConfigurationBuilder,deploymentType,installerLookup);
     final IsisSystem system=injector.getInstance(IsisSystem.class);
+    isisConfigurationBuilder.lockConiguration();
     isisConfigurationBuilder.dumpResourcesToLog();
     servletContext.setAttribute(WebAppConstants.ISIS_SYSTEM_KEY,system);
   }

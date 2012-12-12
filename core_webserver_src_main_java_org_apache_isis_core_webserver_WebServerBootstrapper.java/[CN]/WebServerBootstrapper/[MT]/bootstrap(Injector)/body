@@ -1,5 +1,5 @@
 {
-  final IsisConfigurationBuilder isisConfigurationBuilder=injector.getInstance(IsisConfigurationBuilder.class);
+  final IsisConfigurationBuilder isisConfigurationBuilder=runner.getStartupConfiguration();
   final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
   final int port=configuration.getInteger(EMBEDDED_WEB_SERVER_PORT_KEY,EMBEDDED_WEB_SERVER_PORT_DEFAULT);
   final String webappContextPath=configuration.getString(EMBEDDED_WEB_SERVER_RESOURCE_BASE_KEY,EMBEDDED_WEB_SERVER_RESOURCE_BASE_DEFAULT);
@@ -8,6 +8,7 @@
   final WebAppContext context=new WebAppContext(SRC_MAIN_WEBAPP,webappContextPath);
   copyConfigurationPrimersIntoServletContext(context);
   jettyServer.setHandler(context);
+  LOG.info("starting Jetty on port " + port + " to serve webapp");
   try {
     jettyServer.start();
     if (startupMode.isForeground()) {
