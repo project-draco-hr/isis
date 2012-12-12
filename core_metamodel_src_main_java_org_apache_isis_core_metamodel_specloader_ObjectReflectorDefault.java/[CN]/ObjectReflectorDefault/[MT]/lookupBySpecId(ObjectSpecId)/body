@@ -1,3 +1,7 @@
 {
-  return getCache().getByObjectType(objectSpecId);
+  ObjectSpecification specification=getCache().getByObjectType(objectSpecId);
+  if (specification == null) {
+    throw new IsisException("Could not load specification for " + objectSpecId.asString());
+  }
+  return specification;
 }
