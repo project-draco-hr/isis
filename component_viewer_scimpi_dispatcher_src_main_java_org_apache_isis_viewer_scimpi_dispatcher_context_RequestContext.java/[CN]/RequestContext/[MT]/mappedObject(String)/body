@@ -5,8 +5,8 @@
   if (dataOrOid == null) {
     dataOrOid=RESULT;
   }
-  if (dataOrOid.startsWith("D")) {
-    return objectMapping.mappedTransientObject(StringEscapeUtils.unescapeHtml(dataOrOid.substring(1)));
+  if (dataOrOid.startsWith(TRANSIENT_OBJECT_OID_MARKER + "{")) {
+    return objectMapping.mappedTransientObject(StringEscapeUtils.unescapeHtml(dataOrOid.substring(TRANSIENT_OBJECT_OID_MARKER.length())));
   }
   final String oidStr=dataOrOid;
   final TypedOid typedOid=getOidMarshaller().unmarshal(oidStr,TypedOid.class);
