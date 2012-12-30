@@ -1,0 +1,21 @@
+{
+  if (realmSecurityManager == null) {
+    return Collections.emptyList();
+  }
+  final List<String> roles=Lists.newArrayList();
+  final Collection<Realm> realms=realmSecurityManager.getRealms();
+  for (  final Realm realm : realms) {
+    if (realm.supports(token)) {
+      continue;
+    }
+    final AuthenticationInfo authenticationInfo=realm.getAuthenticationInfo(token);
+    if (authenticationInfo instanceof AuthorizationInfo) {
+      final AuthorizationInfo authorizationInfo=(AuthorizationInfo)authenticationInfo;
+      final Collection<String> realmRoles=authorizationInfo.getRoles();
+      for (      final String role : realmRoles) {
+        roles.add(realm.getName() + ":" + role);
+      }
+    }
+  }
+  return roles;
+}

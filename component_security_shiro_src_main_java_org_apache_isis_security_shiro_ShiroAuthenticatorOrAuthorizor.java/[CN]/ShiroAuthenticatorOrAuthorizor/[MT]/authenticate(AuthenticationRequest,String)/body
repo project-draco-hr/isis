@@ -1,0 +1,32 @@
+{
+  final AuthenticationToken token=asAuthenticationToken(request);
+  Subject currentUser=SecurityUtils.getSubject();
+  if (currentUser.isAuthenticated()) {
+    currentUser.logout();
+  }
+  try {
+    currentUser.login(token);
+  }
+ catch (  UnknownAccountException uae) {
+    LOG.debug("Unable to authenticate",uae);
+    return null;
+  }
+catch (  IncorrectCredentialsException ice) {
+    LOG.debug("Unable to authenticate",ice);
+    return null;
+  }
+catch (  LockedAccountException lae) {
+    LOG.info("Unable to authenticate",lae);
+    return null;
+  }
+catch (  ExcessiveAttemptsException eae) {
+    LOG.info("Unable to authenticate",eae);
+    return null;
+  }
+catch (  AuthenticationException ae) {
+    LOG.error("Unable to authenticate",ae);
+    return null;
+  }
+  List<String> roles=getRoles(token);
+  return new SimpleSession(request.getName(),roles,code);
+}

@@ -1,0 +1,57 @@
+{
+  context.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString("isis.authentication.shiro.iniClasspath");
+      will(returnValue("classpath:shiro.ini"));
+    }
+  }
+);
+  Factory<SecurityManager> factory=new IniSecurityManagerFactory("classpath:shiro.ini");
+  SecurityManager securityManager=factory.getInstance();
+  SecurityUtils.setSecurityManager(securityManager);
+  Subject currentUser=SecurityUtils.getSubject();
+  Session session=currentUser.getSession();
+  session.setAttribute("someKey","aValue");
+  String value=(String)session.getAttribute("someKey");
+  if (value.equals("aValue")) {
+    System.out.println("Retrieved the correct value! [" + value + "]");
+  }
+  if (!currentUser.isAuthenticated()) {
+    UsernamePasswordToken token=new UsernamePasswordToken("lonestarr","vespa");
+    token.setRememberMe(true);
+    try {
+      currentUser.login(token);
+    }
+ catch (    UnknownAccountException uae) {
+      System.out.println("There is no user with username of " + token.getPrincipal());
+    }
+catch (    IncorrectCredentialsException ice) {
+      System.out.println("Password for account " + token.getPrincipal() + " was incorrect!");
+    }
+catch (    LockedAccountException lae) {
+      System.out.println("The account for username " + token.getPrincipal() + " is locked.  "+ "Please contact your administrator to unlock it.");
+    }
+catch (    AuthenticationException ae) {
+    }
+  }
+  System.out.println("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+  if (currentUser.hasRole("schwartz")) {
+    System.out.println("May the Schwartz be with you!");
+  }
+ else {
+    System.out.println("Hello, mere mortal.");
+  }
+  if (currentUser.isPermitted("lightsaber:weild")) {
+    System.out.println("You may use a lightsaber ring.  Use it wisely.");
+  }
+ else {
+    System.out.println("Sorry, lightsaber rings are for schwartz masters only.");
+  }
+  if (currentUser.isPermitted("winnebago:drive:eagle5")) {
+    System.out.println("You are permitted to 'drive' the winnebago with license plate (id) 'eagle5'.  " + "Here are the keys - have fun!");
+  }
+ else {
+    System.out.println("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
+  }
+  currentUser.logout();
+}
