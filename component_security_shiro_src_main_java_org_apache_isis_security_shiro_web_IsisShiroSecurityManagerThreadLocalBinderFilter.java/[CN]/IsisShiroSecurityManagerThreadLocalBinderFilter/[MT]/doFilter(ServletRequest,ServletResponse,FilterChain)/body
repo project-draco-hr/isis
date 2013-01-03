@@ -1,0 +1,12 @@
+{
+  ServletContext servletContext=filterConfig.getServletContext();
+  WebEnvironment webEnvironment=WebUtils.getWebEnvironment(servletContext);
+  SecurityManager securityManager=webEnvironment.getSecurityManager();
+  ThreadContext.bind(securityManager);
+  try {
+    doFilter(request,response,chain);
+  }
+  finally {
+    ThreadContext.unbindSecurityManager();
+  }
+}

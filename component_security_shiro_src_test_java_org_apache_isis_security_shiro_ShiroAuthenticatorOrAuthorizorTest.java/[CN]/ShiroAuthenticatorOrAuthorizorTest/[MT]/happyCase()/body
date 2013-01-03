@@ -1,0 +1,24 @@
+{
+  context.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getString(with("isis.security.shiro.iniLocation"));
+      will(returnValue("classpath:shiro.ini"));
+    }
+  }
+);
+  authOrAuth.init();
+  assertThat(authOrAuth.canAuthenticate(AuthenticationRequestPassword.class),is(true));
+  AuthenticationRequest ar=new AuthenticationRequestPassword("lonestarr","vespa");
+  AuthenticationSession isisAuthSession=authOrAuth.authenticate(ar,null);
+  assertThat(isisAuthSession,is(not(nullValue())));
+  assertThat(isisAuthSession.getUserName(),is("lonestarr"));
+  assertThat(isisAuthSession.getValidationCode(),is(nullValue()));
+  Identifier changeAddressIdentifier=Identifier.actionIdentifier("com.mycompany.myapp.Customer","changeAddress",String.class,String.class);
+  assertThat(authOrAuth.isVisibleInAnyRole(changeAddressIdentifier),is(true));
+  Identifier changeEmailIdentifier=Identifier.actionIdentifier("com.mycompany.myapp.Customer","changeEmail",String.class);
+  assertThat(authOrAuth.isVisibleInAnyRole(changeEmailIdentifier),is(true));
+  Identifier submitOrderIdentifier=Identifier.actionIdentifier("com.mycompany.myapp.Order","submit");
+  assertThat(authOrAuth.isVisibleInAnyRole(submitOrderIdentifier),is(true));
+  Identifier cancelOrderIdentifier=Identifier.actionIdentifier("com.mycompany.myapp.Order","cancel");
+  assertThat(authOrAuth.isVisibleInAnyRole(cancelOrderIdentifier),is(false));
+}

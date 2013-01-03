@@ -3,7 +3,8 @@
     return (DefaultSecurityManager)SecurityUtils.getSecurityManager();
   }
  catch (  UnavailableSecurityManagerException ex) {
-    Factory<SecurityManager> factory=new IniSecurityManagerFactory(configuration.getString("isis.security.shiro.iniLocation","classpath:shiro.ini"));
+    String shiroIniLocation=lookupIniLocationFrom(configuration);
+    Factory<SecurityManager> factory=new IniSecurityManagerFactory(shiroIniLocation);
     SecurityManager securityManager=factory.getInstance();
     SecurityUtils.setSecurityManager(securityManager);
     return securityManager;
