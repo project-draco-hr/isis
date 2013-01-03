@@ -1,9 +1,10 @@
 {
-  if (realmSecurityManager == null) {
-    return Collections.emptyList();
-  }
   final List<String> roles=Lists.newArrayList();
-  final Collection<Realm> realms=realmSecurityManager.getRealms();
+  RealmSecurityManager securityManager=getSecurityManager();
+  if (securityManager == null) {
+    return roles;
+  }
+  final Collection<Realm> realms=securityManager.getRealms();
   for (  final Realm realm : realms) {
     if (realm.supports(token)) {
       continue;

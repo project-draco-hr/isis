@@ -1,8 +1,9 @@
 {
-  if (realmSecurityManager == null) {
+  RealmSecurityManager securityManager=getSecurityManager();
+  if (securityManager == null) {
     return false;
   }
   String permission=asPermissionsString(identifier) + ":" + qualifier;
-  PrincipalCollection principals=SecurityUtils.getSubject().getPrincipals();
-  return realmSecurityManager.isPermitted(principals,permission);
+  Subject subject=SecurityUtils.getSubject();
+  return subject.isPermitted(permission);
 }

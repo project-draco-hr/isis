@@ -1,4 +1,8 @@
 {
+  RealmSecurityManager securityManager=getSecurityManager();
+  if (securityManager == null) {
+    return null;
+  }
   final AuthenticationToken token=asAuthenticationToken(request);
   Subject currentUser=SecurityUtils.getSubject();
   if (currentUser.isAuthenticated()) {
@@ -28,5 +32,6 @@ catch (  AuthenticationException ae) {
     return null;
   }
   List<String> roles=getRoles(token);
+  roles.addAll(request.getRoles());
   return new SimpleSession(request.getName(),roles,code);
 }
