@@ -1,0 +1,11 @@
+{
+  HttpServletRequest httpServletRequest=(HttpServletRequest)request;
+  String acceptHeader=httpServletRequest.getHeader("Accept");
+  String requestURI=httpServletRequest.getRequestURI();
+  if (requestURI.equals("/") && acceptHeader.contains("text/html")) {
+    request.getRequestDispatcher("/about/index.html").forward(request,response);
+  }
+ else {
+    chain.doFilter(request,response);
+  }
+}
