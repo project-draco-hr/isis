@@ -1,12 +1,7 @@
 {
-  context.checking(new Expectations(){
-{
-      allowing(mockConfiguration).getString(with("isis.security.shiro.iniLocation"));
-      will(returnValue("classpath:shiro.ini"));
-    }
-  }
-);
-  authOrAuth.init();
+  Factory<SecurityManager> factory=new IniSecurityManagerFactory("classpath:shiro.ini");
+  SecurityManager securityManager=factory.getInstance();
+  SecurityUtils.setSecurityManager(securityManager);
   assertThat(authOrAuth.canAuthenticate(AuthenticationRequestPassword.class),is(true));
   AuthenticationRequest ar=new AuthenticationRequestPassword("lonestarr","vespa");
   AuthenticationSession isisAuthSession=authOrAuth.authenticate(ar,null);
