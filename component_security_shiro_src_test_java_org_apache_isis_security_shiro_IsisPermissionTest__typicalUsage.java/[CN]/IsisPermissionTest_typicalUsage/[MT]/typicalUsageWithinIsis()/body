@@ -1,0 +1,27 @@
+{
+  WildcardPermission viewCustomerChangeAddress=new WildcardPermission("com.mycompany.myapp:Customer:changeAddress:r");
+  WildcardPermission useCustomerChangeAddress=new WildcardPermission("com.mycompany.myapp:Customer:changeAddress:w");
+  assertThat(viewCustomerChangeAddress,permittedBy("com.mycompany.myapp:Customer:changeAddress:r"));
+  assertThat(viewCustomerChangeAddress,permittedBy("com.mycompany.myapp:Customer:changeAddress:*"));
+  assertThat(viewCustomerChangeAddress,permittedBy("com.mycompany.myapp:Customer:*:r"));
+  assertThat(viewCustomerChangeAddress,permittedBy("com.mycompany.myapp:*:*:r"));
+  assertThat(viewCustomerChangeAddress,permittedBy("*:*:*:r"));
+  assertThat(viewCustomerChangeAddress,permittedBy("*:*:*:*"));
+  assertThat(viewCustomerChangeAddress,permittedBy("*:*:*"));
+  assertThat(viewCustomerChangeAddress,permittedBy("*:*"));
+  assertThat(viewCustomerChangeAddress,permittedBy("*"));
+  assertThat(viewCustomerChangeAddress,permittedBy("*:Customer:*:r"));
+  assertThat(useCustomerChangeAddress,permittedBy("com.mycompany.myapp:Customer:changeAddress:w"));
+  assertThat(useCustomerChangeAddress,permittedBy("com.mycompany.myapp:Customer:changeAddress:*"));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("com.mycompany.myapp:Customer:changeAddress:w")));
+  assertThat(useCustomerChangeAddress,not(permittedBy("com.mycompany.myapp:Customer:changeAddress:r")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("com.mycompany.myapp:Customer:changePhoneNumber:r")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("com.mycompany.myapp:Order:changeAddress:r")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("xxx.mycompany.myapp:Customer:changeAddress:r")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("*:*:xxx")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("*:xxx")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("xxx")));
+  assertThat(viewCustomerChangeAddress,not(permittedBy("!foo/com.mycompany.myapp:Customer:changeAddress:r")));
+  assertThat(useCustomerChangeAddress,not(permittedBy("!foo/com.mycompany.myapp:Customer:changeAddress:w")));
+  assertThat(useCustomerChangeAddress,not(permittedBy("!foo/com.mycompany.myapp:Customer:changeAddress:r")));
+}

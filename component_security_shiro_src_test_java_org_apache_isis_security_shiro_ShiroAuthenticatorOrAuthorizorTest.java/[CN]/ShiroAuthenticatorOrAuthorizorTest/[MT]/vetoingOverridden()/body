@@ -1,0 +1,9 @@
+{
+  Factory<SecurityManager> factory=new IniSecurityManagerFactory("classpath:shiro.ini");
+  SecurityManager securityManager=factory.getInstance();
+  SecurityUtils.setSecurityManager(securityManager);
+  AuthenticationRequest ar=new AuthenticationRequestPassword("lonestarr","vespa");
+  authOrAuth.authenticate(ar,null);
+  Identifier removeCustomerIdentifier=Identifier.actionIdentifier("com.mycompany.myapp.Customer","remove");
+  assertThat(authOrAuth.isVisibleInAnyRole(removeCustomerIdentifier),is(true));
+}

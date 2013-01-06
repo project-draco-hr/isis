@@ -1,0 +1,15 @@
+{
+  if (permissionGroup == null) {
+    return false;
+  }
+  List<IsisPermission> vetoingPermissions=VETOING_PERMISSIONS.get().get(permissionGroup);
+  if (vetoingPermissions == null || vetoingPermissions.isEmpty()) {
+    return false;
+  }
+  for (  IsisPermission vetoingPermission : vetoingPermissions) {
+    if (vetoingPermission.impliesWithoutVeto(p)) {
+      return true;
+    }
+  }
+  return false;
+}
