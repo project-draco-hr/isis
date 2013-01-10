@@ -1,0 +1,20 @@
+{
+  final Set<String> roleNames=Sets.newLinkedHashSet();
+  final NamingEnumeration<SearchResult> searchResultEnum=ldapCtx.search(searchBase,groupNameAttribute + "=" + groupName,SUBTREE_SCOPE);
+  while (searchResultEnum.hasMore()) {
+    final SearchResult sr=searchResultEnum.next();
+    final NamingEnumeration<? extends Attribute> attributeEnum=sr.getAttributes().getAll();
+    while (attributeEnum.hasMore()) {
+      final Attribute attr=attributeEnum.next();
+      if (!groupMembersAttribute.equalsIgnoreCase(attr.getID())) {
+        continue;
+      }
+      final NamingEnumeration<?> e=attr.getAll();
+      while (e.hasMore()) {
+        Object next=e.next();
+        roleNames.add(next.toString());
+      }
+    }
+  }
+  return roleNames;
+}

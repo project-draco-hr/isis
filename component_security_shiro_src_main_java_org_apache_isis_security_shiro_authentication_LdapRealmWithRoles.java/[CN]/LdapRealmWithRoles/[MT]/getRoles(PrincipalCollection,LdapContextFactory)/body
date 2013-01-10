@@ -1,0 +1,14 @@
+{
+  final String username=(String)getAvailablePrincipal(principals);
+  LdapContext systemLdapCtx=null;
+  try {
+    systemLdapCtx=ldapContextFactory.getSystemLdapContext();
+    return rolesFor(username,systemLdapCtx);
+  }
+ catch (  AuthenticationException ex) {
+    return Collections.emptySet();
+  }
+ finally {
+    LdapUtils.closeContext(systemLdapCtx);
+  }
+}
