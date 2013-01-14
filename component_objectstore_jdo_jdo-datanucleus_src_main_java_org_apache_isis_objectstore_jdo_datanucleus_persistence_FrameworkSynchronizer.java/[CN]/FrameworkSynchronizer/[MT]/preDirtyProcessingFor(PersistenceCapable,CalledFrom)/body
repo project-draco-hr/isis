@@ -2,7 +2,13 @@
   withLogging(pojo,new Runnable(){
     @Override public void run(){
       final IsisTransaction transaction=getCurrentTransaction();
-      final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      if (adapter == null) {
+        adapter=lazilyLoaded(pojo,CalledFrom.EVENT_PREDIRTY);
+        if (adapter == null) {
+          throw new RuntimeException("DN could not find objectId for pojo (unexpected) and so could not map into Isis; pojo=[" + pojo + "]");
+        }
+      }
       if (adapter.isTransient()) {
         return;
       }
