@@ -1,0 +1,19 @@
+{
+  final NamingEnumeration<? extends Attribute> attributeEnum=group.getAttributes().getAll();
+  while (attributeEnum.hasMore()) {
+    final Attribute attr=attributeEnum.next();
+    if (!uniqueMemberAttribute.equalsIgnoreCase(attr.getID())) {
+      continue;
+    }
+    final NamingEnumeration<?> e=attr.getAll();
+    while (e.hasMore()) {
+      String attrValue=e.next().toString();
+      if ((uniqueMemberAttributeValuePrefix + userName + uniqueMemberAttributeValueSuffix).equals(attrValue)) {
+        Attribute attribute=group.getAttributes().get("cn");
+        String groupName=attribute.get().toString();
+        roleNames.add(groupName);
+        break;
+      }
+    }
+  }
+}

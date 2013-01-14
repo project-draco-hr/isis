@@ -1,0 +1,9 @@
+{
+  final Set<String> roleNames=Sets.newLinkedHashSet();
+  final NamingEnumeration<SearchResult> searchResultEnum=ldapCtx.search(searchBase,"objectClass=" + groupObjectClass,SUBTREE_SCOPE);
+  while (searchResultEnum.hasMore()) {
+    final SearchResult group=searchResultEnum.next();
+    addRoleIfMember(userName,group,roleNames);
+  }
+  return roleNames;
+}

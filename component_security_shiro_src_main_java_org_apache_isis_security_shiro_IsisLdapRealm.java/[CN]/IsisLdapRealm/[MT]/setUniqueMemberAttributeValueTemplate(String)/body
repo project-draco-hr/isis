@@ -1,0 +1,15 @@
+{
+  if (!StringUtils.hasText(template)) {
+    String msg="User DN template cannot be null or empty.";
+    throw new IllegalArgumentException(msg);
+  }
+  int index=template.indexOf(UNIQUEMEMBER_SUBSTITUTION_TOKEN);
+  if (index < 0) {
+    String msg="UniqueMember attribute value template must contain the '" + UNIQUEMEMBER_SUBSTITUTION_TOKEN + "' replacement token to understand how to "+ "parse the group members.";
+    throw new IllegalArgumentException(msg);
+  }
+  String prefix=template.substring(0,index);
+  String suffix=template.substring(prefix.length() + UNIQUEMEMBER_SUBSTITUTION_TOKEN.length());
+  this.uniqueMemberAttributeValuePrefix=prefix;
+  this.uniqueMemberAttributeValueSuffix=suffix;
+}
