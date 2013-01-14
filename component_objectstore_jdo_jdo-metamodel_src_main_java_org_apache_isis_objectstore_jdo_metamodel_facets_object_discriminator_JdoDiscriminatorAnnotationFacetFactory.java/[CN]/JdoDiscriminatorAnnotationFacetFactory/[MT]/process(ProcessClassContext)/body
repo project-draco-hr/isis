@@ -3,7 +3,15 @@
   if (annotation == null) {
     return;
   }
-  final String annotationValueAttribute=annotation.value();
-  FacetUtil.addFacet(new ObjectSpecIdFacetInferredFromJdoDiscriminatorValueAnnotation(annotationValueAttribute,processClassContext.getFacetHolder()));
+  String annotationValueAttribute=annotation.value();
+  if (!Strings.isNullOrEmpty(annotationValueAttribute)) {
+    FacetUtil.addFacet(new ObjectSpecIdFacetInferredFromJdoDiscriminatorValueAnnotation(annotationValueAttribute,processClassContext.getFacetHolder()));
+  }
+ else {
+    final FacetHolder facetHolder=processClassContext.getFacetHolder();
+    final Class<?> originalClass=processClassContext.getCls();
+    final Class<?> substitutedClass=classSubstitutor.getClass(originalClass);
+    FacetUtil.addFacet(new ObjectSpecIdFacetDerivedFromClassName(substitutedClass.getCanonicalName(),facetHolder));
+  }
   FacetUtil.addFacet(new JdoDiscriminatorFacetDefault(annotationValueAttribute,processClassContext.getFacetHolder()));
 }
