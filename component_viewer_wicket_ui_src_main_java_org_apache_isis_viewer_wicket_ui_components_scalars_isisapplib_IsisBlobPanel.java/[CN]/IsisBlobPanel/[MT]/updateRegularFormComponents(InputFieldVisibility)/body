@@ -1,6 +1,10 @@
 {
-  MarkupContainer formComponentLabel=(MarkupContainer)getComponentForRegular();
-  formComponentLabel.get(ID_SCALAR_VALUE).setVisible(visibility == InputFieldVisibility.VISIBLE);
+  MarkupContainer formComponent=(MarkupContainer)getComponentForRegular();
+  formComponent.get(ID_SCALAR_VALUE).setVisible(visibility == InputFieldVisibility.VISIBLE);
+  formComponent.get(ID_SCALAR_IF_REGULAR_UPLOAD).setVisible(visibility == InputFieldVisibility.VISIBLE);
   updateClearLink(visibility);
-  updateDownloadLink(ID_SCALAR_IF_REGULAR_DOWNLOAD,formComponentLabel);
+  final MarkupContainer downloadLink=updateDownloadLink(ID_SCALAR_IF_REGULAR_DOWNLOAD,formComponent);
+  if (downloadLink != null) {
+    downloadLink.setVisible(visibility == InputFieldVisibility.NOT_VISIBLE);
+  }
 }
