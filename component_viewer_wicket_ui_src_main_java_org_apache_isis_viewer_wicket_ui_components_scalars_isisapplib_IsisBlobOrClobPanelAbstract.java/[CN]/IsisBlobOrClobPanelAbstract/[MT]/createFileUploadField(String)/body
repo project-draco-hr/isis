@@ -5,11 +5,7 @@
       if (fileUploads == null || fileUploads.isEmpty()) {
         return;
       }
-      final FileUpload fileUpload=fileUploads.get(0);
-      final String contentType=fileUpload.getContentType();
-      final String clientFileName=fileUpload.getClientFileName();
-      final byte[] bytes=fileUpload.getBytes();
-      final Blob blob=new Blob(clientFileName,contentType,bytes);
+      final T blob=getBlobOrClobFrom(fileUploads);
       final ObjectAdapter adapter=getAdapterManager().adapterFor(blob);
       getModel().setObject(adapter);
     }
