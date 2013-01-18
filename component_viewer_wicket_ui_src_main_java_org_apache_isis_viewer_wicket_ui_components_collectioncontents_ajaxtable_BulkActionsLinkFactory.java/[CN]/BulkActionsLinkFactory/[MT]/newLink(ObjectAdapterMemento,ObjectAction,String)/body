@@ -1,0 +1,33 @@
+{
+  final ActionMemento actionMemento=new ActionMemento(objectAction);
+  AbstractLink link=new AjaxLink<Void>(linkId){
+    private static final long serialVersionUID=1L;
+    @Override public void onClick(    AjaxRequestTarget target){
+      final ObjectAction objectAction=actionMemento.getAction();
+      for (      ObjectAdapterMemento entityAdapterMemento : model.getToggleMementosList()) {
+        final ObjectAdapter entityAdapter=entityAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
+        int numParameters=objectAction.getParameterCount();
+        if (objectAction.isContributed()) {
+          if (numParameters != 1) {
+            return;
+          }
+          if (serviceAdapterMemento == null) {
+            return;
+          }
+          final ObjectAdapter serviceAdapter=serviceAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+          objectAction.execute(serviceAdapter,new ObjectAdapter[]{entityAdapter});
+        }
+ else {
+          if (numParameters != 0) {
+            return;
+          }
+          objectAction.execute(entityAdapter,new ObjectAdapter[]{});
+        }
+      }
+      model.clearToggleMementosList();
+      target.add(dataTable);
+    }
+  }
+;
+  return new LinkAndLabel(link,objectAction.getName());
+}
