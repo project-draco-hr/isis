@@ -1,12 +1,28 @@
 {
   final List<ComponentFactory> componentFactories=findOtherComponentFactories(model,factory);
-  final ComponentFactory selectedComponentFactory=Iterables.find(componentFactories,determineInitialFactory(model));
+  final int selected=determineInitialFactory(componentFactories,model);
+  final LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
+  final Component[] underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
+  int i=0;
+  for (  ComponentFactory componentFactory : componentFactories) {
+    final String underlyingId=underlyingIdPrefix + "-" + i;
+    final T emptyModel=dummyOf(model);
+    Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
+    underlyingViews[i++]=underlyingView;
+    selectorPanel.addOrReplace(underlyingView);
+  }
+  while (i < MAX_NUM_UNDERLYING_VIEWS) {
+    String underlyingId=underlyingIdPrefix + "-" + i;
+    permanentlyHide(underlyingId);
+    i++;
+  }
   if (componentFactories.size() <= 1) {
     permanentlyHide(ID_VIEWS);
   }
  else {
     final Model<ComponentFactory> componentFactoryModel=new Model<ComponentFactory>();
-    componentFactoryModel.setObject(selectedComponentFactory);
+    selectorPanel.selectedComponentFactory=componentFactories.get(selected);
+    componentFactoryModel.setObject(selectorPanel.selectedComponentFactory);
     final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
     final WebMarkupContainer container=new WebMarkupContainer(ID_VIEW_LIST);
     views.addOrReplace(container);
@@ -15,12 +31,21 @@
     final ListView<ComponentFactory> listView=new ListView<ComponentFactory>(ID_VIEW_ITEM,componentFactories){
       private static final long serialVersionUID=1L;
       @Override protected void populateItem(      ListItem<ComponentFactory> item){
+        final int underlyingViewNum=item.getIndex();
         final ComponentFactory componentFactory=item.getModelObject();
         final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
           private static final long serialVersionUID=1L;
           @Override public void onClick(          AjaxRequestTarget target){
-            LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
-            selectorPanel.select(underlyingId,model,componentFactory);
+            for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
+              final Component component=underlyingViews[i];
+              T dummyModel=dummyOf(model);
+              if (component != null) {
+                final boolean isSelected=i == underlyingViewNum;
+                applyCssVisibility(component,isSelected);
+                component.setDefaultModel(isSelected ? model : dummyModel);
+              }
+            }
+            selectorPanel.selectedComponentFactory=componentFactory;
             target.add(selectorPanel,views);
           }
         }
@@ -30,8 +55,7 @@
         viewTitleLabel.add(new CssClassAppender(StringUtils.toLowerDashed(name)));
         link.add(viewTitleLabel);
         item.add(link);
-        LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
-        link.setEnabled(selectorPanel.selectedComponentFactory != componentFactory);
+        link.setEnabled(componentFactory != selectorPanel.selectedComponentFactory);
       }
       private String nameFor(      final ComponentFactory componentFactory){
         return componentFactory instanceof CollectionContentsAsUnresolvedPanelFactory ? "hide" : componentFactory.getName();
@@ -41,5 +65,12 @@
     container.add(listView);
     addOrReplace(views);
   }
-  select(underlyingId,model,selectedComponentFactory);
+  for (i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
+    Component component=underlyingViews[i];
+    if (component != null) {
+      if (i != selected) {
+        component.add(new AttributeAppender("class"," " + INVISIBLE_CLASS));
+      }
+    }
+  }
 }
