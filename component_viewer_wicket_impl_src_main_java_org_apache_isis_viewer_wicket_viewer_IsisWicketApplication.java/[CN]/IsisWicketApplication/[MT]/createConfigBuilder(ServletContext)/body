@@ -1,8 +1,14 @@
 {
-  final ResourceStreamSource rssServletContext=new ResourceStreamSourceForWebInf(servletContext);
-  final ResourceStreamSource rssTcl=ResourceStreamSourceContextLoaderClassPath.create();
-  final ResourceStreamSource rssClasspath=new ResourceStreamSourceCurrentClassClassPath();
-  final IsisConfigurationBuilderResourceStreams configurationBuilder=new IsisConfigurationBuilderResourceStreams(rssTcl,rssClasspath,rssServletContext);
+  final String configLocation=servletContext.getInitParameter(WebAppConstants.CONFIG_DIR_PARAM);
+  final ResourceStreamSourceComposite compositeSource=new ResourceStreamSourceComposite(new ResourceStreamSourceForWebInf(servletContext),ResourceStreamSourceContextLoaderClassPath.create(),new ResourceStreamSourceCurrentClassClassPath());
+  if (configLocation != null) {
+    LOG.info("Config override location: " + configLocation);
+    compositeSource.addResourceStreamSource(ResourceStreamSourceFileSystem.create(configLocation));
+  }
+ else {
+    LOG.info("Config override location: No override location configured!");
+  }
+  final IsisConfigurationBuilder configurationBuilder=new IsisConfigurationBuilderResourceStreams(compositeSource);
   primeConfigurationBuilder(configurationBuilder,servletContext);
   configurationBuilder.addDefaultConfigurationResources();
   return configurationBuilder;
