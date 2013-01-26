@@ -1,0 +1,20 @@
+{
+  InputStream binaryStream=results.getStream(columnName(1));
+  int[][] intArray;
+  try {
+    int width=binaryStream.read();
+    int height=binaryStream.read();
+    intArray=new int[height][width];
+    for (int j=0; j < height; j++) {
+      for (int i=0; i < width; i++) {
+        intArray[j][i]=binaryStream.read();
+      }
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    intArray=new int[0][0];
+  }
+  final Image object=new Image(intArray);
+  return object;
+}
