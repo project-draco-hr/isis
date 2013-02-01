@@ -2,6 +2,7 @@
   Logger.getRootLogger().setLevel(Level.OFF);
   context.ignoring(mockRuntimeContext);
   context.ignoring(mockConfiguration);
+  context.ignoring(mockAuditingService);
   isisMetaModel=new IsisMetaModel(mockRuntimeContext,new ProgrammingModelFacetsJava5(),new CustomerRepository());
   isisMetaModel.init();
   context.checking(new Expectations(){
@@ -31,7 +32,7 @@
     }
   }
 ;
-  transactionManager=new IsisTransactionManager(persistenceSession,mockObjectStore);
+  transactionManager=new IsisTransactionManager(persistenceSession,mockObjectStore,mockAuditingService,mockPublishingService);
   persistenceSession.setTransactionManager(transactionManager);
   servicesInjector.setServices(Collections.emptyList());
   persistentAdapter=PojoAdapterBuilder.create().withOid("CUS|1").withPojo(new Customer()).with(Persistence.PERSISTENT).with(mockVersion).with(isisMetaModel.getSpecificationLoader()).build();

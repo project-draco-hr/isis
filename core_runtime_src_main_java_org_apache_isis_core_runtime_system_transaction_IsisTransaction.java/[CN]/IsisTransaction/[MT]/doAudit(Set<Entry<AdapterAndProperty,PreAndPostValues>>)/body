@@ -1,5 +1,10 @@
 {
-  for (  Entry<AdapterAndProperty,PreAndPostValues> auditEntry : auditEntries) {
-    LOG.info(auditEntry.getKey() + ": " + auditEntry.getValue());
+  if (auditingService == null) {
+    return;
+  }
+  final String currentUser=getAuthenticationSession().getUserName();
+  final long currentTimestampEpoch=currentTimestampEpoch();
+  for (  Entry<AdapterAndProperty,PreAndPostValues> auditEntry : changedObjectProperties) {
+    auditChangedProperty(currentUser,currentTimestampEpoch,auditEntry);
   }
 }

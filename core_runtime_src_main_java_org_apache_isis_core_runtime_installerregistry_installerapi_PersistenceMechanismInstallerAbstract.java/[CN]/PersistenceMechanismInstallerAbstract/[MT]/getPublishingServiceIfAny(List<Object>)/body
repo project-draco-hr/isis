@@ -1,0 +1,15 @@
+{
+  final PublishingService publishingService=getServiceIfAny(services,PublishingService.class);
+  if (publishingService == null) {
+    return null;
+  }
+  PublishedObject.EventCanonicalizer objectEventCanonicalizer=getServiceIfAny(services,PublishedObject.EventCanonicalizer.class);
+  if (objectEventCanonicalizer == null) {
+    objectEventCanonicalizer=newDefaultObjectEventCanonicalizer();
+  }
+  PublishedAction.EventCanonicalizer actionEventCanonicalizer=getServiceIfAny(services,PublishedAction.EventCanonicalizer.class);
+  if (actionEventCanonicalizer == null) {
+    actionEventCanonicalizer=newDefaultActionEventCanonicalizer();
+  }
+  return new PublishingServiceWithCanonicalizers(publishingService,objectEventCanonicalizer,actionEventCanonicalizer);
+}

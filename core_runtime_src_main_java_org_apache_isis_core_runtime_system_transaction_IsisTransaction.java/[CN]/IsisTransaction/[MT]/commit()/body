@@ -11,8 +11,10 @@
     return;
   }
   try {
+    doAudit(getChangedObjectProperties());
     doFlush();
     setState(State.COMMITTED);
+    doPublish(getChangedObjects());
   }
  catch (  final RuntimeException ex) {
     setAbortCause(ex);

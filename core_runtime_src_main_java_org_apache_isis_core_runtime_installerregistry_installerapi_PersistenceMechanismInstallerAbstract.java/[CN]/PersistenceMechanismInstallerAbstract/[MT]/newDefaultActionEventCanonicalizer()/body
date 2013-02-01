@@ -1,0 +1,14 @@
+{
+  return new PublishedAction.EventCanonicalizer(){
+    @Override public CanonicalEvent canonicalizeAction(    Object invokedObject,    String actionMethodName,    List<Object> args,    Object actionResult){
+      return new CanonicalEvent.Default(oidStrFor(invokedObject + "#" + actionMethodName+ appendResultIfAny(actionResult)));
+    }
+    private String appendResultIfAny(    Object actionResult){
+      if (actionResult == null) {
+        return "";
+      }
+      return "=" + oidStrFor(actionResult);
+    }
+  }
+;
+}
