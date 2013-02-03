@@ -6,6 +6,10 @@
   if (query instanceof QueryFindAllInstances) {
     return new PersistenceQueryFindAllInstances(noSpec);
   }
+  if (query instanceof QueryFindAllPaged) {
+    QueryFindAllPaged<?> pagedQuery=(QueryFindAllPaged<?>)query;
+    return new PersistenceQueryFindPaged(noSpec,pagedQuery.getStart(),pagedQuery.getCount());
+  }
   if (query instanceof QueryFindByTitle) {
     final QueryFindByTitle<?> queryByTitle=(QueryFindByTitle<?>)query;
     final String title=queryByTitle.getTitle();
