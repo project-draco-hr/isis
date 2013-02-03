@@ -1,13 +1,13 @@
 {
   if (!spec.isAbstract()) {
     final ObjectMapping mapper=objectMappingLookup.getMapping(spec,connector);
-    final List<ObjectAdapter> instances=mapper.getInstances(connector,spec);
+    final List<ObjectAdapter> instances=mapper.getInstances(connector,spec,startIndex,rowCount);
     matchingInstances.addAll(instances);
   }
   if (spec.hasSubclasses()) {
     final List<ObjectSpecification> subclasses=spec.subclasses();
     for (    final ObjectSpecification subclassSpec : subclasses) {
-      addSpecInstances(subclassSpec,connector,matchingInstances);
+      addSpecInstances(subclassSpec,connector,matchingInstances,startIndex,rowCount);
     }
   }
 }

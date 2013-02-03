@@ -3,7 +3,11 @@
     return findByTitle((PersistenceQueryFindByTitle)query);
   }
  else   if (query instanceof PersistenceQueryFindAllInstances) {
-    return getAllInstances((PersistenceQueryFindAllInstances)query);
+    return getAllInstances((PersistenceQueryFindAllInstances)query,0,0);
+  }
+ else   if (query instanceof PersistenceQueryFindPaged) {
+    PersistenceQueryFindPaged findQuery=(PersistenceQueryFindPaged)query;
+    return getAllInstances((PersistenceQueryFindPaged)query,findQuery.getStart(),findQuery.getCount());
   }
  else   if (query instanceof PersistenceQueryFindByPattern) {
     return findByPattern((PersistenceQueryFindByPattern)query);
