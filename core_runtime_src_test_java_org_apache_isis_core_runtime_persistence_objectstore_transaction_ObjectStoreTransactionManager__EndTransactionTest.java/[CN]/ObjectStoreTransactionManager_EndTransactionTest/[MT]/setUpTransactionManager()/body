@@ -1,3 +1,15 @@
 {
-  transactionManager=new IsisTransactionManager(mockPersistenceSession,mockObjectStore,mockAuditingService,mockPublishingService);
+  context.checking(new Expectations(){
+{
+      allowing(mockAuthenticationSession).getUserName();
+      will(returnValue("sven"));
+    }
+  }
+);
+  transactionManager=new IsisTransactionManager(mockPersistenceSession,mockObjectStore,mockAuditingService,mockPublishingService){
+    @Override public AuthenticationSession getAuthenticationSession(){
+      return mockAuthenticationSession;
+    }
+  }
+;
 }

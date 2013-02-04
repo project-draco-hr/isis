@@ -1,6 +1,20 @@
 {
   Logger.getRootLogger().setLevel(Level.OFF);
   context.ignoring(mockAuditingService);
+  context.checking(new Expectations(){
+{
+      allowing(mockTransactionManager).getAuthenticationSession();
+      will(returnValue(mockAuthenticationSession));
+    }
+  }
+);
+  context.checking(new Expectations(){
+{
+      allowing(mockAuthenticationSession).getUserName();
+      will(returnValue("sven"));
+    }
+  }
+);
   transaction=new IsisTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,mockObjectStore,mockAuditingService,mockPublishingService);
   transientAdapter1=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("1").build();
   transientAdapter2=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("2").build();
