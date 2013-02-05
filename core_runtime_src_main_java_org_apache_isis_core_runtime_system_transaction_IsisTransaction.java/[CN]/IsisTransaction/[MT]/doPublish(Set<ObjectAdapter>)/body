@@ -4,11 +4,6 @@
   }
   final String currentUser=getTransactionManager().getAuthenticationSession().getUserName();
   final long currentTimestampEpoch=currentTimestampEpoch();
-  for (  ObjectAdapter changedAdapter : changedAdapters) {
-    PublishedObjectFacet publishedObjectFacet=changedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
-    if (publishedObjectFacet == null) {
-      continue;
-    }
-    publishingService.publishObject(publishedObjectFacet.value(),getGuid(),currentUser,currentTimestampEpoch,changedAdapter);
-  }
+  publishedChangedObjects(changedAdapters,currentUser,currentTimestampEpoch);
+  publishActionIfRequired(currentUser,currentTimestampEpoch);
 }

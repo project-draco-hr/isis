@@ -1,0 +1,10 @@
+{
+  for (  final ObjectAdapter changedAdapter : changedAdapters) {
+    final PublishedObjectFacet publishedObjectFacet=changedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
+    if (publishedObjectFacet == null) {
+      continue;
+    }
+    final PublishedObject.EventCanonicalizer canonicalizer=publishedObjectFacet.value();
+    publishingService.publishObject(canonicalizer,getGuid(),currentUser,currentTimestampEpoch,changedAdapter);
+  }
+}

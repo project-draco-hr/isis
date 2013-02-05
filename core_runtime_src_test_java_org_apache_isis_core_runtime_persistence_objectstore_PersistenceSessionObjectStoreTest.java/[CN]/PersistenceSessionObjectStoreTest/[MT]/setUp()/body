@@ -32,6 +32,7 @@
     }
   }
 ;
+  servicesInjector.setServices(Collections.emptyList());
   context.checking(new Expectations(){
 {
       allowing(mockAuthenticationSession).getUserName();
@@ -39,14 +40,13 @@
     }
   }
 );
-  transactionManager=new IsisTransactionManager(persistenceSession,mockObjectStore,mockAuditingService,mockPublishingService){
+  transactionManager=new IsisTransactionManager(persistenceSession,mockObjectStore,servicesInjector){
     @Override public AuthenticationSession getAuthenticationSession(){
       return mockAuthenticationSession;
     }
   }
 ;
   persistenceSession.setTransactionManager(transactionManager);
-  servicesInjector.setServices(Collections.emptyList());
   persistentAdapter=PojoAdapterBuilder.create().withOid("CUS|1").withPojo(new Customer()).with(Persistence.PERSISTENT).with(mockVersion).with(isisMetaModel.getSpecificationLoader()).build();
   transientAdapter=PojoAdapterBuilder.create().withOid("CUS|2").withPojo(new Customer()).with(Persistence.TRANSIENT).with(isisMetaModel.getSpecificationLoader()).build();
 }

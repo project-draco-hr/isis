@@ -1,0 +1,17 @@
+{
+  try {
+    final CurrentInvocation currentInvocation=ActionInvocationFacet.currentInvocation.get();
+    if (currentInvocation == null) {
+      return;
+    }
+    final PublishedActionFacet publishedActionFacet=currentInvocation.getAction().getFacet(PublishedActionFacet.class);
+    if (publishedActionFacet == null) {
+      return;
+    }
+    final EventCanonicalizer canonicalizer=publishedActionFacet.value();
+    publishingService.publishAction(canonicalizer,guid,currentUser,currentTimestampEpoch,currentInvocation);
+  }
+  finally {
+    ActionInvocationFacet.currentInvocation.set(null);
+  }
+}

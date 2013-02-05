@@ -1,8 +1,9 @@
 {
-  return getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturnAbstract<ObjectAdapter>(){
+  final ObjectAdapter result=getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturnAbstract<ObjectAdapter>(){
     @Override public ObjectAdapter execute(){
       return underlyingFacet.invoke(targetAdapter,parameterAdapters);
     }
   }
 );
+  return result;
 }

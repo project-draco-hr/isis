@@ -1,0 +1,15 @@
+{
+  final PublishingService publishingService=servicesInjectorSpi.lookupService(PublishingService.class);
+  if (publishingService == null) {
+    return null;
+  }
+  PublishedObject.EventCanonicalizer objectEventCanonicalizer=servicesInjectorSpi.lookupService(PublishedObject.EventCanonicalizer.class);
+  if (objectEventCanonicalizer == null) {
+    objectEventCanonicalizer=newDefaultObjectEventCanonicalizer();
+  }
+  PublishedAction.EventCanonicalizer actionEventCanonicalizer=servicesInjectorSpi.lookupService(PublishedAction.EventCanonicalizer.class);
+  if (actionEventCanonicalizer == null) {
+    actionEventCanonicalizer=newDefaultActionEventCanonicalizer();
+  }
+  return new PublishingServiceWithCanonicalizers(publishingService,objectEventCanonicalizer,actionEventCanonicalizer);
+}

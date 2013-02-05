@@ -18,6 +18,8 @@
     final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
     final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
     resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
+    PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
+    ActionInvocationFacet.currentInvocation.set(publishedActionFacet != null ? new CurrentInvocation(inObject,getIdentified(),parameters,resultAdapter) : null);
     return resultAdapter;
   }
  catch (  final IllegalArgumentException e) {
