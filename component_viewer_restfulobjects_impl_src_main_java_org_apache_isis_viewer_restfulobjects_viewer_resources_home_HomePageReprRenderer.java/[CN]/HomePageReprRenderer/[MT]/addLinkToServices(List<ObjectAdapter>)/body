@@ -1,0 +1,11 @@
+{
+  final JsonRepresentation link=LinkBuilder.newBuilder(getResourceContext(),Rel.SERVICES,RepresentationType.LIST,"services").build();
+  final LinkFollower linkFollower=getLinkFollower().follow("links[rel=services]");
+  if (linkFollower.matches(link)) {
+    final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.LIST);
+    final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+    renderer.usingLinkToBuilder(new DomainServiceLinkTo()).withSelf("services").with(serviceAdapters);
+    link.mapPut("value",renderer.render());
+  }
+  getLinks().arrayAdd(link);
+}

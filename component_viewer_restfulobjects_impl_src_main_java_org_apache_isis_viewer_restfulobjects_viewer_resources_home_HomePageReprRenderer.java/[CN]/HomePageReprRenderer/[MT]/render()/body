@@ -2,10 +2,10 @@
   if (includesSelf) {
     addLinkToSelf(representation);
   }
-  addLinkToUser();
-  addLinkToServices();
+  addLinkToUser(getResourceContext().getAuthenticationSession());
+  addLinkToServices(((ResourceContext)getResourceContext()).getPersistenceSession().getServices());
   addLinkToVersion();
-  addLinkToDomainTypes();
+  addLinkToDomainTypes(((ResourceContext)getResourceContext()).getSpecificationLookup().allSpecifications());
   representation.mapPut("extensions",JsonRepresentation.newMap());
   return representation;
 }
