@@ -1,0 +1,9 @@
+{
+  final EncodableFacet facet=objectAdapter.getSpecification().getFacet(EncodableFacet.class);
+  if (facet == null) {
+    throw ReprRendererException.create("Not an (encodable) value",objectAdapter.titleString());
+  }
+  final Object value=jsonValueEncoder.asObject(objectAdapter);
+  representation.mapPut("value",value);
+  return this;
+}

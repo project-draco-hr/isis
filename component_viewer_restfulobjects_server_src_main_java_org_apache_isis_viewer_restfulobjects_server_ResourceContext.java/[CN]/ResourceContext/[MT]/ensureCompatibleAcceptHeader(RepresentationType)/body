@@ -1,0 +1,14 @@
+{
+  if (representationType == null) {
+    return;
+  }
+  final com.google.common.net.MediaType producedType=representationType.getMediaType();
+  final List<MediaType> acceptableJaxRsMediaTypes=acceptableMediaTypes();
+  final List<com.google.common.net.MediaType> acceptableGuavaMediaTypes=Lists.transform(acceptableJaxRsMediaTypes,MediaTypes.JAXRS_TO_GUAVA);
+  if (Iterables.tryFind(acceptableGuavaMediaTypes,accepts(producedType)).isPresent()) {
+    return;
+  }
+  if (!contains(producedType,acceptableJaxRsMediaTypes)) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,"Resource produces %s media type",representationType.getMediaType());
+  }
+}
