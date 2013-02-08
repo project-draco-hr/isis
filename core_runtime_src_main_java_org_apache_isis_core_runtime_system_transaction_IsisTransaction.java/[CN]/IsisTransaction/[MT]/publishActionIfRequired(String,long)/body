@@ -8,8 +8,9 @@
     if (publishedActionFacet == null) {
       return;
     }
-    final EventCanonicalizer canonicalizer=publishedActionFacet.value();
-    publishingService.publishAction(canonicalizer,guid,currentUser,currentTimestampEpoch,currentInvocation);
+    final PayloadFactory payloadFactory=publishedActionFacet.value();
+    final EventMetadata metadata=new EventMetadata(getGuid(),currentUser,currentTimestampEpoch);
+    publishingService.publishAction(payloadFactory,metadata,currentInvocation);
   }
   finally {
     ActionInvocationFacet.currentInvocation.set(null);

@@ -3,13 +3,17 @@
   if (publishingService == null) {
     return null;
   }
-  PublishedObject.EventCanonicalizer objectEventCanonicalizer=servicesInjectorSpi.lookupService(PublishedObject.EventCanonicalizer.class);
-  if (objectEventCanonicalizer == null) {
-    objectEventCanonicalizer=newDefaultObjectEventCanonicalizer();
+  EventSerializer eventSerializer=servicesInjectorSpi.lookupService(EventSerializer.class);
+  if (eventSerializer == null) {
+    eventSerializer=newSimpleEventSerializer();
   }
-  PublishedAction.EventCanonicalizer actionEventCanonicalizer=servicesInjectorSpi.lookupService(PublishedAction.EventCanonicalizer.class);
-  if (actionEventCanonicalizer == null) {
-    actionEventCanonicalizer=newDefaultActionEventCanonicalizer();
+  PublishedObject.PayloadFactory objectPayloadFactory=servicesInjectorSpi.lookupService(PublishedObject.PayloadFactory.class);
+  if (objectPayloadFactory == null) {
+    objectPayloadFactory=newDefaultObjectPayloadFactory();
   }
-  return new PublishingServiceWithCanonicalizers(publishingService,objectEventCanonicalizer,actionEventCanonicalizer);
+  PublishedAction.PayloadFactory actionPayloadFactory=servicesInjectorSpi.lookupService(PublishedAction.PayloadFactory.class);
+  if (actionPayloadFactory == null) {
+    actionPayloadFactory=newDefaultActionPayloadFactory();
+  }
+  return new PublishingServiceWithDefaultPayloadFactories(publishingService,objectPayloadFactory,actionPayloadFactory);
 }

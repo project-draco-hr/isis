@@ -1,7 +1,7 @@
 {
   final LinkFollower linkFollower=getLinkFollower().follow("members");
   for (  final ObjectAssociation assoc : associations) {
-    if (!mode.isCutDown()) {
+    if (mode.checkVisibility()) {
       final Consent visibility=assoc.isVisible(getAuthenticationSession(),objectAdapter,resourceContext.getWhere());
       if (!visibility.isAllowed()) {
         continue;
@@ -12,12 +12,12 @@
       final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.OBJECT_PROPERTY);
       final ObjectPropertyReprRenderer renderer=(ObjectPropertyReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
       renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(linkToBuilder);
-      if (mode.isCutDown()) {
+      if (mode.representsArguments()) {
         renderer.asArguments();
       }
       members.arrayAdd(renderer.render());
     }
-    if (mode.isCutDown()) {
+    if (mode.representsArguments()) {
       continue;
     }
     if (assoc instanceof OneToManyAssociation) {

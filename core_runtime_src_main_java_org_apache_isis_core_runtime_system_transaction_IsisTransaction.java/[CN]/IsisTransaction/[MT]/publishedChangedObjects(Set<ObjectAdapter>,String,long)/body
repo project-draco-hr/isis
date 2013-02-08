@@ -4,7 +4,8 @@
     if (publishedObjectFacet == null) {
       continue;
     }
-    final PublishedObject.EventCanonicalizer canonicalizer=publishedObjectFacet.value();
-    publishingService.publishObject(canonicalizer,getGuid(),currentUser,currentTimestampEpoch,changedAdapter);
+    final PublishedObject.PayloadFactory payloadFactory=publishedObjectFacet.value();
+    final EventMetadata metadata=new EventMetadata(getGuid(),currentUser,currentTimestampEpoch);
+    publishingService.publishObject(payloadFactory,metadata,changedAdapter);
   }
 }
