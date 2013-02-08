@@ -1,16 +1,16 @@
 {
   if (query instanceof PersistenceQueryFindByTitle) {
-    return findByTitle((PersistenceQueryFindByTitle)query);
+    return findByTitle((PersistenceQueryFindByTitle)query,query.getStart(),query.getCount());
   }
  else   if (query instanceof PersistenceQueryFindAllInstances) {
-    return getAllInstances((PersistenceQueryFindAllInstances)query,0,0);
+    return getAllInstances((PersistenceQueryFindAllInstances)query,query.getStart(),query.getCount());
   }
  else   if (query instanceof PersistenceQueryFindPaged) {
     PersistenceQueryFindPaged findQuery=(PersistenceQueryFindPaged)query;
     return getAllInstances((PersistenceQueryFindPaged)query,findQuery.getStart(),findQuery.getCount());
   }
  else   if (query instanceof PersistenceQueryFindByPattern) {
-    return findByPattern((PersistenceQueryFindByPattern)query);
+    return findByPattern((PersistenceQueryFindByPattern)query,query.getStart(),query.getCount());
   }
  else {
     throw new SqlObjectStoreException("Query type not supported: " + query);
