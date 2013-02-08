@@ -1,0 +1,13 @@
+{
+  iswf.persist(iswf.fixtures.smpl1);
+  iswf.persist(iswf.fixtures.smpl2);
+  iswf.persist(iswf.fixtures.smpl3);
+  iswf.persist(iswf.fixtures.smpl4);
+  iswf.bounceSystem();
+  final List<ObjectAdapter> retrievedAdapters=getStore().loadInstancesAndAdapt(new PersistenceQueryFindAllInstances(epvSpecification,2,2));
+  assertEquals(2,retrievedAdapters.size());
+  final ObjectAdapter retrievedAdapter=retrievedAdapters.get(0);
+  assertNotSame(epv4Adapter,retrievedAdapter);
+  assertEquals(((SimpleEntity)epv4Adapter.getObject()).getName(),((SimpleEntity)retrievedAdapter.getObject()).getName());
+  assertEquals(epv4Adapter.getOid(),retrievedAdapter.getOid());
+}
