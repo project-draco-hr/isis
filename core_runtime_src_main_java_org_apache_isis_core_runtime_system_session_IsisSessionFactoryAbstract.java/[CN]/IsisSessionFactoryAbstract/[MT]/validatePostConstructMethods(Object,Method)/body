@@ -1,0 +1,14 @@
+{
+  PostConstruct postConstruct=method.getAnnotation(PostConstruct.class);
+  if (postConstruct == null) {
+    return;
+  }
+  final int numParams=method.getParameterTypes().length;
+  if (numParams == 0) {
+    return;
+  }
+  if (numParams == 1 && method.getParameterTypes()[0].isAssignableFrom(Map.class)) {
+    return;
+  }
+  throw new IllegalStateException("Domain service " + service.getClass().getName() + " has @PostConstruct method "+ method.getName()+ "; such methods must take either no argument or 1 argument of type Map<String,String>");
+}

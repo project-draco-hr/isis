@@ -1,0 +1,11 @@
+{
+  PreDestroy preDestroy=method.getAnnotation(PreDestroy.class);
+  if (preDestroy == null) {
+    return;
+  }
+  final int numParams=method.getParameterTypes().length;
+  if (numParams == 0) {
+    return;
+  }
+  throw new IllegalStateException("Domain service " + service.getClass().getName() + " has @PreDestroy method "+ method.getName()+ "; such methods must take no arguments");
+}
