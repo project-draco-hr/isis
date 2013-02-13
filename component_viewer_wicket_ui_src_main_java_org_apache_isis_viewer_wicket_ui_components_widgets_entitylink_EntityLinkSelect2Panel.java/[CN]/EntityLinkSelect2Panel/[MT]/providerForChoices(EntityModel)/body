@@ -3,8 +3,12 @@
     private static final long serialVersionUID=1L;
     @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
       final ScalarModel scalarModel=(ScalarModel)entityModel;
+      final boolean hasChoices=scalarModel.hasChoices();
+      if (!hasChoices) {
+        return null;
+      }
       final List<ObjectAdapter> choices=scalarModel.getChoices();
-      if (choices.size() == 0) {
+      if (choices.isEmpty()) {
         return null;
       }
       return Lists.newArrayList(Lists.transform(choices,Mementos.fromAdapter()));
