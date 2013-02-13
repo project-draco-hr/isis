@@ -19,6 +19,9 @@
         final ObjectAdapter currentAdapter=oneToOneAssociation.get(targetAdapter);
         final Object currentPojo=AdapterUtils.unwrap(currentAdapter);
         if (currentAdapter == null || currentPojo == null || !currentPojo.equals(entryPojo)) {
+          if (entryAdapter.isTransient()) {
+            getPersistenceSession().makePersistent(entryAdapter);
+          }
           oneToOneAssociation.setAssociation(targetAdapter,entryAdapter);
         }
       }
