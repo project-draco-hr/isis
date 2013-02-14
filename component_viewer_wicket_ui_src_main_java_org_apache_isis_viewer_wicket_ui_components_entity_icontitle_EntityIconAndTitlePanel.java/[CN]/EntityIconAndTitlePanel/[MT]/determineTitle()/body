@@ -1,4 +1,14 @@
 {
-  final ObjectAdapter adapter=getModel().getObject();
-  return adapter != null ? adapter.titleString() : "(no object)";
+  EntityModel model=getModel();
+  final ObjectAdapter adapter=model.getObject();
+  if (adapter != null) {
+    String titleString=adapter.titleString();
+    if (model.getRenderingHint().isUltraCompact()) {
+      return abbreviated(titleString,TITLE_MAX_LEN_IF_ULTRA_COMPACT);
+    }
+    return titleString;
+  }
+ else {
+    return "(no object)";
+  }
 }
