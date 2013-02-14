@@ -1,12 +1,14 @@
 {
-  LOG.info("calling @PostConstruct on all domain services");
+  LOG.debug("looking for @PostConstruct methods on " + service.getClass().getName());
   Method[] methods=service.getClass().getMethods();
+  boolean found=false;
   for (  Method method : methods) {
     PostConstruct postConstruct=method.getAnnotation(PostConstruct.class);
     if (postConstruct == null) {
       continue;
     }
-    LOG.info("calling @PostConstruct method: " + service.getClass().getName() + ": "+ method.getName());
+    found=true;
+    LOG.info("... calling @PostConstruct method: " + service.getClass().getName() + ": "+ method.getName());
     final int numParams=method.getParameterTypes().length;
     if (numParams == 0) {
       InvokeUtils.invoke(method,service);
@@ -14,5 +16,8 @@
  else {
       InvokeUtils.invoke(method,service,new Object[]{props});
     }
+  }
+  if (!found) {
+    LOG.info("... found no @PostConstruct methods on " + service.getClass().getName());
   }
 }

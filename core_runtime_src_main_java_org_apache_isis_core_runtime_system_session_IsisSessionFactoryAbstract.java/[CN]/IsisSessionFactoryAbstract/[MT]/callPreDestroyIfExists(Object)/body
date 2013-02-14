@@ -1,17 +1,22 @@
 {
-  LOG.info("calling @PreDestroy on all domain services");
+  LOG.debug("looking for @PreDestroy methods on " + service.getClass().getName());
   final Method[] methods=service.getClass().getMethods();
+  boolean found=false;
   for (  Method method : methods) {
-    PreDestroy preDestroy=method.getAnnotation(PreDestroy.class);
+    final PreDestroy preDestroy=method.getAnnotation(PreDestroy.class);
     if (preDestroy == null) {
       continue;
     }
-    LOG.info("calling @PreDestroy method: " + service.getClass().getName() + ": "+ method.getName());
+    found=true;
+    LOG.info("... calling @PreDestroy method: " + service.getClass().getName() + ": "+ method.getName());
     try {
       InvokeUtils.invoke(method,service);
     }
  catch (    Exception ex) {
-      LOG.warn("@PreDestroy method threw exception - continuing anyway",ex);
+      LOG.warn("... @PreDestroy method threw exception - continuing anyway",ex);
     }
+  }
+  if (!found) {
+    LOG.info("... found no @PreDestroy methods on " + service.getClass().getName());
   }
 }
