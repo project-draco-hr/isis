@@ -1,16 +1,32 @@
 {
-  final WebMarkupContainer container=new WebMarkupContainer(BOOKMARK_LIST);
+  final WebMarkupContainer container=new WebMarkupContainer(ID_BOOKMARK_LIST);
   container.setOutputMarkupId(true);
   add(container);
   final BookmarkedPagesModel bookmarkedPagesModel=getModel();
-  final ListView<PageParameters> listView=new ListView<PageParameters>(BOOKMARKED_PAGE_ITEM,bookmarkedPagesModel){
+  final ListView<PageParameters> listView=new ListView<PageParameters>(ID_BOOKMARKED_PAGE_ITEM,bookmarkedPagesModel){
     private static final long serialVersionUID=1L;
     @Override protected void populateItem(    ListItem<PageParameters> item){
       final PageParameters pageParameters=item.getModelObject();
       final PageType pageType=PageParameterNames.PAGE_TYPE.getEnumFrom(pageParameters,PageType.class);
       final Class<? extends Page> pageClass=pageClassRegistry.getPageClass(pageType);
-      final AbstractLink link=Links.newBookmarkablePageLink(BOOKMARKED_PAGE_LINK,pageParameters,pageClass);
-      link.add(new Label(BOOKMARKED_PAGE_TITLE,BookmarkedPagesModel.titleFrom(pageParameters)));
+      final AbstractLink link=Links.newBookmarkablePageLink(ID_BOOKMARKED_PAGE_LINK,pageParameters,pageClass);
+      final RootOid oid=BookmarkedPagesModel.oidFrom(pageParameters);
+      ObjectSpecification objectSpec=null;
+      if (oid != null) {
+        ObjectSpecId objectSpecId=oid.getObjectSpecId();
+        objectSpec=getSpecificationLoader().lookupBySpecId(objectSpecId);
+      }
+      final ResourceReference imageResource=imageCache.resourceReferenceForSpec(objectSpec);
+      final Image image=new Image(ID_BOOKMARKED_PAGE_ICON,imageResource){
+        private static final long serialVersionUID=1L;
+        @Override protected boolean shouldAddAntiCacheParameter(){
+          return false;
+        }
+      }
+;
+      link.addOrReplace(image);
+      String title=BookmarkedPagesModel.titleFrom(pageParameters);
+      link.add(new Label(ID_BOOKMARKED_PAGE_TITLE,title));
       item.add(link);
     }
   }
