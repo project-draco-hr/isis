@@ -1,0 +1,21 @@
+{
+  if (parentSpec == null) {
+    return Filters.any();
+  }
+  return new Filter<ObjectAssociation>(){
+    @Override public boolean accept(    ObjectAssociation association){
+      final HiddenFacet facet=association.getFacet(HiddenFacet.class);
+      if (facet == null) {
+        return true;
+      }
+      if (facet.where() != Where.REFERENCES_PARENT) {
+        return true;
+      }
+      final ObjectSpecification assocSpec=association.getSpecification();
+      final boolean associationSpecIsOfParentSpec=assocSpec.isOfType(parentSpec);
+      final boolean isVisible=!associationSpecIsOfParentSpec;
+      return isVisible;
+    }
+  }
+;
+}
