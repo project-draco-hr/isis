@@ -1,0 +1,15 @@
+{
+class Customer {
+    @SuppressWarnings({"deprecation","unused"}) @org.apache.isis.applib.annotation.Resolve public Collection<?> getOrders(){
+      return null;
+    }
+  }
+  facetedMethod=FacetedMethod.createForCollection(Customer.class,"orders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,facetedMethod.getMethod(),methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(RenderFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof RenderFacetViaResolveAnnotation);
+  RenderFacet resolveFacet=(RenderFacet)facet;
+  assertThat(resolveFacet.value(),is(Render.Type.EAGERLY));
+  assertNoMethodsRemoved();
+}
