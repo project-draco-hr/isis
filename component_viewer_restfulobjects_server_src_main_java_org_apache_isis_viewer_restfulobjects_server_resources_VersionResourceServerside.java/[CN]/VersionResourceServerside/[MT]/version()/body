@@ -1,9 +1,7 @@
 {
-  final RepresentationType representationType=RepresentationType.VERSION;
-  init(representationType,Where.NOWHERE);
+  init(RepresentationType.VERSION,Where.NOWHERE);
   fakeRuntimeExceptionIfXFail();
-  final RendererFactory factory=rendererFactoryRegistry.find(representationType);
-  final VersionReprRenderer renderer=(VersionReprRenderer)factory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final VersionReprRenderer renderer=new VersionReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.includesSelf();
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

@@ -1,6 +1,7 @@
 {
-  final String oidStr=((RootOid)elementAdapter.getOid()).enString(getOidMarshaller());
-  final String url="objects/" + oidStr;
-  final LinkBuilder builder=LinkBuilder.newBuilder(resourceContext,rel,RepresentationType.DOMAIN_OBJECT,url).withTitle(elementAdapter.titleString());
+  String domainType=OidUtils.getDomainType(objectAdapter);
+  String instanceId=OidUtils.getInstanceId(rendererContext,objectAdapter);
+  final String url="objects/" + domainType + "/"+ instanceId;
+  final LinkBuilder builder=LinkBuilder.newBuilder(rendererContext,rel.getName(),RepresentationType.DOMAIN_OBJECT,url).withTitle(objectAdapter.titleString());
   return builder;
 }

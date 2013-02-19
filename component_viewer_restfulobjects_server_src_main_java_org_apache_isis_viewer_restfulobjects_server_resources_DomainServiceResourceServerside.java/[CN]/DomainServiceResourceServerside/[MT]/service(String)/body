@@ -1,8 +1,7 @@
 {
   init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS);
   final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
-  final RendererFactory rendererFactory=rendererFactoryRegistry.find(RepresentationType.DOMAIN_OBJECT);
-  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.usingLinkToBuilder(new DomainServiceLinkTo()).with(serviceAdapter).includesSelf();
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

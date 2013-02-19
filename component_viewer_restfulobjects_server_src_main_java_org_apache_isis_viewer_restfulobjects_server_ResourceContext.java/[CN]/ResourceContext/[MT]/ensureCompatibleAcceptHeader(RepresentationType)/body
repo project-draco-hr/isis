@@ -2,10 +2,16 @@
   if (representationType == null) {
     return;
   }
-  final MediaType producedType=representationType.getMediaType();
-  final List<MediaType> acceptedMediaTypes=acceptedMediaTypes();
-  if (Iterables.tryFind(acceptedMediaTypes,accepts(producedType)).isPresent()) {
-    return;
+  final String producedProfile=representationType.getMediaTypeProfile();
+  if (producedProfile != null) {
+    for (    MediaType mediaType : httpHeaders.getAcceptableMediaTypes()) {
+      String acceptedProfileValue=mediaType.getParameters().get("profile");
+      if (acceptedProfileValue == null) {
+        continue;
+      }
+      if (!producedProfile.equals(acceptedProfileValue)) {
+        throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE);
+      }
+    }
   }
-  throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,"Resource produces %s media type",representationType.getMediaType());
 }

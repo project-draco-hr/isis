@@ -11,8 +11,7 @@
     final JsonRepresentation linkToObject=linkTo.with(adapter).builder().build();
     values.arrayAdd(linkToObject);
     if (linkFollower.matches(linkToObject)) {
-      final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.DOMAIN_OBJECT);
-      final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+      final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
       final JsonRepresentation domainObject=renderer.with(adapter).render();
       linkToObject.mapPut("value",domainObject);
     }

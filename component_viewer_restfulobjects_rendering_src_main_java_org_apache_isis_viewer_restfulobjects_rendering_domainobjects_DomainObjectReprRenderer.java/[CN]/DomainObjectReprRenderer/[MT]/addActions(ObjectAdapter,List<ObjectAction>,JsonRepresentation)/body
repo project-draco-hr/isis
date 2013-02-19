@@ -1,7 +1,7 @@
 {
   final LinkFollower linkFollower=getLinkFollower().follow("members");
   for (  final ObjectAction action : actions) {
-    final Consent visibility=action.isVisible(getAuthenticationSession(),objectAdapter,resourceContext.getWhere());
+    final Consent visibility=action.isVisible(getAuthenticationSession(),objectAdapter,rendererContext.getWhere());
     if (!visibility.isAllowed()) {
       continue;
     }
@@ -11,8 +11,7 @@
       addActions(objectAdapter,subactions,members);
     }
  else {
-      final RendererFactory factory=getRendererFactoryRegistry().find(RepresentationType.OBJECT_ACTION);
-      final ObjectActionReprRenderer renderer=(ObjectActionReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+      final ObjectActionReprRenderer renderer=new ObjectActionReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
       renderer.with(new ObjectAndAction(objectAdapter,action)).usingLinkTo(linkToBuilder);
       members.arrayAdd(renderer.render());
     }

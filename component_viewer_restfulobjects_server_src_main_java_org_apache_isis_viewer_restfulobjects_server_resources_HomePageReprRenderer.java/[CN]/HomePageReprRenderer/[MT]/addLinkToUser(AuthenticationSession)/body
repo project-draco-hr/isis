@@ -1,9 +1,8 @@
 {
-  final JsonRepresentation link=LinkBuilder.newBuilder(getResourceContext(),Rel.USER,RepresentationType.USER,"user").build();
-  final LinkFollower linkFollower=getLinkFollower().follow("links[rel=user]");
+  final JsonRepresentation link=LinkBuilder.newBuilder(getRendererContext(),Rel.USER.getName(),RepresentationType.USER,"user").build();
+  final LinkFollower linkFollower=getLinkFollower().follow("links[rel=" + Rel.USER.getName() + "]");
   if (linkFollower.matches(link)) {
-    final RendererFactory factory=RendererFactoryRegistry.instance.find(RepresentationType.USER);
-    final UserReprRenderer renderer=(UserReprRenderer)factory.newRenderer(getResourceContext(),linkFollower,JsonRepresentation.newMap());
+    final UserReprRenderer renderer=new UserReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
     renderer.with(authenticationSession);
     link.mapPut("value",renderer.render());
   }

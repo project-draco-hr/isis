@@ -1,0 +1,28 @@
+{
+  List<String> parts=Lists.newArrayList();
+  String curr=null;
+  for (  String part : Splitter.on(".").split(path)) {
+    if (curr != null) {
+      if (part.contains("]")) {
+        curr=curr + "." + part;
+        parts.add(curr);
+        curr=null;
+      }
+ else {
+        curr=curr + "." + part;
+      }
+      continue;
+    }
+    if (!part.contains("[")) {
+      parts.add(part);
+      continue;
+    }
+    if (part.contains("]")) {
+      parts.add(part);
+    }
+ else {
+      curr=part;
+    }
+  }
+  return parts;
+}

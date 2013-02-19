@@ -1,15 +1,14 @@
 {
-  repr=whenExecuteAndFollowLinksUsing("/","links[rel=services].values[id=simples]");
+  repr=whenExecuteAndFollowLinksUsing("/","links[rel=" + Rel.SERVICES.getName() + "].value[rel="+ Rel.SERVICE.andParam("serviceId","WrapperValuedEntities")+ "]");
   final JsonRepresentation servicesValue=repr.getServices().getValue();
   assertThat(servicesValue,is(not(nullValue())));
   assertThat(servicesValue,isMap());
-  final JsonRepresentation serviceLinkList=servicesValue.getArray("values");
+  final JsonRepresentation serviceLinkList=servicesValue.getArray("value");
   assertThat(serviceLinkList,isArray());
   JsonRepresentation service;
-  service=serviceLinkList.getRepresentation("[id=%s]","simples");
+  service=serviceLinkList.getRepresentation("[rel=%s;serviceId=\"%s\"]",Rel.SERVICE.getName(),"WrapperValuedEntities");
   assertThat(service,isMap());
-  assertThat(service.getString("id"),is("simples"));
   assertThat(service.getRepresentation("value"),is(not(nullValue())));
-  service=serviceLinkList.getRepresentation("[id=%s]","applibValuedEntities");
+  service=serviceLinkList.getRepresentation("[rel=%s;serviceId=\"%s\"]",Rel.SERVICE.getName(),"JdkValuedEntities");
   assertThat(service.getRepresentation("value"),is(nullValue()));
 }

@@ -1,9 +1,7 @@
 {
-  final RepresentationType representationType=RepresentationType.LIST;
-  init(representationType,Where.STANDALONE_TABLES);
+  init(RepresentationType.LIST,Where.STANDALONE_TABLES);
   final List<ObjectAdapter> serviceAdapters=getResourceContext().getServiceAdapters();
-  final RendererFactory factory=RendererFactoryRegistry.instance.find(representationType);
-  final ListReprRenderer renderer=(ListReprRenderer)factory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final ListReprRenderer renderer=new ListReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.usingLinkToBuilder(new DomainServiceLinkTo()).withSelf("services").with(serviceAdapters);
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

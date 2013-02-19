@@ -1,0 +1,12 @@
+{
+  final List<List<String>> links=asListOfLists("links[rel=urn:org.restfulobjects:rels/version].x,links[rel=urn:org.restfulobjects:rels/user].y");
+  final LinkFollower linkFollower=LinkFollower.create(links);
+  LinkFollower followRelVersion=linkFollower.follow("links[rel=urn:org.restfulobjects:rels/version]");
+  assertThat(followRelVersion.isFollowing(),is(true));
+  assertThat(followRelVersion.isTerminated(),is(false));
+  assertThat(followRelVersion.follow("x").isFollowing(),is(true));
+  LinkFollower followRelUser=linkFollower.follow("links[rel=urn:org.restfulobjects:rels/user]");
+  assertThat(followRelUser.isFollowing(),is(true));
+  assertThat(followRelUser.isTerminated(),is(false));
+  assertThat(followRelUser.follow("y").isFollowing(),is(true));
+}

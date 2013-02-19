@@ -5,9 +5,9 @@
   if (objectAdapter.getSpecification().containsDoOpFacet(NotPersistableFacet.class)) {
     return;
   }
-  final RendererFactory rendererFactory=getRendererFactoryRegistry().find(RepresentationType.DOMAIN_OBJECT);
-  final DomainObjectReprRenderer renderer=(DomainObjectReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),null,JsonRepresentation.newMap());
   final JsonRepresentation domainObjectRepr=renderer.with(objectAdapter).asPersistLinkArguments().render();
-  final LinkBuilder persistLinkBuilder=LinkBuilder.newBuilder(getResourceContext(),Rel.PERSIST,RepresentationType.DOMAIN_OBJECT,"objects/").withHttpMethod(RestfulHttpMethod.POST).withArguments(domainObjectRepr);
+  final String domainType=objectAdapter.getSpecification().getSpecId().asString();
+  final LinkBuilder persistLinkBuilder=LinkBuilder.newBuilder(getRendererContext(),Rel.PERSIST.getName(),RepresentationType.DOMAIN_OBJECT,"objects/%s",domainType).withHttpMethod(RestfulHttpMethod.POST).withArguments(domainObjectRepr);
   getLinks().arrayAdd(persistLinkBuilder.build());
 }

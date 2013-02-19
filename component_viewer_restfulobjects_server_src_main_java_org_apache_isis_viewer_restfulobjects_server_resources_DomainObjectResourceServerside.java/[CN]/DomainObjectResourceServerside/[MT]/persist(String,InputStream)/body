@@ -1,0 +1,26 @@
+{
+  init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS);
+  final String objectStr=DomainResourceHelper.asStringUtf8(object);
+  final JsonRepresentation objectRepr=DomainResourceHelper.readAsMap(objectStr);
+  if (!objectRepr.isMap()) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Body is not a map; got %s",objectRepr);
+  }
+  final ObjectSpecification domainTypeSpec=getSpecificationLoader().lookupBySpecId(ObjectSpecId.of(domainType));
+  if (domainTypeSpec == null) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Could not determine type of domain object to persist (no class with domainType Id of '%s')",domainType);
+  }
+  final ObjectAdapter objectAdapter=getResourceContext().getPersistenceSession().createTransientInstance(domainTypeSpec);
+  final JsonRepresentation propertiesList=objectRepr.getArrayEnsured("members[memberType=property]");
+  if (propertiesList == null) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[memberType=property]); got %s",objectRepr);
+  }
+  if (!DomainResourceHelper.copyOverProperties(getResourceContext(),objectAdapter,propertiesList)) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,objectRepr,"Illegal property value");
+  }
+  final Consent validity=objectAdapter.getSpecification().isValid(objectAdapter);
+  if (validity.isVetoed()) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,objectRepr,validity.getReason());
+  }
+  getResourceContext().getPersistenceSession().makePersistent(objectAdapter);
+  return new DomainResourceHelper(getResourceContext(),objectAdapter).objectRepresentation();
+}

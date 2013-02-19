@@ -10,8 +10,7 @@
     throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_FOUND);
   }
   final OneToOneAssociation property=(OneToOneAssociation)objectMember;
-  final RendererFactory rendererFactory=rendererFactoryRegistry.find(representationType);
-  final PropertyDescriptionReprRenderer renderer=(PropertyDescriptionReprRenderer)rendererFactory.newRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  final PropertyDescriptionReprRenderer renderer=new PropertyDescriptionReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.with(new ParentSpecAndProperty(parentSpec,property)).includesSelf();
   return responseOfOk(renderer,Caching.ONE_DAY).build();
 }

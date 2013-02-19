@@ -1,4 +1,9 @@
 {
-  final ResponseBuilder builder=Response.status(HttpStatusCode.INTERNAL_SERVER_ERROR.getJaxrsStatusType()).type(RestfulMediaType.APPLICATION_JSON_ERROR).entity(jsonFor(ex));
+  HttpStatusCode statusCode=HttpStatusCode.INTERNAL_SERVER_ERROR;
+  if (ex instanceof Failure) {
+    Failure failure=(Failure)ex;
+    statusCode=HttpStatusCode.statusFor(failure.getErrorCode());
+  }
+  final ResponseBuilder builder=Response.status(statusCode.getJaxrsStatusType()).type(RestfulMediaType.APPLICATION_JSON_ERROR).entity(jsonFor(ex));
   return builder.build();
 }
