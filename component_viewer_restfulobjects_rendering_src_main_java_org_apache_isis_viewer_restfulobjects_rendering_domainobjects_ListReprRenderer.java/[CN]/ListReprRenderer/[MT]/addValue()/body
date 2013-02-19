@@ -3,13 +3,14 @@
     return;
   }
   final JsonRepresentation values=JsonRepresentation.newArray();
-  final LinkFollower linkFollower=getLinkFollower().follow("value");
   for (  final ObjectAdapter adapter : objectAdapters) {
-    if (adapter.getSpecification().isHidden()) {
+    final ObjectSpecification specification=adapter.getSpecification();
+    if (specification.isHidden()) {
       continue;
     }
     final JsonRepresentation linkToObject=linkTo.with(adapter).builder().build();
     values.arrayAdd(linkToObject);
+    final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("value");
     if (linkFollower.matches(linkToObject)) {
       final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
       final JsonRepresentation domainObject=renderer.with(adapter).render();

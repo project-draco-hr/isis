@@ -1,0 +1,10 @@
+{
+  final List<List<String>> links=asListOfLists("a[x=y].b.c");
+  final LinkFollowSpecs linkFollower=LinkFollowSpecs.create(links);
+  assertThat(linkFollower.follow("x").isFollowing(),is(false));
+  final LinkFollowSpecs followA=linkFollower.follow("a");
+  assertThat(followA.isFollowing(),is(true));
+  assertThat(followA.matches(JsonRepresentation.newMap("x","y")),is(true));
+  assertThat(followA.matches(JsonRepresentation.newMap()),is(false));
+  assertThat(followA.matches(JsonRepresentation.newMap("x","z")),is(false));
+}

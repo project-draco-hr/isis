@@ -1,9 +1,9 @@
 {
   final JsonRepresentation link=LinkBuilder.newBuilder(getRendererContext(),Rel.DOMAIN_TYPES.getName(),RepresentationType.TYPE_LIST,"domainTypes").build();
-  final LinkFollower linkFollower=getLinkFollower().follow("links[rel=" + Rel.DOMAIN_TYPES.getName() + "]");
+  final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("links");
   if (linkFollower.matches(link)) {
     final TypeListReprRenderer renderer=new TypeListReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
-    renderer.withSelf("domainTypes").with(specifications);
+    renderer.withLink(Rel.SELF,"domainTypes").with(specifications);
     link.mapPut("value",renderer.render());
   }
   getLinks().arrayAdd(link);

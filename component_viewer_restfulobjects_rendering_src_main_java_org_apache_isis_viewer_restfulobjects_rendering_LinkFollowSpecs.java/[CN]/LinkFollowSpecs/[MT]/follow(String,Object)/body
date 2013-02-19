@@ -1,0 +1,30 @@
+{
+  final String path=String.format(pathTemplate,args);
+  if (path == null) {
+    return terminated();
+  }
+  if (mode == Mode.TERMINATED) {
+    return terminated();
+  }
+  final PathNode candidate=PathNode.parse(path);
+  if (mode == Mode.FOLLOWING) {
+    List<List<PathNode>> remainingPathSpecs=Lists.newArrayList();
+    List<PathNode> firstSpecs=Lists.newArrayList();
+    for (    List<PathNode> spec : pathSpecs) {
+      if (spec.isEmpty()) {
+        continue;
+      }
+      PathNode first=spec.get(0);
+      if (candidate.equals(first)) {
+        List<PathNode> remaining=spec.subList(1,spec.size());
+        firstSpecs.add(first);
+        remainingPathSpecs.add(remaining);
+      }
+    }
+    if (!remainingPathSpecs.isEmpty()) {
+      return new LinkFollowSpecs(remainingPathSpecs,Mode.FOLLOWING,firstSpecs);
+    }
+    return terminated();
+  }
+  return terminated();
+}
