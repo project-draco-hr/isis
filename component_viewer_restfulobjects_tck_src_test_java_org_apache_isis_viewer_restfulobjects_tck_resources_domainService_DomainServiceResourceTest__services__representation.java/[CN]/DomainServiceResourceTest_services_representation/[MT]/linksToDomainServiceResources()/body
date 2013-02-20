@@ -1,0 +1,10 @@
+{
+  final ListRepresentation repr=givenRepresentation();
+  final JsonRepresentation values=repr.getValue();
+  for (  final LinkRepresentation link : values.arrayIterable(LinkRepresentation.class)) {
+    assertThat("HiddenRepository should not show up in services list",false,is(link.getHref().endsWith("HiddenRepository")));
+  }
+  for (  final LinkRepresentation link : values.arrayIterable(LinkRepresentation.class)) {
+    assertThat(link,isLink(client).rel(containsString(Rel.SERVICE.getName())).href(endsWith(":39393/")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.HOME_PAGE.getMediaType()).returning(HttpStatusCode.OK).responseEntityWithSelfHref(link.getHref()));
+  }
+}

@@ -1,0 +1,10 @@
+{
+  final JsonRepresentation link=LinkBuilder.newBuilder(getRendererContext(),Rel.SELF.getName(),RepresentationType.USER,"user").build();
+  final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("links");
+  if (linkFollower.matches(link)) {
+    final UserReprRenderer renderer=new UserReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
+    renderer.with(getRendererContext().getAuthenticationSession());
+    link.mapPut("value",renderer.render());
+  }
+  getLinks().arrayAdd(link);
+}

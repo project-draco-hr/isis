@@ -1,0 +1,11 @@
+{
+  final Response response=resource.services();
+  final RestfulResponse<ListRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  final ListRepresentation repr=restfulResponse.getEntity();
+  assertThat(repr,isMap());
+  assertThat(repr.getSelf(),isLink(client).rel(Rel.SELF).href(endsWith(":39393/services")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.LIST.getMediaType()).returning(HttpStatusCode.OK));
+  assertThat(repr.getUp(),isLink(client).rel(Rel.UP).href(endsWith(":39393/")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.HOME_PAGE.getMediaType()).returning(HttpStatusCode.OK));
+  assertThat(repr.getValue(),isArray());
+  assertThat(repr.getLinks(),isArray());
+  assertThat(repr.getExtensions(),isMap());
+}

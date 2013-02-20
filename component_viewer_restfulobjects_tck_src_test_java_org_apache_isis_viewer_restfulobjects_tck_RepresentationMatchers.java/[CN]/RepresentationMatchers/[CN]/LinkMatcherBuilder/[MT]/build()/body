@@ -28,14 +28,20 @@
         description.appendText(" with value ");
         valueMatcher.describeTo(description);
       }
-      if (statusCode != null) {
+      if (statusCode != null || selfHref != null) {
         if (client == null) {
           throw new IllegalStateException("require client in order to assert on statusCode");
         }
-        description.appendText(" that when followed returns status " + statusCode);
-      }
-      if (statusCode != null) {
-        description.appendText(" returns ").appendValue(statusCode);
+        description.appendText(" that when followed");
+        if (statusCode != null) {
+          description.appendText(" returns status " + statusCode);
+        }
+        if (statusCode != null || selfHref != null) {
+          description.appendText(" and");
+        }
+        if (selfHref != null) {
+          description.appendText(" an response whose self.href is " + selfHref);
+        }
       }
     }
     @Override public boolean matchesSafely(    final JsonRepresentation linkRepr){
@@ -44,6 +50,9 @@
       }
       final LinkRepresentation link=linkRepr.asLink();
       if (rel != null && !rel.equals(link.getRel())) {
+        return false;
+      }
+      if (relNameMatcher != null && !relNameMatcher.matches(link.getHref())) {
         return false;
       }
       if (href != null && !href.equals(link.getHref())) {
@@ -72,7 +81,7 @@
         return false;
       }
       RestfulResponse<JsonRepresentation> jsonResp=null;
-      if (statusCode != null) {
+      if (statusCode != null || selfHref != null) {
         if (client == null) {
           return false;
         }
@@ -85,6 +94,25 @@
       }
       if (statusCode != null) {
         if (jsonResp.getStatus() != statusCode) {
+          return false;
+        }
+      }
+      if (selfHref != null) {
+        JsonRepresentation entity;
+        try {
+          entity=jsonResp.getEntity();
+        }
+ catch (        Exception e) {
+          return false;
+        }
+        if (entity == null) {
+          return false;
+        }
+        LinkRepresentation selfLink=entity.getLink("self");
+        if (selfLink == null) {
+          return false;
+        }
+        if (!selfLink.getHref().equals(selfHref)) {
           return false;
         }
       }
