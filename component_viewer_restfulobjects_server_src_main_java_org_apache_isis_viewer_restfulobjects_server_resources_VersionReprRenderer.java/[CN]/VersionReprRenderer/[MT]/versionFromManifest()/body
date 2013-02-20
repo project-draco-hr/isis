@@ -1,6 +1,9 @@
 {
   try {
-    return Resources.toString(Resources.getResource(META_INF_POM_PROPERTIES),Charset.defaultCharset());
+    URL resource=Resources.getResource(META_INF_POM_PROPERTIES);
+    Properties p=new Properties();
+    p.load(Resources.newReaderSupplier(resource,Charset.defaultCharset()).getInput());
+    return p.getProperty("version");
   }
  catch (  final Exception ex) {
     return "UNKNOWN";

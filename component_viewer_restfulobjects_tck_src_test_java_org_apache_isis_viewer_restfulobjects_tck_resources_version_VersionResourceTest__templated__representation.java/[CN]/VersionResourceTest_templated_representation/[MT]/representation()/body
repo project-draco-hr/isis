@@ -1,0 +1,22 @@
+{
+  final Response servicesResp=resource.version();
+  final RestfulResponse<VersionRepresentation> restfulResponse=RestfulResponse.ofT(servicesResp);
+  assertThat(restfulResponse.getStatus().getFamily(),is(Family.SUCCESSFUL));
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final VersionRepresentation repr=restfulResponse.getEntity();
+  assertThat(repr,is(not(nullValue())));
+  assertThat(repr,isMap());
+  assertThat(repr.getSelf(),isLink(client).rel(Rel.SELF).href(endsWith(":39393/version")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.VERSION.getMediaType()).returning(HttpStatusCode.OK));
+  assertThat(repr.getUp(),isLink(client).rel(Rel.UP).href(endsWith(":39393/")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.HOME_PAGE.getMediaType()).returning(HttpStatusCode.OK));
+  assertThat(repr.getString("specVersion"),is("1.0.0"));
+  assertThat(repr.getString("implVersion"),is(not(nullValue())));
+  final JsonRepresentation optionalCapbilitiesRepr=repr.getOptionalCapabilities();
+  assertThat(optionalCapbilitiesRepr,isMap());
+  assertThat(optionalCapbilitiesRepr.getString("blobsClobs"),is("yes"));
+  assertThat(optionalCapbilitiesRepr.getString("deleteObjects"),is("yes"));
+  assertThat(optionalCapbilitiesRepr.getString("domainModel"),is("formal"));
+  assertThat(optionalCapbilitiesRepr.getString("validateOnly"),is("yes"));
+  assertThat(optionalCapbilitiesRepr.getString("protoPersistentObjects"),is("yes"));
+  assertThat(repr.getLinks(),isArray());
+  assertThat(repr.getExtensions(),is(not(nullValue())));
+}

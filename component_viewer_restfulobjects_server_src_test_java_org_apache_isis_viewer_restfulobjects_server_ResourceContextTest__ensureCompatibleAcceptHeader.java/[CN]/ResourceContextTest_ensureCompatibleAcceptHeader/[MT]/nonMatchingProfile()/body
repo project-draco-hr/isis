@@ -1,5 +1,10 @@
 {
   final RepresentationType representationType=RepresentationType.HOME_PAGE;
   givenHttpHeadersGetAcceptableMediaTypesReturns(Arrays.<MediaType>asList(RepresentationType.USER.getMediaType()));
-  instantiateResourceContext(representationType);
+  try {
+    instantiateResourceContext(representationType);
+  }
+ catch (  RestfulObjectsApplicationException ex) {
+    assertThat(ex.getHttpStatusCode(),is(HttpStatusCode.NOT_ACCEPTABLE));
+  }
 }
