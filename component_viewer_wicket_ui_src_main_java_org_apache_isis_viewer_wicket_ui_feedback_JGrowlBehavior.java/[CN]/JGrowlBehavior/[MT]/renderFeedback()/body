@@ -1,0 +1,19 @@
+{
+  final StringBuilder buf=new StringBuilder();
+  for (  String info : IsisContext.getMessageBroker().getMessages()) {
+    addJGrowlCall(info,"INFO",false,buf);
+  }
+  for (  String warning : IsisContext.getMessageBroker().getWarnings()) {
+    addJGrowlCall(warning,"WARNING",true,buf);
+  }
+  try {
+    final String error=ActionModel.applicationError.get();
+    if (error != null) {
+      addJGrowlCall(error,"ERROR",true,buf);
+    }
+  }
+  finally {
+    ActionModel.applicationError.remove();
+  }
+  return buf.toString();
+}

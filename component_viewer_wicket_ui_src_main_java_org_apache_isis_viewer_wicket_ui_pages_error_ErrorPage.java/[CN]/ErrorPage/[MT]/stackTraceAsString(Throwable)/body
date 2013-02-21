@@ -1,0 +1,11 @@
+{
+  StringBuilder buf=new StringBuilder();
+  appendStackTrace(ex,buf);
+  Throwable cause=ex.getCause();
+  while (cause != null) {
+    buf.append("\n\nCaused by:\n");
+    appendStackTrace(cause,buf);
+    cause=cause.getCause();
+  }
+  return buf.toString();
+}
