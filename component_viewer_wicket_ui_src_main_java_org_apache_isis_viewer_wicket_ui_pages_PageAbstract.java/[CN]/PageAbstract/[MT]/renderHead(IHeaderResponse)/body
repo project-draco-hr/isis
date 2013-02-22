@@ -1,6 +1,11 @@
 {
   super.renderHead(response);
+  response.render(JavaScriptHeaderItem.forReference(Application.get().getJavaScriptLibrarySettings().getJQueryReference()));
   response.render(JavaScriptReferenceHeaderItem.forReference(JQUERY_JGROWL_JS));
+  final String feedbackMsg=renderFeedback();
+  if (!StringUtils.isEmpty(feedbackMsg)) {
+    response.render(OnDomReadyHeaderItem.forScript(feedbackMsg));
+  }
   if (applicationCss != null) {
     response.render(CssReferenceHeaderItem.forUrl(applicationCss));
   }
