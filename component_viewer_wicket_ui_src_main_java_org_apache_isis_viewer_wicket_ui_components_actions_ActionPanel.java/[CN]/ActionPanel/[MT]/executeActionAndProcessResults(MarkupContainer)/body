@@ -1,0 +1,22 @@
+{
+  permanentlyHide(ComponentType.ENTITY_ICON_AND_TITLE);
+  ObjectAdapter targetAdapter=null;
+  boolean clearArgs=true;
+  try {
+    targetAdapter=getModel().getTargetAdapter();
+    clearArgs=executeActionOnTargetAndProcessResults(targetAdapter,feedbackForm);
+  }
+ catch (  ConcurrencyException ex) {
+    if (targetAdapter == null) {
+      targetAdapter=getModel().getTargetAdapter();
+    }
+    final ResultType resultType=ResultType.determineFor(targetAdapter);
+    resultType.addResults(this,targetAdapter,ex);
+    return;
+  }
+ finally {
+    if (clearArgs) {
+      getActionModel().clearArguments();
+    }
+  }
+}

@@ -2,16 +2,6 @@
   final ObjectAdapter targetAdapter=getTargetAdapter();
   final ObjectAdapter[] arguments=getArgumentsAsArray();
   final ObjectAction action=getActionMemento().getAction();
-  try {
-    final ObjectAdapter results=action.execute(targetAdapter,arguments);
-    return results;
-  }
- catch (  RuntimeException ex) {
-    final ApplicationException appEx=getApplicationExceptionIfAny(ex);
-    if (appEx != null) {
-      applicationError.set(appEx.getMessage());
-      return null;
-    }
-    throw ex;
-  }
+  final ObjectAdapter results=action.execute(targetAdapter,arguments);
+  return results;
 }

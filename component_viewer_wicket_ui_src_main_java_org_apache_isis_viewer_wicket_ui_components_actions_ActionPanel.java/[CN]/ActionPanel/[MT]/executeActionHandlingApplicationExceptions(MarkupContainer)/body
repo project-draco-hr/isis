@@ -1,0 +1,16 @@
+{
+  final ActionModel actionModel=getActionModel();
+  try {
+    ObjectAdapter resultAdapter=actionModel.getObject();
+    return resultAdapter;
+  }
+ catch (  RuntimeException ex) {
+    final ApplicationException appEx=getApplicationExceptionIfAny(ex);
+    if (appEx != null) {
+      applicationError.set(appEx.getMessage());
+      getTransactionManager().abortTransaction();
+      return null;
+    }
+    throw ex;
+  }
+}
