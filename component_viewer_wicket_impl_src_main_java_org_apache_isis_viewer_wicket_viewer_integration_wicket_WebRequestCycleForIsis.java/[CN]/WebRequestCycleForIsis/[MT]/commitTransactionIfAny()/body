@@ -1,11 +1,12 @@
 {
   final IsisTransaction transaction=getTransactionManager().getTransaction();
-  if (transaction != null) {
-    if (transaction.getState() == IsisTransaction.State.MUST_ABORT) {
-      getTransactionManager().abortTransaction();
-    }
- else     if (transaction.getState() == IsisTransaction.State.IN_PROGRESS) {
-      getTransactionManager().endTransaction();
-    }
+  if (transaction == null) {
+    return;
+  }
+  if (transaction.getState() == IsisTransaction.State.MUST_ABORT) {
+    getTransactionManager().abortTransaction();
+  }
+ else   if (transaction.getState() == IsisTransaction.State.IN_PROGRESS) {
+    getTransactionManager().endTransaction();
   }
 }

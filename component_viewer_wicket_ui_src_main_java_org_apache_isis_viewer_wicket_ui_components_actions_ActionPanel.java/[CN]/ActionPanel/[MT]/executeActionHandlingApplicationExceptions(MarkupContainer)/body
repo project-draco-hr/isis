@@ -7,8 +7,7 @@
  catch (  RuntimeException ex) {
     final ApplicationException appEx=getApplicationExceptionIfAny(ex);
     if (appEx != null) {
-      applicationError.set(appEx.getMessage());
-      getTransactionManager().abortTransaction();
+      getMessageBroker().setApplicationError(appEx.getMessage());
       return null;
     }
     throw ex;

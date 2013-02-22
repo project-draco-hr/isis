@@ -1,0 +1,11 @@
+{
+  org.apache.isis.core.commons.authentication.MessageBroker messageBroker;
+synchronized (authenticationSession) {
+    messageBroker=authenticationSession.getMessageBroker();
+    if (messageBroker == null) {
+      messageBroker=new MessageBrokerDefault();
+      authenticationSession.setMessageBroker(messageBroker);
+    }
+  }
+  return messageBroker;
+}
