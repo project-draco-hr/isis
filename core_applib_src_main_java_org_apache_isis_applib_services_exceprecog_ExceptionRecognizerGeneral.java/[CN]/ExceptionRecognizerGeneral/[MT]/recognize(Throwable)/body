@@ -1,0 +1,9 @@
+{
+  List<Throwable> causalChain=Throwables.getCausalChain(ex);
+  for (  Throwable throwable : causalChain) {
+    if (predicate.apply(throwable)) {
+      return messageParser.apply(throwable.getMessage());
+    }
+  }
+  return null;
+}

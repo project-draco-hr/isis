@@ -1,0 +1,23 @@
+{
+  super(new PageParameters());
+  addBookmarkedPages();
+  add(new Label(ID_MAIN_MESSAGE,mainMessage).setEscapeModelStrings(false));
+  MarkupContainer container=new WebMarkupContainer(ID_EXCEPTION_DETAIL);
+  add(container);
+  if (exceptionMessage != null) {
+    container.add(new Label(ID_EXCEPTION_MESSAGE,exceptionMessage));
+    container.add(new ListView<Detail>(ID_STACK_TRACE_ELEMENT,stackTraceDetail){
+      private static final long serialVersionUID=1L;
+      @Override protected void populateItem(      ListItem<Detail> item){
+        final Detail detail=item.getModelObject();
+        Label label=new Label(ID_LINE,detail.line);
+        item.add(new AttributeAppender("class",detail.type.name().toLowerCase()));
+        item.add(label);
+      }
+    }
+);
+  }
+ else {
+    container.setVisible(false);
+  }
+}
