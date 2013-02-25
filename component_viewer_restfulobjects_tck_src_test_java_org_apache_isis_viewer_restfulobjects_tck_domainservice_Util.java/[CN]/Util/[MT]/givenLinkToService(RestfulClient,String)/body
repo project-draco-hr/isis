@@ -1,0 +1,7 @@
+{
+  final DomainServiceResource resource=restfulClient.getDomainServiceResource();
+  final Response response=resource.services();
+  final ListRepresentation services=RestfulResponse.<ListRepresentation>ofT(response).getEntity();
+  final String href=services.getRepresentation("value[rel=" + Rel.SERVICE.getName() + ";serviceId=\""+ serviceId+ "\"]").asLink().getHref();
+  return href;
+}

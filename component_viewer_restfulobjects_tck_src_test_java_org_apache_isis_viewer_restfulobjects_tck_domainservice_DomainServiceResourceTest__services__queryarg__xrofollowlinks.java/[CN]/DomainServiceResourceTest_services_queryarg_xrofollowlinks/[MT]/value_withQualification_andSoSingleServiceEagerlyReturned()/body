@@ -1,0 +1,17 @@
+{
+  request=client.createRequest(RestfulHttpMethod.GET,"services").withArg(RequestParameter.FOLLOW_LINKS,"value[rel=" + Rel.SERVICE.getName() + ";serviceId=\"JdkValuedEntities\"]");
+  restfulResponse=request.executeT();
+  repr=restfulResponse.getEntity();
+  int numWithValue=0;
+  int numWithoutValue=0;
+  for (  final LinkRepresentation link : repr.getValue().arrayIterable(LinkRepresentation.class)) {
+    if (isLink(client).value(is(not(nullValue(JsonRepresentation.class)))).build().matches(link)) {
+      numWithValue++;
+    }
+ else {
+      numWithoutValue++;
+    }
+  }
+  assertThat(numWithValue,is(1));
+  assertThat(numWithoutValue,is(greaterThan(0)));
+}
