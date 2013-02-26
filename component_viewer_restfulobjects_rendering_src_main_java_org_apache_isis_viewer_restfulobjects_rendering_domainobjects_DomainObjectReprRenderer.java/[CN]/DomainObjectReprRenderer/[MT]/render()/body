@@ -5,7 +5,7 @@
         final JsonRepresentation self=linkToBuilder.with(objectAdapter).builder(Rel.SELF).build();
         getLinks().arrayAdd(self);
       }
-      representation.mapPut("oid",getOidStr());
+      getExtensions().mapPut("oid",getOidStr());
     }
   }
   if (!mode.representsArguments()) {
@@ -24,7 +24,7 @@
   }
   if (!mode.representsArguments()) {
     addPersistLinkIfTransientAndPersistable();
-    addUpdatePropertiesLinkIfPersistent();
+    addUpdatePropertiesLinkIfPersistentAndNotService();
     final boolean isService=objectAdapter.getSpecification().isService();
     getExtensions().mapPut("isService",isService);
     getExtensions().mapPut("isPersistent",objectAdapter.representsPersistent());

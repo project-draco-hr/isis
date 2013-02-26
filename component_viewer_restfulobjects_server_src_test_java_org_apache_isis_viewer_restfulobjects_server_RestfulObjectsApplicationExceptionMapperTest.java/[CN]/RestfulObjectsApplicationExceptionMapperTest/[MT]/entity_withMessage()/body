@@ -1,7 +1,7 @@
 {
   final RestfulObjectsApplicationException ex=RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"foobar");
   final Response response=exceptionMapper.toResponse(ex);
-  assertThat((String)response.getMetadata().get("Warning").get(0),is(ex.getMessage()));
+  assertThat((String)response.getMetadata().get("Warning").get(0),is("199 RestfulObjects " + ex.getMessage()));
   final String entity=(String)response.getEntity();
   assertThat(entity,is(not(nullValue())));
   final JsonRepresentation jsonRepr=JsonMapper.instance().read(entity,JsonRepresentation.class);

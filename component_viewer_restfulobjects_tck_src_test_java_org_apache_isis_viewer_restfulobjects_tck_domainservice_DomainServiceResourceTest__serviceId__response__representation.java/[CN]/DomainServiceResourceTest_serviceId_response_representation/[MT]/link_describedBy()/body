@@ -1,0 +1,7 @@
+{
+  final Response resp=resource.service("JdkValuedEntities");
+  final RestfulResponse<DomainObjectRepresentation> jsonResp=RestfulResponse.ofT(resp);
+  final DomainObjectRepresentation repr=jsonResp.getEntity();
+  LinkRepresentation describedByLink=repr.getLinkWithRel(Rel.DESCRIBEDBY);
+  assertThat(describedByLink,isLink(client).returning(HttpStatusCode.OK).responseEntityWithSelfHref(describedByLink.getHref()));
+}
