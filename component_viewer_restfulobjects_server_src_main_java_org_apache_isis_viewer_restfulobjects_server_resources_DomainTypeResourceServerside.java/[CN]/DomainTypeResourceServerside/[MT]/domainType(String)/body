@@ -1,6 +1,6 @@
 {
   init(RepresentationType.DOMAIN_TYPE,Where.ANYWHERE);
-  final ObjectSpecification objectSpec=getSpecificationLoader().loadSpecification(domainType);
+  final ObjectSpecification objectSpec=getSpecificationLoader().lookupBySpecId(ObjectSpecId.of(domainType));
   final DomainTypeReprRenderer renderer=new DomainTypeReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.with(objectSpec).includesSelf();
   return responseOfOk(renderer,Caching.ONE_DAY).build();
