@@ -11,7 +11,7 @@
         getPersistenceSession().remapRecreatedPojo(adapter,pojo);
         if (previousVersion != null && datastoreVersion != null) {
           if (previousVersion.different(datastoreVersion)) {
-            getCurrentTransaction().addException(new ConcurrencyException(getAuthenticationSession().getUserName(),oid,previousVersion,datastoreVersion));
+            getCurrentTransaction().setAbortCause(new ConcurrencyException(getAuthenticationSession().getUserName(),oid,previousVersion,datastoreVersion));
           }
         }
       }

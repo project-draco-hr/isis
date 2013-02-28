@@ -1,0 +1,14 @@
+{
+  final IsisSession session=getIsisContext().getSessionInstance();
+  if (session != null) {
+    try {
+      getTransactionManager().endTransaction();
+    }
+ catch (    Exception ex) {
+      throw new RestartResponseException(errorPageFor(ex));
+    }
+ finally {
+      getIsisContext().closeSessionInstance();
+    }
+  }
+}

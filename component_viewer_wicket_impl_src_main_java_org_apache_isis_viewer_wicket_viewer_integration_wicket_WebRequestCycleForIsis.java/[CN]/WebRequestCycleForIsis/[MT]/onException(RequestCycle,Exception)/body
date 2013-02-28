@@ -1,6 +1,4 @@
 {
-  List<ExceptionRecognizer> exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
-  String message=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
-  final ErrorPage page=message != null ? new ErrorPage(message) : new ErrorPage(ex);
+  final ErrorPage page=errorPageFor(ex);
   return new RenderPageRequestHandler(new PageProvider(page));
 }
