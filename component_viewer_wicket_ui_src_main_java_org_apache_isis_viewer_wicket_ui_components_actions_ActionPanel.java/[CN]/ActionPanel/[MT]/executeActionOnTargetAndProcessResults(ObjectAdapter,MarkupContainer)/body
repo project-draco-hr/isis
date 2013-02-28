@@ -16,18 +16,12 @@
     return true;
   }
  catch (  RuntimeException ex) {
-    List<ExceptionRecognizer> exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
-    String message=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+    String message=recognizeException(ex,feedbackForm);
     if (message != null) {
-      if (feedbackForm != null) {
-        feedbackForm.error(message);
-      }
- else {
-        getMessageBroker().setApplicationError(message);
+      if (feedbackForm == null) {
         final ResultType resultType=ResultType.determineFor(null);
         resultType.addResults(this,null);
       }
-      getTransactionManager().getTransaction().clearAbortCause();
       return false;
     }
     throw ex;
