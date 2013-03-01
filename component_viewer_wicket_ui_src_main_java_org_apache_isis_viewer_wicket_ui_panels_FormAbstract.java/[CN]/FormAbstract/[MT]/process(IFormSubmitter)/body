@@ -1,7 +1,12 @@
 {
-  if (submittingComponent instanceof IFormSubmitterWithPreSubmitHook) {
-    IFormSubmitterWithPreSubmitHook componentWithPreSubmitHook=(IFormSubmitterWithPreSubmitHook)submittingComponent;
-    componentWithPreSubmitHook.preSubmit();
+  try {
+    if (submittingComponent instanceof IFormSubmitterWithPreValidateHook) {
+      IFormSubmitterWithPreValidateHook componentWithPreSubmitHook=(IFormSubmitterWithPreValidateHook)submittingComponent;
+      preValidationErrorIfAny=componentWithPreSubmitHook.preValidate();
+    }
+    super.process(submittingComponent);
   }
-  super.process(submittingComponent);
+  finally {
+    preValidationErrorIfAny=null;
+  }
 }

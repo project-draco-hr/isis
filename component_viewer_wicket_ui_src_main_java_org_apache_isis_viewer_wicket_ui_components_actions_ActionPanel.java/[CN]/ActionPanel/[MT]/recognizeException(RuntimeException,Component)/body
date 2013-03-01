@@ -1,14 +1,12 @@
 {
   List<ExceptionRecognizer> exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
-  String message=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
-  if (message != null) {
+  String recognizedErrorIfAny=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+  if (recognizedErrorIfAny != null) {
     if (feedbackComponent != null) {
-      feedbackComponent.error(message);
+      feedbackComponent.error(recognizedErrorIfAny);
     }
- else {
-      getMessageBroker().setApplicationError(message);
-    }
+    getMessageBroker().setApplicationError(recognizedErrorIfAny);
     getTransactionManager().getTransaction().clearAbortCause();
   }
-  return message;
+  return recognizedErrorIfAny;
 }

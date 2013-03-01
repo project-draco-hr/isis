@@ -21,18 +21,35 @@
   }
 ;
   add(editButton);
-  okButton=new ButtonWithPreSubmitHook(ID_OK_BUTTON,Model.of("OK")){
+  okButton=new ButtonWithPreValidateHook(ID_OK_BUTTON,Model.of("OK")){
     private static final long serialVersionUID=1L;
-    @Override public void preSubmit(){
+    @Override public String preValidate(){
       try {
-        getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
+        getEntityModel().load(ConcurrencyChecking.CHECK);
       }
- catch (      ConcurrencyException ex) {
-        Session.get().getFeedbackMessages().add(new FeedbackMessage(EntityPropertiesForm.this,ex.getMessage(),FeedbackMessage.ERROR));
+ catch (      RuntimeException ex) {
+        String recognizedErrorMessage=recognizeException(ex);
+        if (recognizedErrorMessage == null) {
+          throw ex;
+        }
+        getEntityModel().load(ConcurrencyChecking.NO_CHECK);
+        getForm().clearInput();
+        getEntityModel().resetPropertyModels();
+        toViewMode(null);
+        toEditMode(null);
+        return recognizedErrorMessage;
       }
+      return null;
     }
     @Override public void validate(){
-      super.validate();
+      EntityPropertiesForm form=EntityPropertiesForm.this;
+      String preValidationErrorIfAny=form.getPreValidationErrorIfAny();
+      if (preValidationErrorIfAny != null) {
+        feedbackOrNotifyAnyRecognizedError(preValidationErrorIfAny,form);
+      }
+ else {
+        super.validate();
+      }
     }
     @Override public void onSubmit(){
       if (getForm().hasError()) {
@@ -51,7 +68,7 @@
         EntityPropertiesForm.this.getTransactionManager().flushTransaction();
       }
  catch (      RuntimeException ex) {
-        String message=recognizeException(ex,EntityPropertiesForm.this);
+        String message=recognizeExceptionAndNotify(ex,EntityPropertiesForm.this);
         if (message == null) {
           throw ex;
         }
@@ -69,7 +86,13 @@
   }
 ;
   add(okButton);
-  cancelButton=new AjaxButtonWithPreSubmitHook(ID_CANCEL_BUTTON,Model.of("Cancel")){
+  okButton.add(new IValidator<String>(){
+    private static final long serialVersionUID=1L;
+    @Override public void validate(    IValidatable<String> validatable){
+    }
+  }
+);
+  cancelButton=new AjaxButton(ID_CANCEL_BUTTON,Model.of("Cancel")){
     private static final long serialVersionUID=1L;
 {
       setDefaultFormProcessing(false);
@@ -83,8 +106,6 @@
         getEntityModel().load(ConcurrencyChecking.NO_CHECK);
       }
       super.validate();
-    }
-    @Override public void preSubmit(){
     }
     @Override protected void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
       Session.get().getFeedbackMessages().clear();
