@@ -2,31 +2,64 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("endTransaction: level " + (transactionLevel) + "->"+ (transactionLevel - 1));
   }
+  final IsisTransaction transaction=getTransaction();
+  if (transaction == null || transaction.getState().isComplete()) {
+    return;
+  }
+  RuntimeException abortCause=this.getTransaction().getAbortCause();
+  if (transaction.getState().mustAbort()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("endTransaction: aborting instead [EARLY TERMINATION], abort cause '" + abortCause.getMessage() + "' has been set");
+    }
+    abortTransaction();
+    abortCause=this.getTransaction().getAbortCause();
+    if (abortCause != null) {
+      throw abortCause;
+    }
+ else {
+      return;
+    }
+  }
   transactionLevel--;
   if (transactionLevel == 0) {
-    List<IsisException> exceptions=this.getTransaction().getExceptionsIfAny();
-    if (exceptions.isEmpty()) {
+    if (abortCause == null) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("endTransaction: committing");
       }
-      objectPersistor.objectChangedAllDirty();
-      exceptions=this.getTransaction().getExceptionsIfAny();
-    }
-    if (exceptions.isEmpty()) {
-      getTransaction().commit();
-      exceptions=this.getTransaction().getExceptionsIfAny();
-    }
-    if (exceptions.isEmpty()) {
-      transactionalResource.endTransaction();
-      exceptions=this.getTransaction().getExceptionsIfAny();
-    }
-    if (!exceptions.isEmpty()) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("endTransaction: aborting instead, " + exceptions.size() + " exception(s) have been raised");
+      try {
+        objectPersistor.objectChangedAllDirty();
       }
-      abortTransaction();
-      exceptions=this.getTransaction().getExceptionsIfAny();
-      throw exceptionToThrowFrom(exceptions);
+ catch (      RuntimeException ex) {
+        abortCause=ex;
+      }
+    }
+    if (abortCause == null) {
+      try {
+        getTransaction().commit();
+      }
+ catch (      RuntimeException ex) {
+        abortCause=ex;
+      }
+    }
+    if (abortCause == null) {
+      try {
+        transactionalResource.endTransaction();
+      }
+ catch (      RuntimeException ex) {
+        abortCause=ex;
+      }
+    }
+    if (abortCause != null) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("endTransaction: aborting instead, abort cause has been set");
+      }
+      try {
+        abortTransaction();
+      }
+ catch (      RuntimeException ex) {
+        abortCause=ex;
+      }
+      throw abortCause;
     }
   }
  else   if (transactionLevel < 0) {

@@ -1,8 +1,15 @@
 {
-  editButton=new AjaxButtonWithPreSubmitHook(ID_EDIT_BUTTON,Model.of("Edit")){
+  editButton=new AjaxButton(ID_EDIT_BUTTON,Model.of("Edit")){
     private static final long serialVersionUID=1L;
-    @Override public void preSubmit(){
-      getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+    @Override public void validate(){
+      try {
+        getEntityModel().load(ConcurrencyChecking.CHECK);
+      }
+ catch (      ConcurrencyException ex) {
+        getMessageBroker().addMessage("Object changed by " + ex.getOid().getVersion().getUser() + ", automatically reloading");
+        getEntityModel().load(ConcurrencyChecking.NO_CHECK);
+      }
+      super.validate();
     }
     @Override public void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
       getEntityModel().resetPropertyModels();
@@ -14,45 +21,85 @@
   }
 ;
   add(editButton);
-  okButton=new ButtonWithPreSubmitHook(ID_OK_BUTTON,Model.of("OK")){
+  okButton=new ButtonWithPreValidateHook(ID_OK_BUTTON,Model.of("OK")){
     private static final long serialVersionUID=1L;
-    @Override public void preSubmit(){
+    @Override public String preValidate(){
       try {
-        getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
+        getEntityModel().load(ConcurrencyChecking.CHECK);
       }
- catch (      ConcurrencyException ex) {
-        Session.get().getFeedbackMessages().add(new FeedbackMessage(EntityPropertiesForm.this,ex.getMessage(),FeedbackMessage.ERROR));
+ catch (      RuntimeException ex) {
+        String recognizedErrorMessage=recognizeException(ex);
+        if (recognizedErrorMessage == null) {
+          throw ex;
+        }
+        getEntityModel().load(ConcurrencyChecking.NO_CHECK);
+        getForm().clearInput();
+        getEntityModel().resetPropertyModels();
+        toViewMode(null);
+        toEditMode(null);
+        return recognizedErrorMessage;
+      }
+      return null;
+    }
+    @Override public void validate(){
+      EntityPropertiesForm form=EntityPropertiesForm.this;
+      String preValidationErrorIfAny=form.getPreValidationErrorIfAny();
+      if (preValidationErrorIfAny != null) {
+        feedbackOrNotifyAnyRecognizedError(preValidationErrorIfAny,form);
+      }
+ else {
+        super.validate();
       }
     }
     @Override public void onSubmit(){
-      if (!getForm().hasError()) {
-        final ObjectAdapter object=getEntityModel().getObject();
-        final Memento snapshotToRollbackToIfInvalid=new Memento(object);
-        getEntityModel().apply();
-        final String invalidReasonIfAny=getEntityModel().getReasonInvalidIfAny();
-        if (invalidReasonIfAny != null) {
-          getForm().error(invalidReasonIfAny);
-          snapshotToRollbackToIfInvalid.recreateObject();
-          return;
-        }
- else {
-          getEntityModel().resetPropertyModels();
-          toViewMode(null);
-        }
+      if (getForm().hasError()) {
+        return;
       }
- else {
+      final ObjectAdapter object=getEntityModel().getObject();
+      final Memento snapshotToRollbackToIfInvalid=new Memento(object);
+      getEntityModel().apply();
+      final String invalidReasonIfAny=getEntityModel().getReasonInvalidIfAny();
+      if (invalidReasonIfAny != null) {
+        getForm().error(invalidReasonIfAny);
+        snapshotToRollbackToIfInvalid.recreateObject();
+        return;
       }
+      try {
+        EntityPropertiesForm.this.getTransactionManager().flushTransaction();
+      }
+ catch (      RuntimeException ex) {
+        String message=recognizeExceptionAndNotify(ex,EntityPropertiesForm.this);
+        if (message == null) {
+          throw ex;
+        }
+        toEditMode(null);
+        return;
+      }
+      try {
+        getEntityModel().resetPropertyModels();
+      }
+ catch (      RuntimeException ex) {
+        throw ex;
+      }
+      toViewMode(null);
     }
   }
 ;
   add(okButton);
-  cancelButton=new AjaxButtonWithPreSubmitHook(ID_CANCEL_BUTTON,Model.of("Cancel")){
+  cancelButton=new AjaxButton(ID_CANCEL_BUTTON,Model.of("Cancel")){
     private static final long serialVersionUID=1L;
 {
       setDefaultFormProcessing(false);
     }
-    @Override public void preSubmit(){
-      getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+    @Override public void validate(){
+      try {
+        getEntityModel().load(ConcurrencyChecking.CHECK);
+      }
+ catch (      ConcurrencyException ex) {
+        getMessageBroker().addMessage("Object changed by " + ex.getOid().getVersion().getUser() + ", automatically reloading");
+        getEntityModel().load(ConcurrencyChecking.NO_CHECK);
+      }
+      super.validate();
     }
     @Override protected void onSubmit(    final AjaxRequestTarget target,    final Form<?> form){
       Session.get().getFeedbackMessages().clear();
@@ -66,7 +113,12 @@
         }
       }
 );
-      getEntityModel().resetPropertyModels();
+      try {
+        getEntityModel().resetPropertyModels();
+      }
+ catch (      RuntimeException ex) {
+        throw ex;
+      }
       toViewMode(target);
     }
     @Override protected void onError(    final AjaxRequestTarget target,    final Form<?> form){
@@ -77,4 +129,6 @@
   add(cancelButton);
   editButton.setOutputMarkupPlaceholderTag(true);
   cancelButton.setOutputMarkupPlaceholderTag(true);
+  editButton.add(new JGrowlBehaviour());
+  cancelButton.add(new JGrowlBehaviour());
 }

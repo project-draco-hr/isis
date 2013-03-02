@@ -1,7 +1,4 @@
 {
-  if (commands.isEmpty()) {
-    return;
-  }
   ensureThatState(getState().canFlush(),is(true),"state is: " + getState());
   if (LOG.isDebugEnabled()) {
     LOG.debug("flush transaction " + this);
@@ -10,8 +7,7 @@
     doFlush();
   }
  catch (  final RuntimeException ex) {
-    setState(State.MUST_ABORT);
-    setAbortCause(ex);
+    setAbortCause(new IsisTransactionFlushException(ex));
     throw ex;
   }
 }

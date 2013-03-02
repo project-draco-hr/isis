@@ -1,11 +1,10 @@
 {
   ObjectAdapter adapter=getAdapterFor(typedOid);
-  if (adapter != null) {
-    return adapter;
+  if (adapter == null) {
+    final Object pojo=pojoRecreator.recreatePojo(typedOid);
+    adapter=mapRecreatedPojo(typedOid,pojo);
   }
-  final Object pojo=pojoRecreator.recreatePojo(typedOid);
-  adapter=mapRecreatedPojo(typedOid,pojo);
-  final Oid adapterOid=adapter.getOid();
+  Oid adapterOid=adapter.getOid();
   if (adapterOid instanceof RootOid) {
     final RootOid recreatedOid=(RootOid)adapterOid;
     final RootOid originalOid=(RootOid)typedOid;

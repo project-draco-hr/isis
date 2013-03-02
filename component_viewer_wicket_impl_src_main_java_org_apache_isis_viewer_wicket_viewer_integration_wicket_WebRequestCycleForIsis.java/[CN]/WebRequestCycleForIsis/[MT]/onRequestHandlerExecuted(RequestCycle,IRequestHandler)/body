@@ -1,0 +1,18 @@
+{
+  LOG.info("onRequestHandlerExecuted: handler: " + handler);
+  final IsisSession session=getIsisContext().getSessionInstance();
+  if (session != null) {
+    try {
+      getTransactionManager().endTransaction();
+    }
+ catch (    Exception ex) {
+      if (handler instanceof RenderPageRequestHandler) {
+        RenderPageRequestHandler requestHandler=(RenderPageRequestHandler)handler;
+        if (requestHandler.getPage() instanceof ErrorPage) {
+          return;
+        }
+      }
+      throw new RestartResponseException(errorPageProviderFor(ex),RedirectPolicy.ALWAYS_REDIRECT);
+    }
+  }
+}

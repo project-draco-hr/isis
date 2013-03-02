@@ -1,0 +1,14 @@
+{
+  final StringBuilder buf=new StringBuilder();
+  for (  String info : messageBroker.getMessages()) {
+    addJGrowlCall(info,"INFO",false,buf);
+  }
+  for (  String warning : messageBroker.getWarnings()) {
+    addJGrowlCall(warning,"WARNING",true,buf);
+  }
+  final String error=messageBroker.getApplicationError();
+  if (error != null) {
+    addJGrowlCall(error,"ERROR",true,buf);
+  }
+  return buf.toString();
+}

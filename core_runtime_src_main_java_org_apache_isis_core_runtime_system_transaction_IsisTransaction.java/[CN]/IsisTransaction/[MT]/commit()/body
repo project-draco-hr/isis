@@ -1,6 +1,6 @@
 {
   ensureThatState(getState().canCommit(),is(true),"state is: " + getState());
-  ensureThatState(exceptions.isEmpty(),is(true),"cannot commit: " + exceptions.size() + " exceptions have been raised");
+  ensureThatState(abortCause,is(nullValue()),"cannot commit: an abort cause has been set");
   if (LOG.isDebugEnabled()) {
     LOG.debug("commit transaction " + this);
   }
@@ -17,7 +17,7 @@
     doPublish(getChangedObjects());
   }
  catch (  final RuntimeException ex) {
-    setAbortCause(ex);
+    setAbortCause(new IsisTransactionManagerException(ex));
     throw ex;
   }
 }

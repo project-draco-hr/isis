@@ -1,0 +1,11 @@
+{
+  List<StackTraceDetail> stackTrace=Lists.newArrayList();
+  List<Throwable> causalChain=Throwables.getCausalChain(ex);
+  for (  Throwable cause : causalChain) {
+    stackTrace.add(StackTraceDetail.exceptionClassName(cause));
+    stackTrace.add(StackTraceDetail.exceptionMessage(cause));
+    addStackTraceElements(cause,stackTrace);
+    cause=cause.getCause();
+  }
+  return stackTrace;
+}

@@ -1,0 +1,13 @@
+{
+  List<ExceptionRecognizer> exceptionRecognizers;
+  try {
+    exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
+  }
+ catch (  Exception ex2) {
+    LOG.warn("Unable to obtain exceptionRecognizers (no session?)");
+    exceptionRecognizers=Collections.emptyList();
+  }
+  String message=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+  final ErrorPage page=message != null ? new ErrorPage(message,ex) : new ErrorPage(ex);
+  return page;
+}

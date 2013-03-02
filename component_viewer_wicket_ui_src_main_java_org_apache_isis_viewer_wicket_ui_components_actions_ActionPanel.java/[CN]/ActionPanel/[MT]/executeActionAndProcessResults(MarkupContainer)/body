@@ -3,18 +3,20 @@
   ObjectAdapter targetAdapter=null;
   boolean clearArgs=true;
   try {
-    targetAdapter=getModel().getTargetAdapter();
-    clearArgs=executeActionOnTargetAndProcessResults(targetAdapter,feedbackForm);
-  }
- catch (  ConcurrencyException ex) {
-    if (targetAdapter == null) {
+    try {
       targetAdapter=getModel().getTargetAdapter();
+      clearArgs=executeActionOnTargetAndProcessResults(targetAdapter,feedbackForm);
     }
-    final ResultType resultType=ResultType.determineFor(targetAdapter);
-    resultType.addResults(this,targetAdapter,ex);
-    return;
+ catch (    ConcurrencyException ex) {
+      if (targetAdapter == null) {
+        targetAdapter=getModel().getTargetAdapter();
+      }
+      ResultType.OBJECT.addResults(this,targetAdapter,ex);
+      getMessageBroker().addWarning(ex.getMessage());
+      return;
+    }
   }
- finally {
+  finally {
     if (clearArgs) {
       getActionModel().clearArguments();
     }
