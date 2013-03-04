@@ -1,13 +1,17 @@
 {
-  List<ExceptionRecognizer> exceptionRecognizers;
-  try {
+  List<ExceptionRecognizer> exceptionRecognizers=Collections.emptyList();
+  if (inIsisSession()) {
     exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
   }
- catch (  Exception ex2) {
-    LOG.warn("Unable to obtain exceptionRecognizers (no session?)");
-    exceptionRecognizers=Collections.emptyList();
+ else {
+    LOG.warn("Unable to obtain exceptionRecognizers (no session), will be treated as unrecognized exception");
   }
-  String message=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
-  final ErrorPage page=message != null ? new ErrorPage(message,ex) : new ErrorPage(ex);
-  return page;
+  String recognizedMessageIfAny=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+  ExceptionModel exceptionModel=ExceptionModel.create(recognizedMessageIfAny,ex);
+  if (isSignedIn()) {
+    return new ErrorPage(exceptionModel);
+  }
+ else {
+    return new WicketSignInPage(null,exceptionModel);
+  }
 }

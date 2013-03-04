@@ -1,0 +1,12 @@
+{
+  List<ExceptionRecognizer> exceptionRecognizers;
+  try {
+    exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
+  }
+ catch (  Exception ex2) {
+    LOG.warn("Unable to obtain exceptionRecognizers (no session?)");
+    exceptionRecognizers=Collections.emptyList();
+  }
+  final String recognizedMessageIfAny=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+  return ExceptionModel.create(recognizedMessageIfAny,ex);
+}
