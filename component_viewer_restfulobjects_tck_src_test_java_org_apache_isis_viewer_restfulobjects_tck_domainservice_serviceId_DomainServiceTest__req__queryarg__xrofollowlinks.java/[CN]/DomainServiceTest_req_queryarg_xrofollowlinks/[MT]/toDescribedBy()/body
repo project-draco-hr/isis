@@ -1,2 +1,8 @@
 {
+  final String href=givenHrefToService("WrapperValuedEntities");
+  final RestfulRequest request=client.createRequest(RestfulHttpMethod.GET,href).withArg(RequestParameter.FOLLOW_LINKS,"links[rel=describedby]");
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=request.executeT();
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final DomainObjectRepresentation repr=restfulResponse.getEntity();
+  assertThat(repr.getLinkWithRel(Rel.DESCRIBEDBY).getValue(),is(not(nullValue())));
 }

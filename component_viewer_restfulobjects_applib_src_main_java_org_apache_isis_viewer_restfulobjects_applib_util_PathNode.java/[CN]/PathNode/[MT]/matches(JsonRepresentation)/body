@@ -4,9 +4,14 @@
   }
   for (  final Map.Entry<String,String> criterium : getCriteria().entrySet()) {
     final String requiredValue=criterium.getValue();
-    final String actualValue=repr.getString(criterium.getKey());
-    if (!Objects.equal(requiredValue,actualValue)) {
-      return false;
+    if (requiredValue != null) {
+      final String actualValue=repr.getString(criterium.getKey());
+      if (!Objects.equal(requiredValue,actualValue)) {
+        return false;
+      }
+    }
+ else {
+      return repr.getRepresentation(criterium.getKey()) != null;
     }
   }
   return true;

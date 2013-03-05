@@ -5,8 +5,10 @@
   final JsonRepresentation link=linkTo.memberBuilder(Rel.DETAILS,memberType,objectMember).build();
   getLinks().arrayAdd(link);
   final LinkFollowSpecs membersLinkFollower=getLinkFollowSpecs();
-  final LinkFollowSpecs detailsLinkFollower=membersLinkFollower.follow("links[rel=%s]",Rel.DETAILS.getName());
-  if (membersLinkFollower.matches(representation) && detailsLinkFollower.matches(link)) {
+  final LinkFollowSpecs detailsLinkFollower=membersLinkFollower.follow("links");
+  final JsonRepresentation memberMap=JsonRepresentation.newMap();
+  memberMap.mapPut(getMemberId(),this.representation);
+  if (membersLinkFollower.matches(memberMap) && detailsLinkFollower.matches(link)) {
     followDetailsLink(link);
   }
   return;

@@ -9,7 +9,7 @@
     }
     if (assoc instanceof OneToOneAssociation) {
       final OneToOneAssociation property=(OneToOneAssociation)assoc;
-      final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
+      final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(getRendererContext(),linkFollower,property.getId(),JsonRepresentation.newMap());
       renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(linkToBuilder);
       if (mode.representsArguments()) {
         renderer.asArguments();
@@ -21,7 +21,7 @@
     }
     if (assoc instanceof OneToManyAssociation) {
       final OneToManyAssociation collection=(OneToManyAssociation)assoc;
-      final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
+      final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(getRendererContext(),linkFollower,collection.getId(),JsonRepresentation.newMap());
       renderer.with(new ObjectAndCollection(objectAdapter,collection)).usingLinkTo(linkToBuilder);
       members.mapPut(assoc.getId(),renderer.render());
     }

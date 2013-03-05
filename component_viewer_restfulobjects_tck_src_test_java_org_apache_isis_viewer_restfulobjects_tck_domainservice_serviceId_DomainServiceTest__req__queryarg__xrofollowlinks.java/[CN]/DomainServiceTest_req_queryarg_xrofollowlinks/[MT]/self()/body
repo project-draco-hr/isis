@@ -1,0 +1,8 @@
+{
+  final String href=givenHrefToService("WrapperValuedEntities");
+  final RestfulRequest request=client.createRequest(RestfulHttpMethod.GET,href).withArg(RequestParameter.FOLLOW_LINKS,"links[rel=self]");
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=request.executeT();
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final DomainObjectRepresentation repr=restfulResponse.getEntity();
+  assertThat(repr.getSelf().getValue(),is(not(nullValue())));
+}

@@ -2,8 +2,7 @@
   if (!mode.representsArguments()) {
     if (objectAdapter.representsPersistent()) {
       if (includesSelf) {
-        final JsonRepresentation self=linkToBuilder.with(objectAdapter).builder(Rel.SELF).build();
-        getLinks().arrayAdd(self);
+        addLinkToSelf();
       }
       getExtensions().mapPut("oid",getOidStr());
     }
@@ -20,7 +19,7 @@
   }
   withMembers(objectAdapter);
   if (mode.includesDescribedBy()) {
-    getLinks().arrayAdd(DomainTypeReprRenderer.newLinkToBuilder(getRendererContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification()).build());
+    addLinkToDescribedBy();
   }
   if (!mode.representsArguments()) {
     addPersistLinkIfTransientAndPersistable();

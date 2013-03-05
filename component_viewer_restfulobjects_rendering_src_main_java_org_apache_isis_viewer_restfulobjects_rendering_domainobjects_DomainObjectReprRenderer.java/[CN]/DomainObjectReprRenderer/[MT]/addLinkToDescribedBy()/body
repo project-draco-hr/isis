@@ -1,0 +1,10 @@
+{
+  final JsonRepresentation link=DomainTypeReprRenderer.newLinkToBuilder(getRendererContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification()).build();
+  final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("links");
+  if (linkFollower.matches(link)) {
+    final DomainTypeReprRenderer renderer=new DomainTypeReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
+    renderer.with(objectAdapter.getSpecification());
+    link.mapPut("value",renderer.render());
+  }
+  getLinks().arrayAdd(link);
+}

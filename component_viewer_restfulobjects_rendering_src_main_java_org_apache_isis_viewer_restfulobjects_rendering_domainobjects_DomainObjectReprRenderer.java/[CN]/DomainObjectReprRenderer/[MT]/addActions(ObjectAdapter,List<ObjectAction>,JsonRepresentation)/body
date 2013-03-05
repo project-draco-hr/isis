@@ -1,5 +1,4 @@
 {
-  final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("members");
   for (  final ObjectAction action : actions) {
     final Consent visibility=action.isVisible(getRendererContext().getAuthenticationSession(),objectAdapter,rendererContext.getWhere());
     if (!visibility.isAllowed()) {
@@ -11,7 +10,8 @@
       addActions(objectAdapter,subactions,members);
     }
  else {
-      final ObjectActionReprRenderer renderer=new ObjectActionReprRenderer(getRendererContext(),linkFollower,JsonRepresentation.newMap());
+      final LinkFollowSpecs linkFollowSpecs=getLinkFollowSpecs().follow("members[" + action.getId() + "]");
+      final ObjectActionReprRenderer renderer=new ObjectActionReprRenderer(getRendererContext(),linkFollowSpecs,action.getId(),JsonRepresentation.newMap());
       renderer.with(new ObjectAndAction(objectAdapter,action)).usingLinkTo(linkToBuilder);
       members.mapPut(action.getId(),renderer.render());
     }
