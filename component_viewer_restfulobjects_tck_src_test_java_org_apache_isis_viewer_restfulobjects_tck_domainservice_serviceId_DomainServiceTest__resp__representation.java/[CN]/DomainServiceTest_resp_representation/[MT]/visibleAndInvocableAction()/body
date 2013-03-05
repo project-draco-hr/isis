@@ -1,0 +1,12 @@
+{
+  final Response resp=resource.service("BusinessRulesEntities");
+  final RestfulResponse<DomainObjectRepresentation> jsonResp=RestfulResponse.ofT(resp);
+  assertThat(jsonResp.getStatus(),is(HttpStatusCode.OK));
+  final DomainObjectRepresentation repr=jsonResp.getEntity();
+  assertThat(repr,isMap());
+  final DomainObjectMemberRepresentation actionRepr=repr.getAction("visibleAndInvocableAction");
+  assertThat(actionRepr,isMap());
+  assertThat(actionRepr.getDisabledReason(),is(nullValue()));
+  final LinkRepresentation actionDetailsLink=actionRepr.getLinkWithRel(Rel.DETAILS);
+  assertThat(actionDetailsLink,isLink(this.client).rel(Rel.DETAILS).httpMethod(RestfulHttpMethod.GET).href(Matchers.endsWith(":39393/services/BusinessRulesEntities/actions/visibleAndInvocableAction")).returning(HttpStatusCode.OK));
+}
