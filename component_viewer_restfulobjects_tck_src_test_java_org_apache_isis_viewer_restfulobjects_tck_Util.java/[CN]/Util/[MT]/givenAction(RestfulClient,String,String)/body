@@ -1,0 +1,9 @@
+{
+  final String href=givenHrefToService(client,serviceId);
+  final RestfulRequest request=client.createRequest(RestfulHttpMethod.GET,href).withArg(RequestParameter.FOLLOW_LINKS,"members[%s].links[rel=%s]",actionId,Rel.DETAILS.getName());
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=request.executeT();
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final DomainObjectRepresentation repr=restfulResponse.getEntity();
+  final JsonRepresentation actionLinkRepr=repr.getAction(actionId);
+  return actionLinkRepr.getRepresentation("links[rel=%s].value",Rel.DETAILS.getName());
+}

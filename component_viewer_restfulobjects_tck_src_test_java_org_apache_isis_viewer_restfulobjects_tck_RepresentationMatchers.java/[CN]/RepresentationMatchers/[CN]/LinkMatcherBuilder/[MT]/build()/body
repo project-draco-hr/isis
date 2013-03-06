@@ -25,6 +25,9 @@
       if (typeParameterName != null) {
         description.appendText(" with media type parameter '").appendText(typeParameterName).appendText("=").appendText(typeParameterValue).appendText("'");
       }
+      if (arguments != null) {
+        description.appendText(" with arguments").appendText(arguments.toString());
+      }
       if (novalue != null && novalue) {
         description.appendText(" with no value");
       }
@@ -79,6 +82,9 @@
         }
       }
       if (novalue != null && novalue && link.getValue() != null) {
+        return false;
+      }
+      if (arguments != null && !arguments.equals(link.getArguments())) {
         return false;
       }
       if (valueMatcher != null && !valueMatcher.matches(link.getValue())) {
