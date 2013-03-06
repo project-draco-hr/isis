@@ -1,0 +1,8 @@
+{
+  Response response=serviceResource.invokeActionQueryOnly("ActionsEntities","list",null);
+  RestfulResponse<ActionResultRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.LIST));
+  final ListRepresentation listRepr=actionResultRepr.getResult().as(ListRepresentation.class);
+  assertThat(listRepr.getValue().size(),is(5));
+}

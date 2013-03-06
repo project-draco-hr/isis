@@ -1,0 +1,12 @@
+{
+  JsonRepresentation args=JsonRepresentation.newMap();
+  args.mapPut("from",1);
+  args.mapPut("to",3);
+  String xIsisQueryString=UrlEncodingUtils.urlEncode(args);
+  Response response=serviceResource.invokeActionQueryOnly("ActionsEntities","subList",xIsisQueryString);
+  RestfulResponse<ActionResultRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.LIST));
+  final ListRepresentation listRepr=actionResultRepr.getResult().as(ListRepresentation.class);
+  assertThat(listRepr.getValue().size(),is(2));
+}

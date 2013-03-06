@@ -1,0 +1,11 @@
+{
+  final JsonRepresentation givenAction=Util.givenAction(client,"ActionsEntities","list");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  assertThat(invokeLink,isLink(client).rel(Rel.INVOKE).httpMethod(RestfulHttpMethod.GET).href(Matchers.endsWith(":39393/services/ActionsEntities/actions/list/invoke")).arguments(JsonRepresentation.newMap()).build());
+  final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink);
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.LIST));
+  final ListRepresentation listRepr=actionResultRepr.getResult().as(ListRepresentation.class);
+  assertThat(listRepr.getValue().size(),is(5));
+}
