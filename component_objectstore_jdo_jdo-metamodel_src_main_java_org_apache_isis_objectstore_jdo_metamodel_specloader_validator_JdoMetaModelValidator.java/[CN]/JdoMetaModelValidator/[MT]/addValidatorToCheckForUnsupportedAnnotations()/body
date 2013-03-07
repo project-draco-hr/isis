@@ -1,0 +1,12 @@
+{
+  MetaModelValidatorVisiting.Visitor ensureIdentityType=new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    ObjectSpecification objSpec,    ValidationFailures validationFailures){
+      if (objSpec.containsDoOpFacet(ParentedFacet.class) && !objSpec.containsDoOpFacet(CollectionFacet.class)) {
+        validationFailures.add("DataNucleus object store currently does not supported Aggregated or EmbeddedOnly annotations: see %s",objSpec.getFullIdentifier());
+      }
+      return true;
+    }
+  }
+;
+  add(new MetaModelValidatorVisiting(ensureIdentityType));
+}
