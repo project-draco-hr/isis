@@ -25,9 +25,20 @@
         }
       }
       model.clearToggleMementosList();
+      model.setObject(persistentAdaptersWithin(model.getObject()));
+      target.add(this);
       target.add(dataTable);
+    }
+    private List<ObjectAdapter> persistentAdaptersWithin(    List<ObjectAdapter> adapters){
+      return Lists.newArrayList(Iterables.filter(adapters,new Predicate<ObjectAdapter>(){
+        @Override public boolean apply(        ObjectAdapter input){
+          return !input.isTransient() && !input.isDestroyed();
+        }
+      }
+));
     }
   }
 ;
+  link.add(new JGrowlBehaviour());
   return new LinkAndLabel(link,objectAction.getName());
 }
