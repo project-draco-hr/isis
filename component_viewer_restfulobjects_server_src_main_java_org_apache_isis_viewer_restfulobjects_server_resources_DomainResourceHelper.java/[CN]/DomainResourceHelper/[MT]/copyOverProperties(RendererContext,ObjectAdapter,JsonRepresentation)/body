@@ -20,7 +20,15 @@
       allOk=false;
       continue;
     }
-    final ObjectAdapter valueAdapter=objectAdapterFor(resourceContext,propertySpec,valueRepr);
+    final ObjectAdapter valueAdapter;
+    try {
+      valueAdapter=objectAdapterFor(resourceContext,propertySpec,valueRepr);
+    }
+ catch (    IllegalArgumentException ex) {
+      propertyRepr.mapPut("invalidReason",ex.getMessage());
+      allOk=false;
+      continue;
+    }
     final Consent consent=property.isAssociationValid(objectAdapter,valueAdapter);
     if (consent.isAllowed()) {
       try {

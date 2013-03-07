@@ -1,0 +1,17 @@
+{
+  final JsonRepresentation givenAction=Util.givenAction(client,"ActionsEntities","subList");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  assertThat(invokeLink,isLink(client).rel(Rel.INVOKE).httpMethod(RestfulHttpMethod.GET).href(Matchers.endsWith(":39393/services/ActionsEntities/actions/subList/invoke")).build());
+  JsonRepresentation args=invokeLink.getArguments();
+  assertThat(args.size(),is(2));
+  assertThat(args,RestfulMatchers.mapHas("from"));
+  assertThat(args,RestfulMatchers.mapHas("to"));
+  args.mapPut("from",1);
+  args.mapPut("to",3);
+  final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.LIST));
+  final ListRepresentation listRepr=actionResultRepr.getResult().as(ListRepresentation.class);
+  assertThat(listRepr.getValue().size(),is(2));
+}

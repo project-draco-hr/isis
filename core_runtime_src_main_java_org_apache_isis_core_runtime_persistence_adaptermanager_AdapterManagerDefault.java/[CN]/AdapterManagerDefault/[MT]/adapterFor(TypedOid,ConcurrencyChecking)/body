@@ -1,8 +1,13 @@
 {
   ObjectAdapter adapter=getAdapterFor(typedOid);
   if (adapter == null) {
-    final Object pojo=pojoRecreator.recreatePojo(typedOid);
-    adapter=mapRecreatedPojo(typedOid,pojo);
+    try {
+      final Object pojo=pojoRecreator.recreatePojo(typedOid);
+      adapter=mapRecreatedPojo(typedOid,pojo);
+    }
+ catch (    RuntimeException ex) {
+      throw new ObjectNotFoundException(typedOid,ex);
+    }
   }
   Oid adapterOid=adapter.getOid();
   if (adapterOid instanceof RootOid) {

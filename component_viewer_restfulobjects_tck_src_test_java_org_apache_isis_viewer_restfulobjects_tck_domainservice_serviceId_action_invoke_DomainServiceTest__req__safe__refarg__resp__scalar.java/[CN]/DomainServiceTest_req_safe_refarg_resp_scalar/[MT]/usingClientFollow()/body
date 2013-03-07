@@ -1,0 +1,31 @@
+{
+  final ListRepresentation subListRepr=givenSublistActionInvoked(0,1);
+  assertThat(subListRepr.getValue().size(),is(1));
+  LinkRepresentation firstEntityLink=subListRepr.getValue().arrayGet(0).asLink();
+  final JsonRepresentation containsAction=Util.givenAction(client,"ActionsEntities","contains");
+  final ObjectActionRepresentation containsActionRepr=containsAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=containsActionRepr.getInvoke();
+  final JsonRepresentation args=invokeLink.getArguments();
+  assertThat(args.size(),is(3));
+  args.mapPut("searchFor",firstEntityLink);
+  args.mapPut("from",0);
+  args.mapPut("to",3);
+  RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
+  ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.SCALAR_VALUE));
+  JsonRepresentation resultRepr=actionResultRepr.getResult();
+  assertThat(resultRepr,is(not(nullValue())));
+  ScalarValueRepresentation scalarValueRepr=resultRepr.as(ScalarValueRepresentation.class);
+  LinkRepresentation returnTypeLink=scalarValueRepr.getLinkWithRel(Rel.RETURN_TYPE);
+  assertThat(returnTypeLink,is(not(nullValue())));
+  assertThat(returnTypeLink,isLink(client).rel(Rel.RETURN_TYPE).href(Matchers.endsWith(":39393/domain-types/boolean")).returning(HttpStatusCode.OK).build());
+  assertThat(scalarValueRepr.getValue().asBoolean(),is(true));
+  args.mapPut("searchFor",firstEntityLink);
+  args.mapPut("from",3);
+  args.mapPut("to",5);
+  restfulResponse=client.followT(invokeLink,args);
+  actionResultRepr=restfulResponse.getEntity();
+  resultRepr=actionResultRepr.getResult();
+  scalarValueRepr=resultRepr.as(ScalarValueRepresentation.class);
+  assertThat(scalarValueRepr.getValue().asBoolean(),is(false));
+}

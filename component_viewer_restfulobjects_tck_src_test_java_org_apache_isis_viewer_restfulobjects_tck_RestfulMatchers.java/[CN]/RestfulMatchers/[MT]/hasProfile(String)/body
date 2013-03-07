@@ -1,0 +1,17 @@
+{
+  final MediaType expectedMediaType=Header.CONTENT_TYPE.parse(expectedMediaTypeAndProfileStr);
+  final String expectedProfileIfAny=expectedMediaType.getParameters().get("profile");
+  return new TypeSafeMatcher<MediaType>(){
+    @Override public void describeTo(    Description description){
+      description.appendText("is a media type 'application/json' with a profile parameter of '" + expectedMediaTypeAndProfileStr + '"');
+    }
+    @Override protected boolean matchesSafely(    MediaType item){
+      if (!item.isCompatible(expectedMediaType)) {
+        return false;
+      }
+      String actualProfileIfAny=item.getParameters().get("profile");
+      return Objects.equal(expectedProfileIfAny,actualProfileIfAny);
+    }
+  }
+;
+}

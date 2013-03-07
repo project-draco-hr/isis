@@ -1,6 +1,7 @@
 {
-  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLES);
-  final ObjectAdapter objectAdapter=getObjectAdapter(domainType,oidStr);
+  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLES,body);
+  final JsonRepresentation arguments=getResourceContext().getQueryStringAsJsonRepr();
+  final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
-  return helper.invokeAction(actionId,body,getResourceContext().getWhere());
+  return helper.invokeAction(actionId,arguments,getResourceContext().getWhere());
 }

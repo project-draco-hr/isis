@@ -1,6 +1,6 @@
 {
   init(Where.OBJECT_FORMS);
-  final ObjectAdapter objectAdapter=getObjectAdapter(domainType,oidStr);
+  final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
   final OneToOneAssociation property=helper.getPropertyThatIsVisibleAndUsable(propertyId,Intent.MUTATE,getResourceContext().getWhere());
   final Consent consent=property.isAssociationValid(objectAdapter,null);
@@ -8,5 +8,5 @@
     throw RestfulObjectsApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   property.set(objectAdapter,null);
-  return helper.propertyDetails(objectAdapter,propertyId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());
+  return helper.propertyDetails(propertyId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());
 }

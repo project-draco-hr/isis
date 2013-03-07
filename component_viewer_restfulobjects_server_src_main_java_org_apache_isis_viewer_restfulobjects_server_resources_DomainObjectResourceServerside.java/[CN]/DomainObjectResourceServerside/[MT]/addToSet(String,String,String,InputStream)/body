@@ -1,6 +1,6 @@
 {
   init(Where.PARENTED_TABLES);
-  final ObjectAdapter objectAdapter=getObjectAdapter(domainType,oidStr);
+  final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
   final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(collectionId,Intent.MUTATE,getResourceContext().getWhere());
   if (!collection.getCollectionSemantics().isSet()) {
@@ -14,5 +14,5 @@
     throw RestfulObjectsApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   collection.addElement(objectAdapter,argAdapter);
-  return helper.collectionDetails(objectAdapter,collectionId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());
+  return helper.collectionDetails(collectionId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());
 }

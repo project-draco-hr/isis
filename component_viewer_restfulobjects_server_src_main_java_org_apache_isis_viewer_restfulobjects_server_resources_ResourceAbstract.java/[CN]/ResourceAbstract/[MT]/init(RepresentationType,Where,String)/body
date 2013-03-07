@@ -1,0 +1,9 @@
+{
+  if (!IsisContext.inSession()) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.UNAUTHORIZED);
+  }
+  if (getAuthenticationSession() == null) {
+    throw RestfulObjectsApplicationException.create(HttpStatusCode.UNAUTHORIZED);
+  }
+  this.resourceContext=new ResourceContext(representationType,httpHeaders,uriInfo,request,where,queryString,httpServletRequest,httpServletResponse,securityContext,getLocalization(),getAuthenticationSession(),getPersistenceSession(),getAdapterManager(),getSpecificationLoader(),getConfiguration());
+}

@@ -1,0 +1,15 @@
+{
+  final ListRepresentation subListRepr=givenSublistActionInvoked(0,1);
+  LinkRepresentation firstEntityLink=subListRepr.getValue().arrayGet(0).asLink();
+  JsonRepresentation args=JsonRepresentation.newMap();
+  args.mapPut("searchFor",firstEntityLink);
+  args.mapPut("from",0);
+  args.mapPut("to",3);
+  Response response=serviceResource.invokeActionQueryOnly("ActionsEntities","contains",UrlEncodingUtils.urlEncode(args));
+  RestfulResponse<ActionResultRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  JsonRepresentation resultRepr=actionResultRepr.getResult();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.SCALAR_VALUE));
+  ScalarValueRepresentation scalarValueRepr=resultRepr.as(ScalarValueRepresentation.class);
+  assertThat(scalarValueRepr.getValue().asBoolean(),is(true));
+}

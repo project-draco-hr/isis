@@ -1,0 +1,16 @@
+{
+  LinkRepresentation nonExistentEntityLink=new LinkRepresentation().withHref("http://localhost:39393/objects/NONEXISTENT/123");
+  final JsonRepresentation containsAction=Util.givenAction(client,"ActionsEntities","contains");
+  final ObjectActionRepresentation containsActionRepr=containsAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=containsActionRepr.getInvoke();
+  final JsonRepresentation args=invokeLink.getArguments();
+  args.mapPut("searchFor",nonExistentEntityLink);
+  args.mapPut("from",0);
+  args.mapPut("to",1);
+  RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
+  assertThat(restfulResponse,hasStatus(HttpStatusCode.VALIDATION_FAILED));
+  assertThat(restfulResponse.getHeader(Header.WARNING),is("199 Argument 'searchFor' href does not reference a known entity"));
+  assertThat(restfulResponse.getHeader(Header.CONTENT_TYPE),hasProfile(MediaType.APPLICATION_JSON));
+  RestfulResponse<JsonRepresentation> restfulResponseOfError=restfulResponse.wraps(JsonRepresentation.class);
+  JsonRepresentation repr=restfulResponseOfError.getEntity();
+}

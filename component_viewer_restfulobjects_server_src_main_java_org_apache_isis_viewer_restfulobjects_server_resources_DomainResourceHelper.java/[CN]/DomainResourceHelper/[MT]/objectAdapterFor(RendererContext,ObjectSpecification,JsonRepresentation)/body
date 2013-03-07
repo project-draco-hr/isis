@@ -6,16 +6,15 @@
     return new JsonValueEncoder().asAdapter(objectSpec,representation);
   }
   if (!representation.isLink()) {
-    throw new ExpectedMapRepresentingLinkException();
+    throw new IllegalArgumentException("Expected a link (because this object's type is not a value) but found no 'href'");
   }
-  final JsonRepresentation argLink=representation.asLink();
-  final String oidFromHref=UrlParserUtils.oidFromLink(argLink);
+  final String oidFromHref=UrlParserUtils.encodedOidFromLink(representation);
   if (oidFromHref == null) {
-    throw new ExpectedMapRepresentingLinkException();
+    throw new IllegalArgumentException("Could not parse 'href' to identify the object's OID");
   }
-  final ObjectAdapter objectAdapter=OidUtils.getObjectAdapter(resourceContext,oidFromHref);
+  final ObjectAdapter objectAdapter=OidUtils.getObjectAdapterElseNull(resourceContext,oidFromHref);
   if (objectAdapter == null) {
-    throw new UnknownOidException(oidFromHref);
+    throw new IllegalArgumentException("Object not found for 'href'");
   }
   return objectAdapter;
 }
