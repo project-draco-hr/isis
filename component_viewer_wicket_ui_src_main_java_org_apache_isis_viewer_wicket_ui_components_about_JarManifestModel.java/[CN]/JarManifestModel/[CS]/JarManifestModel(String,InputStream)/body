@@ -1,0 +1,47 @@
+{
+  this.aboutMessage=aboutMessage;
+  Manifest manifest;
+  try {
+    manifest=new Manifest(metaInfManifestIs);
+    manifests.add(JarManifestAttributes.jarName("Web archive (war file)"));
+    manifests.add(JarManifestAttributes.jarUrl(null));
+    addAttributes(manifest,manifests);
+    String versionIfAny=guessVersion(manifest);
+    this.aboutMessage=this.aboutMessage + (versionIfAny != null ? "\n\n" + versionIfAny : "");
+  }
+ catch (  Exception ex) {
+  }
+ finally {
+    IoUtils.closeSafely(metaInfManifestIs);
+  }
+  Enumeration<?> resEnum;
+  try {
+    resEnum=Thread.currentThread().getContextClassLoader().getResources(JarFile.MANIFEST_NAME);
+  }
+ catch (  IOException e) {
+    return;
+  }
+  final List<JarManifest> jarManifests=Lists.newArrayList();
+  while (resEnum.hasMoreElements()) {
+    URL url=(URL)resEnum.nextElement();
+    JarManifest jarManifest=new JarManifest(url);
+    jarManifests.add(jarManifest);
+    InputStream is=null;
+    try {
+      is=url.openStream();
+      if (is != null) {
+        manifest=new Manifest(is);
+        jarManifest.addAttributesFrom(manifest);
+      }
+    }
+ catch (    Exception e3) {
+    }
+ finally {
+      IoUtils.closeSafely(is);
+    }
+  }
+  Collections.sort(jarManifests);
+  for (  JarManifest jarManifest : jarManifests) {
+    jarManifest.addAttributesTo(manifests);
+  }
+}

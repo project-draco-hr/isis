@@ -1,0 +1,18 @@
+{
+  final String path=url.getPath();
+  String strippedPath=stripSuffix(path,"/META-INF/MANIFEST.MF");
+  strippedPath=stripSuffix(strippedPath,"!");
+  List<String> parts=Lists.newArrayList(Splitter.on(CharMatcher.anyOf("/\\")).split(strippedPath));
+  Collections.reverse(parts);
+  for (  String part : parts) {
+    if (part.endsWith(".jar")) {
+      return new JarName(JarName.Type.JAR,part);
+    }
+  }
+  if (parts.size() >= 3) {
+    if (parts.get(0).equals("classes") && parts.get(1).startsWith("target")) {
+      return new JarName(JarName.Type.CLASSES,parts.get(2));
+    }
+  }
+  return new JarName(JarName.Type.OTHER,strippedPath);
+}

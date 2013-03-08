@@ -1,0 +1,13 @@
+{
+  super(id,manifestModel);
+  add(new Label(ID_ABOUT_MESSAGE,manifestModel.getAboutMessage()).setEscapeModelStrings(false));
+  MarkupContainer container=new WebMarkupContainer(ID_MANIFEST_ATTRIBUTES){
+    private static final long serialVersionUID=1L;
+    @Override public void renderHead(    IHeaderResponse response){
+      response.render(JavaScriptReferenceHeaderItem.forReference(DIV_TOGGLE_JS));
+    }
+  }
+;
+  container.add(new JarManifestListView(ID_MANIFEST_ATTRIBUTE,JarManifestPanel.ID_LINE,manifestModel.getDetail()));
+  add(container);
+}
