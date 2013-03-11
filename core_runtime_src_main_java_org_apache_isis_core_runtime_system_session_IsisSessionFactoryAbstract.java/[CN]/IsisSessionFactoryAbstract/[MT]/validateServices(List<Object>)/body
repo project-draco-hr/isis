@@ -6,4 +6,16 @@
       validatePreDestroyMethods(service,method);
     }
   }
+  ListMultimap<String,Object> servicesById=ArrayListMultimap.create();
+  for (  Object service : serviceList) {
+    String id=ServiceUtil.id(service);
+    servicesById.put(id,service);
+  }
+  for (  Entry<String,Collection<Object>> servicesForId : servicesById.asMap().entrySet()) {
+    String serviceId=servicesForId.getKey();
+    Collection<Object> services=servicesForId.getValue();
+    if (services.size() > 1) {
+      throw new IllegalStateException("Service ids must be unique; serviceId '" + serviceId + "' is declared by domain services "+ classNamesFor(services));
+    }
+  }
 }
