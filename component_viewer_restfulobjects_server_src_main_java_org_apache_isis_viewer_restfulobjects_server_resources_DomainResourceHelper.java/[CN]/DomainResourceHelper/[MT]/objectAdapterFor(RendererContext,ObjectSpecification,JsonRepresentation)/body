@@ -1,20 +1,32 @@
 {
-  if (representation == null) {
+  if (argRepr == null) {
     return null;
   }
   if (objectSpec.isEncodeable()) {
-    return new JsonValueEncoder().asAdapter(objectSpec,representation);
+    return new JsonValueEncoder().asAdapter(objectSpec,argRepr);
   }
-  if (!representation.isLink()) {
-    throw new IllegalArgumentException("Expected a link (because this object's type is not a value) but found no 'href'");
+  final JsonRepresentation argValueRepr=argRepr.getRepresentation("value");
+  if (argValueRepr == null) {
+    String reason="No 'value' key";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
   }
-  final String oidFromHref=UrlParserUtils.encodedOidFromLink(representation);
+  if (!argValueRepr.isLink()) {
+    final String reason="Expected a link (because this object's type is not a value) but found no 'href'";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
+  }
+  final String oidFromHref=UrlParserUtils.encodedOidFromLink(argValueRepr);
   if (oidFromHref == null) {
-    throw new IllegalArgumentException("Could not parse 'href' to identify the object's OID");
+    final String reason="Could not parse 'href' to identify the object's OID";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
   }
   final ObjectAdapter objectAdapter=OidUtils.getObjectAdapterElseNull(resourceContext,oidFromHref);
   if (objectAdapter == null) {
-    throw new IllegalArgumentException("Object not found for 'href'");
+    final String reason="'href' does not reference a known entity";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
   }
   return objectAdapter;
 }

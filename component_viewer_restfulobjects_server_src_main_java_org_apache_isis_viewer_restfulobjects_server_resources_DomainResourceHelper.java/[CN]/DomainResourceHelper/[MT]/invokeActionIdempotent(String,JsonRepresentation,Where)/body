@@ -2,7 +2,7 @@
   final ObjectAction action=getObjectActionThatIsVisibleAndUsable(actionId,Intent.MUTATE,where);
   final ActionSemantics.Of actionSemantics=action.getSemantics();
   if (!actionSemantics.isIdempotentInNature()) {
-    throw RestfulObjectsApplicationException.create(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
+    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
   }
   return invokeActionUsingAdapters(action,arguments);
 }

@@ -3,24 +3,24 @@
   final String objectStr=DomainResourceHelper.asStringUtf8(object);
   final JsonRepresentation objectRepr=DomainResourceHelper.readAsMap(objectStr);
   if (!objectRepr.isMap()) {
-    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Body is not a map; got %s",objectRepr);
+    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Body is not a map; got %s",objectRepr);
   }
   final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,oidStr);
   final JsonRepresentation propertiesList=objectRepr.getArrayEnsured("members[memberType=property]");
   if (propertiesList == null) {
-    throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[memberType=property]); got %s",objectRepr);
+    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[memberType=property]); got %s",objectRepr);
   }
   final IsisTransactionManager transactionManager=getResourceContext().getPersistenceSession().getTransactionManager();
   transactionManager.startTransaction();
   try {
     if (!DomainResourceHelper.copyOverProperties(getResourceContext(),objectAdapter,propertiesList)) {
       transactionManager.abortTransaction();
-      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,objectRepr,"Illegal property value");
+      throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,"Illegal property value");
     }
     final Consent validity=objectAdapter.getSpecification().isValid(objectAdapter);
     if (validity.isVetoed()) {
       transactionManager.abortTransaction();
-      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,objectRepr,validity.getReason());
+      throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,validity.getReason());
     }
     transactionManager.endTransaction();
   }

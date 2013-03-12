@@ -3,7 +3,9 @@
   for (  final Entry<String,JsonRepresentation> arg : arguments.mapIterable()) {
     final String argName=arg.getKey();
     if (action.getParameterById(argName) == null) {
-      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s' does not have a parameter %s but an argument of that name was provided",action.getId(),argName);
+      String reason=String.format("Action '%s' does not have a parameter %s but an argument of that name was provided",action.getId(),argName);
+      arguments.mapPut("x-ro-invalidReason",reason);
+      throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.VALIDATION_FAILED,reason);
     }
   }
   final List<ObjectActionParameter> parameters=action.getParameters();
@@ -11,7 +13,9 @@
     final String paramId=param.getId();
     final JsonRepresentation argRepr=arguments.getRepresentation(paramId);
     if (argRepr == null && !param.isOptional()) {
-      throw RestfulObjectsApplicationException.create(HttpStatusCode.BAD_REQUEST,"Action '%s', no argument found for (mandatory) parameter '%s'",action.getId(),paramId);
+      String reason=String.format("Action '%s', no argument found for (mandatory) parameter '%s'",action.getId(),paramId);
+      arguments.mapPut("x-ro-invalidReason",reason);
+      throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.VALIDATION_FAILED,reason);
     }
     argList.add(argRepr);
   }

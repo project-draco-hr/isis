@@ -1,8 +1,16 @@
 {
-  final ResponseBuilder builder=Response.status(ex.getHttpStatusCode().getJaxrsStatusType()).type(RestfulMediaType.APPLICATION_JSON_ERROR).entity(jsonFor(ex));
+  final ResponseBuilder builder=Response.status(ex.getHttpStatusCode().getJaxrsStatusType());
+  final String body=bodyFor(ex);
+  if (body != null) {
+    builder.entity(body);
+    builder.type(MediaType.APPLICATION_JSON);
+  }
+ else {
+    builder.type(RestfulMediaType.APPLICATION_JSON_ERROR);
+  }
   final String message=ex.getMessage();
   if (message != null) {
-    builder.header(RestfulResponse.Header.WARNING.getName(),WARNING_HEADER_PREFIX + message);
+    builder.header(RestfulResponse.Header.WARNING.getName(),RestfulResponse.Header.WARNING.render(message));
   }
   return builder.build();
 }

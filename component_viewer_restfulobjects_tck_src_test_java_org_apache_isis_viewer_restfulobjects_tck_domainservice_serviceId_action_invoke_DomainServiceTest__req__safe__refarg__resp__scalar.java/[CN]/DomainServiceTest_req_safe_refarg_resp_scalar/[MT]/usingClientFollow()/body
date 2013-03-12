@@ -7,9 +7,9 @@
   final LinkRepresentation invokeLink=containsActionRepr.getInvoke();
   final JsonRepresentation args=invokeLink.getArguments();
   assertThat(args.size(),is(3));
-  args.mapPut("searchFor",firstEntityLink);
-  args.mapPut("from",0);
-  args.mapPut("to",3);
+  args.mapPut("searchFor.value",firstEntityLink);
+  args.mapPut("from.value",0);
+  args.mapPut("to.value",3);
   RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
   ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
   assertThat(actionResultRepr.getResultType(),is(ResultType.SCALAR_VALUE));
@@ -20,9 +20,9 @@
   assertThat(returnTypeLink,is(not(nullValue())));
   assertThat(returnTypeLink,isLink(client).rel(Rel.RETURN_TYPE).href(Matchers.endsWith(":39393/domain-types/boolean")).returning(HttpStatusCode.OK).build());
   assertThat(scalarValueRepr.getValue().asBoolean(),is(true));
-  args.mapPut("searchFor",firstEntityLink);
-  args.mapPut("from",3);
-  args.mapPut("to",5);
+  args.mapPut("searchFor.value",firstEntityLink);
+  args.mapPut("from.value",3);
+  args.mapPut("to.values",5);
   restfulResponse=client.followT(invokeLink,args);
   actionResultRepr=restfulResponse.getEntity();
   resultRepr=actionResultRepr.getResult();

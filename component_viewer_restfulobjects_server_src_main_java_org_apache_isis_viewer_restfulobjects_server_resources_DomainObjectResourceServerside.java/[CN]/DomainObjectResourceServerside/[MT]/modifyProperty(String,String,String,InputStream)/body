@@ -8,7 +8,7 @@
   final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(propertySpec,bodyAsString);
   final Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
-    throw RestfulObjectsApplicationException.create(HttpStatusCode.UNAUTHORIZED,consent.getReason());
+    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   property.set(objectAdapter,argAdapter);
   return helper.propertyDetails(propertyId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());

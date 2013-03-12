@@ -11,14 +11,14 @@
       final Object arg=argAdapter.getObject();
       final String reasonNotValid=parameter.isValid(objectAdapter,arg,null);
       if (reasonNotValid != null) {
-        throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,reasonNotValid);
+        throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.NOT_ACCEPTABLE,reasonNotValid);
       }
     }
   }
   final ObjectAdapter[] argArray=argAdapters.toArray(new ObjectAdapter[0]);
   final Consent consent=action.isProposedArgumentSetValid(objectAdapter,argArray);
   if (consent.isVetoed()) {
-    throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE,consent.getReason());
+    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.NOT_ACCEPTABLE,consent.getReason());
   }
   final ObjectAdapter returnedAdapter=action.execute(objectAdapter,argArray);
   final ActionResultReprRenderer renderer=new ActionResultReprRenderer(resourceContext,null,JsonRepresentation.newMap());
