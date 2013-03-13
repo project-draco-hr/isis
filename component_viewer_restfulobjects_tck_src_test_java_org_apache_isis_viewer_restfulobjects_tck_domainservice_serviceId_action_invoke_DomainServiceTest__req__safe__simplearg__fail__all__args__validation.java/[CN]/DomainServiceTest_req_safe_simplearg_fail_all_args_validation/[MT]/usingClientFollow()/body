@@ -8,7 +8,7 @@
   assertThat(args,RestfulMatchers.mapHas("from"));
   assertThat(args,RestfulMatchers.mapHas("to"));
   args.mapPut("from.value",1);
-  args.mapPut("to.value",3);
+  args.mapPut("to.value",0);
   final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
-  then(restfulResponse);
+  thenResponseIsErrorWithInvalidReason(restfulResponse);
 }

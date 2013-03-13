@@ -1,0 +1,12 @@
+{
+  assertThat(restfulResponse.getHeader(Header.CONTENT_TYPE),hasProfile(RestfulMediaType.APPLICATION_JSON_ACTION_RESULT));
+  ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.SCALAR_VALUE));
+  JsonRepresentation resultRepr=actionResultRepr.getResult();
+  assertThat(resultRepr,is(not(nullValue())));
+  ScalarValueRepresentation scalarValueRepr=resultRepr.as(ScalarValueRepresentation.class);
+  LinkRepresentation returnTypeLink=scalarValueRepr.getLinkWithRel(Rel.RETURN_TYPE);
+  assertThat(returnTypeLink,is(not(nullValue())));
+  assertThat(returnTypeLink,isLink(client).rel(Rel.RETURN_TYPE).href(Matchers.endsWith(":39393/domain-types/boolean")).returning(HttpStatusCode.OK).build());
+  assertThat(scalarValueRepr.getValue().asBoolean(),is(value));
+}
