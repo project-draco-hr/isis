@@ -1,0 +1,15 @@
+{
+  if (!field.isAnnotationPresent(Auto.class)) {
+    return;
+  }
+  final Class<?> type=field.getType();
+  if (type == States.class) {
+    autoInstantiateStates(field,object);
+  }
+ else   if (type == Sequence.class) {
+    autoInstantiateSequence(field,object);
+  }
+ else {
+    throw new IllegalStateException("cannot auto-instantiate field of type " + type.getName());
+  }
+}

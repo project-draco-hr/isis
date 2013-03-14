@@ -1,0 +1,23 @@
+{
+  if (!field.isAnnotationPresent(Mock.class)) {
+    return;
+  }
+  final Object mock=context.mock(field.getType(),field.getName());
+  setAutoField(field,object,mock,"auto-mock field " + field.getName());
+  if (field.isAnnotationPresent(Ignoring.class)) {
+    context.ignoring(mock);
+  }
+  if (field.isAnnotationPresent(Allowing.class)) {
+    context.allowing(mock);
+  }
+  if (field.isAnnotationPresent(Never.class)) {
+    context.never(mock);
+  }
+  if (field.isAnnotationPresent(One.class)) {
+    context.one(mock);
+  }
+  if (field.isAnnotationPresent(Checking.class)) {
+    checking(field,mock);
+  }
+  mocks.add(mock);
+}

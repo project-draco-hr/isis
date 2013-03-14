@@ -1,0 +1,11 @@
+{
+  try {
+    Constructor<? extends ExpectationsOn<T>> constructor=expectationsClass.getConstructor(Object.class);
+    ExpectationsOn<T> expectations=constructor.newInstance(mock);
+    checking(expectations);
+    return mock;
+  }
+ catch (  Exception e) {
+    throw new AssertionFailedError("Unable to instantiate expectations class '" + expectationsClass.getName() + "'");
+  }
+}

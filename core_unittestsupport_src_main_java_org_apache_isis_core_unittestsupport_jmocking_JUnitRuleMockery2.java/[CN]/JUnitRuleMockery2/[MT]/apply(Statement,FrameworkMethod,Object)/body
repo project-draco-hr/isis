@@ -1,0 +1,48 @@
+{
+  return new Statement(){
+    @Override public void evaluate() throws Throwable {
+      prepare(target);
+      base.evaluate();
+      assertIsSatisfied();
+    }
+    private void prepare(    final Object target){
+      final List<Field> allFields=AllDeclaredFields.in(target.getClass());
+      assertOnlyOneJMockContextIn(allFields);
+      List<Object> mocks=fillInAutoMocks(target,allFields);
+      cutType=locateClassUnderTestIfAny(allFields);
+      if (cutType != null) {
+        for (        Object mock : mocks) {
+          container.addComponent(mock);
+        }
+        container.addComponent(cutType);
+      }
+    }
+    private void assertOnlyOneJMockContextIn(    final List<Field> allFields){
+      Field contextField=null;
+      for (      final Field field : allFields) {
+        if (JUnitRuleMockery2.class.isAssignableFrom(field.getType())) {
+          if (null != contextField) {
+            fail("Test class should only have one JUnitRuleMockery2 field, found " + contextField.getName() + " and "+ field.getName());
+          }
+          contextField=field;
+        }
+      }
+    }
+    private Class<?> locateClassUnderTestIfAny(    final List<Field> allFields){
+      Field cutField=null;
+      for (      final Field field : allFields) {
+        if (field.getAnnotation(ClassUnderTest.class) != null) {
+          if (null != cutField) {
+            fail("Test class should only have one field annotated with @ClassUnderTest, found " + cutField.getName() + " and "+ field.getName());
+          }
+          cutField=field;
+        }
+      }
+      return cutField != null ? cutField.getType() : null;
+    }
+    private List<Object> fillInAutoMocks(    final Object target,    final List<Field> allFields){
+      return mockomatic.fillIn(target,allFields);
+    }
+  }
+;
+}
