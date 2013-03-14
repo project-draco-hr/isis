@@ -1,0 +1,25 @@
+{
+  ObjectAdapter proposedValueAdapter=null;
+  ObjectSpecification proposedValueSpec;
+  if (proposedValue != null) {
+    proposedValueAdapter=getAdapterMap().adapterFor(proposedValue);
+    proposedValueSpec=proposedValueAdapter.getSpecification();
+    if (!proposedValueSpec.isOfType(proposedValueSpec)) {
+      proposedValueAdapter=doCoerceProposedValue(adapter,proposedValue,localization);
+    }
+    if (proposedValueAdapter == null) {
+      return null;
+    }
+    proposedValueSpec=proposedValueAdapter.getSpecification();
+    if (!proposedValueSpec.isOfType(proposedValueSpec)) {
+      return null;
+    }
+  }
+  final ValidityContext<?> ic=createProposedArgumentInteractionContext(getAuthenticationSession(),InteractionInvocationMethod.BY_USER,adapter,arguments(proposedValueAdapter),getNumber());
+  final InteractionResultSet buf=new InteractionResultSet();
+  InteractionUtils.isValidResultSet(this,ic,buf);
+  if (buf.isVetoed()) {
+    return buf.getInteractionResult().getReason();
+  }
+  return null;
+}
