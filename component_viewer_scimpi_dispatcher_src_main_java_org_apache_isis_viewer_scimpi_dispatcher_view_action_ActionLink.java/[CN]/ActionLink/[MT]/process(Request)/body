@@ -10,6 +10,8 @@
   final String scopeSegment=scope == null ? "" : "&amp;" + SCOPE + "="+ scope;
   final String confirm=request.getOptionalProperty(CONFIRM);
   final String completionMessage=request.getOptionalProperty(MESSAGE);
+  final String idName=request.getOptionalProperty(ID,method);
+  final String className=request.getOptionalProperty(CLASS);
   final String confirmSegment=confirm == null ? "" : "&amp;" + "_" + CONFIRM + "="+ URLEncoder.encode(confirm);
   final String messageSegment=completionMessage == null ? "" : "&amp;" + "_" + MESSAGE + "="+ URLEncoder.encode(completionMessage);
   final RequestContext context=request.getContext();
@@ -36,7 +38,7 @@
     target=objectId;
   }
   if (MethodsUtils.isVisibleAndUsable(object,action,where)) {
-    writeLink(request,target,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,resultOverride,scopeSegment,confirmSegment,messageSegment,context,action,parameters,text);
+    writeLink(request,idName,className,target,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,resultOverride,scopeSegment,confirmSegment,messageSegment,context,action,parameters,text);
   }
   request.popBlockContent();
 }

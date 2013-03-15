@@ -4,12 +4,14 @@
   for (int i=0; i < parameters.length; i++) {
     parameterSegment+="&param" + (i + 1) + "="+ parameters[i];
   }
+  final String idSegment=idName == null ? "" : ("id=\"" + idName + "\" ");
+  final String classSegment="class=\"" + (className == null ? "action in-line" : className) + "\"";
   final String interactionParamters=context.encodedInteractionParameters();
   final String forwardResultSegment=forwardResultTo == null ? "" : "&amp;" + "_" + VIEW + "="+ context.fullFilePath(forwardResultTo);
   final String resultOverrideSegment=resultOverride == null ? "" : "&amp;" + "_" + RESULT_OVERRIDE + "="+ resultOverride;
   final String voidView=context.fullFilePath(forwardVoidTo == null ? context.getResourceFile() : forwardVoidTo);
   final String forwardVoidSegment="&amp;" + "_" + VOID + "="+ voidView;
-  request.appendHtml("<a href=\"action.app?" + "_" + OBJECT + "="+ objectId+ "&amp;"+ "_"+ VERSION+ "="+ version+ "&amp;"+ "_"+ METHOD+ "="+ method+ resultOverrideSegment+ forwardResultSegment+ forwardVoidSegment+ resultNameSegment+ parameterSegment+ scopeSegment+ confirmSegment+ messageSegment+ interactionParamters+ "\">");
+  request.appendHtml("<a " + idSegment + classSegment+ " href=\"action.app?"+ "_"+ OBJECT+ "="+ objectId+ "&amp;"+ "_"+ VERSION+ "="+ version+ "&amp;"+ "_"+ METHOD+ "="+ method+ resultOverrideSegment+ forwardResultSegment+ forwardVoidSegment+ resultNameSegment+ parameterSegment+ scopeSegment+ confirmSegment+ messageSegment+ interactionParamters+ "\">");
   request.appendHtml(text);
   request.appendHtml("</a>");
   HelpLink.append(request,action.getDescription(),action.getHelp());
