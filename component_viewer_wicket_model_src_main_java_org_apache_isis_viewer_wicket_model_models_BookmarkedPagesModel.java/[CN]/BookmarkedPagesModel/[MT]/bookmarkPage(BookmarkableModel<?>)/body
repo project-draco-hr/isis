@@ -1,14 +1,34 @@
 {
-  final PageParameters pageParameters=bookmarkableModel.asPageParameters();
-  PageType pageType=PageParameterNames.PAGE_TYPE.getEnumFrom(pageParameters,PageType.class);
+  final PageParameters candidatePP=bookmarkableModel.asPageParameters();
+  PageType pageType=PageParameterNames.PAGE_TYPE.getEnumFrom(candidatePP,PageType.class);
   if (pageType == null) {
     return;
   }
-  if (PageParameterNames.PAGE_TITLE.getStringFrom(pageParameters) == null) {
+  String candidateTitle=PageParameterNames.PAGE_TITLE.getStringFrom(candidatePP);
+  if (candidateTitle == null) {
     return;
   }
-  if (!list.contains(pageParameters)) {
-    list.add(pageParameters);
+  final String pageTitleKey=PageParameterNames.PAGE_TITLE.toString();
+  try {
+    candidatePP.remove(pageTitleKey);
+    for (    PageParameters eachPP : list) {
+      String pageTitle=PageParameterNames.PAGE_TITLE.getStringFrom(eachPP);
+      try {
+        eachPP.remove(pageTitleKey);
+        if (eachPP.equals(candidatePP)) {
+          pageTitle=candidateTitle;
+          current=eachPP;
+          return;
+        }
+      }
+  finally {
+        eachPP.add(PageParameterNames.PAGE_TITLE.toString(),pageTitle);
+      }
+    }
   }
-  current=pageParameters;
+  finally {
+    PageParameterNames.PAGE_TITLE.addStringTo(candidatePP,candidateTitle);
+  }
+  list.add(candidatePP);
+  current=candidatePP;
 }
