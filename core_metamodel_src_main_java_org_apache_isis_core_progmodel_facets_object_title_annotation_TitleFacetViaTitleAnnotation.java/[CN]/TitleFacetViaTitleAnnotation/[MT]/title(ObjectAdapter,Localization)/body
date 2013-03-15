@@ -1,26 +1,3 @@
 {
-  final StringBuilder stringBuilder=new StringBuilder();
-  try {
-    for (    final TitleComponent component : this.components) {
-      String title=null;
-      final Object titlePart=AdapterInvokeUtils.invoke(component.getMethod(),owningAdapter);
-      if (titlePart != null) {
-        title=titleOf(titlePart);
-        if (Strings.isNullOrEmpty(title)) {
-          title=titlePart.toString().trim();
-        }
-      }
-      if (Strings.isNullOrEmpty(title)) {
-        continue;
-      }
-      stringBuilder.append(component.getPrepend());
-      stringBuilder.append(abbreviated(title,component.abbreviateTo));
-      stringBuilder.append(component.getAppend());
-    }
-    return stringBuilder.toString().trim();
-  }
- catch (  final RuntimeException ex) {
-    LOG.warn("Title failure",ex);
-    return "Failed Title";
-  }
+  return title(null,targetAdapter,localization);
 }

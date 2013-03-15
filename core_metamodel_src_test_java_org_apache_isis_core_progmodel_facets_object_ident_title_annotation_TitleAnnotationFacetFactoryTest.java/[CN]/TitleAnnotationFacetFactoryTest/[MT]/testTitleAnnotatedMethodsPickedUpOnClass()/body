@@ -1,22 +1,22 @@
 {
   facetFactory.process(new ProcessClassContext(Customer2.class,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(TitleFacet.class);
-  assertNotNull(facet);
-  assertTrue(facet instanceof TitleFacetViaTitleAnnotation);
+  Assert.assertNotNull(facet);
+  Assert.assertTrue(facet instanceof TitleFacetViaTitleAnnotation);
   final TitleFacetViaTitleAnnotation titleFacetViaTitleAnnotation=(TitleFacetViaTitleAnnotation)facet;
   final List<Method> titleMethods=Arrays.asList(Customer2.class.getMethod("titleElement1"),Customer2.class.getMethod("titleElement3"),Customer2.class.getMethod("titleElement2"));
   final List<TitleComponent> components=titleFacetViaTitleAnnotation.getComponents();
   for (int i=0; i < titleMethods.size(); i++) {
-    assertEquals(titleMethods.get(i),components.get(i).getMethod());
+    Assert.assertEquals(titleMethods.get(i),components.get(i).getMethod());
   }
   final Customer2 customer=new Customer2();
   context.checking(new Expectations(){
 {
-      allowing(objectAdapter).getObject();
+      allowing(mockObjectAdapter).getObject();
       will(returnValue(customer));
     }
   }
 );
-  final String title=titleFacetViaTitleAnnotation.title(objectAdapter,mockLocalizationProvider.getLocalization());
+  final String title=titleFacetViaTitleAnnotation.title(mockObjectAdapter,mockLocalizationProvider.getLocalization());
   assertThat(title,is("titleElement1. titleElement3,titleElement2"));
 }

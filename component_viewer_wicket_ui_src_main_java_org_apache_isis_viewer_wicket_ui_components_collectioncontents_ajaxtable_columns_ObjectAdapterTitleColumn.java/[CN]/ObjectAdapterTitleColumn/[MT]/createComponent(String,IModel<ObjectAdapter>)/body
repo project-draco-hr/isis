@@ -1,7 +1,8 @@
 {
   final ObjectAdapter adapter=rowModel.getObject();
   final EntityModel model=new EntityModel(adapter);
-  model.setRenderingHint(renderingHint);
+  model.setRenderingHint(parentAdapterMementoIfAny != null ? RenderingHint.PARENTED_TITLE_COLUMN : RenderingHint.STANDALONE_TITLE_COLUMN);
+  model.setContextAdapterIfAny(parentAdapterMementoIfAny);
   final ComponentFactory componentFactory=findComponentFactory(ComponentType.ENTITY_LINK,model);
   return componentFactory.createComponent(id,model);
 }
