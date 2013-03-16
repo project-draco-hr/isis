@@ -18,7 +18,6 @@
   final ObjectAdapter object=MethodsUtils.findObject(context,objectId);
   final String version=context.mapVersion(object);
   final ObjectAction action=MethodsUtils.findAction(object,method);
-  objectId=request.getContext().mapObject(object,Scope.REQUEST);
   final ActionContent parameterBlock=new ActionContent(action);
   request.setBlockContent(parameterBlock);
   request.pushNewBuffer();
@@ -35,7 +34,7 @@
     }
   }
  else {
-    target=objectId;
+    target=StringEscapeUtils.escapeHtml(request.getContext().mapObject(object,Scope.INTERACTION));
   }
   if (MethodsUtils.isVisibleAndUsable(object,action,where)) {
     writeLink(request,idName,className,target,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,resultOverride,scopeSegment,confirmSegment,messageSegment,context,action,parameters,text);
