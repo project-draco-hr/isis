@@ -2,12 +2,12 @@
   expectNoMethodsRemoved();
   context.checking(new Expectations(){
 {
-      one(classSubstitutor).getClass(CustomerAsManufacturedByCglibByteCodeEnhancer.class);
+      one(mockClassSubstitutor).getClass(CustomerAsManufacturedByCglibByteCodeEnhancer.class);
       will(returnValue(Customer.class));
     }
   }
 );
-  facetFactory.process(new ProcessClassContext(CustomerAsManufacturedByCglibByteCodeEnhancer.class,methodRemover,facetHolderImpl));
+  facetFactory.process(new ProcessClassContext(CustomerAsManufacturedByCglibByteCodeEnhancer.class,mockMethodRemover,facetHolderImpl));
   final ObjectSpecIdFacet facet=facetHolderImpl.getFacet(ObjectSpecIdFacet.class);
   assertThat(facet,is(not(nullValue())));
   assertThat(facet instanceof ObjectSpecIdFacetDerivedFromClassName,is(true));
