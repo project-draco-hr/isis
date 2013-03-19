@@ -3,10 +3,27 @@
   putIfNotPresent(props,"datanucleus.autoCreateSchema","true");
   putIfNotPresent(props,"datanucleus.validateSchema","true");
   putIfNotPresent(props,"datanucleus.cache.level2.type","none");
-  if (props.containsKey("datanucleus.ConnectionFactoryName")) {
+  String connectionFactoryName=props.get("datanucleus.ConnectionFactoryName");
+  if (connectionFactoryName != null) {
+    String connectionFactory2Name=props.get("datanucleus.ConnectionFactory2Name");
+    String transactionType=props.get("javax.jdo.option.TransactionType");
+    if (transactionType == null) {
+      LOG.info("found non-JTA JNDI datasource (" + connectionFactoryName + ")");
+      if (connectionFactory2Name != null) {
+        LOG.warn("found non-JTA JNDI datasource (" + connectionFactoryName + "); second '-nontx' JNDI datasource configured but will not be used ("+ connectionFactory2Name+ ")");
+      }
+    }
+ else     LOG.info("found JTA JNDI datasource (" + connectionFactoryName + ")");
+    if (connectionFactory2Name == null) {
+      LOG.error("found JTA JNDI datasource (" + connectionFactoryName + ") but second '-nontx' JNDI datasource *not* found");
+    }
+ else {
+      LOG.info("... and second '-nontx' JNDI datasource found; " + connectionFactory2Name);
+    }
     return;
   }
  else {
+    LOG.info("did *not* find JNDI datasource; will use JDBC");
     putIfNotPresent(props,"javax.jdo.option.ConnectionDriverName","org.hsqldb.jdbcDriver");
     putIfNotPresent(props,"javax.jdo.option.ConnectionURL","jdbc:hsqldb:mem:test;hsqldb.sqllog=3");
     putIfNotPresent(props,"javax.jdo.option.ConnectionUserName","sa");
