@@ -25,7 +25,9 @@
   final String text=request.popBuffer();
   final String[] parameters=parameterBlock.getParameters();
   final String target;
+  final ObjectAdapter[] objectParameters;
   if (action.isContributed()) {
+    objectParameters=null;
     System.arraycopy(parameters,0,parameters,1,parameters.length - 1);
     parameters[0]=request.getContext().mapObject(object,Scope.REQUEST);
     target=request.getContext().mapObject(action.realTarget(object),Scope.REQUEST);
@@ -34,9 +36,26 @@
     }
   }
  else {
+    objectParameters=new ObjectAdapter[parameters.length];
     target=StringEscapeUtils.escapeHtml(request.getContext().mapObject(object,Scope.INTERACTION));
+    int i=0;
+    for (    final ObjectActionParameter spec : action.getParameters()) {
+      final ObjectSpecification type=spec.getSpecification();
+      if (parameters[i] == null) {
+        objectParameters[i]=null;
+      }
+ else       if (type.getFacet(ParseableFacet.class) != null) {
+        final ParseableFacet facet=type.getFacet(ParseableFacet.class);
+        Localization localization=IsisContext.getLocalization();
+        objectParameters[i]=facet.parseTextEntry(null,parameters[i],localization);
+      }
+ else {
+        objectParameters[i]=MethodsUtils.findObject(request.getContext(),parameters[i]);
+      }
+      i++;
+    }
   }
-  if (MethodsUtils.isVisibleAndUsable(object,action,where)) {
+  if (MethodsUtils.isVisibleAndUsable(object,action,where) && MethodsUtils.canRunMethod(object,action,objectParameters).isAllowed()) {
     writeLink(request,idName,className,target,version,method,forwardResultTo,forwardVoidTo,resultNameSegment,resultOverride,scopeSegment,confirmSegment,messageSegment,context,action,parameters,text);
   }
   request.popBlockContent();
