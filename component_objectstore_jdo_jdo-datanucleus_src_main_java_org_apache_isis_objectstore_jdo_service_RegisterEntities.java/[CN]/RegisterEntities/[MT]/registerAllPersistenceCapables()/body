@@ -1,0 +1,13 @@
+{
+  if (packagePrefixes == null) {
+    LOG.warn("Did not find key '" + PACKAGE_PREFIX_KEY + "' and so entities will not be eagerly registered in the Isis metamodel");
+    return;
+  }
+  for (  String packagePrefix : Splitter.on(",").split(packagePrefixes)) {
+    Reflections reflections=new Reflections(packagePrefix);
+    Set<Class<?>> entityTypes=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
+    for (    Class<?> entityType : entityTypes) {
+      IsisContext.getSpecificationLoader().loadSpecification(entityType);
+    }
+  }
+}
