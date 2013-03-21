@@ -1,0 +1,12 @@
+{
+  final JsonRepresentation givenAction=Util.givenAction(client,"BusinessRulesEntities","visibleButNotInvocableAction");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final String disabledReason=actionRepr.getDisabledReason();
+  assertThat(disabledReason,is("Always disabled"));
+  final LinkRepresentation invokeLink=new LinkRepresentation().withRel(Rel.INVOKE).withHref("http://localhost:39393/services/BusinessRulesEntities/actions/visibleButNotInvocableAction/invoke");
+  JsonRepresentation args=JsonRepresentation.newMap();
+  args=JsonRepresentation.newMap();
+  args.mapPut("id.value",123);
+  final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
+  thenResponseIsErrorWithInvalidReason(restfulResponse,disabledReason);
+}

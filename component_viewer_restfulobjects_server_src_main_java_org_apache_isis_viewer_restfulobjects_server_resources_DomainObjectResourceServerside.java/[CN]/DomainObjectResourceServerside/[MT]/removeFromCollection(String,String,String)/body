@@ -2,7 +2,7 @@
   init(Where.PARENTED_TABLES);
   final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
-  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(collectionId,Intent.MUTATE,getResourceContext().getWhere());
+  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleForIntent(collectionId,Intent.MUTATE,getResourceContext().getWhere());
   final ObjectSpecification collectionSpec=collection.getSpecification();
   final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,getResourceContext().getQueryString());
   final Consent consent=collection.isValidToRemove(objectAdapter,argAdapter);

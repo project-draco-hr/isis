@@ -1,0 +1,12 @@
+{
+  final JsonRepresentation givenAction=Util.givenAction(client,"ActionsEntities","subListWithOptionalRange");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  assertThat(invokeLink,isLink(client).rel(Rel.INVOKE).httpMethod(RestfulHttpMethod.GET).href(Matchers.endsWith(":39393/services/ActionsEntities/actions/subListWithOptionalRange/invoke")).build());
+  invokeLink.withMethod(RestfulHttpMethod.POST);
+  JsonRepresentation args=JsonRepresentation.newMap();
+  args=JsonRepresentation.newMap();
+  args.mapPut("id.value",123);
+  final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
+  thenResponseIsErrorWithInvalidReason(restfulResponse);
+}

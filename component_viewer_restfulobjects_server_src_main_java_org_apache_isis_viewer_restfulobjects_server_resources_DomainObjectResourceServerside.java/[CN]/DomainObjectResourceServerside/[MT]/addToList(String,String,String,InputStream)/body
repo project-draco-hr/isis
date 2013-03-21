@@ -2,7 +2,7 @@
   init(Where.PARENTED_TABLES);
   final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,oidStr);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
-  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleAndUsable(collectionId,Intent.MUTATE,getResourceContext().getWhere());
+  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleForIntent(collectionId,Intent.MUTATE,getResourceContext().getWhere());
   if (!collection.getCollectionSemantics().isListOrArray()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.METHOD_NOT_ALLOWED,"Collection '%s' does not have list or array semantics",collectionId);
   }

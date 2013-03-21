@@ -1,0 +1,10 @@
+{
+  JsonRepresentation args=JsonRepresentation.newMap();
+  args.mapPut("from.value",0);
+  args.mapPut("to.value",1);
+  args.mapPut("nonExistent.value",2);
+  assertThat(args.size(),is(3));
+  Response response=serviceResource.invokeActionQueryOnly("ActionsEntities","subList",UrlEncodingUtils.urlEncode(args));
+  RestfulResponse<ActionResultRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  thenResponseIsErrorWithInvalidReason(restfulResponse);
+}
