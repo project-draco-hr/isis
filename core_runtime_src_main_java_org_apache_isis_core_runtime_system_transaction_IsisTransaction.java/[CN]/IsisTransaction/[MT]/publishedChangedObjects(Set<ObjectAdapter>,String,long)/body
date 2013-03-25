@@ -5,7 +5,10 @@
       continue;
     }
     final PublishedObject.PayloadFactory payloadFactory=publishedObjectFacet.value();
-    final EventMetadata metadata=newEventMetadata(currentUser,currentTimestampEpoch);
+    final RootOid adapterOid=(RootOid)changedAdapter.getOid();
+    final String oidStr=getOidMarshaller().marshal(adapterOid);
+    final String title=oidStr;
+    final EventMetadata metadata=newEventMetadata(currentUser,currentTimestampEpoch,title);
     publishingService.publishObject(payloadFactory,metadata,changedAdapter);
   }
 }

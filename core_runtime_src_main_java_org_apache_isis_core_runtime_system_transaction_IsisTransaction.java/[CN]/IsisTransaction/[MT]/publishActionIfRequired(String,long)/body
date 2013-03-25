@@ -9,7 +9,10 @@
       return;
     }
     final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
-    final EventMetadata metadata=newEventMetadata(currentUser,currentTimestampEpoch);
+    final RootOid adapterOid=(RootOid)currentInvocation.getTarget().getOid();
+    final String oidStr=getOidMarshaller().marshal(adapterOid);
+    final String title=oidStr + ": " + currentInvocation.getAction().getIdentifier().toNameParmsIdentityString();
+    final EventMetadata metadata=newEventMetadata(currentUser,currentTimestampEpoch,title);
     publishingService.publishAction(payloadFactory,metadata,currentInvocation);
   }
   finally {

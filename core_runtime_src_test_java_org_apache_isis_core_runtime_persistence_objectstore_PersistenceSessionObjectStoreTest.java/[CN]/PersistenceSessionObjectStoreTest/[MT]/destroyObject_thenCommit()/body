@@ -2,14 +2,16 @@
   final Sequence tran=context.sequence("tran");
   context.checking(new Expectations(){
 {
-      one(mockObjectStore).startTransaction();
+      oneOf(mockObjectStore).startTransaction();
       inSequence(tran);
-      one(mockObjectStore).createDestroyObjectCommand(persistentAdapter);
+      oneOf(mockObjectStore).createDestroyObjectCommand(persistentAdapter);
       inSequence(tran);
       will(returnValue(destroyObjectCommand));
-      one(mockObjectStore).execute(with(IsisMatchers.listContaining((PersistenceCommand)destroyObjectCommand)));
+      oneOf(mockObjectStore).execute(with(IsisMatchers.listContaining((PersistenceCommand)destroyObjectCommand)));
       inSequence(tran);
-      one(mockObjectStore).endTransaction();
+      oneOf(mockObjectStore).execute(with(equalTo(Collections.<PersistenceCommand>emptyList())));
+      inSequence(tran);
+      oneOf(mockObjectStore).endTransaction();
       inSequence(tran);
     }
   }

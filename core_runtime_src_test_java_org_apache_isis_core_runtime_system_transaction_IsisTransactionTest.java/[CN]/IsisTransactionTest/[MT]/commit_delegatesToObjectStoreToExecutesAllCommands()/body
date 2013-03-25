@@ -3,7 +3,8 @@
   command2=createSaveCommandThatAborts(transientAdapter2,"command 2");
   context.checking(new Expectations(){
 {
-      one(mockObjectStore).execute(with(IsisMatchers.listContainingAll(command,command2)));
+      oneOf(mockObjectStore).execute(with(IsisMatchers.listContainingAll(command,command2)));
+      oneOf(mockObjectStore).execute(with(equalTo(Collections.<PersistenceCommand>emptyList())));
     }
   }
 );

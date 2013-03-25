@@ -13,8 +13,9 @@
   try {
     doAudit(getChangedObjectProperties());
     doFlush();
-    setState(State.COMMITTED);
     doPublish(getChangedObjects());
+    doFlush();
+    setState(State.COMMITTED);
   }
  catch (  final RuntimeException ex) {
     setAbortCause(new IsisTransactionManagerException(ex));

@@ -1,0 +1,12 @@
+{
+  final String serializedEvent=eventSerializer.serialize(metadata,payload).toString();
+  final PublishedEvent publishedEvent=newTransientInstance(PublishedEvent.class);
+  publishedEvent.setSerializedForm(serializedEvent);
+  publishedEvent.setId(metadata.getId());
+  publishedEvent.setTransactionId(metadata.getTransactionId().toString());
+  publishedEvent.setSequence(metadata.getSequence());
+  publishedEvent.setTimestamp(metadata.getTimestamp());
+  publishedEvent.setUser(metadata.getUser());
+  publishedEvent.setTitle(metadata.getTitle());
+  persist(publishedEvent);
+}
