@@ -3,18 +3,37 @@
   final int colonIdx=idStr.indexOf(SEPARATOR);
   final String keyStr=idStr.substring(colonIdx + 1);
   final String firstPart=idStr.substring(0,colonIdx);
-  if ("s".equals(firstPart)) {
-    return new StringIdentity(objectTypeClassFor(oid),keyStr);
+  final ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(oid.getObjectSpecId());
+  JdoPersistenceCapableFacet facet=spec.getFacet(JdoPersistenceCapableFacet.class);
+  if (facet != null && facet.getIdentityType() == IdentityType.APPLICATION) {
+    if ("s".equals(firstPart)) {
+      return keyStr;
+    }
+    if ("i".equals(firstPart)) {
+      return Integer.parseInt(keyStr);
+    }
+    if ("l".equals(firstPart)) {
+      return Long.parseLong(keyStr);
+    }
+    if ("b".equals(firstPart)) {
+      return Byte.parseByte(keyStr);
+    }
   }
-  if ("i".equals(firstPart)) {
-    return new IntIdentity(objectTypeClassFor(oid),keyStr);
-  }
-  if ("l".equals(firstPart)) {
-    return new LongIdentity(objectTypeClassFor(oid),keyStr);
+ else {
+    if ("s".equals(firstPart)) {
+      return new StringIdentity(objectTypeClassFor(oid),keyStr);
+    }
+    if ("i".equals(firstPart)) {
+      return new IntIdentity(objectTypeClassFor(oid),keyStr);
+    }
+    if ("l".equals(firstPart)) {
+      return new LongIdentity(objectTypeClassFor(oid),keyStr);
+    }
+    if ("b".equals(firstPart)) {
+      return new ByteIdentity(objectTypeClassFor(oid),keyStr);
+    }
   }
   if (dnPrefixes.contains(firstPart)) {
-    ObjectSpecId objectSpecId=oid.getObjectSpecId();
-    ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(objectSpecId);
     return keyStr + "[OID]" + spec.getFullIdentifier();
   }
   final String clsName=firstPart;
