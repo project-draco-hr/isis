@@ -12,7 +12,7 @@
     final RootOid adapterOid=(RootOid)currentInvocation.getTarget().getOid();
     final String oidStr=getOidMarshaller().marshal(adapterOid);
     final String title=oidStr + ": " + currentInvocation.getAction().getIdentifier().toNameParmsIdentityString();
-    final EventMetadata metadata=newEventMetadata(currentUser,currentTimestampEpoch,title);
+    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,currentTimestampEpoch,title);
     publishingService.publishAction(payloadFactory,metadata,currentInvocation);
   }
   finally {
