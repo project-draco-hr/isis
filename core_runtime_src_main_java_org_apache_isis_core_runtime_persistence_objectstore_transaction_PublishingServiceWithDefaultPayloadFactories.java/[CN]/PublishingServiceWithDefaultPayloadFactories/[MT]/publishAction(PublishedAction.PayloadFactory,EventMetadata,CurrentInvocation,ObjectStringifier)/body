@@ -1,5 +1,6 @@
 {
   final PublishedAction.PayloadFactory payloadFactoryToUse=payloadFactoryIfAny != null ? payloadFactoryIfAny : defaultActionPayloadFactory;
   final EventPayload payload=payloadFactoryToUse.payloadFor(currentInvocation.getAction().getIdentifier(),ObjectAdapterUtils.unwrapObject(currentInvocation.getTarget()),ObjectAdapterUtils.unwrapObjects(currentInvocation.getParameters()),ObjectAdapterUtils.unwrapObject(currentInvocation.getResult()));
+  payload.withStringifier(stringifier);
   publishingService.publish(metadata,payload);
 }

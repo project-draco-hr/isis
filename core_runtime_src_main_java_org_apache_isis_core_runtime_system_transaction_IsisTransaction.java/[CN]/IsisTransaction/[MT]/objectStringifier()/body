@@ -1,0 +1,25 @@
+{
+  if (objectStringifier == null) {
+    objectStringifier=new ObjectStringifier(){
+      @Override public String toString(      Object object){
+        if (object == null) {
+          return null;
+        }
+        final ObjectAdapter adapter=getAdapterManager().adapterFor(object);
+        Oid oid=adapter.getOid();
+        return oid != null ? oid.enString(getOidMarshaller()) : encodedValueOf(adapter);
+      }
+      private String encodedValueOf(      ObjectAdapter adapter){
+        EncodableFacet facet=adapter.getSpecification().getFacet(EncodableFacet.class);
+        return facet != null ? facet.toEncodedString(adapter) : adapter.toString();
+      }
+      @Override public String classNameOf(      Object object){
+        final ObjectAdapter adapter=getAdapterManager().adapterFor(object);
+        final String className=adapter.getSpecification().getFullIdentifier();
+        return className;
+      }
+    }
+;
+  }
+  return objectStringifier;
+}
