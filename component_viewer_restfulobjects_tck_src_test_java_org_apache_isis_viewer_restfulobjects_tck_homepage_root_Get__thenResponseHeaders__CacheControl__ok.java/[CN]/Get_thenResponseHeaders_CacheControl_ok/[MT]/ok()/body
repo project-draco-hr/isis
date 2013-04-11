@@ -1,0 +1,7 @@
+{
+  final Response resp=resource.homePage();
+  final RestfulResponse<HomePageRepresentation> restfulResponse=RestfulResponse.ofT(resp);
+  final CacheControl cacheControl=restfulResponse.getHeader(Header.CACHE_CONTROL);
+  assertThat(cacheControl,hasMaxAge(24 * 60 * 60));
+  assertThat(cacheControl.getMaxAge(),is(24 * 60 * 60));
+}

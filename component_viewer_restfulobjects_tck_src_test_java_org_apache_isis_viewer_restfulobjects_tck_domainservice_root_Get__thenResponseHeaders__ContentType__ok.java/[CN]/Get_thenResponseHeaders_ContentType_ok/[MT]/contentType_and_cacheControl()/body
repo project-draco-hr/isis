@@ -1,0 +1,9 @@
+{
+  final Response resp=resource.services();
+  final RestfulResponse<ListRepresentation> restfulResponse=RestfulResponse.ofT(resp);
+  final MediaType contentType=restfulResponse.getHeader(Header.CONTENT_TYPE);
+  assertThat(contentType,hasType("application"));
+  assertThat(contentType,hasSubType("json"));
+  assertThat(contentType,hasParameter("profile","urn:org.restfulobjects:repr-types/list"));
+  assertThat(contentType,is(RepresentationType.LIST.getMediaType()));
+}
