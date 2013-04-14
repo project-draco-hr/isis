@@ -1,0 +1,22 @@
+{
+  final EntityCollectionModel model=getModel();
+  final ObjectSpecification elementSpec=model.getTypeOfSpecification();
+  final FeedbackPanel feedback=new FeedbackPanel(ID_FEEDBACK);
+  feedback.setOutputMarkupId(true);
+  addOrReplace(feedback);
+  List<ObjectAssociation> numberAssociations=elementSpec.getAssociations(CollectionContentsAsSummaryFactory.OF_TYPE_BIGDECIMAL);
+  RepeatingView repeating=new RepeatingView(ID_REPEATING_SUMMARY);
+  addOrReplace(repeating);
+  for (  ObjectAssociation numberAssociation : numberAssociations) {
+    AbstractItem item=new AbstractItem(repeating.newChildId());
+    repeating.add(item);
+    String propertyName=numberAssociation.getName();
+    item.add(new Label(ID_PROPERTY_NAME,new Model<String>(propertyName)));
+    List<ObjectAdapter> adapters=model.getObject();
+    Summary summary=new Summary(adapters,numberAssociation);
+    addItem(item,ID_SUM,summary.getTotal());
+    addItem(item,ID_AVG,summary.getAverage());
+    addItem(item,ID_MIN,summary.getMin());
+    addItem(item,ID_MAX,summary.getMax());
+  }
+}

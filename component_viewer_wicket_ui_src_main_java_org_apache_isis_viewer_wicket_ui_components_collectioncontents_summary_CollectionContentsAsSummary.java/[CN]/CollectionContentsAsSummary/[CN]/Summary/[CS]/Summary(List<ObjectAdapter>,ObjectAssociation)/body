@@ -1,0 +1,23 @@
+{
+  int nonNullCount=0;
+  for (  ObjectAdapter objectAdapter : adapters) {
+    titles.add(objectAdapter.titleString(null));
+    final ObjectAdapter valueAdapter=numberAssociation.get(objectAdapter);
+    if (valueAdapter == null) {
+      values.add(null);
+      continue;
+    }
+    final Object valueObj=ObjectAdapterUtils.unwrapObject(valueAdapter);
+    if (valueObj == null) {
+      values.add(null);
+      continue;
+    }
+    nonNullCount++;
+    BigDecimal value=(BigDecimal)valueObj;
+    sum=sum.add(value);
+    min=min != null && min.compareTo(value) < 0 ? min : value;
+    max=max != null && max.compareTo(value) > 0 ? max : value;
+    values.add(value);
+  }
+  average=nonNullCount != 0 ? sum.divide(BigDecimal.valueOf(nonNullCount),2,RoundingMode.HALF_UP) : null;
+}
