@@ -1,3 +1,9 @@
 {
-  return Lists.transform(entityCollectionModel.mementoList,ObjectAdapters.fromMemento());
+  final ObjectAdapter adapter=entityCollectionModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final OneToManyAssociation collection=entityCollectionModel.collectionMemento.getCollection();
+  final ObjectAdapter collectionAsAdapter=collection.get(adapter);
+  final Iterable<Object> objectList=asIterable(collectionAsAdapter);
+  final Iterable<ObjectAdapter> adapterIterable=Iterables.transform(objectList,ObjectAdapters.fromPojo());
+  final List<ObjectAdapter> adapterList=Lists.newArrayList(adapterIterable);
+  return adapterList;
 }

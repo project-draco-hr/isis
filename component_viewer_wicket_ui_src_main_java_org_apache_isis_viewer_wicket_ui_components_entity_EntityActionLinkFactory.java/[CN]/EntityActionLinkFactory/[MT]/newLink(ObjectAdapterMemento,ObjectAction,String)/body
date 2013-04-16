@@ -2,5 +2,15 @@
   final ObjectAdapter adapter=adapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
   final AbstractLink link=createLink(adapterMemento,action,linkId,adapter);
   final String label=ObjectActions.nameFor(action);
-  return new LinkAndLabel(link,label);
+  final AuthenticationSession session=getAuthenticationSession();
+  final Consent visibility=action.isVisible(session,adapter,Where.OBJECT_FORMS);
+  if (visibility.isVetoed()) {
+    return null;
+  }
+  final Consent usability=action.isUsable(session,adapter,Where.OBJECT_FORMS);
+  final String disabledReasonIfAny=usability.getReason();
+  if (disabledReasonIfAny != null) {
+    link.setEnabled(false);
+  }
+  return new LinkAndLabel(link,label,disabledReasonIfAny);
 }
