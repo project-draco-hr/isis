@@ -27,15 +27,5 @@
     resolveImmediately(parentAdapter);
     return;
   }
-  final Object domainObject=adapter.getObject();
-  if (domainObject == null) {
-    throw new ObjectNotFoundException(adapter.getOid());
-  }
-  try {
-    getPersistenceManager().refresh(domainObject);
-  }
- catch (  final RuntimeException e) {
-    throw new ObjectNotFoundException(adapter.getOid(),e);
-  }
-  frameworkSynchronizer.postLoadProcessingFor((PersistenceCapable)domainObject,CalledFrom.OS_RESOLVE);
+  refreshRoot(adapter);
 }
