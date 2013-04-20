@@ -12,6 +12,8 @@
         final RootOid persistentOid=getOidGenerator().createPersistent(pojo,isisOid);
         getPersistenceSession().remapAsPersistent(adapter,persistentOid);
         callbackFacetClass=PersistedCallbackFacet.class;
+        final IsisTransaction transaction=getCurrentTransaction();
+        transaction.enlistCreated(adapter);
       }
  else {
         callbackFacetClass=UpdatedCallbackFacet.class;

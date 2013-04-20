@@ -1,7 +1,6 @@
 {
   withLogging(pojo,new Runnable(){
     @Override public void run(){
-      final IsisTransaction transaction=getCurrentTransaction();
       ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
       if (adapter == null) {
         adapter=lazilyLoaded(pojo,CalledFrom.EVENT_PREDIRTY);
@@ -12,7 +11,8 @@
       if (adapter.isTransient()) {
         return;
       }
-      transaction.auditDirty(adapter);
+      final IsisTransaction transaction=getCurrentTransaction();
+      transaction.enlistUpdating(adapter);
       ensureRootObject(pojo);
       ensureFrameworksInAgreement(pojo);
     }

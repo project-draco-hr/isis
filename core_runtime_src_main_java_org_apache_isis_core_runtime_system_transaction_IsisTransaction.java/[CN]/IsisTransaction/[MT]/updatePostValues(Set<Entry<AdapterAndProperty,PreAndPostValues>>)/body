@@ -2,6 +2,12 @@
   for (  Entry<AdapterAndProperty,PreAndPostValues> entry : entrySet) {
     final AdapterAndProperty aap=entry.getKey();
     final PreAndPostValues papv=entry.getValue();
-    papv.setPost(aap.getPropertyValue());
+    ObjectAdapter adapter=aap.getAdapter();
+    if (adapter.isDestroyed()) {
+      papv.setPost("[DELETED]");
+    }
+ else {
+      papv.setPost(aap.getPropertyValue());
+    }
   }
 }

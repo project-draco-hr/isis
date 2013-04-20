@@ -1,0 +1,18 @@
+{
+  if (publishingService == null) {
+    return;
+  }
+  for (  final ObjectAdapter enlistedAdapter : changeKindByEnlistedAdapter.keySet()) {
+    final ChangeKind changeKind=changeKindByEnlistedAdapter.get(enlistedAdapter);
+    final PublishedObjectFacet publishedObjectFacet=enlistedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
+    if (publishedObjectFacet == null) {
+      continue;
+    }
+    final PublishedObject.PayloadFactory payloadFactory=publishedObjectFacet.value();
+    final RootOid adapterOid=(RootOid)enlistedAdapter.getOid();
+    final String oidStr=getOidMarshaller().marshal(adapterOid);
+    final String title=oidStr;
+    final EventMetadata metadata=newEventMetadata(eventTypeFor(changeKind),currentUser,currentTimestampEpoch,title);
+    publishingService.publishObject(payloadFactory,metadata,enlistedAdapter,changeKind,objectStringifier());
+  }
+}

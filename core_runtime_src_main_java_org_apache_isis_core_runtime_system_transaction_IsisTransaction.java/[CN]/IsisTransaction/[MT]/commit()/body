@@ -12,8 +12,11 @@
   }
   try {
     doAudit(getChangedObjectProperties());
+    final String currentUser=getTransactionManager().getAuthenticationSession().getUserName();
+    final long endTimestamp=currentTimestamp();
+    publishActionIfRequired(currentUser,endTimestamp);
     doFlush();
-    doPublish(getChangedObjects());
+    publishedChangedObjectsIfRequired(currentUser,endTimestamp);
     doFlush();
     setState(State.COMMITTED);
   }
