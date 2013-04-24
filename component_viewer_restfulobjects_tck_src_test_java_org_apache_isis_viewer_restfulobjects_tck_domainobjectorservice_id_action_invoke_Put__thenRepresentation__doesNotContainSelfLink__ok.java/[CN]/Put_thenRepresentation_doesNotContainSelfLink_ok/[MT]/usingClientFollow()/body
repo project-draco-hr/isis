@@ -1,0 +1,9 @@
+{
+  final JsonRepresentation givenAction=Util.givenAction(client,"ActionsEntities","findByIdIdempotent");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  final JsonRepresentation args=invokeLink.getArguments();
+  args.mapPut("id.value",1);
+  final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink,args);
+  then(restfulResponse);
+}

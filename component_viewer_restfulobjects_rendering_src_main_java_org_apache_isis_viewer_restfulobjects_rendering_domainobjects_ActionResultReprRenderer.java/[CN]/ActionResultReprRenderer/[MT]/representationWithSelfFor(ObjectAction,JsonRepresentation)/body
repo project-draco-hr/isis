@@ -1,6 +1,9 @@
 {
   final JsonRepresentation links=JsonRepresentation.newArray();
   representation.mapPut("links",links);
+  if (selfLink == SelfLink.EXCLUDED) {
+    return;
+  }
   final LinkBuilder selfLinkBuilder=adapterLinkTo.memberBuilder(Rel.SELF,MemberType.ACTION,action,RepresentationType.ACTION_RESULT,"invoke");
   final MemberType memberType=MemberType.of(action);
   final Map<String,MutatorSpec> mutators=memberType.getMutators();
@@ -10,5 +13,4 @@
   final JsonRepresentation selfLink=selfLinkBuilder.build();
   links.arrayAdd(selfLink);
   selfLink.mapPut("args",bodyArgs);
-  return representation;
 }

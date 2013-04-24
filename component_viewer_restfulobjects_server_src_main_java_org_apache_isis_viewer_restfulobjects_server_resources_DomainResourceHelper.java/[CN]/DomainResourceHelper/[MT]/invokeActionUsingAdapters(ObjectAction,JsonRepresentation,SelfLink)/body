@@ -1,0 +1,11 @@
+{
+  final List<ObjectAdapter> argAdapters=parseAndValidateArguments(action,arguments);
+  final ObjectAdapter[] argArray2=argAdapters.toArray(new ObjectAdapter[0]);
+  final ObjectAdapter returnedAdapter=action.execute(objectAdapter,argArray2);
+  final ActionResultReprRenderer renderer=new ActionResultReprRenderer(resourceContext,null,selfLink,JsonRepresentation.newMap());
+  renderer.with(new ObjectAndActionInvocation(objectAdapter,action,arguments,returnedAdapter)).using(adapterLinkTo);
+  final ResponseBuilder respBuilder=ResourceAbstract.responseOfOk(renderer,Caching.NONE);
+  final Version version=objectAdapter.getVersion();
+  ResourceAbstract.addLastModifiedAndETagIfAvailable(respBuilder,version);
+  return respBuilder.build();
+}

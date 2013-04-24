@@ -1,0 +1,20 @@
+{
+  @SuppressWarnings("unchecked") final Map<String,String[]> params=httpServletRequest.getParameterMap();
+  if (simpleQueryArgs(params)) {
+    final JsonRepresentation map=JsonRepresentation.newMap();
+    for (    String paramName : params.keySet()) {
+      String paramValue=params.get(paramName)[0];
+      try {
+        int paramValueAsInt=Integer.parseInt(paramValue);
+        map.mapPut(paramName + ".value",paramValueAsInt);
+      }
+ catch (      Exception ex) {
+        map.mapPut(paramName + ".value",paramValue);
+      }
+    }
+    return map;
+  }
+ else {
+    return DomainResourceHelper.readQueryStringAsMap(getQueryString());
+  }
+}

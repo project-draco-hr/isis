@@ -1,0 +1,11 @@
+{
+  link=new LinkRepresentation().withRel(Rel.SELF).withHref("http://foo/bar").withMethod(RestfulHttpMethod.GET);
+  JsonRepresentation linkListRepr=JsonRepresentation.newArray();
+  linkListRepr.arrayAdd(link);
+  jsonRepresentation=JsonRepresentation.newMap();
+  jsonRepresentation.mapPut("links",linkListRepr);
+  assertThat(jsonRepresentation.isLink("links[rel=self]"),is(true));
+  assertThat(jsonRepresentation.getLink("links[rel=self]"),is(not(nullValue())));
+  assertThat(jsonRepresentation.isLink("links[rel=other]"),is(false));
+  assertThat(jsonRepresentation.getLink("links[rel=other]"),is(nullValue()));
+}
