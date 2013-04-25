@@ -1,0 +1,23 @@
+{
+  final DomainObjectResource domainObjectResource=client.getDomainObjectResource();
+  final Response jaxrsResponse=domainObjectResource.object("PRMV","29");
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=RestfulResponse.ofT(jaxrsResponse);
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  assertThat(restfulResponse.getHeader(Header.CONTENT_TYPE),hasProfile(RestfulMediaType.APPLICATION_JSON_OBJECT));
+  assertThat(restfulResponse.getHeader(Header.CONTENT_LENGTH),is(6226));
+  final DomainObjectRepresentation domainObjectRepr=restfulResponse.getEntity();
+  assertThat(domainObjectRepr,is(not(nullValue())));
+  assertThat(domainObjectRepr.getTitle(),is("Primitive Valued Entity #0"));
+  assertThat(domainObjectRepr.getExtensions().getString("oid"),is("PRMV:29"));
+  assertThat(domainObjectRepr.getExtensions().getBoolean("isService"),is(false));
+  assertThat(domainObjectRepr.getExtensions().getBoolean("isPersistent"),is(true));
+  final LinkRepresentation self=domainObjectRepr.getSelf();
+  assertThat(self,isLink().rel(Rel.SELF).href(matches(".+\\/objects\\/PRMV\\/29")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.DOMAIN_OBJECT.getMediaType()));
+  assertThat(domainObjectRepr.getLinkWithRel(Rel.DESCRIBEDBY),isLink().href(matches(".+\\/domain-types\\/PRMV")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.DOMAIN_TYPE.getMediaType()));
+  assertThat(domainObjectRepr.getLinkWithRel(Rel.MODIFY),isLink().href(matches(".+\\/objects\\/PRMV\\/29")).httpMethod(RestfulHttpMethod.PUT).type(RepresentationType.DOMAIN_OBJECT.getMediaType()));
+  DomainObjectMemberRepresentation property=domainObjectRepr.getProperty("byteProperty");
+  assertThat(property.getMemberType(),is("property"));
+  Byte byteValue=property.getRepresentation("value").as(ScalarValueRepresentation.class).asByte();
+  assertThat(byteValue,is((byte)0));
+}
