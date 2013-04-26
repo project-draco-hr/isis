@@ -1,13 +1,16 @@
 {
-  final LinkAndLabel linkAndLabel=cssMenuLinkFactory.newLink(targetAdapterMemento,objectAction,PageAbstract.ID_MENU_LINK);
-  final AbstractLink link=linkAndLabel.getLink();
-  final String actionLabel=linkAndLabel.getLabel();
   final AuthenticationSession session=getAuthenticationSession();
   final ObjectAdapter adapter=targetAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
   final Consent visibility=objectAction.isVisible(session,adapter,where);
   if (visibility.isVetoed()) {
     return null;
   }
+  final LinkAndLabel linkAndLabel=cssMenuLinkFactory.newLink(targetAdapterMemento,objectAction,PageAbstract.ID_MENU_LINK);
+  if (linkAndLabel == null) {
+    return null;
+  }
+  final AbstractLink link=linkAndLabel.getLink();
+  final String actionLabel=linkAndLabel.getLabel();
   final Consent usability=objectAction.isUsable(session,adapter,where);
   final String reasonDisabledIfAny=usability.getReason();
   return newSubMenuItem(actionLabel).link(link).enabled(reasonDisabledIfAny);
