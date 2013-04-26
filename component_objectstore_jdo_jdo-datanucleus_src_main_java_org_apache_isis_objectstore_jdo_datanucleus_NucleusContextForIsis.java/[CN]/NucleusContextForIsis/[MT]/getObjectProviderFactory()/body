@@ -1,0 +1,15 @@
+{
+  try {
+    Field declaredField=NucleusContext.class.getDeclaredField("opFactory");
+    declaredField.setAccessible(true);
+    ObjectProviderFactory opf=(ObjectProviderFactory)declaredField.get(this);
+    if (opf == null) {
+      opf=newObjectProviderFactory();
+      declaredField.set(this,opf);
+    }
+    return opf;
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}

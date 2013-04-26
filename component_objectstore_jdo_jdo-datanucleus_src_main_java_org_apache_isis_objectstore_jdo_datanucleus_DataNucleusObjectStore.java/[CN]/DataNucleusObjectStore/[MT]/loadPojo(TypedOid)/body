@@ -7,7 +7,10 @@
   try {
     final Class<?> cls=clsOf(rootOid);
     final Object jdoObjectId=JdoObjectIdSerializer.toJdoObjectId(rootOid);
-    result=getPersistenceManager().getObjectById(cls,jdoObjectId);
+    final PersistenceManager pm=getPersistenceManager();
+    FetchPlan fetchPlan=pm.getFetchPlan();
+    fetchPlan.addGroup(FetchGroup.DEFAULT);
+    result=pm.getObjectById(cls,jdoObjectId);
   }
  catch (  final RuntimeException e) {
     throw e;

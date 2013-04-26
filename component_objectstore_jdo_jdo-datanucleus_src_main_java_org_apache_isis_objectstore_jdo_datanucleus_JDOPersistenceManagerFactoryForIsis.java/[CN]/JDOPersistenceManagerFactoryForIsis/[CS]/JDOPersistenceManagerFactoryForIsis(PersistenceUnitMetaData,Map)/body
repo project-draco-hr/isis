@@ -1,0 +1,22 @@
+{
+  Map props=new HashMap();
+  if (pumd != null && pumd.getProperties() != null) {
+    props.putAll(pumd.getProperties());
+  }
+  if (overrideProps != null) {
+    props.putAll(overrideProps);
+  }
+  if (!props.containsKey(PropertyNames.PROPERTY_TRANSACTION_TYPE) && !props.containsKey("javax.jdo.option.TransactionType")) {
+    props.put(PropertyNames.PROPERTY_TRANSACTION_TYPE,TransactionType.RESOURCE_LOCAL.toString());
+  }
+ else {
+    String transactionType=props.get(PropertyNames.PROPERTY_TRANSACTION_TYPE) != null ? (String)props.get(PropertyNames.PROPERTY_TRANSACTION_TYPE) : (String)props.get("javax.jdo.option.TransactionType");
+    if (TransactionType.JTA.toString().equalsIgnoreCase(transactionType)) {
+      props.put(ConnectionFactory.DATANUCLEUS_CONNECTION_RESOURCE_TYPE,ConnectionResourceType.JTA.toString());
+      props.put(ConnectionFactory.DATANUCLEUS_CONNECTION2_RESOURCE_TYPE,ConnectionResourceType.JTA.toString());
+    }
+  }
+  nucleusContext=createNucleusContext(props);
+  initialiseMetaData(pumd);
+  processLifecycleListenersFromProperties(props);
+}
