@@ -1,14 +1,14 @@
 {
   assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
   assertThat(restfulResponse.getHeader(Header.CONTENT_TYPE),hasProfile(RestfulMediaType.APPLICATION_JSON_ACTION_RESULT));
-  assertThat(restfulResponse.getHeader(Header.CONTENT_LENGTH),is(3248));
+  assertThat(restfulResponse.getHeader(Header.CONTENT_LENGTH),is(IsisMatchers.greaterThan(1000)));
   final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
   assertThat(actionResultRepr.getResultType(),is(ResultType.DOMAIN_OBJECT));
   final DomainObjectRepresentation objRepr=actionResultRepr.getResult().as(DomainObjectRepresentation.class);
   assertThat(objRepr.getMembers(),is(not(nullValue())));
-  assertThat(objRepr.getMembers().size(),is(greaterThan(0)));
+  assertThat(objRepr.getMembers().size(),is(IsisMatchers.greaterThan(0)));
   assertThat(objRepr.getTitle(),is(not(nullValue())));
   assertThat(objRepr.getLinks(),is(not(nullValue())));
-  assertThat(objRepr.getMembers().size(),is(greaterThan(0)));
+  assertThat(objRepr.getMembers().size(),is(IsisMatchers.greaterThan(0)));
   assertThat(objRepr.getExtensions(),is(not(nullValue())));
 }

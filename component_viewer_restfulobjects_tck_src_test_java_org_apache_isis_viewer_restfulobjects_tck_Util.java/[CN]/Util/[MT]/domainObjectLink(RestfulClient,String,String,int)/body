@@ -1,0 +1,15 @@
+{
+  final DomainServiceResource serviceResource=client.getDomainServiceResource();
+  Response response=serviceResource.invokeActionQueryOnly(repoName,actionName,null);
+  RestfulResponse<ActionResultRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.LIST));
+  final ListRepresentation listRepr=actionResultRepr.getResult().as(ListRepresentation.class);
+  assertThat(listRepr.getValue(),is(not(nullValue())));
+  assertThat(listRepr.getValue().size(),is(IsisMatchers.greaterThan(idx + 1)));
+  final LinkRepresentation domainObjectLinkRepr=listRepr.getValue().arrayGet(idx).as(LinkRepresentation.class);
+  assertThat(domainObjectLinkRepr,is(not(nullValue())));
+  assertThat(domainObjectLinkRepr,isLink().rel(Rel.ELEMENT).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).arguments(JsonRepresentation.newMap()).build());
+  return domainObjectLinkRepr;
+}

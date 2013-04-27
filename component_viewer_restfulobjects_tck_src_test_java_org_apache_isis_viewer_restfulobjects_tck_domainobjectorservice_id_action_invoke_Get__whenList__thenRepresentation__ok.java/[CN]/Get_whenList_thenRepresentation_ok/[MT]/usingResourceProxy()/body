@@ -1,0 +1,16 @@
+{
+  Response response=serviceResource.invokeActionQueryOnly("ActionsEntities","list",null);
+  RestfulResponse<ActionResultRepresentation> restfulResponse=RestfulResponse.ofT(response);
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final ActionResultRepresentation actionResultRepr=restfulResponse.getEntity();
+  assertThat(actionResultRepr.getResultType(),is(ResultType.LIST));
+  final ListRepresentation listRepr=actionResultRepr.getResult().as(ListRepresentation.class);
+  assertThat(listRepr.getValue(),is(not(nullValue())));
+  assertThat(listRepr.getValue().size(),is(5));
+  final JsonRepresentation domainObjectLinkRepr=listRepr.getValue().arrayGet(0);
+  assertThat(domainObjectLinkRepr,is(not(nullValue())));
+  assertThat(domainObjectLinkRepr,isLink().rel(Rel.ELEMENT).title("Untitled Actions Entity").httpMethod(RestfulHttpMethod.GET).href(matches("http://localhost:\\d+/objects/RTNE/67")).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).arguments(JsonRepresentation.newMap()).build());
+  assertThat(listRepr.getLinks(),is(not(nullValue())));
+  final LinkRepresentation elementTypeLink=listRepr.getLinkWithRel(Rel.ELEMENT_TYPE);
+  assertThat(elementTypeLink,is(not(nullValue())));
+}

@@ -16,6 +16,13 @@
         description.appendText(" with href ");
         hrefMatcher.describeTo(description);
       }
+      if (title != null) {
+        description.appendText(" with title '").appendText(title).appendText("'");
+      }
+      if (titleMatcher != null) {
+        description.appendText(" with title ");
+        titleMatcher.describeTo(description);
+      }
       if (httpMethod != null) {
         description.appendText(" with method '").appendValue(httpMethod).appendText("'");
       }
@@ -66,6 +73,12 @@
         return false;
       }
       if (hrefMatcher != null && !hrefMatcher.matches(link.getHref())) {
+        return false;
+      }
+      if (title != null && !title.equals(link.getTitle())) {
+        return false;
+      }
+      if (titleMatcher != null && !titleMatcher.matches(link.getTitle())) {
         return false;
       }
       if (httpMethod != null && !httpMethod.equals(link.getHttpMethod())) {

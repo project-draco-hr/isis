@@ -1,0 +1,7 @@
+{
+  final RestfulResponse<DomainObjectRepresentation> restfulResponse=Util.domainObjectJaxrsResponse(client,"PrimitiveValuedEntities");
+  assertThat(restfulResponse.getStatus(),is(HttpStatusCode.OK));
+  final CacheControl expected=new CacheControl();
+  expected.setNoCache(true);
+  assertThat(restfulResponse.getHeader(Header.CACHE_CONTROL),isCacheControl().withNoCache().build());
+}

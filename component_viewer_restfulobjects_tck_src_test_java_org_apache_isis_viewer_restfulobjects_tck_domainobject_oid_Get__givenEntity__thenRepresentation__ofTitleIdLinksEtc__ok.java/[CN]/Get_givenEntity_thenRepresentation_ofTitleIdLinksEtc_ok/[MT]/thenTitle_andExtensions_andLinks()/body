@@ -1,0 +1,16 @@
+{
+  final LinkRepresentation link=Util.domainObjectLink(client,"PrimitiveValuedEntities");
+  domainObjectRepr=client.follow(link).getEntity().as(DomainObjectRepresentation.class);
+  assertThat(domainObjectRepr,is(not(nullValue())));
+  assertThat(domainObjectRepr.getTitle(),is("Primitive Valued Entity #0"));
+  assertThat(domainObjectRepr.getDomainType(),is("PRMV"));
+  assertThat(domainObjectRepr.getInstanceId(),is(not(nullValue())));
+  assertThat(domainObjectRepr.getExtensions().getString("oid"),IsisMatchers.startsWith("PRMV:" + domainObjectRepr.getInstanceId()));
+  assertThat(domainObjectRepr.getExtensions().getBoolean("isService"),is(false));
+  assertThat(domainObjectRepr.getExtensions().getBoolean("isPersistent"),is(true));
+  final LinkRepresentation self=domainObjectRepr.getSelf();
+  assertThat(self,isLink().rel(Rel.SELF).href(matches(".+\\/objects\\/PRMV\\/\\d+")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.DOMAIN_OBJECT.getMediaType()));
+  assertThat(domainObjectRepr.getLinkWithRel(Rel.DESCRIBEDBY),isLink().href(matches(".+\\/domain-types\\/PRMV")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.DOMAIN_TYPE.getMediaType()));
+  assertThat(domainObjectRepr.getLinkWithRel(Rel.MODIFY),isLink().href(matches(".+\\/objects\\/PRMV\\/\\d+")).httpMethod(RestfulHttpMethod.PUT).type(RepresentationType.DOMAIN_OBJECT.getMediaType()));
+  assertThat(domainObjectRepr.getLinkWithRel(Rel.ICON),is(nullValue()));
+}

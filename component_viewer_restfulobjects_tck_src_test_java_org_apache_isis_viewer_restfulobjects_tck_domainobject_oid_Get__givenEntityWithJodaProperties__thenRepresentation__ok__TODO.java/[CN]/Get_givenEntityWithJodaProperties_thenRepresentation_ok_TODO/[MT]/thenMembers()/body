@@ -1,0 +1,16 @@
+{
+  final LinkRepresentation link=Util.domainObjectLink(client,"JodaValuedEntities");
+  domainObjectRepr=client.follow(link).getEntity().as(DomainObjectRepresentation.class);
+  DomainObjectMemberRepresentation property;
+  ScalarValueRepresentation scalarRepr;
+  property=domainObjectRepr.getProperty("localDateProperty");
+  assertThat(property.getMemberType(),is("property"));
+  scalarRepr=property.getRepresentation("value").as(ScalarValueRepresentation.class);
+  property=domainObjectRepr.getProperty("localDateTimeProperty");
+  assertThat(property.getMemberType(),is("property"));
+  scalarRepr=property.getRepresentation("value").as(ScalarValueRepresentation.class);
+  property=domainObjectRepr.getProperty("localDateProperty");
+  assertThat(property.getLinkWithRel(Rel.DETAILS),isLink().href(matches(".+\\/objects\\/JODA\\/\\d+\\/properties\\/localDateProperty")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.OBJECT_PROPERTY.getMediaType()));
+  property=domainObjectRepr.getProperty("localDateTimeProperty");
+  assertThat(property.getLinkWithRel(Rel.DETAILS),isLink().href(matches(".+\\/objects\\/JODA\\/\\d+\\/properties\\/localDateTimeProperty")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.OBJECT_PROPERTY.getMediaType()));
+}

@@ -1,0 +1,19 @@
+{
+  return new TypeSafeMatcher<CacheControl>(){
+    @Override public void describeTo(    Description description){
+      description.appendText("is a CacheControl header ");
+      if (noCache != null) {
+        description.appendText("with " + (noCache ? "no" : "") + " cache");
+      }
+    }
+    @Override protected boolean matchesSafely(    CacheControl item){
+      if (noCache != null) {
+        if (item.isNoCache() != noCache) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+;
+}
