@@ -1,5 +1,13 @@
 {
-  final ObjectAction action=objectAdapter.getSpecification().getObjectAction(actionId);
+  final ObjectAction action;
+  try {
+    final ObjectSpecification specification=objectAdapter.getSpecification();
+    action=specification.getObjectAction(actionId);
+  }
+ catch (  Exception ex) {
+    throwNotFoundException(actionId,MemberType.ACTION);
+    return null;
+  }
   if (action == null) {
     throwNotFoundException(actionId,MemberType.ACTION);
   }

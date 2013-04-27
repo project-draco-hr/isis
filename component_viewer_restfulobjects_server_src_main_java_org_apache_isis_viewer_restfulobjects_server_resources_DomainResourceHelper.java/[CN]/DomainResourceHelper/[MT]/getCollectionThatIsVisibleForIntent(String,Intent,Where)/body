@@ -1,5 +1,13 @@
 {
-  final ObjectAssociation association=objectAdapter.getSpecification().getAssociation(collectionId);
+  final ObjectAssociation association;
+  try {
+    final ObjectSpecification specification=objectAdapter.getSpecification();
+    association=specification.getAssociation(collectionId);
+  }
+ catch (  Exception ex) {
+    throwNotFoundException(collectionId,MemberType.COLLECTION);
+    return null;
+  }
   if (association == null || !association.isOneToManyAssociation()) {
     throwNotFoundException(collectionId,MemberType.COLLECTION);
   }
