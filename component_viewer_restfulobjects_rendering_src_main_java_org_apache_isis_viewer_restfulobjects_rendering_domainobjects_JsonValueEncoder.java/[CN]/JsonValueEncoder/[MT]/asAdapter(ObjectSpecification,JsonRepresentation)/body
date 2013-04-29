@@ -24,101 +24,25 @@
     argRepr.mapPut("invalidReason",reason);
     throw new IllegalArgumentException(reason);
   }
-  if (isBoolean(objectSpec)) {
-    if (!argValueRepr.isBoolean()) {
-      throwIncompatibleException(objectSpec,argRepr);
-    }
-    final String argStr="" + argValueRepr.asBoolean();
-    return encodableFacet.fromEncodedString(argStr);
-  }
-  if (isInteger(objectSpec)) {
-    if (argValueRepr.isInt()) {
-      final String argStr="" + argValueRepr.asInt();
-      return encodableFacet.fromEncodedString(argStr);
-    }
+  final JsonValueConverter jvc=converterBySpec.get(objectSpec.getSpecId());
+  if (jvc == null) {
     if (argValueRepr.isString()) {
       final String argStr=argValueRepr.asString();
       return encodableFacet.fromEncodedString(argStr);
     }
-    throwIncompatibleException(objectSpec,argRepr);
+    final String reason="Unable to parse value";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
   }
-  if (isLong(objectSpec)) {
-    if (!argValueRepr.isLong()) {
-      throwIncompatibleException(objectSpec,argRepr);
-    }
-    final String argStr="" + argValueRepr.asLong();
-    return encodableFacet.fromEncodedString(argStr);
-  }
-  if (isBigInteger(objectSpec)) {
-    if (argValueRepr.isBigInteger()) {
-      final String argStr="" + argValueRepr.asBigInteger();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isLong()) {
-      final String argStr="" + argValueRepr.asLong();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isInt()) {
-      final String argStr="" + argValueRepr.asInt();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isString()) {
-      final String argStr=argValueRepr.asString();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    throwIncompatibleException(objectSpec,argRepr);
-  }
-  if (isBigDecimal(objectSpec)) {
-    if (argValueRepr.isBigDecimal()) {
-      final String argStr="" + argValueRepr.asBigDecimal();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isBigInteger()) {
-      final String argStr="" + argValueRepr.asBigInteger();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isDouble()) {
-      final String argStr="" + argValueRepr.asDouble();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isLong()) {
-      final String argStr="" + argValueRepr.asLong();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isInt()) {
-      final String argStr="" + argValueRepr.asInt();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isString()) {
-      final String argStr=argValueRepr.asString();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    throwIncompatibleException(objectSpec,argRepr);
-  }
-  if (isDouble(objectSpec)) {
-    if (argValueRepr.isDouble()) {
-      final String argStr="" + argValueRepr.asDouble();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isLong()) {
-      final String argStr="" + argValueRepr.asLong();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isInt()) {
-      final String argStr="" + argValueRepr.asInt();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    if (argValueRepr.isString()) {
-      final String argStr=argValueRepr.asString();
-      return encodableFacet.fromEncodedString(argStr);
-    }
-    throwIncompatibleException(objectSpec,argRepr);
+  final ObjectAdapter asAdapter=jvc.asAdapter(argValueRepr);
+  if (asAdapter != null) {
+    return asAdapter;
   }
   if (argValueRepr.isString()) {
     final String argStr=argValueRepr.asString();
     return encodableFacet.fromEncodedString(argStr);
   }
-  final String reason="Unable to parse value";
+  final String reason="Could not parse value '" + argValueRepr.asString() + "' as a "+ objectSpec.getFullIdentifier();
   argRepr.mapPut("invalidReason",reason);
   throw new IllegalArgumentException(reason);
 }

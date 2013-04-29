@@ -3,8 +3,9 @@
     throw new IllegalArgumentException("objectAdapter cannot be null");
   }
   final ObjectSpecification objectSpec=objectAdapter.getSpecification();
-  if (isBoolean(objectSpec) || isInteger(objectSpec) || isLong(objectSpec)|| isBigInteger(objectSpec)|| isDouble(objectSpec)|| isBigDecimal(objectSpec)) {
-    return objectAdapter.getObject();
+  final JsonValueConverter jvc=converterBySpec.get(objectSpec.getSpecId());
+  if (jvc != null) {
+    return jvc.asObject(objectAdapter);
   }
   final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
   if (encodableFacet == null) {

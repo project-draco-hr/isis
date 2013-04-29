@@ -1,65 +1,14 @@
 {
-  Object value;
-  String format=null;
-  String xIsisFormat=null;
-  if (isBoolean(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    xIsisFormat="boolean";
-  }
- else   if (isByte(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    xIsisFormat="byte";
-  }
- else   if (isChar(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    xIsisFormat="char";
-  }
- else   if (isShort(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    xIsisFormat="short";
-  }
- else   if (isInteger(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    format="int";
-    xIsisFormat="int";
-  }
- else   if (isLong(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    format="int";
-    xIsisFormat="long";
-  }
- else   if (isBigInteger(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    format="int";
-    xIsisFormat="biginteger";
-  }
- else   if (isFloat(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    format="decimal";
-    xIsisFormat="float";
-  }
- else   if (isDouble(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    format="decimal";
-    xIsisFormat="double";
-  }
- else   if (isBigDecimal(objectSpec)) {
-    value=asValueElseNull(objectAdapter);
-    format="decimal";
-    xIsisFormat="bigdecimal";
+  final JsonValueConverter jvc=converterBySpec.get(objectSpec.getSpecId());
+  if (jvc != null) {
+    jvc.appendValueAndFormat(objectAdapter,repr);
   }
  else {
     final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
     if (encodableFacet == null) {
       throw new IllegalArgumentException("objectSpec expected to have EncodableFacet");
     }
-    value=objectAdapter != null ? encodableFacet.toEncodedString(objectAdapter) : NullNode.getInstance();
-  }
-  repr.mapPut("value",value);
-  if (format != null) {
-    repr.mapPut("format",format);
-  }
-  if (xIsisFormat != null) {
-    repr.mapPut("x-isis-format",xIsisFormat);
+    Object value=objectAdapter != null ? encodableFacet.toEncodedString(objectAdapter) : NullNode.getInstance();
+    append(repr,value,"decimal","bigdecimal");
   }
 }
