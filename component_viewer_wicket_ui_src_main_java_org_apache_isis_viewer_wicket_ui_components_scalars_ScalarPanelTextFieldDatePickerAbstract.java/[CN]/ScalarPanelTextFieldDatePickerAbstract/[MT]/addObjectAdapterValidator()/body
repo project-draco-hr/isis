@@ -1,10 +1,9 @@
 {
-  final AbstractTextComponent<Date> textField=getTextField();
-  textField.add(new IValidator<java.util.Date>(){
+  final AbstractTextComponent<T> textField=getTextField();
+  textField.add(new IValidator<T>(){
     private static final long serialVersionUID=1L;
-    @Override public void validate(    final IValidatable<java.util.Date> validatable){
-      final java.util.Date proposedValue=validatable.getValue();
-      final T proposed=asPojo(proposedValue);
+    @Override public void validate(    final IValidatable<T> validatable){
+      final T proposed=validatable.getValue();
       final ObjectAdapter proposedAdapter=adapterFor(proposed);
       String reasonIfAny=scalarModel.validate(proposedAdapter);
       if (reasonIfAny != null) {
