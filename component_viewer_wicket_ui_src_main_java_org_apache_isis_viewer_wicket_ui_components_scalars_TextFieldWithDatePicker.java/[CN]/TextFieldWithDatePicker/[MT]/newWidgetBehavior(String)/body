@@ -1,0 +1,29 @@
+{
+  final DatePickerBehavior datePickerBehavior=new DatePickerBehavior(selector,this.options){
+    private static final long serialVersionUID=1L;
+    @Override public boolean isOnSelectEventEnabled(){
+      return TextFieldWithDatePicker.this.isOnSelectEventEnabled();
+    }
+    @Override public void onConfigure(    Component component){
+      super.onConfigure(component);
+      TextFieldWithDatePicker.this.onConfigure(this);
+    }
+    @Override public void onSelect(    AjaxRequestTarget target,    String date){
+      TextFieldWithDatePicker.this.onSelect(target,date);
+    }
+    @Override protected JQueryAjaxPostBehavior newOnSelectBehavior(){
+      return new JQueryAjaxPostBehavior(this,TextFieldWithDatePicker.this){
+        private static final long serialVersionUID=1L;
+        @Override protected CallbackParameter[] getCallbackParameters(){
+          return new CallbackParameter[]{CallbackParameter.explicit("dateText"),CallbackParameter.context("inst")};
+        }
+        @Override protected JQueryEvent newEvent(){
+          return new SelectEvent();
+        }
+      }
+;
+    }
+  }
+;
+  return datePickerBehavior;
+}
