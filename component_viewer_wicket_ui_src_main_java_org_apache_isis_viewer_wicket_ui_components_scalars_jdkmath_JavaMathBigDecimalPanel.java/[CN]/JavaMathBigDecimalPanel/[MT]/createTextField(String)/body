@@ -1,0 +1,32 @@
+{
+  final ScalarModel model=getModel();
+  final TextField<BigDecimal> textField=new TextField<BigDecimal>(id,newTextFieldValueModel(),cls){
+    private static final long serialVersionUID=1L;
+    @SuppressWarnings("unchecked") @Override public <C>IConverter<C> getConverter(    Class<C> type){
+      Integer scale=model.getScale();
+      final MathContext mathContext=new MathContext(scale + 1,RoundingMode.HALF_UP);
+      if (type == BigDecimal.class) {
+        return (IConverter<C>)new IConverter<BigDecimal>(){
+          private static final long serialVersionUID=1L;
+          @Override public BigDecimal convertToObject(          String value,          Locale locale){
+            try {
+              return new BigDecimal(value,mathContext);
+            }
+ catch (            Exception e) {
+              return null;
+            }
+          }
+          @Override public String convertToString(          BigDecimal value,          Locale locale){
+            return value.toPlainString();
+          }
+        }
+;
+      }
+ else {
+        return super.getConverter(type);
+      }
+    }
+  }
+;
+  return textField;
+}
