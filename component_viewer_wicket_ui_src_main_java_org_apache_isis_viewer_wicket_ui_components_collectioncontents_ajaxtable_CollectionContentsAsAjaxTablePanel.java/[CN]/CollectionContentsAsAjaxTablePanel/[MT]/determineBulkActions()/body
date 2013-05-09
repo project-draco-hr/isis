@@ -5,6 +5,16 @@
   }
   final ObjectSpecification typeSpec=model.getTypeOfSpecification();
   List<ObjectAction> objectActions=typeSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  if (isExploring() || isPrototyping()) {
+    List<ObjectAction> explorationActions=typeSpec.getObjectActions(ActionType.EXPLORATION,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    List<ObjectAction> prototypeActions=typeSpec.getObjectActions(ActionType.PROTOTYPE,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    objectActions.addAll(explorationActions);
+    objectActions.addAll(prototypeActions);
+  }
+  if (isDebugMode()) {
+    List<ObjectAction> debugActions=typeSpec.getObjectActions(ActionType.DEBUG,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    objectActions.addAll(debugActions);
+  }
   List<ObjectAction> flattenedActions=ObjectActions.flattenedActions(objectActions);
   return Lists.newArrayList(Iterables.filter(flattenedActions,BULK));
 }
