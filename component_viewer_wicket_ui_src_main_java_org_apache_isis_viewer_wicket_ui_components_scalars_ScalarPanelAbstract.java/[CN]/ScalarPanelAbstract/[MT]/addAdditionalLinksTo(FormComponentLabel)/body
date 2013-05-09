@@ -1,14 +1,12 @@
 {
-  final FormComponentLabel fcl=super.addComponentForRegular();
   final List<LinkAndLabel> entityActions;
   if (scalarModel.getKind() == ScalarModel.Kind.PROPERTY) {
     final ObjectAdapterMemento parentMemento=scalarModel.getParentObjectAdapterMemento();
     final EntityModel parentEntityModel=new EntityModel(parentMemento);
-    entityActions=CollectionPanel.entityActions(parentEntityModel,scalarModel.getPropertyMemento().getProperty());
+    entityActions=EntityActionUtil.entityActions(parentEntityModel,scalarModel.getPropertyMemento().getProperty());
   }
  else {
     entityActions=null;
   }
-  addAdditionalLinks(fcl,entityActions);
-  return fcl;
+  addAdditionalLinks(labelIfRegular,entityActions);
 }

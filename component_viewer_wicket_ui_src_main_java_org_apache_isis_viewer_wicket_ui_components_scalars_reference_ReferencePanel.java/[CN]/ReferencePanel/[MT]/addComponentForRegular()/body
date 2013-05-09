@@ -6,9 +6,6 @@
   entityLink.setLabel(Model.of(name));
   final FormComponentLabel labelIfRegular=new FormComponentLabel(ID_SCALAR_IF_REGULAR,entityLink);
   labelIfRegular.add(entityLink);
-  if (getModel().isRequired()) {
-    labelIfRegular.add(new CssClassAppender("mandatory"));
-  }
   final String describedAs=getModel().getDescribedAs();
   if (describedAs != null) {
     labelIfRegular.add(new AttributeModifier("title",Model.of(describedAs)));
@@ -16,7 +13,8 @@
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(entityLink));
   labelIfRegular.add(scalarName);
   addOrReplace(labelIfRegular);
-  addOrReplace(new ComponentFeedbackPanel(ID_FEEDBACK,entityLink));
+  addFeedbackTo(labelIfRegular,entityLink);
+  addAdditionalLinksTo(labelIfRegular);
   addStandardSemantics();
   addSemantics();
   if (getModel().isRequired()) {
