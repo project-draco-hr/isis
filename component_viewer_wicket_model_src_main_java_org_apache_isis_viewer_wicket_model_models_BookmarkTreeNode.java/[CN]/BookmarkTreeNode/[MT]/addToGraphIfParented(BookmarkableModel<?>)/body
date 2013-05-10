@@ -1,0 +1,25 @@
+{
+  boolean whetherAdded=false;
+  if (candidateBookmarkableModel instanceof EntityModel) {
+    EntityModel entityModel=(EntityModel)candidateBookmarkableModel;
+    final ObjectAdapter candidateAdapter=entityModel.getObject();
+    final List<ObjectAssociation> properties=candidateAdapter.getSpecification().getAssociations(ObjectAssociationFilters.REFERENCE_PROPERTIES);
+    for (    ObjectAssociation objectAssoc : properties) {
+      final ObjectAdapter possibleParentAdapter=objectAssoc.get(candidateAdapter);
+      if (possibleParentAdapter == null) {
+        continue;
+      }
+      final Oid possibleParentOid=possibleParentAdapter.getOid();
+      if (possibleParentOid == null) {
+        continue;
+      }
+      final String possibleParentOidStr=possibleParentOid.enStringNoVersion(IsisContext.getOidMarshaller());
+      final String thisOidStr=PageParameterNames.OBJECT_OID.getStringFrom(this.pageParameters);
+      if (Objects.equal(thisOidStr,possibleParentOidStr)) {
+        this.addChild(candidateBookmarkableModel);
+        whetherAdded=true;
+      }
+    }
+  }
+  return whetherAdded;
+}

@@ -1,0 +1,14 @@
+{
+  boolean inGraph=false;
+  final PageParameters candidatePP=candidateBookmarkableModel.getPageParameters();
+  inGraph=matchAndUpdateTitle(candidatePP,this.pageParameters);
+  if (candidateBookmarkableModel.hasAsChildPolicy()) {
+    for (    BookmarkTreeNode childNode : this.getChildren()) {
+      inGraph=childNode.matchAndUpdateTitle(candidateBookmarkableModel) || inGraph;
+    }
+    if (!inGraph) {
+      inGraph=addToGraphIfParented(candidateBookmarkableModel);
+    }
+  }
+  return inGraph;
+}
