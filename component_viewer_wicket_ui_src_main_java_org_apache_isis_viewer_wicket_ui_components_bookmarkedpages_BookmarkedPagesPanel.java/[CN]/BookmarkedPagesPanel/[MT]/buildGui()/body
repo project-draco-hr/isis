@@ -9,10 +9,11 @@
   container.setOutputMarkupId(true);
   add(container);
   final BookmarkedPagesModel bookmarkedPagesModel=getModel();
-  final ListView<PageParameters> listView=new ListView<PageParameters>(ID_BOOKMARKED_PAGE_ITEM,bookmarkedPagesModel){
+  final ListView<BookmarkTreeNode> listView=new ListView<BookmarkTreeNode>(ID_BOOKMARKED_PAGE_ITEM,bookmarkedPagesModel){
     private static final long serialVersionUID=1L;
-    @Override protected void populateItem(    ListItem<PageParameters> item){
-      final PageParameters pageParameters=item.getModelObject();
+    @Override protected void populateItem(    ListItem<BookmarkTreeNode> item){
+      final BookmarkTreeNode rootNode=item.getModelObject();
+      final PageParameters pageParameters=rootNode.getPageParameters();
       final PageType pageType=PageParameterNames.PAGE_TYPE.getEnumFrom(pageParameters,PageType.class);
       final Class<? extends Page> pageClass=pageClassRegistry.getPageClass(pageType);
       final AbstractLink link=Links.newBookmarkablePageLink(ID_BOOKMARKED_PAGE_LINK,pageParameters,pageClass);

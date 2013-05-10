@@ -1,0 +1,64 @@
+{
+  final PageParameters candidatePP=bookmarkableModel.asPageParameters();
+  PageType pageType=PageParameterNames.PAGE_TYPE.getEnumFrom(candidatePP,PageType.class);
+  if (pageType == null) {
+    return;
+  }
+  String candidateTitle=PageParameterNames.PAGE_TITLE.getStringFrom(candidatePP);
+  if (candidateTitle == null) {
+    return;
+  }
+  final String pageTitleKey=PageParameterNames.PAGE_TITLE.toString();
+  try {
+    candidatePP.remove(pageTitleKey);
+    for (    BookmarkTreeNode eachNode : rootNodes) {
+      PageParameters eachPP=eachNode.pageParameters;
+      String pageTitle=PageParameterNames.PAGE_TITLE.getStringFrom(eachPP);
+      try {
+        eachPP.remove(pageTitleKey);
+        if (eachPP.equals(candidatePP)) {
+          pageTitle=candidateTitle;
+          current=eachPP;
+          return;
+        }
+      }
+  finally {
+        eachPP.add(PageParameterNames.PAGE_TITLE.toString(),pageTitle);
+      }
+    }
+  }
+  finally {
+    PageParameterNames.PAGE_TITLE.addStringTo(candidatePP,candidateTitle);
+  }
+  rootNodes.add(new BookmarkTreeNode(bookmarkableModel));
+  Collections.sort(rootNodes,new Comparator<BookmarkTreeNode>(){
+    @Override public int compare(    BookmarkTreeNode o1,    BookmarkTreeNode o2){
+      PageType pageType1=PageParameterNames.PAGE_TYPE.getEnumFrom(o1.pageParameters,PageType.class);
+      PageType pageType2=PageParameterNames.PAGE_TYPE.getEnumFrom(o2.pageParameters,PageType.class);
+      final int pageTypeComparison=pageType1.compareTo(pageType2);
+      if (pageTypeComparison != 0) {
+        return pageTypeComparison;
+      }
+      if (pageType1 == PageType.ENTITY) {
+        final String className1=classNameOf(o1.pageParameters);
+        final String className2=classNameOf(o2.pageParameters);
+        final int classNameComparison=className1.compareTo(className2);
+        if (classNameComparison != 0) {
+          return classNameComparison;
+        }
+      }
+      String title1=PageParameterNames.PAGE_TITLE.getStringFrom(o1.pageParameters);
+      String title2=PageParameterNames.PAGE_TITLE.getStringFrom(o2.pageParameters);
+      return title1.compareTo(title2);
+    }
+    private String classNameOf(    PageParameters o1){
+      String oidStr1=PageParameterNames.OBJECT_OID.getStringFrom(o1);
+      RootOid oid1=getOidMarshaller().unmarshal(oidStr1,RootOid.class);
+      ObjectSpecId objectSpecId1=oid1.getObjectSpecId();
+      final String className1=getSpecificationLoader().lookupBySpecId(objectSpecId1).getIdentifier().getClassName();
+      return className1;
+    }
+  }
+);
+  current=candidatePP;
+}
