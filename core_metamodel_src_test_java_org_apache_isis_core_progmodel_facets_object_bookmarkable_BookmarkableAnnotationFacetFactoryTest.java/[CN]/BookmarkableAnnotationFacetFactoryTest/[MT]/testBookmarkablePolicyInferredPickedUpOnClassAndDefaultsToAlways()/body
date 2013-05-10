@@ -1,0 +1,11 @@
+{
+class Customer {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(BookmarkPolicyFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof BookmarkPolicyFacetFallback);
+  BookmarkPolicyFacet bookmarkableFacet=(BookmarkPolicyFacet)facet;
+  assertThat(bookmarkableFacet.value(),is(BookmarkPolicy.NEVER));
+  assertNoMethodsRemoved();
+}
