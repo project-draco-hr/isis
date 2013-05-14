@@ -8,7 +8,8 @@
     interfaces.addAll(Arrays.asList(enhancedClass.getInterfaces()));
     interfaces.remove(Factory.class);
     interfaces.add(WrapperObject.class);
-    return (T)Enhancer.create(origSuperclass,interfaces.toArray(new Class[]{}),new InvocationHandlerMethodInterceptor(handler));
+    InvocationHandlerMethodInterceptor interceptor=new InvocationHandlerMethodInterceptor(handler);
+    return (T)Enhancer.create(origSuperclass,interfaces.toArray(new Class[]{}),interceptor);
   }
   final Class<T> clazz=(Class<T>)toProxy.getClass();
   T proxy=null;

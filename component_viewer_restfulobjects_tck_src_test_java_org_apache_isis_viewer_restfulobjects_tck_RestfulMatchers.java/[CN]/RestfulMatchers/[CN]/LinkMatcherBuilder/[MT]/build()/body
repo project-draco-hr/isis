@@ -115,31 +115,40 @@
           throw new RuntimeException(e);
         }
       }
-      if (statusCode != null) {
-        if (jsonResp.getStatus() != statusCode) {
-          return false;
+      try {
+        if (statusCode != null) {
+          if (jsonResp.getStatus() != statusCode) {
+            return false;
+          }
         }
+        if (selfHref != null) {
+          JsonRepresentation entity;
+          try {
+            entity=jsonResp.getEntity();
+          }
+ catch (          Exception e) {
+            return false;
+          }
+          if (entity == null) {
+            return false;
+          }
+          LinkRepresentation selfLink=entity.getLink("links[rel=self]");
+          if (selfLink == null) {
+            return false;
+          }
+          if (!selfLink.getHref().equals(selfHref)) {
+            return false;
+          }
+        }
+        return true;
       }
-      if (selfHref != null) {
-        JsonRepresentation entity;
+  finally {
         try {
-          entity=jsonResp.getEntity();
+          jsonResp.getEntity();
         }
  catch (        Exception e) {
-          return false;
-        }
-        if (entity == null) {
-          return false;
-        }
-        LinkRepresentation selfLink=entity.getLink("links[rel=self]");
-        if (selfLink == null) {
-          return false;
-        }
-        if (!selfLink.getHref().equals(selfHref)) {
-          return false;
         }
       }
-      return true;
     }
   }
 ;
