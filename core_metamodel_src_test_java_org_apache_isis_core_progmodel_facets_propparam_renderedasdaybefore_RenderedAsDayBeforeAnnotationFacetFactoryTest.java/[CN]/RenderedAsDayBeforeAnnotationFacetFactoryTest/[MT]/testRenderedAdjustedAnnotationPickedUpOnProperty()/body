@@ -1,0 +1,15 @@
+{
+  final RenderedAsDayBeforeAnnotationOnPropertyFacetFactory facetFactory=new RenderedAsDayBeforeAnnotationOnPropertyFacetFactory();
+class Customer {
+    @RenderedAsDayBefore public LocalDate getEndDate(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getEndDate");
+  facetFactory.process(new ProcessMethodContext(Customer.class,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(RenderedAdjustedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof RenderedAsDayBeforeFacetAnnotationOnProperty);
+  final RenderedAsDayBeforeFacetAnnotationOnProperty facetAnnotation=(RenderedAsDayBeforeFacetAnnotationOnProperty)facet;
+  assertEquals(-1,facetAnnotation.value());
+}
