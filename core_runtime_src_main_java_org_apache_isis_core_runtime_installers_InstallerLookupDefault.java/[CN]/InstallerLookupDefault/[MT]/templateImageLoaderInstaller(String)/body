@@ -1,4 +1,11 @@
 {
-  final boolean onGae=onGae();
-  return getInstaller(TemplateImageLoaderInstaller.class,requested,SystemConstants.IMAGE_LOADER_KEY,!onGae ? SystemConstants.IMAGE_LOADER_DEFAULT : SystemConstants.IMAGE_LOADER_GAE);
+  try {
+    if (requested == null) {
+      @SuppressWarnings("unused") Canvas canvas=new java.awt.Canvas();
+    }
+    return templateImageLoaderInstaller(requested,SystemConstants.IMAGE_LOADER_DEFAULT);
+  }
+ catch (  NoClassDefFoundError e) {
+    return templateImageLoaderInstaller(requested,SystemConstants.IMAGE_LOADER_NOOP);
+  }
 }
