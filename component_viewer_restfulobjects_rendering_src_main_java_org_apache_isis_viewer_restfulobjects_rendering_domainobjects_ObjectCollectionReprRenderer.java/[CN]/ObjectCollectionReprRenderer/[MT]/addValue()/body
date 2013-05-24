@@ -3,11 +3,18 @@
   if (valueAdapter == null) {
     return;
   }
+  final RenderFacet renderFacet=objectMember.getFacet(RenderFacet.class);
+  boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY;
   final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(valueAdapter);
   final List<JsonRepresentation> list=Lists.newArrayList();
   for (  final ObjectAdapter elementAdapter : facet.iterable(valueAdapter)) {
-    final LinkBuilder newBuilder=DomainObjectReprRenderer.newLinkToBuilder(rendererContext,Rel.VALUE,elementAdapter);
-    list.add(newBuilder.build());
+    final LinkBuilder valueLinkBuilder=DomainObjectReprRenderer.newLinkToBuilder(rendererContext,Rel.VALUE,elementAdapter);
+    if (eagerlyRender) {
+      final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),getLinkFollowSpecs(),JsonRepresentation.newMap());
+      renderer.with(elementAdapter);
+      valueLinkBuilder.withValue(renderer.render());
+    }
+    list.add(valueLinkBuilder.build());
   }
   representation.mapPut("value",list);
 }
