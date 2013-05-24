@@ -1,0 +1,12 @@
+{
+  final List<ToDoItem> all=wrap(toDoItems).notYetComplete();
+  final ToDoItem toDoItem=wrap(all.get(0));
+  toDoItem.completed();
+  try {
+    toDoItem.completed();
+    fail("completed should have been disabled");
+  }
+ catch (  DisabledException ex) {
+    assertThat(ex.getMessage(),is("Already completed"));
+  }
+}
