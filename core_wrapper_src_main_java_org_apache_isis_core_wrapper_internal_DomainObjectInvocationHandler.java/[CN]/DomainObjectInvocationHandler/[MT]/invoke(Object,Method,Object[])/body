@@ -2,6 +2,12 @@
   if (isObjectMethod(method)) {
     return delegate(method,args);
   }
+  if (isJdoMethod(method)) {
+    return delegate(method,args);
+  }
+  if (isInjectMethod(method)) {
+    return delegate(method,args);
+  }
   final ObjectAdapter targetAdapter=getAdapterManager().getAdapterFor(getDelegate());
   if (isTitleMethod(method)) {
     return handleTitleMethod(method,args,targetAdapter);
@@ -12,9 +18,6 @@
   }
   if (isUnderlyingMethod(method)) {
     return getDelegate();
-  }
-  if (method.getName().startsWith("jdo")) {
-    return delegate(method,args);
   }
   final ObjectMember objectMember=locateAndCheckMember(method);
   final List<Facet> imperativeFacets=getImperativeFacets(objectMember,method);
