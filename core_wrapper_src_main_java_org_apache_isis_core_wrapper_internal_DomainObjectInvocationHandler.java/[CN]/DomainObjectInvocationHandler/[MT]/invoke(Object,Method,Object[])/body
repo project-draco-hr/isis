@@ -13,6 +13,9 @@
   if (isUnderlyingMethod(method)) {
     return getDelegate();
   }
+  if (method.getName().startsWith("jdo")) {
+    return delegate(method,args);
+  }
   final ObjectMember objectMember=locateAndCheckMember(method);
   final List<Facet> imperativeFacets=getImperativeFacets(objectMember,method);
   final String memberName=objectMember.getName();

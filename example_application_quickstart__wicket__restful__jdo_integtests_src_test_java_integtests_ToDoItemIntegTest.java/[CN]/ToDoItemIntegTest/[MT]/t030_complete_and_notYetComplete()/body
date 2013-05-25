@@ -1,0 +1,17 @@
+{
+  List<ToDoItem> all=wrap(toDoItems).notYetComplete();
+  final ToDoItem toDoItem=wrap(all.get(0));
+  assertThat(toDoItem.getDescription(),is("Buy milk and butter"));
+  assertThat(toDoItem.isComplete(),is(false));
+  assertThat(container.titleOf(toDoItem),is("foo"));
+  toDoItem.completed();
+  assertThat(toDoItem.isComplete(),is(true));
+  assertThat(container.titleOf(toDoItem),is("foo"));
+  all=wrap(toDoItems).notYetComplete();
+  assertThat(all.size(),is(4));
+  toDoItem.notYetCompleted();
+  assertThat(toDoItem.isComplete(),is(false));
+  assertThat(container.titleOf(toDoItem),is("foo"));
+  all=wrap(toDoItems).notYetComplete();
+  assertThat(all.size(),is(5));
+}
