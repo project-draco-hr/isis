@@ -1,15 +1,19 @@
 {
   ensureOpened();
   ensureThatState(persistenceManager,is(notNullValue()));
-  final IsisTransaction currentTransaction=getTransactionManager().getTransaction();
-  if (currentTransaction != null && !currentTransaction.getState().isComplete()) {
-    if (currentTransaction.getState().canCommit()) {
-      getTransactionManager().endTransaction();
-    }
- else     if (currentTransaction.getState().canAbort()) {
-      getTransactionManager().abortTransaction();
+  try {
+    final IsisTransaction currentTransaction=getTransactionManager().getTransaction();
+    if (currentTransaction != null && !currentTransaction.getState().isComplete()) {
+      if (currentTransaction.getState().canCommit()) {
+        getTransactionManager().endTransaction();
+      }
+ else       if (currentTransaction.getState().canAbort()) {
+        getTransactionManager().abortTransaction();
+      }
     }
   }
-  persistenceManager.close();
-  state=State.CLOSED;
+  finally {
+    persistenceManager.close();
+    state=State.CLOSED;
+  }
 }

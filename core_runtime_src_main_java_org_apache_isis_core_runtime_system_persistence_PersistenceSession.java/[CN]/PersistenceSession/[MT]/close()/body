@@ -5,8 +5,20 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("closing " + this);
   }
-  objectStore.close();
-  adapterManager.close();
-  objectFactory.close();
+  try {
+    objectStore.close();
+  }
+ catch (  RuntimeException ex) {
+  }
+  try {
+    adapterManager.close();
+  }
+ catch (  RuntimeException ex) {
+  }
+  try {
+    objectFactory.close();
+  }
+ catch (  RuntimeException ex) {
+  }
   setState(State.CLOSED);
 }
