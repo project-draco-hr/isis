@@ -1,0 +1,23 @@
+{
+  if (toZip == null) {
+    return null;
+  }
+  ZipOutputStream zos=null;
+  ByteArrayOutputStream baos=null;
+  try {
+    baos=new ByteArrayOutputStream();
+    zos=new ZipOutputStream(baos);
+    ZipEntry entry=new ZipEntry(entryName);
+    zos.putNextEntry(entry);
+    final byte[] utf8Bytes=toZip.getBytes(Charset.forName("UTF-8"));
+    zos.write(utf8Bytes);
+    zos.flush();
+  }
+ catch (  IOException e) {
+    throw new ApplicationException(e);
+  }
+ finally {
+    closeSafely(zos);
+  }
+  return baos.toByteArray();
+}

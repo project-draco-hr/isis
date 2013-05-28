@@ -1,0 +1,27 @@
+{
+  if (toUnzip == null) {
+    return null;
+  }
+  ByteArrayInputStream bais=null;
+  ZipInputStream zis=null;
+  try {
+    bais=new ByteArrayInputStream(toUnzip);
+    zis=new ZipInputStream(bais);
+    ZipEntry entry;
+    while ((entry=zis.getNextEntry()) != null) {
+      if (!entry.getName().equals(entryName)) {
+        zis.closeEntry();
+        continue;
+      }
+      final byte[] utf8Bytes=IoUtils.readBytes(zis);
+      return new String(utf8Bytes,Charset.forName("UTF-8"));
+    }
+    return null;
+  }
+ catch (  IOException ex) {
+    throw new ApplicationException(ex);
+  }
+ finally {
+    IoUtils.closeSafely(zis);
+  }
+}
