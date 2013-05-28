@@ -1,9 +1,11 @@
 {
   renderMemberContent();
-  if (mode.isStandalone() || mode.isMutated() || !objectAdapter.representsPersistent()) {
+  if (mode.isStandalone() || mode.isMutated() || mode.isEventSerialization()|| !objectAdapter.representsPersistent()) {
     addValue();
   }
-  putDisabledReasonIfDisabled();
+  if (!mode.isEventSerialization()) {
+    putDisabledReasonIfDisabled();
+  }
   if (mode.isStandalone() || mode.isMutated()) {
     addExtensionsIsisProprietaryChangedObjects();
   }

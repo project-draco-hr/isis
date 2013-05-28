@@ -4,7 +4,7 @@
     return;
   }
   final RenderFacet renderFacet=objectMember.getFacet(RenderFacet.class);
-  boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY;
+  boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY && rendererContext.canEagerlyRender(valueAdapter);
   final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(valueAdapter);
   final List<JsonRepresentation> list=Lists.newArrayList();
   for (  final ObjectAdapter elementAdapter : facet.iterable(valueAdapter)) {
@@ -12,6 +12,9 @@
     if (eagerlyRender) {
       final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),getLinkFollowSpecs(),JsonRepresentation.newMap());
       renderer.with(elementAdapter);
+      if (mode.isEventSerialization()) {
+        renderer.asEventSerialization();
+      }
       valueLinkBuilder.withValue(renderer.render());
     }
     list.add(valueLinkBuilder.build());

@@ -14,6 +14,9 @@
       if (mode.representsArguments()) {
         renderer.asArguments();
       }
+      if (mode.isEventSerialization()) {
+        renderer.asEventSerialization();
+      }
       members.mapPut(assoc.getId(),renderer.render());
     }
     if (mode.representsArguments()) {
@@ -23,6 +26,9 @@
       final OneToManyAssociation collection=(OneToManyAssociation)assoc;
       final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(getRendererContext(),linkFollower,collection.getId(),JsonRepresentation.newMap());
       renderer.with(new ObjectAndCollection(objectAdapter,collection)).usingLinkTo(linkToBuilder);
+      if (mode.isEventSerialization()) {
+        renderer.asEventSerialization();
+      }
       members.mapPut(assoc.getId(),renderer.render());
     }
   }
