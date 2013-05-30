@@ -1,8 +1,7 @@
 {
-  return allMatches(ToDoItem.class,new Filter<ToDoItem>(){
-    @Override public boolean accept(    final ToDoItem t){
-      return ownedByCurrentUser(t) && !t.isComplete();
-    }
+  List<ToDoItem> items=doNotYetComplete();
+  if (items.isEmpty()) {
+    getContainer().informUser("All to-do items have been completed :-)");
   }
-);
+  return items;
 }
