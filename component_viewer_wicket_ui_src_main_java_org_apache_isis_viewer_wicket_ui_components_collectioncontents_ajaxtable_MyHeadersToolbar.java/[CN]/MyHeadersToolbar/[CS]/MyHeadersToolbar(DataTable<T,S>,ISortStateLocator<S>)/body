@@ -1,0 +1,41 @@
+{
+  super(table);
+  RefreshingView<IColumn<T,S>> headers=new RefreshingView<IColumn<T,S>>("headers"){
+    private static final long serialVersionUID=1L;
+    @Override protected Iterator<IModel<IColumn<T,S>>> getItemModels(){
+      List<IModel<IColumn<T,S>>> columnsModels=new LinkedList<IModel<IColumn<T,S>>>();
+      for (      IColumn<T,S> column : table.getColumns()) {
+        columnsModels.add(Model.of(column));
+      }
+      return columnsModels.iterator();
+    }
+    @Override protected void populateItem(    Item<IColumn<T,S>> item){
+      final IColumn<T,S> column=item.getModelObject();
+      WebMarkupContainer header=null;
+      if (column.isSortable()) {
+        header=newSortableHeader("header",column.getSortProperty(),stateLocator);
+      }
+ else {
+        header=new WebMarkupContainer("header");
+      }
+      if (column instanceof IStyledColumn) {
+        CssAttributeBehavior cssAttributeBehavior=new CssAttributeBehavior(){
+          private static final long serialVersionUID=1L;
+          @Override protected String getCssClass(){
+            return ((IStyledColumn<?,S>)column).getCssClass();
+          }
+        }
+;
+        header.add(cssAttributeBehavior);
+      }
+      item.add(header);
+      item.setRenderBodyOnly(true);
+      Component label;
+      label=new Label("label");
+      label=column.getHeader("label");
+      header.add(label);
+    }
+  }
+;
+  add(headers);
+}
