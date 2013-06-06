@@ -1,0 +1,16 @@
+{
+  final Set<Field> mappedByFields=Reflections.getAllFields(entityType,ReflectUtils.persistentMappedBy);
+  for (  Field mappedByField : mappedByFields) {
+    final Parent p=new Parent();
+    p.entityType=entityType;
+    p.childField=mappedByField;
+    try {
+      out.println("processing " + p.entityType.getSimpleName() + "#"+ p.childField.getName());
+      out.incrementIndent();
+      process(p);
+    }
+  finally {
+      out.decrementIndent();
+    }
+  }
+}

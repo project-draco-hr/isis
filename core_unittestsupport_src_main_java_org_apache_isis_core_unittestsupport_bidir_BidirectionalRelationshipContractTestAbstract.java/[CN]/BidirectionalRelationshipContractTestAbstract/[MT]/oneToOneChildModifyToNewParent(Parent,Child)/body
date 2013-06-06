@@ -1,0 +1,15 @@
+{
+  final String methodDesc="oneToOneChildModifyToNewParent";
+  out.println(methodDesc);
+  Object parent1=p.newParent(this);
+  Object parent2=p.newParent(this);
+  Object child1=c.newChild(this);
+  Object child2=c.newChild(this);
+  p.modifyChild(parent1,child1);
+  p.modifyChild(parent2,child2);
+  c.modifyParent(child1,parent2);
+  assertThat(assertDesc(p,c,methodDesc,"parent 1 no longer references child 1"),p.getChild(parent1),is(nullValue()));
+  assertThat(assertDesc(p,c,methodDesc,"parent 2 now references child 1"),p.getChild(parent2),is(child1));
+  assertThat(assertDesc(p,c,methodDesc,"child 1 now references parent 2"),c.getParent(child1),is(parent2));
+  assertThat(assertDesc(p,c,methodDesc,"child 2, as a side-effect, no longer references parent 2"),c.getParent(child2),is(nullValue()));
+}

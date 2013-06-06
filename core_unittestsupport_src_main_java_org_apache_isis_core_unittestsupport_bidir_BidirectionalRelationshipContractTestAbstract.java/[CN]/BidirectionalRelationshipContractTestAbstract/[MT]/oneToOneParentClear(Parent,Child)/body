@@ -1,0 +1,10 @@
+{
+  final String methodDesc="oneToOneParentClear";
+  out.println(methodDesc);
+  Object parent1=p.newParent(this);
+  Object child1=c.newChild(this);
+  p.modifyChild(parent1,child1);
+  p.clearChild(parent1);
+  assertThat(assertDesc(p,c,methodDesc,"parent no longer references child"),p.getChild(parent1),is(nullValue()));
+  assertThat(assertDesc(p,c,methodDesc,"child no longer references parent"),c.getParent(child1),is(nullValue()));
+}

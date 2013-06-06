@@ -1,0 +1,10 @@
+{
+  final String methodDesc="oneToManyParentRemoveFrom";
+  out.println(methodDesc);
+  Object parent1=p.newParent(this);
+  Object child1=c.newChild(this);
+  p.addToChildren(parent1,child1);
+  p.removeFromChildren(parent1,child1);
+  assertThat(assertDesc(p,c,methodDesc,"parent no longer contains child"),p.getChildren(parent1).isEmpty(),is(true));
+  assertThat(assertDesc(p,c,methodDesc,"child no longer references parent"),c.getParent(child1),is(nullValue()));
+}

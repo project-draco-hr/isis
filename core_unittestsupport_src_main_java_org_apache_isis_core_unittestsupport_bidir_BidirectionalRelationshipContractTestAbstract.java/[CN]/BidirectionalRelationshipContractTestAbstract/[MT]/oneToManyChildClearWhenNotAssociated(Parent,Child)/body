@@ -1,0 +1,9 @@
+{
+  final String methodDesc="oneToManyChildClearWhenNotAssociated";
+  out.println(methodDesc);
+  Object parent1=p.newParent(this);
+  Object child1=c.newChild(this);
+  c.clearParent(child1);
+  assertThat(assertDesc(p,c,methodDesc,"parent still does not reference child"),p.getChildren(parent1).isEmpty(),is(true));
+  assertThat(assertDesc(p,c,methodDesc,"child still does not reference parent"),c.getParent(child1),is(nullValue()));
+}

@@ -1,0 +1,19 @@
+{
+  return new Predicate<Method>(){
+    public boolean apply(    Method input){
+      if (input != null) {
+        Class<?>[] parameterTypes=input.getParameterTypes();
+        if (parameterTypes.length == types.length) {
+          for (int i=0; i < parameterTypes.length; i++) {
+            if (!parameterTypes[i].isAssignableFrom(types[i])) {
+              return false;
+            }
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+;
+}

@@ -1,0 +1,15 @@
+{
+  final String methodDesc="oneToManyChildModifyToNewParent";
+  out.println(methodDesc);
+  Object parent1=p.newParent(this);
+  Object parent2=p.newParent(this);
+  Object child1=c.newChild(this);
+  Object child2=c.newChild(this);
+  p.addToChildren(parent1,child1);
+  p.addToChildren(parent2,child2);
+  c.modifyParent(child1,parent2);
+  assertThat(assertDesc(p,c,methodDesc,"parent 1 no longer has any children"),p.getChildren(parent1).isEmpty(),is(true));
+  assertThat(assertDesc(p,c,methodDesc,"parent 2 now has both children"),p.getChildren(parent2),Matchers.containsInAnyOrder(child1,child2));
+  assertThat(assertDesc(p,c,methodDesc,"child 1 now references parent 2"),c.getParent(child1),is(parent2));
+  assertThat(assertDesc(p,c,methodDesc,"child 2 still references parent 2"),c.getParent(child2),is(parent2));
+}

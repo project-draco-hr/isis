@@ -1,0 +1,15 @@
+{
+  if (instantiator != null) {
+    try {
+      @SuppressWarnings("unused") final Object dummy=instantiator.instantiate();
+    }
+ catch (    RuntimeException ex) {
+      instantiator=Instantiator.NOOP;
+    }
+  }
+ else {
+    instantiator=Instantiator.NOOP;
+  }
+  instantiatorMap.put(cls,instantiator);
+  return instantiator;
+}
