@@ -1,0 +1,20 @@
+{
+  Set<Class<?>> entityTypes=Sets.newTreeSet(new Comparator<Class<?>>(){
+    @Override public int compare(    Class<?> o1,    Class<?> o2){
+      return o1.getName().compareTo(o2.getName());
+    }
+  }
+);
+  entityTypes.addAll(findTypes());
+  for (  Class<?> entityType : entityTypes) {
+    out.println(entityType.getName());
+    out.incrementIndent();
+    try {
+      applyContractTest(entityType);
+    }
+  finally {
+      out.decrementIndent();
+    }
+  }
+  out.println("DONE");
+}

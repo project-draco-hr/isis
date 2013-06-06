@@ -1,0 +1,14 @@
+{
+  final Set<Field> collectionFields=Reflections.getAllFields(entityType,ReflectionUtils.withTypeAssignableTo(Collection.class));
+  for (  Field collectionField : collectionFields) {
+    try {
+      final String desc=desc(entityType,collectionField);
+      out.println("processing " + desc);
+      out.incrementIndent();
+      process(entityType,collectionField);
+    }
+  finally {
+      out.decrementIndent();
+    }
+  }
+}
