@@ -1,0 +1,23 @@
+{
+class Order {
+  }
+class OrderComparator implements Comparator<Order> {
+    @Override public int compare(    Order o1,    Order o2){
+      return 0;
+    }
+  }
+  ;
+class Customer {
+    @SortedBy(OrderComparator.class) public SortedSet<Order> getOrders(){
+      return null;
+    }
+  }
+  facetedMethod=FacetedMethod.createForCollection(Customer.class,"orders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,facetedMethod.getMethod(),methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(SortedByFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof SortedByFacetAnnotation);
+  SortedByFacet sortedByFacet=(SortedByFacet)facet;
+  assertEquals(OrderComparator.class,sortedByFacet.value());
+  assertNoMethodsRemoved();
+}
