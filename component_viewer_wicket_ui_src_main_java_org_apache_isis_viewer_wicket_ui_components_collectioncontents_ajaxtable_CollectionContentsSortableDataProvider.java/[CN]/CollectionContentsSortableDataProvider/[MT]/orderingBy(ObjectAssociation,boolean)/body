@@ -1,0 +1,12 @@
+{
+  final Ordering<ObjectAdapter> ordering=new Ordering<ObjectAdapter>(){
+    @Override public int compare(    final ObjectAdapter p,    final ObjectAdapter q){
+      final ObjectAdapter pSort=sortProperty.get(p);
+      final ObjectAdapter qSort=sortProperty.get(q);
+      Ordering<ObjectAdapter> naturalOrdering=ascending ? ORDERING_BY_NATURAL.nullsFirst() : ORDERING_BY_NATURAL.nullsLast();
+      return naturalOrdering.compare(pSort,qSort);
+    }
+  }
+;
+  return ascending ? ordering : ordering.reverse();
+}
