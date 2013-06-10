@@ -1,0 +1,21 @@
+{
+  if (parameters.isEmpty()) {
+    return;
+  }
+  final Method actionMethod=processMethodContext.getMethod();
+  final Class<?>[] params=actionMethod.getParameterTypes();
+  for (int i=0; i < params.length; i++) {
+    final Class<?> paramType=params[i];
+    final Class<?> arrayOfParamType=(Array.newInstance(paramType,0)).getClass();
+    Method autoCompleteMethod=findAutoCompleteNumMethodReturning(processMethodContext,i,arrayOfParamType);
+    if (autoCompleteMethod == null) {
+      autoCompleteMethod=findAutoCompleteNumMethodReturning(processMethodContext,i,List.class);
+    }
+    if (autoCompleteMethod == null) {
+      continue;
+    }
+    processMethodContext.removeMethod(autoCompleteMethod);
+    final FacetedMethodParameter paramAsHolder=parameters.get(i);
+    FacetUtil.addFacet(new ActionParameterAutoCompleteFacetViaMethod(autoCompleteMethod,paramType,paramAsHolder,getSpecificationLoader(),getAdapterManager()));
+  }
+}

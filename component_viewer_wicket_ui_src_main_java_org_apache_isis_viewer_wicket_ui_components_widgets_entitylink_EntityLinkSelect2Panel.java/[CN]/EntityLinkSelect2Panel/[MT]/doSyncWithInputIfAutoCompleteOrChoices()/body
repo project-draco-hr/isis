@@ -3,7 +3,16 @@
     permanentlyHide(ID_AUTO_COMPLETE);
     return;
   }
-  final ChoiceProvider<ObjectAdapterMemento> provider=hasChoices() ? providerForChoices(getEntityModel()) : providerForAutoComplete(getEntityModel());
+  final ChoiceProvider<ObjectAdapterMemento> provider;
+  if (hasChoices()) {
+    provider=providerForChoices(getEntityModel());
+  }
+ else   if (hasParamOrPropertyAutoComplete()) {
+    provider=providerForParamOrPropertyAutoComplete(getEntityModel());
+  }
+ else {
+    provider=providerForObjectAutoComplete(getEntityModel());
+  }
   final ModelAbstract<ObjectAdapterMemento> model=new ModelAbstract<ObjectAdapterMemento>(){
     private static final long serialVersionUID=1L;
     @Override protected ObjectAdapterMemento load(){

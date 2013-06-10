@@ -1,0 +1,18 @@
+{
+  return new ObjectAdapterMementoProviderAbstract(){
+    private static final long serialVersionUID=1L;
+    @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
+      final ScalarModel scalarModel=(ScalarModel)entityModel;
+      final boolean hasAutoComplete=scalarModel.hasAutoComplete();
+      if (!hasAutoComplete) {
+        return null;
+      }
+      final List<ObjectAdapter> autoCompleteChoices=scalarModel.getAutoComplete(term);
+      if (autoCompleteChoices.isEmpty()) {
+        return null;
+      }
+      return Lists.newArrayList(Lists.transform(autoCompleteChoices,Mementos.fromAdapter()));
+    }
+  }
+;
+}

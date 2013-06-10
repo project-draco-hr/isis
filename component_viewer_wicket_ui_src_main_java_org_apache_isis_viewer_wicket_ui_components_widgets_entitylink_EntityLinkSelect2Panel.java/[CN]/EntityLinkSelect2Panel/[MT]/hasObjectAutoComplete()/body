@@ -1,0 +1,14 @@
+{
+  final EntityModel entityModel=getEntityModel();
+  if (!(entityModel instanceof ScalarModel)) {
+    return false;
+  }
+  final ScalarModel scalarModel=(ScalarModel)entityModel;
+  boolean hasAutoComplete=scalarModel.hasAutoComplete();
+  if (hasAutoComplete) {
+    return true;
+  }
+  final ObjectSpecification typeOfSpecification=getEntityModel().getTypeOfSpecification();
+  final AutoCompleteFacet autoCompleteFacet=(typeOfSpecification != null) ? typeOfSpecification.getFacet(AutoCompleteFacet.class) : null;
+  return autoCompleteFacet != null;
+}
