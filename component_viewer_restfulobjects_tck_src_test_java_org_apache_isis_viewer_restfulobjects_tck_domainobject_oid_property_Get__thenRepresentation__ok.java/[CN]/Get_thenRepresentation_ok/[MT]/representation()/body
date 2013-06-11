@@ -1,0 +1,26 @@
+{
+  final Response idPropertyResp=domainObjectResource.propertyDetails("org.apache.isis.core.tck.dom.defaults.WithDefaultsEntity","58","anInt");
+  final RestfulResponse<ObjectPropertyRepresentation> idPropertyJsonResp=RestfulResponse.ofT(idPropertyResp);
+  assertThat(idPropertyJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
+  final ObjectPropertyRepresentation propertyRepr=idPropertyJsonResp.getEntity();
+  assertThat(propertyRepr.getString("memberType"),is("property"));
+  final LinkRepresentation selfLink=propertyRepr.getLinkWithRel(Rel.SELF);
+  assertThat(selfLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/org.apache.isis.core.tck.dom.defaults.WithDefaultsEntity/58/properties/anInt")).returning(HttpStatusCode.OK));
+  final LinkRepresentation upLink=propertyRepr.getLinkWithRel(Rel.UP);
+  assertThat(upLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/org.apache.isis.core.tck.dom.defaults.WithDefaultsEntity/58")).returning(HttpStatusCode.OK).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).title("default-name"));
+  final LinkRepresentation modifyLink=propertyRepr.getLinkWithRel(Rel.MODIFY);
+  assertThat(modifyLink,isLink(client).httpMethod(RestfulHttpMethod.PUT).type(RepresentationType.OBJECT_PROPERTY.getMediaType()).href(endsWith("/objects/org.apache.isis.core.tck.dom.defaults.WithDefaultsEntity/58/properties/anInt")));
+  assertThat(modifyLink.getArguments(),is(not(nullValue())));
+  assertThat(modifyLink.getArguments().isArray(),is(false));
+  assertThat(modifyLink.getArguments().size(),is(1));
+  final LinkRepresentation clearLink=propertyRepr.getLinkWithRel(Rel.CLEAR);
+  assertThat(clearLink,isLink(client).httpMethod(RestfulHttpMethod.DELETE).type(RepresentationType.OBJECT_PROPERTY.getMediaType()).href(endsWith("/objects/org.apache.isis.core.tck.dom.defaults.WithDefaultsEntity/58/properties/anInt")));
+  final LinkRepresentation describedByLink=propertyRepr.getLinkWithRel(Rel.DESCRIBEDBY);
+  assertThat(describedByLink,isLink(client).returning(HttpStatusCode.OK).responseEntityWithSelfHref(describedByLink.getHref()));
+  assertThat(propertyRepr.getInt("value"),is(42));
+  assertThat(propertyRepr.getString("format"),is("int"));
+  assertThat(propertyRepr.getString("x-isis-format"),is("int"));
+  assertThat(propertyRepr.getExtensions(),isMap());
+  assertThat(propertyRepr.getExtensions().getArray("changed").isArray(),is(true));
+  assertThat(propertyRepr.getExtensions().getArray("disposed").isArray(),is(true));
+}
