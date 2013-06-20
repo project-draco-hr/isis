@@ -1,0 +1,13 @@
+{
+  if (obj == null) {
+    return null;
+  }
+  String methodName=buildMethodName(propertyName);
+  try {
+    final Method getterMethod=obj.getClass().getMethod(methodName);
+    return getterMethod.invoke(obj);
+  }
+ catch (  Exception e) {
+    throw new IllegalArgumentException("No such method ' " + methodName + "'",e);
+  }
+}
