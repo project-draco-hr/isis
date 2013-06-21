@@ -1,0 +1,14 @@
+{
+  final ObjectSpecification serviceSpec=serviceAdapter.getSpecification();
+  for (  final ObjectAction objectAction : serviceSpec.getObjectActions(actionType,Contributed.INCLUDED)) {
+    if (objectAction.getFacet(NotInServiceMenuFacet.class) != null) {
+      continue;
+    }
+    final MemberOrderFacet memberOrderFacet=objectAction.getFacet(MemberOrderFacet.class);
+    String serviceName=memberOrderFacet != null ? memberOrderFacet.name() : null;
+    if (Strings.isNullOrEmpty(serviceName)) {
+      serviceName=serviceSpec.getFacet(NamedFacet.class).value();
+    }
+    serviceActions.add(new LogicalServiceAction(serviceName,serviceAdapter,objectAction));
+  }
+}

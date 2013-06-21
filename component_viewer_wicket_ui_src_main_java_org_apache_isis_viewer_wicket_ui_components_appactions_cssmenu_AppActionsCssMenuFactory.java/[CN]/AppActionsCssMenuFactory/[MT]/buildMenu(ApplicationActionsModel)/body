@@ -1,8 +1,11 @@
 {
-  final List<ObjectAdapter> serviceAdapters=cssModel.getObject();
-  final List<CssMenuItem> menuItems=new ArrayList<CssMenuItem>();
+  final List<ObjectAdapter> serviceAdapters=appActionsModel.getObject();
+  final List<LogicalServiceAction> serviceActions=Lists.newArrayList();
   for (  final ObjectAdapter serviceAdapter : serviceAdapters) {
-    addMenuItemsIfVisible(menuItems,serviceAdapter);
+    collateServiceActions(serviceAdapter,ActionType.USER,serviceActions);
+    collateServiceActions(serviceAdapter,ActionType.PROTOTYPE,serviceActions);
   }
-  return menuItems;
+  final List<String> serviceNamesInOrder=serviceNamesInOrder(serviceActions);
+  final Map<String,List<LogicalServiceAction>> serviceActionsByName=groupByServiceName(serviceActions);
+  return buildMenuItems(serviceNamesInOrder,serviceActionsByName);
 }
