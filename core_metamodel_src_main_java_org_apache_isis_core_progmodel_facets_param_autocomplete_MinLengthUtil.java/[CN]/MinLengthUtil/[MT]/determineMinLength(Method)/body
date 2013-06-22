@@ -1,0 +1,13 @@
+{
+  final Annotation[][] parameterAnnotations=method.getParameterAnnotations();
+  if (parameterAnnotations.length == 1) {
+    final Annotation[] searchArgAnnotations=parameterAnnotations[0];
+    for (    Annotation annotation : searchArgAnnotations) {
+      if (annotation instanceof MinLength) {
+        MinLength minLength=(MinLength)annotation;
+        return minLength.value();
+      }
+    }
+  }
+  return MinLengthUtil.MIN_LENGTH_DEFAULT;
+}
