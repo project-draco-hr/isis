@@ -1,3 +1,9 @@
 {
-  return ORDERING_BY_DESCRIPTION.compound(Ordering.<ToDoItem>natural()).compare(p,q);
+  Ordering<ToDoItem> byDescription=new Ordering<ToDoItem>(){
+    public int compare(    final ToDoItem p,    final ToDoItem q){
+      return Ordering.natural().nullsFirst().compare(p.getDescription(),q.getDescription());
+    }
+  }
+;
+  return byDescription.compound(Ordering.<ToDoItem>natural()).compare(p,q);
 }

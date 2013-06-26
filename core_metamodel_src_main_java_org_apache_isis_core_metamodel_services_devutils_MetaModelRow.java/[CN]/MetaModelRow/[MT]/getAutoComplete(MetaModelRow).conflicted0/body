@@ -1,0 +1,9 @@
+{
+  final List<ObjectActionParameter> parameters=metaModelRow.action.getParameters();
+  final List<String> interpretations=Lists.newArrayList();
+  for (  ObjectActionParameter param : parameters) {
+    final ActionParameterAutoCompleteFacet facet=param.getFacet(ActionParameterAutoCompleteFacet.class);
+    addIfNotEmpty(interpretFacet(facet),interpretations);
+  }
+  return !interpretations.isEmpty() ? Joiner.on(";").join(interpretations) : "";
+}

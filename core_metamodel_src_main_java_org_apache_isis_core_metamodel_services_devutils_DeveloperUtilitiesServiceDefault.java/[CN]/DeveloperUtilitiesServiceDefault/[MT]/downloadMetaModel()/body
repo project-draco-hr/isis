@@ -1,0 +1,25 @@
+{
+  final Collection<ObjectSpecification> specifications=specificationLoader.allSpecifications();
+  final List<MetaModelRow> rows=Lists.newArrayList();
+  for (  ObjectSpecification spec : specifications) {
+    final List<ObjectAssociation> properties=spec.getAssociations(ObjectAssociationFilters.PROPERTIES);
+    for (    ObjectAssociation property : properties) {
+      rows.add(new MetaModelRow(spec,(OneToOneAssociation)property));
+    }
+    final List<ObjectAssociation> associations=spec.getAssociations(ObjectAssociationFilters.COLLECTIONS);
+    for (    ObjectAssociation collection : associations) {
+      rows.add(new MetaModelRow(spec,(OneToManyAssociation)collection));
+    }
+    final List<ObjectAction> actions=spec.getObjectActions(Contributed.INCLUDED);
+    for (    ObjectAction action : actions) {
+      rows.add(new MetaModelRow(spec,action));
+    }
+  }
+  Collections.sort(rows);
+  final StringBuilder buf=new StringBuilder();
+  buf.append(MetaModelRow.header()).append("\n");
+  for (  MetaModelRow row : rows) {
+    buf.append(row.asTextCsv()).append("\n");
+  }
+  return new Clob("metamodel.csv",mimeTypeTextCsv,buf.toString().toCharArray());
+}
