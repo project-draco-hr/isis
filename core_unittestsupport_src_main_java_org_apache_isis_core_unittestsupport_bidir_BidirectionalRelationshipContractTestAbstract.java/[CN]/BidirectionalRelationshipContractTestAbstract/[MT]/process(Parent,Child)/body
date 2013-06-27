@@ -1,20 +1,20 @@
 {
-  final Set<Field> parentFields=Reflections.getAllFields(c.entityType,Predicates.and(Reflections.withName(p.mappedBy),ReflectUtils.withTypeAssignableFrom(p.entityType)));
+  final Set<Field> parentFields=Reflections.getAllFields(c.entityType,Predicates.and(ReflectionUtils.withName(p.mappedBy),ReflectUtils.withTypeAssignableFrom(p.entityType)));
   assertThat(c.entityType.getName() + ": could not locate '" + p.mappedBy+ "' field, returning supertype of "+ p.entityType.getSimpleName()+ ", (as per @Persistent(mappedBy=...) in parent "+ p.entityType.getSimpleName()+ ")",parentFields.size(),is(1));
   c.parentField=CollectUtils.firstIn(parentFields);
   String getterMethod=StringUtils.methodNamed("get",c.parentField);
-  final Set<Method> getterMethods=Reflections.getAllMethods(c.entityType,Predicates.and(Reflections.withName(getterMethod),ReflectionUtils.withParametersCount(0),ReflectUtils.withReturnTypeAssignableFrom(p.entityType)));
+  final Set<Method> getterMethods=Reflections.getAllMethods(c.entityType,Predicates.and(withConcreteMethodNamed(getterMethod),ReflectionUtils.withParametersCount(0),ReflectUtils.withReturnTypeAssignableFrom(p.entityType)));
   assertThat(p.descRel(c) + ": could not locate getter " + getterMethod+ "() returning supertype of "+ p.entityType.getSimpleName(),getterMethods.size(),is(1));
   c.getMethod=CollectUtils.firstIn(getterMethods);
   String modifyMethod=StringUtils.methodNamed("modify",c.parentField);
-  final Set<Method> modifyMethods=Reflections.getAllMethods(c.entityType,Predicates.and(Reflections.withName(modifyMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withParametersAssignableFrom(p.entityType)));
+  final Set<Method> modifyMethods=Reflections.getAllMethods(c.entityType,Predicates.and(withConcreteMethodNamed(modifyMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withParametersAssignableFrom(p.entityType)));
   if (modifyMethods.size() != 1) {
     out.println("no modifyXxx() method in child");
     return;
   }
   c.modifyMethod=CollectUtils.firstIn(modifyMethods);
   String clearMethod=StringUtils.methodNamed("clear",c.parentField);
-  final Set<Method> clearMethods=Reflections.getAllMethods(c.entityType,Predicates.and(Reflections.withName(clearMethod),ReflectionUtils.withParametersCount(0)));
+  final Set<Method> clearMethods=Reflections.getAllMethods(c.entityType,Predicates.and(withConcreteMethodNamed(clearMethod),ReflectionUtils.withParametersCount(0)));
   if (clearMethods.size() != 1) {
     out.println("no clearXxx() method in child");
     return;

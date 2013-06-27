@@ -2,21 +2,21 @@
   final Persistent persistentAnnotation=p.childField.getAnnotation(Persistent.class);
   p.mappedBy=persistentAnnotation.mappedBy();
   final String getMethod=StringUtils.methodNamed("get",p.childField);
-  final Set<Method> getMethods=Reflections.getAllMethods(p.entityType,ReflectionUtils.withName(getMethod));
-  assertThat(p.desc() + ": no getXxx() method",getMethods.size(),is(1));
+  final Set<Method> getMethods=Reflections.getAllMethods(p.entityType,withConcreteMethodNamed(getMethod));
+  assertThat(p.desc() + ": no unique getXxx() method:" + getMethods,getMethods.size(),is(1));
   p.getMethod=CollectUtils.firstIn(getMethods);
   final Child c=new Child();
   final Class<?> returnType=p.getMethod.getReturnType();
   if (Collection.class.isAssignableFrom(returnType)) {
     final String addToMethod=StringUtils.methodNamed("addTo",p.childField);
-    final Set<Method> addToMethods=Reflections.getAllMethods(p.entityType,Predicates.and(ReflectionUtils.withName(addToMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withEntityParameter()));
+    final Set<Method> addToMethods=Reflections.getAllMethods(p.entityType,Predicates.and(withConcreteMethodNamed(addToMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withEntityParameter()));
     if (addToMethods.size() != 1) {
       out.println("no addToXxx() method in parent");
       return;
     }
     p.addToMethod=CollectUtils.firstIn(addToMethods);
     final String removeFromMethod=StringUtils.methodNamed("removeFrom",p.childField);
-    final Set<Method> removeFromMethods=Reflections.getAllMethods(p.entityType,Predicates.and(ReflectionUtils.withName(removeFromMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withEntityParameter()));
+    final Set<Method> removeFromMethods=Reflections.getAllMethods(p.entityType,Predicates.and(withConcreteMethodNamed(removeFromMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withEntityParameter()));
     if (removeFromMethods.size() != 1) {
       out.println("no removeFromXxx() method in parent");
       return;
@@ -29,14 +29,14 @@
   }
  else {
     String modifyMethod=StringUtils.methodNamed("modify",p.childField);
-    final Set<Method> modifyMethods=Reflections.getAllMethods(p.entityType,Predicates.and(Reflections.withName(modifyMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withEntityParameter()));
+    final Set<Method> modifyMethods=Reflections.getAllMethods(p.entityType,Predicates.and(withConcreteMethodNamed(modifyMethod),ReflectionUtils.withParametersCount(1),ReflectUtils.withEntityParameter()));
     if (modifyMethods.size() != 1) {
       out.println("no modifyXxx() method in parent");
       return;
     }
     p.modifyMethod=CollectUtils.firstIn(modifyMethods);
     String clearMethod=StringUtils.methodNamed("clear",p.childField);
-    final Set<Method> clearMethods=Reflections.getAllMethods(p.entityType,Predicates.and(Reflections.withName(clearMethod),ReflectionUtils.withParametersCount(0)));
+    final Set<Method> clearMethods=Reflections.getAllMethods(p.entityType,Predicates.and(withConcreteMethodNamed(clearMethod),ReflectionUtils.withParametersCount(0)));
     if (clearMethods.size() != 1) {
       out.println("no clearXxx() method in parent");
       return;
