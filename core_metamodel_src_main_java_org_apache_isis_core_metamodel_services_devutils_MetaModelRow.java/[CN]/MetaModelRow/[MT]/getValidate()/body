@@ -1,3 +1,14 @@
 {
-  return memberType.getValidate(this);
+  if (memberType == MemberType.PROPERTY) {
+    return interpretRowAndFacet(PropertyValidateFacet.class);
+  }
+ else   if (memberType == MemberType.COLLECTION) {
+    final SortedSet<String> interpretations=Sets.newTreeSet();
+    addIfNotEmpty(interpretRowAndFacet(CollectionValidateAddToFacet.class),interpretations);
+    addIfNotEmpty(interpretRowAndFacet(CollectionValidateRemoveFromFacet.class),interpretations);
+    return !interpretations.isEmpty() ? Joiner.on(";").join(interpretations) : "";
+  }
+ else {
+    return interpretRowAndFacet(ActionValidationFacet.class);
+  }
 }

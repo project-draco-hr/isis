@@ -1,3 +1,17 @@
 {
-  return memberType.getDefault(this);
+  if (memberType == MemberType.PROPERTY) {
+    return interpretRowAndFacet(PropertyDefaultFacet.class);
+  }
+ else   if (memberType == MemberType.COLLECTION) {
+    return "";
+  }
+ else {
+    final List<ObjectActionParameter> parameters=this.action.getParameters();
+    final SortedSet<String> interpretations=Sets.newTreeSet();
+    for (    ObjectActionParameter param : parameters) {
+      final ActionParameterDefaultsFacet facet=param.getFacet(ActionParameterDefaultsFacet.class);
+      addIfNotEmpty(interpretFacet(facet),interpretations);
+    }
+    return !interpretations.isEmpty() ? Joiner.on(";").join(interpretations) : interpretRowAndFacet(ActionDefaultsFacet.class);
+  }
 }

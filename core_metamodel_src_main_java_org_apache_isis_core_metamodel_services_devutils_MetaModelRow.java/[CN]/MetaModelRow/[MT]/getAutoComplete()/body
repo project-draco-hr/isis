@@ -1,3 +1,17 @@
 {
-  return memberType.getAutoComplete(this);
+  if (memberType == MemberType.PROPERTY) {
+    return interpretRowAndFacet(PropertyAutoCompleteFacet.class);
+  }
+ else   if (memberType == MemberType.COLLECTION) {
+    return "";
+  }
+ else {
+    final List<ObjectActionParameter> parameters=this.action.getParameters();
+    final SortedSet<String> interpretations=Sets.newTreeSet();
+    for (    ObjectActionParameter param : parameters) {
+      final ActionParameterAutoCompleteFacet facet=param.getFacet(ActionParameterAutoCompleteFacet.class);
+      addIfNotEmpty(interpretFacet(facet),interpretations);
+    }
+    return !interpretations.isEmpty() ? Joiner.on(";").join(interpretations) : "";
+  }
 }

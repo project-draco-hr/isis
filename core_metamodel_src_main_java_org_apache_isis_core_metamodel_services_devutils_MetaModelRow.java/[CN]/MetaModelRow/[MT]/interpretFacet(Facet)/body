@@ -1,12 +1,15 @@
 {
-  if (facet == null) {
+  if (facet == null || facet.isNoop()) {
     return "";
   }
   if (facet instanceof ImperativeFacet) {
     ImperativeFacet imperativeFacet=(ImperativeFacet)facet;
     return imperativeFacet.getMethods().get(0).getName();
   }
- else {
-    return "decl.";
+  final String name=facet.getClass().getSimpleName();
+  if (ignore(name)) {
+    return "";
   }
+  final String abbr=StringUtils.toAbbreviation(name);
+  return abbr.length() > 0 ? abbr : name;
 }

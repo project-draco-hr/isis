@@ -1,3 +1,17 @@
 {
-  return memberType.getChoices(this);
+  if (memberType == MemberType.PROPERTY) {
+    return interpretRowAndFacet(PropertyChoicesFacet.class);
+  }
+ else   if (memberType == MemberType.COLLECTION) {
+    return "";
+  }
+ else {
+    final List<ObjectActionParameter> parameters=this.action.getParameters();
+    final SortedSet<String> interpretations=Sets.newTreeSet();
+    for (    ObjectActionParameter param : parameters) {
+      final ActionParameterChoicesFacet facet=param.getFacet(ActionParameterChoicesFacet.class);
+      addIfNotEmpty(interpretFacet(facet),interpretations);
+    }
+    return !interpretations.isEmpty() ? Joiner.on(";").join(interpretations) : interpretRowAndFacet(ActionChoicesFacet.class);
+  }
 }
