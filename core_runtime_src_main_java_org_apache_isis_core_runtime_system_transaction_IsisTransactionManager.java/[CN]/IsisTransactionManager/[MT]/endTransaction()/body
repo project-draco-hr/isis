@@ -11,8 +11,13 @@
     if (LOG.isDebugEnabled()) {
       LOG.debug("endTransaction: aborting instead [EARLY TERMINATION], abort cause '" + abortCause.getMessage() + "' has been set");
     }
-    abortTransaction();
-    abortCause=this.getTransaction().getAbortCause();
+    try {
+      abortTransaction();
+      abortCause=this.getTransaction().getAbortCause();
+    }
+ catch (    RuntimeException ex) {
+      abortCause=ex;
+    }
     if (abortCause != null) {
       throw abortCause;
     }

@@ -6,6 +6,9 @@
       getTransactionManager().endTransaction();
     }
  catch (    Exception ex) {
+      if (getTransactionManager().getTransaction().getState().isComplete()) {
+        getTransactionManager().startTransaction();
+      }
       if (handler instanceof RenderPageRequestHandler) {
         RenderPageRequestHandler requestHandler=(RenderPageRequestHandler)handler;
         if (requestHandler.getPage() instanceof ErrorPage) {
