@@ -19,6 +19,12 @@
       final RootOid persistentOid=(RootOid)serviceAdapter.getOid();
       registerService(persistentOid);
     }
+    final Object object=serviceAdapter.getObject();
+    if (object instanceof EventBusServiceDefault) {
+      eventBusService=(EventBusServiceDefault)object;
+      EventBusServiceDefault ebs=eventBusService;
+      ebs.open();
+    }
   }
   getTransactionManager().endTransaction();
 }
