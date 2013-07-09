@@ -31,6 +31,9 @@
         PersistorUtil.toEndState(adapter);
       }
       adapter.setVersion(datastoreVersion);
+      if (pojo.jdoIsDeleted()) {
+        adapter.changeState(ResolveState.DESTROYED);
+      }
       ensureFrameworksInAgreement(pojo);
     }
   }

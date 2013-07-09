@@ -9,6 +9,11 @@
       throw new IsisException(MessageFormat.format("adapter oid={0} has oid in invalid state; should be transient; pojo: {1}",oid,pojo));
     }
   }
+ else   if (pojo.jdoIsDeleted()) {
+    if (!adapter.getResolveState().isDestroyed()) {
+      throw new IsisException(MessageFormat.format("adapter oid={0} has resolve state in invalid state; should be destroyed but is {1}; pojo: {2}",oid,adapter.getResolveState(),pojo));
+    }
+  }
  else {
     if (!adapter.getResolveState().representsPersistent()) {
       throw new IsisException(MessageFormat.format("adapter oid={0} has resolve state in invalid state; should be in a persistent but is {1}; pojo: {2}",oid,adapter.getResolveState(),pojo));
