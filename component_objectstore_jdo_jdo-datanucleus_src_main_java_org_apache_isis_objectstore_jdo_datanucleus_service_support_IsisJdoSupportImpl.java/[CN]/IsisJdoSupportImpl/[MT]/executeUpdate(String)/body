@@ -1,0 +1,14 @@
+{
+  final JDOConnection dataStoreConnection=getJdoPersistenceManager().getDataStoreConnection();
+  try {
+    final Object connectionObj=dataStoreConnection.getNativeConnection();
+    if (!(connectionObj instanceof java.sql.Connection)) {
+      return null;
+    }
+    java.sql.Connection connection=(java.sql.Connection)connectionObj;
+    return executeUpdate(connection,sql);
+  }
+  finally {
+    dataStoreConnection.close();
+  }
+}
