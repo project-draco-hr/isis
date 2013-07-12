@@ -1,0 +1,37 @@
+{
+  if (obj == null) {
+    return null;
+  }
+  final Class<? extends Object> cls=obj.getClass();
+  try {
+    final String methodName="get" + capitalize(propertyName);
+    final Method method=cls.getMethod(methodName,new Class[]{});
+    if (method != null) {
+      return method.invoke(obj);
+    }
+  }
+ catch (  Exception e) {
+  }
+  try {
+    final String methodName="is" + capitalize(propertyName);
+    final Method method=cls.getMethod(methodName,new Class[]{});
+    if (method != null) {
+      return method.invoke(obj);
+    }
+  }
+ catch (  Exception e) {
+  }
+  try {
+    final Field field=cls.getDeclaredField(propertyName);
+    if (field != null) {
+      if (!field.isAccessible()) {
+        field.setAccessible(true);
+      }
+      return field.get(obj);
+    }
+  }
+ catch (  Exception e) {
+  }
+  Assert.fail("Unable to locate property '" + propertyName + "' in object "+ obj);
+  return null;
+}

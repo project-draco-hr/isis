@@ -1,0 +1,15 @@
+{
+  final List<Object> listOfActuals=Lists.newArrayList(iterableOfActuals);
+  assertThat(listOfActuals.size(),is(listOfExpecteds.size()));
+  for (int i=0; i < listOfActuals.size(); i++) {
+    final Object actual=listOfActuals.get(i);
+    final Object expected=listOfExpecteds.get(i);
+    final Field[] expectedFields=expected.getClass().getDeclaredFields();
+    for (    Field field : expectedFields) {
+      final String propertyName=field.getName();
+      final Object actualProp=getProperty(actual,propertyName);
+      final Object expectedProp=getProperty(expected,propertyName);
+      assertThat("Values differ for property: " + propertyName,actualProp,is(expectedProp));
+    }
+  }
+}

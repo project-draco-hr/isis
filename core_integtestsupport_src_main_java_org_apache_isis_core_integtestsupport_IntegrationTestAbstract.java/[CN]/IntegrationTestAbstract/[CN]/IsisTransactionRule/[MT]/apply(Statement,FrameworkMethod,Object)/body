@@ -1,0 +1,17 @@
+{
+  final IsisSystemForTest isft=IsisSystemForTest.get();
+  return new Statement(){
+    @Override public void evaluate() throws Throwable {
+      isft.beginTran();
+      try {
+        base.evaluate();
+        isft.commitTran();
+      }
+ catch (      Throwable e) {
+        isft.bounceSystem();
+        throw e;
+      }
+    }
+  }
+;
+}
