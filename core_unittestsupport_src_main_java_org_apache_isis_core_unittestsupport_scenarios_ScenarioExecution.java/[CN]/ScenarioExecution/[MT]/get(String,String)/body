@@ -1,0 +1,22 @@
+{
+  if (type != null && id != null) {
+    final VariableId variableId=new VariableId(type,id);
+    final Object value=objectByVariableId.get(variableId);
+    if (value != null) {
+      mostRecent.put(type,value);
+      return value;
+    }
+    throw new IllegalStateException("No such " + variableId);
+  }
+  if (type != null && id == null) {
+    return mostRecent.get(type);
+  }
+  if (type == null && id != null) {
+    final Object value=objectsById.get(id);
+    if (value != null) {
+      mostRecent.put(type,value);
+    }
+    return value;
+  }
+  throw new IllegalArgumentException("Must specify type and/or id");
+}
