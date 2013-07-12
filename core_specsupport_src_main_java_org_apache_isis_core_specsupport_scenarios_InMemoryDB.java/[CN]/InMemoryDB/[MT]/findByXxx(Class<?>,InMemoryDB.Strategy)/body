@@ -1,0 +1,24 @@
+{
+  return new Action(){
+    @Override public Object invoke(    Invocation invocation) throws Throwable {
+      if (invocation.getParameterCount() != 1) {
+        throw new IllegalArgumentException("intended for action of findByXxx");
+      }
+      final Object argObj=invocation.getParameter(0);
+      if (!(argObj instanceof String)) {
+        throw new IllegalArgumentException("Argument must be a string");
+      }
+      String arg=(String)argObj;
+      if (strategy == Strategy.AUTOCREATE) {
+        return getElseCreate(cls,arg);
+      }
+ else {
+        return get(cls,arg);
+      }
+    }
+    @Override public void describeTo(    Description description){
+      description.appendText("findByXxx for " + cls.getName());
+    }
+  }
+;
+}

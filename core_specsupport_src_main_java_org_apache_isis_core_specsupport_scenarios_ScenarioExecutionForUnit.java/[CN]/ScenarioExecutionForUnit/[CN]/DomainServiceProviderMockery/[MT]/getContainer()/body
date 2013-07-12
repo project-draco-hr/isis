@@ -1,0 +1,23 @@
+{
+  if (mockContainer == null) {
+    mockContainer=getService(DomainObjectContainer.class);
+    context.checking(new Expectations(){
+{
+        allowing(mockContainer).newTransientInstance(with(Expectations.<Class<?>>anything()));
+        will(new Action(){
+          @SuppressWarnings("rawtypes") public Object invoke(          Invocation invocation) throws Throwable {
+            Class cls=(Class)invocation.getParameter(0);
+            return scenarioExecution.injectServices(cls.newInstance());
+          }
+          public void describeTo(          Description description){
+            description.appendText("newTransientInstance");
+          }
+        }
+);
+        allowing(mockContainer).persistIfNotAlready(with(anything()));
+      }
+    }
+);
+  }
+  return mockContainer;
+}

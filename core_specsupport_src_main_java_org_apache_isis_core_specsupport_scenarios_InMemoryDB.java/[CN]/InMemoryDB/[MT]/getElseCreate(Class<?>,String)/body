@@ -1,0 +1,15 @@
+{
+  final Object object=get(cls,id);
+  if (object != null) {
+    return object;
+  }
+  Object obj;
+  obj=instantiateAndInject(cls);
+  init(obj,id);
+  while (cls != null) {
+    final InMemoryDB.EntityId entityId=new EntityId(cls,id);
+    objectsById.put(entityId,obj);
+    cls=cls.getSuperclass();
+  }
+  return obj;
+}

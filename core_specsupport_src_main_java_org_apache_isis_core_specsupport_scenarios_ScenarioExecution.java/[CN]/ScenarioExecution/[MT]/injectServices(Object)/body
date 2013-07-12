@@ -1,0 +1,24 @@
+{
+  try {
+    final Method[] methods=obj.getClass().getMethods();
+    for (    Method method : methods) {
+      final Class<?>[] parameterTypes=method.getParameterTypes();
+      if (parameterTypes.length != 1) {
+        continue;
+      }
+      final Class<?> serviceClass=parameterTypes[0];
+      if (method.getName().startsWith("inject")) {
+        final Object service=service(serviceClass);
+        method.invoke(obj,service);
+      }
+      if (method.getName().startsWith("set") && serviceClass == DomainObjectContainer.class) {
+        final Object container=container();
+        method.invoke(obj,container);
+      }
+    }
+    return obj;
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}
