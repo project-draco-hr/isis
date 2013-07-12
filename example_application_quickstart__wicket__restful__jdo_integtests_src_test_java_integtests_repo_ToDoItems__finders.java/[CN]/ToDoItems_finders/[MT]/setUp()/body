@@ -1,6 +1,7 @@
 {
-  final List<ToDoItem> notYetCompleteItems=wrap(toDoItems).notYetComplete();
-  final List<ToDoItem> completedItems=wrap(toDoItems).complete();
+  scenarioExecution().install(new ToDoItemsFixture());
+  final List<ToDoItem> notYetCompleteItems=wrap(service(ToDoItems.class)).notYetComplete();
+  final List<ToDoItem> completedItems=wrap(service(ToDoItems.class)).complete();
   notYetCompletedSize=notYetCompleteItems.size();
   completedSize=completedItems.size();
   assertThat(notYetCompletedSize,is(Matchers.greaterThan(5)));

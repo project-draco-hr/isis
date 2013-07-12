@@ -1,5 +1,6 @@
 {
-  removeAllToDosForCurrentUser();
-  installFor(getContainer().getUser().getName());
+  final String ownedBy=getContainer().getUser().getName();
+  isisJdoSupport.executeUpdate("delete from TODOITEM where OWNEDBY = '" + ownedBy + "'");
+  installFor(ownedBy);
   getContainer().flush();
 }
