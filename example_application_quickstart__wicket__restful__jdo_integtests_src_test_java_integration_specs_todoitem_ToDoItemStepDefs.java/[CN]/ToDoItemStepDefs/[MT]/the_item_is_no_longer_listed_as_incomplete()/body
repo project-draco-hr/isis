@@ -1,0 +1,15 @@
+{
+  assertIsSatisfied();
+  Mockery m;
+  final ArrayList<ToDoItem> notYetCompleteItems=notYetComplete(items);
+  checking(new Expectations(){
+{
+      oneOf(service(ToDoItems.class)).notYetComplete();
+      will(returnValue(notYetCompleteItems));
+    }
+  }
+);
+  final List<ToDoItem> notYetComplete=service(ToDoItems.class).notYetComplete();
+  ToDoItem toDoItem=get(null,"firstToDo",ToDoItem.class);
+  assertThat(notYetComplete.contains(toDoItem),is(false));
+}
