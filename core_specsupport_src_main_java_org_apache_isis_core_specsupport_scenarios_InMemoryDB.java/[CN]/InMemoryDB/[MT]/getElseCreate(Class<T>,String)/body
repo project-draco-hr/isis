@@ -1,15 +1,9 @@
 {
-  final Object object=get(cls,id);
+  final Object object=getNoCreate(cls,id);
   if (object != null) {
     return (T)object;
   }
   Object obj=instantiateAndInject(cls);
   init(obj,id);
-  Class type=cls;
-  while (type != null) {
-    final InMemoryDB.EntityId entityId=new EntityId(cls,id);
-    objectsById.put(entityId,obj);
-    type=type.getSuperclass();
-  }
-  return (T)obj;
+  return put(cls,id,obj);
 }

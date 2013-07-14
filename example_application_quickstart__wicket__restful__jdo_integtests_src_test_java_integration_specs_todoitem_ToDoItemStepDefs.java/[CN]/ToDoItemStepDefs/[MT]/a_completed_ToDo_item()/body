@@ -1,0 +1,24 @@
+{
+  if (supportsMocks()) {
+    checking(new Expectations(){
+{
+        allowing(service(ToDoItems.class)).allToDos();
+        will(returnValue(findItems(Predicates.<ToDoItem>alwaysTrue())));
+      }
+    }
+);
+  }
+  try {
+    final List<ToDoItem> allToDos=service(ToDoItems.class).allToDos();
+    for (    ToDoItem toDoItem : allToDos) {
+      if (toDoItem.isComplete()) {
+        putVar("todo","toDoItem",toDoItem);
+        return;
+      }
+    }
+    Assert.fail("could not locate any completed ToDo items");
+  }
+  finally {
+    assertMocksSatisfied();
+  }
+}

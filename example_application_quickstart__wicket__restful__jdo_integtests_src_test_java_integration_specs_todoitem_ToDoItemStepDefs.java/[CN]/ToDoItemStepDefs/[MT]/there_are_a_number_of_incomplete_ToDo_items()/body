@@ -1,12 +1,19 @@
 {
-  checking(new Expectations(){
+  if (supportsMocks()) {
+    checking(new Expectations(){
 {
-      allowing(service(ToDoItems.class)).notYetComplete();
-      will(returnValue(notYetComplete(items)));
+        allowing(service(ToDoItems.class)).notYetComplete();
+        will(returnValue(notYetCompleteItems()));
+      }
     }
-  }
 );
-  final List<ToDoItem> notYetComplete=service(ToDoItems.class).notYetComplete();
-  assertThat(notYetComplete.isEmpty(),is(false));
-  put("list","notYetComplete",notYetComplete);
+  }
+  try {
+    final List<ToDoItem> notYetComplete=service(ToDoItems.class).notYetComplete();
+    assertThat(notYetComplete.isEmpty(),is(false));
+    putVar("list","notYetCompleteItems",notYetComplete);
+  }
+  finally {
+    assertMocksSatisfied();
+  }
 }
