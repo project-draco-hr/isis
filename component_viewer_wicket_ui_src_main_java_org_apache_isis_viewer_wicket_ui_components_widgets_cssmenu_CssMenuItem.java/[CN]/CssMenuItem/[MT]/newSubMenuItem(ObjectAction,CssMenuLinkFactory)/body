@@ -2,5 +2,10 @@
   final LinkAndLabel linkAndLabel=cssMenuLinkFactory.newLink(null,objectAction,PageAbstract.ID_MENU_LINK);
   final AbstractLink link=linkAndLabel.getLink();
   final String actionLabel=linkAndLabel.getLabel();
-  return this.newSubMenuItem(actionLabel).link(link).prototyping(linkAndLabel.isPrototype());
+  Builder builder=this.newSubMenuItem(actionLabel).link(link).prototyping(linkAndLabel.isPrototype());
+  CssClassFacet cssClassFacet=objectAction.getFacet(CssClassFacet.class);
+  if (cssClassFacet != null) {
+    builder.withCssClass(cssClassFacet.value());
+  }
+  return builder;
 }

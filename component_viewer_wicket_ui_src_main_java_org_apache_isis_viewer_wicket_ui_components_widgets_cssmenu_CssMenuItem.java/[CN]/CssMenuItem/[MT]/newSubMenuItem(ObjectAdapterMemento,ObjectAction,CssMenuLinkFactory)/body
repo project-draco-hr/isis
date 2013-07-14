@@ -13,8 +13,13 @@
   final String actionLabel=linkAndLabel.getLabel();
   final Consent usability=objectAction.isUsable(session,adapter,where);
   final String reasonDisabledIfAny=usability.getReason();
+  CssClassFacet cssClassFacet=objectAction.getFacet(CssClassFacet.class);
   final boolean blobOrClob=returnsBlobOrClob(objectAction);
   final boolean prototype=isExplorationOrPrototype(objectAction);
   final String actionIdentifier=actionIdentifierFor(objectAction);
-  return newSubMenuItem(actionLabel).link(link).enabled(reasonDisabledIfAny).returnsBlobOrClob(blobOrClob).prototyping(prototype).withActionIdentifier(actionIdentifier);
+  Builder builder=newSubMenuItem(actionLabel).link(link).enabled(reasonDisabledIfAny).returnsBlobOrClob(blobOrClob).prototyping(prototype).withActionIdentifier(actionIdentifier);
+  if (cssClassFacet != null) {
+    builder.withCssClass(cssClassFacet.value());
+  }
+  return builder;
 }
