@@ -1,6 +1,7 @@
 {
   final List<Object> listOfActuals=Lists.newArrayList(iterableOfActuals);
   assertThat(listOfActuals.size(),is(listOfExpecteds.size()));
+  final StringBuilder buf=new StringBuilder();
   for (int i=0; i < listOfActuals.size(); i++) {
     final Object actual=listOfActuals.get(i);
     final Object expected=listOfExpecteds.get(i);
@@ -9,7 +10,12 @@
       final String propertyName=field.getName();
       final Object actualProp=getProperty(actual,propertyName);
       final Object expectedProp=getProperty(expected,propertyName);
-      assertThat("Values differ for property: " + propertyName,actualProp,is(expectedProp));
+      if (!Objects.equal(actualProp,expectedProp)) {
+        buf.append("#" + i + ": "+ propertyName+ ": "+ expectedProp+ " vs "+ actualProp).append("\n");
+      }
     }
+  }
+  if (buf.length() != 0) {
+    Assert.fail("\n" + buf.toString());
   }
 }
