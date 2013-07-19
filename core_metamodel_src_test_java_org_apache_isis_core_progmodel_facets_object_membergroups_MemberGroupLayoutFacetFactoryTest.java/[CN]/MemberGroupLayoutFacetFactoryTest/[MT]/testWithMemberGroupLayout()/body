@@ -1,0 +1,14 @@
+{
+  facetFactory.process(new ProcessClassContext(ClassWithMemberGroupLayoutAnnotation.class,methodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(MemberGroupLayoutFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MemberGroupLayoutFacetAnnotation);
+  final MemberGroupLayoutFacetAnnotation memberGroupsFacet=(MemberGroupLayoutFacetAnnotation)facet;
+  final List<String> leftNames=memberGroupsFacet.getLeft();
+  final List<String> middleNames=memberGroupsFacet.getMiddle();
+  final ColumnSpans columnSpans=memberGroupsFacet.getColumnSpans();
+  assertEquals(Arrays.asList("General","Foo","Bar"),leftNames);
+  assertEquals(Arrays.asList("Baz","Boz"),middleNames);
+  assertEquals(ColumnSpans._2_4_6,columnSpans);
+  assertNoMethodsRemoved();
+}

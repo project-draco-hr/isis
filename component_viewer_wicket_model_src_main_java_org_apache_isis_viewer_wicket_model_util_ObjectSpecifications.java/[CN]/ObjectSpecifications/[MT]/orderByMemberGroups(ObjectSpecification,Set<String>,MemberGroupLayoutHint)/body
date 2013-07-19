@@ -1,0 +1,16 @@
+{
+  final MemberGroupLayoutFacet facet=objSpec.getFacet(MemberGroupLayoutFacet.class);
+  final List<String> leftColumnGroupNames=Lists.newArrayList(groupNamesToOrder);
+  if (facet == null) {
+    return leftColumnGroupNames;
+  }
+  if (memberGroupLayoutHint == MemberGroupLayoutHint.LEFT) {
+    final List<String> groupNamedInRequiredOrder=facet.getLeft();
+    final List<String> order=order(leftColumnGroupNames,groupNamedInRequiredOrder);
+    order.removeAll(facet.getMiddle());
+    return order;
+  }
+ else {
+    return facet.getMiddle();
+  }
+}

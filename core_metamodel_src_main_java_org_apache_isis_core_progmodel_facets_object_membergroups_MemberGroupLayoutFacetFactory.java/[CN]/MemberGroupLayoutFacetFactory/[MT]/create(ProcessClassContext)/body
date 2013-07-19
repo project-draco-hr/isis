@@ -1,0 +1,12 @@
+{
+  final FacetHolder holder=processClassContext.getFacetHolder();
+  final MemberGroupLayout mglAnnot=Annotations.getAnnotation(processClassContext.getCls(),MemberGroupLayout.class);
+  if (mglAnnot != null) {
+    return new MemberGroupLayoutFacetAnnotation(mglAnnot,holder);
+  }
+  final MemberGroups mgAnnot=Annotations.getAnnotation(processClassContext.getCls(),MemberGroups.class);
+  if (mgAnnot != null) {
+    return new MemberGroupsFacetAnnotation(mgAnnot,processClassContext.getFacetHolder());
+  }
+  return new MemberGroupLayoutFacetFallback(holder);
+}
