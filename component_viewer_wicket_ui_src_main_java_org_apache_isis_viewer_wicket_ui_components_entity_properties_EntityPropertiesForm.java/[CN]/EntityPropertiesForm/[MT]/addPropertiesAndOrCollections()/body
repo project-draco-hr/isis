@@ -9,6 +9,9 @@
   final List<String> groupNames=ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),entityModel.getMemberGroupLayoutHint());
   for (  String groupName : groupNames) {
     final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
+    if (associationsInGroup == null) {
+      continue;
+    }
     final WebMarkupContainer memberGroupRvContainer=new WebMarkupContainer(memberGroupRv.newChildId());
     memberGroupRv.add(memberGroupRvContainer);
     memberGroupRvContainer.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
@@ -23,4 +26,5 @@
       addPropertyToForm(entityModel,association,propertyRvContainer);
     }
   }
+  return !groupNames.isEmpty();
 }

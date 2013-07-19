@@ -1,6 +1,7 @@
 {
+  Properties properties=null;
   if (isNotIntrospected()) {
-    facetedMethodsBuilder.introspectClass();
+    properties=facetedMethodsBuilder.introspectClass();
   }
   if (isNotIntrospected()) {
     addNamedFacetAndPluralFacetIfRequired();
@@ -30,8 +31,8 @@
   if (isNotIntrospected()) {
     updateInterfaces(interfaceSpecList);
   }
-  final List<FacetedMethod> associationFacetedMethods=facetedMethodsBuilder.getAssociationFacetedMethods();
-  final List<FacetedMethod> actionFacetedMethods=facetedMethodsBuilder.getActionFacetedMethods();
+  final List<FacetedMethod> associationFacetedMethods=facetedMethodsBuilder.getAssociationFacetedMethods(properties);
+  final List<FacetedMethod> actionFacetedMethods=facetedMethodsBuilder.getActionFacetedMethods(properties);
   if (isNotIntrospected()) {
     final OrderSet associationOrderSet=getMemberLayoutArranger().createAssociationOrderSetFor(this,associationFacetedMethods);
     updateAssociations(asFlattenedAssociations(associationOrderSet));
@@ -41,7 +42,7 @@
     updateObjectActions(asObjectActions(actionOrderSet));
   }
   if (isNotIntrospected()) {
-    facetedMethodsBuilder.introspectClassPostProcessing();
+    facetedMethodsBuilder.introspectClassPostProcessing(properties);
   }
   if (isNotIntrospected()) {
     updateFromFacetValues();

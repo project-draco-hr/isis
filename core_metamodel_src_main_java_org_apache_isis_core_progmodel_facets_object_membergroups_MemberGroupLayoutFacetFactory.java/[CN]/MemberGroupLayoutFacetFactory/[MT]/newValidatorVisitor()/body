@@ -5,23 +5,25 @@
       ColumnSpans columnSpans=facet.getColumnSpans();
       final List<String> middle=facet.getMiddle();
       final List<String> right=facet.getRight();
-      List<ObjectAssociation> objectCollections=objectSpec.getAssociations(ObjectAssociationFilters.staticallyVisible(Where.OBJECT_FORMS));
+      final int numCollections=numCollectionsOf(objectSpec);
       if (columnSpans.getMiddle() == 0 && !middle.isEmpty()) {
         validationFailures.add("%s MemberGroupLayout: middle (property) column is 0 for ColumnSpans (%s), but groups have been listed (%s).  NB: ColumnSpans may have been defaulted if could not be parsed.",objectSpec.getIdentifier().getClassName(),columnSpans.name(),middle);
       }
       if (columnSpans.getMiddle() > 0 && middle.isEmpty()) {
-        validationFailures.add("%s MemberGroupLayout: middle (property) column is non-zero for ColumnSpans (%s), but no groups have been listed",objectSpec.getIdentifier().getClassName(),columnSpans.name());
       }
       if (columnSpans.getRight() == 0 && !right.isEmpty()) {
         validationFailures.add("%s MemberGroupLayout: right (property) column is 0 for ColumnSpans (%s), but groups have been listed (%s).  NB: ColumnSpans may have been defaulted if could not be parsed.",objectSpec.getIdentifier().getClassName(),columnSpans.name(),right);
       }
       if (columnSpans.getRight() > 0 && right.isEmpty()) {
-        validationFailures.add("%s MemberGroupLayout: right (property) column is non-zero for ColumnSpans (%s), but no groups have been listed",objectSpec.getIdentifier().getClassName(),columnSpans.name());
       }
-      if (columnSpans.getCollections() == 0 && !objectCollections.isEmpty()) {
-        validationFailures.add("%s MemberGroupLayout: collections column is 0 for ColumnSpans (%s), but there are (up to) %d visible collections visible",objectSpec.getIdentifier().getClassName(),columnSpans.name(),objectCollections.size());
+      if (columnSpans.getCollections() == 0 && numCollections > 0) {
+        validationFailures.add("%s MemberGroupLayout: collections column is 0 for ColumnSpans (%s), but there are (up to) %d visible collections",objectSpec.getIdentifier().getClassName(),columnSpans.name(),numCollections);
       }
       return true;
+    }
+    @SuppressWarnings("unchecked") private int numCollectionsOf(    ObjectSpecification objectSpec){
+      List<ObjectAssociation> objectCollections=objectSpec.getAssociations(Filters.and(ObjectAssociationFilters.staticallyVisible(Where.OBJECT_FORMS),ObjectAssociationFilters.COLLECTIONS));
+      return objectCollections.size();
     }
   }
 ;

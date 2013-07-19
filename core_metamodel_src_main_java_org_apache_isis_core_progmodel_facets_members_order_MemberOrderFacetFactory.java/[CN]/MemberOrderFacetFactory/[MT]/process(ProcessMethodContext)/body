@@ -1,0 +1,15 @@
+{
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  MemberOrderFacet memberOrderFacet=null;
+  final Properties properties=processMethodContext.layoutProperties("memberOrder");
+  if (properties != null) {
+    memberOrderFacet=new MemberOrderFacetProperties(properties,holder);
+  }
+  if (memberOrderFacet == null) {
+    final MemberOrder annotation=Annotations.getAnnotation(processMethodContext.getMethod(),MemberOrder.class);
+    if (annotation != null) {
+      memberOrderFacet=new MemberOrderFacetAnnotation(annotation.name(),annotation.sequence(),holder);
+    }
+  }
+  FacetUtil.addFacet(memberOrderFacet);
+}

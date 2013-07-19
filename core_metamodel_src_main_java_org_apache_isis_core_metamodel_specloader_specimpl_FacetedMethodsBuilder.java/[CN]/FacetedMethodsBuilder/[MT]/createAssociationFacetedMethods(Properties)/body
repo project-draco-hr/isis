@@ -1,0 +1,15 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("introspecting " + getClassName() + ": properties and collections");
+  }
+  final Set<Method> associationCandidateMethods=getFacetProcessor().findAssociationCandidateAccessors(methods,new HashSet<Method>());
+  final List<Class<?>> typesToLoad=Lists.newArrayList();
+  for (  final Method method : associationCandidateMethods) {
+    getSpecificationTraverser().traverseTypes(method,typesToLoad);
+  }
+  getSpecificationLoader().loadSpecifications(typesToLoad,introspectedClass);
+  final List<FacetedMethod> associationFacetedMethods=Lists.newArrayList();
+  findAndRemoveCollectionAccessorsAndCreateCorrespondingFacetedMethods(associationFacetedMethods,properties);
+  findAndRemovePropertyAccessorsAndCreateCorrespondingFacetedMethods(associationFacetedMethods,properties);
+  return Collections.unmodifiableList(associationFacetedMethods);
+}

@@ -3,7 +3,8 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("introspecting " + getClassName() + ": class-level details");
   }
-  getFacetProcessor().process(introspectedClass,methodRemover,spec);
+  final Properties properties=PropertyUtil.propertiesFor(introspectedClass,".layout");
+  getFacetProcessor().process(introspectedClass,properties,methodRemover,spec);
   final FacetsFacet facetsFacet=spec.getFacet(FacetsFacet.class);
   if (facetsFacet != null) {
     final Class<? extends FacetFactory>[] facetFactories=facetsFacet.facetFactories();
@@ -19,7 +20,8 @@ catch (      final IllegalAccessException e) {
         throw new IsisException(e);
       }
       getFacetProcessor().injectDependenciesInto(facetFactory);
-      facetFactory.process(new ProcessClassContext(introspectedClass,methodRemover,spec));
+      facetFactory.process(new ProcessClassContext(introspectedClass,properties,methodRemover,spec));
     }
   }
+  return properties;
 }
