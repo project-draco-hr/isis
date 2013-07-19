@@ -4,13 +4,19 @@
   if (facet == null) {
     return leftColumnGroupNames;
   }
-  if (memberGroupLayoutHint == MemberGroupLayoutHint.LEFT) {
-    final List<String> groupNamedInRequiredOrder=facet.getLeft();
-    final List<String> order=order(leftColumnGroupNames,groupNamedInRequiredOrder);
+  if (memberGroupLayoutHint == MemberGroupLayoutHint.MIDDLE) {
+    return facet.getColumnSpans().getMiddle() > 0 ? facet.getMiddle() : Collections.<String>emptyList();
+  }
+  if (memberGroupLayoutHint == MemberGroupLayoutHint.RIGHT) {
+    return facet.getColumnSpans().getRight() > 0 ? facet.getRight() : Collections.<String>emptyList();
+  }
+  final List<String> groupNamedInRequiredOrder=facet.getLeft();
+  final List<String> order=order(leftColumnGroupNames,groupNamedInRequiredOrder);
+  if (facet.getColumnSpans().getMiddle() > 0) {
     order.removeAll(facet.getMiddle());
-    return order;
   }
- else {
-    return facet.getMiddle();
+  if (facet.getColumnSpans().getRight() > 0) {
+    order.removeAll(facet.getRight());
   }
+  return order;
 }

@@ -1,10 +1,15 @@
 {
   final FacetHolder holder=processClassContext.getFacetHolder();
-  final MemberGroupLayout mglAnnot=Annotations.getAnnotation(processClassContext.getCls(),MemberGroupLayout.class);
+  final Class<?> cls=processClassContext.getCls();
+  final Properties properties=propertiesFor(cls,".memberGroupLayout",".memberLayout",".layout");
+  if (properties != null) {
+    return new MemberGroupLayoutFacetProperties(properties,holder);
+  }
+  final MemberGroupLayout mglAnnot=Annotations.getAnnotation(cls,MemberGroupLayout.class);
   if (mglAnnot != null) {
     return new MemberGroupLayoutFacetAnnotation(mglAnnot,holder);
   }
-  final MemberGroups mgAnnot=Annotations.getAnnotation(processClassContext.getCls(),MemberGroups.class);
+  final MemberGroups mgAnnot=Annotations.getAnnotation(cls,MemberGroups.class);
   if (mgAnnot != null) {
     return new MemberGroupsFacetAnnotation(mgAnnot,processClassContext.getFacetHolder());
   }
