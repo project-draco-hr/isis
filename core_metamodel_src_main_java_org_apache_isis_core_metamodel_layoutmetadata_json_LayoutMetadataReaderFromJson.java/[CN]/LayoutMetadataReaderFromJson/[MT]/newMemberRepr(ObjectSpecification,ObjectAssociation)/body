@@ -1,0 +1,12 @@
+{
+  final MemberRepr memberRepr=new MemberRepr();
+  final List<ObjectAction> actions=objectSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,ObjectActions.memberOrderOf(assoc));
+  if (!actions.isEmpty()) {
+    memberRepr.actions=Maps.newLinkedHashMap();
+    sortByMemberOrderFacet(actions);
+    for (    final ObjectAction action : actions) {
+      memberRepr.actions.put(action.getId(),new ActionRepr());
+    }
+  }
+  return memberRepr;
+}

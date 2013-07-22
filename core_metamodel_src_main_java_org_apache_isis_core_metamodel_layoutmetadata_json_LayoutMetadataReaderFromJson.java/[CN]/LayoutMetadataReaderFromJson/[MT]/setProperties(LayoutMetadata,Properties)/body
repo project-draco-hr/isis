@@ -1,0 +1,17 @@
+{
+  final List<ColumnRepr> columns=metadata.getColumns();
+  for (  final ColumnRepr columnRepr : columns) {
+    final Map<String,MemberGroupRepr> memberGroups=columnRepr.memberGroups;
+    if (memberGroups == null) {
+      continue;
+    }
+    for (    final String memberGroupName : memberGroups.keySet()) {
+      final MemberGroupRepr memberGroup=memberGroups.get(memberGroupName);
+      final Map<String,MemberRepr> members=memberGroup.members;
+      if (members == null) {
+        continue;
+      }
+      setMembersAndAssociatedActions(props,memberGroupName,members);
+    }
+  }
+}

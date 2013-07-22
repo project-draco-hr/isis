@@ -2,7 +2,15 @@
   final ObjectSpecification adapterSpec=entityModel.getTypeOfSpecification();
   final ObjectAdapter adapter=entityModel.load(ConcurrencyChecking.NO_CHECK);
   final ObjectAdapterMemento adapterMemento=entityModel.getObjectAdapterMemento();
-  @SuppressWarnings("unchecked") final List<ObjectAction> userActions=adapterSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.and(EntityActionUtil.memberOrderOf(association),EntityActionUtil.dynamicallyVisibleFor(adapter)));
+  @SuppressWarnings("unchecked") final List<ObjectAction> userActions=adapterSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.and(ObjectActions.memberOrderOf(association),EntityActionUtil.dynamicallyVisibleFor(adapter)));
+  Collections.sort(userActions,new Comparator<ObjectAction>(){
+    @Override public int compare(    ObjectAction o1,    ObjectAction o2){
+      final MemberOrderFacet m1=o1.getFacet(MemberOrderFacet.class);
+      final MemberOrderFacet m2=o2.getFacet(MemberOrderFacet.class);
+      return memberOrderFacetComparator.compare(m1,m2);
+    }
+  }
+);
   final CssMenuLinkFactory linkFactory=new EntityActionLinkFactory(entityModel);
   return Lists.transform(userActions,new Function<ObjectAction,LinkAndLabel>(){
     @Override public LinkAndLabel apply(    ObjectAction objectAction){

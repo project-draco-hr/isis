@@ -1,0 +1,16 @@
+{
+  final List<ColumnRepr> columns=metadata.getColumns();
+  final StringBuilder buf=new StringBuilder();
+  for (  final ColumnRepr columnRepr : columns) {
+    buf.append("_");
+    buf.append(columnRepr.span);
+  }
+  final String columnSpansStr=buf.toString();
+  try {
+    ColumnSpans.valueOf(columnSpansStr);
+  }
+ catch (  IllegalArgumentException ex) {
+    throw new ReaderException("Invalid values for column spans '" + columnSpansStr + "'; when concatenated must be value of the ColumnSpans enum",ex);
+  }
+  props.setProperty("memberGroupLayout.columnSpans",columnSpansStr);
+}

@@ -1,0 +1,21 @@
+{
+  List<LayoutMetadataReader> layoutMetadataReaders=Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson(),new LayoutMetadataReaderFromJson());
+  for (  LayoutMetadataReader reader : layoutMetadataReaders) {
+    try {
+      Properties properties=reader.asProperties(domainClass);
+      if (properties != null) {
+        return properties;
+      }
+    }
+ catch (    ReaderException ex) {
+      final String message=reader.toString() + ": unable to load layout metadata for " + domainClass.getName()+ " ("+ ex.getMessage()+ ")";
+      if (ex.getCause() instanceof JsonSyntaxException) {
+        LOG.warn(message);
+      }
+ else {
+        LOG.debug(message);
+      }
+    }
+  }
+  return null;
+}

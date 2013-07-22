@@ -1,0 +1,11 @@
+{
+  final Properties properties=reader.asProperties(ExampleDomainObject.class);
+  assertThat(properties,is(not(nullValue())));
+  final Properties expectedProperties=ResourceUtil.propertiesFor(ExampleDomainObject.class,".isis.properties");
+  for (  Object expectedKey : expectedProperties.keySet()) {
+    final String key=(String)expectedKey;
+    final String expectedValue=expectedProperties.getProperty(key);
+    final String actualValue=properties.getProperty(key);
+    assertThat(key,actualValue,is(expectedValue.trim()));
+  }
+}
