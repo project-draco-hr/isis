@@ -12,8 +12,10 @@
     ZipOutputStream zos=new ZipOutputStream(baos);
     OutputStreamWriter writer=new OutputStreamWriter(zos);
     for (    ObjectSpecification objectSpec : domainObjectSpecs) {
-      zos.putNextEntry(new ZipEntry(objectSpec.getFullIdentifier()));
+      zos.putNextEntry(new ZipEntry(zipEntryNameFor(objectSpec)));
       writer.write(propertiesReader.asJson(objectSpec));
+      writer.flush();
+      zos.closeEntry();
     }
     writer.close();
     return new Blob("layouts.zip",mimeTypeApplicationZip,baos.toByteArray());
