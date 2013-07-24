@@ -1,8 +1,35 @@
 {
-  boolean added=addPropertiesAndOrCollections();
-  addButtons();
-  addFeedbackGui();
+  final EntityModel entityModel=(EntityModel)getModel();
+  final ColumnSpans columnSpans=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class).getColumnSpans();
+  MarkupContainer leftColumn=new WebMarkupContainer(ID_LEFT_COLUMN);
+  add(leftColumn);
+  boolean added=addPropertiesInColumn(leftColumn,MemberGroupLayoutHint.LEFT,columnSpans);
+  addButtons(leftColumn);
+  addFeedbackGui(leftColumn);
   if (!added) {
     Components.permanentlyHide(this,editButton.getId(),okButton.getId(),cancelButton.getId(),ID_FEEDBACK);
+  }
+  if (columnSpans.getMiddle() > 0) {
+    MarkupContainer middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
+    add(middleColumn);
+    addPropertiesInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,columnSpans);
+  }
+ else {
+    Components.permanentlyHide(this,ID_MIDDLE_COLUMN);
+  }
+  if (columnSpans.getRight() > 0) {
+    MarkupContainer rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
+    add(rightColumn);
+    addPropertiesInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,columnSpans);
+  }
+ else {
+    Components.permanentlyHide(this,ID_RIGHT_COLUMN);
+  }
+  if (columnSpans.getCollections() > 0) {
+    final Component collectionsColumn=getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.ENTITY_COLLECTIONS,entityModel);
+    addClassForSpan(collectionsColumn,columnSpans.getCollections());
+  }
+ else {
+    Components.permanentlyHide(this,ComponentType.ENTITY_COLLECTIONS.toString());
   }
 }
