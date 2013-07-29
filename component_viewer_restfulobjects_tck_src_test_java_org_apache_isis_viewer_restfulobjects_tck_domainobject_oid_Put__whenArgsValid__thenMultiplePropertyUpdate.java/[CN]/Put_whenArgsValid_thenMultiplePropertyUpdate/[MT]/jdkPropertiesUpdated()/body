@@ -18,7 +18,7 @@
   argRepr.mapPut("javaUtilDateProperty.value",asIso(d));
   argRepr.mapPut("myEnum.value",e);
   argRepr.mapPut("stringProperty.value",s);
-  RestfulResponse<JsonRepresentation> result=client.follow(updateLink,argRepr);
+  final RestfulResponse<JsonRepresentation> result=client.follow(updateLink,argRepr);
   assertThat(result.getStatus(),is(HttpStatusCode.OK));
   final DomainObjectRepresentation afterResp=result.getEntity().as(DomainObjectRepresentation.class);
   assertThat(afterResp.getProperty("bigIntegerProperty").getBigInteger("value"),is(bi));
