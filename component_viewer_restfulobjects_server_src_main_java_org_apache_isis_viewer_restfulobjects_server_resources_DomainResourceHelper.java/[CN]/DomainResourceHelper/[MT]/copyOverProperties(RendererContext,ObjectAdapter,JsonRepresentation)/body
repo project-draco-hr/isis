@@ -6,14 +6,13 @@
     final OneToOneAssociation property=(OneToOneAssociation)association;
     final ObjectSpecification propertySpec=property.getSpecification();
     final String id=property.getId();
-    final JsonRepresentation propertyRepr=propertiesList.getRepresentation("[id=%s]",id);
+    final JsonRepresentation propertyRepr=propertiesList.getRepresentation(id);
     if (propertyRepr == null) {
       if (property.isMandatory()) {
         throw new IllegalArgumentException(String.format("Mandatory field %s missing",property.getName()));
       }
       continue;
     }
-    final JsonRepresentation valueRepr=propertyRepr.getRepresentation("value");
     final Consent usable=property.isUsable(resourceContext.getAuthenticationSession(),objectAdapter,resourceContext.getWhere());
     if (usable.isVetoed()) {
       propertyRepr.mapPut("invalidReason",usable.getReason());
@@ -22,7 +21,7 @@
     }
     final ObjectAdapter valueAdapter;
     try {
-      valueAdapter=objectAdapterFor(resourceContext,propertySpec,valueRepr);
+      valueAdapter=objectAdapterFor(resourceContext,propertySpec,propertyRepr);
     }
  catch (    IllegalArgumentException ex) {
       propertyRepr.mapPut("invalidReason",ex.getMessage());

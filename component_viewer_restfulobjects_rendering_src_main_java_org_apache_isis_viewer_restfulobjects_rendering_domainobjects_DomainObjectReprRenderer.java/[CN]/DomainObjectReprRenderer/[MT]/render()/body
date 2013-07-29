@@ -1,17 +1,13 @@
 {
-  if (!mode.representsArguments()) {
+  if (!(mode.isArgs())) {
     if (objectAdapter.representsPersistent()) {
       if (includesSelf) {
         addLinkToSelf();
       }
       getExtensions().mapPut("oid",getOidStr());
     }
-  }
-  if (!mode.representsArguments()) {
     final String title=objectAdapter.titleString(null);
     representation.mapPut("title",title);
-  }
-  if (!mode.representsArguments()) {
     final boolean isService=objectAdapter.getSpecification().isService();
     if (isService) {
       representation.mapPut("serviceId",ServiceUtil.id(objectAdapter.getObject()));
@@ -26,10 +22,10 @@
     }
   }
   withMembers(objectAdapter);
-  if (mode.includesDescribedBy()) {
+  if (mode.includeDescribedBy()) {
     addLinkToDescribedBy();
   }
-  if (!mode.representsArguments()) {
+  if (!mode.isArgs()) {
     addPersistLinkIfTransientAndPersistable();
     addUpdatePropertiesLinkIfRequired();
     final boolean isService=objectAdapter.getSpecification().isService();

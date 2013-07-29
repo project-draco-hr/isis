@@ -11,7 +11,7 @@
       final OneToOneAssociation property=(OneToOneAssociation)assoc;
       final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(getRendererContext(),linkFollower,property.getId(),JsonRepresentation.newMap());
       renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(linkToBuilder);
-      if (mode.representsArguments()) {
+      if (mode.isArgs()) {
         renderer.asArguments();
       }
       if (mode.isEventSerialization()) {
@@ -19,7 +19,7 @@
       }
       members.mapPut(assoc.getId(),renderer.render());
     }
-    if (mode.representsArguments()) {
+    if (mode.isArgs()) {
       continue;
     }
     if (assoc instanceof OneToManyAssociation) {

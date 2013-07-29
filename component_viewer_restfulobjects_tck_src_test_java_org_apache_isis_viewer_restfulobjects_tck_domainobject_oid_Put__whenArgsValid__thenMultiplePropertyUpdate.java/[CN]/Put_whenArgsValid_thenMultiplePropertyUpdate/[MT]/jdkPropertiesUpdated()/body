@@ -1,0 +1,31 @@
+{
+  final DomainObjectRepresentation domainObjectRepr=getObjectRepr("JDKV","29");
+  final LinkRepresentation updateLink=domainObjectRepr.getLinkWithRel(Rel.UPDATE);
+  final JsonRepresentation argRepr=updateLink.getArguments();
+  final BigDecimal bd=new BigDecimal("12345678901234567.789");
+  final BigInteger bi=new BigInteger("12345678901234567890");
+  final java.sql.Date sqld=new java.sql.Date(114,4,1);
+  final java.sql.Time sqlt=new java.sql.Time(13,0,0);
+  final java.sql.Timestamp sqlts=new java.sql.Timestamp(114,4,1,13,0,0,0);
+  final java.util.Date d=new java.util.Date(114,4,1,13,0,0);
+  final String e="ORANGE";
+  final String s="Tangerine";
+  argRepr.mapPut("bigDecimalProperty.value",bd);
+  argRepr.mapPut("bigIntegerProperty.value",bi);
+  argRepr.mapPut("javaSqlDateProperty.value",asIsoNoT(sqld));
+  argRepr.mapPut("javaSqlTimeProperty.value",asIsoOnlyT(sqlt));
+  argRepr.mapPut("javaSqlTimestampProperty.value",sqlts.getTime());
+  argRepr.mapPut("javaUtilDateProperty.value",asIso(d));
+  argRepr.mapPut("myEnum.value",e);
+  argRepr.mapPut("stringProperty.value",s);
+  RestfulResponse<JsonRepresentation> result=client.follow(updateLink,argRepr);
+  assertThat(result.getStatus(),is(HttpStatusCode.OK));
+  final DomainObjectRepresentation afterResp=result.getEntity().as(DomainObjectRepresentation.class);
+  assertThat(afterResp.getProperty("bigIntegerProperty").getBigInteger("value"),is(bi));
+  assertThat(afterResp.getProperty("javaSqlDateProperty").getDate("value"),is((java.util.Date)sqld));
+  assertThat(afterResp.getProperty("javaSqlTimeProperty").getTime("value"),is((java.util.Date)sqlt));
+  assertThat(afterResp.getProperty("javaSqlTimestampProperty").getLong("value"),is(sqlts.getTime()));
+  assertThat(afterResp.getProperty("javaUtilDateProperty").getDateTime("value"),is(d));
+  assertThat(afterResp.getProperty("myEnum").getString("value"),is(e));
+  assertThat(afterResp.getProperty("stringProperty").getString("value"),is(s));
+}

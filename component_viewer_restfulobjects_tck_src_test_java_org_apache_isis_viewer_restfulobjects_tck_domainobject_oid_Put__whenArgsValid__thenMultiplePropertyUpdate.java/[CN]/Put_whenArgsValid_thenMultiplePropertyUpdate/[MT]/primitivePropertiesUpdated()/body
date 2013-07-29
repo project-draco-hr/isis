@@ -1,0 +1,32 @@
+{
+  final DomainObjectRepresentation domainObjectRepr=getObjectRepr("PRMV","31");
+  final LinkRepresentation updateLink=domainObjectRepr.getLinkWithRel(Rel.UPDATE);
+  final JsonRepresentation argRepr=updateLink.getArguments();
+  final byte b=(byte)99;
+  final char c='b';
+  final double d=12345.678;
+  final float f=54321.123F;
+  final int i=999999;
+  final int l=999999999;
+  final short s=(short)999;
+  final boolean z=false;
+  argRepr.mapPut("byteProperty.value",b);
+  argRepr.mapPut("charProperty.value",c);
+  argRepr.mapPut("doubleProperty.value",d);
+  argRepr.mapPut("floatProperty.value",f);
+  argRepr.mapPut("intProperty.value",i);
+  argRepr.mapPut("longProperty.value",l);
+  argRepr.mapPut("shortProperty.value",s);
+  argRepr.mapPut("booleanProperty.value",z);
+  RestfulResponse<JsonRepresentation> result=client.follow(updateLink,argRepr);
+  assertThat(result.getStatus(),is(HttpStatusCode.OK));
+  final DomainObjectRepresentation afterResp=result.getEntity().as(DomainObjectRepresentation.class);
+  assertThat(afterResp.getProperty("byteProperty").getByte("value"),is(b));
+  assertThat(afterResp.getProperty("charProperty").getChar("value"),is(c));
+  assertThat(afterResp.getProperty("doubleProperty").getDouble("value"),is(d));
+  assertThat(afterResp.getProperty("floatProperty").getFloat("value"),is(f));
+  assertThat(afterResp.getProperty("intProperty").getInt("value"),is(i));
+  assertThat(afterResp.getProperty("longProperty").getInt("value"),is(l));
+  assertThat(afterResp.getProperty("shortProperty").getShort("value"),is(s));
+  assertThat(afterResp.getProperty("booleanProperty").getBoolean("value"),is(z));
+}

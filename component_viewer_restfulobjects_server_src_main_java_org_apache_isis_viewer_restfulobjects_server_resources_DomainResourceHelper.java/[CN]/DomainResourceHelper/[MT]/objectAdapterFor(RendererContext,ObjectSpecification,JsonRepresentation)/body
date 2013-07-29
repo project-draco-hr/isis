@@ -3,7 +3,22 @@
     return null;
   }
   if (objectSpec.isEncodeable()) {
-    return JsonValueEncoder.asAdapter(objectSpec,argRepr);
+    try {
+      return JsonValueEncoder.asAdapter(objectSpec,argRepr);
+    }
+ catch (    Exception ex) {
+      StringBuilder buf=new StringBuilder("Failed to parse representation ");
+      try {
+        final String reprStr=argRepr.getString("value");
+        buf.append("'").append(reprStr).append("' ");
+      }
+ catch (      Exception ex2) {
+      }
+      buf.append("as value of type '").append(objectSpec.getShortIdentifier()).append("'");
+      String reason=buf.toString();
+      argRepr.mapPut("invalidReason",reason);
+      throw new IllegalArgumentException(reason);
+    }
   }
   final JsonRepresentation argValueRepr=argRepr.getRepresentation("value");
   if (argValueRepr == null) {
