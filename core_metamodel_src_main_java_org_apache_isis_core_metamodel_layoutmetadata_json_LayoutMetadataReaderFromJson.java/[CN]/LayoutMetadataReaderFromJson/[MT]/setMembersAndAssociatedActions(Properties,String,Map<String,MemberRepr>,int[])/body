@@ -1,0 +1,24 @@
+{
+  for (  final String memberName : members.keySet()) {
+    props.setProperty("memberOrder." + memberName + ".sequence","" + ++memberSeq[0]);
+    if (memberGroupName != null) {
+      props.setProperty("memberOrder." + memberName + ".name",memberGroupName);
+    }
+    final MemberRepr memberRepr=members.get(memberName);
+    final Map<String,ActionRepr> actions=memberRepr.actions;
+    if (actions == null) {
+      continue;
+    }
+    int actSeq=0;
+    for (    final String actionName : actions.keySet()) {
+      String nameKey="memberOrder." + actionName + ".name";
+      String sequenceKey="memberOrder." + actionName + ".sequence";
+      if (props.containsKey(nameKey)) {
+        nameKey="memberOrder." + actionName + "().name";
+        sequenceKey="memberOrder." + actionName + "().sequence";
+      }
+      props.setProperty(nameKey,memberName);
+      props.setProperty(sequenceKey,"" + ++actSeq);
+    }
+  }
+}
