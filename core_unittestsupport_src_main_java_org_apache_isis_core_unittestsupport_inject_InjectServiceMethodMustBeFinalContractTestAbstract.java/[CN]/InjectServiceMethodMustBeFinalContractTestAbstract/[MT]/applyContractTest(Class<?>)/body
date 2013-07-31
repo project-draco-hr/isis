@@ -1,0 +1,14 @@
+{
+  final Set<Method> injectMethods=Reflections.getAllMethods(entityType,ReflectionUtils.withPrefix("inject"));
+  for (  Method injectMethod : injectMethods) {
+    try {
+      final String desc=desc(entityType,injectMethod);
+      out.println("processing " + desc);
+      out.incrementIndent();
+      process(entityType,injectMethod);
+    }
+  finally {
+      out.decrementIndent();
+    }
+  }
+}
