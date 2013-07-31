@@ -1,0 +1,18 @@
+{
+  final LocalDate ld=new LocalDate(2013,5,1);
+  modifyLink=getObjectPropertyReprModifyLink("JODA","73","localDateProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",asIsoNoT(ld.toDate()));
+  assertThat(followedRepr(modifyLink,argRepr).getDate("value"),is(ld.toDate()));
+  final LocalDateTime ldt=new LocalDateTime(2013,2,1,14,15,0);
+  modifyLink=getObjectPropertyReprModifyLink("JODA","73","localDateTimeProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",asIso(ldt.toDate()));
+  assertThat(followedRepr(modifyLink,argRepr).getDateTime("value"),is(ldt.toDate()));
+  final DateTime dt=new DateTime(2013,2,1,14,15,0);
+  modifyLink=getObjectPropertyReprModifyLink("JODA","73","dateTimeProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",asIso(dt.toDate()));
+  assertThat(followedRepr(modifyLink,argRepr).getDateTime("value"),is(dt.toDate()));
+  final String s="New string";
+  modifyLink=getObjectPropertyReprModifyLink("JODA","73","stringProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",s);
+  assertThat(followedRepr(modifyLink,argRepr).getString("value"),is(s));
+}

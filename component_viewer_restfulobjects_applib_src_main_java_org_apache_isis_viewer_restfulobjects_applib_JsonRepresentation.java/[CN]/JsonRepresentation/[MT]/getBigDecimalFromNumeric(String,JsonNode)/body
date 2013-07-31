@@ -1,0 +1,22 @@
+{
+  if (representsNull(node)) {
+    return null;
+  }
+  checkValue(path,node,"a bigdecimal");
+  if (node.isBigDecimal()) {
+    return node.getDecimalValue();
+  }
+  if (node.isLong()) {
+    return new BigDecimal(node.getLongValue());
+  }
+  if (node.isDouble()) {
+    return new BigDecimal(node.getDoubleValue());
+  }
+  if (node.isBigInteger()) {
+    return new BigDecimal(node.getBigIntegerValue());
+  }
+  if (node.isInt()) {
+    return new BigDecimal(node.getIntValue());
+  }
+  throw new IllegalArgumentException(formatExMsg(path,"is not a bigdecimal (or any other numeric)"));
+}

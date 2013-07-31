@@ -1,0 +1,9 @@
+{
+  if (!isMap()) {
+    throw new IllegalStateException("does not represent map");
+  }
+  final Path path=Path.parse(key);
+  final ObjectNode node=JsonNodeUtils.walkNodeUpTo(asObjectNode(),path.getHead());
+  node.put(path.getTail(),value != null ? new BigIntegerNode(value) : NullNode.getInstance());
+  return this;
+}

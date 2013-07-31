@@ -1,0 +1,34 @@
+{
+  final BigDecimal bd=new BigDecimal("12345678901234567.789");
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","bigDecimalProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",bd);
+  assertThat(followedRepr(modifyLink,argRepr).getBigDecimalFromNumeric("value"),is(new BigDecimal(12345678901234568L)));
+  final BigInteger bi=new BigInteger("12345678901234567890");
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","bigIntegerProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",bi);
+  assertThat(followedRepr(modifyLink,argRepr).getBigInteger("value"),is(bi));
+  final java.sql.Date sqld=new java.sql.Date(114,4,1);
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","javaSqlDateProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",asIsoNoT(sqld));
+  assertThat(followedRepr(modifyLink,argRepr).getDate("value"),is((java.util.Date)sqld));
+  final java.sql.Time sqlt=new java.sql.Time(13,0,0);
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","javaSqlTimeProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",asIsoOnlyT(sqlt));
+  assertThat(followedRepr(modifyLink,argRepr).getTime("value"),is((java.util.Date)sqlt));
+  final java.sql.Timestamp sqlts=new java.sql.Timestamp(114,4,1,13,0,0,0);
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","javaSqlTimestampProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",sqlts.getTime());
+  assertThat(followedRepr(modifyLink,argRepr).getLong("value"),is(sqlts.getTime()));
+  final java.util.Date d=new java.util.Date(114,4,1,13,0,0);
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","javaUtilDateProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",asIso(d));
+  assertThat(followedRepr(modifyLink,argRepr).getDateTime("value"),is(d));
+  final String e="ORANGE";
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","myEnum");
+  argRepr=modifyLink.getArguments().mapPut("value",e);
+  assertThat(followedRepr(modifyLink,argRepr).getString("value"),is(e));
+  final String s="Tangerine";
+  modifyLink=getObjectPropertyReprModifyLink("JDKV","29","stringProperty");
+  argRepr=modifyLink.getArguments().mapPut("value",s);
+  assertThat(followedRepr(modifyLink,argRepr).getString("value"),is(s));
+}

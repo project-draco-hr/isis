@@ -21,6 +21,7 @@
   final RestfulResponse<JsonRepresentation> result=client.follow(updateLink,argRepr);
   assertThat(result.getStatus(),is(HttpStatusCode.OK));
   final DomainObjectRepresentation afterResp=result.getEntity().as(DomainObjectRepresentation.class);
+  assertThat(afterResp.getProperty("bigDecimalProperty").getBigDecimalFromNumeric("value"),is(new BigDecimal(12345678901234568L)));
   assertThat(afterResp.getProperty("bigIntegerProperty").getBigInteger("value"),is(bi));
   assertThat(afterResp.getProperty("javaSqlDateProperty").getDate("value"),is((java.util.Date)sqld));
   assertThat(afterResp.getProperty("javaSqlTimeProperty").getTime("value"),is((java.util.Date)sqlt));
