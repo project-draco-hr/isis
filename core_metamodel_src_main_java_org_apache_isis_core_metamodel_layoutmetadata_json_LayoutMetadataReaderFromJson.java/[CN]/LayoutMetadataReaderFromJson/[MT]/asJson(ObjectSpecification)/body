@@ -3,20 +3,17 @@
   metadata.setColumns(Lists.<ColumnRepr>newArrayList());
   final MemberGroupLayoutFacet mglf=objectSpec.getFacet(MemberGroupLayoutFacet.class);
   final ColumnSpans columnSpans=mglf.getColumnSpans();
+  Set<String> actionIdsForAssociations=Sets.newTreeSet();
   ColumnRepr columnRepr;
   columnRepr=addColumnWithSpan(metadata,columnSpans.getLeft());
-  updateColumnMemberGroups(objectSpec,MemberGroupLayoutHint.LEFT,columnRepr);
+  updateColumnMemberGroups(objectSpec,MemberGroupLayoutHint.LEFT,columnRepr,actionIdsForAssociations);
   columnRepr=addColumnWithSpan(metadata,columnSpans.getMiddle());
-  updateColumnMemberGroups(objectSpec,MemberGroupLayoutHint.MIDDLE,columnRepr);
+  updateColumnMemberGroups(objectSpec,MemberGroupLayoutHint.MIDDLE,columnRepr,actionIdsForAssociations);
   columnRepr=addColumnWithSpan(metadata,columnSpans.getRight());
-  updateColumnMemberGroups(objectSpec,MemberGroupLayoutHint.RIGHT,columnRepr);
+  updateColumnMemberGroups(objectSpec,MemberGroupLayoutHint.RIGHT,columnRepr,actionIdsForAssociations);
   columnRepr=addColumnWithSpan(metadata,columnSpans.getCollections());
-  final List<ObjectAssociation> objectAssociations=visibleCollections(objectSpec);
-  columnRepr.collections=Maps.newLinkedHashMap();
-  for (  ObjectAssociation assoc : objectAssociations) {
-    final MemberRepr memberRepr=newMemberRepr(objectSpec,assoc);
-    columnRepr.collections.put(assoc.getId(),memberRepr);
-  }
+  updateCollectionColumnRepr(objectSpec,columnRepr,actionIdsForAssociations);
+  addActions(objectSpec,metadata,actionIdsForAssociations);
   final Gson gson=new GsonBuilder().setPrettyPrinting().create();
   return gson.toJson(metadata);
 }

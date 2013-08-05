@@ -1,5 +1,5 @@
 {
-  final List<ObjectAssociation> objectAssociations=visibleProperties(objectSpec);
+  final List<ObjectAssociation> objectAssociations=propertiesOf(objectSpec);
   final Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociations.groupByMemberOrderName(objectAssociations);
   final List<String> groupNames=ObjectSpecifications.orderByMemberGroups(objectSpec,associationsByGroup.keySet(),hint);
   columnRepr.memberGroups=Maps.newLinkedHashMap();
@@ -12,7 +12,7 @@
       continue;
     }
     for (    ObjectAssociation assoc : associationsInGroup) {
-      final MemberRepr memberRepr=newMemberRepr(objectSpec,assoc);
+      final MemberRepr memberRepr=newMemberRepr(objectSpec,assoc,actionIdsForAssociations);
       memberGroupRepr.members.put(assoc.getId(),memberRepr);
     }
   }
