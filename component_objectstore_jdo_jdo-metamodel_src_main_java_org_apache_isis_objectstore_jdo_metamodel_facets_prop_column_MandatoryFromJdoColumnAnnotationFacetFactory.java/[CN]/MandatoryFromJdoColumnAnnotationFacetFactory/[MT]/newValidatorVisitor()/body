@@ -1,0 +1,48 @@
+{
+  return new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      validate(objectSpec,validationFailures);
+      return true;
+    }
+    private void validate(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      List<ObjectAssociation> associations=objectSpec.getAssociations(ObjectAssociationFilters.PROPERTIES);
+      for (      ObjectAssociation association : associations) {
+        MandatoryFacet facet=association.getFacet(MandatoryFacet.class);
+        MandatoryFacet underlying=(MandatoryFacet)facet.getUnderlyingFacet();
+        if (underlying == null) {
+          continue;
+        }
+        if (facet instanceof MandatoryFacetDerivedFromJdoColumn) {
+          if (association.isNotPersisted()) {
+            validationFailures.add("%s: @javax.jdo.annotations.Column found on non-persisted property; please remove)",association.getIdentifier().toClassAndNameIdentityString());
+            continue;
+          }
+          if (underlying.isInvertedSemantics() == facet.isInvertedSemantics()) {
+            continue;
+          }
+          if (underlying.isInvertedSemantics()) {
+            validationFailures.add("%s: incompatible usage of Isis' @Optional annotation and @javax.jdo.annotations.Column; use just @javax.jdo.annotations.Column(allowNulls=\"...\")",association.getIdentifier().toClassAndNameIdentityString());
+          }
+ else {
+            validationFailures.add("%s: incompatible Isis' default of required/optional properties vs JDO; add @javax.jdo.annotations.Column(allowNulls=\"...\")",association.getIdentifier().toClassAndNameIdentityString());
+          }
+        }
+        if (facet instanceof MandatoryFacetInferredFromAbsenceOfJdoColumn) {
+          if (association.isNotPersisted()) {
+            continue;
+          }
+          if (underlying.isInvertedSemantics() == facet.isInvertedSemantics()) {
+            continue;
+          }
+          if (underlying.isInvertedSemantics()) {
+            validationFailures.add("%s: incompatible usage of Isis' @Optional annotation and @javax.jdo.annotations.Column; use just @javax.jdo.annotations.Column(allowNulls=\"...\")",association.getIdentifier().toClassAndNameIdentityString());
+          }
+ else {
+            validationFailures.add("%s: incompatible default handling of required/optional properties between Isis and JDO; add @javax.jdo.annotations.Column(allowsNull=\"...\")",association.getIdentifier().toClassAndNameIdentityString());
+          }
+        }
+      }
+    }
+  }
+;
+}

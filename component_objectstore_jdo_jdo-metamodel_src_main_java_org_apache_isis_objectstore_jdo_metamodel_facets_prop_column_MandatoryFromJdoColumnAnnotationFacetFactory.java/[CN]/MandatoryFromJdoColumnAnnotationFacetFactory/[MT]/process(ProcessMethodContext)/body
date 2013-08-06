@@ -1,0 +1,19 @@
+{
+  final Column annotation=Annotations.getAnnotation(processMethodContext.getMethod(),Column.class);
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  final MandatoryFacet existingFacet=holder.getFacet(MandatoryFacet.class);
+  if (existingFacet != null) {
+    if (existingFacet instanceof OptionalFacetDerivedFromJdoPrimaryKeyAnnotation) {
+      return;
+    }
+    if (existingFacet instanceof MandatoryFacetExplicitForProperty) {
+      return;
+    }
+  }
+  boolean required=whetherRequired(processMethodContext,annotation);
+  MandatoryFacet facet=annotation != null ? new MandatoryFacetDerivedFromJdoColumn(holder,required) : new MandatoryFacetInferredFromAbsenceOfJdoColumn(holder,required);
+  FacetUtil.addFacet(facet);
+  if (facet instanceof MandatoryFacetDerivedFromJdoColumn && facet.getUnderlyingFacet() instanceof MandatoryFacetDefault) {
+    facet.setUnderlyingFacet(null);
+  }
+}

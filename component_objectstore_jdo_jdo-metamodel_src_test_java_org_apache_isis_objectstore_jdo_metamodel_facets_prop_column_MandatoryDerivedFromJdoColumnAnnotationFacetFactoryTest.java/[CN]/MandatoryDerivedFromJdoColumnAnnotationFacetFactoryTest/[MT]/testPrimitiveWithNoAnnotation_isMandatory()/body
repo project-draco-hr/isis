@@ -1,0 +1,8 @@
+{
+  final Method method=cls.getMethod("getPrimitiveWithNoAnnotation");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(cls,null,null,method,methodRemover,facetedMethod));
+  final MandatoryFacet facet=facetedMethod.getFacet(MandatoryFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MandatoryFacetInferredFromAbsenceOfJdoColumn);
+  assertThat(facet.isInvertedSemantics(),is(false));
+}
