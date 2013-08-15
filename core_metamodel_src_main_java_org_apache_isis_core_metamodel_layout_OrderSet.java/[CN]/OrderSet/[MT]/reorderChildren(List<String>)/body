@@ -1,0 +1,22 @@
+{
+  final LinkedHashMap<String,OrderSet> orderSets=Maps.newLinkedHashMap();
+  for (  Object child : elementList()) {
+    if (child instanceof OrderSet) {
+      final OrderSet orderSet=(OrderSet)child;
+      elements.remove(orderSet);
+      orderSets.put(orderSet.getGroupName(),orderSet);
+    }
+  }
+  for (  String group : requiredOrder) {
+    OrderSet orderSet=orderSets.get(group);
+    if (orderSet == null) {
+      continue;
+    }
+    orderSets.remove(group);
+    elements.add(orderSet);
+  }
+  for (  String orderSetGroupName : orderSets.keySet()) {
+    final OrderSet orderSet=orderSets.get(orderSetGroupName);
+    elements.add(orderSet);
+  }
+}
