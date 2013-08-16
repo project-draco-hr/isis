@@ -11,7 +11,7 @@
   final List<String> fullIdentifierList=Lists.newArrayList(Collections2.transform(specs,className));
   for (  final String fullIdentifier : fullIdentifierList) {
     final ObjectSpecification spec=getSpecificationLoader().loadSpecification(fullIdentifier);
-    if (spec.getAssociations().size() == 0 && spec.getObjectActions(Contributed.EXCLUDED).size() == 0) {
+    if (spec.getAssociations(Contributed.EXCLUDED).size() == 0 && spec.getObjectActions(Contributed.EXCLUDED).size() == 0) {
       continue;
     }
     final String name=spec.getIdentifier().toClassIdentityString();
@@ -22,14 +22,14 @@
   context.getWriter().append("\n\n");
   for (  final String fullIdentifier : fullIdentifierList) {
     final ObjectSpecification spec=getSpecificationLoader().loadSpecification(fullIdentifier);
-    if (spec.getAssociations().size() == 0 && spec.getObjectActions(Contributed.EXCLUDED).size() == 0) {
+    if (spec.getAssociations(Contributed.EXCLUDED).size() == 0 && spec.getObjectActions(Contributed.EXCLUDED).size() == 0) {
       continue;
     }
     final String name=spec.getIdentifier().toClassIdentityString();
     boolean isAbstract=spec.isAbstract();
     context.getWriter().append("### " + spec.getShortIdentifier() + (isAbstract ? " (abstract)" : "")+ " ###\n");
     context.getWriter().append((isAbstract ? "#" : "") + name + ":roles\n");
-    for (    final ObjectAssociation assoc : spec.getAssociations()) {
+    for (    final ObjectAssociation assoc : spec.getAssociations(Contributed.EXCLUDED)) {
       context.getWriter().append("#" + name + "#"+ assoc.getId()+ ":roles\n");
     }
     for (    final ObjectAction action : spec.getObjectActions(Contributed.EXCLUDED)) {

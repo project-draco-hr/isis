@@ -22,7 +22,7 @@
   final ObjectAdapter parentAdapter=objectMapping.mappedObject(parentOid.enString(getOidMarshaller()));
   getPersistenceSession().resolveImmediately(parentAdapter);
   ObjectAdapter aggregatedAdapter=null;
-  outer:   for (  final ObjectAssociation association : parentAdapter.getSpecification().getAssociations()) {
+  outer:   for (  final ObjectAssociation association : parentAdapter.getSpecification().getAssociations(Contributed.EXCLUDED)) {
     if (association.getSpecification().isParented()) {
       final ObjectAdapter objectAdapter=association.get(parentAdapter);
       if (objectAdapter == null) {

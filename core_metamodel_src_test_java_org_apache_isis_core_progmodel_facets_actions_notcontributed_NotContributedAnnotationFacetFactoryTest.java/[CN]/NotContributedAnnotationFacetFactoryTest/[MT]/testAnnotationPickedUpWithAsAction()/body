@@ -1,0 +1,13 @@
+{
+class CustomerRepository {
+    @NotContributed(As.ACTION) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(CustomerRepository.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(CustomerRepository.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final NotContributedFacet facet=facetedMethod.getFacet(NotContributedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof NotContributedFacetAbstract);
+  assertThat(facet.value(),is(As.ACTION));
+  assertNoMethodsRemoved();
+}

@@ -49,7 +49,7 @@
   request.setBlockContent(containedBlock);
   request.processUtilCloseTag();
   final AuthenticationSession session=IsisContext.getAuthenticationSession();
-  List<ObjectAssociation> viewFields=specification.getAssociations(ObjectAssociationFilters.dynamicallyVisible(session,object,where));
+  List<ObjectAssociation> viewFields=specification.getAssociations(Contributed.EXCLUDED,ObjectAssociationFilters.dynamicallyVisible(session,object,where));
   viewFields=containedBlock.includedFields(viewFields);
   final InputField[] formFields=createFields(viewFields);
   initializeFields(context,object,formFields,entryState,!hideNonEditableFields);
@@ -73,7 +73,7 @@
   hiddenFields.add(resultOverride == null ? null : new HiddenInputField("_" + RESULT_OVERRIDE,resultOverride));
   hiddenFields.add(scope == null ? null : new HiddenInputField("_" + SCOPE,scope));
   if (!object.isTransient()) {
-    final List<ObjectAssociation> fields2=object.getSpecification().getAssociations();
+    final List<ObjectAssociation> fields2=object.getSpecification().getAssociations(Contributed.EXCLUDED);
     for (int i=0; i < fields2.size(); i++) {
       final ObjectAssociation field=fields2.get(i);
       if (!viewFields.contains(field) && field.getSpecification().containsFacet(BooleanValueFacet.class)) {

@@ -2,7 +2,7 @@
   final ObjectSpecification typeOfSpec=getModel().getTypeOfSpecification();
   final ObjectSpecification parentSpecIfAny=getModel().isParented() ? getModel().getParentObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK).getSpecification() : null;
   @SuppressWarnings("unchecked") final Filter<ObjectAssociation> filter=Filters.and(ObjectAssociationFilters.PROPERTIES,ObjectAssociationFilters.staticallyVisible(getModel().isParented() ? Where.PARENTED_TABLES : Where.STANDALONE_TABLES),associationDoesNotReferenceParent(parentSpecIfAny));
-  final List<? extends ObjectAssociation> propertyList=typeOfSpec.getAssociations(filter);
+  final List<? extends ObjectAssociation> propertyList=typeOfSpec.getAssociations(Contributed.INCLUDED,filter);
   for (  final ObjectAssociation property : propertyList) {
     final ColumnAbstract<ObjectAdapter> nopc=createObjectAdapterPropertyColumn(property);
     columns.add(nopc);

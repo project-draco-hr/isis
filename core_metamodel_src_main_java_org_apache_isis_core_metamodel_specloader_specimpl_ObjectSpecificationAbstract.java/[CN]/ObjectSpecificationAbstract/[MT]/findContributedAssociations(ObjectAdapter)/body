@@ -1,0 +1,37 @@
+{
+  final ObjectSpecification specification=serviceAdapter.getSpecification();
+  final List<ObjectAction> serviceActions=specification.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  final List<ObjectActionImpl> contributingActions=Lists.newArrayList();
+  for (  final ObjectAction serviceAction : serviceActions) {
+    if (serviceAction.isAlwaysHidden()) {
+      continue;
+    }
+    final NotContributedFacet notContributed=serviceAction.getFacet(NotContributedFacet.class);
+    if (notContributed != null && notContributed.toAssociations()) {
+      continue;
+    }
+    if (!serviceAction.hasReturn()) {
+      continue;
+    }
+    if (serviceAction.getParameterCount() != 1 || !matchesParameterOf(serviceAction)) {
+      continue;
+    }
+    if (!(serviceAction instanceof ObjectActionImpl)) {
+      continue;
+    }
+    ObjectActionImpl objectActionImpl=(ObjectActionImpl)serviceAction;
+    contributingActions.add(objectActionImpl);
+  }
+  return Lists.newArrayList(Iterables.transform(contributingActions,new Function<ObjectActionImpl,ObjectAssociation>(){
+    @Override public ObjectAssociation apply(    ObjectActionImpl input){
+      final ObjectSpecification returnType=input.getReturnType();
+      if (returnType.isNotCollection()) {
+        return new OneToOneAssociationContributed(serviceAdapter,input,objectMemberContext);
+      }
+ else {
+        return new OneToManyAssociationContributed(serviceAdapter,input,objectMemberContext);
+      }
+    }
+  }
+));
+}
