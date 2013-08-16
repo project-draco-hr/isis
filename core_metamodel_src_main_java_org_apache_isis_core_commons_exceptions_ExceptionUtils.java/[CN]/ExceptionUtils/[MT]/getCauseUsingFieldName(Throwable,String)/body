@@ -1,0 +1,20 @@
+{
+  Field field=null;
+  try {
+    field=throwable.getClass().getField(fieldName);
+  }
+ catch (  NoSuchFieldException ignored) {
+  }
+catch (  SecurityException ignored) {
+  }
+  if (field != null && Throwable.class.isAssignableFrom(field.getType())) {
+    try {
+      return (Throwable)field.get(throwable);
+    }
+ catch (    IllegalAccessException ignored) {
+    }
+catch (    IllegalArgumentException ignored) {
+    }
+  }
+  return null;
+}
