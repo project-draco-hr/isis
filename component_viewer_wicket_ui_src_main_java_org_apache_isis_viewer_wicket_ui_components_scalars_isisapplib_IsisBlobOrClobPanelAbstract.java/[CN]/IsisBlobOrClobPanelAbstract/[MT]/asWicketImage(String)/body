@@ -1,0 +1,22 @@
+{
+  final ObjectAdapter adapter=getModel().getObject();
+  if (adapter == null) {
+    return null;
+  }
+  final Object object=adapter.getObject();
+  if (!(object instanceof Blob)) {
+    return null;
+  }
+  final Blob blob=(Blob)object;
+  final MimeType mimeType=blob.getMimeType();
+  if (mimeType == null || !mimeType.getPrimaryType().equals("image")) {
+    return null;
+  }
+  final BufferedImage image=asBufferedImage(blob);
+  if (image == null) {
+    return null;
+  }
+  final BufferedDynamicImageResource imageResource=new BufferedDynamicImageResource();
+  imageResource.setImage(image);
+  return new Image(id,imageResource);
+}
