@@ -23,7 +23,7 @@
     for (int i=0; i < parameterCount; i++) {
       final ActionParameterDefaultsFacet paramFacet=parameters.get(i).getFacet(ActionParameterDefaultsFacet.class);
       if (paramFacet != null && !paramFacet.isNoop()) {
-        parameterDefaultPojos[i]=paramFacet.getDefault(target);
+        parameterDefaultPojos[i]=paramFacet.getDefault(target,null);
       }
  else {
         parameterDefaultPojos[i]=null;
@@ -34,13 +34,6 @@
   if (parameterDefaultPojos != null) {
     for (int i=0; i < parameterCount; i++) {
       parameterDefaultAdapters[i]=adapterFor(parameterDefaultPojos[i]);
-    }
-  }
-  if (false && target != null) {
-    for (int i=0; i < parameterCount; i++) {
-      if (target.getSpecification().isOfType(parameters.get(i).getSpecification())) {
-        parameterDefaultAdapters[i]=target;
-      }
     }
   }
   return parameterDefaultAdapters;

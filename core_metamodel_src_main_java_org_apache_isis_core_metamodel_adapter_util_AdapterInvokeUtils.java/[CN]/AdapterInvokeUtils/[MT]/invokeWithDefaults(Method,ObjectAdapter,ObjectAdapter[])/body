@@ -1,0 +1,17 @@
+{
+  final int numParams=method.getParameterTypes().length;
+  ObjectAdapter[] adapters;
+  if (argumentAdapters == null || argumentAdapters.length == 0) {
+    adapters=new ObjectAdapter[numParams];
+  }
+ else   if (numParams == 0) {
+    adapters=new ObjectAdapter[0];
+  }
+ else   if (argumentAdapters.length == numParams) {
+    adapters=argumentAdapters;
+  }
+ else {
+    throw new IllegalArgumentException("Method has " + numParams + " params but "+ argumentAdapters.length+ " arguments provided");
+  }
+  return AdapterInvokeUtils.invoke(method,adapter,adapters);
+}
