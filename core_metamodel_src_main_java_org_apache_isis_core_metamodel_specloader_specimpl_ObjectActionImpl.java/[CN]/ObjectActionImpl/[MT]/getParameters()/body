@@ -6,11 +6,12 @@
     for (int i=0; i < parameterCount; i++) {
       final TypedHolder paramPeer=paramPeers.get(i);
       final ObjectSpecification specification=ObjectMemberAbstract.getSpecification(getSpecificationLookup(),paramPeer.getType());
+      final ObjectActionParameter parameter;
       if (specification.isParseable()) {
-        parameters.add(new ObjectActionParameterParseable(i,this,paramPeer));
+        parameter=new ObjectActionParameterParseable(i,this,paramPeer);
       }
  else       if (specification.isNotCollection()) {
-        parameters.add(new OneToOneActionParameterImpl(i,this,paramPeer));
+        parameter=new OneToOneActionParameterImpl(i,this,paramPeer);
       }
  else       if (specification.isParentedOrFreeCollection()) {
         throw new UnknownTypeException("collections not supported as parameters: " + getIdentifier());
@@ -18,6 +19,7 @@
  else {
         throw new UnknownTypeException(specification);
       }
+      parameters.add(parameter);
     }
     this.parameters=parameters;
   }

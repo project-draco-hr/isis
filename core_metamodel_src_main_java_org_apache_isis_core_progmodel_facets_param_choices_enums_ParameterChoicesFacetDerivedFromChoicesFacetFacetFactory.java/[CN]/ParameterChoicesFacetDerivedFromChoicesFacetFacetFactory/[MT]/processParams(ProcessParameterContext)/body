@@ -3,5 +3,9 @@
   if (!paramType.isEnum()) {
     return;
   }
-  FacetUtil.addFacet(new ActionParameterChoicesFacetDerivedFromChoicesFacet(processParameterContext.getFacetHolder(),getSpecificationLoader(),getAdapterManager()));
+  final FacetedMethodParameter facetHolder=processParameterContext.getFacetHolder();
+  if (facetHolder.containsDoOpFacet(ActionParameterChoicesFacet.class)) {
+    return;
+  }
+  FacetUtil.addFacet(new ActionParameterChoicesFacetDerivedFromChoicesFacet(facetHolder,getSpecificationLoader(),getAdapterManager()));
 }

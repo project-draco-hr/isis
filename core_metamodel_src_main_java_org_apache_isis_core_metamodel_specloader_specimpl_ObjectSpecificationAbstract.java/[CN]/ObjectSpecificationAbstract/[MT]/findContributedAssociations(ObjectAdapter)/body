@@ -13,7 +13,7 @@
     if (!serviceAction.hasReturn()) {
       continue;
     }
-    if (serviceAction.getParameterCount() != 1 || !matchesParameterOf(serviceAction)) {
+    if (serviceAction.getParameterCount() != 1 || contributeeParameterMatchOf(serviceAction) == -1) {
       continue;
     }
     if (!(serviceAction instanceof ObjectActionImpl)) {
@@ -26,10 +26,10 @@
     @Override public ObjectAssociation apply(    ObjectActionImpl input){
       final ObjectSpecification returnType=input.getReturnType();
       if (returnType.isNotCollection()) {
-        return new OneToOneAssociationContributed(serviceAdapter,input,objectMemberContext);
+        return new OneToOneAssociationContributee(serviceAdapter,input,objectMemberContext);
       }
  else {
-        return new OneToManyAssociationContributed(serviceAdapter,input,objectMemberContext);
+        return new OneToManyAssociationContributee(serviceAdapter,input,objectMemberContext);
       }
     }
   }

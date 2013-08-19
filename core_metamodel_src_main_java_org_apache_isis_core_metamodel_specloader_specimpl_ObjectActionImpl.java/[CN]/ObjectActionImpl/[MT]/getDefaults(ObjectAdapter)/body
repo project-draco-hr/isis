@@ -1,11 +1,10 @@
 {
-  final ObjectAdapter realTarget=realTarget(target);
   final int parameterCount=getParameterCount();
   final List<ObjectActionParameter> parameters=getParameters();
   final Object[] parameterDefaultPojos;
   final ActionDefaultsFacet facet=getFacet(ActionDefaultsFacet.class);
   if (!facet.isNoop()) {
-    parameterDefaultPojos=facet.getDefaults(realTarget);
+    parameterDefaultPojos=facet.getDefaults(target);
     if (parameterDefaultPojos.length != parameterCount) {
       throw new DomainModelException("Defaults array of incompatible size; expected " + parameterCount + " elements, but was "+ parameterDefaultPojos.length+ " for "+ facet);
     }
@@ -24,7 +23,7 @@
     for (int i=0; i < parameterCount; i++) {
       final ActionParameterDefaultsFacet paramFacet=parameters.get(i).getFacet(ActionParameterDefaultsFacet.class);
       if (paramFacet != null && !paramFacet.isNoop()) {
-        parameterDefaultPojos[i]=paramFacet.getDefault(realTarget);
+        parameterDefaultPojos[i]=paramFacet.getDefault(target);
       }
  else {
         parameterDefaultPojos[i]=null;
@@ -37,7 +36,7 @@
       parameterDefaultAdapters[i]=adapterFor(parameterDefaultPojos[i]);
     }
   }
-  if (isContributed() && target != null) {
+  if (false && target != null) {
     for (int i=0; i < parameterCount; i++) {
       if (target.getSpecification().isOfType(parameters.get(i).getSpecification())) {
         parameterDefaultAdapters[i]=target;

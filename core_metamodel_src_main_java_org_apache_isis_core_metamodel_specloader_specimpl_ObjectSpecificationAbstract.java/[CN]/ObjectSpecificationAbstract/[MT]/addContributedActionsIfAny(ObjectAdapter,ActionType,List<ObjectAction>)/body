@@ -3,10 +3,29 @@
   if (specification == this) {
     return;
   }
-  final List<ObjectAction> contributedActions=findContributedActions(specification,actionType);
-  if (contributedActions.isEmpty()) {
+  final List<ObjectAction> contributeeActions=Lists.newArrayList();
+  final List<ObjectAction> serviceActions=specification.getObjectActions(actionType,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  for (  final ObjectAction serviceAction : serviceActions) {
+    if (serviceAction.isAlwaysHidden()) {
+      continue;
+    }
+    final NotContributedFacet notContributed=serviceAction.getFacet(NotContributedFacet.class);
+    if (notContributed != null && notContributed.toActions()) {
+      continue;
+    }
+    if (!(serviceAction instanceof ObjectActionImpl)) {
+      continue;
+    }
+    ObjectActionImpl serviceActionImpl=(ObjectActionImpl)serviceAction;
+    final int contributeeParam=contributeeParameterMatchOf(serviceActionImpl);
+    if (contributeeParam != -1) {
+      ObjectActionContributee contributee=new ObjectActionContributee(serviceAdapter,serviceActionImpl,contributeeParam,this,objectMemberContext);
+      contributeeActions.add(contributee);
+    }
+  }
+  if (contributeeActions.isEmpty()) {
     return;
   }
-  final ObjectActionSet contributedActionSet=new ObjectActionSet("id",serviceAdapter.titleString(),contributedActions);
+  final ObjectActionSet contributedActionSet=new ObjectActionSet("id",serviceAdapter.titleString(null),contributeeActions);
   contributedActionSetsToAppendTo.add(contributedActionSet);
 }

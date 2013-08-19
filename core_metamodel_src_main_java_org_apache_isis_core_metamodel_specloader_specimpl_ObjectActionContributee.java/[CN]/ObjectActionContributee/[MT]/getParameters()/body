@@ -1,0 +1,27 @@
+{
+  if (this.parameters == null) {
+    final List<ObjectActionParameter> serviceParameters=serviceAction.getParameters();
+    final List<ObjectActionParameterContributee> contributeeParameters=Lists.newArrayList();
+    int contributeeParamNum=0;
+    for (int serviceParamNum=0; serviceParamNum < serviceParameters.size(); serviceParamNum++) {
+      if (serviceParamNum == contributeeParam) {
+        continue;
+      }
+      final ObjectActionParameterAbstract serviceParameter=(ObjectActionParameterAbstract)serviceParameters.get(serviceParamNum);
+      final ObjectActionParameterContributee contributedParam;
+      if (serviceParameter instanceof ObjectActionParameterParseable) {
+        contributedParam=new ObjectActionParameterParseableContributee(serviceAdapter,serviceAction,serviceParameter,serviceParamNum,contributeeParamNum,this);
+      }
+ else       if (serviceParameter instanceof OneToOneActionParameterImpl) {
+        contributedParam=new OneToOneActionParameterContributee(serviceAdapter,serviceAction,serviceParameter,serviceParamNum,contributeeParamNum,this);
+      }
+ else {
+        throw new RuntimeException("Unknown implementation of ObjectActionParameter; " + serviceParameter.getClass().getName());
+      }
+      contributeeParameters.add(contributedParam);
+      contributeeParamNum++;
+    }
+    this.parameters=contributeeParameters;
+  }
+  return CastUtils.listOf(parameters,ObjectActionParameter.class);
+}
