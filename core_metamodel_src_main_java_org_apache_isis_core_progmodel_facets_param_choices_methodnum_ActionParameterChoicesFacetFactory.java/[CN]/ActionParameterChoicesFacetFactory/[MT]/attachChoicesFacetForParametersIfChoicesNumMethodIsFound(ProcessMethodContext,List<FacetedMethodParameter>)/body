@@ -6,17 +6,7 @@
   final Class<?>[] paramTypes=actionMethod.getParameterTypes();
   for (int i=0; i < paramTypes.length; i++) {
     final Class<?> arrayOfParamType=(Array.newInstance(paramTypes[i],0)).getClass();
-    Method choicesMethod;
-    choicesMethod=findChoicesNumMethodReturning(processMethodContext,i,paramTypes,arrayOfParamType);
-    if (choicesMethod == null) {
-      choicesMethod=findChoicesNumMethodReturning(processMethodContext,i,paramTypes,Collection.class);
-    }
-    if (choicesMethod == null) {
-      choicesMethod=findChoicesNumMethodReturning(processMethodContext,i,new Class[0],arrayOfParamType);
-    }
-    if (choicesMethod == null) {
-      choicesMethod=findChoicesNumMethodReturning(processMethodContext,i,new Class[0],Collection.class);
-    }
+    final Method choicesMethod=findChoicesNumMethodReturning(processMethodContext,i);
     if (choicesMethod == null) {
       continue;
     }

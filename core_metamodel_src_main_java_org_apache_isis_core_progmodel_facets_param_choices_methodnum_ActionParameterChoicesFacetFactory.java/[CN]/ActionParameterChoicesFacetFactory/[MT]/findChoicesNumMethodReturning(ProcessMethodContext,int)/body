@@ -1,0 +1,21 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  final List<Class<?>> paramTypes=ListUtils.mutableCopy(actionMethod.getParameterTypes());
+  final Class<?> arrayOfParamType=(Array.newInstance(paramTypes.get(n),0)).getClass();
+  final int numParamTypes=paramTypes.size();
+  for (int i=0; i < numParamTypes + 1; i++) {
+    Method method;
+    method=findChoicesNumMethodReturning(processMethodContext,n,paramTypes.toArray(new Class<?>[]{}),arrayOfParamType);
+    if (method != null) {
+      return method;
+    }
+    method=findChoicesNumMethodReturning(processMethodContext,n,paramTypes.toArray(new Class<?>[]{}),Collection.class);
+    if (method != null) {
+      return method;
+    }
+    if (!paramTypes.isEmpty()) {
+      paramTypes.remove(paramTypes.size() - 1);
+    }
+  }
+  return null;
+}

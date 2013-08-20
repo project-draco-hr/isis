@@ -1,0 +1,15 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  final List<Class<?>> paramTypes=ListUtils.mutableCopy(actionMethod.getParameterTypes());
+  final int numParamTypes=paramTypes.size();
+  for (int i=0; i < numParamTypes + 1; i++) {
+    final Method method=findDefaultNumMethod(processMethodContext,n,paramTypes.toArray(new Class<?>[]{}));
+    if (method != null) {
+      return method;
+    }
+    if (!paramTypes.isEmpty()) {
+      paramTypes.remove(paramTypes.size() - 1);
+    }
+  }
+  return null;
+}

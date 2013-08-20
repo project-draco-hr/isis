@@ -1,0 +1,13 @@
+{
+  final Object choices=AdapterInvokeUtils.invokeAutofit(method,adapter,argumentsIfAvailable);
+  if (choices == null) {
+    return new Object[0];
+  }
+  if (choices.getClass().isArray()) {
+    return ArrayUtil.getObjectAsObjectArray(choices);
+  }
+ else {
+    final ObjectSpecification specification=getSpecification(choicesType);
+    return CollectionUtils.getCollectionAsObjectArray(choices,specification,getAdapterManager());
+  }
+}
