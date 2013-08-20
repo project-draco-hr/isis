@@ -1,0 +1,24 @@
+{
+  final ScalarModel scalarModel=provider.getModel();
+  String name=scalarModel.getName();
+  final ObjectAdapterMemento objectAdapterMemento=scalarModel.getObjectAdapterMemento();
+  final List<ObjectAdapter> pendingArgs=Lists.newArrayList(Iterables.transform(scalarPanels,new Function<ScalarPanelAbstract,ObjectAdapter>(){
+    @Override public ObjectAdapter apply(    ScalarPanelAbstract input){
+      if (input == null) {
+        return null;
+      }
+      final ScalarModel model=input.getModel();
+      final ObjectAdapterMemento objectAdapterMemento=model.getObjectAdapterMemento();
+      if (objectAdapterMemento == null) {
+        return null;
+      }
+      return objectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+    }
+  }
+));
+  System.out.println(pendingArgs);
+  final ActionModel actionModel=getActionModel();
+  actionModel.getArgumentsAsArray();
+  for (  ScalarPanelAbstract scalarPanel : scalarPanels) {
+  }
+}
