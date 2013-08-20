@@ -1,0 +1,14 @@
+{
+  if (false) {
+    return allMatches(ToDoItem.class,new Filter<ToDoItem>(){
+      @Override public boolean accept(      ToDoItem t){
+        return t != toDoItem && Objects.equal(toDoItem.getCategory(),t.getCategory()) && Objects.equal(toDoItem.getOwnedBy(),t.getOwnedBy());
+      }
+    }
+);
+  }
+ else {
+    final List<ToDoItem> similarToDoItems=allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_similarTo","ownedBy",currentUserName(),"category",toDoItem.getCategory()));
+    return Lists.newArrayList(Iterables.filter(similarToDoItems,excluding(toDoItem)));
+  }
+}

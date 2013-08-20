@@ -1,16 +1,6 @@
 {
-  if (false && adapter != null) {
-    if (adapter.getSpecification().isOfType(getSpecification())) {
-      return adapter;
-    }
-  }
-  final ActionParameterDefaultsFacet defaultsFacet=getFacet(ActionParameterDefaultsFacet.class);
-  if (defaultsFacet != null) {
-    final Object dflt=defaultsFacet.getDefault(adapter,null);
-    if (dflt == null) {
-      return null;
-    }
-    return getAdapterMap().adapterFor(dflt);
-  }
-  return null;
+  final ObjectAdapter target=targetForDefaultOrChoices(adapter);
+  ;
+  final ObjectAdapter[] args=argsForDefaultOrChoices(adapter);
+  return getDefault(target,args);
 }

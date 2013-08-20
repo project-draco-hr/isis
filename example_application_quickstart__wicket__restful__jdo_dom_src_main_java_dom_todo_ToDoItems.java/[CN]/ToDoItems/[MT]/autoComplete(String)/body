@@ -1,8 +1,13 @@
 {
-  return allMatches(ToDoItem.class,new Filter<ToDoItem>(){
-    @Override public boolean accept(    final ToDoItem t){
-      return ownedByCurrentUser(t) && t.getDescription().contains(description);
+  if (false) {
+    return allMatches(ToDoItem.class,new Filter<ToDoItem>(){
+      @Override public boolean accept(      final ToDoItem t){
+        return ownedByCurrentUser(t) && t.getDescription().contains(description);
+      }
     }
-  }
 );
+  }
+ else {
+    return allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_autoComplete","ownedBy",currentUserName(),"description",description));
+  }
 }

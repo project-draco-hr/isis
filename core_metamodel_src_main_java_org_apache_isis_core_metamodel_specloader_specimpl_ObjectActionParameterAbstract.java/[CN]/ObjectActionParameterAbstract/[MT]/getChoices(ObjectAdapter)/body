@@ -1,15 +1,5 @@
 {
-  final List<ObjectAdapter> parameterChoices=Lists.newArrayList();
-  final ActionParameterChoicesFacet choicesFacet=getFacet(ActionParameterChoicesFacet.class);
-  if (choicesFacet != null) {
-    final Object[] choices=choicesFacet.getChoices(adapter);
-    checkChoicesOrAutoCompleteType(getSpecificationLookup(),choices,getSpecification());
-    for (    final Object choice : choices) {
-      parameterChoices.add(getAdapterMap().adapterFor(choice));
-    }
-  }
-  if (parameterChoices.size() == 0 && BoundedFacetUtils.isBoundedSet(getSpecification())) {
-    addParameterChoicesForBounded(parameterChoices);
-  }
-  return parameterChoices.toArray(new ObjectAdapter[0]);
+  final ObjectAdapter target=targetForDefaultOrChoices(adapter);
+  final ObjectAdapter[] args=argsForDefaultOrChoices(adapter);
+  return getChoices(target,args);
 }
