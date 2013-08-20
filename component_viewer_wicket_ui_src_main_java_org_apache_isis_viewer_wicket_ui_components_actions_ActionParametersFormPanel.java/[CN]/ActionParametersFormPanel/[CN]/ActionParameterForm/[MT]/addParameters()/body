@@ -8,16 +8,17 @@
   }
   final RepeatingView rv=new RepeatingView(ID_ACTION_PARAMETERS);
   add(rv);
-  scalarPanels.clear();
+  paramPanels.clear();
   for (  final ActionParameterMemento apm : mementos) {
     final WebMarkupContainer container=new WebMarkupContainer(rv.newChildId());
     rv.add(container);
     final ScalarModel argumentModel=actionModel.getArgumentModel(apm);
-    final Component paramPanel=getComponentFactoryRegistry().addOrReplaceComponent(container,ComponentType.SCALAR_NAME_AND_VALUE,argumentModel);
-    final ScalarPanelAbstract scalarPanel=paramPanel instanceof ScalarPanelAbstract ? (ScalarPanelAbstract)paramPanel : null;
-    scalarPanels.add(scalarPanel);
-  }
-  for (  ScalarPanelAbstract scalarPanel : scalarPanels) {
-    scalarPanel.addScalarModelSubscriber(this);
+    final Component component=getComponentFactoryRegistry().addOrReplaceComponent(container,ComponentType.SCALAR_NAME_AND_VALUE,argumentModel);
+    final ScalarPanelAbstract paramPanel=component instanceof ScalarPanelAbstract ? (ScalarPanelAbstract)component : null;
+    paramPanels.add(paramPanel);
+    if (paramPanel != null) {
+      paramPanel.notifyOnChange(this);
+      paramPanel.setOutputMarkupId(true);
+    }
   }
 }
