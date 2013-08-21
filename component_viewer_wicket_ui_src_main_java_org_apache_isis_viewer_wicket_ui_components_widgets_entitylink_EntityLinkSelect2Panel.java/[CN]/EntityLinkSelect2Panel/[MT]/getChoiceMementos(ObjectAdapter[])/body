@@ -1,0 +1,13 @@
+{
+  final ScalarModel scalarModel=(ScalarModel)getEntityModel();
+  ;
+  final boolean hasChoices=scalarModel.hasChoices();
+  if (!hasChoices) {
+    return Collections.emptyList();
+  }
+  final List<ObjectAdapter> choices=scalarModel.getChoices(argsIfAvailable);
+  if (choices.isEmpty()) {
+    return Collections.emptyList();
+  }
+  return Lists.newArrayList(Lists.transform(choices,Mementos.fromAdapter()));
+}

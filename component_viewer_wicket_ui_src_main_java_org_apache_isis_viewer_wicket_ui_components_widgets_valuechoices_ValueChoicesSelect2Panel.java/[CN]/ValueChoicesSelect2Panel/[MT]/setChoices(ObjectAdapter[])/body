@@ -1,10 +1,11 @@
 {
-  select2ChoiceField.setProvider(newChoiceProvider(choicesMementos));
+  final List<ObjectAdapterMemento> choicesMementos=getChoiceMementos(argsIfAvailable);
+  select2Field.setProvider(newChoiceProvider(choicesMementos));
   getModel().setPending(null);
   final ObjectAdapterMemento objectAdapterMemento=getModel().getObjectAdapterMemento();
   if (!choicesMementos.contains(objectAdapterMemento)) {
     final ObjectAdapterMemento newAdapterMemento=!choicesMementos.isEmpty() ? choicesMementos.get(0) : null;
-    select2ChoiceField.getModel().setObject(newAdapterMemento);
+    select2Field.getModel().setObject(newAdapterMemento);
     getModel().setObject(newAdapterMemento != null ? newAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK) : null);
   }
 }

@@ -3,16 +3,6 @@
     permanentlyHide(ID_AUTO_COMPLETE);
     return;
   }
-  final ChoiceProvider<ObjectAdapterMemento> provider;
-  if (hasChoices()) {
-    provider=providerForChoices(getEntityModel());
-  }
- else   if (hasParamOrPropertyAutoComplete()) {
-    provider=providerForParamOrPropertyAutoComplete(getEntityModel());
-  }
- else {
-    provider=providerForObjectAutoComplete(getEntityModel());
-  }
   final ModelAbstract<ObjectAdapterMemento> model=new ModelAbstract<ObjectAdapterMemento>(){
     private static final long serialVersionUID=1L;
     @Override protected ObjectAdapterMemento load(){
@@ -20,11 +10,12 @@
     }
   }
 ;
-  autoCompleteField=new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE,model,provider);
-  final Settings settings=autoCompleteField.getSettings();
+  select2Field=new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE,model);
+  setChoices(null);
+  final Settings settings=select2Field.getSettings();
   ScalarModel scalarModel=(ScalarModel)getEntityModel();
   settings.setMinimumInputLength(scalarModel.getAutoCompleteMinLength());
-  addOrReplace(autoCompleteField);
+  addOrReplace(select2Field);
   permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
   permanentlyHide(ID_ENTITY_TITLE_NULL);
 }
