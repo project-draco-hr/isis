@@ -1,8 +1,13 @@
 {
   for (  final Object object : objects) {
-    final ObjectSpecification componentSpec=specificationLookup.loadSpecification(object.getClass());
-    if (!componentSpec.isOfType(paramSpec)) {
-      throw new DomainModelException("Type incompatible with parameter type; expected " + paramSpec.getFullIdentifier() + ", but was "+ componentSpec.getFullIdentifier());
+    final Class<? extends Object> choiceClass=object.getClass();
+    final Class<?> paramClass=paramSpec.getCorrespondingClass();
+    final Class<? extends Object> choiceWrappedClass=WrapperUtils.wrapAsNecessary(choiceClass);
+    final Class<? extends Object> paramWrappedClass=WrapperUtils.wrapAsNecessary(paramClass);
+    final ObjectSpecification choiceWrappedSpec=specificationLookup.loadSpecification(choiceWrappedClass);
+    final ObjectSpecification paramWrappedSpec=specificationLookup.loadSpecification(paramWrappedClass);
+    if (!choiceWrappedSpec.isOfType(paramWrappedSpec)) {
+      throw new DomainModelException("Type incompatible with parameter type; expected " + paramSpec.getFullIdentifier() + ", but was "+ choiceClass.getName());
     }
   }
 }

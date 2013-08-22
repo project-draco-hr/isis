@@ -1,13 +1,34 @@
 {
   final ChoiceProvider<ObjectAdapterMemento> provider;
   if (hasChoices()) {
-    provider=providerForChoices(argsIfAvailable);
+    final List<ObjectAdapterMemento> choiceMementos=getChoiceMementos(argsIfAvailable);
+    provider=new ObjectAdapterMementoProviderAbstract(){
+      private static final long serialVersionUID=1L;
+      @Override protected List<ObjectAdapterMemento> obtainMementos(      String unused){
+        return choiceMementos;
+      }
+    }
+;
+    select2Field.setProvider(provider);
+    getEntityModel().clearPending();
+    final ObjectAdapterMemento curr=select2Field.getModelObject();
+    final ObjectAdapterMemento curr2=getEntityModel().getObjectAdapterMemento();
+    if (curr == null || !curr.containedIn(choiceMementos)) {
+      final ObjectAdapterMemento newAdapterMemento=!choiceMementos.isEmpty() ? choiceMementos.get(0) : null;
+      select2Field.getModel().setObject(newAdapterMemento);
+      getModel().setObject(newAdapterMemento != null ? newAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK) : null);
+    }
+ else {
+    }
   }
  else   if (hasParamOrPropertyAutoComplete()) {
     provider=providerForParamOrPropertyAutoComplete();
+    select2Field.setProvider(provider);
+    getEntityModel().setPending(null);
   }
  else {
     provider=providerForObjectAutoComplete();
+    select2Field.setProvider(provider);
+    getEntityModel().setPending(null);
   }
-  select2Field.setProvider(provider);
 }

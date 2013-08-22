@@ -1,4 +1,21 @@
 {
-  final IModel<List<ObjectAdapterMemento>> choicesModel=newModel(choicesMementos);
-  return newChoiceProvider(choicesModel);
+  ChoiceProvider<ObjectAdapterMemento> provider=new ObjectAdapterMementoProviderAbstract(){
+    private static final long serialVersionUID=1L;
+    @Override public Collection<ObjectAdapterMemento> toChoices(    final Collection<String> ids){
+      final List<ObjectAdapterMemento> mementos=obtainMementos(null);
+      final Predicate<ObjectAdapterMemento> predicate=new Predicate<ObjectAdapterMemento>(){
+        @Override public boolean apply(        ObjectAdapterMemento input){
+          final String id=(String)getId(input);
+          return ids.contains(id);
+        }
+      }
+;
+      return Collections2.filter(mementos,predicate);
+    }
+    @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
+      return choicesMementos;
+    }
+  }
+;
+  return provider;
 }

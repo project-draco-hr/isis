@@ -1,7 +1,8 @@
 {
   final List<ObjectAdapterMemento> choicesMementos=getChoiceMementos(argsIfAvailable);
-  select2Field.setProvider(newChoiceProvider(choicesMementos));
-  getModel().setPending(null);
+  final ChoiceProvider<ObjectAdapterMemento> provider=newChoiceProvider(choicesMementos);
+  select2Field.setProvider(provider);
+  getModel().clearPending();
   final ObjectAdapterMemento objectAdapterMemento=getModel().getObjectAdapterMemento();
   if (!choicesMementos.contains(objectAdapterMemento)) {
     final ObjectAdapterMemento newAdapterMemento=!choicesMementos.isEmpty() ? choicesMementos.get(0) : null;

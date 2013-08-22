@@ -10,12 +10,17 @@
     }
   }
 ;
-  select2Field=new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE,model);
-  setChoices(null);
-  final Settings settings=select2Field.getSettings();
-  ScalarModel scalarModel=(ScalarModel)getEntityModel();
-  settings.setMinimumInputLength(scalarModel.getAutoCompleteMinLength());
-  addOrReplace(select2Field);
+  if (select2Field == null) {
+    select2Field=new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE,model);
+    setChoices(null);
+    if (!hasChoices()) {
+      final Settings settings=select2Field.getSettings();
+      ScalarModel scalarModel=(ScalarModel)getEntityModel();
+      final int minLength=scalarModel.getAutoCompleteMinLength();
+      settings.setMinimumInputLength(minLength);
+    }
+    addOrReplace(select2Field);
+  }
   permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
   permanentlyHide(ID_ENTITY_TITLE_NULL);
 }
