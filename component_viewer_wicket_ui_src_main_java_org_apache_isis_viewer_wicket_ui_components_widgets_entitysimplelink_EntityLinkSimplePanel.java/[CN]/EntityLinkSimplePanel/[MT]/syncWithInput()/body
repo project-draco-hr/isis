@@ -1,0 +1,16 @@
+{
+  final ObjectAdapter adapter=getPendingElseCurrentAdapter();
+  if (adapter != null) {
+    final EntityModel entityModelForLink=new EntityModel(adapter);
+    entityModelForLink.setContextAdapterIfAny(getEntityModel().getContextAdapterIfAny());
+    entityModelForLink.setRenderingHint(getEntityModel().getRenderingHint());
+    final ComponentFactory componentFactory=getComponentFactoryRegistry().findComponentFactory(ComponentType.ENTITY_ICON_AND_TITLE,entityModelForLink);
+    final Component component=componentFactory.createComponent(entityModelForLink);
+    addOrReplace(component);
+    permanentlyHide(ID_ENTITY_TITLE_NULL);
+  }
+ else {
+    addOrReplace(new Label(ID_ENTITY_TITLE_NULL,""));
+    permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
+  }
+}
