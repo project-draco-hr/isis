@@ -1,0 +1,22 @@
+{
+  final LinkedHashMap<String,DeweyOrderSet> orderSets=Maps.newLinkedHashMap();
+  for (  Object child : elementList()) {
+    if (child instanceof DeweyOrderSet) {
+      final DeweyOrderSet orderSet=(DeweyOrderSet)child;
+      elements.remove(orderSet);
+      orderSets.put(orderSet.getGroupName(),orderSet);
+    }
+  }
+  for (  String group : requiredOrder) {
+    DeweyOrderSet orderSet=orderSets.get(group);
+    if (orderSet == null) {
+      continue;
+    }
+    orderSets.remove(group);
+    elements.add(orderSet);
+  }
+  for (  String orderSetGroupName : orderSets.keySet()) {
+    final DeweyOrderSet orderSet=orderSets.get(orderSetGroupName);
+    elements.add(orderSet);
+  }
+}

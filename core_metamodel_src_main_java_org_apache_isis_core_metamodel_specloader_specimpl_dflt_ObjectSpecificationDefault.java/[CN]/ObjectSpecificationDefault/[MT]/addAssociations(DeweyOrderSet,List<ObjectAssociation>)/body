@@ -1,0 +1,20 @@
+{
+  for (  final Object element : orderSet) {
+    if (element instanceof FacetedMethod) {
+      final FacetedMethod facetMethod=(FacetedMethod)element;
+      if (facetMethod.getFeatureType().isCollection()) {
+        associations.add(createCollection(facetMethod));
+      }
+ else       if (facetMethod.getFeatureType().isProperty()) {
+        associations.add(createProperty(facetMethod));
+      }
+    }
+ else     if (element instanceof DeweyOrderSet) {
+      DeweyOrderSet childOrderSet=(DeweyOrderSet)element;
+      addAssociations(childOrderSet,associations);
+    }
+ else {
+      throw new UnknownTypeException(element);
+    }
+  }
+}
