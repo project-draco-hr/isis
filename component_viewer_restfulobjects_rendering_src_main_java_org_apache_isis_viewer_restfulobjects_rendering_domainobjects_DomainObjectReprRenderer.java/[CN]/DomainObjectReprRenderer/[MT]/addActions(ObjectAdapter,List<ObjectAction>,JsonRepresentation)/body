@@ -4,16 +4,9 @@
     if (!visibility.isAllowed()) {
       continue;
     }
-    if (action.getType().isSet()) {
-      final ObjectActionSet objectActionSet=(ObjectActionSet)action;
-      final List<ObjectAction> subactions=objectActionSet.getActions();
-      addActions(objectAdapter,subactions,members);
-    }
- else {
-      final LinkFollowSpecs linkFollowSpecs=getLinkFollowSpecs().follow("members[" + action.getId() + "]");
-      final ObjectActionReprRenderer renderer=new ObjectActionReprRenderer(getRendererContext(),linkFollowSpecs,action.getId(),JsonRepresentation.newMap());
-      renderer.with(new ObjectAndAction(objectAdapter,action)).usingLinkTo(linkToBuilder);
-      members.mapPut(action.getId(),renderer.render());
-    }
+    final LinkFollowSpecs linkFollowSpecs=getLinkFollowSpecs().follow("members[" + action.getId() + "]");
+    final ObjectActionReprRenderer renderer=new ObjectActionReprRenderer(getRendererContext(),linkFollowSpecs,action.getId(),JsonRepresentation.newMap());
+    renderer.with(new ObjectAndAction(objectAdapter,action)).usingLinkTo(linkToBuilder);
+    members.mapPut(action.getId(),renderer.render());
   }
 }

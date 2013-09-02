@@ -1,24 +1,18 @@
 {
   for (int i=0; i < actions.size(); i++) {
-    UserAction option=null;
-    if (actions.get(i).getActions().size() > 0) {
-      option=menuOptionSet.addNewActionSet(actions.get(i).getName());
-      menuOptions(actions.get(i).getActions(),target,(UserActionSet)option);
+    final UserAction option;
+    final int noOfParameters=actions.get(i).getParameterCount();
+    if (noOfParameters == 0) {
+      option=ImmediateObjectOption.createOption(actions.get(i),target);
+    }
+ else     if (false) {
+      option=ImmediateObjectOption.createServiceOption(actions.get(i),target);
     }
  else {
-      final int noOfParameters=actions.get(i).getParameterCount();
-      if (noOfParameters == 0) {
-        option=ImmediateObjectOption.createOption(actions.get(i),target);
-      }
- else       if (false) {
-        option=ImmediateObjectOption.createServiceOption(actions.get(i),target);
-      }
- else {
-        option=DialoggedObjectOption.createOption(actions.get(i),target);
-      }
-      if (option != null) {
-        menuOptionSet.add(option);
-      }
+      option=DialoggedObjectOption.createOption(actions.get(i),target);
+    }
+    if (option != null) {
+      menuOptionSet.add(option);
     }
   }
 }

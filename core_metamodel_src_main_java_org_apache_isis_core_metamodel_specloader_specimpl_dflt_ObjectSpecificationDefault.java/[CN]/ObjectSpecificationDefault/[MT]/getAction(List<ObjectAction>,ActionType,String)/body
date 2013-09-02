@@ -2,26 +2,18 @@
   if (id == null) {
     return null;
   }
-  outer:   for (int i=0; i < availableActions.size(); i++) {
+  for (int i=0; i < availableActions.size(); i++) {
     final ObjectAction action=availableActions.get(i);
-    if (action.getActions().size() > 0) {
-      final ObjectAction a=getAction(action.getActions(),type,id);
-      if (a != null) {
-        return a;
-      }
+    if (!type.matchesTypeOf(action)) {
+      continue;
     }
- else {
-      if (!type.matchesTypeOf(action)) {
-        continue outer;
-      }
-      if (id.equals(action.getIdentifier().toNameParmsIdentityString())) {
-        return action;
-      }
-      if (id.equals(action.getIdentifier().toNameIdentityString())) {
-        return action;
-      }
-      continue outer;
+    if (id.equals(action.getIdentifier().toNameParmsIdentityString())) {
+      return action;
     }
+    if (id.equals(action.getIdentifier().toNameIdentityString())) {
+      return action;
+    }
+    continue;
   }
   return null;
 }
