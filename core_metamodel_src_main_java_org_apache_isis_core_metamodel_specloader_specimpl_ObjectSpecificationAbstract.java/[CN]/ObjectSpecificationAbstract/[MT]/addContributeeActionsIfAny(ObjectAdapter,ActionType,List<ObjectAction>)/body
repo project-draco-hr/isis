@@ -1,0 +1,30 @@
+{
+  final ObjectSpecification specification=serviceAdapter.getSpecification();
+  if (specification == this) {
+    return;
+  }
+  final List<ObjectAction> contributeeActions=Lists.newArrayList();
+  final List<ObjectAction> serviceActions=specification.getObjectActions(actionType,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  for (  final ObjectAction serviceAction : serviceActions) {
+    if (serviceAction.isAlwaysHidden()) {
+      continue;
+    }
+    final NotContributedFacet notContributed=serviceAction.getFacet(NotContributedFacet.class);
+    if (notContributed != null && notContributed.toActions()) {
+      continue;
+    }
+    if (!(serviceAction instanceof ObjectActionImpl)) {
+      continue;
+    }
+    ObjectActionImpl contributedAction=(ObjectActionImpl)serviceAction;
+    final int contributeeParam=contributeeParameterMatchOf(contributedAction);
+    if (contributeeParam != -1) {
+      ObjectActionContributee contributeeAction=new ObjectActionContributee(serviceAdapter,contributedAction,contributeeParam,this,objectMemberContext);
+      contributeeActions.add(contributeeAction);
+    }
+  }
+  if (contributeeActions.isEmpty()) {
+    return;
+  }
+  contributeeActionsToAppendTo.addAll(contributeeActions);
+}

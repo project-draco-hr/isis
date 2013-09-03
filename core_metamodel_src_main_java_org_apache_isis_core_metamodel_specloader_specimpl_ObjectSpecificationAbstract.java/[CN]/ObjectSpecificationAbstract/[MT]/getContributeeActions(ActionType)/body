@@ -1,0 +1,12 @@
+{
+  List<ObjectAction> contributeeActions=contributeeActionsByType.get(actionType);
+  if (contributeeActions == null) {
+    contributeeActions=Lists.newArrayList();
+    contributeeActionsByType.put(actionType,contributeeActions);
+    final List<ObjectAdapter> services=getServicesProvider().getServices();
+    for (    final ObjectAdapter serviceAdapter : services) {
+      addContributeeActionsIfAny(serviceAdapter,actionType,contributeeActions);
+    }
+  }
+  return contributeeActions;
+}

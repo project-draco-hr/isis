@@ -1,0 +1,18 @@
+{
+  outer:   for (int i=0; i < candidateActions.size(); i++) {
+    final ObjectAction action=candidateActions.get(i);
+    if (actionName != null && !actionName.equals(action.getId())) {
+      continue outer;
+    }
+    if (action.getParameters().size() != parameters.size()) {
+      continue outer;
+    }
+    for (int j=0; j < parameters.size(); j++) {
+      if (!parameters.get(j).isOfType(action.getParameters().get(j).getSpecification())) {
+        continue outer;
+      }
+    }
+    return action;
+  }
+  return null;
+}
