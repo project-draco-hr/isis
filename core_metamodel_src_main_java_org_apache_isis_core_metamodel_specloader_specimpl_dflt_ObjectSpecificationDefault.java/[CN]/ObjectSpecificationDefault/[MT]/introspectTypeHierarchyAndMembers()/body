@@ -1,7 +1,7 @@
 {
-  Properties properties=null;
+  metadataProperties=null;
   if (isNotIntrospected()) {
-    properties=facetedMethodsBuilder.introspectClass();
+    metadataProperties=facetedMethodsBuilder.introspectClass();
   }
   if (isNotIntrospected()) {
     addNamedFacetAndPluralFacetIfRequired();
@@ -32,17 +32,15 @@
     updateInterfaces(interfaceSpecList);
   }
   if (isNotIntrospected()) {
-    final List<ObjectAssociation> associations=createAssociations(properties);
-    final List<ObjectAssociation> orderedAssociations=sortAssociations(associations);
-    updateAssociations(orderedAssociations);
+    final List<ObjectAssociation> associations=createAssociations(metadataProperties);
+    sortAndUpdateAssociations(associations);
   }
   if (isNotIntrospected()) {
-    final List<ObjectAction> actions=createActions(properties);
-    final List<ObjectAction> orderedActions=sortActions(actions);
-    updateObjectActions(orderedActions);
+    final List<ObjectAction> actions=createActions(metadataProperties);
+    sortAndUpdateActions(actions);
   }
   if (isNotIntrospected()) {
-    facetedMethodsBuilder.introspectClassPostProcessing(properties);
+    facetedMethodsBuilder.introspectClassPostProcessing(metadataProperties);
   }
   if (isNotIntrospected()) {
     updateFromFacetValues();

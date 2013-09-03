@@ -1,7 +1,14 @@
 {
+  if (contributed.isIncluded() && !contributeeActionsAdded) {
+    final List<ObjectAction> actions=Lists.newArrayList(this.objectActions);
+    actions.addAll(createContributeeActions());
+    sortAndUpdateActions(actions);
+    contributeeActionsAdded=true;
+  }
   final List<ObjectAction> actions=Lists.newArrayList();
   for (  final ActionType type : types) {
-    addActions(type,contributed,filter,actions);
+    @SuppressWarnings("unchecked") final List<ObjectAction> filterActions=Lists.newArrayList(Iterables.filter(objectActions,Filters.asPredicate(Filters.and(ObjectAction.Filters.ofType(type),filter))));
+    actions.addAll(filterActions);
   }
   return Lists.newArrayList(Iterables.filter(actions,ContributeeMember.Predicates.regularElse(contributed)));
 }

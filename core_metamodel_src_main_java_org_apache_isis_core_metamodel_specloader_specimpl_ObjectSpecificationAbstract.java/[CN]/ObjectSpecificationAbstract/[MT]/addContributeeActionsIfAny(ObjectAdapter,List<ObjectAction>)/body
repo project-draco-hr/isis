@@ -4,7 +4,7 @@
     return;
   }
   final List<ObjectAction> contributeeActions=Lists.newArrayList();
-  final List<ObjectAction> serviceActions=specification.getObjectActions(actionType,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  final List<ObjectAction> serviceActions=specification.getObjectActions(ActionType.ALL,Contributed.INCLUDED,Filters.<ObjectAction>any());
   for (  final ObjectAction serviceAction : serviceActions) {
     if (serviceAction.isAlwaysHidden()) {
       continue;
@@ -16,7 +16,7 @@
     if (!(serviceAction instanceof ObjectActionImpl)) {
       continue;
     }
-    ObjectActionImpl contributedAction=(ObjectActionImpl)serviceAction;
+    final ObjectActionImpl contributedAction=(ObjectActionImpl)serviceAction;
     final int contributeeParam=contributeeParameterMatchOf(contributedAction);
     if (contributeeParam != -1) {
       ObjectActionContributee contributeeAction=new ObjectActionContributee(serviceAdapter,contributedAction,contributeeParam,this,objectMemberContext);
