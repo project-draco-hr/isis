@@ -2,9 +2,14 @@
   for (  final Object element : orderSet) {
     if (element instanceof FacetedMethod) {
       final FacetedMethod facetedMethod=(FacetedMethod)element;
-      if (facetedMethod.getFeatureType().isAction()) {
-        actionsToAppendTo.add(createAction(facetedMethod));
+      final ObjectAction objectAction=createAction(facetedMethod);
+      if (objectAction != null) {
+        actionsToAppendTo.add(objectAction);
       }
+    }
+ else     if (element instanceof ObjectAction) {
+      final ObjectAction objectAction=(ObjectAction)element;
+      actionsToAppendTo.add(objectAction);
     }
  else     if (element instanceof DeweyOrderSet) {
       final DeweyOrderSet set=((DeweyOrderSet)element);

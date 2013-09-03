@@ -2,12 +2,16 @@
   for (  final Object element : orderSet) {
     if (element instanceof FacetedMethod) {
       final FacetedMethod facetMethod=(FacetedMethod)element;
-      if (facetMethod.getFeatureType().isCollection()) {
-        associationsToAppendTo.add(createCollection(facetMethod));
+      final ObjectAssociation objectAssociation=createAssociation(facetMethod);
+      if (objectAssociation != null) {
+        associationsToAppendTo.add(objectAssociation);
       }
- else       if (facetMethod.getFeatureType().isProperty()) {
-        associationsToAppendTo.add(createProperty(facetMethod));
-      }
+    }
+ else     if (element instanceof OneToManyAssociation) {
+      associationsToAppendTo.add((ObjectAssociation)element);
+    }
+ else     if (element instanceof OneToOneAssociation) {
+      associationsToAppendTo.add((ObjectAssociation)element);
     }
  else     if (element instanceof DeweyOrderSet) {
       DeweyOrderSet childOrderSet=(DeweyOrderSet)element;
