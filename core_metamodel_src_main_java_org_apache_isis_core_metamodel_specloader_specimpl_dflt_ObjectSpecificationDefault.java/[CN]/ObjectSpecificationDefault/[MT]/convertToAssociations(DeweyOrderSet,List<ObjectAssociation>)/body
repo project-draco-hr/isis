@@ -3,15 +3,15 @@
     if (element instanceof FacetedMethod) {
       final FacetedMethod facetMethod=(FacetedMethod)element;
       if (facetMethod.getFeatureType().isCollection()) {
-        associations.add(createCollection(facetMethod));
+        associationsToAppendTo.add(createCollection(facetMethod));
       }
  else       if (facetMethod.getFeatureType().isProperty()) {
-        associations.add(createProperty(facetMethod));
+        associationsToAppendTo.add(createProperty(facetMethod));
       }
     }
  else     if (element instanceof DeweyOrderSet) {
       DeweyOrderSet childOrderSet=(DeweyOrderSet)element;
-      addAssociations(childOrderSet,associations);
+      convertToAssociations(childOrderSet,associationsToAppendTo);
     }
  else {
       throw new UnknownTypeException(element);

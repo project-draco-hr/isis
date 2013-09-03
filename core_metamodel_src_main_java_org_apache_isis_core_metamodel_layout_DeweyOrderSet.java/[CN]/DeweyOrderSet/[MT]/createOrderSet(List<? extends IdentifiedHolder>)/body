@@ -1,16 +1,16 @@
 {
-  final SortedMap<String,SortedSet<FacetedMethod>> sortedMembersByGroup=Maps.newTreeMap();
-  final SortedSet<FacetedMethod> nonAnnotatedGroup=Sets.newTreeSet(new MemberIdentifierComparator());
-  for (  final FacetedMethod facetedMethod : facetedMethods) {
+  final SortedMap<String,SortedSet<IdentifiedHolder>> sortedMembersByGroup=Maps.newTreeMap();
+  final SortedSet<IdentifiedHolder> nonAnnotatedGroup=Sets.newTreeSet(new MemberIdentifierComparator());
+  for (  final IdentifiedHolder facetedMethod : facetedMethods) {
     final MemberOrderFacet memberOrder=facetedMethod.getFacet(MemberOrderFacet.class);
     if (memberOrder == null) {
       nonAnnotatedGroup.add(facetedMethod);
       continue;
     }
-    final SortedSet<FacetedMethod> sortedMembersForGroup=getSortedSet(sortedMembersByGroup,memberOrder.name());
+    final SortedSet<IdentifiedHolder> sortedMembersForGroup=getSortedSet(sortedMembersByGroup,memberOrder.name());
     sortedMembersForGroup.add(facetedMethod);
   }
-  final SortedSet<FacetedMethod> defaultSet=getSortedSet(sortedMembersByGroup,"");
+  final SortedSet<IdentifiedHolder> defaultSet=getSortedSet(sortedMembersByGroup,"");
   defaultSet.addAll(nonAnnotatedGroup);
   final Set<String> groupNames=sortedMembersByGroup.keySet();
   final SortedMap<String,DeweyOrderSet> orderSetsByGroup=Maps.newTreeMap();

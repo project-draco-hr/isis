@@ -34,12 +34,24 @@
   final List<FacetedMethod> associationFacetedMethods=facetedMethodsBuilder.getAssociationFacetedMethods(properties);
   final List<FacetedMethod> actionFacetedMethods=facetedMethodsBuilder.getActionFacetedMethods(properties);
   if (isNotIntrospected()) {
-    final DeweyOrderSet associationOrderSet=createAssociationOrderSetFor(this,associationFacetedMethods);
-    updateAssociations(asFlattenedAssociations(associationOrderSet));
+    final DeweyOrderSet orderSet=DeweyOrderSet.createOrderSet(associationFacetedMethods);
+    final MemberGroupLayoutFacet memberGroupLayoutFacet=this.getFacet(MemberGroupLayoutFacet.class);
+    if (memberGroupLayoutFacet != null) {
+      final List<String> groupOrder=Lists.newArrayList();
+      groupOrder.addAll(memberGroupLayoutFacet.getLeft());
+      groupOrder.addAll(memberGroupLayoutFacet.getMiddle());
+      groupOrder.addAll(memberGroupLayoutFacet.getRight());
+      orderSet.reorderChildren(groupOrder);
+    }
+    final List<ObjectAssociation> associations=Lists.newArrayList();
+    convertToAssociations(orderSet,associations);
+    updateAssociations(associations);
   }
   if (isNotIntrospected()) {
-    final DeweyOrderSet actionOrderSet=createActionOrderSetFor(this,actionFacetedMethods);
-    updateObjectActions(asObjectActions(actionOrderSet));
+    final DeweyOrderSet orderSet=DeweyOrderSet.createOrderSet(actionFacetedMethods);
+    final List<ObjectAction> actions=Lists.newArrayList();
+    convertToObjectActions(orderSet,actions);
+    updateObjectActions(actions);
   }
   if (isNotIntrospected()) {
     facetedMethodsBuilder.introspectClassPostProcessing(properties);
