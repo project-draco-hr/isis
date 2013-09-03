@@ -1,0 +1,14 @@
+{
+  final DeweyOrderSet orderSet=DeweyOrderSet.createOrderSet(associations);
+  final MemberGroupLayoutFacet memberGroupLayoutFacet=this.getFacet(MemberGroupLayoutFacet.class);
+  if (memberGroupLayoutFacet != null) {
+    final List<String> groupOrder=Lists.newArrayList();
+    groupOrder.addAll(memberGroupLayoutFacet.getLeft());
+    groupOrder.addAll(memberGroupLayoutFacet.getMiddle());
+    groupOrder.addAll(memberGroupLayoutFacet.getRight());
+    orderSet.reorderChildren(groupOrder);
+  }
+  final List<ObjectAssociation> orderedAssociations=Lists.newArrayList();
+  sortAssociations(orderSet,orderedAssociations);
+  return orderedAssociations;
+}
