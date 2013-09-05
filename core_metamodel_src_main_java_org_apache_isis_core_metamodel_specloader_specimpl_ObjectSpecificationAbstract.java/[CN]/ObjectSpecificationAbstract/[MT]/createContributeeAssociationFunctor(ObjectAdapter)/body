@@ -1,0 +1,11 @@
+{
+  return new Function<ObjectActionImpl,ObjectAssociation>(){
+    @Override public ObjectAssociation apply(    ObjectActionImpl input){
+      final ObjectSpecification returnType=input.getReturnType();
+      final ObjectAssociationAbstract association=returnType.isNotCollection() ? new OneToOneAssociationContributee(serviceAdapter,input,objectMemberContext) : new OneToManyAssociationContributee(serviceAdapter,input,objectMemberContext);
+      facetProcessor.processMemberOrder(metadataProperties,association);
+      return association;
+    }
+  }
+;
+}

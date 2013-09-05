@@ -6,7 +6,7 @@
   final List<ObjectAction> contributeeActions=Lists.newArrayList();
   final List<ObjectAction> serviceActions=specification.getObjectActions(ActionType.ALL,Contributed.INCLUDED,Filters.<ObjectAction>any());
   for (  final ObjectAction serviceAction : serviceActions) {
-    if (serviceAction.isAlwaysHidden()) {
+    if (isAlwaysHidden(serviceAction)) {
       continue;
     }
     final NotContributedFacet notContributed=serviceAction.getFacet(NotContributedFacet.class);
@@ -20,11 +20,9 @@
     final int contributeeParam=contributeeParameterMatchOf(contributedAction);
     if (contributeeParam != -1) {
       ObjectActionContributee contributeeAction=new ObjectActionContributee(serviceAdapter,contributedAction,contributeeParam,this,objectMemberContext);
+      facetProcessor.processMemberOrder(metadataProperties,contributeeAction);
       contributeeActions.add(contributeeAction);
     }
-  }
-  if (contributeeActions.isEmpty()) {
-    return;
   }
   contributeeActionsToAppendTo.addAll(contributeeActions);
 }
