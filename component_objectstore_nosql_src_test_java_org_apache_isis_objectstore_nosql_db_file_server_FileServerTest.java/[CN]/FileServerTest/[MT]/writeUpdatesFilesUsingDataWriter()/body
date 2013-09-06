@@ -4,7 +4,7 @@
   final String originalData="org.domain.Class 1026 21 {}";
   fileWriter.write(originalData);
   fileWriter.close();
-  final ServerConnection connection=new ServerConnection(IoUtils.asUtf8ByteStream("W\nUorg.domain.Class2 1026 21 22 \n{data2}\n\n\n"),out);
+  final ServerConnection connection=new ServerConnection(InputStreamExtensions.asUtf8ByteStream("W\nUorg.domain.Class2 1026 21 22 \n{data2}\n\n\n"),out);
   server.process(connection);
   assertThat(out.toString(),is(equalTo("ok\n")));
   assertThat(file2.length(),is(greaterThan((long)originalData.length())));

@@ -1,0 +1,27 @@
+{
+  if (extendee == null) {
+    return null;
+  }
+  if (!requiredClass.isAssignableFrom(extendee)) {
+    return null;
+  }
+  try {
+    extendee.getConstructor(new Class[]{constructorParamType});
+  }
+ catch (  final NoSuchMethodException ex) {
+    try {
+      extendee.getConstructor(new Class[]{});
+    }
+ catch (    final NoSuchMethodException e) {
+      return null;
+    }
+  }
+catch (  final SecurityException e) {
+    return null;
+  }
+  final int modifiers=extendee.getModifiers();
+  if (!Modifier.isPublic(modifiers)) {
+    return null;
+  }
+  return extendee;
+}

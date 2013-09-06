@@ -1,14 +1,14 @@
 {
   super(collectionToProxy,collectionName,handler,otma);
   try {
-    intercept(getMethod(collectionToProxy,"containsKey",Object.class));
-    intercept(getMethod(collectionToProxy,"containsValue",Object.class));
-    intercept(getMethod(collectionToProxy,"size"));
-    intercept(getMethod(collectionToProxy,"isEmpty"));
-    veto(getMethod(collectionToProxy,"put",Object.class,Object.class));
-    veto(getMethod(collectionToProxy,"remove",Object.class));
-    veto(getMethod(collectionToProxy,"putAll",Map.class));
-    veto(getMethod(collectionToProxy,"clear"));
+    intercept(ObjectExtensions.getMethod(collectionToProxy,"containsKey",Object.class));
+    intercept(ObjectExtensions.getMethod(collectionToProxy,"containsValue",Object.class));
+    intercept(ObjectExtensions.getMethod(collectionToProxy,"size"));
+    intercept(ObjectExtensions.getMethod(collectionToProxy,"isEmpty"));
+    veto(ObjectExtensions.getMethod(collectionToProxy,"put",Object.class,Object.class));
+    veto(ObjectExtensions.getMethod(collectionToProxy,"remove",Object.class));
+    veto(ObjectExtensions.getMethod(collectionToProxy,"putAll",Map.class));
+    veto(ObjectExtensions.getMethod(collectionToProxy,"clear"));
   }
  catch (  final NoSuchMethodException e) {
     throw new RuntimeException("A Collection method could not be found: " + e.getMessage());

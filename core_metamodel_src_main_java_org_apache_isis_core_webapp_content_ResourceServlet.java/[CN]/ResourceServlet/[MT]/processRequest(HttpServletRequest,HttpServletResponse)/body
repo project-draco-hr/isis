@@ -1,5 +1,5 @@
 {
-  final String servletPath=StringUtils.stripLeadingSlash(request.getServletPath());
+  final String servletPath=StringExtensions.stripLeadingSlash(request.getServletPath());
   if (LOG.isInfoEnabled()) {
     LOG.info("request: " + servletPath);
   }
@@ -9,7 +9,7 @@
       LOG.debug("request: " + servletPath + " loaded from filesystem");
     }
     writeContentType(request,response);
-    IoUtils.copy(is2,response.getOutputStream());
+    InputStreamExtensions.copyTo(is2,response.getOutputStream());
     is2.close();
     return;
   }
@@ -19,7 +19,7 @@
       LOG.debug("request: " + servletPath + " loaded from classpath");
     }
     writeContentType(request,response);
-    IoUtils.copy(is,response.getOutputStream());
+    InputStreamExtensions.copyTo(is,response.getOutputStream());
     is.close();
     return;
   }

@@ -1,3 +1,14 @@
 {
-  return Lists.transform(entityCollectionModel.mementoList,ObjectAdapters.fromMemento());
+  final ObjectAdapter adapter=entityCollectionModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final OneToManyAssociation collection=entityCollectionModel.collectionMemento.getCollection();
+  final ObjectAdapter collectionAsAdapter=collection.get(adapter);
+  final List<Object> objectList=asIterable(collectionAsAdapter);
+  final Class<? extends Comparator<?>> sortedBy=entityCollectionModel.sortedBy;
+  if (sortedBy != null) {
+    @SuppressWarnings("unchecked") final Comparator<Object> comparator=(Comparator<Object>)InstanceUtil.createInstance(sortedBy);
+    Collections.sort(objectList,comparator);
+  }
+  final Iterable<ObjectAdapter> adapterIterable=Iterables.transform(objectList,ObjectAdapterFunctions.fromPojo(getAdapterManagerStatic()));
+  final List<ObjectAdapter> adapterList=Lists.newArrayList(adapterIterable);
+  return adapterList;
 }

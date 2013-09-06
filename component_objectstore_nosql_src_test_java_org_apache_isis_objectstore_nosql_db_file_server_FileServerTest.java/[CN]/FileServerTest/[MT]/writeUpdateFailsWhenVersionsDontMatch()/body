@@ -4,7 +4,7 @@
   final String originalData="org.domain.Class 1026 21\n{datax}\n\n\n***";
   fileWriter.write(originalData);
   fileWriter.close();
-  final ServerConnection connection=new ServerConnection(IoUtils.asUtf8ByteStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n\n\n"),out);
+  final ServerConnection connection=new ServerConnection(InputStreamExtensions.asUtf8ByteStream("W\nUorg.domain.Class 1026 19 21 \n{data2}\n\n\n"),out);
   server.process(connection);
   assertThat(out.toString(),is(equalTo("error\nmismatch between FileContent version (19) and DataReader version (21)\n")));
 }

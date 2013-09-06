@@ -1,0 +1,15 @@
+{
+  try {
+    return method.invoke(object,parameters);
+  }
+ catch (  final IllegalArgumentException e) {
+    throw e;
+  }
+catch (  final InvocationTargetException e) {
+    ThrowableExtensions.throwWithinIsisException(e,"Exception executing " + method);
+    return null;
+  }
+catch (  final IllegalAccessException e) {
+    throw new MetaModelException("illegal access of " + method,e);
+  }
+}
