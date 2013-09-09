@@ -6,6 +6,9 @@
   for (  String packagePrefix : Splitter.on(",").split(packagePrefixes)) {
     Reflections reflections=new Reflections(packagePrefix);
     Set<Class<?>> entityTypes=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
+    if (noEntitiesIn(entityTypes)) {
+      LOG.error("Could not locate any PersistenceCapable entities in " + packagePrefix);
+    }
     for (    Class<?> entityType : entityTypes) {
       IsisContext.getSpecificationLoader().loadSpecification(entityType);
     }

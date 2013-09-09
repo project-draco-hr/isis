@@ -1,0 +1,11 @@
+{
+  final DeploymentTypeWicketAbstract prototype=new WicketServerPrototype();
+  final DeploymentTypeWicketAbstract deployment=new WicketServer();
+  if (deploymentTypeFromConfig != null) {
+    final DeploymentType deploymentType=DeploymentType.lookup(deploymentTypeFromConfig);
+    return !deploymentType.getDeploymentCategory().isProduction() ? prototype : deployment;
+  }
+ else {
+    return usesDevelopmentConfig() ? prototype : deployment;
+  }
+}

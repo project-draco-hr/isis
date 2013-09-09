@@ -5,8 +5,8 @@
   getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
   getRequestCycleListeners().add(new WebRequestCycleForIsis());
   getResourceSettings().setParentFolderPlaceholder("$up$");
-  final DeploymentType deploymentType=determineDeploymentType();
   final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
+  determineDeploymentTypeIfRequired();
   final IsisInjectModule isisModule=newIsisModule(deploymentType,isisConfigurationBuilder);
   final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
   injector.injectMembers(this);
