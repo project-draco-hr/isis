@@ -6,7 +6,7 @@
   final List<ObjectAssociation> associations=visibleProperties(adapter,objSpec,Where.OBJECT_FORMS);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   markupContainer.add(memberGroupRv);
-  Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociations.groupByMemberOrderName(associations);
+  Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociation.Util.groupByMemberOrderName(associations);
   final List<String> groupNames=ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   for (  String groupName : groupNames) {
     final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
@@ -17,13 +17,11 @@
     memberGroupRv.add(memberGroupRvContainer);
     memberGroupRvContainer.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
     final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
-    final EvenOrOddCssClassAppenderFactory eo=new EvenOrOddCssClassAppenderFactory();
     memberGroupRvContainer.add(propertyRv);
     @SuppressWarnings("unused") Component component;
     for (    final ObjectAssociation association : associationsInGroup) {
       final WebMarkupContainer propertyRvContainer=new WebMarkupContainer(propertyRv.newChildId());
       propertyRv.add(propertyRvContainer);
-      propertyRvContainer.add(eo.nextClass());
       addPropertyToForm(entityModel,association,propertyRvContainer);
     }
   }
