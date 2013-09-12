@@ -1,10 +1,13 @@
 {
-  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(transientObject);
+  final ObjectAdapter adapter=getAdapterManager().adapterFor(domainObject);
+  if (adapter == null) {
+    throw new PersistFailedException("Object not known to framework; instantiate using newTransientInstance(...) rather than simply new'ing up.");
+  }
   if (adapter.isParented()) {
     return;
   }
-  if (isPersistent(transientObject)) {
-    throw new PersistFailedException("Object already persistent: " + adapter);
+  if (isPersistent(domainObject)) {
+    throw new PersistFailedException("Object already persistent; OID=" + adapter.getOid());
   }
   getObjectPersistor().makePersistent(adapter);
 }
