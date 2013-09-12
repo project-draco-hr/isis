@@ -1,6 +1,9 @@
 {
   final String configLocation=servletContext.getInitParameter(WebAppConstants.CONFIG_DIR_PARAM);
-  final ResourceStreamSourceComposite compositeSource=new ResourceStreamSourceComposite(new ResourceStreamSourceForWebInf(servletContext),ResourceStreamSourceContextLoaderClassPath.create(),new ResourceStreamSourceCurrentClassClassPath());
+  final ResourceStreamSourceForWebInf rssWebInf=new ResourceStreamSourceForWebInf(servletContext);
+  final ResourceStreamSourceContextLoaderClassPath rssContextLoaderClassPath=ResourceStreamSourceContextLoaderClassPath.create();
+  final ResourceStreamSourceCurrentClassClassPath rssCurrentClassPath=new ResourceStreamSourceCurrentClassClassPath();
+  final ResourceStreamSourceComposite compositeSource=new ResourceStreamSourceComposite(rssWebInf,rssContextLoaderClassPath,rssCurrentClassPath);
   if (configLocation != null) {
     LOG.info("Config override location: " + configLocation);
     compositeSource.addResourceStreamSource(ResourceStreamSourceFileSystem.create(configLocation));

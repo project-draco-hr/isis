@@ -2,8 +2,14 @@
   if (deploymentType != null) {
     return;
   }
-  final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
-  final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
-  String deploymentTypeFromConfig=configuration.getString("isis.deploymentType");
-  deploymentType=determineDeploymentType(deploymentTypeFromConfig);
+  determiningDeploymentType=true;
+  try {
+    final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
+    final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
+    String deploymentTypeFromConfig=configuration.getString("isis.deploymentType");
+    deploymentType=determineDeploymentType(deploymentTypeFromConfig);
+  }
+  finally {
+    determiningDeploymentType=false;
+  }
 }
