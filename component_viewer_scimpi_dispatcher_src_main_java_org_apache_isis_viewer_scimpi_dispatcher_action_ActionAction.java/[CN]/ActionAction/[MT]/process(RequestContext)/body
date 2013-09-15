@@ -16,7 +16,8 @@
     if (session == null && action.isVisible(new AnonymousSession(),object,where).isVetoed()) {
       session=new AnonymousSession();
     }
-    object.checkLock(context.getVersion(version));
+    final Version originalVersion=context.getVersion(version);
+    object.checkLock(originalVersion);
     if (entryState.isValid()) {
       final boolean hasResult=invokeMethod(context,resultName,object,action,entryState);
       String view=context.getParameter(hasResult ? "_" + VIEW : "_" + VOID);

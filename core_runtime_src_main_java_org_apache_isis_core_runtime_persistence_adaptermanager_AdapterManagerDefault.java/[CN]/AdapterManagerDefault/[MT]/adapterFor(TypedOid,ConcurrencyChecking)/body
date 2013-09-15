@@ -14,12 +14,24 @@
     final RootOid recreatedOid=(RootOid)adapterOid;
     final RootOid originalOid=(RootOid)typedOid;
     try {
-      if (concurrencyChecking == ConcurrencyChecking.CHECK) {
-        recreatedOid.checkLock(getAuthenticationSession().getUserName(),originalOid);
+      if (concurrencyChecking.isChecking()) {
+        final Version otherVersion=originalOid.getVersion();
+        final Version thisVersion=recreatedOid.getVersion();
+        if (thisVersion != null && otherVersion != null && thisVersion.different(otherVersion)) {
+          if (ConcurrencyException.concurrencyChecking.get().isChecking()) {
+            LOG.info("concurrency conflict detected on " + recreatedOid + " ("+ otherVersion+ ")");
+            final String currentUser=getAuthenticationSession().getUserName();
+            throw new ConcurrencyException(currentUser,recreatedOid,thisVersion,otherVersion);
+          }
+ else {
+            LOG.warn("concurrency conflict detected but suppressed, on " + recreatedOid + " ("+ otherVersion+ ")");
+          }
+        }
       }
     }
   finally {
-      originalOid.setVersion(recreatedOid.getVersion());
+      final Version recreatedVersion=recreatedOid.getVersion();
+      originalOid.setVersion(recreatedVersion);
     }
   }
   return adapter;

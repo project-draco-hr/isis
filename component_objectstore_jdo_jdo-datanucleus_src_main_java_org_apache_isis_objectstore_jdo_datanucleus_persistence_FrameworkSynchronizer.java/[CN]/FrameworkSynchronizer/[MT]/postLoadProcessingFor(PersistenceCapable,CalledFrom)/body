@@ -2,37 +2,46 @@
   withLogging(pojo,new Runnable(){
     @Override public void run(){
       final Version datastoreVersion=getVersionIfAny(pojo);
-      final RootOid oid;
-      ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
-      if (adapter != null) {
+      final RootOid originalOid;
+      ObjectAdapter originalAdapter=getAdapterManager().getAdapterFor(pojo);
+      if (originalAdapter != null) {
         ensureRootObject(pojo);
-        oid=(RootOid)adapter.getOid();
-        final Version previousVersion=adapter.getVersion();
-        getPersistenceSession().remapRecreatedPojo(adapter,pojo);
-        if (previousVersion != null && datastoreVersion != null) {
-          if (previousVersion.different(datastoreVersion)) {
-            getCurrentTransaction().setAbortCause(new ConcurrencyException(getAuthenticationSession().getUserName(),oid,previousVersion,datastoreVersion));
+        originalOid=(RootOid)originalAdapter.getOid();
+        final Version originalVersion=originalAdapter.getVersion();
+        getPersistenceSession().remapRecreatedPojo(originalAdapter,pojo);
+        final RootOid thisOid=originalOid;
+        final Version thisVersion=originalVersion;
+        final Version otherVersion=datastoreVersion;
+        if (thisVersion != null && otherVersion != null && thisVersion.different(otherVersion)) {
+          if (ConcurrencyException.concurrencyChecking.get().isChecking()) {
+            LOG.info("concurrency conflict detected on " + thisOid + " ("+ otherVersion+ ")");
+            final String currentUser=getAuthenticationSession().getUserName();
+            final ConcurrencyException abortCause=new ConcurrencyException(currentUser,thisOid,thisVersion,otherVersion);
+            getCurrentTransaction().setAbortCause(abortCause);
+          }
+ else {
+            LOG.warn("concurrency conflict detected but suppressed, on " + thisOid + " ("+ otherVersion+ ")");
           }
         }
       }
  else {
         final OidGenerator oidGenerator=getOidGenerator();
-        oid=oidGenerator.createPersistent(pojo,null);
-        adapter=getAdapterManager().getAdapterFor(oid);
-        if (adapter != null) {
-          getPersistenceSession().remapRecreatedPojo(adapter,pojo);
+        originalOid=oidGenerator.createPersistent(pojo,null);
+        originalAdapter=getAdapterManager().getAdapterFor(originalOid);
+        if (originalAdapter != null) {
+          getPersistenceSession().remapRecreatedPojo(originalAdapter,pojo);
         }
  else {
-          adapter=getPersistenceSession().mapRecreatedPojo(oid,pojo);
+          originalAdapter=getPersistenceSession().mapRecreatedPojo(originalOid,pojo);
         }
       }
-      if (!adapter.isResolved()) {
-        PersistorUtil.startResolving(adapter);
-        PersistorUtil.toEndState(adapter);
+      if (!originalAdapter.isResolved()) {
+        PersistorUtil.startResolving(originalAdapter);
+        PersistorUtil.toEndState(originalAdapter);
       }
-      adapter.setVersion(datastoreVersion);
+      originalAdapter.setVersion(datastoreVersion);
       if (pojo.jdoIsDeleted()) {
-        adapter.changeState(ResolveState.DESTROYED);
+        originalAdapter.changeState(ResolveState.DESTROYED);
       }
       ensureFrameworksInAgreement(pojo);
     }
