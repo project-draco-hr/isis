@@ -1,17 +1,29 @@
 {
-  try {
-    objectStore.execute(Collections.unmodifiableList(commands));
-    for (    final PersistenceCommand command : commands) {
-      if (command instanceof DestroyObjectCommand) {
-        final ObjectAdapter adapter=command.onAdapter();
-        adapter.setVersion(null);
-        if (!adapter.isDestroyed()) {
-          adapter.changeState(ResolveState.DESTROYED);
+  int i=0;
+  do {
+    final List<PersistenceCommand> commandsPrior=Collections.unmodifiableList(Lists.newArrayList(commands));
+    try {
+      objectStore.execute(commandsPrior);
+      for (      final PersistenceCommand command : commandsPrior) {
+        if (command instanceof DestroyObjectCommand) {
+          final ObjectAdapter adapter=command.onAdapter();
+          adapter.setVersion(null);
+          if (!adapter.isDestroyed()) {
+            adapter.changeState(ResolveState.DESTROYED);
+          }
         }
       }
+      commands.removeAll(commandsPrior);
+    }
+ catch (    final RuntimeException ex) {
+      commands.clear();
+      throw ex;
     }
   }
-  finally {
+ while (!commands.isEmpty() && i++ < MAX_FLUSH_ATTEMPTS);
+  if (!commands.isEmpty()) {
+    final List<PersistenceCommand> commandsStillToFlush=Collections.unmodifiableList(Lists.newArrayList(commands));
     commands.clear();
+    throw new ObjectPersistenceException("Failed to flush transaction after " + MAX_FLUSH_ATTEMPTS + " attempts; commands still to flush:\n "+ commandsStillToFlush.toString());
   }
 }
