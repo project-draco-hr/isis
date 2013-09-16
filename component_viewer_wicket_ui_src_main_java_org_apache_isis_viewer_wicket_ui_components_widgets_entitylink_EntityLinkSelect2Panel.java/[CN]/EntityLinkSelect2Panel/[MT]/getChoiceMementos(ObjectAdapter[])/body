@@ -1,13 +1,9 @@
 {
+  final List<ObjectAdapter> choices=Lists.newArrayList();
   final ScalarModel scalarModel=(ScalarModel)getScalarModel();
   ;
-  final boolean hasChoices=scalarModel.hasChoices();
-  if (!hasChoices) {
-    return Collections.emptyList();
-  }
-  final List<ObjectAdapter> choices=scalarModel.getChoices(argsIfAvailable);
-  if (choices.isEmpty()) {
-    return Collections.emptyList();
+  if (scalarModel.hasChoices()) {
+    choices.addAll(scalarModel.getChoices(argsIfAvailable));
   }
   return Lists.newArrayList(Lists.transform(choices,MementoFunctions.fromAdapter()));
 }

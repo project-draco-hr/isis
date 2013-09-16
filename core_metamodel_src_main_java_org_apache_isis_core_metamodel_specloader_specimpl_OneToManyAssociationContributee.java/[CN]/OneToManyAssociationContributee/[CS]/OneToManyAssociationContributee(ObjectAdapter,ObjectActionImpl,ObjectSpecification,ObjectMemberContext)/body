@@ -1,0 +1,22 @@
+{
+  super(serviceAction.getFacetedMethod(),typeOfSpec(serviceAction,objectMemberContext),objectMemberContext);
+  this.serviceAdapter=serviceAdapter;
+  this.objectAction=serviceAction;
+  renderFacet=new RenderFacetAbstract(Render.Type.EAGERLY,this){
+  }
+;
+  notPersistedFacet=new NotPersistedFacetAbstract(this){
+  }
+;
+  typeOfFacet=new TypeOfFacetAbstract(getSpecification().getCorrespondingClass(),this,objectMemberContext.getSpecificationLookup()){
+  }
+;
+  FacetUtil.copyFacets(serviceAction.getFacetedMethod(),facetHolder);
+  FacetUtil.addFacet(renderFacet);
+  FacetUtil.addFacet(notPersistedFacet);
+  FacetUtil.addFacet(typeOfFacet);
+  final Identifier contributorIdentifier=serviceAction.getFacetedMethod().getIdentifier();
+  final String memberName=contributorIdentifier.getMemberName();
+  List<String> memberParameterNames=contributorIdentifier.getMemberParameterNames();
+  identifier=Identifier.actionIdentifier(contributeeType.getCorrespondingClass().getName(),memberName,memberParameterNames);
+}

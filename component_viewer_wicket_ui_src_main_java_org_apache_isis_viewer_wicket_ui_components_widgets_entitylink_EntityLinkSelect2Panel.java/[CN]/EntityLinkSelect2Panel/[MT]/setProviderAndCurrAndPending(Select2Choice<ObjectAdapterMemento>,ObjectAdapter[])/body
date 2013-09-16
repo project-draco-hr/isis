@@ -1,0 +1,16 @@
+{
+  if (getScalarModel().hasChoices()) {
+    final List<ObjectAdapterMemento> choiceMementos=getChoiceMementos(argsIfAvailable);
+    select2Field.setProvider(providerForChoices(choiceMementos));
+    getScalarModel().clearPending();
+    resetIfCurrentNotInChoices(select2Field,choiceMementos);
+  }
+ else   if (hasParamOrPropertyAutoComplete()) {
+    select2Field.setProvider(providerForParamOrPropertyAutoComplete());
+    getScalarModel().clearPending();
+  }
+ else {
+    select2Field.setProvider(providerForObjectAutoComplete());
+    getScalarModel().clearPending();
+  }
+}

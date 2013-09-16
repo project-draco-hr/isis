@@ -3,14 +3,10 @@
   return new ObjectAdapterMementoProviderAbstract(){
     private static final long serialVersionUID=1L;
     @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
+      final List<ObjectAdapter> autoCompleteChoices=Lists.newArrayList();
       final ScalarModel scalarModel=(ScalarModel)entityModel;
-      final boolean hasAutoComplete=scalarModel.hasAutoComplete();
-      if (!hasAutoComplete) {
-        return Collections.emptyList();
-      }
-      final List<ObjectAdapter> autoCompleteChoices=scalarModel.getAutoComplete(term);
-      if (autoCompleteChoices.isEmpty()) {
-        return Collections.emptyList();
+      if (scalarModel.hasAutoComplete()) {
+        autoCompleteChoices.addAll(scalarModel.getAutoComplete(term));
       }
       return Lists.newArrayList(Lists.transform(autoCompleteChoices,MementoFunctions.fromAdapter()));
     }

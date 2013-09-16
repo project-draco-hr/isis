@@ -3,18 +3,18 @@
     permanentlyHide(ID_AUTO_COMPLETE);
     return;
   }
-  final IModel<ObjectAdapterMemento> model=Util.createModel(getScalarModel().asScalarModelWithPending());
+  final IModel<ObjectAdapterMemento> model=ScalarModelWithPending.Util.createModel(getScalarModel().asScalarModelWithPending());
   if (select2Field == null) {
     select2Field=new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE,model);
-    setChoices(getScalarModel().getActionArgsHint());
+    setProviderAndCurrAndPending(select2Field,getScalarModel().getActionArgsHint());
     if (!getScalarModel().hasChoices()) {
       final Settings settings=select2Field.getSettings();
-      ScalarModel scalarModel=(ScalarModel)getScalarModel();
+      ScalarModel scalarModel=getScalarModel();
       final int minLength=scalarModel.getAutoCompleteMinLength();
       settings.setMinimumInputLength(minLength);
+      settings.setPlaceholder(scalarModel.getName());
     }
     addOrReplace(select2Field);
   }
   permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
-  permanentlyHide(ID_ENTITY_TITLE_NULL);
 }
