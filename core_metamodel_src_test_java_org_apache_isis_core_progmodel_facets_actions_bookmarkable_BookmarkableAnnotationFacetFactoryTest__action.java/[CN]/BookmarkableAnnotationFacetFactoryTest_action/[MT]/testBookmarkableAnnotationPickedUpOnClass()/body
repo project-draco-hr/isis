@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Bookmarkable(BookmarkPolicy.AS_CHILD) public void placeOrder(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"placeOrder");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(BookmarkPolicyFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof BookmarkPolicyFacetAbstract);
+  assertNoMethodsRemoved();
+}
