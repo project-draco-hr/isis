@@ -1,15 +1,15 @@
 {
 class Customer {
-    @Disabled public Collection<?> getOrders(){
-      return null;
+    @Disabled(reason="Oh no you don't!") public int getNumberOfOrders(){
+      return 0;
     }
   }
-  final Method actionMethod=findMethod(Customer.class,"getOrders");
+  final Method actionMethod=findMethod(Customer.class,"getNumberOfOrders");
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(DisabledFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof DisabledFacetAbstract);
   final DisabledFacet disabledFacet=(DisabledFacet)facet;
-  assertThat(disabledFacet.disabledReason(null),is("Always disabled"));
+  assertThat(disabledFacet.disabledReason(null),is("Oh no you don't!"));
   assertNoMethodsRemoved();
 }

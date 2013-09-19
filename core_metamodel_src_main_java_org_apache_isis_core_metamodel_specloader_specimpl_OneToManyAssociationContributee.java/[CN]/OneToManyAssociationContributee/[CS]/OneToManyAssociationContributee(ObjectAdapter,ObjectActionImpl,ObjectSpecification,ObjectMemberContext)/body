@@ -2,18 +2,20 @@
   super(serviceAction.getFacetedMethod(),typeOfSpec(serviceAction,objectMemberContext),objectMemberContext);
   this.serviceAdapter=serviceAdapter;
   this.objectAction=serviceAction;
-  renderFacet=new RenderFacetAbstract(Render.Type.EAGERLY,this){
-  }
-;
-  notPersistedFacet=new NotPersistedFacetAbstract(this){
-  }
-;
-  typeOfFacet=new TypeOfFacetAbstract(getSpecification().getCorrespondingClass(),this,objectMemberContext.getSpecificationLookup()){
-  }
-;
   FacetUtil.copyFacets(serviceAction.getFacetedMethod(),facetHolder);
+  final RenderFacet renderFacet=new RenderFacetAbstract(Render.Type.EAGERLY,this){
+  }
+;
+  final NotPersistedFacet notPersistedFacet=new NotPersistedFacetAbstract(this){
+  }
+;
+  final DisabledFacet disabledFacet=disabledFacet();
+  final TypeOfFacet typeOfFacet=new TypeOfFacetAbstract(getSpecification().getCorrespondingClass(),this,objectMemberContext.getSpecificationLookup()){
+  }
+;
   FacetUtil.addFacet(renderFacet);
   FacetUtil.addFacet(notPersistedFacet);
+  FacetUtil.addFacet(disabledFacet);
   FacetUtil.addFacet(typeOfFacet);
   final Identifier contributorIdentifier=serviceAction.getFacetedMethod().getIdentifier();
   final String memberName=contributorIdentifier.getMemberName();

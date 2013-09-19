@@ -1,6 +1,6 @@
 {
   if (when() == When.ALWAYS) {
-    return "Always disabled";
+    return disabledReasonElse("Always disabled");
   }
  else   if (when() == When.NEVER) {
     return null;
@@ -9,10 +9,10 @@
     return null;
   }
   if (when() == When.UNTIL_PERSISTED) {
-    return targetAdapter.isTransient() ? "Disabled until persisted" : null;
+    return targetAdapter.isTransient() ? disabledReasonElse("Disabled until persisted") : null;
   }
  else   if (when() == When.ONCE_PERSISTED) {
-    return targetAdapter.representsPersistent() ? "Disabled once persisted" : null;
+    return targetAdapter.representsPersistent() ? disabledReasonElse("Disabled once persisted") : null;
   }
   return null;
 }
