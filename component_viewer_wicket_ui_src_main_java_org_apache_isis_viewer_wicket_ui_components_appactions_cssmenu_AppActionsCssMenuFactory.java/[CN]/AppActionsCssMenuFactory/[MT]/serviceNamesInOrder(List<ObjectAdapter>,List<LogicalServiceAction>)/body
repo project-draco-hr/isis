@@ -1,5 +1,10 @@
 {
   final List<String> serviceNameOrder=Lists.newArrayList();
+  for (  ObjectAdapter serviceAdapter : serviceAdapters) {
+    final ObjectSpecification serviceSpec=serviceAdapter.getSpecification();
+    String serviceName=serviceSpec.getFacet(NamedFacet.class).value();
+    serviceNameOrder.add(serviceName);
+  }
   for (  LogicalServiceAction serviceAction : serviceActions) {
     if (!serviceNameOrder.contains(serviceAction.serviceName)) {
       serviceNameOrder.add(serviceAction.serviceName);

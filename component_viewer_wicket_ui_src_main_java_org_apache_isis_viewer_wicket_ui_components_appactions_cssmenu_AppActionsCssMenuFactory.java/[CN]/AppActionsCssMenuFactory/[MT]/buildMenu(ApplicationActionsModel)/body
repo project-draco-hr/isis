@@ -5,7 +5,8 @@
     collateServiceActions(serviceAdapter,ActionType.USER,serviceActions);
     collateServiceActions(serviceAdapter,ActionType.PROTOTYPE,serviceActions);
   }
-  final List<String> serviceNamesInOrder=serviceNamesInOrder(serviceActions);
+  final List<String> serviceNamesInOrder=serviceNamesInOrder(serviceAdapters,serviceActions);
   final Map<String,List<LogicalServiceAction>> serviceActionsByName=groupByServiceName(serviceActions);
+  serviceNamesInOrder.retainAll(serviceActionsByName.keySet());
   return buildMenuItems(serviceNamesInOrder,serviceActionsByName);
 }
