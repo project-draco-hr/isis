@@ -6,7 +6,7 @@
   Oid thisOid=getOid();
   final Version thisVersion=thisOid.getVersion();
   if (thisVersion != null && otherVersion != null && thisVersion.different(otherVersion)) {
-    if (ConcurrencyException.concurrencyChecking.get().isChecking()) {
+    if (ConcurrencyChecking.isCurrentlyEnabled()) {
       LOG.info("concurrency conflict detected on " + thisOid + " ("+ otherVersion+ ")");
       final String currentUser=getAuthenticationSession().getUserName();
       throw new ConcurrencyException(currentUser,thisOid,thisVersion,otherVersion);

@@ -2,6 +2,17 @@
   for (  Class<?> pcClass : pcClasses) {
     final Extent<?> extent=getJdoPersistenceManager().getExtent(pcClass);
     final List<Object> instances=Lists.newArrayList(extent.iterator());
-    getJdoPersistenceManager().deletePersistentAll(instances);
+    try {
+      ConcurrencyChecking.executeWithConcurrencyCheckingDisabled(new Callable<Void>(){
+        @Override public Void call(){
+          getJdoPersistenceManager().deletePersistentAll(instances);
+          return null;
+        }
+      }
+);
+    }
+ catch (    Exception e) {
+      throw new ApplicationException(e);
+    }
   }
 }

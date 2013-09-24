@@ -13,7 +13,7 @@
         final Version thisVersion=originalVersion;
         final Version otherVersion=datastoreVersion;
         if (thisVersion != null && otherVersion != null && thisVersion.different(otherVersion)) {
-          if (ConcurrencyException.concurrencyChecking.get().isChecking()) {
+          if (ConcurrencyChecking.isCurrentlyEnabled()) {
             LOG.info("concurrency conflict detected on " + thisOid + " ("+ otherVersion+ ")");
             final String currentUser=getAuthenticationSession().getUserName();
             final ConcurrencyException abortCause=new ConcurrencyException(currentUser,thisOid,thisVersion,otherVersion);
