@@ -1,0 +1,17 @@
+{
+  return new Predicate<Throwable>(){
+    @Override public boolean apply(    Throwable input){
+      final List<Throwable> causalChain=Throwables.getCausalChain(input);
+      for (      String message : messages) {
+        for (        Throwable throwable : causalChain) {
+          final String throwableMessage=throwable.getMessage();
+          if (throwableMessage != null && throwableMessage.contains(message)) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+  }
+;
+}
