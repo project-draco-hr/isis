@@ -1,4 +1,10 @@
 {
-  IsisContext.shutdown();
-  super.onDestroy();
+  try {
+    IsisContext.shutdown();
+    super.onDestroy();
+  }
+ catch (  final RuntimeException ex) {
+    LOG.error("Failed to destroy",ex);
+    throw ex;
+  }
 }

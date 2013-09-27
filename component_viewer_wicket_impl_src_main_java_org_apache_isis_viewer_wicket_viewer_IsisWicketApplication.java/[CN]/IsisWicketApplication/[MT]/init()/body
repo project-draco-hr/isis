@@ -1,17 +1,23 @@
 {
-  super.init();
-  final String webInfDir=getServletContext().getRealPath("/WEB-INF");
-  loggingConfigurer.configureLogging(webInfDir,new String[0]);
-  getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
-  getRequestCycleListeners().add(new WebRequestCycleForIsis());
-  getResourceSettings().setParentFolderPlaceholder("$up$");
-  determineDeploymentTypeIfRequired();
-  final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
-  final IsisInjectModule isisModule=newIsisModule(deploymentType,isisConfigurationBuilder);
-  final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
-  injector.injectMembers(this);
-  final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
-  this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
-  this.bookmarkedPagesModel=new BookmarkedPagesModel();
-  initWicketComponentInjection(injector);
+  try {
+    super.init();
+    final String webInfDir=getServletContext().getRealPath("/WEB-INF");
+    loggingConfigurer.configureLogging(webInfDir,new String[0]);
+    getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
+    getRequestCycleListeners().add(new WebRequestCycleForIsis());
+    getResourceSettings().setParentFolderPlaceholder("$up$");
+    determineDeploymentTypeIfRequired();
+    final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
+    final IsisInjectModule isisModule=newIsisModule(deploymentType,isisConfigurationBuilder);
+    final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
+    injector.injectMembers(this);
+    final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
+    this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
+    this.bookmarkedPagesModel=new BookmarkedPagesModel();
+    initWicketComponentInjection(injector);
+  }
+ catch (  RuntimeException ex) {
+    LOG.error("Failed to initialize",ex);
+    throw ex;
+  }
 }
