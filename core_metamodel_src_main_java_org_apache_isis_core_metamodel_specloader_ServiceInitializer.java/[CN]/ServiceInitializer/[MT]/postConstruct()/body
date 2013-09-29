@@ -1,0 +1,15 @@
+{
+  LOG.info("calling @PostConstruct on all domain services");
+  for (  final Map.Entry<Object,Method> entry : postConstructMethodsByService.entrySet()) {
+    final Object service=entry.getKey();
+    final Method method=entry.getValue();
+    LOG.info("... calling @PostConstruct method: " + service.getClass().getName() + ": "+ method.getName());
+    final int numParams=method.getParameterTypes().length;
+    if (numParams == 0) {
+      MethodExtensions.invoke(method,service);
+    }
+ else {
+      MethodExtensions.invoke(method,service,new Object[]{props});
+    }
+  }
+}

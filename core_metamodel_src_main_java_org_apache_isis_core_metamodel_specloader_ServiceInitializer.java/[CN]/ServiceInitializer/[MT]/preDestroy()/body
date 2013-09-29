@@ -1,0 +1,15 @@
+{
+  LOG.info("calling @PreDestroy on all domain services");
+  for (  final Map.Entry<Object,Method> entry : preDestroyMethodsByService.entrySet()) {
+    final Object service=entry.getKey();
+    final Method method=entry.getValue();
+    LOG.info("... calling @PreDestroy method: " + service.getClass().getName() + ": "+ method.getName());
+    final int numParams=method.getParameterTypes().length;
+    try {
+      MethodExtensions.invoke(method,service);
+    }
+ catch (    Exception ex) {
+      LOG.warn("... @PreDestroy method threw exception - continuing anyway",ex);
+    }
+  }
+}
