@@ -1,11 +1,6 @@
 {
   if (false) {
-    return allMatches(ToDoItem.class,new Predicate<ToDoItem>(){
-      @Override public boolean apply(      final ToDoItem t){
-        return ownedByCurrentUser(t) && t.getDescription().contains(description);
-      }
-    }
-);
+    return allMatches(ToDoItem.class,Predicates.and(ToDoItem.Predicates.thoseOwnedBy(currentUserName()),ToDoItem.Predicates.thoseWithSimilarDescription(description)));
   }
  else {
     return allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_autoComplete","ownedBy",currentUserName(),"description",description));
