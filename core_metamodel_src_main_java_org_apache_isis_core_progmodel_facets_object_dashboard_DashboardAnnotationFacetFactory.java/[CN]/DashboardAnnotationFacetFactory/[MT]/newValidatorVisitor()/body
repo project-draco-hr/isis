@@ -1,0 +1,19 @@
+{
+  return new MetaModelValidatorVisiting.SummarizingVisitor(){
+    private final List<String> annotated=Lists.newArrayList();
+    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      if (objectSpec.containsFacet(DashboardFacet.class)) {
+        final String fullIdentifier=objectSpec.getFullIdentifier();
+        annotated.add(fullIdentifier);
+      }
+      return true;
+    }
+    @Override public void summarize(    ValidationFailures validationFailures){
+      if (annotated.size() > 1) {
+        final String nonServiceNamesStr=Joiner.on(", ").join(annotated);
+        validationFailures.add("Only one service can be specified as the dashboard; " + "found DashboardFacet on these classes: %s",nonServiceNamesStr);
+      }
+    }
+  }
+;
+}

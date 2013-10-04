@@ -1,16 +1,5 @@
 {
-  final List<ToDoItem> items;
-  if (false) {
-    items=allMatches(ToDoItem.class,new Predicate<ToDoItem>(){
-      @Override public boolean apply(      final ToDoItem t){
-        return ownedByCurrentUser(t) && t.isComplete();
-      }
-    }
-);
-  }
- else {
-    items=allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_complete","ownedBy",currentUserName()));
-  }
+  final List<ToDoItem> items=completeNoUi();
   if (items.isEmpty()) {
     getContainer().informUser("No to-do items have yet been completed :-(");
   }
