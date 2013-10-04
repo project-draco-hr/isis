@@ -3,8 +3,17 @@
   if (!matcher.matches()) {
     throw new IllegalArgumentException("Could not parse OID '" + oidStr + "'; should match pattern: "+ OIDSTR_PATTERN.pattern());
   }
-  final String isTransientStr=getGroup(matcher,3);
-  boolean isTransient=TRANSIENT_INDICATOR.equals(isTransientStr);
+  final String isTransientOrViewModelStr=getGroup(matcher,3);
+  final State state;
+  if ("!".equals(isTransientOrViewModelStr)) {
+    state=State.TRANSIENT;
+  }
+ else   if ("*".equals(isTransientOrViewModelStr)) {
+    state=State.VIEWMODEL;
+  }
+ else {
+    state=State.PERSISTENT;
+  }
   final String rootOidStr=getGroup(matcher,2);
   final String rootObjectType=getGroup(matcher,4);
   final String rootIdentifier=getGroup(matcher,5);
@@ -33,7 +42,7 @@
   if (collectionName == null) {
     if (aggregateOidParts.isEmpty()) {
       ensureCorrectType(oidStr,requestedType,RootOidDefault.class);
-      return (T)new RootOidDefault(ObjectSpecId.of(rootObjectType),rootIdentifier,State.valueOf(isTransient),version);
+      return (T)new RootOidDefault(ObjectSpecId.of(rootObjectType),rootIdentifier,state,version);
     }
  else {
       ensureCorrectType(oidStr,requestedType,AggregatedOid.class);

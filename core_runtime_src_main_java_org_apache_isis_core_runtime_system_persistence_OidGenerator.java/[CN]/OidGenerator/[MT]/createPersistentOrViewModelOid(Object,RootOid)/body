@@ -1,0 +1,7 @@
+{
+  final ObjectSpecId objectSpecId=objectSpecIdFor(pojo);
+  final String persistentIdentifier=identifierGenerator.createPersistentIdentifierFor(objectSpecId,pojo,transientRootOid);
+  final ObjectSpecification spec=getSpecificationLookup().lookupBySpecId(objectSpecId);
+  final State state=spec != null && spec.containsFacet(ViewModelFacet.class) ? State.VIEWMODEL : State.PERSISTENT;
+  return new RootOidDefault(objectSpecId,persistentIdentifier,state);
+}

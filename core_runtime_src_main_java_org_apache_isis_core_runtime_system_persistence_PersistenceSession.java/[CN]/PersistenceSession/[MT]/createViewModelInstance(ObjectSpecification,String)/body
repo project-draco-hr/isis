@@ -1,0 +1,10 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("creating view model instance of " + objectSpec);
+  }
+  final Object pojo=objectSpec.createObject();
+  ViewModelFacet facet=objectSpec.getFacet(ViewModelFacet.class);
+  facet.initialize(pojo,memento);
+  final ObjectAdapter adapter=getAdapterManager().adapterFor(pojo);
+  return objectSpec.initialize(adapter);
+}

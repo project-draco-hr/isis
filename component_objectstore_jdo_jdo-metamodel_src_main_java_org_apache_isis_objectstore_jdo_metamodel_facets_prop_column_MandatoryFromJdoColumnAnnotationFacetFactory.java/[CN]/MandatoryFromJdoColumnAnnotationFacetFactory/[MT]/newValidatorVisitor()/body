@@ -5,8 +5,15 @@
       return true;
     }
     private void validate(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
-      List<ObjectAssociation> associations=objectSpec.getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.PROPERTIES);
+      final JdoPersistenceCapableFacet pcFacet=objectSpec.getFacet(JdoPersistenceCapableFacet.class);
+      if (pcFacet == null || pcFacet.getIdentityType() == IdentityType.NONDURABLE) {
+        return;
+      }
+      final List<ObjectAssociation> associations=objectSpec.getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.PROPERTIES);
       for (      ObjectAssociation association : associations) {
+        if (association.containsDoOpFacet(JdoNotPersistentFacet.class)) {
+          return;
+        }
         MandatoryFacet facet=association.getFacet(MandatoryFacet.class);
         MandatoryFacet underlying=(MandatoryFacet)facet.getUnderlyingFacet();
         if (underlying == null) {

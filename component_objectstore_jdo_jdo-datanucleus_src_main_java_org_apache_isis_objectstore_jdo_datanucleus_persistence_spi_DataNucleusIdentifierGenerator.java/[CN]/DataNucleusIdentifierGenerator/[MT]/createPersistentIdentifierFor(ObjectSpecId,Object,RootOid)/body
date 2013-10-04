@@ -2,6 +2,10 @@
   if (!(pojo instanceof PersistenceCapable)) {
     return "1";
   }
+  if (pojo instanceof ViewModel) {
+    ViewModel viewModel=(ViewModel)pojo;
+    return viewModel.viewModelMemento();
+  }
   final Object jdoOid=getJdoPersistenceManager().getObjectId(pojo);
   return JdoObjectIdSerializer.toOidIdentifier(jdoOid);
 }

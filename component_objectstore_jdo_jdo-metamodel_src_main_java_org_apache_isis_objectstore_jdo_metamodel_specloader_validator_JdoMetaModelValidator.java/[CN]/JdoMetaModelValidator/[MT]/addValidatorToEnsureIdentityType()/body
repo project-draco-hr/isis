@@ -8,10 +8,12 @@
       final IdentityType identityType=jpcf.getIdentityType();
       if (identityType == IdentityType.APPLICATION) {
       }
+ else       if (identityType == IdentityType.NONDURABLE) {
+      }
  else       if (identityType == IdentityType.DATASTORE || identityType == IdentityType.UNSPECIFIED) {
       }
  else {
-        validationFailures.add("DataNucleus object store: %s must be annotated with @PersistenceCapable, with an identityType of either DATASTORE or UNSPECIFIED or APPLICATION (has an identityType of %s)",objSpec.getFullIdentifier(),identityType);
+        validationFailures.add("DataNucleus object store: %s is annotated with @PersistenceCapable but with an unrecognized identityType (%s)",objSpec.getFullIdentifier(),identityType);
       }
       return true;
     }

@@ -1,0 +1,13 @@
+{
+  final ObjectSpecification spec=getSpecificationLookup().loadSpecification(ofClass);
+  if (!spec.containsFacet(ViewModelFacet.class)) {
+    throw new IsisException("Type must be a ViewModel: " + ofClass);
+  }
+  final ObjectAdapter adapter=doCreateViewModelInstance(spec,memento);
+  if (adapter.getOid().isViewModel()) {
+    return (T)adapter.getObject();
+  }
+ else {
+    throw new IsisException("Object instantiated but was not given a ViewModel Oid; please report as a possible defect in Isis: " + ofClass);
+  }
+}

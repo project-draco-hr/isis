@@ -1,0 +1,16 @@
+{
+class Customer {
+    private Long someColumn;
+    @SuppressWarnings("unused") public Long getSomeColumn(){
+      return someColumn;
+    }
+    @SuppressWarnings("unused") public void setSomeColumn(    final Long someColumn){
+      this.someColumn=someColumn;
+    }
+  }
+  final Class<?> cls=Customer.class;
+  final Method method=cls.getMethod("getSomeColumn");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(cls,null,null,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(JdoNotPersistentFacet.class);
+  assertNull(facet);
+}

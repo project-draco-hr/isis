@@ -1,4 +1,9 @@
 {
-  final String oidStr=joinAsOid(domainType,instanceId);
+  String oidStr=joinAsOid(domainType,instanceId);
+  final ObjectSpecId specId=ObjectSpecId.of(domainType);
+  final ObjectSpecification spec=IsisContext.getSpecificationLoader().lookupBySpecId(specId);
+  if (spec.containsFacet(ViewModelFacet.class)) {
+    oidStr="*" + oidStr;
+  }
   return getObjectAdapterForUnencodedElseThrowNotFound(resourceContext,oidStr);
 }
