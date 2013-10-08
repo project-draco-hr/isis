@@ -1,4 +1,14 @@
 {
-  ToDoItem toDoItem=getVar(null,"toDoItem",ToDoItem.class);
-  wrap(toDoItem).completed();
+  final ToDoItem toDoItem=getVar(null,"toDoItem",ToDoItem.class);
+  if (supportsMocks()) {
+    Bulk.InteractionContext.with(new Runnable(){
+      @Override public void run(){
+        toDoItem.completed();
+      }
+    }
+,toDoItem);
+  }
+ else {
+    wrap(toDoItem).completed();
+  }
 }

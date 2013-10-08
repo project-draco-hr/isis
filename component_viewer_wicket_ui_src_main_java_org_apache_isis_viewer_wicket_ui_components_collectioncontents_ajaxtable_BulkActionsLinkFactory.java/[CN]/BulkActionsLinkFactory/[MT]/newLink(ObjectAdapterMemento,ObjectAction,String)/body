@@ -4,13 +4,24 @@
     private static final long serialVersionUID=1L;
     @Override public void onClick(){
       final ObjectAction objectAction=actionMemento.getAction();
-      for (      ObjectAdapterMemento entityAdapterMemento : model.getToggleMementosList()) {
-        final ObjectAdapter entityAdapter=entityAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-        int numParameters=objectAction.getParameterCount();
-        if (numParameters != 0) {
-          return;
+      try {
+        final List<ObjectAdapterMemento> toggleMementosList=model.getToggleMementosList();
+        final Iterable<ObjectAdapter> toggledAdapters=Iterables.transform(toggleMementosList,ObjectAdapterFunctions.fromMemento());
+        final List<Object> domainObjects=Lists.newArrayList(Iterables.transform(toggledAdapters,ObjectAdapter.Functions.getObject()));
+        final Bulk.InteractionContext interactionContext=new Bulk.InteractionContext(domainObjects);
+        Bulk.InteractionContext.current.set(interactionContext);
+        int i=0;
+        for (        final ObjectAdapter adapter : toggledAdapters) {
+          int numParameters=objectAction.getParameterCount();
+          if (numParameters != 0) {
+            return;
+          }
+          interactionContext.setIndex(i++);
+          objectAction.execute(adapter,new ObjectAdapter[]{});
         }
-        objectAction.execute(entityAdapter,new ObjectAdapter[]{});
+      }
+  finally {
+        Bulk.InteractionContext.current.set(null);
       }
       model.clearToggleMementosList();
       final ActionModel actionModelHint=model.getActionModelHint();

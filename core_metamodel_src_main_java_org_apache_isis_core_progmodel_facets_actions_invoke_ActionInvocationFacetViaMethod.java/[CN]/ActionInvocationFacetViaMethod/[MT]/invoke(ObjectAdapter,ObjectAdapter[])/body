@@ -8,7 +8,20 @@
       executionParameters[i]=unwrap(parameters[i]);
     }
     final Object object=unwrap(inObject);
-    final Object result=method.invoke(object,executionParameters);
+    final Object result;
+    final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
+    if (bulkFacet != null && Bulk.InteractionContext.current.get() == null) {
+      try {
+        Bulk.InteractionContext.current.set(new InteractionContext(object));
+        result=method.invoke(object,executionParameters);
+      }
+  finally {
+        Bulk.InteractionContext.current.set(null);
+      }
+    }
+ else {
+      result=method.invoke(object,executionParameters);
+    }
     if (LOG.isDebugEnabled()) {
       LOG.debug(" action result " + result);
     }
