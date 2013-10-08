@@ -1,0 +1,16 @@
+{
+  final Column annotation=Annotations.getAnnotation(processMethodContext.getMethod(),Column.class);
+  if (String.class != processMethodContext.getMethod().getReturnType()) {
+    return;
+  }
+  if (annotation == null || annotation.length() == -1) {
+    return;
+  }
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  MaxLengthFacet existingFacet=holder.getFacet(MaxLengthFacet.class);
+  final MaxLengthFacet facet=new MaxLengthFacetDerivedFromJdoColumn(annotation.length(),holder);
+  if (!existingFacet.isNoop()) {
+    facet.setUnderlyingFacet(existingFacet);
+  }
+  FacetUtil.addFacet(facet);
+}

@@ -1,0 +1,31 @@
+{
+  return new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      validate(objectSpec,validationFailures);
+      return true;
+    }
+    private void validate(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      final JdoPersistenceCapableFacet pcFacet=objectSpec.getFacet(JdoPersistenceCapableFacet.class);
+      if (pcFacet == null || pcFacet.getIdentityType() == IdentityType.NONDURABLE) {
+        return;
+      }
+      final List<ObjectAssociation> associations=objectSpec.getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.PROPERTIES);
+      for (      ObjectAssociation association : associations) {
+        if (association.containsDoOpFacet(JdoNotPersistentFacet.class)) {
+          return;
+        }
+        MaxLengthFacet facet=association.getFacet(MaxLengthFacet.class);
+        MaxLengthFacet underlying=(MaxLengthFacet)facet.getUnderlyingFacet();
+        if (underlying == null) {
+          continue;
+        }
+        if (facet instanceof MaxLengthFacetDerivedFromJdoColumn && underlying instanceof MaxLengthFacetAnnotationForProperty) {
+          if (facet.value() != underlying.value()) {
+            validationFailures.add("%s: incompatible usage of Isis' @MaxLength annotation and @javax.jdo.annotations.Column with inconsistent lengths; use just @javax.jdo.annotations.Column(length=...)",association.getIdentifier().toClassAndNameIdentityString());
+          }
+        }
+      }
+    }
+  }
+;
+}
