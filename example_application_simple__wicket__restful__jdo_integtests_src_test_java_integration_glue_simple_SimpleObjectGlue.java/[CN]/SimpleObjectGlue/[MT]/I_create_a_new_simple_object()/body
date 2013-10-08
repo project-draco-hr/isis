@@ -1,0 +1,12 @@
+{
+  if (supportsMocks()) {
+    checking(new Expectations(){
+{
+        oneOf(service(SimpleObjects.class)).create(with(any(String.class)));
+        will(addToInMemoryDB());
+      }
+    }
+);
+  }
+  service(SimpleObjects.class).create(UUID.randomUUID().toString());
+}
