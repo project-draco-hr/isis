@@ -7,25 +7,20 @@
       for (      ObjectAdapterMemento entityAdapterMemento : model.getToggleMementosList()) {
         final ObjectAdapter entityAdapter=entityAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
         int numParameters=objectAction.getParameterCount();
-        if (false) {
-          if (numParameters != 1) {
-            return;
-          }
-          if (serviceAdapterMemento == null) {
-            return;
-          }
-          final ObjectAdapter serviceAdapter=serviceAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-          objectAction.execute(serviceAdapter,new ObjectAdapter[]{entityAdapter});
+        if (numParameters != 0) {
+          return;
         }
- else {
-          if (numParameters != 0) {
-            return;
-          }
-          objectAction.execute(entityAdapter,new ObjectAdapter[]{});
-        }
+        objectAction.execute(entityAdapter,new ObjectAdapter[]{});
       }
       model.clearToggleMementosList();
-      model.setObject(persistentAdaptersWithin(model.getObject()));
+      final ActionModel actionModelHint=model.getActionModelHint();
+      if (actionModelHint != null) {
+        ObjectAdapter resultAdapter=actionModelHint.getObject();
+        model.setObjectList(resultAdapter);
+      }
+ else {
+        model.setObject(persistentAdaptersWithin(model.getObject()));
+      }
     }
     private List<ObjectAdapter> persistentAdaptersWithin(    List<ObjectAdapter> adapters){
       return Lists.newArrayList(Iterables.filter(adapters,new Predicate<ObjectAdapter>(){
