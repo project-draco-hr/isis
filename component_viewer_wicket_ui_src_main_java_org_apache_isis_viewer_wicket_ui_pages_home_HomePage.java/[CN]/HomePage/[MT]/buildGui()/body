@@ -1,11 +1,15 @@
 {
-  final ObjectAdapter dashboardAdapter=lookupDashboard();
-  if (dashboardAdapter != null) {
+  final HomePageTuple homePageTuple=lookupHomePageAction();
+  if (homePageTuple != null) {
     Components.permanentlyHide(this,ComponentType.WELCOME);
-    getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.ENTITY,new EntityModel(dashboardAdapter));
+    final ObjectAdapterMemento serviceMemento=MementoFunctions.fromAdapter().apply(homePageTuple.serviceAdapter);
+    ActionMemento homePageActionMemento=MementoFunctions.fromAction().apply(homePageTuple.action);
+    Mode mode=homePageTuple.action.getParameterCount() > 0 ? Mode.PARAMETERS : Mode.RESULTS;
+    final IModel<?> actionModel=ActionModel.create(serviceMemento,homePageActionMemento,mode,SingleResultsMode.INLINE);
+    getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.ACTION,actionModel);
   }
  else {
-    Components.permanentlyHide(this,ComponentType.ENTITY);
+    Components.permanentlyHide(this,ComponentType.ACTION);
     getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.WELCOME,null);
   }
 }
