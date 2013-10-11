@@ -1,7 +1,8 @@
 {
   final ObjectAdapter adapter=adapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
   final ObjectAdapter contextAdapter=entityModel.getObject();
-  final PageParameters pageParameters=ActionModel.createPageParameters(adapter,action,contextAdapter,ActionModel.SingleResultsMode.REDIRECT,ConcurrencyChecking.NO_CHECK);
+  final ConcurrencyChecking concurrencyChecking=action.getSemantics() == ActionSemantics.Of.SAFE ? ConcurrencyChecking.NO_CHECK : ConcurrencyChecking.CHECK;
+  final PageParameters pageParameters=ActionModel.createPageParameters(adapter,action,contextAdapter,ActionModel.SingleResultsMode.REDIRECT,concurrencyChecking);
   final Class<? extends Page> pageClass=getPageClassRegistry().getPageClass(PageType.ACTION);
   return Links.newBookmarkablePageLink(linkId,pageParameters,pageClass);
 }
