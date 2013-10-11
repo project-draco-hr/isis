@@ -4,33 +4,53 @@
     private static final long serialVersionUID=1L;
     @Override public void onClick(){
       final ObjectAction objectAction=actionMemento.getAction();
+      final ConcurrencyChecking concurrencyChecking=ConcurrencyChecking.concurrencyCheckingFor(objectAction.getSemantics());
       try {
         final List<ObjectAdapterMemento> toggleMementosList=model.getToggleMementosList();
-        final Iterable<ObjectAdapter> toggledAdapters=Iterables.transform(toggleMementosList,ObjectAdapterFunctions.fromMemento());
+        final Iterable<ObjectAdapter> toggledAdapters=Iterables.transform(toggleMementosList,ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking));
         final List<Object> domainObjects=Lists.newArrayList(Iterables.transform(toggledAdapters,ObjectAdapter.Functions.getObject()));
-        final Bulk.InteractionContext interactionContext=new Bulk.InteractionContext(domainObjects);
-        Bulk.InteractionContext.current.set(interactionContext);
-        int i=0;
-        for (        final ObjectAdapter adapter : toggledAdapters) {
-          int numParameters=objectAction.getParameterCount();
-          if (numParameters != 0) {
-            return;
+        try {
+          final Bulk.InteractionContext interactionContext=new Bulk.InteractionContext(domainObjects);
+          Bulk.InteractionContext.current.set(interactionContext);
+          int i=0;
+          for (          final ObjectAdapter adapter : toggledAdapters) {
+            int numParameters=objectAction.getParameterCount();
+            if (numParameters != 0) {
+              return;
+            }
+            interactionContext.setIndex(i++);
+            objectAction.execute(adapter,new ObjectAdapter[]{});
           }
-          interactionContext.setIndex(i++);
-          objectAction.execute(adapter,new ObjectAdapter[]{});
+        }
+  finally {
+          Bulk.InteractionContext.current.set(null);
+        }
+        model.clearToggleMementosList();
+        final ActionModel actionModelHint=model.getActionModelHint();
+        if (actionModelHint != null) {
+          ObjectAdapter resultAdapter=actionModelHint.getObject();
+          model.setObjectList(resultAdapter);
+        }
+ else {
+          model.setObject(persistentAdaptersWithin(model.getObject()));
         }
       }
-  finally {
-        Bulk.InteractionContext.current.set(null);
-      }
-      model.clearToggleMementosList();
-      final ActionModel actionModelHint=model.getActionModelHint();
-      if (actionModelHint != null) {
-        ObjectAdapter resultAdapter=actionModelHint.getObject();
-        model.setObjectList(resultAdapter);
-      }
- else {
+ catch (      final ConcurrencyException ex) {
+        final List<ObjectAdapterMemento> toggleMementosList=Lists.newArrayList(model.getToggleMementosList());
+        for (        ObjectAdapterMemento oam : toggleMementosList) {
+          oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+        }
         model.setObject(persistentAdaptersWithin(model.getObject()));
+        final List<ObjectAdapter> adapters=model.getObject();
+        model.clearToggleMementosList();
+        for (        ObjectAdapterMemento oam : toggleMementosList) {
+          final ObjectAdapter objectAdapter=oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+          if (adapters.contains(objectAdapter)) {
+            model.toggleSelectionOn(objectAdapter);
+          }
+        }
+        getMessageBroker().addWarning(ex.getMessage());
+        return;
       }
     }
     private List<ObjectAdapter> persistentAdaptersWithin(    List<ObjectAdapter> adapters){

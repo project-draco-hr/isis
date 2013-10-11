@@ -2,9 +2,16 @@
   final ContainedToggleboxPanel toggle=new ContainedToggleboxPanel(componentId){
     private static final long serialVersionUID=1L;
     @Override public void onSubmit(    AjaxRequestTarget target){
-      final EntityModel o=(EntityModel)rowModel;
-      final ObjectAdapter selectedAdapter=o.load(ConcurrencyChecking.NO_CHECK);
-      handler.onSelected(this,selectedAdapter);
+      final EntityModel entityModel=(EntityModel)rowModel;
+      ObjectAdapter selectedAdapter=null;
+      try {
+        selectedAdapter=entityModel.load(ConcurrencyChecking.CHECK);
+        handler.onSelected(this,selectedAdapter,target);
+      }
+ catch (      ConcurrencyException ex) {
+        selectedAdapter=entityModel.load(ConcurrencyChecking.CHECK);
+        handler.onConcurrencyException(this,selectedAdapter,ex,target);
+      }
     }
   }
 ;

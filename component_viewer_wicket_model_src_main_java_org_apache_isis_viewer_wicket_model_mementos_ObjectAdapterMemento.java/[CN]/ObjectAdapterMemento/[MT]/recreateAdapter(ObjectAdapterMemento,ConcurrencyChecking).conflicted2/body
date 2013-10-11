@@ -1,10 +1,3 @@
 {
-  TypedOid oid=getOidMarshaller().unmarshal(oam.persistentOidStr,TypedOid.class);
-  try {
-    final ObjectAdapter adapter=getAdapterManager().adapterFor(oid,concurrencyChecking);
-    return adapter;
-  }
-  finally {
-    oam.persistentOidStr=oid.enString(getOidMarshaller());
-  }
+  return oam.transientMemento.recreateObject();
 }
