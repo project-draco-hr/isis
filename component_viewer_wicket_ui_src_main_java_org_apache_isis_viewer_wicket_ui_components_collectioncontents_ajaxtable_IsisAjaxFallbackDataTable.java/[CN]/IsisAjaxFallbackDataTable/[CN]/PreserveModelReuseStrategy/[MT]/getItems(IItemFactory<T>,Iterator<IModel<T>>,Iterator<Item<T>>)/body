@@ -1,0 +1,29 @@
+{
+  final Map<IModel<T>,Item<T>> modelToItem=Generics.newHashMap();
+  while (existingItems.hasNext()) {
+    final Item<T> item=existingItems.next();
+    modelToItem.put(item.getModel(),item);
+  }
+  return new Iterator<Item<T>>(){
+    private int index=0;
+    @Override public boolean hasNext(){
+      return newModels.hasNext();
+    }
+    @Override public Item<T> next(){
+      final IModel<T> model=newModels.next();
+      final Item<T> oldItem=modelToItem.get(model);
+      final IModel<T> model2;
+      if (oldItem == null) {
+        model2=model;
+      }
+ else {
+        model2=oldItem.getModel();
+      }
+      return factory.newItem(index++,model2);
+    }
+    @Override public void remove(){
+      throw new UnsupportedOperationException();
+    }
+  }
+;
+}

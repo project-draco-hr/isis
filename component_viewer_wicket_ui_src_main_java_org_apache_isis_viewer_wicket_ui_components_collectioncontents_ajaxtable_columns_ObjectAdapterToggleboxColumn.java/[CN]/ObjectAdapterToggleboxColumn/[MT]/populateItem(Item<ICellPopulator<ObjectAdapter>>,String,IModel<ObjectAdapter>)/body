@@ -1,4 +1,11 @@
 {
+  final MarkupContainer row=cellItem.getParent().getParent();
+  row.setOutputMarkupId(true);
+  final EntityModel entityModel=(EntityModel)rowModel;
+  String concurrencyExceptionIfAny=entityModel.getAndClearConcurrencyExceptionIfAny();
+  if (concurrencyExceptionIfAny != null) {
+    row.add(new CssClassAppender("reloaded-after-concurrency-exception"));
+  }
   final ContainedToggleboxPanel toggle=new ContainedToggleboxPanel(componentId){
     private static final long serialVersionUID=1L;
     @Override public void onSubmit(    AjaxRequestTarget target){
@@ -11,6 +18,7 @@
  catch (      ConcurrencyException ex) {
         selectedAdapter=entityModel.load(ConcurrencyChecking.CHECK);
         handler.onConcurrencyException(this,selectedAdapter,ex,target);
+        entityModel.setException(ex);
       }
     }
   }
