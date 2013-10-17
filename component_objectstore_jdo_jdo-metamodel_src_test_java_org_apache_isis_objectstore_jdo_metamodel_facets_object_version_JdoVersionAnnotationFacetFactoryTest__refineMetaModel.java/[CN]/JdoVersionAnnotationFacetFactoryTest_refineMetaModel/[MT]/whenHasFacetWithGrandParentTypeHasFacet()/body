@@ -1,0 +1,37 @@
+{
+@Version class GrandParent {
+  }
+class Parent extends GrandParent {
+  }
+@Version class Child extends Parent {
+  }
+  context.checking(new Expectations(){
+{
+      oneOf(mockChildType).getCorrespondingClass();
+      inSequence(sequence);
+      will(returnValue(Child.class));
+      oneOf(mockChildType).superclass();
+      inSequence(sequence);
+      will(returnValue(mockParentType));
+      oneOf(mockParentType).getCorrespondingClass();
+      inSequence(sequence);
+      will(returnValue(Parent.class));
+      oneOf(mockParentType).superclass();
+      inSequence(sequence);
+      will(returnValue(mockGrandParentType));
+      oneOf(mockGrandParentType).getCorrespondingClass();
+      inSequence(sequence);
+      will(returnValue(GrandParent.class));
+      oneOf(mockChildType).getFullIdentifier();
+      inSequence(sequence);
+      will(returnValue("mockChildType"));
+      oneOf(mockGrandParentType).getFullIdentifier();
+      inSequence(sequence);
+      will(returnValue("mockGrandParentType"));
+    }
+  }
+);
+  newValidatorVisitor.visit(mockChildType,validationFailures);
+  assertThat(validationFailures.getNumberOfMessages(),is(1));
+  assertThat(validationFailures.getMessages().iterator().next(),is("Cannot have @Version annotated on subclass and any of its supertypes; subclass: mockChildType, superclass: mockGrandParentType"));
+}

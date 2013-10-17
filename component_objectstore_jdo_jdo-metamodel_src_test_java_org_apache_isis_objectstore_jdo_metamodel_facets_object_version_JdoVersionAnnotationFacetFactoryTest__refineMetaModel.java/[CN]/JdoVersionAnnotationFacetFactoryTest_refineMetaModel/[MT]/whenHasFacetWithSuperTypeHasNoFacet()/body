@@ -1,0 +1,25 @@
+{
+class Parent {
+  }
+@Version class Child extends Parent {
+  }
+  context.checking(new Expectations(){
+{
+      oneOf(mockChildType).getCorrespondingClass();
+      inSequence(sequence);
+      will(returnValue(Child.class));
+      oneOf(mockChildType).superclass();
+      inSequence(sequence);
+      will(returnValue(mockParentType));
+      oneOf(mockParentType).getCorrespondingClass();
+      inSequence(sequence);
+      will(returnValue(Parent.class));
+      oneOf(mockParentType).superclass();
+      inSequence(sequence);
+      will(returnValue(null));
+    }
+  }
+);
+  newValidatorVisitor.visit(mockChildType,validationFailures);
+  assertThat(validationFailures.getNumberOfMessages(),is(0));
+}

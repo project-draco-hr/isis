@@ -1,0 +1,17 @@
+{
+@Version class Child {
+  }
+  context.checking(new Expectations(){
+{
+      oneOf(mockChildType).getCorrespondingClass();
+      inSequence(sequence);
+      will(returnValue(Child.class));
+      oneOf(mockChildType).superclass();
+      inSequence(sequence);
+      will(returnValue(null));
+    }
+  }
+);
+  newValidatorVisitor.visit(mockChildType,validationFailures);
+  assertThat(validationFailures.getNumberOfMessages(),is(0));
+}

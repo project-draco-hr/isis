@@ -1,0 +1,25 @@
+{
+  return new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      validate(objectSpec,validationFailures);
+      return true;
+    }
+    private void validate(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      if (!declaresVersionAnnotation(objectSpec)) {
+        return;
+      }
+      ObjectSpecification superclassSpec=objectSpec.superclass();
+      while (superclassSpec != null) {
+        if (declaresVersionAnnotation(superclassSpec)) {
+          validationFailures.add("Cannot have @Version annotated on subclass and any of its supertypes; " + "subclass: %s, superclass: %s",objectSpec.getFullIdentifier(),superclassSpec.getFullIdentifier());
+          return;
+        }
+        superclassSpec=superclassSpec.superclass();
+      }
+    }
+    private boolean declaresVersionAnnotation(    ObjectSpecification objectSpec){
+      return Annotations.getDeclaredAnnotation(objectSpec.getCorrespondingClass(),Version.class) != null;
+    }
+  }
+;
+}
