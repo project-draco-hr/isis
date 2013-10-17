@@ -1,0 +1,14 @@
+{
+  final Class<?> cls=objectSpec.getCorrespondingClass();
+  if (!JdoPropertyUtils.hasPrimaryKeyProperty(objectSpec)) {
+    throw new UnsupportedOperationException("cannot search by primary key for DataStore-assigned entities");
+  }
+  final OneToOneAssociation pkOtoa=JdoPropertyUtils.getPrimaryKeyPropertyFor(objectSpec);
+  final String pkOtoaId=pkOtoa.getId();
+  final String filter=pkOtoaId + "==" + map.get(pkOtoaId);
+  final Query jdoQuery=getPersistenceManager().newQuery(cls,filter);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("query: " + queryName + ", filter: "+ filter);
+  }
+  return (List<?>)jdoQuery.execute();
+}

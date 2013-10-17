@@ -2,6 +2,9 @@
   final PersistenceManager persistenceManager=getJdoObjectStore().getPersistenceManager();
   final Class<?> cls=objectSpec.getCorrespondingClass();
   final Query jdoQuery=persistenceManager.newNamedQuery(cls,queryName);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("query: " + queryName + ", args: "+ argumentsByParameterName);
+  }
   final List<?> results=(List<?>)jdoQuery.executeWithMap(argumentsByParameterName);
   if (cardinality == QueryCardinality.MULTIPLE) {
     return results;

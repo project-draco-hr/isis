@@ -5,15 +5,7 @@
   final ObjectSpecification objectSpec=persistenceQuery.getSpecification();
   final List<?> results;
   if ((objectSpec.getFullIdentifier() + "#pk").equals(queryName)) {
-    final Class<?> cls=objectSpec.getCorrespondingClass();
-    if (!JdoPropertyUtils.hasPrimaryKeyProperty(objectSpec)) {
-      throw new UnsupportedOperationException("cannot search by primary key for DataStore-assigned entities");
-    }
-    final OneToOneAssociation pkOtoa=JdoPropertyUtils.getPrimaryKeyPropertyFor(objectSpec);
-    String pkOtoaId=pkOtoa.getId();
-    final String filter=pkOtoaId + "==" + map.get(pkOtoaId);
-    final Query jdoQuery=getPersistenceManager().newQuery(cls,filter);
-    results=(List<?>)jdoQuery.execute();
+    results=getResultsPk(queryName,map,objectSpec);
   }
  else {
     results=getResults(objectSpec,queryName,map,cardinality);
