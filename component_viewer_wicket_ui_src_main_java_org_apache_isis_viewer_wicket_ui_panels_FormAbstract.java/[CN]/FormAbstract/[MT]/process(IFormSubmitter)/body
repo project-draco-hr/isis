@@ -4,7 +4,17 @@
       IFormSubmitterWithPreValidateHook componentWithPreSubmitHook=(IFormSubmitterWithPreValidateHook)submittingComponent;
       preValidationErrorIfAny=componentWithPreSubmitHook.preValidate();
     }
-    super.process(submittingComponent);
+    if (preValidationErrorIfAny != null) {
+      AdapterManager.ConcurrencyChecking.executeWithConcurrencyCheckingDisabled(new Runnable(){
+        @Override public void run(){
+          FormAbstract.super.process(submittingComponent);
+        }
+      }
+);
+    }
+ else {
+      super.process(submittingComponent);
+    }
   }
   finally {
     preValidationErrorIfAny=null;
