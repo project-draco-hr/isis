@@ -1,9 +1,22 @@
 {
-  final List<Object> parameters=Lists.newArrayList();
-  for (int i=0; i < objectMember.getParameterCount(); i++) {
-    final ObjectActionParameter param=objectMember.getParameters().get(i);
-    parameters.add(paramDetails(param));
+  boolean gsoc2013=getRendererContext().getConfiguration().getBoolean("isis.viewer.restfulobjects.gsoc2013.legacyParamDetails",false);
+  if (gsoc2013) {
+    final List<Object> parameters=Lists.newArrayList();
+    for (int i=0; i < objectMember.getParameterCount(); i++) {
+      final ObjectActionParameter param=objectMember.getParameters().get(i);
+      final Object paramDetails=paramDetails(param);
+      parameters.add(paramDetails);
+    }
+    representation.mapPut("parameters",parameters);
   }
-  representation.mapPut("parameters",parameters);
+ else {
+    final Map<String,Object> parameters=Maps.newLinkedHashMap();
+    for (int i=0; i < objectMember.getParameterCount(); i++) {
+      final ObjectActionParameter param=objectMember.getParameters().get(i);
+      final Object paramDetails=paramDetails(param);
+      parameters.put(param.getId(),paramDetails);
+    }
+    representation.mapPut("parameters",parameters);
+  }
   return this;
 }
