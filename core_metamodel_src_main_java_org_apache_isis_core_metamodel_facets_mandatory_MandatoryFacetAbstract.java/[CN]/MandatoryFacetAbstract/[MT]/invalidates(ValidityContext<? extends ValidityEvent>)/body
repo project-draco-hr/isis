@@ -6,5 +6,13 @@
     return null;
   }
   final ProposedHolder proposedHolder=(ProposedHolder)context;
-  return isRequiredButNull(proposedHolder.getProposed()) ? "Mandatory" : null;
+  final boolean required=isRequiredButNull(proposedHolder.getProposed());
+  if (required) {
+    final NamedFacet namedFacet=getFacetHolder().getFacet(NamedFacet.class);
+    final String name=namedFacet != null ? namedFacet.value() : null;
+    return name != null ? name + " is mandatory" : "Mandatory";
+  }
+ else {
+    return null;
+  }
 }
