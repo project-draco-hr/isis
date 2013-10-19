@@ -1,6 +1,5 @@
 {
   this.props=configuration.asMap();
-  this.services=services;
   for (  final Object service : services) {
     LOG.debug("checking for @PostConstruct and @PostDestroy methods on " + service.getClass().getName());
     final Method[] methods=service.getClass().getMethods();
@@ -18,7 +17,7 @@ switch (parameterTypes.length) {
 case 0:
         break;
 case 1:
-      if (!Map.class.isAssignableFrom(parameterTypes[0])) {
+      if (Map.class != parameterTypes[0]) {
         throw new RuntimeException("@PostConstruct method must be no-arg or 1-arg accepting java.util.Map; method is: " + service.getClass().getName() + "#"+ method.getName());
       }
     break;
