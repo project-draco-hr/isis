@@ -1,0 +1,9 @@
+{
+  if (false) {
+    return allMatches(ToDoItem.class,ToDoItem.Predicates.thoseSimilarTo(toDoItem));
+  }
+ else {
+    final List<ToDoItem> similarToDoItems=allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"todo_similarTo","ownedBy",currentUserName(),"category",toDoItem.getCategory()));
+    return Lists.newArrayList(Iterables.filter(similarToDoItems,excluding(toDoItem)));
+  }
+}

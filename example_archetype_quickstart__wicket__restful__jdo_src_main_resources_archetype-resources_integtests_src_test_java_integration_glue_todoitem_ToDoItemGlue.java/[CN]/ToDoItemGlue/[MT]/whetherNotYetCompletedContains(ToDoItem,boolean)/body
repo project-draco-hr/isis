@@ -1,0 +1,19 @@
+{
+  if (supportsMocks()) {
+    final List<ToDoItem> notYetCompleteItems=notYetCompleteItems();
+    checking(new Expectations(){
+{
+        oneOf(service(ToDoItems.class)).notYetComplete();
+        will(returnValue(notYetCompleteItems));
+      }
+    }
+);
+  }
+  try {
+    final List<ToDoItem> notYetComplete=service(ToDoItems.class).notYetComplete();
+    assertThat(notYetComplete.contains(toDoItem),is(whetherContained));
+  }
+  finally {
+    assertMocksSatisfied();
+  }
+}
