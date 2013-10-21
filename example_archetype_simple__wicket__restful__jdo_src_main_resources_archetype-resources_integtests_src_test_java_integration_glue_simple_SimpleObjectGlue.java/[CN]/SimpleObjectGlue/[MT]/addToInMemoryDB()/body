@@ -1,0 +1,16 @@
+{
+  return new Action(){
+    @Override public Object invoke(    Invocation invocation) throws Throwable {
+      final InMemoryDB inMemoryDB=getVar("isis","in-memory-db",InMemoryDB.class);
+      final String name=(String)invocation.getParameter(0);
+      final SimpleObject obj=new SimpleObject();
+      obj.setName(name);
+      inMemoryDB.put(SimpleObject.class,name,obj);
+      return obj;
+    }
+    @Override public void describeTo(    Description description){
+      description.appendText("add to database");
+    }
+  }
+;
+}
