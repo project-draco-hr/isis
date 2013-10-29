@@ -1,7 +1,14 @@
 {
+  final String queryName=persistenceQuery.getQueryName();
+  final Map<String,Object> argumentsByParameterName=unwrap(persistenceQuery.getArgumentsAdaptersByParameterName());
+  final QueryCardinality cardinality=persistenceQuery.getCardinality();
+  final ObjectSpecification objectSpec=persistenceQuery.getSpecification();
   final PersistenceManager persistenceManager=getJdoObjectStore().getPersistenceManager();
   final Class<?> cls=objectSpec.getCorrespondingClass();
   final Query jdoQuery=persistenceManager.newNamedQuery(cls,queryName);
+  if (persistenceQuery.hasRange()) {
+    jdoQuery.setRange(persistenceQuery.getStart(),persistenceQuery.getEnd());
+  }
   if (LOG.isDebugEnabled()) {
     LOG.debug("query: " + queryName + ", args: "+ argumentsByParameterName);
   }

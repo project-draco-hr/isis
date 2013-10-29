@@ -1,14 +1,12 @@
 {
   final String queryName=persistenceQuery.getQueryName();
-  final Map<String,Object> map=unwrap(persistenceQuery.getArgumentsAdaptersByParameterName());
-  final QueryCardinality cardinality=persistenceQuery.getCardinality();
   final ObjectSpecification objectSpec=persistenceQuery.getSpecification();
   final List<?> results;
   if ((objectSpec.getFullIdentifier() + "#pk").equals(queryName)) {
-    results=getResultsPk(queryName,map,objectSpec);
+    results=getResultsPk(persistenceQuery);
   }
  else {
-    results=getResults(objectSpec,queryName,map,cardinality);
+    results=getResults(persistenceQuery);
   }
   return loadAdapters(objectSpec,results);
 }
