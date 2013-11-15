@@ -14,7 +14,11 @@
     }
   }
 );
-  textField.add(AttributeModifier.replace("cols",Integer.toString(COLS)));
-  textField.add(AttributeModifier.replace("rows",Integer.toString(numberOfLines)));
+  final MultiLineFacet multiLineFacet=getModel().getFacet(MultiLineFacet.class);
+  setAttribute(textField,"rows",multiLineFacet.numberOfLines());
+  final Integer maxLength=getValueOf(getModel(),MaxLengthFacet.class);
+  if (maxLength != null) {
+    setAttribute(textField,"maxlength",maxLength);
+  }
   return textField;
 }

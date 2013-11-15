@@ -1,0 +1,13 @@
+{
+  final Integer maxLength=getValueOf(getModel(),MaxLengthFacet.class);
+  Integer typicalLength=getValueOf(getModel(),TypicalLengthFacet.class);
+  if (typicalLength != null && maxLength != null && typicalLength > maxLength) {
+    typicalLength=maxLength;
+  }
+  if (typicalLength != null) {
+    textField.add(new AttributeModifier("size",Model.of("" + typicalLength)));
+  }
+  if (maxLength != null) {
+    textField.add(new AttributeModifier("maxlength",Model.of("" + maxLength)));
+  }
+}
