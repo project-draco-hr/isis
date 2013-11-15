@@ -15,6 +15,12 @@
     this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
     this.bookmarkedPagesModel=new BookmarkedPagesModel();
     initWicketComponentInjection(injector);
+    buildCssBundle();
+    IPackageResourceGuard guard=getResourceSettings().getPackageResourceGuard();
+    if (guard instanceof SecurePackageResourceGuard) {
+      SecurePackageResourceGuard secureGuard=(SecurePackageResourceGuard)guard;
+      secureGuard.addPattern("+org/apache/wicket/merged-resources");
+    }
   }
  catch (  RuntimeException ex) {
     LOG.error("Failed to initialize",ex);

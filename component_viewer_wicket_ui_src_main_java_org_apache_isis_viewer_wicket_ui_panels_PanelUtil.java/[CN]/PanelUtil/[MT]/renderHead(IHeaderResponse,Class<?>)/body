@@ -1,8 +1,8 @@
 {
-  String simpleName=cls.getSimpleName();
-  if (Strings.isNullOrEmpty(simpleName)) {
+  final CssResourceReference cssResourceReference=cssResourceReferenceFor(cls);
+  if (cssResourceReference == null) {
     return;
   }
-  final String url=simpleName + ".css";
-  response.render(CssHeaderItem.forReference(new CssResourceReference(cls,url)));
+  final CssReferenceHeaderItem forReference=CssHeaderItem.forReference(cssResourceReference);
+  response.render(forReference);
 }
