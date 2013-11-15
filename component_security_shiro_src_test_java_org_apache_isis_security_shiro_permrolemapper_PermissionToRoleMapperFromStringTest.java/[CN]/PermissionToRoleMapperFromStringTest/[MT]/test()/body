@@ -1,0 +1,7 @@
+{
+  final Map<String,List<String>> permissionsByRole=new PermissionToRoleMapperFromString("role1 = foo,bar;" + "role2 = fiz:x,bip:bop:* ;" + "role3 = *").getPermissionsByRole();
+  assertThat(permissionsByRole.get("role1"),is(equalTo((List<String>)Lists.newArrayList("foo","bar"))));
+  assertThat(permissionsByRole.get("role2"),is(equalTo((List<String>)Lists.newArrayList("fiz:x","bip:bop:*"))));
+  assertThat(permissionsByRole.get("role3"),is(equalTo((List<String>)Lists.newArrayList("*"))));
+  assertThat(permissionsByRole.size(),is(3));
+}
