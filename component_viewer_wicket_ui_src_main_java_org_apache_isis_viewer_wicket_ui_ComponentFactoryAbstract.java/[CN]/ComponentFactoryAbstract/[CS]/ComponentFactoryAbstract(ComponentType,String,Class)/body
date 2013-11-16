@@ -1,10 +1,8 @@
 {
   this.componentType=componentType;
   this.name=name != null ? name : getClass().getSimpleName();
-  for (  Class<?> cls : cssClasses) {
-    if (ComponentFactory.class.isAssignableFrom(cls)) {
-      throw new IllegalArgumentException("specified a ComponentFactory as a cssClass... you probably meant the component instead? cls = " + cls.getName());
-    }
+  if (componentClass != null && ComponentFactory.class.isAssignableFrom(componentClass)) {
+    throw new IllegalArgumentException("specified a ComponentFactory as a componentClass... you probably meant the component instead? componentClass = " + componentClass.getName());
   }
-  this.cssClasses=cssClasses;
+  this.componentClass=componentClass;
 }
