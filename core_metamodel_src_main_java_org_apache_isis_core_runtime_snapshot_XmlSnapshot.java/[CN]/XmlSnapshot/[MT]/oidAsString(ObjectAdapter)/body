@@ -1,3 +1,13 @@
 {
-  return adapter.getOid().enString(oidMarshaller);
+  if (adapter.getObject() instanceof ViewModel) {
+    String fakeOid=viewModelFakeOids.get(adapter);
+    if (fakeOid == null) {
+      fakeOid="viewmodel-fakeoid-" + UUID.randomUUID().toString();
+      viewModelFakeOids.put(adapter,fakeOid);
+    }
+    return fakeOid;
+  }
+ else {
+    return adapter.getOid().enString(oidMarshaller);
+  }
 }

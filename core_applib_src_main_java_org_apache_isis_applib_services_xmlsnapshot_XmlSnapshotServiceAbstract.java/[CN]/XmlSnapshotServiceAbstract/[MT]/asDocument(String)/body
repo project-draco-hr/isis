@@ -1,0 +1,20 @@
+{
+  try {
+    final StringReader reader=new StringReader(xmlStr);
+    final StreamSource streamSource=new StreamSource(reader);
+    final DOMResult result=new DOMResult();
+    final TransformerFactory tf=TransformerFactory.newInstance();
+    final Transformer transformer=tf.newTransformer();
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"no");
+    transformer.setOutputProperty(OutputKeys.METHOD,"xml");
+    transformer.setOutputProperty(OutputKeys.INDENT,"yes");
+    transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
+    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
+    transformer.transform(streamSource,result);
+    final Node node=result.getNode();
+    return (Document)node;
+  }
+ catch (  TransformerException e) {
+    throw new XmlSnapshotService.Exception(e);
+  }
+}

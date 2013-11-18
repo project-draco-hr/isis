@@ -1,20 +1,20 @@
 {
   if (LOG.isDebugEnabled()) {
-    LOG.debug("objectToElement(" + log("object",object) + ")");
+    LOG.debug("objectToElement(" + log("object",adapter) + ")");
   }
-  final ObjectSpecification nos=object.getSpecification();
+  final ObjectSpecification nos=adapter.getSpecification();
   if (LOG.isDebugEnabled()) {
-    LOG.debug("objectToElement(NO): create element and nof:title");
+    LOG.debug("objectToElement(NO): create element and isis:title");
   }
   final Element element=schema.createElement(getXmlDocument(),nos.getShortIdentifier(),nos.getFullIdentifier(),nos.getSingularName(),nos.getPluralName());
-  isisMetaModel.appendNofTitle(element,object.titleString());
+  isisMetaModel.appendIsisTitle(element,adapter.titleString());
   if (LOG.isDebugEnabled()) {
-    LOG.debug("objectToElement(NO): create XS element for NOF class");
+    LOG.debug("objectToElement(NO): create XS element for Isis class");
   }
   final Element xsElement=schema.createXsElementForNofClass(getXsdDocument(),element,topLevelElementWritten,FacetUtil.getFacetsByType(nos));
   topLevelElementWritten=true;
-  final Place place=new Place(object,element);
-  isisMetaModel.setAttributesForClass(element,oidAsString(object).toString());
+  final Place place=new Place(adapter,element);
+  isisMetaModel.setAttributesForClass(element,oidAsString(adapter).toString());
   final List<ObjectAssociation> fields=nos.getAssociations(Contributed.EXCLUDED);
   if (LOG.isDebugEnabled()) {
     LOG.debug("objectToElement(NO): processing fields");
@@ -48,7 +48,7 @@
       final Element xmlValueElement=xmlFieldElement;
       ObjectAdapter value;
       try {
-        value=valueAssociation.get(object);
+        value=valueAssociation.get(adapter);
         final ObjectSpecification valueNos=value.getSpecification();
         isisMetaModel.setAttributesForValue(xmlValueElement,valueNos.getShortIdentifier());
         String valueStr;
@@ -85,10 +85,10 @@
       final Element xmlReferenceElement=xmlFieldElement;
       ObjectAdapter referencedObjectAdapter;
       try {
-        referencedObjectAdapter=oneToOneAssociation.get(object);
+        referencedObjectAdapter=oneToOneAssociation.get(adapter);
         isisMetaModel.setAttributesForReference(xmlReferenceElement,schema.getPrefix(),fullyQualifiedClassName);
         if (referencedObjectAdapter != null) {
-          isisMetaModel.appendNofTitle(xmlReferenceElement,referencedObjectAdapter.titleString());
+          isisMetaModel.appendIsisTitle(xmlReferenceElement,referencedObjectAdapter.titleString());
         }
  else {
           isisMetaModel.setIsEmptyAttribute(xmlReferenceElement,true);
@@ -107,7 +107,7 @@
       final Element xmlCollectionElement=xmlFieldElement;
       ObjectAdapter collection;
       try {
-        collection=oneToManyAssociation.get(object);
+        collection=oneToManyAssociation.get(adapter);
         final ObjectSpecification referencedTypeNos=oneToManyAssociation.getSpecification();
         final String fullyQualifiedClassName=referencedTypeNos.getFullIdentifier();
         isisMetaModel.setIsisCollection(xmlCollectionElement,schema.getPrefix(),fullyQualifiedClassName,collection);

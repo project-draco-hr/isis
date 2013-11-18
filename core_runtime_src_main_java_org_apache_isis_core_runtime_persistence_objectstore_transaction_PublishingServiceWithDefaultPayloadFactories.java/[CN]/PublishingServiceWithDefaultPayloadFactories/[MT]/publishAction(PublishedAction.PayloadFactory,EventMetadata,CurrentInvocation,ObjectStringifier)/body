@@ -3,7 +3,7 @@
   ObjectAdapter target=currentInvocation.getTarget();
   ObjectAdapter result=currentInvocation.getResult();
   List<ObjectAdapter> parameters=currentInvocation.getParameters();
-  final EventPayload payload=payloadFactoryToUse.payloadFor(currentInvocation.getAction().getIdentifier(),ObjectAdapterUtils.unwrapObject(undeletedElseEmpty(target)),ObjectAdapterUtils.unwrapObjects(undeletedElseEmpty(parameters)),ObjectAdapterUtils.unwrapObject(undeletedElseEmpty(result)));
+  final EventPayload payload=payloadFactoryToUse.payloadFor(currentInvocation.getAction().getIdentifier(),ObjectAdapter.Util.unwrap(undeletedElseEmpty(target)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(parameters)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(result)));
   payload.withStringifier(stringifier);
   publishingService.publish(metadata,payload);
 }

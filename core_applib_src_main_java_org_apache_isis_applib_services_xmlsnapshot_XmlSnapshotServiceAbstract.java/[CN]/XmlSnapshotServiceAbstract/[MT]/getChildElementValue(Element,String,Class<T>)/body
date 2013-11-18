@@ -1,0 +1,52 @@
+{
+  final Element chldEl=getChildElement(el,tagname);
+  final String dataType=chldEl.getAttribute("isis:datatype");
+  if (dataType == null) {
+    throw new IllegalArgumentException("unable to locate " + tagname + "/@datatype attribute");
+  }
+  if ("isis:String".equals(dataType)) {
+    return (T)getChildTextValue(chldEl);
+  }
+  if ("isis:LocalDate".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    final DateTimeFormatter forPattern=DateTimeFormat.forPattern("dd-MMM-yyyy");
+    return (T)forPattern.parseLocalDate(str);
+  }
+  if ("isis:Byte".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Byte(str);
+  }
+  if ("isis:Short".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Short(str);
+  }
+  if ("isis:Integer".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Integer(str);
+  }
+  if ("isis:Long".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Long(str);
+  }
+  if ("isis:Float".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Float(str);
+  }
+  if ("isis:Double".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Double(str);
+  }
+  if ("isis:BigDecimal".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new BigDecimal(str);
+  }
+  if ("isis:BigInteger".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new BigInteger(str);
+  }
+  if ("isis:Boolean".equals(dataType)) {
+    final String str=getChildTextValue(chldEl);
+    return (T)new Boolean(str);
+  }
+  throw new IllegalArgumentException("Datatype of '" + dataType + "' for element '"+ tagname+ "' not recognized");
+}
