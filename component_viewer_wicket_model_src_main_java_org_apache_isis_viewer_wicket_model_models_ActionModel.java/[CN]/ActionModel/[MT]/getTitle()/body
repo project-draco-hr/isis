@@ -1,0 +1,13 @@
+{
+  final ObjectAdapter adapter=getTargetAdapter();
+  final ObjectAction objectAction=getActionMemento().getAction();
+  final StringBuilder buf=new StringBuilder();
+  final ObjectAdapter[] argumentsAsArray=getArgumentsAsArray();
+  for (  ObjectAdapter argumentAdapter : argumentsAsArray) {
+    if (buf.length() > 0) {
+      buf.append(",");
+    }
+    buf.append(abbreviated(titleOf(argumentAdapter),8));
+  }
+  return adapter.titleString(null) + "." + objectAction.getName()+ (buf.length() > 0 ? "(" + buf.toString() + ")" : "");
+}
