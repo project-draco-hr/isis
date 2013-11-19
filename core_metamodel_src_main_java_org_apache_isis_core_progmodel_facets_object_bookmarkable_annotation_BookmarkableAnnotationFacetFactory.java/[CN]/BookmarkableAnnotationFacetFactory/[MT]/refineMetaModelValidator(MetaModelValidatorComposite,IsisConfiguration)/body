@@ -1,0 +1,20 @@
+{
+  metaModelValidator.add(new MetaModelValidatorVisiting(new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      final Class<?> cls=objectSpec.getCorrespondingClass();
+      final List<ObjectAction> objectActions=objectSpec.getObjectActions(Contributed.EXCLUDED);
+      for (      final ObjectAction objectAction : objectActions) {
+        final BookmarkPolicyFacet bookmarkFacet=objectAction.getFacet(BookmarkPolicyFacet.class);
+        if (bookmarkFacet == null || bookmarkFacet.isNoop() || bookmarkFacet.value() == BookmarkPolicy.NEVER) {
+          continue;
+        }
+        final ActionSemanticsFacet semanticsFacet=objectAction.getFacet(ActionSemanticsFacet.class);
+        if (semanticsFacet == null || semanticsFacet.isNoop() || semanticsFacet.value() != Of.SAFE) {
+          validationFailures.add("Action %s is bookmarkable but action semantics are not explicitly indicated as being safe.  Either add @ActionSemantics(Of.Safe), or remove @Bookmarkable.",objectAction.getIdentifier().toClassAndNameIdentityString());
+        }
+      }
+      return true;
+    }
+  }
+));
+}
