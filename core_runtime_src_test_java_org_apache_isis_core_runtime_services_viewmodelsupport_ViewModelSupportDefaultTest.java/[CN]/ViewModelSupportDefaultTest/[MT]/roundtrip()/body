@@ -1,0 +1,29 @@
+{
+  final Memento memento=viewModelSupport.create();
+  memento.set("someString","a string");
+  memento.set("someByte",(byte)123);
+  memento.set("someShort",(short)12345);
+  memento.set("someInt",123456789);
+  memento.set("someLong",1234567890123456789L);
+  memento.set("someFloat",123.45F);
+  memento.set("someDouble",1234567890.123456);
+  memento.set("someBooleanTrue",Boolean.TRUE);
+  memento.set("someBooleanFalse",Boolean.FALSE);
+  memento.set("someBigInteger",new BigInteger("123456789012345678901234567890"));
+  memento.set("someBigDecimal",new BigDecimal("123456789012345678901234567890.123456789"));
+  memento.set("someLocalDate",new LocalDate(2013,9,3));
+  final String str=memento.asString();
+  final Memento memento2=viewModelSupport.parse(str);
+  assertThat(memento2.get("someString",String.class),is("a string"));
+  assertThat(memento2.get("someByte",Byte.class),is((byte)123));
+  assertThat(memento2.get("someShort",Short.class),is((short)12345));
+  assertThat(memento2.get("someInt",Integer.class),is(123456789));
+  assertThat(memento2.get("someLong",Long.class),is(1234567890123456789L));
+  assertThat(memento2.get("someFloat",Float.class),is(123.45F));
+  assertThat(memento2.get("someDouble",Double.class),is(1234567890.123456));
+  assertThat(memento2.get("someBooleanTrue",Boolean.class),is(Boolean.TRUE));
+  assertThat(memento2.get("someBooleanFalse",Boolean.class),is(Boolean.FALSE));
+  assertThat(memento2.get("someBigInteger",BigInteger.class),is(new BigInteger("123456789012345678901234567890")));
+  assertThat(memento2.get("someBigDecimal",BigDecimal.class),is(new BigDecimal("123456789012345678901234567890.123456789")));
+  assertThat(memento2.get("someLocalDate",LocalDate.class),is(new LocalDate(2013,9,3)));
+}

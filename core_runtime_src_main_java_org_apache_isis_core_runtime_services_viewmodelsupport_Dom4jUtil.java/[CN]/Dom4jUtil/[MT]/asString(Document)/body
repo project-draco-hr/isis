@@ -1,0 +1,22 @@
+{
+  XMLWriter writer=null;
+  final StringWriter sw=new StringWriter();
+  try {
+    OutputFormat outputFormat=OutputFormat.createPrettyPrint();
+    writer=new XMLWriter(sw,outputFormat);
+    writer.write(doc);
+    return sw.toString();
+  }
+ catch (  IOException e) {
+    throw new IsisException(e);
+  }
+ finally {
+    if (writer != null) {
+      try {
+        writer.close();
+      }
+ catch (      IOException e) {
+      }
+    }
+  }
+}
