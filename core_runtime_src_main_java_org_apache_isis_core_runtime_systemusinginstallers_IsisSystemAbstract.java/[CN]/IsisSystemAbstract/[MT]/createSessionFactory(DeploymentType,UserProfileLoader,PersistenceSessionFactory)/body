@@ -6,8 +6,9 @@
   final OidMarshaller oidMarshaller=obtainOidMarshaller();
   final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,templateImageLoader,persistenceSessionFactory);
   final SpecificationLoaderSpi reflector=obtainSpecificationLoaderSpi(deploymentType,persistenceSessionFactory,metaModelRefiners);
-  final List<Object> servicesList=obtainServices();
+  final DomainObjectContainer container=obtainContainer();
+  final List<Object> services=obtainServices();
   RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
   runtimeContext.injectInto(reflector);
-  return new IsisSessionFactoryDefault(deploymentType,configuration,templateImageLoader,reflector,authenticationManager,authorizationManager,userProfileLoader,persistenceSessionFactory,servicesList,oidMarshaller);
+  return new IsisSessionFactoryDefault(deploymentType,configuration,reflector,templateImageLoader,authenticationManager,authorizationManager,userProfileLoader,persistenceSessionFactory,container,services,oidMarshaller);
 }

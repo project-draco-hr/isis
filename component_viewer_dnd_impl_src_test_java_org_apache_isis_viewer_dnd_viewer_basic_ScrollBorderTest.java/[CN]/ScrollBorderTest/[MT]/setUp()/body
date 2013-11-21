@@ -1,25 +1,9 @@
 {
   org.apache.log4j.LogManager.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
-  mockTemplateImageLoader=mockery.mock(TemplateImageLoader.class);
-  mockSpecificationLoader=mockery.mock(SpecificationLoaderSpi.class);
-  mockUserProfileLoader=mockery.mock(UserProfileLoader.class);
-  mockPersistenceSessionFactory=mockery.mock(PersistenceSessionFactory.class);
-  mockAuthenticationManager=mockery.mock(AuthenticationManager.class);
-  mockAuthorizationManager=mockery.mock(AuthorizationManager.class);
-  mockery.checking(new Expectations(){
-{
-      ignoring(mockTemplateImageLoader);
-      ignoring(mockSpecificationLoader);
-      ignoring(mockUserProfileLoader);
-      ignoring(mockPersistenceSessionFactory);
-      ignoring(mockAuthenticationManager);
-      ignoring(mockAuthorizationManager);
-    }
-  }
-);
+  context.ignoring(mockTemplateImageLoader,mockSpecificationLoader,mockUserProfileLoader,mockPersistenceSessionFactory,mockAuthenticationManager,mockAuthorizationManager,mockContainer);
   TestToolkit.createInstance();
   final IsisConfigurationDefault configuration=new IsisConfigurationDefault();
-  final IsisSessionFactory sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockTemplateImageLoader,mockSpecificationLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,Collections.emptyList(),new OidMarshaller());
+  final IsisSessionFactory sessionFactory=new IsisSessionFactoryDefault(DeploymentType.EXPLORATION,configuration,mockSpecificationLoader,mockTemplateImageLoader,mockAuthenticationManager,mockAuthorizationManager,mockUserProfileLoader,mockPersistenceSessionFactory,mockContainer,Collections.emptyList(),new OidMarshaller());
   sessionFactory.init();
   IsisContextStatic.createRelaxedInstance(sessionFactory);
 }
