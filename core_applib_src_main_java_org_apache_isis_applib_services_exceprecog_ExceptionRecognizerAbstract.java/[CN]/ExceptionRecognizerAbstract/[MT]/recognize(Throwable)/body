@@ -1,0 +1,15 @@
+{
+  List<Throwable> causalChain=Throwables.getCausalChain(ex);
+  for (  Throwable throwable : causalChain) {
+    if (predicate.apply(throwable)) {
+      if (logRecognizedExceptions) {
+        LOG.info("Recognized exception, stacktrace : ",throwable);
+      }
+      final Throwable rootCause=Throwables.getRootCause(throwable);
+      final String rootCauseMessage=rootCause.getMessage();
+      final String parsedMessage=messageParser.apply(rootCauseMessage);
+      return parsedMessage;
+    }
+  }
+  return null;
+}
