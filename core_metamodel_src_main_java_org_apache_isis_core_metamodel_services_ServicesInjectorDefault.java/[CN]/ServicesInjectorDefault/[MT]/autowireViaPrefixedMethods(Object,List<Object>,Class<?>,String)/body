@@ -1,0 +1,20 @@
+{
+  final List<Method> methods=Arrays.asList(cls.getMethods());
+  final Iterable<Method> prefixedMethods=Iterables.filter(methods,new Predicate<Method>(){
+    public boolean apply(    Method method){
+      final String methodName=method.getName();
+      return methodName.startsWith(prefix);
+    }
+  }
+);
+  for (  final Method prefixedMethod : prefixedMethods) {
+    for (    final Object service : services) {
+      final Class<?> serviceClass=service.getClass();
+      boolean isInjectorMethod=isInjectorMethodFor(prefixedMethod,serviceClass);
+      if (isInjectorMethod) {
+        prefixedMethod.setAccessible(true);
+        invokeInjectorMethod(prefixedMethod,object,service);
+      }
+    }
+  }
+}

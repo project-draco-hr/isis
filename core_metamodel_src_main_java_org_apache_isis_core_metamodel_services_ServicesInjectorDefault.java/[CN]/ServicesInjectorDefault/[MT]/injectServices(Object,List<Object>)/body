@@ -1,21 +1,6 @@
 {
   final Class<?> cls=object.getClass();
-  final List<Method> methods=Arrays.asList(cls.getMethods());
-  final Iterable<Method> setterAndInjectorMethods=Iterables.filter(methods,new Predicate<Method>(){
-    public boolean apply(    Method method){
-      final String methodName=method.getName();
-      return methodName.startsWith("set") || methodName.startsWith("inject");
-    }
-  }
-);
-  for (  final Method method : setterAndInjectorMethods) {
-    for (    final Object service : services) {
-      final Class<?> serviceClass=service.getClass();
-      boolean isInjectorMethod=isInjectorMethodFor(method,serviceClass);
-      if (isInjectorMethod) {
-        method.setAccessible(true);
-        invokeSetMethod(method,object,service);
-      }
-    }
-  }
+  autowireViaFields(object,services,cls);
+  autowireViaPrefixedMethods(object,services,cls,"set");
+  autowireViaPrefixedMethods(object,services,cls,"inject");
 }
