@@ -5,6 +5,10 @@
       props.setProperty("member." + memberName + ".memberOrder.name",memberGroupName);
     }
     final MemberRepr memberRepr=members.get(memberName);
+    final NamedFacetRepr named=memberRepr.named;
+    if (named != null) {
+      props.setProperty("member." + memberName + ".named.value",named.value);
+    }
     final PagedFacetRepr paged=memberRepr.paged;
     if (paged != null) {
       props.setProperty("member." + memberName + ".paged.value","" + paged.value);
@@ -18,10 +22,10 @@
     if (actions != null) {
       int actSeq=0;
       for (      final String actionName : actions.keySet()) {
+        final ActionRepr actionRepr=actions.get(actionName);
         String nameKey="action." + actionName + ".memberOrder.name";
-        String sequenceKey="action." + actionName + ".memberOrder.sequence";
         props.setProperty(nameKey,memberName);
-        props.setProperty(sequenceKey,"" + ++actSeq);
+        setRemainingActionProperties(props,"action",actionName,actionRepr,++actSeq);
       }
     }
   }

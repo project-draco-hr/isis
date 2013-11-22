@@ -2,8 +2,10 @@
   if (metadata.getActions() == null) {
     return;
   }
-  int seq=0;
-  for (  final String actionName : metadata.getActions().keySet()) {
-    props.setProperty("member." + actionName + ".memberOrder.sequence","" + ++seq);
+  int xeq=0;
+  final Map<String,ActionRepr> actions=metadata.getActions();
+  for (  final String actionName : actions.keySet()) {
+    final ActionRepr actionRepr=actions.get(actionName);
+    setRemainingActionProperties(props,"member",actionName,actionRepr,++xeq);
   }
 }
