@@ -4,15 +4,5 @@
     return new String[0];
   }
   final Iterable<String> split=Splitter.on(',').split(property);
-  return Iterables.toArray(Iterables.filter(Iterables.transform(split,new Function<String,String>(){
-    @Override public String apply(    String input){
-      return input == null ? "" : input.trim();
-    }
-  }
-),new Predicate<String>(){
-    @Override public boolean apply(    String input){
-      return input != null && !input.isEmpty();
-    }
-  }
-),String.class);
+  return Iterables.toArray(Iterables.filter(Iterables.transform(split,StringFunctions.TRIM),StringPredicates.NOT_EMPTY),String.class);
 }

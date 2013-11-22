@@ -1,24 +1,23 @@
 {
   for (  final String memberName : members.keySet()) {
-    props.setProperty("memberOrder." + memberName + ".sequence","" + ++memberSeq[0]);
+    props.setProperty("member." + memberName + ".memberOrder.sequence","" + ++memberSeq[0]);
     if (memberGroupName != null) {
-      props.setProperty("memberOrder." + memberName + ".name",memberGroupName);
+      props.setProperty("member." + memberName + ".memberOrder.name",memberGroupName);
     }
     final MemberRepr memberRepr=members.get(memberName);
-    final Map<String,ActionRepr> actions=memberRepr.actions;
-    if (actions == null) {
-      continue;
+    final PagedFacetRepr paged=memberRepr.paged;
+    if (paged != null) {
+      props.setProperty("member." + memberName + ".paged.value","" + paged.value);
     }
-    int actSeq=0;
-    for (    final String actionName : actions.keySet()) {
-      String nameKey="memberOrder." + actionName + ".name";
-      String sequenceKey="memberOrder." + actionName + ".sequence";
-      if (props.containsKey(nameKey)) {
-        nameKey="memberOrder." + actionName + "().name";
-        sequenceKey="memberOrder." + actionName + "().sequence";
+    final Map<String,ActionRepr> actions=memberRepr.actions;
+    if (actions != null) {
+      int actSeq=0;
+      for (      final String actionName : actions.keySet()) {
+        String nameKey="action." + actionName + ".memberOrder.name";
+        String sequenceKey="action." + actionName + ".memberOrder.sequence";
+        props.setProperty(nameKey,memberName);
+        props.setProperty(sequenceKey,"" + ++actSeq);
       }
-      props.setProperty(nameKey,memberName);
-      props.setProperty(sequenceKey,"" + ++actSeq);
     }
   }
 }

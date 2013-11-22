@@ -1,0 +1,8 @@
+{
+  final Properties properties=processMethodContext.metadataProperties("paged");
+  if (properties != null) {
+    return new PagedFacetProperties(properties,processMethodContext.getFacetHolder());
+  }
+  final Paged annotation=Annotations.getAnnotation(processMethodContext.getMethod(),Paged.class);
+  return annotation != null ? new PagedFacetAnnotation(processMethodContext.getFacetHolder(),annotation.value()) : null;
+}
