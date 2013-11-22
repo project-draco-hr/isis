@@ -1,0 +1,8 @@
+{
+  final Class<?> returnType=processMethodContext.getMethod().getReturnType();
+  if (!Annotations.isString(returnType)) {
+    return null;
+  }
+  final MultiLine annotation=Annotations.getAnnotation(processMethodContext.getMethod(),MultiLine.class);
+  return (annotation != null) ? new MultiLineFacetOnPropertyAnnotation(annotation.numberOfLines(),annotation.preventWrapping(),processMethodContext.getFacetHolder()) : null;
+}
