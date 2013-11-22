@@ -1,10 +1,7 @@
 {
   MemberOrderFacet memberOrderFacet=createFromMetadataPropertiesIfPossible(processMethodContext);
   if (memberOrderFacet == null) {
-    final MemberOrder annotation=Annotations.getAnnotation(processMethodContext.getMethod(),MemberOrder.class);
-    if (annotation != null) {
-      memberOrderFacet=new MemberOrderFacetAnnotation(annotation.name(),annotation.sequence(),processMethodContext.getFacetHolder());
-    }
+    memberOrderFacet=createFromAnnotationIfPossible(processMethodContext);
   }
   FacetUtil.addFacet(memberOrderFacet);
 }

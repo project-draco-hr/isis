@@ -1,6 +1,10 @@
 {
-  final Render renderAnnotation=Annotations.getAnnotation(processMethodContext.getMethod(),Render.class);
-  FacetUtil.addFacet(create(renderAnnotation,processMethodContext.getFacetHolder()));
-  @SuppressWarnings("deprecation") final org.apache.isis.applib.annotation.Resolve resolveAnnotation=Annotations.getAnnotation(processMethodContext.getMethod(),org.apache.isis.applib.annotation.Resolve.class);
-  FacetUtil.addFacet(create(resolveAnnotation,processMethodContext.getFacetHolder()));
+  RenderFacet renderFacet=createFromMetadataPropertiesIfPossible(processMethodContext);
+  if (renderFacet == null) {
+    renderFacet=createFromRenderAnnotationIfPossible(processMethodContext);
+  }
+  if (renderFacet == null) {
+    renderFacet=createFromResolveAnnotationIfPossible(processMethodContext);
+  }
+  FacetUtil.addFacet(renderFacet);
 }
