@@ -1,0 +1,28 @@
+{
+  final DomainObjectContainer container=sessionFactory.getContainer();
+  final List<Object> services=sessionFactory.getServices();
+  final ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault();
+  servicesInjector.setContainer(container);
+  servicesInjector.setServices(services);
+  servicesInjector.init();
+  final ServiceInitializer serviceInitializer=new ServiceInitializer();
+  serviceInitializer.validate(getConfiguration(),container,services);
+  IsisContext.openSession(new InitialisationSession());
+  try {
+    IsisContext.getTransactionManager().startTransaction();
+    try {
+      serviceInitializer.postConstruct();
+      return serviceInitializer;
+    }
+ catch (    RuntimeException ex) {
+      IsisContext.getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      return serviceInitializer;
+    }
+ finally {
+      IsisContext.getTransactionManager().endTransaction();
+    }
+  }
+  finally {
+    IsisContext.closeSession();
+  }
+}
