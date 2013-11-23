@@ -4,9 +4,9 @@
   final LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
   final Component[] underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
   int i=0;
+  final T emptyModel=dummyOf(model);
   for (  ComponentFactory componentFactory : componentFactories) {
     final String underlyingId=underlyingIdPrefix + "-" + i;
-    final T emptyModel=dummyOf(model);
     Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
     underlyingViews[i++]=underlyingView;
     selectorPanel.addOrReplace(underlyingView);
@@ -36,16 +36,19 @@
         final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
           private static final long serialVersionUID=1L;
           @Override public void onClick(          AjaxRequestTarget target){
+            final T dummyModel=dummyOf(model);
             for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
               final Component component=underlyingViews[i];
-              T dummyModel=dummyOf(model);
-              if (component != null) {
-                final boolean isSelected=i == underlyingViewNum;
-                applyCssVisibility(component,isSelected);
-                component.setDefaultModel(isSelected ? model : dummyModel);
+              if (component == null) {
+                continue;
               }
+              final boolean isSelected=i == underlyingViewNum;
+              applyCssVisibility(component,isSelected);
+              component.setDefaultModel(isSelected ? model : dummyModel);
             }
             selectorPanel.selectedComponentFactory=componentFactory;
+            selectorPanel.selectedComponent=underlyingViews[underlyingViewNum];
+            selectorPanel.onSelect(target);
             target.add(selectorPanel,views);
           }
         }
@@ -70,6 +73,9 @@
     if (component != null) {
       if (i != selected) {
         component.add(new AttributeAppender("class"," " + INVISIBLE_CLASS));
+      }
+ else {
+        selectedComponent=component;
       }
     }
   }

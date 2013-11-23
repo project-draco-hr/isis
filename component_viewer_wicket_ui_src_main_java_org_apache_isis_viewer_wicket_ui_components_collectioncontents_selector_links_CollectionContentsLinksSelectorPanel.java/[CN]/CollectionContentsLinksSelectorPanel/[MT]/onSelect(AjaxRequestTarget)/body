@@ -1,0 +1,15 @@
+{
+  super.onSelect(target);
+  Component component=this;
+  while (component != null) {
+    if (component instanceof CollectionPanel) {
+      CollectionPanel collectionPanel=(CollectionPanel)component;
+      final boolean expanded=collectionPanel.onSelect(target);
+      if (additionalLinks != null) {
+        applyCssVisibility(additionalLinks,expanded);
+      }
+      return;
+    }
+    component=component.getParent();
+  }
+}
