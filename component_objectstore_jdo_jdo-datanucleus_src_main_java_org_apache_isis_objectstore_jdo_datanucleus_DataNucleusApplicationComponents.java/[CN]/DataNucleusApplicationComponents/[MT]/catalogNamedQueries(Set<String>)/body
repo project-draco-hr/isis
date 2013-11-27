@@ -1,6 +1,7 @@
 {
   final Map<String,JdoNamedQuery> namedQueryByName=Maps.newHashMap();
-  for (  final ObjectSpecification spec : objectSpecs) {
+  for (  final String persistableClassName : persistableClassNames) {
+    final ObjectSpecification spec=IsisContext.getSpecificationLoader().loadSpecification(persistableClassName);
     final JdoQueryFacet facet=spec.getFacet(JdoQueryFacet.class);
     if (facet == null) {
       continue;
