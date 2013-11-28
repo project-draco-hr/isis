@@ -1,3 +1,22 @@
 {
-  return new ActionRepr();
+  ActionRepr actionRepr=new ActionRepr();
+  CssClassFacet cssClassFacet=action.getFacet(CssClassFacet.class);
+  if (cssClassFacet != null && !cssClassFacet.isNoop()) {
+    CssClassFacetRepr cssClassFacetRepr=new CssClassFacetRepr();
+    cssClassFacetRepr.value=cssClassFacet.value();
+    actionRepr.cssClass=cssClassFacetRepr;
+  }
+  DescribedAsFacet describedAsFacet=action.getFacet(DescribedAsFacet.class);
+  if (describedAsFacet != null && !describedAsFacet.isNoop() && !Strings.isNullOrEmpty(describedAsFacet.value())) {
+    DescribedAsFacetRepr describedAsFacetRepr=new DescribedAsFacetRepr();
+    describedAsFacetRepr.value=describedAsFacet.value();
+    actionRepr.describedAs=describedAsFacetRepr;
+  }
+  NamedFacet namedFacet=action.getFacet(NamedFacet.class);
+  if (namedFacet != null && !namedFacet.isNoop()) {
+    NamedFacetRepr namedFacetRepr=new NamedFacetRepr();
+    namedFacetRepr.value=namedFacet.value();
+    actionRepr.named=namedFacetRepr;
+  }
+  return actionRepr;
 }

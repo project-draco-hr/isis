@@ -1,5 +1,65 @@
 {
   final MemberRepr memberRepr=new MemberRepr();
+  CssClassFacet cssClassFacet=assoc.getFacet(CssClassFacet.class);
+  if (cssClassFacet != null && !cssClassFacet.isNoop()) {
+    CssClassFacetRepr cssClassFacetRepr=new CssClassFacetRepr();
+    cssClassFacetRepr.value=cssClassFacet.value();
+    memberRepr.cssClass=cssClassFacetRepr;
+  }
+  DescribedAsFacet describedAsFacet=assoc.getFacet(DescribedAsFacet.class);
+  if (describedAsFacet != null && !describedAsFacet.isNoop() && !Strings.isNullOrEmpty(describedAsFacet.value())) {
+    DescribedAsFacetRepr describedAsFacetRepr=new DescribedAsFacetRepr();
+    describedAsFacetRepr.value=describedAsFacet.value();
+    memberRepr.describedAs=describedAsFacetRepr;
+  }
+  NamedFacet namedFacet=assoc.getFacet(NamedFacet.class);
+  if (namedFacet != null && !namedFacet.isNoop()) {
+    NamedFacetRepr namedFacetRepr=new NamedFacetRepr();
+    namedFacetRepr.value=namedFacet.value();
+    memberRepr.named=namedFacetRepr;
+  }
+  DisabledFacet disabledFacet=assoc.getFacet(DisabledFacet.class);
+  if (disabledFacet != null && !disabledFacet.isNoop()) {
+    DisabledFacetRepr disabledFacetRepr=new DisabledFacetRepr();
+    if (disabledFacet instanceof DisabledFacetImpl) {
+      DisabledFacetImpl disabledFacetImpl=(DisabledFacetImpl)disabledFacet;
+      disabledFacetRepr.reason=Strings.emptyToNull(disabledFacetImpl.getReason());
+    }
+    disabledFacetRepr.when=whenAlwaysToNull(disabledFacet.when());
+    disabledFacetRepr.where=whereAnywhereToNull(disabledFacet.where());
+    memberRepr.disabled=disabledFacetRepr;
+  }
+  HiddenFacet hiddenFacet=assoc.getFacet(HiddenFacet.class);
+  if (hiddenFacet != null && !hiddenFacet.isNoop()) {
+    HiddenFacetRepr hiddenFacetRepr=new HiddenFacetRepr();
+    hiddenFacetRepr.when=whenAlwaysToNull(hiddenFacet.when());
+    hiddenFacetRepr.where=whereAnywhereToNull(hiddenFacet.where());
+    memberRepr.hidden=hiddenFacetRepr;
+  }
+  MultiLineFacet multiLineFacet=assoc.getFacet(MultiLineFacet.class);
+  if (multiLineFacet != null && !multiLineFacet.isNoop()) {
+    MultiLineFacetRepr multiLineFacetRepr=new MultiLineFacetRepr();
+    multiLineFacetRepr.numberOfLines=multiLineFacet.numberOfLines();
+    memberRepr.multiLine=multiLineFacetRepr;
+  }
+  PagedFacet pagedFacet=assoc.getFacet(PagedFacet.class);
+  if (pagedFacet != null && !pagedFacet.isNoop()) {
+    PagedFacetRepr pagedFacetRepr=new PagedFacetRepr();
+    pagedFacetRepr.value=pagedFacet.value();
+    memberRepr.paged=pagedFacetRepr;
+  }
+  RenderFacet renderFacet=assoc.getFacet(RenderFacet.class);
+  if (renderFacet != null && !renderFacet.isNoop()) {
+    RenderFacetRepr renderFacetRepr=new RenderFacetRepr();
+    renderFacetRepr.value=renderFacet.value();
+    memberRepr.render=renderFacetRepr;
+  }
+  TypicalLengthFacet typicalLengthFacet=assoc.getFacet(TypicalLengthFacet.class);
+  if (typicalLengthFacet != null && !typicalLengthFacet.isNoop()) {
+    TypicalLengthFacetRepr typicalLengthFacetRepr=new TypicalLengthFacetRepr();
+    typicalLengthFacetRepr.value=typicalLengthFacet.value();
+    memberRepr.typicalLength=typicalLengthFacetRepr;
+  }
   final List<ObjectAction> actions=objectSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,ObjectActions.memberOrderOf(assoc));
   if (!actions.isEmpty()) {
     memberRepr.actions=Maps.newLinkedHashMap();

@@ -29,6 +29,22 @@
     if (paged != null) {
       props.setProperty("member." + memberName + ".paged.value","" + paged.value);
     }
+    final DisabledFacetRepr disabled=memberRepr.disabled;
+    if (disabled != null) {
+      final When disabledWhen=disabled.when != null ? disabled.when : When.ALWAYS;
+      props.setProperty("member." + memberName + ".disabled.when",disabledWhen.toString());
+      final Where disabledWhere=disabled.where != null ? disabled.where : Where.ANYWHERE;
+      props.setProperty("member." + memberName + ".disabled.where",disabledWhere.toString());
+      final String disabledReason=disabled.reason != null ? disabled.reason : "";
+      props.setProperty("member." + memberName + ".disabled.reason",disabledReason);
+    }
+    final HiddenFacetRepr hidden=memberRepr.hidden;
+    if (hidden != null) {
+      final When hiddenWhen=hidden.when != null ? hidden.when : When.ALWAYS;
+      props.setProperty("member." + memberName + ".hidden.when",hiddenWhen.toString());
+      final Where hiddenWhere=hidden.where != null ? hidden.where : Where.ANYWHERE;
+      props.setProperty("member." + memberName + ".hidden.where",hiddenWhere.toString());
+    }
     final RenderFacetRepr render=memberRepr.render;
     if (render != null) {
       final Type renderType=render.value != null ? render.value : Render.Type.EAGERLY;
