@@ -1,7 +1,7 @@
 {
   final ObjectAdapter adapter=adapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
   final AbstractLink link=createLink(adapterMemento,action,linkId,adapter);
-  final String label=ObjectActions.nameFor(action);
+  final String label=ObjectAction.Utils.nameFor(action);
   final AuthenticationSession session=getAuthenticationSession();
   final Consent visibility=action.isVisible(session,adapter,Where.OBJECT_FORMS);
   if (visibility.isVetoed()) {
@@ -12,6 +12,7 @@
   if (disabledReasonIfAny != null) {
     link.setEnabled(false);
   }
+  Util.addTargetBlankIfActionReturnsUrl(link,action);
   final boolean blobOrClob=CssMenuItem.returnsBlobOrClob(action);
   final boolean prototype=CssMenuItem.isExplorationOrPrototype(action);
   final String actionIdentifier=CssMenuItem.actionIdentifierFor(action);

@@ -1,18 +1,3 @@
 {
-  final String assocName=association.getName();
-  final String assocId=association.getId();
-  return new Filter<ObjectAction>(){
-    @Override public boolean accept(    ObjectAction t){
-      final MemberOrderFacet memberOrderFacet=t.getFacet(MemberOrderFacet.class);
-      if (memberOrderFacet == null) {
-        return false;
-      }
-      final String memberOrderName=memberOrderFacet.name();
-      if (Strings.isNullOrEmpty(memberOrderName)) {
-        return false;
-      }
-      return memberOrderName.equalsIgnoreCase(assocName) || memberOrderName.equalsIgnoreCase(assocId);
-    }
-  }
-;
+  return ObjectAction.Filters.memberOrderOf(association);
 }

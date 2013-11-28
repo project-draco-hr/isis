@@ -16,6 +16,12 @@
     getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
     label="Downloading: " + blob.getName();
   }
+ else   if (value instanceof java.net.URL) {
+    java.net.URL url=(java.net.URL)value;
+    label="Downloading: " + objectAdapter.titleString(null);
+    IRequestHandler handler=new RedirectRequestHandler(url.toString());
+    getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
+  }
  else {
     label=objectAdapter.titleString(null);
   }

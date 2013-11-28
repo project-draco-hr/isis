@@ -2,7 +2,8 @@
   final PageParameters pageParameters=ActionModel.createPageParameters(adapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK),action,ActionModel.SingleResultsMode.REDIRECT,ConcurrencyChecking.NO_CHECK);
   final Class<? extends Page> pageClass=getPageClassRegistry().getPageClass(PageType.ACTION);
   final AbstractLink link=Links.newBookmarkablePageLink(linkId,pageParameters,pageClass);
-  final String actionLabel=ObjectActions.nameFor(action);
+  final String actionLabel=ObjectAction.Utils.nameFor(action);
+  Util.addTargetBlankIfActionReturnsUrl(link,action);
   final boolean blobOrClob=CssMenuItem.returnsBlobOrClob(action);
   final boolean prototype=CssMenuItem.isExplorationOrPrototype(action);
   final String actionIdentifier=CssMenuItem.actionIdentifierFor(action);
