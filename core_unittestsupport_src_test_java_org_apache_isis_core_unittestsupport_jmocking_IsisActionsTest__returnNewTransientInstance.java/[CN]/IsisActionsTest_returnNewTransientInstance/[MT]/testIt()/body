@@ -1,0 +1,13 @@
+{
+  context.checking(new Expectations(){
+{
+      allowing(mockContainer).newTransientInstance(with(anySubclassOf(Object.class)));
+      will(IsisActions.returnNewTransientInstance());
+      ignoring(mockContainer);
+    }
+  }
+);
+  MyCustomer o=mockContainer.newTransientInstance(MyCustomer.class);
+  assertThat(o,is(not(nullValue())));
+  mockContainer.persistIfNotAlready(o);
+}
