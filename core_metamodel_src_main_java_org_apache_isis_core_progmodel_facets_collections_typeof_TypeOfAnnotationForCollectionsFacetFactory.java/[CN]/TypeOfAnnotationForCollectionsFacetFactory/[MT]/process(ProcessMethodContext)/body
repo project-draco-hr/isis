@@ -1,5 +1,4 @@
 {
-  final TypeOf annotation=Annotations.getAnnotation(processMethodContext.getMethod(),TypeOf.class);
   final Class<?> methodReturnType=processMethodContext.getMethod().getReturnType();
   if (!collectionTypeRegistry.isCollectionType(methodReturnType) && !collectionTypeRegistry.isArrayType(methodReturnType)) {
     return;
@@ -10,6 +9,8 @@
     FacetUtil.addFacet(new TypeOfFacetInferredFromArray(componentType,processMethodContext.getFacetHolder(),getSpecificationLoader()));
     return;
   }
+  Method method=processMethodContext.getMethod();
+  final TypeOf annotation=Annotations.getAnnotation(method,TypeOf.class);
   if (annotation != null) {
     FacetUtil.addFacet(new TypeOfFacetAnnotationForCollection(annotation.value(),processMethodContext.getFacetHolder(),getSpecificationLoader()));
     return;
