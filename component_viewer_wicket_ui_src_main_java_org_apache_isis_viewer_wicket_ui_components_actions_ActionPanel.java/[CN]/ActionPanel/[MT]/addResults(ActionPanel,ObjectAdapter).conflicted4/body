@@ -1,7 +1,6 @@
 {
-  panel.getTransactionManager().flushTransaction();
-  final EntityCollectionModel collectionModel=EntityCollectionModel.createStandalone(resultAdapter);
-  collectionModel.setActionHint(panel.getActionModel());
-  final StandaloneCollectionPage standaloneCollectionPage=new StandaloneCollectionPage(collectionModel);
-  panel.setResponsePage(standaloneCollectionPage);
+  final Object value=resultAdapter.getObject();
+  java.net.URL url=(java.net.URL)value;
+  IRequestHandler handler=new RedirectRequestHandler(url.toString());
+  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
 }

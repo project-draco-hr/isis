@@ -1,4 +1,7 @@
 {
-  final ObjectAdapter actualAdapter=determineActualAdapter(resultAdapter,actionPanel);
-  addResultsAccordingToSingleResultsMode(actionPanel,actualAdapter,null);
+  final Object value=resultAdapter.getObject();
+  final Clob clob=(Clob)value;
+  ResourceStreamRequestHandler handler=new ResourceStreamRequestHandler(new StringResourceStream(clob.getChars(),clob.getMimeType().toString()),clob.getName());
+  handler.setContentDisposition(ContentDisposition.ATTACHMENT);
+  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
 }

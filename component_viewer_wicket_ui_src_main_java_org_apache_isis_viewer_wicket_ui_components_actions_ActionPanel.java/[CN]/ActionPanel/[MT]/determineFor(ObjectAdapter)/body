@@ -5,6 +5,16 @@
   final ObjectSpecification resultSpec=resultAdapter.getSpecification();
   if (resultSpec.isNotCollection()) {
     if (resultSpec.getFacet(ValueFacet.class) != null) {
+      final Object value=resultAdapter.getObject();
+      if (value instanceof Clob) {
+        return ResultType.VALUE_CLOB;
+      }
+      if (value instanceof Blob) {
+        return ResultType.VALUE_BLOB;
+      }
+      if (value instanceof java.net.URL) {
+        return ResultType.VALUE_URL;
+      }
       return ResultType.VALUE;
     }
  else {
@@ -14,12 +24,10 @@
  else {
     final List<Object> pojoList=asList(resultAdapter);
 switch (pojoList.size()) {
-case 0:
-      return ResultType.EMPTY;
 case 1:
-    return ResultType.OBJECT;
+      return ResultType.OBJECT;
 default :
-  return ResultType.COLLECTION;
+    return ResultType.COLLECTION;
 }
 }
 }
