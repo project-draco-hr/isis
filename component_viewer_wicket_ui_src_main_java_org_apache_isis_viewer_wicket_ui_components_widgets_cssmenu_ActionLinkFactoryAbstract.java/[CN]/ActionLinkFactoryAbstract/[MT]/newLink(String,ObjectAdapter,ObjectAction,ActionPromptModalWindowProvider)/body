@@ -1,0 +1,29 @@
+{
+  final ModalWindow modalWindow=actionPromptModalWindowProvider.getActionPromptModalWindow();
+  if (modalWindow != null) {
+    final ActionModel actionModel=ActionModel.create(objectAdapter,action);
+    AjaxLink<Object> link=new AjaxLink<Object>(linkId){
+      private static final long serialVersionUID=1L;
+      @Override public void onClick(      AjaxRequestTarget target){
+        final Component actionPromptPanel=getComponentFactoryRegistry().createComponent(ComponentType.ACTION_PROMPT,modalWindow.getContentId(),actionModel);
+        modalWindow.setTitle(actionModel.getTitle());
+        modalWindow.setContent(actionPromptPanel);
+        target.prependJavaScript("Wicket.Window.unloadConfirmation = false;");
+        modalWindow.show(target);
+      }
+    }
+;
+    link.add(new CssClassAppender("noVeil"));
+    return link;
+  }
+ else {
+    final ConcurrencyChecking concurrencyChecking=ConcurrencyChecking.concurrencyCheckingFor(action.getSemantics());
+    final PageParameters pageParameters=ActionModel.createPageParameters(objectAdapter,action,concurrencyChecking);
+    final Class<? extends Page> pageClass=getPageClassRegistry().getPageClass(PageType.ACTION_PROMPT);
+    AbstractLink link=Links.newBookmarkablePageLink(linkId,pageParameters,pageClass);
+    if (action.getParameterCount() == 0) {
+      addTargetBlankIfActionReturnsUrl(link,action);
+    }
+    return link;
+  }
+}

@@ -1,0 +1,19 @@
+{
+  final ObjectAdapter adapter=adapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final Boolean persistent=adapter.representsPersistent();
+  if (!persistent) {
+    throw new IllegalArgumentException("Object '" + adapter.titleString(null) + "' is not persistent.");
+  }
+  final AuthenticationSession session=getAuthenticationSession();
+  final Consent visibility=action.isVisible(session,adapter,Where.OBJECT_FORMS);
+  if (visibility.isVetoed()) {
+    return null;
+  }
+  final AbstractLink link=newLink(linkId,adapter,action,actionPromptModalWindowProvider);
+  final Consent usability=action.isUsable(session,adapter,Where.OBJECT_FORMS);
+  final String disabledReasonIfAny=usability.getReason();
+  if (disabledReasonIfAny != null) {
+    link.setEnabled(false);
+  }
+  return newLinkAndLabel(action,link,disabledReasonIfAny);
+}

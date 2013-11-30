@@ -1,0 +1,29 @@
+{
+  final ActionModel actionModel=getActionModel();
+  final String invalidReasonIfAny=actionModel.getReasonInvalidIfAny();
+  if (invalidReasonIfAny != null) {
+    raiseWarning(target,feedbackForm,invalidReasonIfAny);
+    return false;
+  }
+  try {
+    final ObjectAdapter resultAdapter=executeActionHandlingApplicationExceptions();
+    getTransactionManager().flushTransaction();
+    final ResultType resultType=ResultType.determineFor(resultAdapter);
+    resultType.addResults(this,resultAdapter);
+    if (actionModel.isBookmarkable()) {
+      bookmarkPage(actionModel);
+    }
+    return false;
+  }
+ catch (  RuntimeException ex) {
+    String message=recognizeException(ex,target,feedbackForm);
+    if (message != null) {
+      if (feedbackForm == null) {
+        final ResultType resultType=ResultType.determineFor(null);
+        resultType.addResults(this,null);
+      }
+      return false;
+    }
+    throw ex;
+  }
+}
