@@ -1,7 +1,6 @@
 {
-  final Object value=resultAdapter.getObject();
-  final Clob clob=(Clob)value;
-  ResourceStreamRequestHandler handler=new ResourceStreamRequestHandler(new StringResourceStream(clob.getChars(),clob.getMimeType().toString()),clob.getName());
-  handler.setContentDisposition(ContentDisposition.ATTACHMENT);
-  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
+  final EntityCollectionModel collectionModel=EntityCollectionModel.createStandalone(resultAdapter);
+  collectionModel.setActionHint(panel.getActionModel());
+  final StandaloneCollectionPage standaloneCollectionPage=new StandaloneCollectionPage(collectionModel);
+  panel.setResponsePage(standaloneCollectionPage);
 }
