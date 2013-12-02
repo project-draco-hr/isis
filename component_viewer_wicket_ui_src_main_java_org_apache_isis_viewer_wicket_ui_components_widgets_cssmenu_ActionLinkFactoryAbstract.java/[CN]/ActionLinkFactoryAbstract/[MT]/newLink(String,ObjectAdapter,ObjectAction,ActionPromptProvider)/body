@@ -1,0 +1,28 @@
+{
+  final ActionPrompt actionPrompt=actionPromptProvider.getActionPrompt();
+  if (actionPrompt != null) {
+    final ActionModel actionModel=ActionModel.create(objectAdapter,action);
+    actionModel.setActionPrompt(actionPrompt);
+    AjaxLink<Object> link=new AjaxLink<Object>(linkId){
+      private static final long serialVersionUID=1L;
+      @Override public void onClick(      AjaxRequestTarget target){
+        final ActionPanel actionPromptPanel=(ActionPanel)getComponentFactoryRegistry().createComponent(ComponentType.ACTION_PROMPT,actionPrompt.getContentId(),actionModel);
+        actionPrompt.setPanel(actionPromptPanel,target);
+        actionPrompt.show(target);
+      }
+    }
+;
+    link.add(new CssClassAppender("noVeil"));
+    return link;
+  }
+ else {
+    final ConcurrencyChecking concurrencyChecking=ConcurrencyChecking.concurrencyCheckingFor(action.getSemantics());
+    final PageParameters pageParameters=ActionModel.createPageParameters(objectAdapter,action,concurrencyChecking);
+    final Class<? extends Page> pageClass=getPageClassRegistry().getPageClass(PageType.ACTION_PROMPT);
+    AbstractLink link=Links.newBookmarkablePageLink(linkId,pageParameters,pageClass);
+    if (action.getParameterCount() == 0) {
+      addTargetBlankIfActionReturnsUrl(link,action);
+    }
+    return link;
+  }
+}

@@ -1,6 +1,7 @@
 {
   final Object value=resultAdapter.getObject();
-  java.net.URL url=(java.net.URL)value;
-  IRequestHandler handler=new RedirectRequestHandler(url.toString());
+  final Clob clob=(Clob)value;
+  ResourceStreamRequestHandler handler=new ResourceStreamRequestHandler(new StringResourceStream(clob.getChars(),clob.getMimeType().toString()),clob.getName());
+  handler.setContentDisposition(ContentDisposition.ATTACHMENT);
   panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
 }

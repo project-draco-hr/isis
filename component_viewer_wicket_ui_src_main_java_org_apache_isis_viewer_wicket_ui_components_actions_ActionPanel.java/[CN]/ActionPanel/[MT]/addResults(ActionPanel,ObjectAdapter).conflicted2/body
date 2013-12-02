@@ -1,6 +1,6 @@
 {
-  ValueModel valueModel=new ValueModel(resultAdapter);
-  valueModel.setActionHint(panel.getActionModel());
-  final ValuePage valuePage=new ValuePage(valueModel);
-  panel.setResponsePage(valuePage);
+  final Object value=resultAdapter.getObject();
+  java.net.URL url=(java.net.URL)value;
+  IRequestHandler handler=new RedirectRequestHandler(url.toString());
+  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
 }
