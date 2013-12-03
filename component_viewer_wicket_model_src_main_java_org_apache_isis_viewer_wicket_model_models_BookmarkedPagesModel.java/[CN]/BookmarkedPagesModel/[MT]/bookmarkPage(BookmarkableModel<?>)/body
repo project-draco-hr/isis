@@ -1,7 +1,8 @@
 {
   cleanUpGarbage(rootNodes);
   final PageParameters candidatePP=bookmarkableModel.getPageParameters();
-  if (!holdsOid(candidatePP)) {
+  RootOid oid=BookmarkTreeNode.oidFrom(candidatePP);
+  if (oid == null) {
     return;
   }
   boolean foundInGraph=false;
@@ -12,7 +13,8 @@
     }
   }
   if (!foundInGraph && bookmarkableModel.hasAsRootPolicy()) {
-    rootNodes.add(BookmarkTreeNode.newRoot(bookmarkableModel));
+    BookmarkTreeNode rootNode=BookmarkTreeNode.newRoot(bookmarkableModel);
+    rootNodes.add(rootNode);
     Collections.sort(rootNodes,COMPARATOR);
     current=candidatePP;
   }

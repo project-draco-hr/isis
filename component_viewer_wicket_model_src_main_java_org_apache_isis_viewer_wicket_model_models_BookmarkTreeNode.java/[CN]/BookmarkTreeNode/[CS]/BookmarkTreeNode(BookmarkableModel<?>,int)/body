@@ -1,5 +1,9 @@
 {
-  this.bookmarkableModel=bookmarkableModel;
-  this.depth=depth;
+  PageParameters pageParameters=bookmarkableModel.getPageParameters();
+  RootOid oid=oidFrom(pageParameters);
+  this.oidNoVerStr=IsisContext.getOidMarshaller().marshalNoVersion(oid);
+  this.oidNoVer=IsisContext.getOidMarshaller().unmarshal(oidNoVerStr,RootOid.class);
   this.title=bookmarkableModel.getTitle();
+  this.pageType=bookmarkableModel instanceof EntityModel ? PageType.ENTITY : PageType.ACTION_PROMPT;
+  this.depth=depth;
 }
