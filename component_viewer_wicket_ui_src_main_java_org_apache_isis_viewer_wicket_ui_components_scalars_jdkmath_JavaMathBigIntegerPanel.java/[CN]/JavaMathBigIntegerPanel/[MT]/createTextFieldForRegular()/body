@@ -1,18 +1,8 @@
 {
   return new TextField<BigInteger>(ID_SCALAR_VALUE,new TextFieldValueModel<BigInteger>(this),BigInteger.class){
     private static final long serialVersionUID=1L;
-    @Override public <C>IConverter<C> getConverter(    Class<C> type){
-      @SuppressWarnings("unchecked") final IConverter<C> converter=(IConverter<C>)new AbstractIntegerConverter<BigInteger>(){
-        private static final long serialVersionUID=1L;
-        @Override public BigInteger convertToObject(        String value,        Locale locale){
-          return new BigInteger(value);
-        }
-        @Override protected Class<BigInteger> getTargetType(){
-          return BigInteger.class;
-        }
-      }
-;
-      return type == BigInteger.class ? converter : super.getConverter(type);
+    @SuppressWarnings("unchecked") @Override public <C>IConverter<C> getConverter(    Class<C> type){
+      return (IConverter<C>)(type == BigInteger.class ? BigIntegerConverter.INSTANCE : super.getConverter(type));
     }
   }
 ;

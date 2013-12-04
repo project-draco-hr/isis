@@ -1,0 +1,15 @@
+{
+  try {
+    final LocalDateTime dateTime=getFormatterForDateTimePattern().parseLocalDateTime(value);
+    return dateTime;
+  }
+ catch (  IllegalArgumentException ex) {
+    try {
+      final LocalDateTime dateTime=getFormatterForDatePattern().parseLocalDateTime(value);
+      return dateTime;
+    }
+ catch (    IllegalArgumentException ex2) {
+      throw new ConversionException("Cannot convert into a date/time",ex);
+    }
+  }
+}
