@@ -1,0 +1,15 @@
+{
+  final BigDecimalForParameterDerivedFromDecimalAnnotationFacetFactory facetFactory=new BigDecimalForParameterDerivedFromDecimalAnnotationFacetFactory();
+class Order {
+    @SuppressWarnings("unused") public void updateCost(    @Decimal(length=14,scale=4) final BigDecimal cost){
+    }
+  }
+  final Method method=findMethod(Order.class,"updateCost",new Class[]{BigDecimal.class});
+  facetFactory.processParams(new ProcessParameterContext(method,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(BigDecimalValueFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof BigDecimalFacetForParameterFromDecimalAnnotation);
+  final BigDecimalFacetForParameterFromDecimalAnnotation annotation=(BigDecimalFacetForParameterFromDecimalAnnotation)facet;
+  assertEquals(new Integer(14),annotation.getLength());
+  assertEquals(new Integer(4),annotation.getScale());
+}
