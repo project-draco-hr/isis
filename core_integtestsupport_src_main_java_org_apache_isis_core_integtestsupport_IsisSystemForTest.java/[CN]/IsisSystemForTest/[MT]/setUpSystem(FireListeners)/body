@@ -1,10 +1,11 @@
 {
-  org.apache.log4j.Logger.getRootLogger().setLevel(getLevel());
   boolean firstTime=isisSystem == null;
   if (fireListeners.shouldFire()) {
     fireInitAndPreSetupSystem(firstTime);
   }
   if (firstTime) {
+    IsisLoggingConfigurer isisLoggingConfigurer=new IsisLoggingConfigurer(getLevel());
+    isisLoggingConfigurer.configureLogging(".",new String[]{});
     isisSystem=createIsisSystem(services);
     isisSystem.init();
     IsisContext.closeSession();
