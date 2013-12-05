@@ -1,0 +1,22 @@
+{
+  DecimalFormat numberFormat=(DecimalFormat)getNumberFormat(locale);
+  char groupingSeparator=numberFormat.getDecimalFormatSymbols().getGroupingSeparator();
+  if (valueStr.contains("" + groupingSeparator)) {
+    throw new ConversionException("Thousands separator '" + groupingSeparator + "' is not allowed in input");
+  }
+  final BigDecimal bd=super.convertToObject(valueStr,locale);
+  if (this.scale != null) {
+    if (bd.scale() > this.scale) {
+      throw new ConversionException("No more than " + this.scale + " digits can be entered after the decimal place");
+    }
+    try {
+      return bd != null ? bd.setScale(this.scale) : null;
+    }
+ catch (    Exception ex) {
+      throw new ConversionException("'" + valueStr + "' is not a valid decimal number.");
+    }
+  }
+ else {
+    return bd;
+  }
+}

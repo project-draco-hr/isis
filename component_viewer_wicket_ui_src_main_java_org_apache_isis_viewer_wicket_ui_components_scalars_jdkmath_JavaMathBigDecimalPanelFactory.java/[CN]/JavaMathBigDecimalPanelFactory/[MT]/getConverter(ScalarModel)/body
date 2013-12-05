@@ -1,0 +1,12 @@
+{
+  final Integer scale=scalarModel.getScale();
+  if (scale == null) {
+    return converterForNullScale;
+  }
+  BigDecimalConverterWithScale bigDecimalConverter=converterByScale.get(scale);
+  if (bigDecimalConverter == null) {
+    bigDecimalConverter=new BigDecimalConverterWithScale(scale);
+    converterByScale.put(scale,bigDecimalConverter);
+  }
+  return bigDecimalConverter;
+}
