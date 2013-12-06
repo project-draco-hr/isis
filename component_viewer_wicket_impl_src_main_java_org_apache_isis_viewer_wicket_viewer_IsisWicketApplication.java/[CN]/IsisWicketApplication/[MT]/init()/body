@@ -26,7 +26,25 @@
     mountPage("/action/${objectOid}/${actionOwningSpec}/${actionId}/${actionType}/#{actionArgs}",PageType.ACTION_PROMPT);
   }
  catch (  RuntimeException ex) {
-    LOG.error("Failed to initialize",ex);
-    throw ex;
+    List<MetaModelInvalidException> mmies=Lists.newArrayList(Iterables.filter(Throwables.getCausalChain(ex),MetaModelInvalidException.class));
+    if (!mmies.isEmpty()) {
+      final MetaModelInvalidException mmie=mmies.get(0);
+      log("");
+      logBanner();
+      log("");
+      validationErrors.addAll(mmie.getValidationErrors());
+      for (      String validationError : validationErrors) {
+        logError(validationError);
+      }
+      log("");
+      log("Please inspect the above messages and correct your domain model.");
+      log("");
+      logBanner();
+      log("");
+    }
+ else {
+      LOG.error("Failed to initialize",ex);
+      throw ex;
+    }
   }
 }

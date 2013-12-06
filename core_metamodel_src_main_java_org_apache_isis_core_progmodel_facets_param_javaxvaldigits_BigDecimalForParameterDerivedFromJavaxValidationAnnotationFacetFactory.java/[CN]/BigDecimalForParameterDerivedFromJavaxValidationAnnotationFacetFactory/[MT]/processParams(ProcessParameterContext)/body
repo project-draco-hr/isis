@@ -1,0 +1,15 @@
+{
+  final Method method=processParameterContext.getMethod();
+  final int paramNum=processParameterContext.getParamNum();
+  if (BigDecimal.class != method.getParameterTypes()[paramNum]) {
+    return;
+  }
+  final Annotation[] parameterAnnotations=Annotations.getParameterAnnotations(method)[paramNum];
+  for (  final Annotation parameterAnnotation : parameterAnnotations) {
+    if (parameterAnnotation instanceof Digits) {
+      Digits digitsAnnotation=(Digits)parameterAnnotation;
+      FacetUtil.addFacet(create(digitsAnnotation,processParameterContext.getFacetHolder()));
+      return;
+    }
+  }
+}

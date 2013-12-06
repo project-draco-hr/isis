@@ -1,15 +1,16 @@
 {
-  final Column annotation=Annotations.getAnnotation(processMethodContext.getMethod(),Column.class);
   if (BigDecimal.class != processMethodContext.getMethod().getReturnType()) {
     return;
   }
-  final BigDecimalValueFacet facet;
   final FacetedMethod holder=processMethodContext.getFacetHolder();
-  if (annotation == null) {
-    facet=new BigDecimalFacetFallback(holder);
+  Integer existingLength=null;
+  Integer existingScale=null;
+  BigDecimalValueFacet existingFacet=(BigDecimalValueFacet)holder.getFacet(BigDecimalValueFacet.class);
+  if (existingFacet != null && !existingFacet.isNoop()) {
+    existingLength=existingFacet.getLength();
+    existingScale=existingFacet.getScale();
   }
- else {
-    facet=new BigDecimalFacetDerivedFromJdoColumn(holder,valueElseDefault(annotation.length(),DEFAULT_LENGTH),valueElseDefault(annotation.scale(),DEFAULT_SCALE));
-  }
+  final Column annotation=Annotations.getAnnotation(processMethodContext.getMethod(),Column.class);
+  final BigDecimalValueFacet facet=annotation == null ? new BigDecimalFacetFallback(holder) : new BigDecimalFacetDerivedFromJdoColumn(holder,valueElseDefaults(annotation.length(),existingLength,DEFAULT_LENGTH),valueElseDefaults(annotation.scale(),existingScale,DEFAULT_SCALE));
   FacetUtil.addFacet(facet);
 }

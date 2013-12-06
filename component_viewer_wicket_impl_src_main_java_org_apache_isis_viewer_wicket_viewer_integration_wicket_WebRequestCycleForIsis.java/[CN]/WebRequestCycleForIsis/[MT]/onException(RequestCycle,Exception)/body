@@ -1,3 +1,5 @@
 {
-  return new RenderPageRequestHandler(errorPageProviderFor(ex),RedirectPolicy.ALWAYS_REDIRECT);
+  PageProvider errorPageProvider=errorPageProviderFor(ex);
+  RedirectPolicy redirectPolicy=ex instanceof PageExpiredException ? RedirectPolicy.NEVER_REDIRECT : RedirectPolicy.ALWAYS_REDIRECT;
+  return errorPageProvider != null ? new RenderPageRequestHandler(errorPageProvider,redirectPolicy) : null;
 }
