@@ -1,0 +1,17 @@
+{
+  updateTitleStringFormatterIfOverridden();
+  final String dateString=entry.trim();
+  final String str=dateString.toLowerCase();
+  if (str.equals("today") || str.equals("now")) {
+    return now();
+  }
+ else   if (dateString.startsWith("+")) {
+    return relativeDate(context == null ? now() : context,dateString,true);
+  }
+ else   if (dateString.startsWith("-")) {
+    return relativeDate(context == null ? now() : context,dateString,false);
+  }
+ else {
+    return parseDate(dateString,context == null ? now() : context,localization);
+  }
+}
