@@ -1,8 +1,9 @@
 {
   if (publishingService == null) {
-    return;
+    return Collections.emptyList();
   }
-  for (  final ObjectAdapter enlistedAdapter : changeKindByEnlistedAdapter.keySet()) {
+  List<ObjectAdapter> enlistedAdapters=Lists.newArrayList(changeKindByEnlistedAdapter.keySet());
+  for (  final ObjectAdapter enlistedAdapter : enlistedAdapters) {
     final ChangeKind changeKind=changeKindByEnlistedAdapter.get(enlistedAdapter);
     final PublishedObjectFacet publishedObjectFacet=enlistedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
     if (publishedObjectFacet == null) {
@@ -15,4 +16,5 @@
     final EventMetadata metadata=newEventMetadata(eventTypeFor(changeKind),currentUser,currentTimestampEpoch,title);
     publishingService.publishObject(payloadFactory,metadata,enlistedAdapter,changeKind,objectStringifier());
   }
+  return enlistedAdapters;
 }
