@@ -1,17 +1,14 @@
 {
   updateTitleStringFormatterIfOverridden();
-  final String dateString=entry.trim();
-  final String str=dateString.toLowerCase();
-  if (str.equals("today") || str.equals("now")) {
-    return now();
+  LocalDate contextDate=(LocalDate)context;
+  final String dateString=entry.trim().toUpperCase();
+  if (dateString.startsWith("+") && contextDate != null) {
+    return JodaLocalDateUtil.relativeDate(contextDate,dateString,true);
   }
- else   if (dateString.startsWith("+")) {
-    return relativeDate(context == null ? now() : context,dateString,true);
-  }
- else   if (dateString.startsWith("-")) {
-    return relativeDate(context == null ? now() : context,dateString,false);
+ else   if (dateString.startsWith("-") && contextDate != null) {
+    return JodaLocalDateUtil.relativeDate(contextDate,dateString,false);
   }
  else {
-    return parseDate(dateString,context == null ? now() : context,localization);
+    return parseDate(dateString,contextDate,localization);
   }
 }

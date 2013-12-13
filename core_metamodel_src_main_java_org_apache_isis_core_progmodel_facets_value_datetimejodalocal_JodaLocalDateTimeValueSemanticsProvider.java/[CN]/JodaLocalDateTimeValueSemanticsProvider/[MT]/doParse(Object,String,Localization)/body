@@ -1,0 +1,14 @@
+{
+  updateTitleStringFormatterIfOverridden();
+  LocalDateTime contextDateTime=(LocalDateTime)context;
+  final String dateString=entry.trim().toUpperCase();
+  if (dateString.startsWith("+") && contextDateTime != null) {
+    return JodaLocalDateTimeUtil.relativeDateTime(contextDateTime,dateString,true);
+  }
+ else   if (dateString.startsWith("-") && contextDateTime != null) {
+    return JodaLocalDateTimeUtil.relativeDateTime(contextDateTime,dateString,false);
+  }
+ else {
+    return parseDateTime(dateString,contextDateTime,localization);
+  }
+}
