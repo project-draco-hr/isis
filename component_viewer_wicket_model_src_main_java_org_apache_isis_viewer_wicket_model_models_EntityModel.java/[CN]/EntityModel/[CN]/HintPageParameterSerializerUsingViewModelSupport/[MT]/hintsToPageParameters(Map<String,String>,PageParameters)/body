@@ -1,0 +1,15 @@
+{
+  if (hints.isEmpty()) {
+    return;
+  }
+  ViewModelSupportDefault vms=new ViewModelSupportDefault();
+  Memento memento=vms.create();
+  Set<String> hintKeys=hints.keySet();
+  for (  String key : hintKeys) {
+    String safeKey=key.replace(':','_');
+    Serializable value=hints.get(key);
+    memento.set(safeKey,value);
+  }
+  String serializedHints=memento.asString();
+  PageParameterNames.HINTS.addStringTo(pageParameters,serializedHints);
+}

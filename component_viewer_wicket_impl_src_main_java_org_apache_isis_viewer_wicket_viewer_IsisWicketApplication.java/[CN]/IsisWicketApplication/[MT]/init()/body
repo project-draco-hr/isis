@@ -23,7 +23,9 @@
     }
 );
     mountPage("/entity/${objectOid}",PageType.ENTITY);
-    mountPage("/action/${objectOid}/${actionOwningSpec}/${actionId}/${actionType}/#{actionArgs}",PageType.ACTION_PROMPT);
+    mountPage("/action/${objectOid}/${actionOwningSpec}/${actionId}/${actionType}/~{actionArgs}",PageType.ACTION_PROMPT);
+    SharedResources sharedResources=getSharedResources();
+    ZeroClipboardLink.addSharedResourceTo(sharedResources);
   }
  catch (  RuntimeException ex) {
     List<MetaModelInvalidException> mmies=Lists.newArrayList(Iterables.filter(Throwables.getCausalChain(ex),MetaModelInvalidException.class));

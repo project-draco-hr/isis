@@ -1,4 +1,9 @@
 {
   final Class<? extends Page> pageClass=this.pageClassRegistry.getPageClass(pageType);
-  mount(new MountedMapper(mountPath,pageClass));
+  mount(new MountedMapper(mountPath,pageClass){
+    @Override protected String getOptionalPlaceholder(    String s){
+      return getPlaceholder(s,'~');
+    }
+  }
+);
 }

@@ -1,0 +1,12 @@
+{
+  final PrependingStringBuffer buffer=new PrependingStringBuffer(32);
+  for (Component c=component; c != null; c=c.getParent()) {
+    if (c instanceof UiHintPathSignificant) {
+      if (buffer.length() > 0) {
+        buffer.prepend(Component.PATH_SEPARATOR);
+      }
+      buffer.prepend(c.getId());
+    }
+  }
+  return buffer.toString();
+}

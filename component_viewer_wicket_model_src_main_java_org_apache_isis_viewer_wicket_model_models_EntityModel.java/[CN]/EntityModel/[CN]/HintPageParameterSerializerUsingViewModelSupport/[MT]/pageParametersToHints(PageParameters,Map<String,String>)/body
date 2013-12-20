@@ -1,0 +1,17 @@
+{
+  String hintsStr=PageParameterNames.HINTS.getStringFrom(pageParameters);
+  if (hintsStr != null) {
+    try {
+      Memento memento=new ViewModelSupportDefault().parse(hintsStr);
+      Set<String> keys=memento.keySet();
+      for (      String safeKey : keys) {
+        String value=memento.get(safeKey,String.class);
+        String key=safeKey.replace('_',':');
+        hints.put(key,value);
+      }
+    }
+ catch (    RuntimeException ex) {
+      System.err.println(ex);
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  super.onInitialize();
+  final UiHintContainer uiHintContainer=getUiHintContainer();
+  if (uiHintContainer != null) {
+    for (    SortOrder sortOrder : SortOrder.values()) {
+      String property=uiHintContainer.getHint(getTable(),sortOrder.name());
+      if (property != null) {
+        S propertyS=(S)property;
+        stateLocator.getSortState().setPropertySortOrder(propertyS,sortOrder);
+      }
+    }
+  }
+}

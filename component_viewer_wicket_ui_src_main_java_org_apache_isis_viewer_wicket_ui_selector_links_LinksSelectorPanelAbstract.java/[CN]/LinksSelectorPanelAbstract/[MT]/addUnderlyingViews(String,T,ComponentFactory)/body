@@ -1,6 +1,6 @@
 {
   final List<ComponentFactory> componentFactories=findOtherComponentFactories(model,factory);
-  final int selected=determineInitialFactory(componentFactories,model);
+  final int selected=determineView(componentFactories,model);
   final LinksSelectorPanelAbstract<T> selectorPanel=LinksSelectorPanelAbstract.this;
   final Component[] underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
   int i=0;
@@ -36,6 +36,12 @@
         final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
           private static final long serialVersionUID=1L;
           @Override public void onClick(          AjaxRequestTarget target){
+            LinksSelectorPanelAbstract<T> linksSelectorPanel=LinksSelectorPanelAbstract.this;
+            UiHintContainer hintContainer=linksSelectorPanel.getUiHintContainer();
+            if (hintContainer != null) {
+              hintContainer.setHint(LinksSelectorPanelAbstract.this,"view","" + underlyingViewNum);
+              send(getPage(),Broadcast.EXACT,new UiHintsSetEvent(target));
+            }
             final T dummyModel=dummyOf(model);
             for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
               final Component component=underlyingViews[i];
