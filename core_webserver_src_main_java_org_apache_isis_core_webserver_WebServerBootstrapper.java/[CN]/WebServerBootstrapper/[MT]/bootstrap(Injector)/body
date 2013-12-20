@@ -5,6 +5,9 @@
   final String webappContextPath=configuration.getString(EMBEDDED_WEB_SERVER_RESOURCE_BASE_KEY,EMBEDDED_WEB_SERVER_RESOURCE_BASE_DEFAULT);
   final StartupMode startupMode=StartupMode.lookup(configuration.getString(EMBEDDED_WEB_SERVER_STARTUP_MODE_KEY,EMBEDDED_WEB_SERVER_STARTUP_MODE_DEFAULT));
   jettyServer=new Server(port);
+  Connector[] connectors=jettyServer.getConnectors();
+  Connector connector=connectors[0];
+  connector.setHeaderBufferSize(8192);
   final WebAppContext context=new WebAppContext(SRC_MAIN_WEBAPP,webappContextPath);
   copyConfigurationPrimersIntoServletContext(context);
   jettyServer.setHandler(context);
