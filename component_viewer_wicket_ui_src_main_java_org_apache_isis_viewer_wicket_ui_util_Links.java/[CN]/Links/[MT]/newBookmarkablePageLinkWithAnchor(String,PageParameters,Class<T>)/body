@@ -1,0 +1,19 @@
+{
+  final String hints=PageParameterNames.ANCHOR.getStringFrom(pageParameters);
+  if (hints != null) {
+    PageParameterNames.ANCHOR.removeFrom(pageParameters);
+    return new BookmarkablePageLink<T>(linkId,pageClass,pageParameters){
+      private static final long serialVersionUID=1L;
+      @Override protected CharSequence appendAnchor(      ComponentTag tag,      CharSequence url){
+        if (url != null) {
+          url=url + "#" + hints;
+        }
+        return url;
+      }
+    }
+;
+  }
+ else {
+    return newBookmarkablePageLink(linkId,pageParameters,pageClass);
+  }
+}

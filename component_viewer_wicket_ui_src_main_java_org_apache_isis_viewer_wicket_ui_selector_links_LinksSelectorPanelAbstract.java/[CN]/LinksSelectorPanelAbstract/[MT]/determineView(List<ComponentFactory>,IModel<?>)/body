@@ -1,14 +1,21 @@
 {
   UiHintContainer hintContainer=getUiHintContainer();
   if (hintContainer != null) {
-    String hintValue=hintContainer.getHint(this,"view");
-    if (hintValue != null) {
-      return Integer.parseInt(hintValue);
+    String viewStr=hintContainer.getHint(this,UIHINT_VIEW);
+    if (viewStr != null) {
+      try {
+        int view=Integer.parseInt(viewStr);
+        if (view >= 0 && view < componentFactories.size()) {
+          return view;
+        }
+      }
+ catch (      NumberFormatException ex) {
+      }
     }
   }
   int initialFactory=determineInitialFactory(componentFactories,model);
   if (hintContainer != null) {
-    hintContainer.setHint(this,"view","" + initialFactory);
+    hintContainer.setHint(this,UIHINT_VIEW,"" + initialFactory);
   }
   return initialFactory;
 }
