@@ -4,9 +4,12 @@
   while (component != null) {
     if (component instanceof CollectionPanel) {
       CollectionPanel collectionPanel=(CollectionPanel)component;
-      final boolean expanded=collectionPanel.onSelect(target);
+      boolean hasCount=collectionPanel.hasCount();
+      if (hasCount) {
+        collectionPanel.updateLabel(target);
+      }
       if (additionalLinks != null) {
-        applyCssVisibility(additionalLinks,expanded);
+        applyCssVisibility(additionalLinks,hasCount);
       }
       return;
     }

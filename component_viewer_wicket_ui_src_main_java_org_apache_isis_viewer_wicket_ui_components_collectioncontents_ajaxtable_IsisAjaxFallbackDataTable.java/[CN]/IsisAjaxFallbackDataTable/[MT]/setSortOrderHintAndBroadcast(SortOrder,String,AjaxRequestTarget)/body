@@ -1,0 +1,11 @@
+{
+  final UiHintContainer uiHintContainer=getUiHintContainer();
+  if (uiHintContainer == null) {
+    return;
+  }
+  for (  SortOrder eachSortOrder : SortOrder.values()) {
+    uiHintContainer.clearHint(this,eachSortOrder.name());
+  }
+  uiHintContainer.setHint(this,order.name(),property);
+  send(getPage(),Broadcast.EXACT,new UiHintsSetEvent(uiHintContainer,target));
+}

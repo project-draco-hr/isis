@@ -12,13 +12,7 @@
     @Override public Item<T> next(){
       final IModel<T> model=newModels.next();
       final Item<T> oldItem=modelToItem.get(model);
-      final IModel<T> model2;
-      if (oldItem == null) {
-        model2=model;
-      }
- else {
-        model2=oldItem.getModel();
-      }
+      final IModel<T> model2=oldItem != null ? oldItem.getModel() : model;
       return factory.newItem(index++,model2);
     }
     @Override public void remove(){

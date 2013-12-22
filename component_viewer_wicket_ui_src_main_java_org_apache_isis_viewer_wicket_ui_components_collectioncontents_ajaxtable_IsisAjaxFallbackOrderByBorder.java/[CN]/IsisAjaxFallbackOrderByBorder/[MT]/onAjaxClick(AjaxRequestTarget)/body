@@ -1,9 +1,11 @@
 {
   target.add(dataTable);
   final UiHintContainer uiHintContainer=getUiHintContainer();
-  if (uiHintContainer != null) {
-    String hintKey=sortOrderName();
-    uiHintContainer.setHint(dataTable,hintKey,sortProperty.toString());
-    send(getPage(),Broadcast.EXACT,new UiHintsSetEvent(uiHintContainer,target));
+  if (uiHintContainer == null) {
+    return;
   }
+  final ISortState<T> state=stateLocator.getSortState();
+  final SortOrder order=state.getPropertySortOrder(sortProperty);
+  dataTable.setSortOrderHintAndBroadcast(order,sortProperty.toString(),target);
+  dataTable.setPageNumberHintAndBroadcast(target);
 }
