@@ -1,0 +1,39 @@
+{
+  super.onInitialize();
+  final BreadcrumbModelProvider session=(BreadcrumbModelProvider)getSession();
+  final BreadcrumbModel breadcrumbModel=session.getBreadcrumbModel();
+  final IModel<EntityModel> entityModel=new Model<EntityModel>();
+  final Select2Choice<EntityModel> breadcrumbChoice=new Select2Choice<EntityModel>(ID_BREADCRUMBS,entityModel);
+  breadcrumbChoice.add(new AjaxFormComponentUpdatingBehavior("onchange"){
+    private static final long serialVersionUID=1L;
+    @Override protected void onUpdate(    AjaxRequestTarget target){
+      final String oidStr=breadcrumbChoice.getInput();
+      final EntityModel selectedModel=breadcrumbModel.lookup(oidStr);
+      if (selectedModel == null) {
+        return;
+      }
+      setResponsePage(EntityPage.class,selectedModel.getPageParameters());
+    }
+  }
+);
+  final Settings settings=breadcrumbChoice.getSettings();
+  settings.setMinimumInputLength(0);
+  settings.setWidth("90%");
+  breadcrumbChoice.setProvider(new TextChoiceProvider<EntityModel>(){
+    private static final long serialVersionUID=1L;
+    @Override protected String getDisplayText(    EntityModel choice){
+      return breadcrumbModel.titleFor(choice);
+    }
+    @Override protected Object getId(    EntityModel choice){
+      return PageParameterNames.OBJECT_OID.getStringFrom(choice.getPageParameters());
+    }
+    @Override public void query(    String term,    int page,    Response<EntityModel> response){
+      response.addAll(breadcrumbModel.getList());
+    }
+    @Override public Collection<EntityModel> toChoices(    Collection<String> ids){
+      return breadcrumbModel.getList();
+    }
+  }
+);
+  addOrReplace(breadcrumbChoice);
+}

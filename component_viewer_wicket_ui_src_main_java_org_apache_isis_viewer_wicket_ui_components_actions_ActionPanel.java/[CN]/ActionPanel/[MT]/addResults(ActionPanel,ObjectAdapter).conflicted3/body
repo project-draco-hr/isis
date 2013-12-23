@@ -1,6 +1,7 @@
 {
-  ValueModel valueModel=new ValueModel(resultAdapter);
-  valueModel.setActionHint(panel.getActionModel());
-  final ValuePage valuePage=new ValuePage(valueModel);
-  panel.setResponsePage(valuePage);
+  final Object value=resultAdapter.getObject();
+  final Clob clob=(Clob)value;
+  ResourceStreamRequestHandler handler=new ResourceStreamRequestHandler(new StringResourceStream(clob.getChars(),clob.getMimeType().toString()),clob.getName());
+  handler.setContentDisposition(ContentDisposition.ATTACHMENT);
+  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
 }

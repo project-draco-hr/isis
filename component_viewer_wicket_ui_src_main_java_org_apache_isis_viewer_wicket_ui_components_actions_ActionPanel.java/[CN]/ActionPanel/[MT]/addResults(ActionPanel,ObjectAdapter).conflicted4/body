@@ -1,4 +1,6 @@
 {
-  final ObjectAdapter actualAdapter=determineActualAdapter(resultAdapter,actionPanel);
-  redirectToEntityPage(actionPanel,actualAdapter,null);
+  final Object value=resultAdapter.getObject();
+  java.net.URL url=(java.net.URL)value;
+  IRequestHandler handler=new RedirectRequestHandler(url.toString());
+  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
 }
