@@ -1,0 +1,16 @@
+{
+  final String candidateOidStr=oidStrFrom(candidateEntityModel);
+  boolean inGraph=Objects.equal(this.oidNoVerStr,candidateOidStr);
+  if (inGraph) {
+    this.setTitle(candidateEntityModel.getTitle());
+  }
+  if (candidateEntityModel.hasAsChildPolicy()) {
+    for (    BookmarkTreeNode childNode : this.getChildren()) {
+      inGraph=childNode.matches(candidateEntityModel) || inGraph;
+    }
+    if (!inGraph) {
+      inGraph=addToGraphIfParented(candidateEntityModel);
+    }
+  }
+  return inGraph;
+}
