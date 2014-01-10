@@ -6,6 +6,7 @@
   final PersistenceManager persistenceManager=getJdoObjectStore().getPersistenceManager();
   final Class<?> cls=objectSpec.getCorrespondingClass();
   final Query jdoQuery=persistenceManager.newNamedQuery(cls,queryName);
+  jdoQuery.addExtension("datanucleus.multivaluedFetch","none");
   if (persistenceQuery.hasRange()) {
     jdoQuery.setRange(persistenceQuery.getStart(),persistenceQuery.getEnd());
   }
