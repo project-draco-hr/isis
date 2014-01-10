@@ -1,6 +1,6 @@
 {
-  final Object value=resultAdapter.getObject();
-  final Blob blob=(Blob)value;
-  ResourceRequestHandler handler=new ResourceRequestHandler(new ByteArrayResource(blob.getMimeType().toString(),blob.getBytes(),blob.getName()),null);
-  panel.getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
+  ValueModel valueModel=new ValueModel(resultAdapter);
+  valueModel.setActionHint(panel.getActionModel());
+  final ValuePage valuePage=new ValuePage(valueModel);
+  panel.setResponsePage(valuePage);
 }
