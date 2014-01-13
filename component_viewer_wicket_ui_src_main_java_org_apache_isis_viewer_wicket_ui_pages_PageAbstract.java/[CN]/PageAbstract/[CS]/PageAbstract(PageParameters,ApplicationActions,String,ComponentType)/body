@@ -1,7 +1,13 @@
 {
   try {
     getSession().bind();
-    addApplicationActions(applicationActions);
+    add(new Label(ID_PAGE_TITLE,title != null ? title : applicationName));
+    themeDiv=new WebMarkupContainer(ID_THEME);
+    add(themeDiv);
+    if (applicationName != null) {
+      themeDiv.add(new CssClassAppender(asCssStyle(applicationName)));
+    }
+    addApplicationActions(themeDiv,applicationActions);
     this.childComponentIds=Collections.unmodifiableList(Arrays.asList(childComponentIds));
     this.pageParameters=pageParameters;
     addHomePageLinkAndApplicationName();
@@ -10,7 +16,6 @@
     addAboutLink();
     addBreadcrumbs();
     addCopyLink();
-    add(new Label(ID_PAGE_TITLE,title != null ? title : applicationName));
     add(new HeaderResponseContainer("footerJS","footerJS"));
   }
  catch (  RuntimeException ex) {
