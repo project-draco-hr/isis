@@ -1,0 +1,14 @@
+{
+  try {
+    ObjectAdapter resultAdapter=actionModel.getObject();
+    return resultAdapter;
+  }
+ catch (  RuntimeException ex) {
+    final ApplicationException appEx=ActionModel.getApplicationExceptionIfAny(ex);
+    if (appEx != null) {
+      IsisContext.getMessageBroker().setApplicationError(appEx.getMessage());
+      return null;
+    }
+    throw ex;
+  }
+}

@@ -1,0 +1,25 @@
+{
+  if (isNoArgReturnTypeRedirect(action)) {
+    return new AjaxDeferredBehaviour(){
+      private static final long serialVersionUID=1L;
+      @Override protected IRequestHandler getRequestHandler(){
+        ObjectAdapter resultAdapter=executeActionHandlingApplicationExceptions(actionModel);
+        final Object value=resultAdapter.getObject();
+        return ActionModel.redirectHandler(value);
+      }
+    }
+;
+  }
+  if (isNoArgReturnTypeDownload(action)) {
+    return new AjaxDeferredBehaviour(){
+      private static final long serialVersionUID=1L;
+      @Override protected IRequestHandler getRequestHandler(){
+        ObjectAdapter resultAdapter=executeActionHandlingApplicationExceptions(actionModel);
+        final Object value=resultAdapter.getObject();
+        return ActionModel.downloadHandler(value);
+      }
+    }
+;
+  }
+  return null;
+}
