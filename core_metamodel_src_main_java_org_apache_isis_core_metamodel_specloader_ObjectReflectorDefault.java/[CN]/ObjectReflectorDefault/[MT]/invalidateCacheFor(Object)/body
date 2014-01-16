@@ -1,11 +1,3 @@
 {
-  final Class<? extends Object> cls=domainObject.getClass();
-  final Class<?> substitutedType=getClassSubstitutor().getClass(cls);
-  ObjectSpecification spec=loadSpecification(substitutedType);
-  while (spec != null) {
-    final Class<?> type=spec.getCorrespondingClass();
-    getCache().remove(type.getName());
-    recache(spec);
-    spec=spec.superclass();
-  }
+  invalidateCache(domainObject.getClass());
 }
