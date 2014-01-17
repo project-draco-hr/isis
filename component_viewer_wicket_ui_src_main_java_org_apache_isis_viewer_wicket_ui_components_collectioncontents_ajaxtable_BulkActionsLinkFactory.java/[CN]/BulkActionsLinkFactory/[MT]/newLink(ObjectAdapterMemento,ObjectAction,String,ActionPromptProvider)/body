@@ -9,21 +9,22 @@
         final List<ObjectAdapterMemento> toggleMementosList=model.getToggleMementosList();
         final Iterable<ObjectAdapter> toggledAdapters=Iterables.transform(toggleMementosList,ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking));
         final List<Object> domainObjects=Lists.newArrayList(Iterables.transform(toggledAdapters,ObjectAdapter.Functions.getObject()));
-        try {
-          final Bulk.InteractionContext interactionContext=new Bulk.InteractionContext(domainObjects);
-          Bulk.InteractionContext.current.set(interactionContext);
-          int i=0;
-          for (          final ObjectAdapter adapter : toggledAdapters) {
-            int numParameters=objectAction.getParameterCount();
-            if (numParameters != 0) {
-              return;
-            }
-            interactionContext.setIndex(i++);
-            objectAction.execute(adapter,new ObjectAdapter[]{});
-          }
+        final Bulk.InteractionContext bulkInteractionContext=Bulk.InteractionContext.current.get();
+        if (bulkInteractionContext != null) {
+          bulkInteractionContext.setInvokedAs(InvokedAs.BULK);
+          bulkInteractionContext.setDomainObjects(domainObjects);
         }
-  finally {
-          Bulk.InteractionContext.current.set(null);
+        ObjectAdapter lastReturnedAdapter=null;
+        int i=0;
+        for (        final ObjectAdapter adapter : toggledAdapters) {
+          int numParameters=objectAction.getParameterCount();
+          if (numParameters != 0) {
+            return;
+          }
+          if (bulkInteractionContext != null) {
+            bulkInteractionContext.setIndex(i++);
+          }
+          lastReturnedAdapter=objectAction.execute(adapter,new ObjectAdapter[]{});
         }
         model.clearToggleMementosList();
         final ActionModel actionModelHint=model.getActionModelHint();
@@ -33,6 +34,12 @@
         }
  else {
           model.setObject(persistentAdaptersWithin(model.getObject()));
+        }
+        if (lastReturnedAdapter != null) {
+          final ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(actionModelHint,lastReturnedAdapter);
+          if (resultResponse.isToPage()) {
+            setResponsePage(resultResponse.getToPage());
+          }
         }
       }
  catch (      final ConcurrencyException ex) {

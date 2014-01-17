@@ -1,0 +1,12 @@
+{
+  AccumulatingCalculator calculator=serviceInstantiator.createInstance(AccumulatingCalculator.class);
+  try {
+    ((RequestScopedService)calculator).__isis_startRequest();
+    assertThat(calculator.add(3),is(3));
+    assertThat(calculator.add(4),is(7));
+    assertThat(calculator.getTotal(),is(7));
+  }
+  finally {
+    ((RequestScopedService)calculator).__isis_endRequest();
+  }
+}

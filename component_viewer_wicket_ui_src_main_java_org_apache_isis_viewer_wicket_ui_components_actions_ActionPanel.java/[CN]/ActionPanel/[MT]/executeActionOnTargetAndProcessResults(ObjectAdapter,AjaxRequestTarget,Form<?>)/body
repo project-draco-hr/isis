@@ -8,8 +8,9 @@
   try {
     final ObjectAdapter resultAdapter=executeActionHandlingApplicationExceptions();
     getTransactionManager().flushTransaction();
-    final ResultType resultType=ResultType.determineFor(resultAdapter);
-    resultType.addResults(this,resultAdapter);
+    ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(this.getActionModel(),resultAdapter);
+    final ActionResultResponseHandlingStrategy resultType=ActionResultResponseHandlingStrategy.determineFor(resultResponse);
+    resultType.handleResults(this,resultResponse);
     if (actionModel.isBookmarkable()) {
       bookmarkPage(actionModel);
     }
@@ -19,8 +20,8 @@
     String message=recognizeException(ex,target,feedbackForm);
     if (message != null) {
       if (feedbackForm == null) {
-        final ResultType resultType=ResultType.determineFor(null);
-        resultType.addResults(this,null);
+        final ActionResultResponseHandlingStrategy resultType=ActionResultResponseHandlingStrategy.determineFor(null);
+        resultType.handleResults(this,null);
       }
       return false;
     }

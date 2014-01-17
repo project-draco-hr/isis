@@ -1,0 +1,44 @@
+{
+  final AccumulatingCalculator calculator=serviceInstantiator.createInstance(AccumulatingCalculator.class);
+  final int[] steps=new int[]{10};
+  final int[] totals=new int[]{0,0,0};
+  final CyclicBarrier barrier=new CyclicBarrier(totals.length + 1,new Runnable(){
+    public void run(){
+      steps[0]--;
+    }
+  }
+);
+  for (int i=0; i < totals.length; i++) {
+    final int j=i;
+    new Thread(){
+      public void run(){
+        try {
+          ((RequestScopedService)calculator).__isis_startRequest();
+          while (steps[0] > 0) {
+            try {
+              calculator.add((j + 1));
+              totals[j]=calculator.getTotal();
+              barrier.await();
+            }
+ catch (            InterruptedException e) {
+              throw new RuntimeException(e);
+            }
+catch (            BrokenBarrierException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        }
+  finally {
+          ((RequestScopedService)calculator).__isis_endRequest();
+        }
+      }
+    }
+.start();
+  }
+  while (steps[0] > 0) {
+    barrier.await();
+  }
+  assertThat(totals[0],is(10));
+  assertThat(totals[1],is(20));
+  assertThat(totals[2],is(30));
+}

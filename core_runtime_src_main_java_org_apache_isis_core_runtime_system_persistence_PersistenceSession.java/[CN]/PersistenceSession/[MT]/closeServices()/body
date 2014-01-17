@@ -1,0 +1,13 @@
+{
+  for (  final Object service : servicesInjector.getRegisteredServices()) {
+    if (service instanceof RequestScopedService) {
+      ((RequestScopedService)service).__isis_endRequest();
+    }
+  }
+  if (bulkInteractionContext != null) {
+    Bulk.InteractionContext.current.set(null);
+  }
+  if (eventBusService != null) {
+    eventBusService.close();
+  }
+}

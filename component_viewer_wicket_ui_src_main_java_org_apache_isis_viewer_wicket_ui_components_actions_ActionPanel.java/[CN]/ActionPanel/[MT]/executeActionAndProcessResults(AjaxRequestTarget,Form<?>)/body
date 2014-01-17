@@ -9,7 +9,8 @@
     if (targetAdapter == null) {
       targetAdapter=getModel().getTargetAdapter();
     }
-    ResultType.OBJECT.addResults(this,targetAdapter,ex);
+    ActionResultResponse resultResponse=ActionResultResponseType.OBJECT.interpretResult(this.getActionModel(),targetAdapter,ex);
+    ActionResultResponseHandlingStrategy.determineFor(resultResponse).handleResults(this,resultResponse);
     getMessageBroker().addWarning(ex.getMessage());
     return false;
   }

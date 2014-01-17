@@ -1,5 +1,6 @@
 {
   final ObjectSpecification adapterSpec=adapter.getSpecification();
-  @SuppressWarnings("unchecked") final List<ObjectAction> userActions=adapterSpec.getObjectActions(actionType,Contributed.INCLUDED,Filters.and(memberOrderNameNotAssociation(adapterSpec),dynamicallyVisibleFor(adapter)));
+  @SuppressWarnings({"unchecked","deprecation"}) Filter<ObjectAction> filter=Filters.and(memberOrderNameNotAssociation(adapterSpec),dynamicallyVisibleFor(adapter),ObjectAction.Filters.notBulkOnly());
+  final List<ObjectAction> userActions=adapterSpec.getObjectActions(actionType,Contributed.INCLUDED,filter);
   topLevelActions.addAll(userActions);
 }

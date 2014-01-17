@@ -10,18 +10,14 @@
     final Object object=unwrap(inObject);
     final Object result;
     final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
-    if (bulkFacet != null && Bulk.InteractionContext.current.get() == null) {
-      try {
-        Bulk.InteractionContext.current.set(new InteractionContext(object));
-        result=method.invoke(object,executionParameters);
-      }
-  finally {
-        Bulk.InteractionContext.current.set(null);
+    if (bulkFacet != null) {
+      Bulk.InteractionContext bulkInteractionContext=Bulk.InteractionContext.current.get();
+      if (bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
+        bulkInteractionContext.setInvokedAs(InvokedAs.REGULAR);
+        bulkInteractionContext.setDomainObjects(Collections.singletonList(object));
       }
     }
- else {
-      result=method.invoke(object,executionParameters);
-    }
+    result=method.invoke(object,executionParameters);
     if (LOG.isDebugEnabled()) {
       LOG.debug(" action result " + result);
     }

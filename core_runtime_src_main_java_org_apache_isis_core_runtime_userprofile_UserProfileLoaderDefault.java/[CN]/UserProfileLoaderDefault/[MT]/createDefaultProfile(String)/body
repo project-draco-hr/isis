@@ -1,11 +1,11 @@
 {
   final UserProfile profile=new UserProfile();
   profile.newPerspective(DEFAULT_PERSPECTIVE_NAME + (IsisContext.getDeploymentType().isExploring() ? EXPLORATION : ""));
-  final List<Object> services=getServices();
-  if (services.size() == 0 && mode == Mode.STRICT) {
-    throw new IsisException("No known services");
+  final List<Object> singletonServices=Lists.newArrayList(Iterables.filter(getServices(),Predicates.not(RequestScopedService.Predicates.instanceOf())));
+  if (singletonServices.size() == 0 && mode == Mode.STRICT) {
+    throw new IsisException("No known (singleton) services");
   }
-  for (  final Object service : services) {
+  for (  final Object service : singletonServices) {
     profile.getPerspective().addToServices(service);
   }
   LOG.debug("creating exploration UserProfile for " + userName);

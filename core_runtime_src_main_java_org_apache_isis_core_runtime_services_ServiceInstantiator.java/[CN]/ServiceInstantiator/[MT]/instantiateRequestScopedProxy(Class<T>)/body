@@ -1,0 +1,46 @@
+{
+  final ProxyFactory proxyFactory=new ProxyFactory();
+  proxyFactory.setSuperclass(cls);
+  proxyFactory.setInterfaces(ArrayExtensions.combine(cls.getInterfaces(),new Class<?>[]{RequestScopedService.class,JavassistEnhanced.class}));
+  proxyFactory.setFilter(new MethodFilter(){
+    @Override public boolean isHandled(    final Method m){
+      return !m.getName().equals("finalize");
+    }
+  }
+);
+  @SuppressWarnings("unchecked") final Class<T> proxySubclass=proxyFactory.createClass();
+  try {
+    final T newInstance=proxySubclass.newInstance();
+    final ProxyObject proxyObject=(ProxyObject)newInstance;
+    proxyObject.setHandler(new MethodHandler(){
+      private ThreadLocal<T> serviceByThread=new ThreadLocal<T>();
+      @Override public Object invoke(      final Object proxied,      final Method proxyMethod,      final Method proxiedMethod,      final Object[] args) throws Throwable {
+        if (proxyMethod.getName().equals("__isis_startRequest")) {
+          T service=instantiate(cls);
+          serviceByThread.set(service);
+          return null;
+        }
+ else         if (proxyMethod.getName().equals("__isis_endRequest")) {
+          serviceByThread.set(null);
+          return null;
+        }
+ else {
+          T service=serviceByThread.get();
+          if (service == null) {
+            throw new IllegalStateException("No service found for thread; make sure ((RequestScopedService)service).__isis_startRequest() is called first");
+          }
+          final Object proxiedReturn=proxyMethod.invoke(service,args);
+          return proxiedReturn;
+        }
+      }
+    }
+);
+    return newInstance;
+  }
+ catch (  final InstantiationException e) {
+    throw new IsisException(e);
+  }
+catch (  final IllegalAccessException e) {
+    throw new IsisException(e);
+  }
+}
