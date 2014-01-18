@@ -1,0 +1,15 @@
+{
+  try {
+    final CacheKey ck=new CacheKey(callingClass,methodName,keys);
+    final CacheValue cv=cache.get(ck);
+    if (cv != null) {
+      return (T)cv.object;
+    }
+    T result=callable.call();
+    cache.put(ck,new CacheValue(result));
+    return result;
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}

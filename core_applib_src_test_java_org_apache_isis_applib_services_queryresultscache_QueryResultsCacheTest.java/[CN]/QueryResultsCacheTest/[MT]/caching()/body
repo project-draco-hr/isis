@@ -1,0 +1,23 @@
+{
+  final int[] i=new int[]{0};
+  Callable<String> callable=new Callable<String>(){
+    @Override public String call() throws Exception {
+      i[0]++;
+      return "foo";
+    }
+  }
+;
+  assertThat(i[0],is(0));
+  assertThat(queryResultsCache.execute(callable,QueryResultsCacheTest.class,"caching","a","b",1,2),is("foo"));
+  assertThat(i[0],is(1));
+  assertThat(queryResultsCache.execute(callable,QueryResultsCacheTest.class,"caching","a","b",1,2),is("foo"));
+  assertThat(i[0],is(1));
+  assertThat(queryResultsCache.execute(callable,QueryResultsCacheTest.class,"XXXcaching","a","b",1,2),is("foo"));
+  assertThat(i[0],is(2));
+  assertThat(queryResultsCache.execute(callable,QueryResultsCache.class,"caching","a","b",1,2),is("foo"));
+  assertThat(i[0],is(3));
+  assertThat(queryResultsCache.execute(callable,QueryResultsCacheTest.class,"caching","XXX","b",1,2),is("foo"));
+  assertThat(i[0],is(4));
+  assertThat(queryResultsCache.execute(callable,QueryResultsCacheTest.class,"caching","a","b",1,2,"x"),is("foo"));
+  assertThat(i[0],is(5));
+}
