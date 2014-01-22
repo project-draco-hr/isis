@@ -1,0 +1,15 @@
+{
+  try {
+    final Value<?> cacheValue=cache.get(cacheKey);
+    logHitOrMiss(cacheKey,cacheValue);
+    if (cacheValue != null) {
+      return (T)cacheValue.getResult();
+    }
+    T result=callable.call();
+    put(cacheKey,result);
+    return result;
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+}
