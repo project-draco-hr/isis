@@ -1,12 +1,8 @@
 {
-  final String persistableClassNames=Joiner.on(',').join(persistableClassNameSet);
-  props.put("datanucleus.autoStartClassNames",persistableClassNames);
-  persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(props);
-  final boolean createSchema=Boolean.parseBoolean(props.get("datanucleus.autoCreateSchema"));
-  if (createSchema) {
-    createSchema(props,persistableClassNameSet);
-  }
-  namedQueryByName=Collections.unmodifiableMap(catalogNamedQueries(persistableClassNameSet));
-  synchronizer=new FrameworkSynchronizer();
-  lifecycleListener=new IsisLifecycleListener(synchronizer);
+  this.props=props;
+  this.persistableClassNameSet=persistableClassNameSet;
+  this.synchronizer=new FrameworkSynchronizer();
+  this.lifecycleListener=new IsisLifecycleListener(synchronizer);
+  init(props,persistableClassNameSet);
+  instance=this;
 }
