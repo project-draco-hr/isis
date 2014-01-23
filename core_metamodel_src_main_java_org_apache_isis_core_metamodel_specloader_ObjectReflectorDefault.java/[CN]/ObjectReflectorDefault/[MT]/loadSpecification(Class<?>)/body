@@ -3,8 +3,13 @@
   if (spec == null) {
     return null;
   }
-  if (getCache().isInitialized() && getCache().getByObjectType(spec.getSpecId()) == null) {
-    getCache().recache(spec);
+  if (getCache().isInitialized()) {
+    if (spec.containsDoOpFacet(ObjectSpecIdFacet.class)) {
+      ObjectSpecId specId=spec.getSpecId();
+      if (getCache().getByObjectType(specId) == null) {
+        getCache().recache(spec);
+      }
+    }
   }
   return spec;
 }

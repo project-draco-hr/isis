@@ -1,7 +1,10 @@
 {
   ObjectSpecification removed=specByClassName.remove(typeName);
   if (removed != null) {
-    specById.remove(removed.getSpecId());
+    if (removed.containsDoOpFacet(ObjectSpecIdFacet.class)) {
+      ObjectSpecId specId=removed.getSpecId();
+      specById.remove(specId);
+    }
   }
   return removed;
 }

@@ -1,10 +1,18 @@
 {
+  if (!getCache().isInitialized()) {
+    return;
+  }
   final Class<?> substitutedType=getClassSubstitutor().getClass(cls);
+  if (substitutedType.isAnonymousClass()) {
+    return;
+  }
   ObjectSpecification spec=loadSpecification(substitutedType);
   while (spec != null) {
     final Class<?> type=spec.getCorrespondingClass();
     getCache().remove(type.getName());
-    recache(spec);
+    if (spec.containsDoOpFacet(ObjectSpecIdFacet.class)) {
+      recache(spec);
+    }
     spec=spec.superclass();
   }
 }
