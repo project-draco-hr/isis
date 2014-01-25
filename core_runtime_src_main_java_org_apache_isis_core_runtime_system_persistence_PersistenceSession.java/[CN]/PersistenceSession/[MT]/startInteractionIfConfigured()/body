@@ -1,0 +1,18 @@
+{
+  final InteractionContext ic=getServiceOrNull(InteractionContext.class);
+  if (ic == null) {
+    return;
+  }
+  final InteractionFactory interactionFactory=getServiceOrNull(InteractionFactory.class);
+  final Interaction interaction=interactionFactory != null ? interactionFactory.start() : new InteractionDefault();
+  ic.setInteraction(interaction);
+  if (interaction.getGuid() == null) {
+    interaction.setGuid(UUID.randomUUID().toString());
+  }
+  if (interaction.getStartedAt() == null) {
+    interaction.setStartedAt(new java.sql.Timestamp(new java.util.Date().getTime()));
+  }
+  if (interaction.getUser() == null) {
+    interaction.setUser(getAuthenticationSession().getUserName());
+  }
+}

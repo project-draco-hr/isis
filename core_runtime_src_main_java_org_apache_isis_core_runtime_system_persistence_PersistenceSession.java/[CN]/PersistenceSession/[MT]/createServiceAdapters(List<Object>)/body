@@ -1,0 +1,24 @@
+{
+  getTransactionManager().startTransaction();
+  for (  final Object service : registeredServices) {
+    final ObjectSpecification serviceSpecification=getSpecificationLoader().loadSpecification(service.getClass());
+    serviceSpecification.markAsService();
+    final RootOid existingOid=getOidForService(serviceSpecification);
+    ObjectAdapter serviceAdapter;
+    if (existingOid == null) {
+      serviceAdapter=getAdapterManager().adapterFor(service);
+    }
+ else {
+      serviceAdapter=mapRecreatedPojo(existingOid,service);
+    }
+    if (serviceAdapter.getOid().isTransient()) {
+      adapterManager.remapAsPersistent(serviceAdapter,null);
+    }
+    serviceAdapter.markAsResolvedIfPossible();
+    if (existingOid == null) {
+      final RootOid persistentOid=(RootOid)serviceAdapter.getOid();
+      registerService(persistentOid);
+    }
+  }
+  getTransactionManager().endTransaction();
+}

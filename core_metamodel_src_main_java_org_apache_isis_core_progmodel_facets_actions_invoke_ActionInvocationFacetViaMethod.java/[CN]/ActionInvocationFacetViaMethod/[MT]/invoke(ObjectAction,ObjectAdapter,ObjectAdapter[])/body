@@ -1,0 +1,72 @@
+{
+  if (arguments.length != paramCount) {
+    LOG.error(method + " requires " + paramCount+ " parameters, not "+ arguments.length);
+  }
+  final Bulk.InteractionContext bulkInteractionContext=getServicesInjector().lookupService(Bulk.InteractionContext.class);
+  final InteractionContext interactionContext=getServicesInjector().lookupService(InteractionContext.class);
+  final BookmarkService bookmarkService=getServicesInjector().lookupService(BookmarkService.class);
+  try {
+    final Object[] executionParameters=new Object[arguments.length];
+    for (int i=0; i < arguments.length; i++) {
+      executionParameters[i]=unwrap(arguments[i]);
+    }
+    final Object object=unwrap(target);
+    final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
+    if (bulkFacet != null && bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
+      bulkInteractionContext.setInvokedAs(InvokedAs.REGULAR);
+      bulkInteractionContext.setDomainObjects(Collections.singletonList(object));
+    }
+    if (interactionContext != null) {
+      Interaction interaction=interactionContext.getInteraction();
+      if (owningAction != null) {
+        final String actionIdentifier=owningAction.getIdentifier().toClassAndNameIdentityString();
+        interaction.setActionIdentifier(actionIdentifier);
+        String targetTitle=target.titleString(null);
+        String actionName=owningAction.getName();
+        interaction.setTargetClass(targetTitle);
+        interaction.setTargetAction(actionName);
+        final StringBuilder argsBuf=new StringBuilder();
+        List<ObjectActionParameter> parameters=owningAction.getParameters();
+        if (parameters.size() == arguments.length) {
+          int i=0;
+          for (          ObjectActionParameter param : parameters) {
+            appendParamArg(argsBuf,param,arguments[i++]);
+          }
+        }
+        interaction.setArguments(argsBuf.toString());
+      }
+      if (bookmarkService != null) {
+        final Bookmark bookmark=bookmarkService.bookmarkFor(target.getObject());
+        interaction.setTarget(bookmark);
+      }
+    }
+    final Object result=method.invoke(object,executionParameters);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(" action result " + result);
+    }
+    if (result == null) {
+      return null;
+    }
+    final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
+    final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
+    resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
+    PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
+    ActionInvocationFacet.currentInvocation.set(publishedActionFacet != null ? new CurrentInvocation(target,getIdentified(),arguments,resultAdapter) : null);
+    return resultAdapter;
+  }
+ catch (  final IllegalArgumentException e) {
+    throw e;
+  }
+catch (  final InvocationTargetException e) {
+    if (e.getTargetException() instanceof IllegalStateException) {
+      throw new ReflectiveActionException("IllegalStateException thrown while executing " + method + " "+ e.getTargetException().getMessage(),e.getTargetException());
+    }
+ else {
+      ThrowableExtensions.throwWithinIsisException(e,"Exception executing " + method);
+      return null;
+    }
+  }
+catch (  final IllegalAccessException e) {
+    throw new ReflectiveActionException("Illegal access of " + method,e);
+  }
+}
