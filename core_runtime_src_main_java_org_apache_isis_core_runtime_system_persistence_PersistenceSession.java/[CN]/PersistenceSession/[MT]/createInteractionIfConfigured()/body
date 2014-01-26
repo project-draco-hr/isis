@@ -4,13 +4,10 @@
     return;
   }
   final InteractionFactory interactionFactory=getServiceOrNull(InteractionFactory.class);
-  final Interaction interaction=interactionFactory != null ? interactionFactory.start() : new InteractionDefault();
+  final Interaction interaction=interactionFactory != null ? interactionFactory.create() : new InteractionDefault();
   ic.setInteraction(interaction);
-  if (interaction.getGuid() == null) {
-    interaction.setGuid(UUID.randomUUID().toString());
-  }
   if (interaction.getStartedAt() == null) {
-    interaction.setStartedAt(new java.sql.Timestamp(new java.util.Date().getTime()));
+    interaction.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
   }
   if (interaction.getUser() == null) {
     interaction.setUser(getAuthenticationSession().getUserName());

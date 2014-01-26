@@ -1,9 +1,15 @@
 {
   context.ignoring(mockObjectStore);
+  context.checking(new Expectations(){
+{
+      oneOf(mockPersistenceSession).startInteractionIfConfigured(with(any(UUID.class)));
+    }
+  }
+);
   transactionManager.startTransaction();
   context.checking(new Expectations(){
 {
-      one(mockPersistenceSession).objectChangedAllDirty();
+      oneOf(mockPersistenceSession).objectChangedAllDirty();
     }
   }
 );
