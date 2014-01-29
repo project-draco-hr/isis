@@ -1,0 +1,35 @@
+{
+  final Bookmark cusBookmark=new Bookmark("CUS","456");
+  final Bookmark prdBookmark=new Bookmark("PRD","123");
+  context.checking(new Expectations(){
+{
+      allowing(mockSpec).getMember(with(any(Method.class)));
+      will(returnValue(mockAction));
+      allowing(mockAction).getIdentifier();
+      will(returnValue(actionIdentifier));
+      oneOf(mockBookmarkService).bookmarkFor(with(any(Customer.class)));
+      will(returnValue(cusBookmark));
+      oneOf(mockBookmarkService).bookmarkFor(product);
+      will(returnValue(prdBookmark));
+      oneOf(mockBackgroundTaskService).execute(with(x()),with(equalTo(transactionId)));
+    }
+    protected Matcher<ActionInvocationMemento> x(){
+      return new TypeSafeMatcher<ActionInvocationMemento>(){
+        @Override public void describeTo(        Description description){
+          description.appendText("all sorted");
+        }
+        @Override protected boolean matchesSafely(        ActionInvocationMemento item){
+          try {
+            return item.getActionId().equals("org.apache.isis.core.runtime.services.background.BackgroundServiceDefaultTest_execute.Customer#placeOrder(org.apache.isis.core.runtime.services.background.BackgroundServiceDefaultTest_execute$Product,int)") && item.getUser().equals("fbloggs") && item.getTarget().toString().equals("CUS:456")&& item.getNumArgs() == 3 && item.getArgType(0).equals(Bookmark.class) && item.getArg(0,Bookmark.class).toString().equals("PRD:123") && item.getArgType(1).equals(int.class) && item.getArg(1,int.class) == 3 && item.getArgType(2).equals(String.class) && Objects.equal(item.getArg(2,String.class),null);
+          }
+ catch (          ClassNotFoundException e) {
+            return false;
+          }
+        }
+      }
+;
+    }
+  }
+);
+  backgroundService.execute(customer).placeOrder(product,3,null);
+}

@@ -1,0 +1,8 @@
+{
+  final ObjectSpecification adapterSpec=entityModel.getTypeOfSpecification();
+  final ObjectAdapter adapter=entityModel.load(ConcurrencyChecking.NO_CHECK);
+  @SuppressWarnings({"unchecked","deprecation"}) Filter<ObjectAction> filter=Filters.and(ObjectAction.Filters.memberOrderOf(association),EntityActionUtil.dynamicallyVisibleFor(adapter),ObjectAction.Filters.notBulkOnly());
+  final List<ObjectAction> userActions=adapterSpec.getObjectActions(type,Contributed.INCLUDED,filter);
+  associatedActions.addAll(userActions);
+  return userActions;
+}

@@ -1,0 +1,41 @@
+{
+  return new MethodHandler(){
+    @Override public Object invoke(    final Object proxied,    final Method proxyMethod,    final Method proxiedMethod,    final Object[] args) throws Throwable {
+      final boolean inheritedFromObject=proxyMethod.getDeclaringClass().equals(Object.class);
+      if (inheritedFromObject) {
+        return proxyMethod.invoke(domainObject,args);
+      }
+      final ObjectSpecificationDefault targetObjSpec=getJavaSpecificationOfOwningClass(proxyMethod);
+      final ObjectMember member=targetObjSpec.getMember(proxyMethod);
+      if (member == null) {
+        return proxyMethod.invoke(domainObject,args);
+      }
+      if (!(member instanceof ObjectAction)) {
+        throw new UnsupportedOperationException("Only actions can be executed in the background " + "(method " + proxiedMethod.getName() + " represents a "+ member.getFeatureType().name()+ "')");
+      }
+      final ObjectAction action=(ObjectAction)member;
+      final String actionId=action.getIdentifier().toFullIdentityString();
+      final Bookmark domainObjectBookmark=bookmarkService.bookmarkFor(domainObject);
+      final List<Class<?>> argTypes=Lists.newArrayList();
+      final List<Object> argObjs=Lists.newArrayList();
+      for (int i=0; i < args.length; i++) {
+        Object input=args[i];
+        if (mementoService.canSet(input)) {
+          argTypes.add(proxiedMethod.getParameterTypes()[i]);
+          argObjs.add(input);
+        }
+ else {
+          Bookmark argBookmark=bookmarkService.bookmarkFor(input);
+          argTypes.add(Bookmark.class);
+          argObjs.add(argBookmark);
+        }
+      }
+      final Interaction interaction=interactionContext.getInteraction();
+      final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,interaction.getUser(),actionId,domainObjectBookmark,argTypes,argObjs);
+      final String transactionId=interaction instanceof HasTransactionId ? ((HasTransactionId)interaction).getTransactionId() : null;
+      backgroundTaskService.execute(aim,transactionId);
+      return null;
+    }
+  }
+;
+}

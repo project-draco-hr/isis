@@ -1,0 +1,18 @@
+{
+  if (argTypes.size() != args.size()) {
+    throw new IllegalArgumentException("argTypes and args must be same size");
+  }
+  this.memento=mementoService.create();
+  memento.set("actionId",actionId);
+  memento.set("user",user);
+  memento.set("target",target);
+  memento.set("numArgs",args.size());
+  final Iterator<Class<?>> iterArgTypes=argTypes.iterator();
+  final Iterator<Object> iterArgs=args.iterator();
+  int i=0;
+  while (iterArgTypes.hasNext() && iterArgs.hasNext()) {
+    memento.set("arg" + i + "Type",iterArgTypes.next().getName());
+    memento.set("arg" + i,iterArgs.next());
+    i++;
+  }
+}

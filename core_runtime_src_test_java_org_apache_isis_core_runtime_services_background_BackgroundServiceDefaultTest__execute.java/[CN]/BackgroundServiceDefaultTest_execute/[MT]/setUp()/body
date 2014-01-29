@@ -1,0 +1,28 @@
+{
+  backgroundService=new BackgroundServiceDefault(){
+    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
+      return mockSpecificationLoaderSpi;
+    }
+  }
+;
+  backgroundService.injectBookmarkService(mockBookmarkService);
+  backgroundService.injectInteractionContext(mockInteractionContext);
+  backgroundService.injectBackgroundTaskService(mockBackgroundTaskService);
+  interactionWithTransactionId=new InteractionWithTransactionId();
+  interactionWithTransactionId.setTransactionId(transactionId);
+  interactionWithTransactionId.setUser("fbloggs");
+  context.checking(new Expectations(){
+{
+      allowing(mockSpecificationLoaderSpi).loadSpecification(with(IsisMatchers.anySubclassOf(Customer.class)));
+      will(returnValue(mockSpec));
+      allowing(mockSpec).getFullIdentifier();
+      will(returnValue(Customer.class.getName()));
+      allowing(mockInteractionContext).getInteraction();
+      will(returnValue(interactionWithTransactionId));
+    }
+  }
+);
+  customer=new Customer();
+  product=new Product();
+  actionIdentifier=Identifier.actionIdentifier(Customer.class,"placeOrder",Product.class,int.class);
+}

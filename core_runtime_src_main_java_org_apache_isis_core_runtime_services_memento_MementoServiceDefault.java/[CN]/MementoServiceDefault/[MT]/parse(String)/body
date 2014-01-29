@@ -1,6 +1,11 @@
 {
-  final byte[] bytes=BaseEncoding.base64Url().decode(str);
-  String xmlStr=new String(bytes,Charset.forName("UTF-8"));
+  String xmlStr;
+  if (noEncoding) {
+    xmlStr=str;
+  }
+ else {
+    xmlStr=base64UrlDecode(str);
+  }
   final Document doc=Dom4jUtil.parse(xmlStr);
-  return new MementoDefault(doc);
+  return new MementoDefault(doc,noEncoding);
 }
