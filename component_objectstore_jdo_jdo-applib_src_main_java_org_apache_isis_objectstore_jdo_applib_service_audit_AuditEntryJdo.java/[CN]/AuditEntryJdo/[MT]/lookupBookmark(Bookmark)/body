@@ -1,0 +1,12 @@
+{
+  try {
+    return bookmarkService != null ? bookmarkService.lookup(bookmark) : null;
+  }
+ catch (  RuntimeException ex) {
+    if (ex.getClass().getName().contains("ObjectNotFoundException")) {
+      container.warnUser("Object not found - has it since been deleted?");
+      return null;
+    }
+    throw ex;
+  }
+}

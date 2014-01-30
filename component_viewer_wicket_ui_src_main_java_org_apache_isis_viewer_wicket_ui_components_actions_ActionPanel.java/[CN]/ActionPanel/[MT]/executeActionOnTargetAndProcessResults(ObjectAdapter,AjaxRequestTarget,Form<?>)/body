@@ -5,12 +5,21 @@
     raiseWarning(target,feedbackForm,invalidReasonIfAny);
     return false;
   }
+  final InteractionContext interactionContext=getServicesInjector().lookupService(InteractionContext.class);
+  final Interaction interaction;
+  if (interactionContext != null) {
+    interaction=interactionContext.getInteraction();
+    interaction.setNature(Interaction.Nature.ACTION_INVOCATION);
+  }
+ else {
+    interaction=null;
+  }
   try {
     final ObjectAdapter resultAdapter=executeActionHandlingApplicationExceptions();
     getTransactionManager().flushTransaction();
     ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(this.getActionModel(),resultAdapter);
-    final ActionResultResponseHandlingStrategy resultType=ActionResultResponseHandlingStrategy.determineFor(resultResponse);
-    resultType.handleResults(this,resultResponse);
+    final ActionResultResponseHandlingStrategy responseHandlingStrategy=ActionResultResponseHandlingStrategy.determineFor(resultResponse);
+    responseHandlingStrategy.handleResults(this,resultResponse);
     if (actionModel.isBookmarkable()) {
       bookmarkPage(actionModel);
     }
@@ -24,6 +33,9 @@
         resultType.handleResults(this,null);
       }
       return false;
+    }
+    if (interaction != null) {
+      interaction.setException(Throwables.getStackTraceAsString(ex));
     }
     throw ex;
   }

@@ -1,10 +1,8 @@
 {
-  if (interaction.getActionIdentifier() == null) {
+  InteractionJdo interactionJdo=asPersistableInteractionJdo(interaction);
+  if (interactionJdo == null) {
     return;
   }
-  if (interaction instanceof InteractionJdo) {
-    final InteractionJdo interactionJdo=(InteractionJdo)interaction;
-    interactionJdo.setCompletedAt(Clock.getTimeAsJavaSqlTimestamp());
-    persistIfNotAlready(interaction);
-  }
+  interactionJdo.setCompletedAt(Clock.getTimeAsJavaSqlTimestamp());
+  persistIfNotAlready(interactionJdo);
 }

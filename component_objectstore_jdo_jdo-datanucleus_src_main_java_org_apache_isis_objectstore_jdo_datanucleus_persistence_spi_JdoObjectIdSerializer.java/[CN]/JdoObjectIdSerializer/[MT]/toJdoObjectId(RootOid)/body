@@ -1,42 +1,48 @@
 {
   String idStr=oid.getIdentifier();
-  final int colonIdx=idStr.indexOf(SEPARATOR);
-  final String keyStr=idStr.substring(colonIdx + 1);
-  final String firstPart=idStr.substring(0,colonIdx);
+  final int separatorIdx=idStr.indexOf(SEPARATOR);
+  final String distinguisher=idStr.substring(0,separatorIdx);
+  final String keyStr=idStr.substring(separatorIdx + 1);
   final ObjectSpecification spec=getSpecificationLoader().lookupBySpecId(oid.getObjectSpecId());
-  JdoPersistenceCapableFacet facet=spec.getFacet(JdoPersistenceCapableFacet.class);
-  if (facet != null && facet.getIdentityType() == IdentityType.APPLICATION) {
-    if ("s".equals(firstPart)) {
+  final JdoPersistenceCapableFacet jdoPcFacet=spec.getFacet(JdoPersistenceCapableFacet.class);
+  if (isApplicationIdentity(jdoPcFacet)) {
+    if ("s".equals(distinguisher)) {
       return keyStr;
     }
-    if ("i".equals(firstPart)) {
+    if ("i".equals(distinguisher)) {
       return Integer.parseInt(keyStr);
     }
-    if ("l".equals(firstPart)) {
+    if ("l".equals(distinguisher)) {
       return Long.parseLong(keyStr);
     }
-    if ("b".equals(firstPart)) {
+    if ("b".equals(distinguisher)) {
       return Byte.parseByte(keyStr);
+    }
+    if ("u".equals(distinguisher)) {
+      return UUID.fromString(keyStr);
     }
   }
  else {
-    if ("s".equals(firstPart)) {
+    if ("s".equals(distinguisher)) {
       return new StringIdentity(objectTypeClassFor(oid),keyStr);
     }
-    if ("i".equals(firstPart)) {
+    if ("i".equals(distinguisher)) {
       return new IntIdentity(objectTypeClassFor(oid),keyStr);
     }
-    if ("l".equals(firstPart)) {
+    if ("l".equals(distinguisher)) {
       return new LongIdentity(objectTypeClassFor(oid),keyStr);
     }
-    if ("b".equals(firstPart)) {
+    if ("b".equals(distinguisher)) {
       return new ByteIdentity(objectTypeClassFor(oid),keyStr);
     }
+    if ("u".equals(distinguisher)) {
+      return new ObjectIdentity(objectTypeClassFor(oid),UUID.fromString(keyStr));
+    }
   }
-  if (dnPrefixes.contains(firstPart)) {
+  if (dnPrefixes.contains(distinguisher)) {
     return keyStr + "[OID]" + spec.getFullIdentifier();
   }
-  final String clsName=firstPart;
+  final String clsName=distinguisher;
   try {
     final Class<?> cls=Thread.currentThread().getContextClassLoader().loadClass(clsName);
     final Constructor<?> cons=cls.getConstructor(String.class);

@@ -1,10 +1,10 @@
 {
-  if (auditingService == null) {
+  if (auditingService3 == null) {
     return;
   }
   final String currentUser=getTransactionManager().getAuthenticationSession().getUserName();
-  final long currentTimestampEpoch=currentTimestamp();
+  final java.sql.Timestamp currentTime=Clock.getTimeAsJavaSqlTimestamp();
   for (  Entry<AdapterAndProperty,PreAndPostValues> auditEntry : changedObjectProperties) {
-    auditChangedProperty(currentUser,currentTimestampEpoch,auditEntry);
+    auditChangedProperty(currentTime,currentUser,auditEntry);
   }
 }

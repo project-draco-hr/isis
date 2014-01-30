@@ -1,0 +1,16 @@
+{
+  final AdapterAndProperty aap=auditEntry.getKey();
+  final ObjectAdapter adapter=aap.getAdapter();
+  if (!adapter.getSpecification().containsFacet(AuditableFacet.class)) {
+    return;
+  }
+  final RootOid oid=(RootOid)adapter.getOid();
+  final String objectType=oid.getObjectSpecId().asString();
+  final String identifier=oid.getIdentifier();
+  final PreAndPostValues papv=auditEntry.getValue();
+  final String preValue=asString(papv.getPre());
+  final String postValue=asString(papv.getPost());
+  final String propertyId=aap.getProperty().getId();
+  final Bookmark target=new Bookmark(objectType,identifier);
+  auditingService3.audit(timestamp,user,target,propertyId,preValue,postValue);
+}

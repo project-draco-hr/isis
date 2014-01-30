@@ -8,6 +8,14 @@
   if (jdoOid instanceof javax.jdo.identity.LongIdentity) {
     return "l" + SEPARATOR + jdoOid;
   }
+  if (jdoOid instanceof javax.jdo.identity.ObjectIdentity) {
+    javax.jdo.identity.ObjectIdentity id=(ObjectIdentity)jdoOid;
+    Object keyAsObject=id.getKeyAsObject();
+    if (keyAsObject instanceof UUID) {
+      UUID uuid=(UUID)keyAsObject;
+      return "u" + SEPARATOR + uuid.toString();
+    }
+  }
   if (jdoOid instanceof OID) {
     OID dnOid=(OID)jdoOid;
     Object keyValue=dnOid.getKeyValue();
