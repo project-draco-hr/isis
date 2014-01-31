@@ -32,8 +32,9 @@
       }
       final Interaction interaction=interactionContext.getInteraction();
       final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,interaction.getUser(),actionId,domainObjectBookmark,argTypes,argObjs);
-      final UUID transactionId=interaction instanceof HasTransactionId ? ((HasTransactionId)interaction).getTransactionId() : null;
-      backgroundTaskService.execute(aim,transactionId);
+      final UUID transactionId=interaction.getTransactionId();
+      Integer sequence=interaction.next("backgroundTaskServiceSequence");
+      backgroundTaskService.execute(aim,transactionId,sequence);
       return null;
     }
   }

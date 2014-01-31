@@ -24,8 +24,10 @@
       positionedServices.put(order,list);
     }
     LOG.info("creating service " + serviceName + (order != Integer.MAX_VALUE ? " at position " + order : ""));
-    Object service=serviceName.indexOf(DELIMITER) == -1 ? createService(servicePrefix + serviceName) : createSimpleRepository(servicePrefix,serviceName);
-    list.add(service);
+    Object service=instantiateService(servicePrefix,serviceName);
+    if (service != null) {
+      list.add(service);
+    }
   }
   for (  Integer position : positionedServices.keySet()) {
     final List<Object> list=positionedServices.get(position);

@@ -3,11 +3,11 @@
   if (ic == null) {
     return;
   }
-  final InteractionFactory interactionFactory=getServiceOrNull(InteractionFactory.class);
+  final InteractionService interactionFactory=getServiceOrNull(InteractionService.class);
   final Interaction interaction=interactionFactory != null ? interactionFactory.create() : new InteractionDefault();
   ic.setInteraction(interaction);
-  if (interaction.getStartedAt() == null) {
-    interaction.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
+  if (interaction.getTimestamp() == null) {
+    interaction.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
   }
   if (interaction.getUser() == null) {
     interaction.setUser(getAuthenticationSession().getUserName());

@@ -1,5 +1,6 @@
 {
   org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+  context.ignoring(mockInteractionContext);
   context.ignoring(mockAuditingService3);
   context.checking(new Expectations(){
 {
@@ -15,7 +16,7 @@
     }
   }
 );
-  transaction=new IsisTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,mockObjectStore,mockAuditingService3,mockPublishingService);
+  transaction=new IsisTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,mockObjectStore,mockInteractionContext,mockAuditingService3,mockPublishingService);
   transientAdapter1=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("1").build();
   transientAdapter2=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("2").build();
   persistentAdapter1=PojoAdapterBuilder.create().with(Persistence.PERSISTENT).withIdentifier("3").build();

@@ -1,0 +1,24 @@
+{
+  if (publishingService == null) {
+    return;
+  }
+  try {
+    final CurrentInvocation currentInvocation=ActionInvocationFacet.currentInvocation.get();
+    if (currentInvocation == null) {
+      return;
+    }
+    final PublishedActionFacet publishedActionFacet=currentInvocation.getAction().getFacet(PublishedActionFacet.class);
+    if (publishedActionFacet == null) {
+      return;
+    }
+    final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
+    final RootOid adapterOid=(RootOid)currentInvocation.getTarget().getOid();
+    final String oidStr=getOidMarshaller().marshal(adapterOid);
+    final String title=oidStr + ": " + currentInvocation.getAction().getIdentifier().toNameParmsIdentityString();
+    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title);
+    publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
+  }
+  finally {
+    ActionInvocationFacet.currentInvocation.set(null);
+  }
+}

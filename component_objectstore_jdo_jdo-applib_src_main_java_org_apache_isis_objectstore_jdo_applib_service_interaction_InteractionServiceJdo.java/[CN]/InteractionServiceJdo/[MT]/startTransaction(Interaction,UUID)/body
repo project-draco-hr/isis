@@ -1,8 +1,10 @@
 {
   if (interaction instanceof InteractionJdo) {
-    InteractionJdo interactionJdo=(InteractionJdo)interaction;
-    if (interactionJdo.getTransactionId() == null) {
-      interactionJdo.setTransactionId(transactionId);
+    final InteractionJdo interactionJdo=(InteractionJdo)interaction;
+    final UUID currentTransactionId=interactionJdo.getTransactionId();
+    if (currentTransactionId != null && !currentTransactionId.equals(transactionId)) {
+      throw new IllegalStateException("Attempting to set a different transactionId on interaction");
     }
+    interactionJdo.setTransactionId(transactionId);
   }
 }

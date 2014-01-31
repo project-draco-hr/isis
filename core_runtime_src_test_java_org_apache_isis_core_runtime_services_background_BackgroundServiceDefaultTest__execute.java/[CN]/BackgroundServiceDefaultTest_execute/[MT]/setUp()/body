@@ -8,9 +8,9 @@
   backgroundService.injectBookmarkService(mockBookmarkService);
   backgroundService.injectInteractionContext(mockInteractionContext);
   backgroundService.injectBackgroundTaskService(mockBackgroundTaskService);
-  interactionWithTransactionId=new InteractionWithTransactionId();
-  interactionWithTransactionId.setTransactionId(transactionId);
-  interactionWithTransactionId.setUser("fbloggs");
+  interaction=new InteractionDefault();
+  interaction.setTransactionId(transactionId);
+  interaction.setUser("fbloggs");
   context.checking(new Expectations(){
 {
       allowing(mockSpecificationLoaderSpi).loadSpecification(with(IsisMatchers.anySubclassOf(Customer.class)));
@@ -18,7 +18,7 @@
       allowing(mockSpec).getFullIdentifier();
       will(returnValue(Customer.class.getName()));
       allowing(mockInteractionContext).getInteraction();
-      will(returnValue(interactionWithTransactionId));
+      will(returnValue(interaction));
     }
   }
 );
