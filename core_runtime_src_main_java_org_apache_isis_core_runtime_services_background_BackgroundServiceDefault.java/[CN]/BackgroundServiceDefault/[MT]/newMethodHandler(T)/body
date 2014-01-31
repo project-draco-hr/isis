@@ -30,11 +30,9 @@
           argObjs.add(argBookmark);
         }
       }
-      final Interaction interaction=interactionContext.getInteraction();
-      final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,interaction.getUser(),actionId,domainObjectBookmark,argTypes,argObjs);
-      final UUID transactionId=interaction.getTransactionId();
-      Integer sequence=interaction.next("backgroundTaskServiceSequence");
-      backgroundTaskService.execute(aim,transactionId,sequence);
+      final ReifiableAction reifiableAction=reifiableActionContext.getReifiableAction();
+      final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,reifiableAction.getUser(),actionId,domainObjectBookmark,argTypes,argObjs);
+      backgroundTaskService.execute(aim,reifiableAction);
       return null;
     }
   }

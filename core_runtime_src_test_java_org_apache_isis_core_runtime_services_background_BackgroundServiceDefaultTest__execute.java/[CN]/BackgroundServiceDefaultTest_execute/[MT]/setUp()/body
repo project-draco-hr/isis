@@ -6,19 +6,20 @@
   }
 ;
   backgroundService.injectBookmarkService(mockBookmarkService);
-  backgroundService.injectInteractionContext(mockInteractionContext);
+  backgroundService.injectReifiableActionContext(mockReifiableActionContext);
   backgroundService.injectBackgroundTaskService(mockBackgroundTaskService);
-  interaction=new InteractionDefault();
-  interaction.setTransactionId(transactionId);
-  interaction.setUser("fbloggs");
+  reifiableAction=new ReifiableActionDefault();
+  reifiableAction.setTransactionId(transactionId);
+  reifiableAction.setUser("fbloggs");
+  reifiableAction.setTransactionId(transactionId);
   context.checking(new Expectations(){
 {
       allowing(mockSpecificationLoaderSpi).loadSpecification(with(IsisMatchers.anySubclassOf(Customer.class)));
       will(returnValue(mockSpec));
       allowing(mockSpec).getFullIdentifier();
       will(returnValue(Customer.class.getName()));
-      allowing(mockInteractionContext).getInteraction();
-      will(returnValue(interaction));
+      allowing(mockReifiableActionContext).getReifiableAction();
+      will(returnValue(reifiableAction));
     }
   }
 );

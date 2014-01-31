@@ -1,0 +1,24 @@
+{
+  ensureThatArg(transactionManager,is(not(nullValue())),"transaction manager is required");
+  ensureThatArg(messageBroker,is(not(nullValue())),"message broker is required");
+  ensureThatArg(updateNotifier,is(not(nullValue())),"update notifier is required");
+  this.transactionManager=transactionManager;
+  this.messageBroker=messageBroker;
+  this.updateNotifier=updateNotifier;
+  this.auditingService3=auditingService3;
+  this.publishingService=publishingService;
+  UUID previousTransactionId=null;
+  if (reifiableActionContext != null) {
+    reifiableAction=reifiableActionContext.getReifiableAction();
+    previousTransactionId=reifiableAction.getTransactionId();
+  }
+ else {
+    reifiableAction=null;
+  }
+  this.transactionId=previousTransactionId != null ? previousTransactionId : UUID.randomUUID();
+  this.state=State.IN_PROGRESS;
+  this.objectStore=objectStore;
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("new transaction " + this);
+  }
+}

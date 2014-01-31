@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Reified public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ReifiedActionFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ReifiedActionFacetAbstract);
+  assertNoMethodsRemoved();
+}

@@ -1,0 +1,10 @@
+{
+  if (reifiableAction instanceof ReifiableActionJdo) {
+    final ReifiableActionJdo interactionJdo=(ReifiableActionJdo)reifiableAction;
+    final UUID currentTransactionId=interactionJdo.getTransactionId();
+    if (currentTransactionId != null && !currentTransactionId.equals(transactionId)) {
+      throw new IllegalStateException("Attempting to set a different transactionId on reifiable action");
+    }
+    interactionJdo.setTransactionId(transactionId);
+  }
+}
