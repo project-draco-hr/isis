@@ -5,6 +5,7 @@
       if (inheritedFromObject) {
         return proxyMethod.invoke(domainObject,args);
       }
+      final ObjectAdapter targetAdapter=getAdapterManager().adapterFor(domainObject);
       final ObjectSpecificationDefault targetObjSpec=getJavaSpecificationOfOwningClass(proxyMethod);
       final ObjectMember member=targetObjSpec.getMember(proxyMethod);
       if (member == null) {
@@ -14,26 +15,22 @@
         throw new UnsupportedOperationException("Only actions can be executed in the background " + "(method " + proxiedMethod.getName() + " represents a "+ member.getFeatureType().name()+ "')");
       }
       final ObjectAction action=(ObjectAction)member;
-      final String actionId=action.getIdentifier().toFullIdentityString();
+      final String actionIdentifier=ReifiableActionUtil.actionIdentifierFor(action);
+      final String targetClassName=ReifiableActionUtil.targetClassNameFor(targetAdapter);
+      final String targetActionName=ReifiableActionUtil.targetActionNameFor(action);
+      final String targetArgs=ReifiableActionUtil.argDescriptionFor(action,adaptersFor(args));
       final Bookmark domainObjectBookmark=bookmarkService.bookmarkFor(domainObject);
       final List<Class<?>> argTypes=Lists.newArrayList();
       final List<Object> argObjs=Lists.newArrayList();
-      for (int i=0; i < args.length; i++) {
-        Object input=args[i];
-        if (mementoService.canSet(input)) {
-          argTypes.add(proxiedMethod.getParameterTypes()[i]);
-          argObjs.add(input);
-        }
- else {
-          Bookmark argBookmark=bookmarkService.bookmarkFor(input);
-          argTypes.add(Bookmark.class);
-          argObjs.add(argBookmark);
-        }
-      }
+      ReifiableActionUtil.buildMementoArgLists(mementoService,bookmarkService,proxiedMethod,args,argTypes,argObjs);
       final ReifiableAction reifiableAction=reifiableActionContext.getReifiableAction();
-      final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,reifiableAction.getUser(),actionId,domainObjectBookmark,argTypes,argObjs);
-      backgroundTaskService.execute(aim,reifiableAction);
+      final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,actionIdentifier,domainObjectBookmark,argTypes,argObjs);
+      backgroundTaskService.schedule(aim,reifiableAction,targetClassName,targetActionName,targetArgs);
       return null;
+    }
+    ObjectAdapter[] adaptersFor(    final Object[] args){
+      final AdapterManager adapterManager=getAdapterManager();
+      return ReifiableActionUtil.adaptersFor(args,adapterManager);
     }
   }
 ;

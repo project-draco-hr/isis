@@ -16,28 +16,27 @@
       bulkInteractionContext.setInvokedAs(InvokedAs.REGULAR);
       bulkInteractionContext.setDomainObjects(Collections.singletonList(object));
     }
-    if (reifiableAction != null) {
-      if (reifiableAction.getNature() == ReifiableAction.Nature.USER_INITIATED && owningAction != null) {
-        final String actionIdentifier=owningAction.getIdentifier().toClassAndNameIdentityString();
-        reifiableAction.setActionIdentifier(actionIdentifier);
-        String targetClassName=StringExtensions.asNaturalName2(targetAdapter.getSpecification().getSingularName());
-        String actionName=owningAction.getName();
-        reifiableAction.setTargetClass(targetClassName);
-        reifiableAction.setTargetAction(actionName);
-        final StringBuilder argsBuf=new StringBuilder();
-        List<ObjectActionParameter> parameters=owningAction.getParameters();
-        if (parameters.size() == arguments.length) {
-          int i=0;
-          for (          ObjectActionParameter param : parameters) {
-            appendParamArg(argsBuf,param,arguments[i++]);
-          }
+    if (reifiableAction != null && reifiableAction.getNature() == ReifiableAction.Nature.USER_INITIATED && owningAction != null) {
+      reifiableAction.setActionIdentifier(ReifiableActionUtil.actionIdentifierFor(owningAction));
+      reifiableAction.setTargetClass(ReifiableActionUtil.targetClassNameFor(targetAdapter));
+      reifiableAction.setTargetAction(ReifiableActionUtil.targetActionNameFor(owningAction));
+      reifiableAction.setArguments(ReifiableActionUtil.argDescriptionFor(owningAction,arguments));
+      final Bookmark targetBookmark=ReifiableActionUtil.bookmarkFor(targetAdapter);
+      reifiableAction.setTarget(targetBookmark);
+      final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
+      if (backgroundService != null) {
+        final Object targetObject=unwrap(targetAdapter);
+        final Object[] args=ReifiableActionUtil.objectsFor(arguments);
+        ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
+        if (aim != null) {
+          reifiableAction.setMemento(aim.asMementoString());
         }
-        reifiableAction.setArguments(argsBuf.toString());
-        final boolean reifiable=getFacetHolder().containsDoOpFacet(ReifiedActionFacet.class);
-        reifiableAction.setReify(reifiable);
+ else {
+          throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
+        }
       }
-      final Bookmark bookmark=bookmarkFor(targetAdapter);
-      reifiableAction.setTarget(bookmark);
+      final boolean reifiable=getFacetHolder().containsDoOpFacet(ReifiedActionFacet.class);
+      reifiableAction.setReify(reifiable);
     }
     final Object result=method.invoke(object,executionParameters);
     if (LOG.isDebugEnabled()) {
@@ -51,7 +50,7 @@
     resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
     if (reifiableAction != null) {
       if (!resultAdapter.getSpecification().containsDoOpFacet(ViewModelFacet.class)) {
-        final Bookmark bookmark=bookmarkFor(resultAdapter);
+        final Bookmark bookmark=ReifiableActionUtil.bookmarkFor(resultAdapter);
         reifiableAction.setResult(bookmark);
       }
     }
