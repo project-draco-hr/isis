@@ -1,0 +1,13 @@
+{
+  final AuthenticationSession authSession=newAuthSession(context);
+  try {
+    if (concurrentInstancesPolicy == ConcurrentInstancesPolicy.SINGLE_INSTANCE_ONLY && executing) {
+      return;
+    }
+    executing=true;
+    isisRunnable.execute(authSession,context);
+  }
+  finally {
+    executing=false;
+  }
+}

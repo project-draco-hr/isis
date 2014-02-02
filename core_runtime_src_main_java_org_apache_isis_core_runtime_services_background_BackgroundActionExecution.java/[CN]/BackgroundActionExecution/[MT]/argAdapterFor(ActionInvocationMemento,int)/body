@@ -1,0 +1,15 @@
+{
+  final Class<?> argType=aim.getArgType(num);
+  final Object arg=aim.getArg(num,argType);
+  if (arg == null) {
+    return null;
+  }
+  if (Bookmark.class != argType) {
+    return adapterFor(arg);
+  }
+ else {
+    final Bookmark argBookmark=(Bookmark)arg;
+    final RootOid rootOid=RootOidDefault.create(argBookmark);
+    return adapterFor(rootOid);
+  }
+}
