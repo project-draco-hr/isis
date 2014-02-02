@@ -1,0 +1,15 @@
+{
+  final ReifiableActionContext reifiableActionContext=getServiceOrNull(ReifiableActionContext.class);
+  if (reifiableActionContext == null) {
+    return;
+  }
+  final ReifiableActionService reifiableActionService=getServiceOrNull(ReifiableActionService.class);
+  final ReifiableAction reifiableAction=reifiableActionService != null ? reifiableActionService.create() : new ReifiableActionDefault();
+  reifiableActionContext.setReifiableAction(reifiableAction);
+  if (reifiableAction.getTimestamp() == null) {
+    reifiableAction.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
+  }
+  if (reifiableAction.getUser() == null) {
+    reifiableAction.setUser(getAuthenticationSession().getUserName());
+  }
+}

@@ -1,19 +1,20 @@
 {
-  final UUID transactionId=reifiableAction.getTransactionId();
-  final Integer sequence=reifiableAction.next(sequenceName);
-  final String user=reifiableAction.getUser();
-  final BackgroundTaskJdo backgroundTask=newTransientInstance(BackgroundTaskJdo.class);
-  backgroundTask.setTransactionId(transactionId);
-  backgroundTask.setSequence(sequence);
-  backgroundTask.setUser(user);
-  backgroundTask.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
-  backgroundTask.setNature(Nature.BACKGROUND);
-  backgroundTask.setTargetClass(targetClassName);
-  backgroundTask.setTargetAction(targetActionName);
-  backgroundTask.setTargetStr(aim.getTarget().toString());
-  backgroundTask.setActionIdentifier(aim.getActionId());
-  backgroundTask.setArguments(targetArgs);
-  backgroundTask.setMemento(aim.asMementoString());
-  reifiableAction.setReify(true);
-  persist(backgroundTask);
+  final UUID transactionId=UUID.randomUUID();
+  final Integer sequence=0;
+  final String user=parentAction.getUser();
+  final ReifiableActionJdo backgroundAction=newTransientInstance(ReifiableActionJdo.class);
+  backgroundAction.setParent(parentAction);
+  backgroundAction.setTransactionId(transactionId);
+  backgroundAction.setSequence(sequence);
+  backgroundAction.setUser(user);
+  backgroundAction.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
+  backgroundAction.setNature(Nature.BACKGROUND);
+  backgroundAction.setTargetClass(targetClassName);
+  backgroundAction.setTargetAction(targetActionName);
+  backgroundAction.setTargetStr(aim.getTarget().toString());
+  backgroundAction.setActionIdentifier(aim.getActionId());
+  backgroundAction.setArguments(targetArgs);
+  backgroundAction.setMemento(aim.asMementoString());
+  parentAction.setReify(true);
+  persist(backgroundAction);
 }
