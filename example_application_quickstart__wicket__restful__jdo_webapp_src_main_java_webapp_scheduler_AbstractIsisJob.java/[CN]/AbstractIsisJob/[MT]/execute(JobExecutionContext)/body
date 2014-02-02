@@ -1,0 +1,29 @@
+{
+  final AuthenticationSession authSession=newAuthSession(context);
+  try {
+    if (executing) {
+      return;
+    }
+    executing=true;
+    IsisContext.openSession(authSession);
+    PersistenceSession persistenceSession=IsisContext.getPersistenceSession();
+    persistenceSession.getServicesInjector().injectServicesInto(this);
+    IsisTransactionManager transactionManager=persistenceSession.getTransactionManager();
+    transactionManager.executeWithinTransaction(new TransactionalClosure(){
+      @Override public void preExecute(){
+      }
+      @Override public void execute(){
+        doExecute(context);
+      }
+      @Override public void onSuccess(){
+      }
+      @Override public void onFailure(){
+      }
+    }
+);
+  }
+  finally {
+    executing=false;
+    IsisContext.closeSession();
+  }
+}
