@@ -1,5 +1,8 @@
 {
   super(pageParameters,ApplicationActions.INCLUDE,titleString,ComponentType.ENTITY);
+  if (!getDeploymentType().isProduction()) {
+    getSpecificationLoader().invalidateCacheFor(entityModel.getObject().getObject());
+  }
   this.model=entityModel;
   addChildComponents(themeDiv,model);
   bookmarkPage(model);
