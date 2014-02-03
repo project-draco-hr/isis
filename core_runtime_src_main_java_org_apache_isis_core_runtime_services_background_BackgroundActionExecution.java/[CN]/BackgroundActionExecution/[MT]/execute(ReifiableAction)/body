@@ -14,9 +14,9 @@
       throw new Exception("Unknown action '" + actionId + "'");
     }
     final ObjectAdapter[] argAdapters=argAdaptersFor(aim);
-    ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters);
+    final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters);
     if (resultAdapter != null) {
-      Bookmark resultBookmark=bookmarkService.bookmarkFor(resultAdapter.getObject());
+      Bookmark resultBookmark=ReifiableActionUtil.bookmarkFor(resultAdapter);
       backgroundAction.setResult(resultBookmark);
     }
   }

@@ -63,13 +63,19 @@
     throw e;
   }
 catch (  final InvocationTargetException e) {
-    if (e.getTargetException() instanceof IllegalStateException) {
-      throw new ReflectiveActionException("IllegalStateException thrown while executing " + method + " "+ e.getTargetException().getMessage(),e.getTargetException());
+    final Throwable targetException=e.getTargetException();
+    if (targetException instanceof IllegalStateException) {
+      throw new ReflectiveActionException("IllegalStateException thrown while executing " + method + " "+ targetException.getMessage(),targetException);
     }
- else {
-      ThrowableExtensions.throwWithinIsisException(e,"Exception executing " + method);
-      return null;
+    if (targetException instanceof RecoverableException) {
+      if (!runtimeContext.getTransactionState().canCommit()) {
+        final Throwable targetExceptionCause=targetException.getCause();
+        Throwable nonRecoverableCause=targetExceptionCause != null ? targetExceptionCause : targetException;
+        throw new NonRecoverableException(nonRecoverableCause);
+      }
     }
+    ThrowableExtensions.throwWithinIsisException(e,"Exception executing " + method);
+    return null;
   }
 catch (  final IllegalAccessException e) {
     throw new ReflectiveActionException("Illegal access of " + method,e);

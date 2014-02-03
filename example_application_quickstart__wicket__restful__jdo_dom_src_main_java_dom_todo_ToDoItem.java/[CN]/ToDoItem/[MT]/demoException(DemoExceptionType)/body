@@ -1,4 +1,16 @@
 {
-  if (type == DemoExceptionType.RUNTIME_EXCEPTION)   throw new RuntimeException("Demo throwing runtime exception");
- else   throw new ApplicationException("Demo throwing application exception");
+switch (type) {
+case NonRecoverableException:
+    throw new NonRecoverableException("Demo throwing " + type.name());
+case RecoverableException:
+  throw new RecoverableException("Demo throwing " + type.name());
+case RecoverableExceptionAutoEscalated:
+try {
+  setSubcategory(null);
+  container.flush();
+}
+ catch (Exception e) {
+  throw new RecoverableException("Demo throwing " + type.name(),e);
+}
+}
 }
