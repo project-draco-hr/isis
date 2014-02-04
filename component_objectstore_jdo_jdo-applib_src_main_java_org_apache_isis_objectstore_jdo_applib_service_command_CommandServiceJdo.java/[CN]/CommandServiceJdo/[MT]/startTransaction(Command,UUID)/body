@@ -1,0 +1,10 @@
+{
+  if (command instanceof CommandJdo) {
+    final CommandJdo commandJdo=(CommandJdo)command;
+    final UUID currentTransactionId=commandJdo.getTransactionId();
+    if (currentTransactionId != null && !currentTransactionId.equals(transactionId)) {
+      throw new IllegalStateException("Attempting to set a different transactionId on command");
+    }
+    commandJdo.setTransactionId(transactionId);
+  }
+}

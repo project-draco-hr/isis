@@ -1,0 +1,11 @@
+{
+  if (commandContext == null || commandService == null) {
+    return;
+  }
+  final Command command=commandContext.getCommand();
+  final CommandJdo commandJdo=commandService.asUserInitiatedCommandJdo(command);
+  if (commandJdo == null) {
+    return;
+  }
+  persistIfNotAlready(commandJdo);
+}

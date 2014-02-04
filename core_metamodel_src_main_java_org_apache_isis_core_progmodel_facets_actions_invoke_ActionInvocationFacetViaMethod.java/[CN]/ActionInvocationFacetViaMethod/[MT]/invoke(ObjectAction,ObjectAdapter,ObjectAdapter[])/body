@@ -3,8 +3,8 @@
     LOG.error(method + " requires " + paramCount+ " parameters, not "+ arguments.length);
   }
   final Bulk.InteractionContext bulkInteractionContext=getServicesInjector().lookupService(Bulk.InteractionContext.class);
-  final ReifiableActionContext reifiableActionContext=getServicesInjector().lookupService(ReifiableActionContext.class);
-  final ReifiableAction reifiableAction=reifiableActionContext != null ? reifiableActionContext.getReifiableAction() : null;
+  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+  final Command command=commandContext != null ? commandContext.getCommand() : null;
   try {
     final Object[] executionParameters=new Object[arguments.length];
     for (int i=0; i < arguments.length; i++) {
@@ -16,28 +16,28 @@
       bulkInteractionContext.setInvokedAs(InvokedAs.REGULAR);
       bulkInteractionContext.setDomainObjects(Collections.singletonList(object));
     }
-    if (reifiableAction != null && reifiableAction.getNature() == ReifiableAction.Nature.USER_INITIATED && owningAction != null) {
-      reifiableAction.setStartedAt(reifiableAction.getTimestamp());
-      reifiableAction.setActionIdentifier(ReifiableActionUtil.actionIdentifierFor(owningAction));
-      reifiableAction.setTargetClass(ReifiableActionUtil.targetClassNameFor(targetAdapter));
-      reifiableAction.setTargetAction(ReifiableActionUtil.targetActionNameFor(owningAction));
-      reifiableAction.setArguments(ReifiableActionUtil.argDescriptionFor(owningAction,arguments));
-      final Bookmark targetBookmark=ReifiableActionUtil.bookmarkFor(targetAdapter);
-      reifiableAction.setTarget(targetBookmark);
+    if (command != null && command.getNature() == Command.Nature.USER_INITIATED && owningAction != null) {
+      command.setStartedAt(command.getTimestamp());
+      command.setActionIdentifier(CommandUtil.actionIdentifierFor(owningAction));
+      command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
+      command.setTargetAction(CommandUtil.targetActionNameFor(owningAction));
+      command.setArguments(CommandUtil.argDescriptionFor(owningAction,arguments));
+      final Bookmark targetBookmark=CommandUtil.bookmarkFor(targetAdapter);
+      command.setTarget(targetBookmark);
       final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
       if (backgroundService != null) {
         final Object targetObject=unwrap(targetAdapter);
-        final Object[] args=ReifiableActionUtil.objectsFor(arguments);
+        final Object[] args=CommandUtil.objectsFor(arguments);
         ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
         if (aim != null) {
-          reifiableAction.setMemento(aim.asMementoString());
+          command.setMemento(aim.asMementoString());
         }
  else {
           throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
         }
       }
-      final boolean reifiable=getFacetHolder().containsDoOpFacet(ReifiedActionFacet.class);
-      reifiableAction.setReify(reifiable);
+      final boolean hasCommandFacet=getFacetHolder().containsDoOpFacet(CommandFacet.class);
+      command.setPersistHint(hasCommandFacet);
     }
     final Object result=method.invoke(object,executionParameters);
     if (LOG.isDebugEnabled()) {
@@ -49,10 +49,10 @@
     final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
     final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
     resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
-    if (reifiableAction != null) {
+    if (command != null) {
       if (!resultAdapter.getSpecification().containsDoOpFacet(ViewModelFacet.class)) {
-        final Bookmark bookmark=ReifiableActionUtil.bookmarkFor(resultAdapter);
-        reifiableAction.setResult(bookmark);
+        final Bookmark bookmark=CommandUtil.bookmarkFor(resultAdapter);
+        command.setResult(bookmark);
       }
     }
     PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);

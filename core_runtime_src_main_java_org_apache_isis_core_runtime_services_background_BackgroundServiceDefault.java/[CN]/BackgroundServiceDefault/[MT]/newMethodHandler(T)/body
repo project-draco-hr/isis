@@ -15,22 +15,22 @@
         throw new UnsupportedOperationException("Only actions can be executed in the background " + "(method " + proxiedMethod.getName() + " represents a "+ member.getFeatureType().name()+ "')");
       }
       final ObjectAction action=(ObjectAction)member;
-      final String actionIdentifier=ReifiableActionUtil.actionIdentifierFor(action);
-      final String targetClassName=ReifiableActionUtil.targetClassNameFor(targetAdapter);
-      final String targetActionName=ReifiableActionUtil.targetActionNameFor(action);
-      final String targetArgs=ReifiableActionUtil.argDescriptionFor(action,adaptersFor(args));
+      final String actionIdentifier=CommandUtil.actionIdentifierFor(action);
+      final String targetClassName=CommandUtil.targetClassNameFor(targetAdapter);
+      final String targetActionName=CommandUtil.targetActionNameFor(action);
+      final String targetArgs=CommandUtil.argDescriptionFor(action,adaptersFor(args));
       final Bookmark domainObjectBookmark=bookmarkService.bookmarkFor(domainObject);
       final List<Class<?>> argTypes=Lists.newArrayList();
       final List<Object> argObjs=Lists.newArrayList();
-      ReifiableActionUtil.buildMementoArgLists(mementoService,bookmarkService,proxiedMethod,args,argTypes,argObjs);
-      final ReifiableAction reifiableAction=reifiableActionContext.getReifiableAction();
+      CommandUtil.buildMementoArgLists(mementoService,bookmarkService,proxiedMethod,args,argTypes,argObjs);
+      final Command command=commandContext.getCommand();
       final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,actionIdentifier,domainObjectBookmark,argTypes,argObjs);
-      backgroundActionService.schedule(aim,reifiableAction,targetClassName,targetActionName,targetArgs);
+      backgroundActionService.schedule(aim,command,targetClassName,targetActionName,targetArgs);
       return null;
     }
     ObjectAdapter[] adaptersFor(    final Object[] args){
       final AdapterManager adapterManager=getAdapterManager();
-      return ReifiableActionUtil.adaptersFor(args,adapterManager);
+      return CommandUtil.adaptersFor(args,adapterManager);
     }
   }
 ;

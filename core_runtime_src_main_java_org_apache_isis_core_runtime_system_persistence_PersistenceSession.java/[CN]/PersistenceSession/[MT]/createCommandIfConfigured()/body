@@ -1,0 +1,15 @@
+{
+  final CommandContext commandContext=getServiceOrNull(CommandContext.class);
+  if (commandContext == null) {
+    return;
+  }
+  final CommandService commandService=getServiceOrNull(CommandService.class);
+  final Command command=commandService != null ? commandService.create() : new CommandDefault();
+  commandContext.setCommand(command);
+  if (command.getTimestamp() == null) {
+    command.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
+  }
+  if (command.getUser() == null) {
+    command.setUser(getAuthenticationSession().getUserName());
+  }
+}

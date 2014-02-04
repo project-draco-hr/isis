@@ -1,0 +1,10 @@
+{
+  final Command parent=siblingAction.getParent();
+  if (parent == null || !(parent instanceof CommandJdo)) {
+    return Collections.emptyList();
+  }
+  final CommandJdo parentJdo=(CommandJdo)parent;
+  final List<CommandJdo> siblingActions=backgroundActionRepository.findByParent(parentJdo);
+  siblingActions.remove(siblingAction);
+  return siblingActions;
+}

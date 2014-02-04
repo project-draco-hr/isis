@@ -1,0 +1,29 @@
+{
+  try {
+    commandContext.setCommand(backgroundAction);
+    backgroundAction.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
+    final String memento=backgroundAction.getMemento();
+    final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,memento);
+    final String actionId=aim.getActionId();
+    final Bookmark targetBookmark=aim.getTarget();
+    final Object targetObject=bookmarkService.lookup(targetBookmark);
+    final ObjectAdapter targetAdapter=adapterFor(targetObject);
+    final ObjectSpecification specification=targetAdapter.getSpecification();
+    final ObjectAction objectAction=findAction(specification,actionId);
+    if (objectAction == null) {
+      throw new Exception("Unknown action '" + actionId + "'");
+    }
+    final ObjectAdapter[] argAdapters=argAdaptersFor(aim);
+    final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters);
+    if (resultAdapter != null) {
+      Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
+      backgroundAction.setResult(resultBookmark);
+    }
+  }
+ catch (  Exception e) {
+    backgroundAction.setException(Throwables.getStackTraceAsString(e));
+  }
+ finally {
+    backgroundAction.setCompletedAt(Clock.getTimeAsJavaSqlTimestamp());
+  }
+}
