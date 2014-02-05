@@ -1,0 +1,18 @@
+{
+  final UUID transactionId=UUID.randomUUID();
+  final String user=parentCommand.getUser();
+  final CommandJdo backgroundCommand=newTransientInstance(CommandJdo.class);
+  backgroundCommand.setParent(parentCommand);
+  backgroundCommand.setTransactionId(transactionId);
+  backgroundCommand.setUser(user);
+  backgroundCommand.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
+  backgroundCommand.setExecuteIn(ExecuteIn.BACKGROUND);
+  backgroundCommand.setTargetClass(targetClassName);
+  backgroundCommand.setTargetAction(targetActionName);
+  backgroundCommand.setTargetStr(aim.getTarget().toString());
+  backgroundCommand.setMemberIdentifier(aim.getActionId());
+  backgroundCommand.setArguments(targetArgs);
+  backgroundCommand.setMemento(aim.asMementoString());
+  parentCommand.setPersistHint(true);
+  persist(backgroundCommand);
+}

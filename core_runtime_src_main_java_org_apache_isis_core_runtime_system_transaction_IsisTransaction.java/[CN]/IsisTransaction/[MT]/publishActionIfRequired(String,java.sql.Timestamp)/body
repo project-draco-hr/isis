@@ -7,15 +7,22 @@
     if (currentInvocation == null) {
       return;
     }
-    final PublishedActionFacet publishedActionFacet=currentInvocation.getAction().getFacet(PublishedActionFacet.class);
+    IdentifiedHolder action=currentInvocation.getAction();
+    final PublishedActionFacet publishedActionFacet=action.getFacet(PublishedActionFacet.class);
     if (publishedActionFacet == null) {
       return;
     }
     final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
     final RootOid adapterOid=(RootOid)currentInvocation.getTarget().getOid();
     final String oidStr=getOidMarshaller().marshal(adapterOid);
-    final String title=oidStr + ": " + currentInvocation.getAction().getIdentifier().toNameParmsIdentityString();
-    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title);
+    final Identifier actionIdentifier=action.getIdentifier();
+    final String title=oidStr + ": " + actionIdentifier.toNameParmsIdentityString();
+    final Command command=currentInvocation.getCommand();
+    final String targetClass=command.getTargetClass();
+    final String targetAction=command.getTargetAction();
+    final Bookmark target=command.getTarget();
+    final String memberIdentifier=command.getMemberIdentifier();
+    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,targetClass,targetAction,target,memberIdentifier);
     publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
   }
   finally {

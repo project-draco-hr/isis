@@ -2,12 +2,9 @@
   if (!(command instanceof CommandJdo)) {
     return null;
   }
-  if (command.getNature() != Command.Nature.USER_INITIATED) {
+  if (command.getExecuteIn() != ExecuteIn.FOREGROUND) {
     return null;
   }
   final CommandJdo commandJdo=(CommandJdo)command;
-  if (!commandJdo.isPersistHint()) {
-    return null;
-  }
-  return commandJdo;
+  return commandJdo.shouldPersist() ? commandJdo : null;
 }
