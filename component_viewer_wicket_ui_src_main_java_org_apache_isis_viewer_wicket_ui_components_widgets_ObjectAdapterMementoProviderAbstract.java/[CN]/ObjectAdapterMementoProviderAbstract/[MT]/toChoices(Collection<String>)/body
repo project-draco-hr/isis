@@ -1,6 +1,9 @@
 {
   Function<String,ObjectAdapterMemento> function=new Function<String,ObjectAdapterMemento>(){
     @Override public ObjectAdapterMemento apply(    String input){
+      if (NULL_PLACEHOLDER.equals(input)) {
+        return null;
+      }
       final RootOid oid=RootOidDefault.deString(input,ObjectAdapterMemento.getOidMarshaller());
       return ObjectAdapterMemento.createPersistent(oid);
     }

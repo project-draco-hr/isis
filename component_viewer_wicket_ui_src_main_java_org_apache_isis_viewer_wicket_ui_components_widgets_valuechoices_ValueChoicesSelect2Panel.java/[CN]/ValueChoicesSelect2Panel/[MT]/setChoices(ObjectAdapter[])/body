@@ -4,9 +4,14 @@
   select2Field.setProvider(provider);
   getModel().clearPending();
   final ObjectAdapterMemento objectAdapterMemento=getModel().getObjectAdapterMemento();
-  if (!choicesMementos.contains(objectAdapterMemento)) {
-    final ObjectAdapterMemento newAdapterMemento=!choicesMementos.isEmpty() ? choicesMementos.get(0) : null;
-    select2Field.getModel().setObject(newAdapterMemento);
-    getModel().setObject(newAdapterMemento != null ? newAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK) : null);
+  if (objectAdapterMemento == null) {
+    select2Field.getModel().setObject(null);
+  }
+ else {
+    if (!choicesMementos.contains(objectAdapterMemento)) {
+      final ObjectAdapterMemento newAdapterMemento=!choicesMementos.isEmpty() ? choicesMementos.get(0) : null;
+      select2Field.getModel().setObject(newAdapterMemento);
+      getModel().setObject(newAdapterMemento != null ? newAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK) : null);
+    }
   }
 }
