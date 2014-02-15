@@ -1,8 +1,14 @@
 {
   final List<ObjectAdapter> adapters=Lists.newArrayList();
   for (  final Object pojo : pojos) {
-    frameworkSynchronizer.postLoadProcessingFor((PersistenceCapable)pojo,CalledFrom.OS_QUERY);
-    ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+    ObjectAdapter adapter;
+    if (pojo instanceof PersistenceCapable) {
+      frameworkSynchronizer.postLoadProcessingFor((PersistenceCapable)pojo,CalledFrom.OS_QUERY);
+      adapter=getAdapterManager().getAdapterFor(pojo);
+    }
+ else {
+      adapter=getAdapterManager().adapterFor(pojo);
+    }
     Assert.assertNotNull(adapter);
     adapters.add(adapter);
   }
