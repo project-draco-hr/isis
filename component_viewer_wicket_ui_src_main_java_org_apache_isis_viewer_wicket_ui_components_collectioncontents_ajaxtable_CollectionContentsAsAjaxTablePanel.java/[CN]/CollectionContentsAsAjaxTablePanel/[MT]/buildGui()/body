@@ -2,13 +2,13 @@
   final EntityCollectionModel model=getModel();
   final List<IColumn<ObjectAdapter,String>> columns=Lists.newArrayList();
   List<ObjectAction> bulkActions=determineBulkActions();
-  addToggleboxColumnIfRequired(columns,bulkActions);
+  ObjectAdapterToggleboxColumn toggleboxColumn=addToggleboxColumnIfRequired(columns,bulkActions);
   addTitleColumn(columns,model.getParentObjectAdapterMemento(),getSettings().getMaxTitleLengthInStandaloneTables(),getSettings().getMaxTitleLengthInStandaloneTables());
   addPropertyColumnsIfRequired(columns);
   final SortableDataProvider<ObjectAdapter,String> dataProvider=new CollectionContentsSortableDataProvider(model);
   dataTable=new IsisAjaxFallbackDataTable<ObjectAdapter,String>(ID_TABLE,columns,dataProvider,model.getPageSize());
   addActionPromptModalWindow();
-  buildEntityActionsGui(bulkActions,this);
+  buildEntityActionsGui(bulkActions,this,toggleboxColumn);
   addOrReplace(dataTable);
   dataTable.honourHints();
 }

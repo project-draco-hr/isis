@@ -1,9 +1,9 @@
 {
   final EntityCollectionModel entityCollectionModel=getModel();
   if (bulkActions.isEmpty() || entityCollectionModel.isParented()) {
-    return;
+    return null;
   }
-  columns.add(new ObjectAdapterToggleboxColumn(new SelectionHandler(){
+  ObjectAdapterToggleboxColumn toggleboxColumn=new ObjectAdapterToggleboxColumn(new SelectionHandler(){
     private static final long serialVersionUID=1L;
     @Override public void onSelected(    final Component context,    final ObjectAdapter selectedAdapter,    AjaxRequestTarget ajaxRequestTarget){
       entityCollectionModel.toggleSelectionOn(selectedAdapter);
@@ -12,5 +12,7 @@
       ajaxRequestTarget.add(dataTable);
     }
   }
-));
+);
+  columns.add(toggleboxColumn);
+  return toggleboxColumn;
 }
