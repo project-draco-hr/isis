@@ -1,7 +1,14 @@
 {
-  T blobOrClob=getBlobOrClobFromModel();
-  String fileName=blobOrClob != null ? blobOrClob.getName() : "";
-  Label fileNameLabel=new Label(idFileName,Model.of(fileName));
+class FileNameModel extends Model<String> {
+    private static final long serialVersionUID=1L;
+    @Override public String getObject(){
+      T blobOrClob=getBlobOrClobFromModel();
+      String fileName=blobOrClob != null ? blobOrClob.getName() : "";
+      return fileName;
+    }
+  }
+  Label fileNameLabel=new Label(idFileName,new FileNameModel());
   formComponent.addOrReplace(fileNameLabel);
+  fileNameLabel.setOutputMarkupId(true);
   return fileNameLabel;
 }
