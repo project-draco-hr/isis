@@ -2,5 +2,10 @@
   if (bookmark == null) {
     return null;
   }
-  return domainObjectServices.lookup(bookmark);
+  try {
+    return domainObjectServices.lookup(bookmark);
+  }
+ catch (  org.apache.isis.core.runtime.persistence.ObjectNotFoundException ex) {
+    return null;
+  }
 }
