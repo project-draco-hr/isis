@@ -38,9 +38,8 @@
         }
         if (lastReturnedAdapter != null) {
           final ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(actionModelHint,lastReturnedAdapter);
-          if (resultResponse.isToPage()) {
-            setResponsePage(resultResponse.getToPage());
-          }
+          final ActionResultResponseHandlingStrategy responseHandlingStrategy=ActionResultResponseHandlingStrategy.determineFor(resultResponse);
+          responseHandlingStrategy.handleResults(this,resultResponse);
         }
       }
  catch (      final ConcurrencyException ex) {
