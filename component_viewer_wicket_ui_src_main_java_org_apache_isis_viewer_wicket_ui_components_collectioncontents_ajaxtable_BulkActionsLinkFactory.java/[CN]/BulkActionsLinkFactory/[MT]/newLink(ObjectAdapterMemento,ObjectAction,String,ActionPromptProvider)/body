@@ -43,21 +43,33 @@
         }
       }
  catch (      final ConcurrencyException ex) {
-        final List<ObjectAdapterMemento> toggleMementosList=Lists.newArrayList(model.getToggleMementosList());
-        for (        ObjectAdapterMemento oam : toggleMementosList) {
-          oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-        }
-        model.setObject(persistentAdaptersWithin(model.getObject()));
-        final List<ObjectAdapter> adapters=model.getObject();
-        model.clearToggleMementosList();
-        for (        ObjectAdapterMemento oam : toggleMementosList) {
-          final ObjectAdapter objectAdapter=oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-          if (adapters.contains(objectAdapter)) {
-            model.toggleSelectionOn(objectAdapter);
-          }
-        }
+        recover();
         getMessageBroker().addWarning(ex.getMessage());
         return;
+      }
+catch (      final RuntimeException ex) {
+        final RecoverableException appEx=ActionModel.getApplicationExceptionIfAny(ex);
+        if (appEx != null) {
+          recover();
+          getMessageBroker().setApplicationError(appEx.getMessage());
+          return;
+        }
+        throw ex;
+      }
+    }
+    private void recover(){
+      final List<ObjectAdapterMemento> toggleMementosList=Lists.newArrayList(model.getToggleMementosList());
+      for (      ObjectAdapterMemento oam : toggleMementosList) {
+        oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+      }
+      model.setObject(persistentAdaptersWithin(model.getObject()));
+      final List<ObjectAdapter> adapters=model.getObject();
+      model.clearToggleMementosList();
+      for (      ObjectAdapterMemento oam : toggleMementosList) {
+        final ObjectAdapter objectAdapter=oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+        if (adapters.contains(objectAdapter)) {
+          model.toggleSelectionOn(objectAdapter);
+        }
       }
     }
     private List<ObjectAdapter> persistentAdaptersWithin(    List<ObjectAdapter> adapters){
