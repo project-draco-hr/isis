@@ -1,3 +1,9 @@
 {
+  final Bulk.InteractionContext bulkInteractionContext=getServicesProvider().lookupService(Bulk.InteractionContext.class);
+  final BulkFacet bulkFacet=getFacet(BulkFacet.class);
+  if (bulkFacet != null && bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
+    bulkInteractionContext.setInvokedAs(InvokedAs.REGULAR);
+    bulkInteractionContext.setDomainObjects(Collections.singletonList(contributee.getObject()));
+  }
   return serviceAction.execute(serviceAdapter,argsPlusContributee(contributee,arguments));
 }
