@@ -3,5 +3,12 @@
     return null;
   }
   final PropertyModifyContext propertyModifyContext=(PropertyModifyContext)context;
-  return invalidReason(propertyModifyContext.getTarget(),propertyModifyContext.getProposed());
+  ObjectAdapter proposed=propertyModifyContext.getProposed();
+  if (proposed == null) {
+    MandatoryFacet mandatoryFacet=getFacetHolder().getFacet(MandatoryFacet.class);
+    if (mandatoryFacet == null || mandatoryFacet.isNoop() || mandatoryFacet.isInvertedSemantics()) {
+      return null;
+    }
+  }
+  return invalidReason(propertyModifyContext.getTarget(),proposed);
 }

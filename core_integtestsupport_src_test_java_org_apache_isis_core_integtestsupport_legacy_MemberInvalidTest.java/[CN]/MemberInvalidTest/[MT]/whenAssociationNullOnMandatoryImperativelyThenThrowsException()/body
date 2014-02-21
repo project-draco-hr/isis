@@ -1,0 +1,15 @@
+{
+  custJsDO.validateCountryOfBirthMandatory="bad country of birth";
+  final Country[] values=new Country[]{null};
+  for (  final Country value : values) {
+    try {
+      custJsWO.setCountryOfBirthMandatory(value);
+      fail("Should have thrown exception");
+    }
+ catch (    final InvalidException ex) {
+      assertThat(ex.getAdvisorClass(),classEqualTo(MandatoryFacetDefault.class));
+      assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("Country Of Birth Mandatory"));
+      assertThat(ex.getMessage(),Matchers.containsString("bad country of birth"));
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  final String[] values=new String[]{null};
+  for (  final String value : values) {
+    custJsDO.validateFirstNameMandatoryExpectedArg=value;
+    custJsDO.validateFirstNameMandatory="bad first name";
+    try {
+      custJsWO.setFirstNameMandatory(value);
+      fail("Should have thrown exception");
+    }
+ catch (    final InvalidException ex) {
+      assertThat(ex.getAdvisorClass(),classEqualTo(MandatoryFacetDefault.class));
+      assertThat(ex.getIdentifier().getMemberNaturalName(),equalTo("First Name Mandatory"));
+      assertThat(ex.getMessage(),Matchers.containsString("bad first name"));
+    }
+  }
+}
