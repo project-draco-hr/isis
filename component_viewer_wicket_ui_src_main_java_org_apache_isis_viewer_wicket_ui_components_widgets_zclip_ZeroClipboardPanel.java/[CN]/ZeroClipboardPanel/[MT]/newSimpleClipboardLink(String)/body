@@ -1,0 +1,33 @@
+{
+  return new AjaxLink<ObjectAdapter>(linkId){
+    private static final long serialVersionUID=1L;
+    @Override public void onClick(    AjaxRequestTarget target){
+      String contentId=simpleClipboardModalWindow.getContentId();
+      SimpleClipboardModalWindowPanel panel=new SimpleClipboardModalWindowPanel(contentId);
+      SimpleClipboardModalWindowForm form=new SimpleClipboardModalWindowForm("form");
+      final TextField<String> textField=new TextField<String>("textField",new LoadableDetachableModel<String>(){
+        private static final long serialVersionUID=1L;
+        @SuppressWarnings({"rawtypes","unchecked"}) @Override protected String load(){
+          if (subscribingLink instanceof BookmarkablePageLink) {
+            final BookmarkablePageLink<?> link=(BookmarkablePageLink<?>)subscribingLink;
+            final Class pageClass=link.getPageClass();
+            final PageParameters pageParameters=link.getPageParameters();
+            final CharSequence urlFor=link.urlFor(pageClass,pageParameters);
+            return getRequestCycle().getUrlRenderer().renderFullUrl(Url.parse(urlFor));
+          }
+ else {
+            return "";
+          }
+        }
+      }
+);
+      panel.add(form);
+      form.add(textField);
+      textField.setOutputMarkupId(true);
+      simpleClipboardModalWindow.setPanel(panel,target);
+      simpleClipboardModalWindow.show(target);
+      target.focusComponent(textField);
+    }
+  }
+;
+}
