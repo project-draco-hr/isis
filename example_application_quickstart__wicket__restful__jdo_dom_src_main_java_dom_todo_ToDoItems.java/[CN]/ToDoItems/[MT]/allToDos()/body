@@ -1,7 +1,5 @@
 {
-  final String currentUser=currentUserName();
-  final List<ToDoItem> items=container.allMatches(ToDoItem.class,ToDoItem.Predicates.thoseOwnedBy(currentUser));
-  Collections.sort(items);
+  final List<ToDoItem> items=container.allMatches(new QueryDefault<ToDoItem>(ToDoItem.class,"findByOwnedBy","ownedBy",currentUserName()));
   if (items.isEmpty()) {
     container.warnUser("No to-do items found.");
   }

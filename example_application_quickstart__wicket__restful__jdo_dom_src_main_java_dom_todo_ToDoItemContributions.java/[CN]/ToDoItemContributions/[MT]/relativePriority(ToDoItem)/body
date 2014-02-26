@@ -1,13 +1,18 @@
 {
-  if (toDoItem.isComplete()) {
-    return null;
-  }
-  int i=1;
-  for (  ToDoItem each : sortedNotYetComplete()) {
-    if (each == toDoItem) {
-      return i;
+  return queryResultsCache.execute(new Callable<Integer>(){
+    @Override public Integer call() throws Exception {
+      if (toDoItem.isComplete()) {
+        return null;
+      }
+      int i=1;
+      for (      ToDoItem each : sortedNotYetComplete()) {
+        if (each == toDoItem) {
+          return i;
+        }
+        i++;
+      }
+      return null;
     }
-    i++;
   }
-  return null;
+,ToDoItemContributions.class,"relativePriority",toDoItem);
 }
