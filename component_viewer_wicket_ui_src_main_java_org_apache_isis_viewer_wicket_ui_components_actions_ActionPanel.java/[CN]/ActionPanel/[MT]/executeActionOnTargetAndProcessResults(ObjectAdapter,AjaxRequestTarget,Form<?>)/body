@@ -17,11 +17,14 @@
   try {
     final ObjectAdapter resultAdapter=executeActionHandlingApplicationExceptions();
     getTransactionManager().flushTransaction();
-    ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(this.getActionModel(),resultAdapter);
-    final ActionResultResponseHandlingStrategy responseHandlingStrategy=ActionResultResponseHandlingStrategy.determineFor(resultResponse);
-    responseHandlingStrategy.handleResults(this,resultResponse);
+    ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(this.getActionModel(),target,resultAdapter);
+    resultResponse.getHandlingStrategy().handleResults(this,resultResponse);
     if (actionModel.isBookmarkable()) {
       bookmarkPage(actionModel);
+    }
+    if (actionPrompt != null) {
+      actionPrompt.close(target);
+      actionModel.clearArguments();
     }
     return true;
   }
@@ -29,8 +32,7 @@
     String message=recognizeException(ex,target,feedbackForm);
     if (message != null) {
       if (feedbackForm == null) {
-        final ActionResultResponseHandlingStrategy resultType=ActionResultResponseHandlingStrategy.determineFor(null);
-        resultType.handleResults(this,null);
+        ActionResultResponseHandlingStrategy.REDIRECT_TO_VOID.handleResults(this,null);
       }
       return false;
     }

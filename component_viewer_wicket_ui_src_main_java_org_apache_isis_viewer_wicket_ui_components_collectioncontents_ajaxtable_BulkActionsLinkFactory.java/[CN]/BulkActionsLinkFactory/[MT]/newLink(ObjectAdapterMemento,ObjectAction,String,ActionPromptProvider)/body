@@ -37,9 +37,8 @@
           model.setObject(persistentAdaptersWithin(model.getObject()));
         }
         if (lastReturnedAdapter != null) {
-          final ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(actionModelHint,lastReturnedAdapter);
-          final ActionResultResponseHandlingStrategy responseHandlingStrategy=ActionResultResponseHandlingStrategy.determineFor(resultResponse);
-          responseHandlingStrategy.handleResults(this,resultResponse);
+          final ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(actionModelHint,null,lastReturnedAdapter);
+          resultResponse.getHandlingStrategy().handleResults(this,resultResponse);
         }
       }
  catch (      final ConcurrencyException ex) {
