@@ -1,0 +1,29 @@
+{
+  final Iterable<Object> pojos=EntityCollectionModel.asIterable(collectionAsAdapter);
+  final List<ObjectAdapterMemento> mementoList=Lists.newArrayList(Iterables.transform(pojos,ObjectAdapterMemento.Functions.fromPojo(getAdapterManagerStatic())));
+  final ObjectSpecification elementSpec;
+  if (!Iterables.isEmpty(pojos)) {
+    final LowestCommonSuperclassClosure closure=new LowestCommonSuperclassClosure();
+    Function<Object,Class<?>> function=new Function<Object,Class<?>>(){
+      @Override public Class<?> apply(      Object obj){
+        return obj.getClass();
+      }
+    }
+;
+    IterableExtensions.fold(Iterables.transform(pojos,function),closure);
+    elementSpec=getSpecificationLoaderStatic().loadSpecification(closure.getLowestCommonSuperclass());
+  }
+ else {
+    elementSpec=collectionAsAdapter.getElementSpecification();
+  }
+  final Class<?> elementType;
+  int pageSize=PAGE_SIZE_DEFAULT_FOR_STANDALONE;
+  if (elementSpec != null) {
+    elementType=elementSpec.getCorrespondingClass();
+    pageSize=pageSize(elementSpec.getFacet(PagedFacet.class),PAGE_SIZE_DEFAULT_FOR_STANDALONE);
+  }
+ else {
+    elementType=Object.class;
+  }
+  return new EntityCollectionModel(elementType,mementoList,pageSize);
+}

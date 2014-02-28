@@ -1,0 +1,10 @@
+{
+  final Bookmark targetBookmark=bookmarkService.bookmarkFor(targetDomainObject);
+  final List<DomainChangeJdoAbstract> changes=Lists.newArrayList();
+  if (commandServiceRepository != null) {
+    changes.addAll(commandServiceRepository.findByTargetAndFromAndTo(targetBookmark,from,to));
+  }
+  changes.addAll(auditingServiceRepository.findByTargetAndFromAndTo(targetBookmark,from,to));
+  Collections.sort(changes,DomainChangeJdoAbstract.compareByTimestampDescThenTypeDesc());
+  return changes;
+}

@@ -1,0 +1,12 @@
+{
+class SummingClosure implements Closure<Double> {
+    private double sum=0;
+    public Double execute(    Double amount){
+      sum+=amount;
+      return sum;
+    }
+  }
+  SummingClosure closure=new SummingClosure();
+  Double result=IterableExtensions.fold(Arrays.asList(new Double[]{99.,127.,35.}),closure);
+  assertEquals(261.0,result,0.000000001);
+}
