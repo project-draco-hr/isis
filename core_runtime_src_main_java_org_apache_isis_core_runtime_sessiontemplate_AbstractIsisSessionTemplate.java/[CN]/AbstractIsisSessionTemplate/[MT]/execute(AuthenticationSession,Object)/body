@@ -3,13 +3,7 @@
     IsisContext.openSession(authSession);
     PersistenceSession persistenceSession=getPersistenceSession();
     persistenceSession.getServicesInjector().injectServicesInto(this);
-    IsisTransactionManager transactionManager=getTransactionManager(persistenceSession);
-    transactionManager.executeWithinTransaction(new TransactionalClosureAbstract(){
-      @Override public void execute(){
-        doExecute(context);
-      }
-    }
-);
+    doExecute(context);
   }
   finally {
     IsisContext.closeSession();

@@ -1,6 +1,14 @@
 {
-  final List<? extends Command> commands=findBackgroundCommandsToExecute();
+  final PersistenceSession persistenceSession=getPersistenceSession();
+  final IsisTransactionManager transactionManager=getTransactionManager(persistenceSession);
+  final List<Command> commands=Lists.newArrayList();
+  transactionManager.executeWithinTransaction(new TransactionalClosureAbstract(){
+    @Override public void execute(){
+      commands.addAll(findBackgroundCommandsToExecute());
+    }
+  }
+);
   for (  final Command command : commands) {
-    execute(command);
+    execute(transactionManager,command);
   }
 }
