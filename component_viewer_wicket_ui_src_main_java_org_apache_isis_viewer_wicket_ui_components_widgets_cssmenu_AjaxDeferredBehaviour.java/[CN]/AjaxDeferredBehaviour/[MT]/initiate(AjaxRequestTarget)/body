@@ -1,9 +1,6 @@
 {
   String url=getCallbackUrl().toString();
-  if (addAntiCache) {
-    url=url + (url.contains("?") ? "&" : "?");
-    url=url + "antiCache=" + System.currentTimeMillis();
-  }
+  url=ActionResultResponseHandlingStrategy.expanded(url);
   String javascriptFor=javascriptFor(url);
   target.appendJavaScript(javascriptFor);
 }
