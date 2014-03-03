@@ -5,18 +5,24 @@
   if (oid == null) {
     return;
   }
-  boolean foundInGraph=false;
+  BookmarkTreeNode rootNode=null;
   for (  BookmarkTreeNode eachNode : rootNodes) {
     if (eachNode.matches(bookmarkableModel)) {
-      current=candidatePP;
-      foundInGraph=true;
+      rootNode=eachNode;
     }
   }
-  if (!foundInGraph && bookmarkableModel.hasAsRootPolicy()) {
-    BookmarkTreeNode rootNode=BookmarkTreeNode.newRoot(bookmarkableModel);
-    rootNodes.add(rootNode);
-    Collections.sort(rootNodes,COMPARATOR);
+  if (rootNode != null) {
+    rootNodes.remove(rootNode);
+    rootNodes.add(0,rootNode);
     current=candidatePP;
   }
+ else {
+    if (bookmarkableModel.hasAsRootPolicy()) {
+      rootNode=BookmarkTreeNode.newRoot(bookmarkableModel);
+      rootNodes.add(0,rootNode);
+      current=candidatePP;
+    }
+  }
+  trim(rootNodes,getMaxSize());
   return;
 }
