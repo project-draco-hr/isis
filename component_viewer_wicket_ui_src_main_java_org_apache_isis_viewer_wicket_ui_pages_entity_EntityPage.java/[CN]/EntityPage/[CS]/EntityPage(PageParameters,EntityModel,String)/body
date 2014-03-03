@@ -1,14 +1,25 @@
 {
   super(pageParameters,ApplicationActions.INCLUDE,titleString,ComponentType.ENTITY);
-  if (!getDeploymentType().isProduction()) {
-    getSpecificationLoader().invalidateCacheFor(entityModel.getObject().getObject());
-  }
   this.model=entityModel;
+  ObjectAdapter objectAdapter;
+  try {
+    objectAdapter=entityModel.getObject();
+  }
+ catch (  RuntimeException ex) {
+    removeAnyBookmark(model);
+    removeAnyBreadcrumb(model);
+    throw ex;
+  }
+  if (!getDeploymentType().isProduction()) {
+    getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
+  }
+  if (titleString == null) {
+    String titleStr=objectAdapter.titleString(null);
+    setTitle(titleStr);
+  }
   addChildComponents(themeDiv,model);
   bookmarkPage(model);
+  addBreadcrumb(entityModel);
   addBookmarkedPages();
-  final BreadcrumbModelProvider session=(BreadcrumbModelProvider)getSession();
-  final BreadcrumbModel breadcrumbModel=session.getBreadcrumbModel();
-  breadcrumbModel.visited(entityModel);
   send(this,Broadcast.BREADTH,new UiHintsBroadcastEvent(entityModel));
 }

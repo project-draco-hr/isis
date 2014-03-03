@@ -10,6 +10,11 @@
       final String oidStr=breadcrumbChoice.getInput();
       final EntityModel selectedModel=breadcrumbModel.lookup(oidStr);
       if (selectedModel == null) {
+        final MessageBroker messageBroker=IsisContext.getAuthenticationSession().getMessageBroker();
+        messageBroker.addWarning("Cannot find object");
+        String feedbackMsg=JGrowlUtil.asJGrowlCalls(messageBroker);
+        target.appendJavaScript(feedbackMsg);
+        breadcrumbModel.remove(oidStr);
         return;
       }
       setResponsePage(EntityPage.class,selectedModel.getPageParameters());
@@ -25,7 +30,13 @@
       return breadcrumbModel.titleFor(choice);
     }
     @Override protected Object getId(    EntityModel choice){
-      return PageParameterNames.OBJECT_OID.getStringFrom(choice.getPageParameters());
+      try {
+        return PageParameterNames.OBJECT_OID.getStringFrom(choice.getPageParameters());
+      }
+ catch (      Exception ex) {
+        breadcrumbModel.remove(choice);
+        return null;
+      }
     }
     @Override public void query(    String term,    int page,    Response<EntityModel> response){
       response.addAll(breadcrumbModel.getList());
