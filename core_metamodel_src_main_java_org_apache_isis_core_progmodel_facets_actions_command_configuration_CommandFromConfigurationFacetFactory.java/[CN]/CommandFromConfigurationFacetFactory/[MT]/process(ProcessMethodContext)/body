@@ -1,0 +1,24 @@
+{
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  final Class<?> cls=processMethodContext.getCls();
+  final Method method=processMethodContext.getMethod();
+  final ActionSemanticsFacet actionSemanticsFacet=facetHolder.getFacet(ActionSemanticsFacet.class);
+  if (actionSemanticsFacet == null) {
+    throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
+  }
+  if (facetHolder.containsDoOpFacet(CommandFacet.class)) {
+    return;
+  }
+  if (HasTransactionId.class.isAssignableFrom(cls)) {
+    return;
+  }
+  final ActionCategorization categorization=ActionCategorization.parse(configuration.getString(COMMAND_ACTIONS_KEY));
+  if (categorization == ActionCategorization.NONE) {
+    return;
+  }
+  if (actionSemanticsFacet.value() == Of.SAFE && categorization == ActionCategorization.IGNORE_SAFE) {
+    return;
+  }
+  final Command annotation=Annotations.getAnnotation(method,Command.class);
+  FacetUtil.addFacet(create(annotation,facetHolder));
+}

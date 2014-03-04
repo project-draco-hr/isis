@@ -1,0 +1,17 @@
+{
+  final String configuredValue=configuration.getString(AUDIT_OBJECTS_KEY);
+  final ObjectCategorization categorization=ObjectCategorization.parse(configuredValue);
+  if (categorization == ObjectCategorization.NONE) {
+    return;
+  }
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  if (facetHolder.containsDoOpFacet(AuditableFacet.class)) {
+    return;
+  }
+  if (HasTransactionId.class.isAssignableFrom(cls)) {
+    return;
+  }
+  FacetUtil.addFacet(new AuditableFacetFromConfiguration(facetHolder));
+  return;
+}

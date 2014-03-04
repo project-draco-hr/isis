@@ -1,7 +1,8 @@
 {
   final AdapterAndProperty aap=auditEntry.getKey();
   final ObjectAdapter adapter=aap.getAdapter();
-  if (!adapter.getSpecification().containsFacet(AuditableFacet.class)) {
+  final AuditableFacet auditableFacet=adapter.getSpecification().getFacet(AuditableFacet.class);
+  if (auditableFacet == null || auditableFacet.isDisabled()) {
     return;
   }
   final RootOid oid=(RootOid)adapter.getOid();
