@@ -1,0 +1,14 @@
+{
+  final ToDoItem toDoItem=getVar(null,"toDoItem",ToDoItem.class);
+  if (supportsMocks()) {
+    final Bulk.InteractionContext bulkInteractionContext=service(Bulk.InteractionContext.class);
+    checking(new Expectations(){
+{
+        allowing(bulkInteractionContext);
+      }
+    }
+);
+    toDoItem.injectBulkInteractionContext(bulkInteractionContext);
+  }
+  wrap(toDoItem).completed();
+}
