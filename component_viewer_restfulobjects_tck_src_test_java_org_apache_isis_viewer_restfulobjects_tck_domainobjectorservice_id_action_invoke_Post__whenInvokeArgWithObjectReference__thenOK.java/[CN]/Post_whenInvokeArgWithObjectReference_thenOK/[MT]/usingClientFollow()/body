@@ -1,0 +1,18 @@
+{
+  RestfulResponse<ObjectCollectionRepresentation> childrenRestfulResponse=RestfulResponse.ofT(objectResource.accessCollection("PRNT","43","children"));
+  ObjectCollectionRepresentation childrenRepr=childrenRestfulResponse.getEntity();
+  JsonRepresentation collValue=childrenRepr.getValue();
+  final int numChildren=collValue.size();
+  assertThat(numChildren,is(IsisMatchers.greaterThan(0)));
+  final LinkRepresentation firstChildRepr=collValue.arrayIterator(LinkRepresentation.class).next();
+  final RestfulResponse<ObjectActionRepresentation> removeChildRestfulResponse=RestfulResponse.ofT(objectResource.actionPrompt("PRNT","43","removeChild"));
+  final ObjectActionRepresentation removeChildRepr=removeChildRestfulResponse.getEntity();
+  LinkRepresentation invokeLinkRepr=removeChildRepr.getLinkWithRel(Rel.INVOKE);
+  JsonRepresentation args=invokeLinkRepr.getArguments();
+  args.mapPut("childEntity.value",firstChildRepr);
+  client.follow(invokeLinkRepr,args);
+  childrenRestfulResponse=RestfulResponse.ofT(objectResource.accessCollection("PRNT","43","children"));
+  childrenRepr=childrenRestfulResponse.getEntity();
+  collValue=childrenRepr.getValue();
+  assertThat(collValue.size(),is(numChildren - 1));
+}
