@@ -1,14 +1,14 @@
 {
   final ToDoItem toDoItem=getVar(null,"toDoItem",ToDoItem.class);
   if (supportsMocks()) {
-    Bulk.InteractionContext.with(new Runnable(){
-      @Override public void run(){
-        toDoItem.completed();
+    final Bulk.InteractionContext bulkInteractionContext=service(Bulk.InteractionContext.class);
+    checking(new Expectations(){
+{
+        allowing(bulkInteractionContext);
       }
     }
-,toDoItem);
+);
+    toDoItem.injectBulkInteractionContext(bulkInteractionContext);
   }
- else {
-    wrap(toDoItem).completed();
-  }
+  wrap(toDoItem).completed();
 }
