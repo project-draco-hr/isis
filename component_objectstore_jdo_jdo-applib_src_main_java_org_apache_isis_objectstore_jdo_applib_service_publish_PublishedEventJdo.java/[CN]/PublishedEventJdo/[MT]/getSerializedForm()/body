@@ -1,3 +1,9 @@
 {
-  return IoUtils.fromUtf8ZippedBytes("serializedForm",getSerializedFormZipped());
+  byte[] zipped=getSerializedFormZipped();
+  if (zipped != null) {
+    return PublishingServiceJdo.fromZippedBytes(zipped);
+  }
+ else {
+    return getSerializedFormClob();
+  }
 }

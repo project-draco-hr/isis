@@ -1,7 +1,13 @@
 {
   final String serializedEvent=eventSerializer.serialize(metadata,payload).toString();
   final PublishedEventJdo publishedEvent=newTransientInstance(PublishedEventJdo.class);
-  publishedEvent.setSerializedForm(serializedEvent);
+  if (this.serializedForm == SerializedForm.ZIPPED) {
+    final byte[] zippedBytes=asZippedBytes(serializedEvent);
+    publishedEvent.setSerializedFormZipped(zippedBytes);
+  }
+ else {
+    publishedEvent.setSerializedFormClob(serializedEvent);
+  }
   publishedEvent.setTransactionId(metadata.getTransactionId());
   publishedEvent.setSequence(metadata.getSequence());
   publishedEvent.setEventType(metadata.getEventType());
