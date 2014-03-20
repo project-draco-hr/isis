@@ -1,5 +1,5 @@
 {
-  for (  final String packagePrefix : Splitter.on(",").split(packagePrefixes)) {
+  for (  final String packagePrefix : Iterables.transform(Splitter.on(",").split(packagePrefixes),trim())) {
     Reflections reflections=new Reflections(packagePrefix);
     Set<Class<?>> entityTypes=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
     if (noEntitiesIn(entityTypes)) {
