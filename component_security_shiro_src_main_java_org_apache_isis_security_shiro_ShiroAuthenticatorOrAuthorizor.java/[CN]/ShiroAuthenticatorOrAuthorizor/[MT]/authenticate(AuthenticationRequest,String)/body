@@ -4,12 +4,12 @@
     return null;
   }
   final AuthenticationToken token=asAuthenticationToken(request);
-  Subject currentUser=SecurityUtils.getSubject();
-  if (currentUser.isAuthenticated()) {
-    currentUser.logout();
+  final Subject currentSubject=SecurityUtils.getSubject();
+  if (currentSubject.isAuthenticated()) {
+    currentSubject.logout();
   }
   try {
-    currentUser.login(token);
+    currentSubject.login(token);
   }
  catch (  UnknownAccountException uae) {
     LOG.debug("Unable to authenticate",uae);
@@ -31,7 +31,7 @@ catch (  AuthenticationException ae) {
     LOG.error("Unable to authenticate",ae);
     return null;
   }
-  List<String> roles=getRoles(token);
+  List<String> roles=getRoles(currentSubject,token);
   roles.addAll(request.getRoles());
   return new SimpleSession(request.getName(),roles,code);
 }

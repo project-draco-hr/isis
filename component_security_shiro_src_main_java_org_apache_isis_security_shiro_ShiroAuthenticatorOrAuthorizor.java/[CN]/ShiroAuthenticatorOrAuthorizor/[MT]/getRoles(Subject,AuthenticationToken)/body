@@ -4,9 +4,10 @@
   if (securityManager == null) {
     return roles;
   }
+  final Set<String> realmNames=realmNamesOf(subject);
   final Collection<Realm> realms=securityManager.getRealms();
   for (  final Realm realm : realms) {
-    if (!realm.supports(token)) {
+    if (!realmNames.contains(realm.getName())) {
       continue;
     }
     final AuthenticationInfo authenticationInfo=realm.getAuthenticationInfo(token);
