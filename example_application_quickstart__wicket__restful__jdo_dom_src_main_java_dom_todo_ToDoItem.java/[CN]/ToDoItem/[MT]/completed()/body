@@ -2,5 +2,6 @@
   setComplete(true);
   @SuppressWarnings("unused") final List<Object> allObjects=bulkInteractionContext.getDomainObjects();
   LOG.debug("completed: " + bulkInteractionContext.getIndex() + " ["+ bulkInteractionContext.getSize()+ "]"+ (bulkInteractionContext.isFirst() ? " (first)" : "")+ (bulkInteractionContext.isLast() ? " (last)" : ""));
+  eventBusService.post(new CompletedEvent(this));
   return bulkInteractionContext.getInvokedAs() == InvokedAs.REGULAR ? this : null;
 }
