@@ -1,7 +1,25 @@
 {
-  for (  final ObjectAssociation objectAssociation : getAssociations(Contributed.INCLUDED)) {
-    if (objectAssociation.getId().equals(id)) {
-      return objectAssociation;
+  ObjectAssociation oa=getAssociationWithId(id);
+  if (oa != null) {
+    return oa;
+  }
+  if (!getDeploymentCategory().isProduction()) {
+    LOG.warn("Could not find association with id '" + id + "'; invalidating cache automatically");
+    if (!invalidatingCache.get()) {
+      try {
+        invalidatingCache.set(true);
+        getSpecificationLookup().invalidateCache(getCorrespondingClass());
+      }
+  finally {
+        invalidatingCache.set(false);
+      }
+    }
+ else {
+      LOG.warn("... already invalidating cache earlier in stacktrace, so skipped this time");
+    }
+    oa=getAssociationWithId(id);
+    if (oa != null) {
+      return oa;
     }
   }
   throw new ObjectSpecificationException("No association called '" + id + "' in '"+ getSingularName()+ "'");
