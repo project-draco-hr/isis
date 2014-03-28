@@ -1,0 +1,10 @@
+{
+  final Response actionPromptResp=serviceResource.actionPrompt("ActionsEntities","subListWithOptionalRange");
+  final RestfulResponse<ObjectActionRepresentation> actionPromptJsonResp=RestfulResponse.ofT(actionPromptResp);
+  final ObjectActionRepresentation actionPromptRepr=actionPromptJsonResp.getEntity();
+  final LinkRepresentation selfLink=actionPromptRepr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation postLink=selfLink.withMethod(RestfulHttpMethod.PUT);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(postLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Putting to an action prompt resource is not allowed."));
+}
