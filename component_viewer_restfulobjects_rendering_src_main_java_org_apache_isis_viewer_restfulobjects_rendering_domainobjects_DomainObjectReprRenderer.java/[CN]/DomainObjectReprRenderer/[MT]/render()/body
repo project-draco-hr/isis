@@ -1,4 +1,5 @@
 {
+  final boolean isService=objectAdapter.getSpecification().isService();
   if (!(mode.isArgs())) {
     if (objectAdapter.representsPersistent()) {
       if (includesSelf) {
@@ -8,7 +9,6 @@
     }
     final String title=objectAdapter.titleString(null);
     representation.mapPut("title",title);
-    final boolean isService=objectAdapter.getSpecification().isService();
     if (isService) {
       representation.mapPut("serviceId",ServiceUtil.id(objectAdapter.getObject()));
     }
@@ -25,10 +25,12 @@
   if (mode.includeDescribedBy()) {
     addLinkToDescribedBy();
   }
+  if (isService && mode.includeUp()) {
+    addLinkToUp();
+  }
   if (!mode.isArgs()) {
     addPersistLinkIfTransientAndPersistable();
     addUpdatePropertiesLinkIfRequired();
-    final boolean isService=objectAdapter.getSpecification().isService();
     getExtensions().mapPut("isService",isService);
     getExtensions().mapPut("isPersistent",objectAdapter.representsPersistent());
   }

@@ -1,0 +1,10 @@
+{
+  final Response serviceResp=homePageResource.homePage();
+  final RestfulResponse<HomePageRepresentation> serviceJsonResp=RestfulResponse.ofT(serviceResp);
+  final HomePageRepresentation serviceRepr=serviceJsonResp.getEntity();
+  final LinkRepresentation selfLink=serviceRepr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation postLink=selfLink.withMethod(RestfulHttpMethod.POST);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(postLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Posting to the home page resource is not allowed."));
+}

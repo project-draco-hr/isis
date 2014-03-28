@@ -1,0 +1,10 @@
+{
+  final Response resp=resource.version();
+  final RestfulResponse<VersionRepresentation> jsonResp=RestfulResponse.ofT(resp);
+  final VersionRepresentation repr=jsonResp.getEntity();
+  final LinkRepresentation selfLink=repr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation deleteLink=selfLink.withMethod(RestfulHttpMethod.DELETE);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(deleteLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Deleting the version resource is not allowed."));
+}

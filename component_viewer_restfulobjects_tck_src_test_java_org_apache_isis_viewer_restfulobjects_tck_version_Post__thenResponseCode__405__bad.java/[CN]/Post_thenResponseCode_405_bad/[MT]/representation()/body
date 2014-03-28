@@ -1,0 +1,10 @@
+{
+  final Response resp=resource.version();
+  final RestfulResponse<VersionRepresentation> jsonResp=RestfulResponse.ofT(resp);
+  final VersionRepresentation repr=jsonResp.getEntity();
+  final LinkRepresentation selfLink=repr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation postLink=selfLink.withMethod(RestfulHttpMethod.POST);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(postLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Posting to the version resource is not allowed."));
+}

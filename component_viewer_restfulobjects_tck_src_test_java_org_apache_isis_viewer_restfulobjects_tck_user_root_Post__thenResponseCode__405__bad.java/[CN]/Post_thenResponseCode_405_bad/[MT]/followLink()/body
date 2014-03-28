@@ -1,0 +1,10 @@
+{
+  final Response serviceResp=userResource.user();
+  final RestfulResponse<UserRepresentation> serviceJsonResp=RestfulResponse.ofT(serviceResp);
+  final UserRepresentation serviceRepr=serviceJsonResp.getEntity();
+  final LinkRepresentation selfLink=serviceRepr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation postLink=selfLink.withMethod(RestfulHttpMethod.POST);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(postLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Posting to the user resource is not allowed."));
+}
