@@ -9,13 +9,13 @@
   final LinkRepresentation upLink=actionPromptRepr.getLinkWithRel(Rel.UP);
   assertThat(upLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/67")).returning(HttpStatusCode.OK).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).title("Untitled Actions Entity"));
   final LinkRepresentation invokeLink=actionPromptRepr.getLinkWithRel(Rel.INVOKE);
-  assertThat(invokeLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/services/ActionsEntities/actions/contains/invoke")));
+  assertThat(invokeLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/67/actions/contains/invoke")));
   assertThat(invokeLink.getArguments(),is(not(nullValue())));
   assertThat(invokeLink.getArguments().isArray(),is(false));
-  assertThat(invokeLink.getArguments().size(),is(3));
+  assertThat(invokeLink.getArguments().size(),is(2));
   final LinkRepresentation describedByLink=actionPromptRepr.getLinkWithRel(Rel.DESCRIBEDBY);
   assertThat(describedByLink,isLink(client).returning(HttpStatusCode.OK).responseEntityWithSelfHref(describedByLink.getHref()));
   assertThat(actionPromptRepr.getExtensions().getString("actionType"),is("user"));
   assertThat(actionPromptRepr.getExtensions().getString("actionSemantics"),is("safe"));
-  assertThat(actionPromptRepr.getArray("parameters").size(),is(3));
+  assertThat(actionPromptRepr.getMap("parameters").size(),is(2));
 }

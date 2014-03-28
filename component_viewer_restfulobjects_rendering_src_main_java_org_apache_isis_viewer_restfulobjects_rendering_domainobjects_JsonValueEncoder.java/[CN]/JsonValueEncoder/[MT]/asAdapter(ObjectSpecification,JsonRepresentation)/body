@@ -1,4 +1,9 @@
 {
+  if (!argRepr.mapHas("value")) {
+    String reason="No 'value' key";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
+  }
   if (objectSpec == null) {
     String reason="ObjectSpec is null, cannot validate";
     argRepr.mapPut("invalidReason",reason);
@@ -7,11 +12,6 @@
   final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
   if (encodableFacet == null) {
     String reason="ObjectSpec expected to have an EncodableFacet";
-    argRepr.mapPut("invalidReason",reason);
-    throw new IllegalArgumentException(reason);
-  }
-  if (!argRepr.mapHas("value")) {
-    String reason="No 'value' key";
     argRepr.mapPut("invalidReason",reason);
     throw new IllegalArgumentException(reason);
   }

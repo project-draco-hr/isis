@@ -1,8 +1,5 @@
 {
-  try {
-    return getObjectAdapterElseThrowNotFound(resourceContext,domainType,instanceId);
-  }
- catch (  ObjectNotFoundException ex) {
-    return null;
-  }
+  final String instanceIdUnencoded=UrlDecoderUtils.urlDecode(instanceIdEncoded);
+  String oidStrUnencoded=getOidMarshaller().joinAsOid(domainType,instanceIdUnencoded);
+  return getObjectAdapter(resourceContext,oidStrUnencoded);
 }

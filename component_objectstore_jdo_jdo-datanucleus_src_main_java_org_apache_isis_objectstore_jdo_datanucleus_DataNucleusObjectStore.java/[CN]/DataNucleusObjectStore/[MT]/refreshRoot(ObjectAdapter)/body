@@ -1,13 +1,13 @@
 {
   final Object domainObject=adapter.getObject();
   if (domainObject == null) {
-    throw new ObjectNotFoundException(adapter.getOid());
+    throw new PojoRefreshException(adapter.getOid());
   }
   try {
     getPersistenceManager().refresh(domainObject);
   }
  catch (  final RuntimeException e) {
-    throw new ObjectNotFoundException(adapter.getOid(),e);
+    throw new PojoRefreshException(adapter.getOid(),e);
   }
   frameworkSynchronizer.postLoadProcessingFor((PersistenceCapable)domainObject,CalledFrom.OS_RESOLVE);
 }

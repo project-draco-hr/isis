@@ -1,0 +1,31 @@
+{
+  RootOidDefault rootOid=RootOidDefault.deString(oidStrUnencoded,getOidMarshaller());
+  final ObjectSpecId specId=rootOid.getObjectSpecId();
+  final ObjectSpecification spec=IsisContext.getSpecificationLoader().lookupBySpecId(specId);
+  if (spec == null) {
+    return null;
+  }
+  if (spec.containsFacet(ViewModelFacet.class)) {
+    if (!rootOid.getIdentifier().startsWith(OidMarshaller.VIEWMODEL_INDICATOR)) {
+      rootOid=RootOidDefault.create(rootOid.getObjectSpecId(),OidMarshaller.VIEWMODEL_INDICATOR + rootOid.getIdentifier());
+    }
+    try {
+      return resourceContext.getPersistenceSession().getAdapterManager().adapterFor(rootOid);
+    }
+ catch (    final ObjectNotFoundException ex) {
+      return null;
+    }
+catch (    final PojoRecreationException ex) {
+      return null;
+    }
+  }
+ else {
+    try {
+      ObjectAdapter objectAdapter=resourceContext.getPersistenceSession().loadObject(rootOid);
+      return objectAdapter.isTransient() ? null : objectAdapter;
+    }
+ catch (    final ObjectNotFoundException ex) {
+      return null;
+    }
+  }
+}
