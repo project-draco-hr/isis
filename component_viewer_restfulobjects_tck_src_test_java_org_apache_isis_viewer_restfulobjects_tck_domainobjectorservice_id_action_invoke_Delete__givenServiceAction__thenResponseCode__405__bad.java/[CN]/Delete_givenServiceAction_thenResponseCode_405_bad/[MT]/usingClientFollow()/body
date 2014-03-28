@@ -1,0 +1,9 @@
+{
+  final JsonRepresentation givenAction=Util.givenAction(client,"ActionsEntities","list");
+  final ObjectActionRepresentation actionRepr=givenAction.as(ObjectActionRepresentation.class);
+  final LinkRepresentation invokeLink=actionRepr.getInvoke();
+  final LinkRepresentation deleteLink=invokeLink.withMethod(RestfulHttpMethod.DELETE);
+  final RestfulResponse<ActionResultRepresentation> restfulResponse=client.followT(invokeLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Deleting an action invocation resource is not allowed."));
+}

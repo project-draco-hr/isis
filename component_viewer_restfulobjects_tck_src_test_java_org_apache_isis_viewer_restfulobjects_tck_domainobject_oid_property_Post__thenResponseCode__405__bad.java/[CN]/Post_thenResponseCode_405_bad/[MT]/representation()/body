@@ -1,0 +1,10 @@
+{
+  final Response idPropertyResp=domainObjectResource.propertyDetails("org.apache.isis.core.tck.dom.defaults.WithDefaultsEntity","58","anInt");
+  final RestfulResponse<ObjectPropertyRepresentation> idPropertyJsonResp=RestfulResponse.ofT(idPropertyResp);
+  final ObjectPropertyRepresentation propertyRepr=idPropertyJsonResp.getEntity();
+  final LinkRepresentation selfLink=propertyRepr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation postLink=selfLink.withMethod(RestfulHttpMethod.POST);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(postLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Posting to a property resource is not allowed."));
+}

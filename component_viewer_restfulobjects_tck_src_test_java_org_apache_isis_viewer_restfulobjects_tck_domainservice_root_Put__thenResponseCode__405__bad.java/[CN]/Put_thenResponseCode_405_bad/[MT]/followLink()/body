@@ -1,0 +1,10 @@
+{
+  final Response serviceResp=domainServiceResource.service("ActionsEntities");
+  final RestfulResponse<DomainObjectRepresentation> serviceJsonResp=RestfulResponse.ofT(serviceResp);
+  final DomainObjectRepresentation serviceRepr=serviceJsonResp.getEntity();
+  final LinkRepresentation selfLink=serviceRepr.getLinkWithRel(Rel.SELF);
+  final LinkRepresentation postLink=selfLink.withMethod(RestfulHttpMethod.PUT);
+  final RestfulResponse<JsonRepresentation> restfulResponse=client.follow(postLink);
+  assertThat(restfulResponse.getStatus(),is(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED));
+  assertThat(restfulResponse.getHeader(RestfulResponse.Header.WARNING),is("Putting to a service resource is not allowed."));
+}
