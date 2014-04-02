@@ -10,9 +10,9 @@
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Could not determine type of domain object to persist (no class with domainType Id of '%s')",domainType);
   }
   final ObjectAdapter objectAdapter=getResourceContext().getPersistenceSession().createTransientInstance(domainTypeSpec);
-  final JsonRepresentation propertiesList=objectRepr.getArrayEnsured("members[memberType=property]");
+  final JsonRepresentation propertiesList=objectRepr.getArrayEnsured("members[objectMemberType=property]");
   if (propertiesList == null) {
-    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[memberType=property]); got %s",objectRepr);
+    throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[objectMemberType=property]); got %s",objectRepr);
   }
   if (!DomainResourceHelper.copyOverProperties(getResourceContext(),objectAdapter,propertiesList)) {
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,"Illegal property value");

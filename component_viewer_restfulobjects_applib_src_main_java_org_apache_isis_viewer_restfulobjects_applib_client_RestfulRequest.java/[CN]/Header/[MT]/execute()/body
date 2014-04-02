@@ -3,7 +3,8 @@
     if (!args.isEmpty()) {
       clientRequestConfigurer.configureArgs(args);
     }
-    final Response response=clientRequestConfigurer.getClientRequest().execute();
+    final ClientRequest clientRequest=clientRequestConfigurer.getClientRequest();
+    final Response response=clientRequest.execute();
     @SuppressWarnings("unchecked") final BaseClientResponse<String> restEasyResponse=(BaseClientResponse<String>)response;
     restEasyResponse.setReturnType(String.class);
     return RestfulResponse.ofT(response);

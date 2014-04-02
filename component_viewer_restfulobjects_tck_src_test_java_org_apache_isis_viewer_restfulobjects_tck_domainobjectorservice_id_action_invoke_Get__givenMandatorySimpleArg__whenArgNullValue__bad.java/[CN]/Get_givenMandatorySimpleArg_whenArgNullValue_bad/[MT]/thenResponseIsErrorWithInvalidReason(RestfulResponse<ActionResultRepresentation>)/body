@@ -1,7 +1,7 @@
 {
   assertThat(restfulResponse,hasStatus(HttpStatusCode.VALIDATION_FAILED));
   assertThat(restfulResponse.getHeader(Header.WARNING),is("Validation failed, see body for details"));
-  assertThat(restfulResponse.getHeader(Header.CONTENT_TYPE),hasProfile(MediaType.APPLICATION_JSON));
+  assertThat(restfulResponse.getHeader(Header.CONTENT_TYPE),hasMediaTypeProfile(MediaType.APPLICATION_JSON));
   RestfulResponse<JsonRepresentation> restfulResponseOfError=restfulResponse.wraps(JsonRepresentation.class);
   JsonRepresentation repr=restfulResponseOfError.getEntity();
   assertThat(repr.getString("from.invalidReason"),is("'from' is mandatory"));

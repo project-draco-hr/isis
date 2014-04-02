@@ -1,0 +1,12 @@
+{
+  return new TypeSafeMatcher<MediaType>(){
+    @Override public void describeTo(    Description description){
+      description.appendText("is a media type with an 'x-ro-domain-type' parameter of '" + expectedXRoDomainType + '"');
+    }
+    @Override protected boolean matchesSafely(    MediaType item){
+      String actualXRoDomainTypeIfany=item.getParameters().get("x-ro-domain-type");
+      return actualXRoDomainTypeIfany != null && actualXRoDomainTypeIfany.contains(expectedXRoDomainType);
+    }
+  }
+;
+}
