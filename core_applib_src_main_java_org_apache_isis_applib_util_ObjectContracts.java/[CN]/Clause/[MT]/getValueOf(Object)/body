@@ -8,14 +8,20 @@
     final Method getterMethod=obj.getClass().getMethod(getMethodName);
     return getterMethod.invoke(obj);
   }
- catch (  Exception e) {
+ catch (  NoSuchMethodException e) {
     final String isMethodName="is" + methodNameSuffix;
     try {
       final Method getterMethod=obj.getClass().getMethod(isMethodName);
       return getterMethod.invoke(obj);
     }
- catch (    Exception ex) {
+ catch (    NoSuchMethodException ex) {
       throw new IllegalArgumentException("No such method ' " + getMethodName + "' or '"+ isMethodName+ "'",e);
     }
+catch (    Exception e1) {
+      throw new RuntimeException(e1);
+    }
+  }
+catch (  Exception e) {
+    throw new RuntimeException(e);
   }
 }
