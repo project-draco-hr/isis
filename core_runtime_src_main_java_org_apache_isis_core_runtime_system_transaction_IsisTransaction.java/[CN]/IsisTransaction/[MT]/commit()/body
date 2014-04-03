@@ -18,10 +18,13 @@
     doFlush();
     publishedChangedObjectsIfRequired(currentUser,endTimestamp);
     doFlush();
+    closeServices();
+    doFlush();
     setState(State.COMMITTED);
   }
  catch (  final RuntimeException ex) {
     setAbortCause(new IsisTransactionManagerException(ex));
+    clearCommandServiceIfConfigured();
     throw ex;
   }
 }

@@ -1,7 +1,34 @@
 {
   org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
   context.ignoring(mockCommandContext);
+  context.ignoring(mockCommandService);
   context.ignoring(mockAuditingService3);
+  context.ignoring(mockEventBusServiceDefault);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(CommandContext.class);
+      will(returnValue(mockCommandContext));
+      allowing(mockServicesInjector).lookupService(CommandService.class);
+      will(returnValue(mockCommandService));
+      allowing(mockServicesInjector).lookupService(AuditingService3.class);
+      will(returnValue(mockAuditingService3));
+      allowing(mockServicesInjector).lookupService(PublishingService.class);
+      will(returnValue(mockPublishingService));
+      allowing(mockServicesInjector).lookupService(EventSerializer.class);
+      will(returnValue(mockEventSerializer));
+      allowing(mockServicesInjector).lookupService(PublishedObject.PayloadFactory.class);
+      will(returnValue(mockPublishedObjectPayloadFactory));
+      allowing(mockServicesInjector).lookupService(PublishedAction.PayloadFactory.class);
+      will(returnValue(mockPublishedActionPayloadFactory));
+      allowing(mockServicesInjector).lookupService(Bulk.InteractionContext.class);
+      will(returnValue(mockBulkInteractionContext));
+      allowing(mockServicesInjector).lookupService(EventBusServiceDefault.class);
+      will(returnValue(mockEventBusServiceDefault));
+      allowing(mockServicesInjector).getRegisteredServices();
+      will(returnValue(Collections.emptyList()));
+    }
+  }
+);
   context.checking(new Expectations(){
 {
       allowing(mockTransactionManager).getAuthenticationSession();
@@ -16,7 +43,7 @@
     }
   }
 );
-  transaction=new IsisTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,mockObjectStore,mockCommandContext,mockAuditingService3,mockPublishingService);
+  transaction=new IsisTransaction(mockTransactionManager,mockMessageBroker,mockUpdateNotifier,mockObjectStore,mockServicesInjector);
   transientAdapter1=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("1").build();
   transientAdapter2=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).withIdentifier("2").build();
   persistentAdapter1=PojoAdapterBuilder.create().with(Persistence.PERSISTENT).withIdentifier("3").build();
