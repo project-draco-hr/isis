@@ -1,38 +1,23 @@
 {
-  if (!argRepr.mapHas("value")) {
-    String reason="No 'value' key";
-    argRepr.mapPut("invalidReason",reason);
-    throw new IllegalArgumentException(reason);
-  }
-  if (objectSpec == null) {
-    String reason="ObjectSpec is null, cannot validate";
-    argRepr.mapPut("invalidReason",reason);
-    throw new IllegalArgumentException(reason);
-  }
-  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
-  if (encodableFacet == null) {
-    String reason="ObjectSpec expected to have an EncodableFacet";
-    argRepr.mapPut("invalidReason",reason);
-    throw new IllegalArgumentException(reason);
-  }
-  final JsonRepresentation argValueRepr=argRepr.getRepresentation("value");
   if (argValueRepr == null) {
     return null;
   }
   if (!argValueRepr.isValue()) {
-    String reason="Representation must be of a value";
-    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException("Representation must be of a value");
+  }
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (encodableFacet == null) {
+    String reason="ObjectSpec expected to have an EncodableFacet";
     throw new IllegalArgumentException(reason);
   }
-  final JsonValueConverter jvc=converterBySpec.get(objectSpec.getSpecId());
+  final ObjectSpecId specId=objectSpec.getSpecId();
+  final JsonValueConverter jvc=converterBySpec.get(specId);
   if (jvc == null) {
     if (argValueRepr.isString()) {
       final String argStr=argValueRepr.asString();
       return encodableFacet.fromEncodedString(argStr);
     }
-    final String reason="Unable to parse value";
-    argRepr.mapPut("invalidReason",reason);
-    throw new IllegalArgumentException(reason);
+    throw new IllegalArgumentException("Unable to parse value");
   }
   final ObjectAdapter asAdapter=jvc.asAdapter(argValueRepr);
   if (asAdapter != null) {
@@ -40,9 +25,12 @@
   }
   if (argValueRepr.isString()) {
     final String argStr=argValueRepr.asString();
-    return encodableFacet.fromEncodedString(argStr);
+    try {
+      return encodableFacet.fromEncodedString(argStr);
+    }
+ catch (    TextEntryParseException ex) {
+      throw new IllegalArgumentException(ex.getMessage());
+    }
   }
-  final String reason="Could not parse value '" + argValueRepr.asString() + "' as a "+ objectSpec.getFullIdentifier();
-  argRepr.mapPut("invalidReason",reason);
-  throw new IllegalArgumentException(reason);
+  throw new IllegalArgumentException("Could not parse value '" + argValueRepr.asString() + "' as a "+ objectSpec.getFullIdentifier());
 }

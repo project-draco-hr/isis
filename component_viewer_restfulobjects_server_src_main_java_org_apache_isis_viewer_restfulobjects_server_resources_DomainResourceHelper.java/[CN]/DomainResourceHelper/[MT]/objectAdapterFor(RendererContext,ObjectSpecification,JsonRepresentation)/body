@@ -2,11 +2,29 @@
   if (argRepr == null) {
     return null;
   }
+  if (!argRepr.mapHas("value")) {
+    String reason="No 'value' key";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
+  }
+  if (objectSpec == null) {
+    String reason="ObjectSpec is null, cannot validate";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
+  }
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (encodableFacet == null) {
+    String reason="ObjectSpec expected to have an EncodableFacet";
+    argRepr.mapPut("invalidReason",reason);
+    throw new IllegalArgumentException(reason);
+  }
+  final JsonRepresentation argValueRepr=argRepr.getRepresentation("value");
   if (objectSpec.isEncodeable()) {
     try {
-      return JsonValueEncoder.asAdapter(objectSpec,argRepr);
+      return JsonValueEncoder.asAdapter(objectSpec,argValueRepr);
     }
  catch (    IllegalArgumentException ex) {
+      argRepr.mapPut("invalidReason",ex.getMessage());
       throw ex;
     }
 catch (    Exception ex) {
@@ -22,12 +40,6 @@ catch (    Exception ex) {
       argRepr.mapPut("invalidReason",reason);
       throw new IllegalArgumentException(reason);
     }
-  }
-  final JsonRepresentation argValueRepr=argRepr.getRepresentation("value");
-  if (argValueRepr == null) {
-    String reason="No 'value' key";
-    argRepr.mapPut("invalidReason",reason);
-    throw new IllegalArgumentException(reason);
   }
   if (!argValueRepr.isLink()) {
     final String reason="Expected a link (because this object's type is not a value) but found no 'href'";

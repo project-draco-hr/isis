@@ -3,9 +3,20 @@
     return false;
   }
   for (  final Map.Entry<String,String> criterium : getCriteria().entrySet()) {
-    final String requiredValue=criterium.getValue();
+    String requiredValue=criterium.getValue();
     if (requiredValue != null) {
-      final String actualValue=repr.getString(criterium.getKey());
+      String actualValue=repr.getString(criterium.getKey());
+      if (actualValue == null) {
+        return false;
+      }
+      final int actualValueSemiIndex=actualValue.indexOf(";");
+      final int requiredValueSemiIndex=requiredValue.indexOf(";");
+      if (actualValueSemiIndex != -1 && requiredValueSemiIndex == -1) {
+        actualValue=actualValue.substring(0,actualValueSemiIndex);
+      }
+      if (actualValueSemiIndex == -1 && requiredValueSemiIndex != -1) {
+        requiredValue=requiredValue.substring(0,requiredValueSemiIndex);
+      }
       if (!Objects.equal(requiredValue,actualValue)) {
         return false;
       }

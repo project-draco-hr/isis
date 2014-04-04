@@ -1,5 +1,12 @@
 {
   allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
-  allowingObjectSpecCorrespondingClassIs(boolean.class);
+  allowingObjectSpecCorrespondingClassAndSpecIdIs(boolean.class);
+  context.checking(new Expectations(){
+{
+      one(encodableFacet).fromEncodedString("aString");
+      will(throwException(new TextEntryParseException("'aString' cannot be parsed as a boolean value")));
+    }
+  }
+);
   jsonValueEncoder.asAdapter(objectSpec,representation);
 }
