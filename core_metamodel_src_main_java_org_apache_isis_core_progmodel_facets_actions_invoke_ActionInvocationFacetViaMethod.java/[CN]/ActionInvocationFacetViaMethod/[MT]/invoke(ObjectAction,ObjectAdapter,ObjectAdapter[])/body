@@ -14,12 +14,16 @@
       bulkInteractionContext.setDomainObjects(Collections.singletonList(object));
     }
     if (command != null && command.getExecutor() == Executor.USER && owningAction != null) {
+      if (command.getTarget() != null) {
+      }
+ else {
+        command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
+        command.setTargetAction(CommandUtil.targetActionNameFor(owningAction));
+        command.setArguments(CommandUtil.argDescriptionFor(owningAction,arguments));
+        final Bookmark targetBookmark=CommandUtil.bookmarkFor(targetAdapter);
+        command.setTarget(targetBookmark);
+      }
       command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
-      command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
-      command.setTargetAction(CommandUtil.targetActionNameFor(owningAction));
-      command.setArguments(CommandUtil.argDescriptionFor(owningAction,arguments));
-      final Bookmark targetBookmark=CommandUtil.bookmarkFor(targetAdapter);
-      command.setTarget(targetBookmark);
       final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
       if (backgroundService != null) {
         final Object targetObject=unwrap(targetAdapter);
