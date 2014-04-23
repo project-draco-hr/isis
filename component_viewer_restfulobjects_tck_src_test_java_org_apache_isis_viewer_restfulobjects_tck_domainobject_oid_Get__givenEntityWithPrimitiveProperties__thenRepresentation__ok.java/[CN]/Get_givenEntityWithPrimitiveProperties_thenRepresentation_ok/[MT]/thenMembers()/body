@@ -1,5 +1,5 @@
 {
-  final LinkRepresentation link=Util.domainObjectLink(client,"PrimitiveValuedEntities");
+  final LinkRepresentation link=Util.serviceActionListInvokeFirstReference(client,"PrimitiveValuedEntities");
   domainObjectRepr=client.follow(link).getEntity().as(DomainObjectRepresentation.class);
   DomainObjectMemberRepresentation property;
   ScalarValueRepresentation scalarRepr;
@@ -10,7 +10,7 @@
   scalarRepr=property.getRepresentation("value").as(ScalarValueRepresentation.class);
   assertThat(scalarRepr.isBoolean(),is(true));
   Boolean booleanValue=scalarRepr.asBoolean();
-  assertThat(booleanValue,is(true));
+  assertThat(booleanValue,is(equalTo(Boolean.TRUE)));
   property=domainObjectRepr.getProperty("byteProperty");
   assertThat(property.getMemberType(),is("property"));
   assertThat(property.getFormat(),is(nullValue()));

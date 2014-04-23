@@ -10,7 +10,10 @@
   LinkRepresentation invokeLinkRepr=removeChildRepr.getLinkWithRel(Rel.INVOKE);
   JsonRepresentation args=invokeLinkRepr.getArguments();
   args.mapPut("childEntity.value",firstChildRepr);
-  client.follow(invokeLinkRepr,args);
+  RestfulResponse<JsonRepresentation> invokeResp=client.follow(invokeLinkRepr,args);
+  @SuppressWarnings("unused") JsonRepresentation invokeRepr=invokeResp.getEntity();
+  final HttpStatusCode status=invokeResp.getStatus();
+  assertThat(status,is(HttpStatusCode.OK));
   childrenRestfulResponse=RestfulResponse.ofT(objectResource.accessCollection("PRNT","43","children"));
   childrenRepr=childrenRestfulResponse.getEntity();
   collValue=childrenRepr.getValue();
