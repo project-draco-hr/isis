@@ -1,10 +1,15 @@
 {
-  if (representsNull(node)) {
-    return null;
+  if (node.isBigInteger()) {
+    return node.getBigIntegerValue();
   }
-  checkValue(path,node,"a biginteger");
-  if (!node.isBigInteger()) {
-    throw new IllegalArgumentException(formatExMsg(path,"is not a biginteger"));
+  if (node.isTextual()) {
+    return new BigInteger(node.getTextValue());
   }
-  return node.getBigIntegerValue();
+  if (node.isLong()) {
+    return BigInteger.valueOf(node.getLongValue());
+  }
+  if (node.isInt()) {
+    return BigInteger.valueOf(node.getIntValue());
+  }
+  throw new IllegalArgumentException(formatExMsg(path,"is not a biginteger, is not any other integral number, is not text parseable as a biginteger"));
 }

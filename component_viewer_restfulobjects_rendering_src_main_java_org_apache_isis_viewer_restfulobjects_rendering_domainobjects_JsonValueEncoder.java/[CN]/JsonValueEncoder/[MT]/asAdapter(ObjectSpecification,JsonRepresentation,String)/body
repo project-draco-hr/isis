@@ -1,0 +1,39 @@
+{
+  if (argValueRepr == null) {
+    return null;
+  }
+  if (objectSpec == null) {
+    throw new IllegalArgumentException("ObjectSpecification is required");
+  }
+  if (!argValueRepr.isValue()) {
+    throw new IllegalArgumentException("Representation must be of a value");
+  }
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  if (encodableFacet == null) {
+    String reason="ObjectSpec expected to have an EncodableFacet";
+    throw new IllegalArgumentException(reason);
+  }
+  final ObjectSpecId specId=objectSpec.getSpecId();
+  final JsonValueConverter jvc=converterBySpec.get(specId);
+  if (jvc == null) {
+    if (argValueRepr.isString()) {
+      final String argStr=argValueRepr.asString();
+      return encodableFacet.fromEncodedString(argStr);
+    }
+    throw new IllegalArgumentException("Unable to parse value");
+  }
+  final ObjectAdapter asAdapter=jvc.asAdapter(argValueRepr,format);
+  if (asAdapter != null) {
+    return asAdapter;
+  }
+  if (argValueRepr.isString()) {
+    final String argStr=argValueRepr.asString();
+    try {
+      return encodableFacet.fromEncodedString(argStr);
+    }
+ catch (    TextEntryParseException ex) {
+      throw new IllegalArgumentException(ex.getMessage());
+    }
+  }
+  throw new IllegalArgumentException("Could not parse value '" + argValueRepr.asString() + "' as a "+ objectSpec.getFullIdentifier());
+}

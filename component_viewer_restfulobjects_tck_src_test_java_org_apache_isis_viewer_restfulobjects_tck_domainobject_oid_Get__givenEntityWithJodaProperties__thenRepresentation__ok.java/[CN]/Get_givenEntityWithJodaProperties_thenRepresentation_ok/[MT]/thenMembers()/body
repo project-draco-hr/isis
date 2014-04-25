@@ -1,0 +1,35 @@
+{
+  final LinkRepresentation link=Util.serviceActionListInvokeFirstReference(client,"JodaValuedEntities");
+  domainObjectRepr=client.follow(link).getEntity().as(DomainObjectRepresentation.class);
+  DomainObjectMemberRepresentation property;
+  ScalarValueRepresentation scalarRepr;
+  property=domainObjectRepr.getProperty("dateTimeProperty");
+  assertThat(property.getMemberType(),is("property"));
+  assertThat(property.getFormat(),is("date-time"));
+  assertThat(property.getXIsisFormat(),is("jodadatetime"));
+  scalarRepr=property.getRepresentation("value").as(ScalarValueRepresentation.class);
+  assertThat(scalarRepr.isString(),is(true));
+  assertThat(scalarRepr.asDateTime(),is(asDateTime("2010-03-31T09:50:43Z")));
+  assertThat(scalarRepr.asString(),is("2010-03-31T09:50:43Z"));
+  property=domainObjectRepr.getProperty("localDateProperty");
+  assertThat(property.getMemberType(),is("property"));
+  assertThat(property.getFormat(),is("date"));
+  assertThat(property.getXIsisFormat(),is("jodalocaldate"));
+  scalarRepr=property.getRepresentation("value").as(ScalarValueRepresentation.class);
+  assertThat(scalarRepr.isString(),is(true));
+  assertThat(scalarRepr.asDate(),is(asDate("2008-03-21")));
+  assertThat(scalarRepr.asString(),is("2008-03-21"));
+  property=domainObjectRepr.getProperty("localDateTimeProperty");
+  assertThat(property.getMemberType(),is("property"));
+  assertThat(property.getFormat(),is("date-time"));
+  assertThat(property.getXIsisFormat(),is("jodalocaldatetime"));
+  scalarRepr=property.getRepresentation("value").as(ScalarValueRepresentation.class);
+  assertThat(scalarRepr.isString(),is(true));
+  final LocalDateTime expected=new LocalDateTime(2009,4,29,13,45,22);
+  assertThat(scalarRepr.asDateTime(),is(expected.toDate()));
+  assertThat(scalarRepr.asString(),is(ISODateTimeFormat.dateTimeNoMillis().withZoneUTC().print(expected.toDateTime())));
+  property=domainObjectRepr.getProperty("localDateProperty");
+  assertThat(property.getLinkWithRel(Rel.DETAILS),isLink().href(matches(".+\\/objects\\/JODA\\/\\d+\\/properties\\/localDateProperty")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.OBJECT_PROPERTY.getMediaType()));
+  property=domainObjectRepr.getProperty("localDateTimeProperty");
+  assertThat(property.getLinkWithRel(Rel.DETAILS),isLink().href(matches(".+\\/objects\\/JODA\\/\\d+\\/properties\\/localDateTimeProperty")).httpMethod(RestfulHttpMethod.GET).type(RepresentationType.OBJECT_PROPERTY.getMediaType()));
+}

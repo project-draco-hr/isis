@@ -1,15 +1,15 @@
 {
-  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  allowingObjectSpecHas(EncodableFacet.class,mockEncodableFacet);
   allowingObjectSpecCorrespondingClassAndSpecIdIs(BigInteger.class);
   final BigInteger value=BigInteger.valueOf(123);
   representation=new JsonRepresentation(BigIntegerNode.valueOf(value));
   context.checking(new Expectations(){
 {
-      one(encodableFacet).fromEncodedString("" + value);
-      will(returnValue(objectAdapter));
+      oneOf(mockAdapterManager).adapterFor(value);
+      will(returnValue(mockObjectAdapter));
     }
   }
 );
-  final ObjectAdapter adapter=jsonValueEncoder.asAdapter(objectSpec,representation);
-  assertSame(objectAdapter,adapter);
+  final ObjectAdapter adapter=JsonValueEncoder.asAdapter(mockObjectSpec,representation,null);
+  assertSame(mockObjectAdapter,adapter);
 }

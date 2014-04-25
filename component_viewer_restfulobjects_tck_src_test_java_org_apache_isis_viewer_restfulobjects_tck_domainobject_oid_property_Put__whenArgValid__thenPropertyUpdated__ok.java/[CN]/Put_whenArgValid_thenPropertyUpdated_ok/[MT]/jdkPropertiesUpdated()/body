@@ -2,12 +2,12 @@
   final BigDecimal bd=new BigDecimal("12345678901234567.789");
   modifyLink=getObjectPropertyReprModifyLink("JDKV","29","bigDecimalProperty");
   argRepr=modifyLink.getArguments().mapPut("value",bd);
-  assertThat(followedRepr(modifyLink,argRepr).getBigDecimalFromNumeric("value"),is(new BigDecimal(12345678901234568L)));
+  assertThat(followedRepr(modifyLink,argRepr).getBigDecimal("value"),is(new BigDecimal("12345678901234567.789")));
   final BigInteger bi=new BigInteger("12345678901234567890");
   modifyLink=getObjectPropertyReprModifyLink("JDKV","29","bigIntegerProperty");
   argRepr=modifyLink.getArguments().mapPut("value",bi);
   assertThat(followedRepr(modifyLink,argRepr).getBigInteger("value"),is(bi));
-  final java.sql.Date sqld=new java.sql.Date(114,4,1);
+  final java.sql.Date sqld=new java.sql.Date(new DateTime(2014,5,1,0,0,DateTimeZone.UTC).getMillis());
   modifyLink=getObjectPropertyReprModifyLink("JDKV","29","javaSqlDateProperty");
   argRepr=modifyLink.getArguments().mapPut("value",asIsoNoT(sqld));
   assertThat(followedRepr(modifyLink,argRepr).getDate("value"),is((java.util.Date)sqld));

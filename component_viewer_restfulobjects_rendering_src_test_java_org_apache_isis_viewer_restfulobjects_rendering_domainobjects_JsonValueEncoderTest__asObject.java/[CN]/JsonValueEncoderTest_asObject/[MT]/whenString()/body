@@ -1,12 +1,13 @@
 {
   allowingObjectSpecCorrespondingClassIs(String.class);
-  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  allowingObjectSpecHas(EncodableFacet.class,mockEncodableFacet);
   context.checking(new Expectations(){
 {
-      one(encodableFacet).toEncodedString(objectAdapter);
+      oneOf(mockObjectAdapter).getObject();
       will(returnValue("encodedString"));
     }
   }
 );
-  assertSame("encodedString",JsonValueEncoder.asObject(objectAdapter));
+  final Object actual=JsonValueEncoder.asObject(mockObjectAdapter,null);
+  assertSame("encodedString",actual);
 }

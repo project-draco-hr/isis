@@ -1,0 +1,15 @@
+{
+  final JsonValueConverter jvc=converterBySpec.get(objectSpec.getSpecId());
+  if (jvc != null) {
+    jvc.appendValueAndFormat(objectAdapter,format,repr);
+  }
+ else {
+    final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+    if (encodableFacet == null) {
+      throw new IllegalArgumentException("objectSpec expected to have EncodableFacet");
+    }
+    Object value=objectAdapter != null ? encodableFacet.toEncodedString(objectAdapter) : NullNode.getInstance();
+    repr.mapPut("value",value);
+    appendFormats(repr,"string","string");
+  }
+}

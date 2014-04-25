@@ -1,14 +1,14 @@
 {
-  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  allowingObjectSpecHas(EncodableFacet.class,mockEncodableFacet);
   allowingObjectSpecCorrespondingClassAndSpecIdIs(String.class);
   representation=new JsonRepresentation(TextNode.valueOf("aString"));
   context.checking(new Expectations(){
 {
-      one(encodableFacet).fromEncodedString("aString");
-      will(returnValue(objectAdapter));
+      oneOf(mockAdapterManager).adapterFor("aString");
+      will(returnValue(mockObjectAdapter));
     }
   }
 );
-  final ObjectAdapter adapter=jsonValueEncoder.asAdapter(objectSpec,representation);
-  assertSame(objectAdapter,adapter);
+  final ObjectAdapter adapter=JsonValueEncoder.asAdapter(mockObjectSpec,representation,null);
+  assertSame(mockObjectAdapter,adapter);
 }

@@ -4,6 +4,11 @@
   }
   final Path path=Path.parse(key);
   final ObjectNode node=JsonNodeUtils.walkNodeUpTo(asObjectNode(),path.getHead());
-  node.put(path.getTail(),value != null ? new BigIntegerNode(value) : NullNode.getInstance());
+  if (value != null) {
+    node.put(path.getTail(),value.toString());
+  }
+ else {
+    node.put(path.getTail(),NullNode.getInstance());
+  }
   return this;
 }

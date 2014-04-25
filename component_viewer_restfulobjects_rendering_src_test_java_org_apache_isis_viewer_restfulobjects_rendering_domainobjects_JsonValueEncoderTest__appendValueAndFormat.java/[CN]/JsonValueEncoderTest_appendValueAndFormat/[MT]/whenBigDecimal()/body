@@ -1,0 +1,10 @@
+{
+  allowingObjectSpecToReturnSpecIdFor(BigDecimal.class);
+  allowingObjectAdapterToReturn(new BigDecimal("12345678901234567890.1234"));
+  JsonValueEncoder.appendValueAndFormat(mockObjectSpec,mockObjectAdapter,representation,"big-decimal(27,4)");
+  assertThat(representation.isString("value"),is(true));
+  assertThat(representation.isBigDecimal("value"),is(true));
+  assertThat(representation.getBigDecimal("value"),is(new BigDecimal("12345678901234567890.1234")));
+  assertThat(representation.getString("format"),is("big-decimal(27,4)"));
+  assertThat(representation.getString("extensions.x-isis-format"),is("javamathbigdecimal"));
+}

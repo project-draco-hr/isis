@@ -1,14 +1,14 @@
 {
   allowingObjectSpecCorrespondingClassIs(BigInteger.class);
-  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
-  never(encodableFacet);
+  allowingObjectSpecHas(EncodableFacet.class,mockEncodableFacet);
+  never(mockEncodableFacet);
   final BigInteger value=new BigInteger("123456789012345");
   context.checking(new Expectations(){
 {
-      one(objectAdapter).getObject();
+      one(mockObjectAdapter).getObject();
       will(returnValue(value));
     }
   }
 );
-  assertEquals(value,JsonValueEncoder.asObject(objectAdapter));
+  assertEquals(value,JsonValueEncoder.asObject(mockObjectAdapter,null));
 }

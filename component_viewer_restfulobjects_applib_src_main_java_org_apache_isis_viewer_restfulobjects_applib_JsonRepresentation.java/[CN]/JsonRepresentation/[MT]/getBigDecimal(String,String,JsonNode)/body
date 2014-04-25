@@ -1,0 +1,24 @@
+{
+  if (representsNull(node)) {
+    return null;
+  }
+  final String requiredType="a bigdecimal";
+  if (!isBigDecimal(node)) {
+    throw new IllegalArgumentException(formatExMsg(path,"is not " + requiredType));
+  }
+  checkValue(path,node,requiredType);
+  final BigDecimal bigDecimal=getBigDecimal(path,node);
+  if (format != null) {
+    final Matcher matcher=FORMAT_BIG_DECIMAL.matcher(format);
+    if (matcher.matches()) {
+      final int precision=Integer.parseInt(matcher.group(1));
+      final int scale=Integer.parseInt(matcher.group(2));
+      final BigDecimal maxAllowed=BigDecimal.TEN.pow(precision - scale);
+      if (bigDecimal.compareTo(maxAllowed) > 0) {
+        throw new IllegalArgumentException(String.format("Value '%s' larger than that allowed by format '%s'",bigDecimal,format));
+      }
+      return bigDecimal.setScale(scale,BigDecimal.ROUND_HALF_EVEN);
+    }
+  }
+  return bigDecimal;
+}

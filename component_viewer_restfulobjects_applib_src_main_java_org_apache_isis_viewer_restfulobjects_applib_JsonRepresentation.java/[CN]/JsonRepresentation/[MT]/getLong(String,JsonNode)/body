@@ -3,8 +3,11 @@
     return null;
   }
   checkValue(path,node,"a long");
-  if (!node.isLong()) {
-    throw new IllegalArgumentException(formatExMsg(path,"is not a long"));
+  if (node.isInt()) {
+    return Long.valueOf(node.getIntValue());
   }
-  return node.getLongValue();
+  if (node.isLong()) {
+    return node.getLongValue();
+  }
+  throw new IllegalArgumentException(formatExMsg(path,"is not a long"));
 }

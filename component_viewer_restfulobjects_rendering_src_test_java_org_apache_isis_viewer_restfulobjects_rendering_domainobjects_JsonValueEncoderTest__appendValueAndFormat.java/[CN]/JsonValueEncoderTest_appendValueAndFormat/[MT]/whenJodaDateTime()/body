@@ -1,0 +1,9 @@
+{
+  allowingObjectSpecToReturnSpecIdFor(org.joda.time.DateTime.class);
+  allowingObjectAdapterToReturn(new org.joda.time.DateTime(asDateTime("2014-04-25T12:34:45Z")));
+  JsonValueEncoder.appendValueAndFormat(mockObjectSpec,mockObjectAdapter,representation,null);
+  assertThat(representation.isString("value"),is(true));
+  assertThat(representation.getString("value"),is("2014-04-25T12:34:45Z"));
+  assertThat(representation.getString("format"),is("date-time"));
+  assertThat(representation.getString("extensions.x-isis-format"),is("jodadatetime"));
+}

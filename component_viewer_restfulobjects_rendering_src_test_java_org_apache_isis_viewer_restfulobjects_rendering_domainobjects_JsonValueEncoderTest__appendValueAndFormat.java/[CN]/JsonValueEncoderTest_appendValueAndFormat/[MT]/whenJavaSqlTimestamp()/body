@@ -1,0 +1,10 @@
+{
+  allowingObjectSpecToReturnSpecIdFor(java.sql.Timestamp.class);
+  final long time=asDateTime("2014-04-25T12:34:45Z").getTime();
+  allowingObjectAdapterToReturn(new Timestamp(time));
+  JsonValueEncoder.appendValueAndFormat(mockObjectSpec,mockObjectAdapter,representation,null);
+  assertThat(representation.isLong("value"),is(true));
+  assertThat(representation.getLong("value"),is(time));
+  assertThat(representation.getString("format"),is("utc-millisec"));
+  assertThat(representation.getString("extensions.x-isis-format"),is("javasqltimestamp"));
+}

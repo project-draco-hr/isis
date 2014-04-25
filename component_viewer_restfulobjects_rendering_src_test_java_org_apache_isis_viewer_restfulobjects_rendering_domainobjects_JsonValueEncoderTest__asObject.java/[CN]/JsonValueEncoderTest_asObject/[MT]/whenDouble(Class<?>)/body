@@ -1,13 +1,13 @@
 {
   allowingObjectSpecCorrespondingClassIs(cls);
-  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
-  never(encodableFacet);
+  allowingObjectSpecHas(EncodableFacet.class,mockEncodableFacet);
+  never(mockEncodableFacet);
   context.checking(new Expectations(){
 {
-      one(objectAdapter).getObject();
+      one(mockObjectAdapter).getObject();
       will(returnValue(12345.6789));
     }
   }
 );
-  assertEquals(12345.6789,JsonValueEncoder.asObject(objectAdapter));
+  assertEquals(12345.6789,JsonValueEncoder.asObject(mockObjectAdapter,null));
 }

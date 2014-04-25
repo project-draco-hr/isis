@@ -1,0 +1,22 @@
+{
+  if (representsNull(node)) {
+    return null;
+  }
+  final String requiredType="a biginteger";
+  if (!isBigInteger(node)) {
+    throw new IllegalArgumentException(formatExMsg(path,"is not " + requiredType));
+  }
+  checkValue(path,node,requiredType);
+  final BigInteger bigInteger=getBigInteger(path,node);
+  if (format != null) {
+    final Matcher matcher=FORMAT_BIG_INTEGER.matcher(format);
+    if (matcher.matches()) {
+      final int precision=Integer.parseInt(matcher.group(1));
+      final BigInteger maxAllowed=BigInteger.TEN.pow(precision);
+      if (bigInteger.compareTo(maxAllowed) > 0) {
+        throw new IllegalArgumentException(String.format("Value '%s' larger than that allowed by format '%s'",bigInteger,format));
+      }
+    }
+  }
+  return bigInteger;
+}

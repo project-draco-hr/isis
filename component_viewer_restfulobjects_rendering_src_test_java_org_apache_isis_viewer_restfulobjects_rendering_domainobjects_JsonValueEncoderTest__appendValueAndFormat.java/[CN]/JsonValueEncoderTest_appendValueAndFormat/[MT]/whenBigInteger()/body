@@ -1,0 +1,10 @@
+{
+  allowingObjectSpecToReturnSpecIdFor(BigInteger.class);
+  allowingObjectAdapterToReturn(new BigInteger("12345678901234567890"));
+  JsonValueEncoder.appendValueAndFormat(mockObjectSpec,mockObjectAdapter,representation,"big-integer(22)");
+  assertThat(representation.isString("value"),is(true));
+  assertThat(representation.isBigInteger("value"),is(true));
+  assertThat(representation.getBigInteger("value"),is(new BigInteger("12345678901234567890")));
+  assertThat(representation.getString("format"),is("big-integer(22)"));
+  assertThat(representation.getString("extensions.x-isis-format"),is("javamathbiginteger"));
+}

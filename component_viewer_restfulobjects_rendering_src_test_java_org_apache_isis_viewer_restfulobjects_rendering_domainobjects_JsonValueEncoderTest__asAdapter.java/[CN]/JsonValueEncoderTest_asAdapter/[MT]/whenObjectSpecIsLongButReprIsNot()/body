@@ -1,12 +1,12 @@
 {
-  allowingObjectSpecHas(EncodableFacet.class,encodableFacet);
+  allowingObjectSpecHas(EncodableFacet.class,mockEncodableFacet);
   allowingObjectSpecCorrespondingClassAndSpecIdIs(long.class);
   context.checking(new Expectations(){
 {
-      one(encodableFacet).fromEncodedString("aString");
+      one(mockEncodableFacet).fromEncodedString("aString");
       will(throwException(new TextEntryParseException("'aString' cannot be parsed as a long value")));
     }
   }
 );
-  jsonValueEncoder.asAdapter(objectSpec,representation);
+  JsonValueEncoder.asAdapter(mockObjectSpec,representation,null);
 }

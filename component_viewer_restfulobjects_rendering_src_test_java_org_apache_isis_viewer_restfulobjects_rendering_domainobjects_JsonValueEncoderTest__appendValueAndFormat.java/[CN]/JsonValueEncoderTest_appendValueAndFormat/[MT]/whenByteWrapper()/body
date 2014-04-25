@@ -1,0 +1,9 @@
+{
+  allowingObjectSpecToReturnSpecIdFor(Byte.class);
+  allowingObjectAdapterToReturn(Byte.valueOf((byte)123));
+  JsonValueEncoder.appendValueAndFormat(mockObjectSpec,mockObjectAdapter,representation,null);
+  assertThat(representation.isIntegralNumber("value"),is(true));
+  assertThat(representation.getByte("value"),is(Byte.valueOf((byte)123)));
+  assertThat(representation.getString("format"),is("int"));
+  assertThat(representation.getString("extensions.x-isis-format"),is("byte"));
+}

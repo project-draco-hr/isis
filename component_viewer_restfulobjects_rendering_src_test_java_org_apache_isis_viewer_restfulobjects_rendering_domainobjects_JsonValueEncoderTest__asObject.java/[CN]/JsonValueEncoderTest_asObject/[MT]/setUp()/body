@@ -1,13 +1,15 @@
 {
-  objectAdapter=context.mock(ObjectAdapter.class);
-  objectSpec=context.mock(ObjectSpecification.class);
+  mockObjectAdapter=context.mock(ObjectAdapter.class);
+  mockObjectSpec=context.mock(ObjectSpecification.class);
   context.checking(new Expectations(){
 {
-      allowing(objectAdapter).getSpecification();
-      will(returnValue(objectSpec));
+      allowing(mockObjectAdapter).getSpecification();
+      will(returnValue(mockObjectSpec));
     }
   }
 );
-  encodableFacet=context.mock(EncodableFacet.class);
+  mockEncodableFacet=context.mock(EncodableFacet.class);
+  mockAdapterManager=context.mock(AdapterManager.class);
+  JsonValueEncoder.testSetAdapterManager(mockAdapterManager);
   encoded=new Object();
 }
