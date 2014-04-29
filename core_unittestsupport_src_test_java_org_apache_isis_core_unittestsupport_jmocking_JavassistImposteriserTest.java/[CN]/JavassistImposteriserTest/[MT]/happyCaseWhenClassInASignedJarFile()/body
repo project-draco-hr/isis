@@ -1,0 +1,10 @@
+{
+  File jarFile=new File("src/test/resources/signed.jar");
+  assertTrue(jarFile.exists());
+  URL jarURL=jarFile.toURI().toURL();
+  ClassLoader loader=new URLClassLoader(new URL[]{jarURL});
+  Class<?> typeInSignedJar=loader.loadClass("TypeInSignedJar");
+  assertTrue(imposteriser.canImposterise(typeInSignedJar));
+  Object o=imposteriser.imposterise(new VoidAction(),typeInSignedJar);
+  assertTrue(typeInSignedJar.isInstance(o));
+}

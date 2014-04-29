@@ -1,0 +1,17 @@
+{
+  if (!canImposterise(mockedType)) {
+    throw new IllegalArgumentException(mockedType.getName() + " cannot be imposterized (either a primitive, or a final type or has final toString method)");
+  }
+  if (mockedType.isInterface()) {
+    return reflectionImposteriser.imposterise(mockObject,mockedType,ancilliaryTypes);
+  }
+  try {
+    setConstructorsAccessible(mockedType,true);
+    final Class<?> proxyClass=proxyClass(mockedType,ancilliaryTypes);
+    final Object proxy=proxy(proxyClass,mockObject);
+    return mockedType.cast(proxy);
+  }
+  finally {
+    setConstructorsAccessible(mockedType,false);
+  }
+}

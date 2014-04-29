@@ -1,0 +1,19 @@
+{
+  final ProxyFactory proxyFactory;
+  proxyFactory=new ProxyFactory();
+  proxyFactory.setFilter(new MethodFilter(){
+    @Override public boolean isHandled(    final Method m){
+      return !m.getName().equals("finalize") || m.isBridge();
+    }
+  }
+);
+  if (mockedType.isInterface()) {
+    proxyFactory.setSuperclass(Object.class);
+    proxyFactory.setInterfaces(prepend(mockedType,ancilliaryTypes));
+  }
+ else {
+    proxyFactory.setSuperclass(mockedType);
+    proxyFactory.setInterfaces(ancilliaryTypes);
+  }
+  return proxyFactory.createClass();
+}

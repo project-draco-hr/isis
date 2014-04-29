@@ -1,0 +1,11 @@
+{
+  Invokable failIfInvokedAction=new Invokable(){
+    @Override public Object invoke(    Invocation invocation) throws Throwable {
+      fail("invocation should not have happened");
+      return null;
+    }
+  }
+;
+  Object imposter=imposteriser.imposterise(failIfInvokedAction,Object.class);
+  invokeMethod(imposter,Object.class.getDeclaredMethod("finalize"));
+}

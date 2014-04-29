@@ -1,0 +1,10 @@
+{
+  final ProxyObject proxyObject=(ProxyObject)objenesis.newInstance(proxyClass);
+  proxyObject.setHandler(new MethodHandler(){
+    @Override public Object invoke(    Object self,    Method thisMethod,    Method proceed,    Object[] args) throws Throwable {
+      return mockObject.invoke(new Invocation(self,thisMethod,args));
+    }
+  }
+);
+  return proxyObject;
+}
