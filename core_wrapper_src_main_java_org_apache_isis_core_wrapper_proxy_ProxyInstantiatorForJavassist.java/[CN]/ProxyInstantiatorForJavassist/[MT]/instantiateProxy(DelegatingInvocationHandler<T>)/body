@@ -1,0 +1,18 @@
+{
+  final T toProxy=handler.getDelegate();
+  final Class<T> clazz=(Class<T>)toProxy.getClass();
+  if (clazz.isInterface()) {
+    return Util.createInstance(clazz,handler,WrapperObject.class);
+  }
+ else {
+    final Class<T> enhancedClass=createEnhancedClass(clazz,handler,WrapperObject.class);
+    ProxyObject proxyObject=(ProxyObject)Util.createInstance(enhancedClass);
+    proxyObject.setHandler(new MethodHandler(){
+      @Override public Object invoke(      Object self,      Method thisMethod,      Method proceed,      Object[] args) throws Throwable {
+        return handler.invoke(self,thisMethod,args);
+      }
+    }
+);
+    return (T)proxyObject;
+  }
+}

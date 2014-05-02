@@ -1,0 +1,21 @@
+{
+  final T toProxy=handler.getDelegate();
+  if (CglibEnhanced.class.isAssignableFrom(toProxy.getClass())) {
+    handler.setResolveObjectChangedEnabled(true);
+    final Class<? extends Object> enhancedClass=toProxy.getClass();
+    final Class<? extends Object> origSuperclass=toProxy.getClass().getSuperclass();
+    final List<Class<?>> interfaces=Lists.newArrayList();
+    interfaces.addAll(Arrays.asList(enhancedClass.getInterfaces()));
+    interfaces.remove(Factory.class);
+    interfaces.add(WrapperObject.class);
+    return (T)Enhancer.create(origSuperclass,interfaces.toArray(new Class[]{}),newMethodInterceptor(handler));
+  }
+  final Class<T> clazz=(Class<T>)toProxy.getClass();
+  if (clazz.isInterface()) {
+    return Util.createInstance(clazz,handler,WrapperObject.class);
+  }
+ else {
+    final Class<T> enhancedClass=createEnhancedClass(clazz,handler,WrapperObject.class);
+    return Util.createInstance(enhancedClass);
+  }
+}

@@ -1,0 +1,37 @@
+{
+  final Consent visibilityConsent=new Allow(new InteractionResult(new PropertyVisibilityEvent(employeeDO,mockPasswordIdentifier)));
+  final Consent usabilityConsent=new Allow(new InteractionResult(new PropertyUsabilityEvent(employeeDO,mockPasswordIdentifier)));
+  final Consent validityConsent=new Allow(new InteractionResult(new PropertyModifyEvent(employeeDO,mockPasswordIdentifier,passwordValue)));
+  context.checking(new Expectations(){
+{
+      allowing(mockPasswordMember).isVisible(session,mockEmployeeAdapter,Where.ANYWHERE);
+      will(returnValue(visibilityConsent));
+      allowing(mockPasswordMember).isUsable(session,mockEmployeeAdapter,Where.ANYWHERE);
+      will(returnValue(usabilityConsent));
+      allowing(mockPasswordMember).isAssociationValid(mockEmployeeAdapter,mockPasswordAdapter);
+      will(returnValue(validityConsent));
+    }
+  }
+);
+  facets=Arrays.asList((Facet)new PropertySetterFacetViaSetterMethod(setPasswordMethod,mockPasswordMember));
+  context.checking(new Expectations(){
+{
+      oneOf(mockPasswordMember).getFacets(with(any(Filter.class)));
+      will(returnValue(facets));
+      oneOf(mockPasswordMember).set(mockEmployeeAdapter,mockPasswordAdapter);
+    }
+  }
+);
+  employeeWO.setPassword(passwordValue);
+  facets=Arrays.asList((Facet)new PropertyAccessorFacetViaAccessor(getPasswordMethod,mockPasswordMember));
+  context.checking(new Expectations(){
+{
+      oneOf(mockPasswordMember).getFacets(with(any(Filter.class)));
+      will(returnValue(facets));
+      oneOf(mockPasswordMember).get(mockEmployeeAdapter);
+      will(returnValue(mockPasswordAdapter));
+    }
+  }
+);
+  assertThat(employeeWO.getPassword(),is(passwordValue));
+}

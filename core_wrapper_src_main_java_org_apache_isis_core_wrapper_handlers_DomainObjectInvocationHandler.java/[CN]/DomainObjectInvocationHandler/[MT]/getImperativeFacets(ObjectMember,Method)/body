@@ -1,0 +1,26 @@
+{
+  final List<Facet> imperativeFacets=objectMember.getFacets(new Filter<Facet>(){
+    @Override public boolean accept(    final Facet facet){
+      final ImperativeFacet imperativeFacet=asImperativeFacet(facet);
+      if (imperativeFacet == null) {
+        return false;
+      }
+      return imperativeFacet.getMethods().contains(method);
+    }
+    private ImperativeFacet asImperativeFacet(    final Facet facet){
+      if (facet == null) {
+        return null;
+      }
+      if (facet instanceof ImperativeFacet) {
+        return (ImperativeFacet)facet;
+      }
+      Facet underlyingFacet=facet.getUnderlyingFacet();
+      return asImperativeFacet(underlyingFacet);
+    }
+  }
+);
+  if (imperativeFacets.isEmpty()) {
+    throw new IllegalStateException("should be at least one imperative facet");
+  }
+  return imperativeFacets;
+}

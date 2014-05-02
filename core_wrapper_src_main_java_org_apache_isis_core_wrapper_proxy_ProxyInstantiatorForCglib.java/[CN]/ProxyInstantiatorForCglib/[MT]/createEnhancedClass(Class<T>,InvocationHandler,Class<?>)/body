@@ -1,0 +1,9 @@
+{
+  final Enhancer enhancer=new Enhancer();
+  enhancer.setSuperclass(toProxyClass);
+  enhancer.setInterfaces(auxiliaryTypes);
+  enhancer.setCallbackType(newMethodInterceptor(handler).getClass());
+  final Class<?> enhancedClass=enhancer.createClass();
+  Enhancer.registerCallbacks(enhancedClass,new Callback[]{newMethodInterceptor(handler)});
+  return (Class<T>)enhancedClass;
+}

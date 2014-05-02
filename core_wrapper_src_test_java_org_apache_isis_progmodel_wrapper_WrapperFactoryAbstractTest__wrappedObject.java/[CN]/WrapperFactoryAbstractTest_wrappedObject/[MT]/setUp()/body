@@ -1,0 +1,57 @@
+{
+  objectMemberContext=new ObjectMemberContext(DeploymentCategory.PRODUCTION,mockAuthenticationSessionProvider,mockSpecificationLookup,mockAdapterManager,mockQuerySubmitter,new CollectionTypeRegistryDefault(),mockServicesProvider);
+  employeeRepository=new EmployeeRepositoryImpl();
+  employeeDO=new Employee();
+  employeeDO.setName("Smith");
+  employeeDO.setEmployeeRepository(employeeRepository);
+  wrapperFactory=createWrapperFactory();
+  wrapperFactory.setAdapterManager(mockAdapterManager);
+  wrapperFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  wrapperFactory.setObjectPersistor(mockObjectPersistor);
+  wrapperFactory.setSpecificationLookup(mockSpecificationLookup);
+  context.checking(new Expectations(){
+{
+      allowing(mockSpecificationLookup).loadSpecification(String.class);
+      will(returnValue(mockStringSpec));
+      allowing(mockStringSpec).getShortIdentifier();
+      will(returnValue(String.class.getName()));
+    }
+  }
+);
+  final Method employeeGetNameMethod=methodOf(Employee.class,"getName");
+  final Method employeeSetNameMethod=methodOf(Employee.class,"setName",String.class);
+  final Method employeeModifyNameMethod=methodOf(Employee.class,"modifyName",String.class);
+  final Method employeeHideNameMethod=methodOf(Employee.class,"hideName");
+  final Method employeeDisableNameMethod=methodOf(Employee.class,"disableName");
+  final Method employeeValidateNameMethod=methodOf(Employee.class,"validateName",String.class);
+  final Method employeeClearNameMethod=methodOf(Employee.class,"clearName");
+  employeeNameMember=new OneToOneAssociationImpl(facetedMethodForProperty(employeeSetNameMethod,employeeGetNameMethod,employeeModifyNameMethod,employeeClearNameMethod,employeeHideNameMethod,employeeDisableNameMethod,employeeValidateNameMethod),objectMemberContext);
+  context.checking(new Expectations(){
+{
+      allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
+      will(returnValue(session));
+      allowing(mockAdapterManager).getAdapterFor(employeeDO);
+      will(returnValue(mockEmployeeAdapter));
+      allowing(mockEmployeeAdapter).getSpecification();
+      will(returnValue(mockEmployeeSpec));
+      allowing(mockSpecificationLookup).loadSpecification(Employee.class);
+      will(returnValue(mockEmployeeSpec));
+      allowing(mockEmployeeSpec).getMember(methodOf(Employee.class,"getEmployeeRepository"));
+      will(returnValue(null));
+      allowing(mockEmployeeSpec).getMember(employeeGetNameMethod);
+      will(returnValue(employeeNameMember));
+      allowing(mockEmployeeSpec).getMember(employeeSetNameMethod);
+      will(returnValue(employeeNameMember));
+      allowing(mockEmployeeSpec).getMember(employeeModifyNameMethod);
+      will(returnValue(employeeNameMember));
+      allowing(mockEmployeeSpec).getMember(employeeClearNameMethod);
+      will(returnValue(employeeNameMember));
+      allowing(mockEmployeeAdapter).getObject();
+      will(returnValue(employeeDO));
+      allowing(mockEmployeeAdapter).representsPersistent();
+      will(returnValue(true));
+    }
+  }
+);
+  employeeWO=wrapperFactory.wrap(employeeDO);
+}

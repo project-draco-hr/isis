@@ -1,0 +1,84 @@
+{
+  if (isObjectMethod(method)) {
+    return delegate(method,args);
+  }
+  if (isJdoMethod(method)) {
+    return delegate(method,args);
+  }
+  if (isInjectMethod(method)) {
+    return delegate(method,args);
+  }
+  final ObjectAdapter targetAdapter=getAdapterManager().getAdapterFor(getDelegate());
+  if (isTitleMethod(method)) {
+    return handleTitleMethod(method,args,targetAdapter);
+  }
+  final ObjectSpecification targetNoSpec=targetAdapter.getSpecification();
+  if (isSaveMethod(method)) {
+    return handleSaveMethod(getAuthenticationSession(),targetAdapter,targetNoSpec);
+  }
+  if (isUnderlyingMethod(method)) {
+    return getDelegate();
+  }
+  final ObjectMember objectMember=locateAndCheckMember(method);
+  final List<Facet> imperativeFacets=getImperativeFacets(objectMember,method);
+  final String memberName=objectMember.getName();
+  if (instanceOf(imperativeFacets,DisableForContextFacetViaMethod.class,HideForContextFacetViaMethod.class)) {
+    throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'",memberName));
+  }
+  final String methodName=method.getName();
+  if (instanceOf(imperativeFacets,ActionDefaultsFacet.class,PropertyDefaultFacet.class,ActionChoicesFacet.class,ActionParameterChoicesFacet.class,PropertyChoicesFacet.class)) {
+    return method.invoke(getDelegate(),args);
+  }
+  checkVisibility(getAuthenticationSession(),targetAdapter,objectMember);
+  if (objectMember.isOneToOneAssociation()) {
+    if (instanceOf(imperativeFacets,PropertyValidateFacetViaMethod.class,PropertySetterFacetViaModifyMethod.class,PropertyClearFacetViaClearMethod.class)) {
+      throw new UnsupportedOperationException(String.format("Cannot invoke supporting method for '%s'; use only property accessor/mutator",memberName));
+    }
+    final OneToOneAssociation otoa=(OneToOneAssociation)objectMember;
+    if (instanceOf(imperativeFacets,PropertyOrCollectionAccessorFacet.class)) {
+      return handleGetterMethodOnProperty(args,targetAdapter,otoa,methodName);
+    }
+    if (instanceOf(imperativeFacets,PropertySetterFacet.class,PropertyInitializationFacet.class)) {
+      checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
+      return handleSetterMethodOnProperty(args,getAuthenticationSession(),targetAdapter,otoa,methodName);
+    }
+  }
+  if (objectMember.isOneToManyAssociation()) {
+    if (instanceOf(imperativeFacets,CollectionValidateAddToFacetViaMethod.class,CollectionValidateRemoveFromFacetViaMethod.class)) {
+      throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only collection accessor/mutator",memberName));
+    }
+    final OneToManyAssociation otma=(OneToManyAssociation)objectMember;
+    if (instanceOf(imperativeFacets,PropertyOrCollectionAccessorFacet.class)) {
+      return handleGetterMethodOnCollection(method,args,targetAdapter,otma,memberName);
+    }
+    if (instanceOf(imperativeFacets,CollectionAddToFacet.class)) {
+      checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
+      return handleCollectionAddToMethod(args,targetAdapter,otma,methodName);
+    }
+    if (instanceOf(imperativeFacets,CollectionRemoveFromFacet.class)) {
+      checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
+      return handleCollectionRemoveFromMethod(args,targetAdapter,otma,methodName);
+    }
+  }
+  if (instanceOf(imperativeFacets,PropertyOrCollectionAccessorFacet.class)) {
+    throw new UnsupportedOperationException(String.format("Can only invoke accessor on properties or collections; '%s' represents %s",methodName,decode(objectMember)));
+  }
+  if (instanceOf(imperativeFacets,PropertySetterFacet.class)) {
+    throw new UnsupportedOperationException(String.format("Can only invoke mutator on properties; '%s' represents %s",methodName,decode(objectMember)));
+  }
+  if (instanceOf(imperativeFacets,CollectionAddToFacet.class)) {
+    throw new UnsupportedOperationException(String.format("Can only invoke 'adder' on collections; '%s' represents %s",methodName,decode(objectMember)));
+  }
+  if (instanceOf(imperativeFacets,CollectionRemoveFromFacet.class)) {
+    throw new UnsupportedOperationException(String.format("Can only invoke 'remover' on collections; '%s' represents %s",methodName,decode(objectMember)));
+  }
+  if (objectMember instanceof ObjectAction) {
+    if (instanceOf(imperativeFacets,ActionValidationFacetViaMethod.class)) {
+      throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
+    }
+    checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
+    final ObjectAction noa=(ObjectAction)objectMember;
+    return handleActionMethod(args,getAuthenticationSession(),targetAdapter,noa,memberName);
+  }
+  throw new UnsupportedOperationException(String.format("Unknown member type '%s'",objectMember));
+}
