@@ -1,6 +1,17 @@
 {
   super.init();
-  getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_BUFFER);
+  WebjarsSettings settings=new WebjarsSettings();
+  WicketWebjars.install(this,settings);
+  String isisConfigDir=getServletContext().getInitParameter("isis.config.dir");
+  final String loggingPropertiesDir;
+  if (isisConfigDir != null) {
+    loggingPropertiesDir=isisConfigDir;
+  }
+ else {
+    loggingPropertiesDir=getServletContext().getRealPath("/WEB-INF");
+  }
+  loggingConfigurer.configureLogging(loggingPropertiesDir,new String[0]);
+  getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
   getRequestCycleListeners().add(new WebRequestCycleForIsis());
   getResourceSettings().setParentFolderPlaceholder("$up$");
   final DeploymentType deploymentType=determineDeploymentType();
