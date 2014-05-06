@@ -41,7 +41,7 @@
     }
     if (abortCause == null) {
       try {
-        getTransaction().commit();
+        getTransaction().preCommit();
       }
  catch (      RuntimeException ex) {
         abortCause=ex;
@@ -56,6 +56,15 @@
         abortCause=ex;
         transactionLevel=1;
         getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      }
+    }
+    if (abortCause == null) {
+      try {
+        getTransaction().commit();
+      }
+ catch (      RuntimeException ex) {
+        abortCause=ex;
+        transactionLevel=1;
       }
     }
     if (abortCause != null) {

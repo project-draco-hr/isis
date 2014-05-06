@@ -2,7 +2,7 @@
   ensureThatState(getState().canCommit(),is(true),"state is: " + getState());
   ensureThatState(abortCause,is(nullValue()),"cannot commit: an abort cause has been set");
   if (LOG.isDebugEnabled()) {
-    LOG.debug("postCommit transaction " + this);
+    LOG.debug("preCommit transaction " + this);
   }
   if (getState() == State.COMMITTED) {
     if (LOG.isInfoEnabled()) {
@@ -10,5 +10,12 @@
     }
     return;
   }
-  setState(State.COMMITTED);
+  try {
+    preCommitServices();
+  }
+ catch (  final RuntimeException ex) {
+    setAbortCause(new IsisTransactionManagerException(ex));
+    clearCommandServiceIfConfigured();
+    throw ex;
+  }
 }
