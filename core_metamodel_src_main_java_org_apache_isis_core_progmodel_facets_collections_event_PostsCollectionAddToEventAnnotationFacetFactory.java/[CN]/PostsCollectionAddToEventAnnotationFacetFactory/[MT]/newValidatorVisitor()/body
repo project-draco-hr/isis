@@ -1,0 +1,18 @@
+{
+  return new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    ObjectSpecification objectSpec,    ValidationFailures validationFailures){
+      List<OneToManyAssociation> objectCollections=objectSpec.getCollections(Contributed.EXCLUDED);
+      for (      OneToManyAssociation objectCollection : objectCollections) {
+        final SortedByFacet facet=objectCollection.getFacet(SortedByFacet.class);
+        if (facet != null) {
+          final Class<? extends Comparator<?>> cls=facet.value();
+          if (!Comparator.class.isAssignableFrom(cls)) {
+            validationFailures.add("%s#%s is annotated with @SortedBy, but the class specified '%s' is not a Comparator",objectSpec.getIdentifier().getClassName(),objectCollection.getId(),facet.value().getName());
+          }
+        }
+      }
+      return true;
+    }
+  }
+;
+}

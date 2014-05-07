@@ -1,0 +1,23 @@
+{
+  final PostsAddedToCollectionEvent annotation=Annotations.getAnnotation(method,PostsAddedToCollectionEvent.class);
+  if (annotation == null) {
+    return null;
+  }
+  final PostsAddedToCollectionEventFacet postsAddedToCollectionEventFacet=holder.getFacet(PostsAddedToCollectionEventFacet.class);
+  if (postsAddedToCollectionEventFacet == null) {
+    return null;
+  }
+  final CollectionAddToFacet collectionAddToFacet=holder.getFacet(CollectionAddToFacet.class);
+  final CollectionFacet collectionFacet=holder.getFacet(CollectionFacet.class);
+  if (postsAddedToCollectionEventFacet != null) {
+    holder.removeFacet(postsAddedToCollectionEventFacet);
+  }
+  if (collectionAddToFacet != null) {
+    holder.removeFacet(collectionAddToFacet);
+  }
+  if (collectionFacet != null) {
+    holder.removeFacet(collectionFacet);
+  }
+  final Class<? extends AddedToCollectionEvent<?,?>> changedEventType=annotation.value();
+  return new PostsCollectionAddToEventFacetAnnotation(changedEventType,postsAddedToCollectionEventFacet,collectionAddToFacet,collectionFacet,servicesProvider,holder);
+}
