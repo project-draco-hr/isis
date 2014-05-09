@@ -1,0 +1,19 @@
+{
+  final Set<Class<? extends FixtureScript>> classes=findFixtureScriptClasses();
+  for (  final Class<? extends FixtureScript> fixtureScriptCls : classes) {
+    final String packageName=fixtureScriptCls.getPackage().getName();
+    if (!packageName.startsWith(packagePrefix)) {
+      continue;
+    }
+    final FixtureScript fs=newFixtureScript(fixtureScriptCls);
+    if (fs != null) {
+      fixtureScriptList.add(fs);
+    }
+  }
+  Collections.sort(fixtureScriptList,new Comparator<FixtureScript>(){
+    @Override public int compare(    FixtureScript o1,    FixtureScript o2){
+      return ObjectContracts.compare(o1,o2,"friendlyName,qualifiedName");
+    }
+  }
+);
+}

@@ -1,0 +1,13 @@
+{
+  try {
+    final Constructor<? extends FixtureScript> constructor=fixtureScriptCls.getConstructor();
+    final FixtureScript template=constructor.newInstance();
+    if (!template.isDiscoverable()) {
+      return null;
+    }
+    return container.newViewModelInstance(fixtureScriptCls,mementoFor(template));
+  }
+ catch (  Exception ex) {
+    return null;
+  }
+}
