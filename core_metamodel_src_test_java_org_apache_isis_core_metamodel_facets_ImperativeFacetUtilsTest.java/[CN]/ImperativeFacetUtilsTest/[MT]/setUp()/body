@@ -1,4 +1,14 @@
 {
-  mockObjectMember=context.mock(ObjectMember.class);
   method=Customer.class.getDeclaredMethod("getFirstName");
+  context.checking(new Expectations(){
+{
+      allowing(mockImperativeFacet).getMethods();
+      will(returnValue(Lists.newArrayList(method)));
+      allowing(mockImperativeFacet).impliesResolve();
+      will(returnValue(true));
+      allowing(mockImperativeFacet).impliesObjectChanged();
+      will(returnValue(true));
+    }
+  }
+);
 }

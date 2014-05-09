@@ -1,12 +1,11 @@
 {
-  final ImperativeFacet imperativeFacet=null;
   context.checking(new Expectations(){
 {
-      one(mockObjectMember).getFacets(with(any(Filter.class)));
-      will(returnValue(Lists.newArrayList((Facet)imperativeFacet)));
+      oneOf(mockObjectMember).getFacets(with(any(Filter.class)));
+      will(returnValue(Lists.newArrayList((Facet)mockImperativeFacet)));
     }
   }
 );
-  final ImperativeFacet.Flags flags=ImperativeFacetUtils.getImperativeFacetFlags(mockObjectMember,method);
+  final ImperativeFacet.Flags flags=ImperativeFacet.Util.getImperativeFacetFlags(mockObjectMember,method);
   assertThat(flags,is(not(nullValue())));
 }
