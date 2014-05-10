@@ -1,0 +1,22 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  try {
+    final PostsCollectionAddedToEvent annotation=Annotations.getAnnotation(actionMethod,PostsCollectionAddedToEvent.class);
+    if (annotation == null) {
+      return;
+    }
+    final Class<?> returnType=actionMethod.getReturnType();
+    final ObjectSpecification returnSpec=getSpecificationLoader().loadSpecification(returnType);
+    if (returnSpec == null) {
+      return;
+    }
+    final Class<?> cls=processMethodContext.getCls();
+    final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
+    final FacetHolder holder=processMethodContext.getFacetHolder();
+    final Class<? extends CollectionAddedToEvent<?,?>> changedEventType=annotation.value();
+    FacetUtil.addFacet(new PostsActionInvokedEventFacetViaMethod(actionMethod,typeSpec,returnSpec,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector(),changedEventType));
+  }
+  finally {
+    processMethodContext.removeMethod(actionMethod);
+  }
+}
