@@ -50,7 +50,7 @@
       final CommandService commandService=getServicesInjector().lookupService(CommandService.class);
       if (commandService.persistIfPossible(command)) {
         final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(command);
-        return new InvocationResult(true,resultAdapter);
+        return InvocationResult.forActionThatReturned(resultAdapter);
       }
  else {
         throw new IsisException("Unable to schedule action '" + owningAction.getIdentifier().toClassAndNameIdentityString() + "' to run in background: "+ "CommandService does not support persistent commands ");
@@ -65,7 +65,7 @@
         LOG.debug(" action result " + result);
       }
       if (result == null) {
-        return new InvocationResult(true,null);
+        return InvocationResult.forActionThatReturned(null);
       }
       final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
       final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
@@ -78,7 +78,7 @@
       }
       final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
       ActionInvocationFacet.currentInvocation.set(publishedActionFacet != null ? new CurrentInvocation(targetAdapter,getIdentified(),arguments,resultAdapter,command) : null);
-      return new InvocationResult(true,resultAdapter);
+      return InvocationResult.forActionThatReturned(resultAdapter);
     }
   }
  catch (  final IllegalArgumentException e) {
@@ -97,7 +97,7 @@ catch (  final InvocationTargetException e) {
       }
     }
     ThrowableExtensions.throwWithinIsisException(e,"Exception executing " + method);
-    return new InvocationResult(false,null);
+    return InvocationResult.forActionNotInvoked();
   }
 catch (  final IllegalAccessException e) {
     throw new ReflectiveActionException("Illegal access of " + method,e);
