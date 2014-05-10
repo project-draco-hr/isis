@@ -3,18 +3,17 @@
     throw new IllegalArgumentException("Invoking a setter should only have a single argument");
   }
   final Object argumentObj=underlying(args[0]);
-  final WrapperPolicy wrapperPolicy=determineWrapperPolicy(otoa,argumentObj);
-  if (wrapperPolicy == WrapperPolicy.ENFORCE_RULES) {
+  if (getExecutionMode().shouldEnforceRules()) {
     checkVisibility(getAuthenticationSession(),targetAdapter,otoa);
     checkUsability(getAuthenticationSession(),targetAdapter,otoa);
   }
   final ObjectAdapter argumentAdapter=argumentObj != null ? getAdapterManager().adapterFor(argumentObj) : null;
   resolveIfRequired(targetAdapter);
-  if (wrapperPolicy == WrapperPolicy.ENFORCE_RULES) {
+  if (getExecutionMode().shouldEnforceRules()) {
     final InteractionResult interactionResult=otoa.isAssociationValid(targetAdapter,argumentAdapter).getInteractionResult();
     notifyListenersAndVetoIfRequired(interactionResult);
   }
-  if (getExecutionMode() == ExecutionMode.EXECUTE) {
+  if (getExecutionMode().shouldExecute()) {
     otoa.set(targetAdapter,argumentAdapter);
   }
   objectChangedIfRequired(targetAdapter);
