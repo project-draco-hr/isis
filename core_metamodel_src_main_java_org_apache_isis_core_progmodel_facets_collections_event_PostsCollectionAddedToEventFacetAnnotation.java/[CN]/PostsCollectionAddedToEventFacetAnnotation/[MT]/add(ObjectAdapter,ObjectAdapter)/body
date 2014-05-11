@@ -1,0 +1,20 @@
+{
+  if (this.collectionAddToFacet == null) {
+    return;
+  }
+  eventBusService=getEventBusService();
+  if (eventBusService == null) {
+    collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
+    return;
+  }
+  final Object referencedObject=AdapterUtils.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter);
+  if (collection instanceof Set) {
+    Set<?> set=(Set<?>)collection;
+    if (set.contains(referencedObject)) {
+      return;
+    }
+  }
+  collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
+  postEvent(targetAdapter,getIdentified().getIdentifier(),referencedObject);
+}

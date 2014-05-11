@@ -29,7 +29,6 @@
   if (instanceOf(imperativeFacets,ActionDefaultsFacet.class,PropertyDefaultFacet.class,ActionChoicesFacet.class,ActionParameterChoicesFacet.class,PropertyChoicesFacet.class)) {
     return method.invoke(getDelegate(),args);
   }
-  checkVisibility(getAuthenticationSession(),targetAdapter,objectMember);
   if (objectMember.isOneToOneAssociation()) {
     if (instanceOf(imperativeFacets,PropertyValidateFacetViaMethod.class,PropertySetterFacetViaModifyMethod.class,PropertyClearFacetViaClearMethod.class)) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method for '%s'; use only property accessor/mutator",memberName));
@@ -39,7 +38,6 @@
       return handleGetterMethodOnProperty(args,targetAdapter,otoa,methodName);
     }
     if (instanceOf(imperativeFacets,PropertySetterFacet.class,PropertyInitializationFacet.class)) {
-      checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
       return handleSetterMethodOnProperty(args,getAuthenticationSession(),targetAdapter,otoa,methodName);
     }
   }
@@ -52,11 +50,9 @@
       return handleGetterMethodOnCollection(method,args,targetAdapter,otma,memberName);
     }
     if (instanceOf(imperativeFacets,CollectionAddToFacet.class)) {
-      checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
       return handleCollectionAddToMethod(args,targetAdapter,otma,methodName);
     }
     if (instanceOf(imperativeFacets,CollectionRemoveFromFacet.class)) {
-      checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
       return handleCollectionRemoveFromMethod(args,targetAdapter,otma,methodName);
     }
   }
@@ -73,6 +69,7 @@
     throw new UnsupportedOperationException(String.format("Can only invoke 'remover' on collections; '%s' represents %s",methodName,decode(objectMember)));
   }
   if (objectMember instanceof ObjectAction) {
+    checkVisibility(getAuthenticationSession(),targetAdapter,objectMember);
     if (instanceOf(imperativeFacets,ActionValidationFacetViaMethod.class)) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
     }
