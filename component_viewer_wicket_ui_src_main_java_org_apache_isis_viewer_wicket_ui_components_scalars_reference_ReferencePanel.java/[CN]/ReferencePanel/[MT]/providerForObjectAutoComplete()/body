@@ -1,0 +1,12 @@
+{
+  return new ObjectAdapterMementoProviderAbstract(getModel()){
+    private static final long serialVersionUID=1L;
+    @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
+      final ObjectSpecification typeOfSpecification=getScalarModel().getTypeOfSpecification();
+      final AutoCompleteFacet autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
+      final List<ObjectAdapter> results=autoCompleteFacet.execute(term);
+      return Lists.transform(results,ObjectAdapterMemento.Functions.fromAdapter());
+    }
+  }
+;
+}

@@ -1,0 +1,17 @@
+{
+  if (getModel().hasChoices()) {
+    final List<ObjectAdapterMemento> choiceMementos=getChoiceMementos(argsIfAvailable);
+    ObjectAdapterMementoProviderAbstract providerForChoices=providerForChoices(choiceMementos);
+    select2Field.setProvider(providerForChoices);
+    getModel().clearPending();
+    resetIfCurrentNotInChoices(select2Field,choiceMementos);
+  }
+ else   if (hasParamOrPropertyAutoComplete()) {
+    select2Field.setProvider(providerForParamOrPropertyAutoComplete());
+    getModel().clearPending();
+  }
+ else {
+    select2Field.setProvider(providerForObjectAutoComplete());
+    getModel().clearPending();
+  }
+}
