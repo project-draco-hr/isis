@@ -16,61 +16,49 @@
   if (isSaveMethod(method)) {
     return handleSaveMethod(getAuthenticationSession(),targetAdapter,targetNoSpec);
   }
-  if (isUnderlyingMethod(method)) {
+  if (isWrappedMethod(method)) {
     return getDelegate();
   }
   final ObjectMember objectMember=locateAndCheckMember(method);
-  final List<Facet> imperativeFacets=getImperativeFacets(objectMember,method);
   final String memberName=objectMember.getName();
-  if (instanceOf(imperativeFacets,DisableForContextFacetViaMethod.class,HideForContextFacetViaMethod.class)) {
+  final Intent intent=ImperativeFacet.Util.getIntent(objectMember,method);
+  if (intent == Intent.CHECK_IF_HIDDEN || intent == Intent.CHECK_IF_DISABLED) {
     throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'",memberName));
   }
   final String methodName=method.getName();
-  if (instanceOf(imperativeFacets,ActionDefaultsFacet.class,PropertyDefaultFacet.class,ActionChoicesFacet.class,ActionParameterChoicesFacet.class,PropertyChoicesFacet.class)) {
+  if (intent == Intent.DEFAULTS || intent == Intent.CHOICES_OR_AUTOCOMPLETE) {
     return method.invoke(getDelegate(),args);
   }
   if (objectMember.isOneToOneAssociation()) {
-    if (instanceOf(imperativeFacets,PropertyValidateFacetViaMethod.class,PropertySetterFacetViaModifyMethod.class,PropertyClearFacetViaClearMethod.class)) {
+    if (intent == Intent.CHECK_IF_VALID || intent == Intent.MODIFY_PROPERTY_SUPPORTING) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method for '%s'; use only property accessor/mutator",memberName));
     }
     final OneToOneAssociation otoa=(OneToOneAssociation)objectMember;
-    if (instanceOf(imperativeFacets,PropertyOrCollectionAccessorFacet.class)) {
+    if (intent == Intent.ACCESSOR) {
       return handleGetterMethodOnProperty(args,targetAdapter,otoa,methodName);
     }
-    if (instanceOf(imperativeFacets,PropertySetterFacet.class,PropertyInitializationFacet.class)) {
+    if (intent == Intent.MODIFY_PROPERTY || intent == Intent.INITIALIZATION) {
       return handleSetterMethodOnProperty(args,getAuthenticationSession(),targetAdapter,otoa,methodName);
     }
   }
   if (objectMember.isOneToManyAssociation()) {
-    if (instanceOf(imperativeFacets,CollectionValidateAddToFacetViaMethod.class,CollectionValidateRemoveFromFacetViaMethod.class)) {
+    if (intent == Intent.CHECK_IF_VALID) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only collection accessor/mutator",memberName));
     }
     final OneToManyAssociation otma=(OneToManyAssociation)objectMember;
-    if (instanceOf(imperativeFacets,PropertyOrCollectionAccessorFacet.class)) {
+    if (intent == Intent.ACCESSOR) {
       return handleGetterMethodOnCollection(method,args,targetAdapter,otma,memberName);
     }
-    if (instanceOf(imperativeFacets,CollectionAddToFacet.class)) {
+    if (intent == Intent.MODIFY_COLLECTION_ADD) {
       return handleCollectionAddToMethod(args,targetAdapter,otma,methodName);
     }
-    if (instanceOf(imperativeFacets,CollectionRemoveFromFacet.class)) {
+    if (intent == Intent.MODIFY_COLLECTION_REMOVE) {
       return handleCollectionRemoveFromMethod(args,targetAdapter,otma,methodName);
     }
   }
-  if (instanceOf(imperativeFacets,PropertyOrCollectionAccessorFacet.class)) {
-    throw new UnsupportedOperationException(String.format("Can only invoke accessor on properties or collections; '%s' represents %s",methodName,decode(objectMember)));
-  }
-  if (instanceOf(imperativeFacets,PropertySetterFacet.class)) {
-    throw new UnsupportedOperationException(String.format("Can only invoke mutator on properties; '%s' represents %s",methodName,decode(objectMember)));
-  }
-  if (instanceOf(imperativeFacets,CollectionAddToFacet.class)) {
-    throw new UnsupportedOperationException(String.format("Can only invoke 'adder' on collections; '%s' represents %s",methodName,decode(objectMember)));
-  }
-  if (instanceOf(imperativeFacets,CollectionRemoveFromFacet.class)) {
-    throw new UnsupportedOperationException(String.format("Can only invoke 'remover' on collections; '%s' represents %s",methodName,decode(objectMember)));
-  }
   if (objectMember instanceof ObjectAction) {
     checkVisibility(getAuthenticationSession(),targetAdapter,objectMember);
-    if (instanceOf(imperativeFacets,ActionValidationFacetViaMethod.class)) {
+    if (intent == Intent.CHECK_IF_VALID) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
     }
     checkUsability(getAuthenticationSession(),targetAdapter,objectMember);

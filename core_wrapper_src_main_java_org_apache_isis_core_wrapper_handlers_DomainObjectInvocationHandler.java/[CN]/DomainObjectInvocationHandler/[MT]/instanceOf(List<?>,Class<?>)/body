@@ -8,6 +8,13 @@
       if (superType.isAssignableFrom(obj.getClass())) {
         return true;
       }
+      if (obj instanceof Facet) {
+        Facet facet=(Facet)obj;
+        Facet underlyingFacet=facet.getUnderlyingFacet();
+        if (underlyingFacet != null && superType.isAssignableFrom(obj.getClass())) {
+          return true;
+        }
+      }
     }
   }
   return false;

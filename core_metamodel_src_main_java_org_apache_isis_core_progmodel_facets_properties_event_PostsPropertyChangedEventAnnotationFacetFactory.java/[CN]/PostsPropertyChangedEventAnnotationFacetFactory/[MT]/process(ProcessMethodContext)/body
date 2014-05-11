@@ -1,4 +1,22 @@
 {
   final Method method=processMethodContext.getMethod();
-  FacetUtil.addFacet(create(method,processMethodContext.getFacetHolder()));
+  FacetedMethod holder=processMethodContext.getFacetHolder();
+  final PostsPropertyChangedEvent annotation=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);
+  if (annotation == null) {
+    return;
+  }
+  final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
+  if (getterFacet == null) {
+    return;
+  }
+  final PropertySetterFacet setterFacet=holder.getFacet(PropertySetterFacet.class);
+  if (setterFacet != null) {
+    final Class<? extends PropertyChangedEvent<?,?>> changedEventType=annotation.value();
+    FacetUtil.addFacet(new PostsPropertyChangedEventSetterFacetAnnotation(changedEventType,getterFacet,setterFacet,servicesInjector,holder));
+  }
+  final PropertyClearFacet clearFacet=holder.getFacet(PropertyClearFacet.class);
+  if (clearFacet != null) {
+    final Class<? extends PropertyChangedEvent<?,?>> changedEventType=annotation.value();
+    FacetUtil.addFacet(new PostsPropertyChangedEventClearFacetAnnotation(changedEventType,getterFacet,clearFacet,servicesInjector,holder));
+  }
 }

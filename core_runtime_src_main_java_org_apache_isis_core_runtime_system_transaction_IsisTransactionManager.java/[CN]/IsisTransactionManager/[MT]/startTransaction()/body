@@ -2,10 +2,14 @@
   boolean noneInProgress=false;
   if (getTransaction() == null || getTransaction().getState().isComplete()) {
     noneInProgress=true;
+    final List<Object> registeredServices=servicesInjector.getRegisteredServices();
+    startRequestOnRequestScopedServices(registeredServices);
+    createCommandIfConfigured();
+    initOtherApplibServicesIfConfigured(registeredServices);
     IsisTransaction isisTransaction=createTransaction();
     transactionLevel=0;
     transactionalResource.startTransaction();
-    persistenceSession.startTransactionOnCommandIfConfigured(isisTransaction.getTransactionId());
+    startTransactionOnCommandIfConfigured(isisTransaction.getTransactionId());
   }
   transactionLevel++;
   if (LOG.isDebugEnabled()) {
