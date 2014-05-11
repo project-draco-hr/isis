@@ -2,10 +2,10 @@
   if (Objects.equal(oldValue,newValue)) {
     return;
   }
-  final Object source=targetAdapter.getObject();
   try {
     final Class type=value();
-    final PropertyChangedEvent<?,?> event=newEvent(type,source,identifier,oldValue,newValue);
+    final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
+    final PropertyChangedEvent<?,?> event=Util.newEvent(type,source,identifier,oldValue,newValue);
     eventBusService.post(event);
   }
  catch (  Exception e) {

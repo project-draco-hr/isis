@@ -1,13 +1,6 @@
 {
   if (!searchedForEventBusService) {
-    final List<ObjectAdapter> serviceAdapters=servicesProvider.getServices();
-    for (    ObjectAdapter serviceAdapter : serviceAdapters) {
-      final Object service=serviceAdapter.getObject();
-      if (service instanceof EventBusService) {
-        eventBusService=(EventBusService)service;
-        break;
-      }
-    }
+    eventBusService=this.servicesInjector.lookupService(EventBusService.class);
   }
   searchedForEventBusService=true;
   return eventBusService;

@@ -1,0 +1,9 @@
+{
+  final SomeDomainObject sdo=new SomeDomainObject();
+  final SomeReferencedObject other=new SomeReferencedObject();
+  final Identifier identifier=Identifier.propertyOrCollectionIdentifier(SomeDomainObject.class,"references");
+  final CollectionAddedToEvent<SomeDomainObject,SomeReferencedObject> ev=PostsCollectionAddedToEventFacet.Util.newEvent(SomeDomainObjectCollectionAddedToEvent.class,sdo,identifier,other);
+  assertThat(ev.getSource(),is(sdo));
+  assertThat(ev.getIdentifier(),is(identifier));
+  assertThat(ev.getValue(),is(other));
+}
