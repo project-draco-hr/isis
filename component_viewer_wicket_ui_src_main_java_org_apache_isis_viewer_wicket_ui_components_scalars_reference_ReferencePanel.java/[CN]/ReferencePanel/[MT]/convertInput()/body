@@ -1,0 +1,13 @@
+{
+  if (getModel().isEditMode() && isEditableWithEitherAutoCompleteOrChoices()) {
+    ObjectAdapterMemento convertedInput=select2Field.getConvertedInput();
+    getModel().setPending(convertedInput);
+    if (select2Field != null) {
+      select2Field.getModel().setObject(convertedInput);
+    }
+    final ObjectAdapter adapter=convertedInput != null ? convertedInput.getObjectAdapter(ConcurrencyChecking.NO_CHECK) : null;
+    getModel().setObject(adapter);
+  }
+  final ObjectAdapter pendingAdapter=getModel().getPendingAdapter();
+  entityLink.setConvertedInput(pendingAdapter);
+}

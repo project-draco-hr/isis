@@ -1,0 +1,26 @@
+{
+  if (!isEditableWithEitherAutoCompleteOrChoices()) {
+    Components.permanentlyHide(entityLink,ReferencePanel.ID_AUTO_COMPLETE);
+    select2Field=null;
+    return;
+  }
+  final IModel<ObjectAdapterMemento> model=Util.createModel(getModel().asScalarModelWithPending());
+  if (select2Field == null) {
+    entityLink.setRequired(getModel().isRequired());
+    select2Field=Select2ChoiceUtil.newSelect2Choice(ReferencePanel.ID_AUTO_COMPLETE,model,getModel());
+    setProviderAndCurrAndPending(select2Field,getModel().getActionArgsHint());
+    if (!getModel().hasChoices()) {
+      final Settings settings=select2Field.getSettings();
+      final int minLength=getModel().getAutoCompleteMinLength();
+      settings.setMinimumInputLength(minLength);
+      settings.setPlaceholder(getModel().getName());
+    }
+    entityLink.addOrReplace(select2Field);
+  }
+ else {
+    select2Field.clearInput();
+  }
+  if (labelIfRegular != null) {
+    Components.permanentlyHide(labelIfRegular,ReferencePanel.ID_ENTITY_ICON_AND_TITLE);
+  }
+}
