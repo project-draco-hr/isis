@@ -1,6 +1,43 @@
 {
   final ObjectAdapter adapter=getModel().getPendingElseCurrentAdapter();
-  syncLinkWithInput(adapter);
-  syncLinkWithInputIfAutoCompleteOrChoices();
-  syncVisibilityAndUsability();
+  if (adapter != null) {
+    if (getComponentForRegular() != null) {
+      final EntityModel entityModelForLink=new EntityModel(adapter);
+      entityModelForLink.setContextAdapterIfAny(getModel().getContextAdapterIfAny());
+      entityModelForLink.setRenderingHint(getModel().getRenderingHint());
+      final ComponentFactory componentFactory=getComponentFactoryRegistry().findComponentFactory(ComponentType.ENTITY_ICON_AND_TITLE,entityModelForLink);
+      final Component component=componentFactory.createComponent(entityModelForLink);
+      ((MarkupContainer)getComponentForRegular()).addOrReplace(component);
+    }
+  }
+ else {
+    permanentlyHideEntityIconAndTitleIfInRegularMode();
+  }
+  if (isEditableWithEitherAutoCompleteOrChoices()) {
+    final IModel<ObjectAdapterMemento> model=Util.createModel(getModel().asScalarModelWithPending());
+    if (select2Field == null) {
+      entityLink.setRequired(getModel().isRequired());
+      select2Field=Select2ChoiceUtil.newSelect2Choice(ID_AUTO_COMPLETE,model,getModel());
+      setProviderAndCurrAndPending(select2Field,getModel().getActionArgsHint());
+      if (!getModel().hasChoices()) {
+        final Settings settings=select2Field.getSettings();
+        final int minLength=getModel().getAutoCompleteMinLength();
+        settings.setMinimumInputLength(minLength);
+        settings.setPlaceholder(getModel().getName());
+      }
+      entityLink.addOrReplace(select2Field);
+    }
+ else {
+      select2Field.clearInput();
+    }
+    permanentlyHideEntityIconAndTitleIfInRegularMode();
+    if (select2Field != null) {
+      final boolean mutability=entityLink.isEnableAllowed() && !getModel().isViewMode();
+      select2Field.setEnabled(mutability);
+    }
+  }
+ else {
+    Components.permanentlyHide(entityLink,ID_AUTO_COMPLETE);
+    select2Field=null;
+  }
 }
