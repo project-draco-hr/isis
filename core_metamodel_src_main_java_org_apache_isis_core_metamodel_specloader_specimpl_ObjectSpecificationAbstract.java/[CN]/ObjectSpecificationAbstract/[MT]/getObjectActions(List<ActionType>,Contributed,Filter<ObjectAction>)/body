@@ -7,8 +7,12 @@
   }
   final List<ObjectAction> actions=Lists.newArrayList();
   for (  final ActionType type : types) {
-    @SuppressWarnings("unchecked") final List<ObjectAction> filterActions=Lists.newArrayList(Iterables.filter(objectActions,Filters.asPredicate(Filters.and(ObjectAction.Filters.ofType(type),filter))));
-    actions.addAll(filterActions);
+    final Predicate<ObjectAction> predicate=Filters.asPredicate(Filters.and(ObjectAction.Filters.ofType(type),filter));
+    for (    ObjectAction objectAction : objectActions) {
+      if (predicate.apply(objectAction)) {
+        actions.add(objectAction);
+      }
+    }
   }
   return Lists.newArrayList(Iterables.filter(actions,ContributeeMember.Predicates.regularElse(contributed)));
 }

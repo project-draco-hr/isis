@@ -1,4 +1,18 @@
 {
-  String mementoFor=mementoFor(script,subkey,object);
-  return container.newViewModelInstance(FixtureResult.class,mementoFor);
+  if (object == null) {
+    return null;
+  }
+  if (object instanceof ViewModel || getContainer().isPersistent(object)) {
+  }
+ else {
+switch (nonPersistedObjectsStrategy) {
+case PERSIST:
+      getContainer().flush();
+    break;
+case IGNORE:
+  return null;
+}
+}
+String mementoFor=mementoFor(script,subkey,object);
+return getContainer().newViewModelInstance(FixtureResult.class,mementoFor);
 }
