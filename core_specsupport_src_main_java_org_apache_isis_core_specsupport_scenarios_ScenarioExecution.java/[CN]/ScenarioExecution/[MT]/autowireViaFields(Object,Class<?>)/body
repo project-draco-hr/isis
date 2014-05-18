@@ -1,0 +1,20 @@
+{
+  final List<Field> fields=Arrays.asList(cls.getDeclaredFields());
+  final Iterable<Field> injectFields=Iterables.filter(fields,new Predicate<Field>(){
+    @Override public boolean apply(    Field input){
+      final Inject annotation=input.getAnnotation(javax.inject.Inject.class);
+      return annotation != null;
+    }
+  }
+);
+  for (  final Field field : injectFields) {
+    final Object service=service(field.getType());
+    final Class<?> serviceClass=service.getClass();
+    field.setAccessible(true);
+    invokeInjectorField(field,object,service);
+  }
+  final Class<?> superclass=cls.getSuperclass();
+  if (superclass != null) {
+    autowireViaFields(object,superclass);
+  }
+}
