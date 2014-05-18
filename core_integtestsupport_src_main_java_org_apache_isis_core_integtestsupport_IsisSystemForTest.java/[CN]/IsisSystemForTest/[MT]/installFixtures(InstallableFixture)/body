@@ -4,4 +4,17 @@
     fid.addFixture(fixture);
   }
   fid.installFixtures();
+  final IsisTransactionManager transactionManager=getTransactionManager();
+  final IsisTransaction transaction=transactionManager.getTransaction();
+  final State transactionState=transaction.getState();
+  if (transactionState.canCommit()) {
+    commitTran();
+    try {
+      bounceSystem();
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+    beginTran();
+  }
 }
