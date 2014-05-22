@@ -1,0 +1,24 @@
+{
+  final IsisTransactionManager transactionManager=getTransactionManager();
+  final IsisTransaction transaction=transactionManager.getTransaction();
+  if (transaction == null) {
+    Assert.fail("No transaction exists");
+    return;
+  }
+  transactionManager.endTransaction();
+  final State state=transaction.getState();
+switch (state) {
+case COMMITTED:
+    break;
+case ABORTED:
+  break;
+case IN_PROGRESS:
+Assert.fail("Transaction is still in state of '" + state + "'");
+break;
+case MUST_ABORT:
+Assert.fail("Transaction is still in state of '" + state + "'");
+break;
+default :
+Assert.fail("Unknown transaction state '" + state + "'");
+}
+}

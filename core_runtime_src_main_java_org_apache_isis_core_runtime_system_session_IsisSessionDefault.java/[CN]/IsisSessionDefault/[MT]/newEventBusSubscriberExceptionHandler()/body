@@ -1,0 +1,12 @@
+{
+  return new SubscriberExceptionHandler(){
+    @Override public void handleException(    Throwable exception,    SubscriberExceptionContext context){
+      if (exception instanceof RecoverableException || exception instanceof NonRecoverableException) {
+        getTransactionManager().getTransaction().setAbortCause(new IsisApplicationException(exception));
+      }
+ else {
+      }
+    }
+  }
+;
+}

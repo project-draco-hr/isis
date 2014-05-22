@@ -1,0 +1,11 @@
+{
+  assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.AcceptEvents));
+  assertThat(toDoItem.isComplete(),is(false));
+  toDoItem.completed();
+  assertThat(toDoItem.isComplete(),is(true));
+  final ToDoItem.CompletedEvent ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(ToDoItem.CompletedEvent.class);
+  assertThat(ev,is(not(nullValue())));
+  ToDoItem source=ev.getSource();
+  assertThat(source,is(equalTo(unwrap(toDoItem))));
+  assertThat(ev.getIdentifier().getMemberName(),is("completed"));
+}

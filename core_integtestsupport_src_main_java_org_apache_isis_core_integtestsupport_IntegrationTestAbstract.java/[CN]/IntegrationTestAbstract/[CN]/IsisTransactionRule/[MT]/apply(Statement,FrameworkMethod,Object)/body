@@ -6,10 +6,16 @@
       isft.beginTran();
       try {
         base.evaluate();
-        isft.commitTran();
+        isft.endTran();
       }
  catch (      Throwable e) {
         isft.bounceSystem();
+        final List<Throwable> causalChain=Throwables.getCausalChain(e);
+        for (        Throwable cause : causalChain) {
+          if (cause instanceof RecoverableException || cause instanceof NonRecoverableException) {
+            throw cause;
+          }
+        }
         throw e;
       }
     }

@@ -2,10 +2,4 @@
   assertThat(toDoItem.getDependencies().size(),is(1));
   toDoItem.remove(otherToDoItem);
   assertThat(toDoItem.getDependencies().size(),is(0));
-  @SuppressWarnings("unchecked") final CollectionRemovedFromEvent<ToDoItem,ToDoItem> ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(CollectionRemovedFromEvent.class);
-  assertThat(ev,is(not(nullValue())));
-  ToDoItem source=ev.getSource();
-  assertThat(source,is(equalTo(unwrap(toDoItem))));
-  assertThat(ev.getIdentifier().getMemberName(),is("dependencies"));
-  assertThat(ev.getValue(),is(unwrap(otherToDoItem)));
 }
