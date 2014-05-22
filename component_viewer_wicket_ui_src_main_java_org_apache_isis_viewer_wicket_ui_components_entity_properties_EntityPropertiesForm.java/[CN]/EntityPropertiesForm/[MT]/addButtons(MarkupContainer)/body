@@ -31,7 +31,7 @@
   }
 ;
   markupContainer.add(editButton);
-  okButton=new ButtonWithPreValidateHook(ID_OK_BUTTON,Model.of("OK")){
+  okButton=new AjaxButtonWithPreValidateHook(ID_OK_BUTTON,Model.of("OK")){
     private static final long serialVersionUID=1L;
     @Override public String preValidate(){
       try {
@@ -63,7 +63,11 @@
         super.validate();
       }
     }
-    @Override public void onSubmit(){
+    @Override protected void onError(    AjaxRequestTarget target,    Form<?> form){
+      super.onError(target,form);
+      toEditMode(target);
+    }
+    @Override protected void onSubmit(    AjaxRequestTarget target,    Form<?> form){
       if (getForm().hasError()) {
         return;
       }
@@ -85,7 +89,7 @@
         if (message == null) {
           throw ex;
         }
-        toEditMode(null);
+        toEditMode(target);
         return;
       }
       try {
