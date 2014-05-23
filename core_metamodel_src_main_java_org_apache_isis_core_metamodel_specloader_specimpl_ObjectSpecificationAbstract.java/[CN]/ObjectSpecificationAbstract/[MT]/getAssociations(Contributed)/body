@@ -1,11 +1,12 @@
 {
-  if (contributee.isIncluded() && !contributeeAssociationsAdded) {
-    List<ObjectAssociation> associations=Lists.newArrayList(this.associations);
-    final List<ObjectAssociation> contributeeAssociations=createContributeeAssociations();
-    associations.addAll(contributeeAssociations);
-    sortAndUpdateAssociations(associations);
-    contributeeAssociationsAdded=true;
+  if (contributed.isIncluded() && !contributeeAssociationsAdded) {
+synchronized (this.associations) {
+      List<ObjectAssociation> associations=Lists.newArrayList(this.associations);
+      associations.addAll(createContributeeAssociations());
+      sortAndUpdateAssociations(associations);
+      contributeeAssociationsAdded=true;
+    }
   }
   final List<ObjectAssociation> associations=Lists.newArrayList(this.associations);
-  return Lists.newArrayList(Iterables.filter(associations,ContributeeMember.Predicates.regularElse(contributee)));
+  return Lists.newArrayList(Iterables.filter(associations,ContributeeMember.Predicates.regularElse(contributed)));
 }

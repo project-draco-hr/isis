@@ -1,18 +1,16 @@
 {
   if (contributed.isIncluded() && !contributeeActionsAdded) {
-    final List<ObjectAction> actions=Lists.newArrayList(this.objectActions);
-    actions.addAll(createContributeeActions());
-    sortAndUpdateActions(actions);
-    contributeeActionsAdded=true;
+synchronized (this.objectActions) {
+      final List<ObjectAction> actions=Lists.newArrayList(this.objectActions);
+      actions.addAll(createContributeeActions());
+      sortCacheAndUpdateActions(actions);
+      contributeeActionsAdded=true;
+    }
   }
   final List<ObjectAction> actions=Lists.newArrayList();
   for (  final ActionType type : types) {
-    final Predicate<ObjectAction> predicate=Filters.asPredicate(Filters.and(ObjectAction.Filters.ofType(type),filter));
-    for (    ObjectAction objectAction : objectActions) {
-      if (predicate.apply(objectAction)) {
-        actions.add(objectAction);
-      }
-    }
+    final Collection<ObjectAction> filterActions=Collections2.filter(objectActionsByType.get(type),Filters.asPredicate(filter));
+    actions.addAll(filterActions);
   }
   return Lists.newArrayList(Iterables.filter(actions,ContributeeMember.Predicates.regularElse(contributed)));
 }

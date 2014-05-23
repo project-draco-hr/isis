@@ -1,0 +1,12 @@
+{
+  final List<ObjectAction> orderedActions=sortActions(objectActions);
+synchronized (this.objectActions) {
+    this.objectActions.clear();
+    this.objectActions.addAll(orderedActions);
+    for (    final ActionType type : ActionType.values()) {
+      final List<ObjectAction> objectActionForType=objectActionsByType.get(type);
+      objectActionForType.clear();
+      objectActionForType.addAll(Collections2.filter(objectActions,ObjectAction.Predicates.ofType(type)));
+    }
+  }
+}
