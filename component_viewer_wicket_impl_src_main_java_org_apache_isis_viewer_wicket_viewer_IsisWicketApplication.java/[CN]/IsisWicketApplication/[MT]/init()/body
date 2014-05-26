@@ -3,14 +3,7 @@
     super.init();
     configureWebJars();
     String isisConfigDir=getServletContext().getInitParameter("isis.config.dir");
-    final String loggingPropertiesDir;
-    if (isisConfigDir != null) {
-      loggingPropertiesDir=isisConfigDir;
-    }
- else {
-      loggingPropertiesDir=getServletContext().getRealPath("/WEB-INF");
-    }
-    loggingConfigurer.configureLogging(loggingPropertiesDir,new String[0]);
+    configureLogging(isisConfigDir);
     getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
     getRequestCycleListeners().add(new WebRequestCycleForIsis());
     getResourceSettings().setParentFolderPlaceholder("$up$");
