@@ -16,12 +16,7 @@
     this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(deploymentType,configuration));
     initWicketComponentInjection(injector);
     buildCssBundle();
-    setHeaderResponseDecorator(new IHeaderResponseDecorator(){
-      @Override public IHeaderResponse decorate(      IHeaderResponse response){
-        return new JavaScriptFilteredIntoFooterHeaderResponse(response,"footerJS");
-      }
-    }
-);
+    filterJavascriptContributions();
     mountPage("/entity/${objectOid}",PageType.ENTITY);
     mountPage("/action/${objectOid}/${actionOwningSpec}/${actionId}/${actionType}",PageType.ACTION_PROMPT);
     @SuppressWarnings("unused") SharedResources sharedResources=getSharedResources();
