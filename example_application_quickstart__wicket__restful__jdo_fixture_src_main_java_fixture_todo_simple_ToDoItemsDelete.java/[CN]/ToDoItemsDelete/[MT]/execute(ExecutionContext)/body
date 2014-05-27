@@ -1,5 +1,4 @@
 {
   final String ownedBy=Util.coalesce(user,executionContext.getParameters(),getContainer().getUser().getName());
-  installFor(ownedBy);
-  getContainer().flush();
+  isisJdoSupport.executeUpdate("delete from \"ToDoItem\" where \"ownedBy\" = '" + ownedBy + "'");
 }
