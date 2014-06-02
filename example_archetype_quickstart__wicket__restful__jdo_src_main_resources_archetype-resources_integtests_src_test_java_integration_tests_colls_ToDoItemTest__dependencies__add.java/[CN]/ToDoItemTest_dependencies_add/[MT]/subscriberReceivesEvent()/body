@@ -1,0 +1,10 @@
+{
+  assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.AcceptEvents));
+  toDoItem.add(otherToDoItem);
+  @SuppressWarnings("unchecked") final CollectionAddedToEvent<ToDoItem,ToDoItem> ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(CollectionAddedToEvent.class);
+  assertThat(ev,is(not(nullValue())));
+  ToDoItem source=ev.getSource();
+  assertThat(source,is(equalTo(unwrap(toDoItem))));
+  assertThat(ev.getIdentifier().getMemberName(),is("dependencies"));
+  assertThat(ev.getValue(),is(unwrap(otherToDoItem)));
+}

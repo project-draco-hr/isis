@@ -1,0 +1,11 @@
+{
+  rejectIfRequired();
+  recordEvent(ev);
+  if (ev.getIdentifier().getMemberName().contains("description")) {
+    String newValue=(String)ev.getNewValue();
+    if (newValue.matches(".*demo veto.*")) {
+      throw new RecoverableException("oh no you don't! " + ev.getNewValue());
+    }
+  }
+  LOG.info(container.titleOf(ev.getSource()) + ", changed " + ev.getIdentifier().getMemberName()+ " : "+ ev.getOldValue()+ " -> "+ ev.getNewValue());
+}
