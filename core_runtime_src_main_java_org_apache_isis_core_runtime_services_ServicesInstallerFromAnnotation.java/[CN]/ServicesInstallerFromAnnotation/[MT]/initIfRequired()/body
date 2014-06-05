@@ -1,0 +1,15 @@
+{
+  if (initialized) {
+    return;
+  }
+  try {
+    packagePrefixes=getConfiguration().getString(PACKAGE_PREFIX_KEY);
+    if (Strings.isNullOrEmpty(packagePrefixes)) {
+      throw new IllegalStateException("Could not locate '" + PACKAGE_PREFIX_KEY + "' key in property files - aborting");
+    }
+    domainServices=addAllDomainServices();
+  }
+  finally {
+    initialized=true;
+  }
+}
