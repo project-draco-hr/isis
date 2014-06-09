@@ -1,0 +1,13 @@
+{
+  initIfRequired();
+  for (  final String packagePrefix : Iterables.transform(Splitter.on(",").split(packagePrefixes),trim())) {
+    Reflections reflections=new Reflections(packagePrefix);
+    final Iterable<Class<?>> classes=Iterables.filter(reflections.getTypesAnnotatedWith(DomainService.class),instantiatable());
+    for (    final Class<?> cls : classes) {
+      final DomainService domainService=cls.getAnnotation(DomainService.class);
+      final String order=domainService.menuOrder();
+      final String serviceName=cls.getName();
+      ServicesInstallerUtils.appendInPosition(positionedServices,order,serviceName);
+    }
+  }
+}

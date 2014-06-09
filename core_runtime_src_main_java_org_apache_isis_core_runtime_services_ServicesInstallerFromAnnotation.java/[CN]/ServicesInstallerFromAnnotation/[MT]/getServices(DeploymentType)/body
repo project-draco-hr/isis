@@ -1,4 +1,11 @@
 {
   initIfRequired();
-  return domainServices;
+  List<Object> serviceList=servicesByDeploymentType.get(deploymentType);
+  if (serviceList == null) {
+    final SortedMap<String,SortedSet<String>> positionedServices=Maps.newTreeMap(new DeweyOrderComparator());
+    appendServices(deploymentType,positionedServices);
+    serviceList=ServicesInstallerUtils.instantiateServicesFrom(positionedServices,serviceInstantiator);
+    servicesByDeploymentType.put(deploymentType,serviceList);
+  }
+  return serviceList;
 }

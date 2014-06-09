@@ -8,7 +8,7 @@
   assertThat(repr.getDomainType(),is(nullValue()));
   assertThat(repr.getInstanceId(),is(nullValue()));
   assertThat(repr.getServiceId(),is("JdkValuedEntities"));
-  assertThat(repr.getSelf(),isLink().httpMethod(RestfulHttpMethod.GET));
+  assertThat(repr.getSelf(),isLink().httpMethod(RestfulHttpMethod.GET).build());
   assertThat(repr.getMembers(),isMap());
   assertThat(repr.getMembers().size(),is(2));
   DomainObjectMemberRepresentation listMemberRepr=repr.getAction("list");
@@ -17,15 +17,15 @@
   assertThat(listMemberRepr.getLinks(),isArray());
   assertThat(listMemberRepr.getLinks().size(),is(1));
   LinkRepresentation listMemberReprDetailsLink=listMemberRepr.getLinkWithRel(Rel.DETAILS);
-  assertThat(listMemberReprDetailsLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/services/JdkValuedEntities/actions/list")).returning(HttpStatusCode.OK).responseEntityWithSelfHref(listMemberReprDetailsLink.getHref()));
+  assertThat(listMemberReprDetailsLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/services/JdkValuedEntities/actions/list")).returning(HttpStatusCode.OK).responseEntityWithSelfHref(listMemberReprDetailsLink.getHref()).build());
   assertThat(repr.getLinks(),isArray());
   assertThat(repr.getLinks().size(),is(3));
   LinkRepresentation describedByLink=repr.getLinkWithRel(Rel.DESCRIBEDBY);
-  assertThat(describedByLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/domain-types/JdkValuedEntities")));
-  assertThat(describedByLink,isLink(client).returning(HttpStatusCode.OK).responseEntityWithSelfHref(describedByLink.getHref()));
+  assertThat(describedByLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/domain-types/JdkValuedEntities")).build());
+  assertThat(describedByLink,isLink(client).returning(HttpStatusCode.OK).responseEntityWithSelfHref(describedByLink.getHref()).build());
   assertThat(repr.getLinkWithRel(Rel.PERSIST),is(nullValue()));
   assertThat(repr.getLinkWithRel(Rel.UPDATE),is(nullValue()));
   assertThat(repr.getLinkWithRel(Rel.DELETE),is(nullValue()));
   assertThat(repr.getExtensions(),isMap());
-  assertThat(repr.getOid(),matches("JdkValuedEntities:2"));
+  assertThat(repr.getOid(),matches("JdkValuedEntities:16"));
 }

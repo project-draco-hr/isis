@@ -1,0 +1,10 @@
+{
+  final String group=deploymentType != null ? deploymentType.name() : null;
+  final String root=ConfigurationConstants.ROOT + (group == null ? "" : group.toLowerCase() + ".");
+  if (getConfiguration().getBoolean(root + EXPLORATION_OBJECTS)) {
+    final DeploymentType explorationDeploymentType=DeploymentType.lookup(getConfiguration().getString(SystemConstants.DEPLOYMENT_TYPE_KEY));
+    if (explorationDeploymentType.isExploring()) {
+      ServicesInstallerUtils.appendInPosition(positionedServices,"" + Integer.MAX_VALUE,ObjectFixtureService.class.getName());
+    }
+  }
+}

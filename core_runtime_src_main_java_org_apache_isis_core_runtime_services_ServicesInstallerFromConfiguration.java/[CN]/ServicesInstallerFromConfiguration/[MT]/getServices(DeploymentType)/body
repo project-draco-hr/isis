@@ -1,10 +1,11 @@
 {
   LOG.info("installing " + this.getClass().getName());
-  final List<Object> serviceList=Lists.newArrayList();
-  appendServices(getConfiguration(),null,serviceList);
-  appendServices(getConfiguration(),deploymentType.name(),serviceList);
-  if (serviceList.size() == 0) {
-    throw new InitialisationException("No services specified");
+  List<Object> serviceList=servicesByDeploymentType.get(deploymentType);
+  if (serviceList == null) {
+    final SortedMap<String,SortedSet<String>> positionedServices=Maps.newTreeMap(new DeweyOrderComparator());
+    appendServices(deploymentType,positionedServices);
+    serviceList=ServicesInstallerUtils.instantiateServicesFrom(positionedServices,serviceInstantiator);
+    servicesByDeploymentType.put(deploymentType,serviceList);
   }
-  return Collections.unmodifiableList(serviceList);
+  return serviceList;
 }
