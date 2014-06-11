@@ -1,5 +1,5 @@
 {
-  final ObjectAdapter adapter=getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
+  ObjectAdapter adapter=getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
   for (  final ScalarModel scalarModel : propertyScalarModels.values()) {
     final OneToOneAssociation property=scalarModel.getPropertyMemento().getProperty();
     if (property.containsDoOpFacet(NotPersistedFacet.class)) {
@@ -8,6 +8,16 @@
     final ObjectAdapter associate=scalarModel.getObject();
     property.set(adapter,associate);
   }
+  final ViewModelFacet viewModelFacet=adapter.getSpecification().getFacet(ViewModelFacet.class);
+  if (viewModelFacet != null) {
+    final Object viewModel=adapter.getObject();
+    final boolean cloneable=viewModelFacet.isCloneable(viewModel);
+    if (cloneable) {
+      final Object newViewModel=viewModelFacet.clone(viewModel);
+      adapter=getAdapterManager().adapterFor(newViewModel);
+    }
+  }
   getObjectAdapterMemento().setAdapter(adapter);
   toViewMode();
+  return adapter;
 }
