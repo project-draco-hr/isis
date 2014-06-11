@@ -1,0 +1,16 @@
+{
+  final Object[] pComponent=new Object[1];
+  page.visitChildren(new DeepChildFirstVisitor(){
+    @Override public void component(    Component component,    IVisit<Void> visit){
+      if (cls.isAssignableFrom(component.getClass())) {
+        pComponent[0]=component;
+        visit.stop();
+      }
+    }
+    @Override public boolean preCheck(    Component component){
+      return false;
+    }
+  }
+);
+  return (T)pComponent[0];
+}
