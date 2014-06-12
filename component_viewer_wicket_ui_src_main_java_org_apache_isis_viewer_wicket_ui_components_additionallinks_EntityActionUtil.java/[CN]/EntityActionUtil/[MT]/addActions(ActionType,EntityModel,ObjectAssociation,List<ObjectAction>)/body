@@ -1,7 +1,10 @@
 {
   final ObjectSpecification adapterSpec=entityModel.getTypeOfSpecification();
   final ObjectAdapter adapter=entityModel.load(ConcurrencyChecking.NO_CHECK);
-  @SuppressWarnings({"unchecked","deprecation"}) Filter<ObjectAction> filter=Filters.and(ObjectAction.Filters.memberOrderOf(association),EntityActionUtil.dynamicallyVisibleFor(adapter),ObjectAction.Filters.notBulkOnly());
+  final AuthenticationSessionProvider asa=(AuthenticationSessionProvider)Session.get();
+  AuthenticationSession authSession=asa.getAuthenticationSession();
+  final ObjectSpecification objectSpecification=entityModel.getTypeOfSpecification();
+  @SuppressWarnings({"unchecked","deprecation"}) Filter<ObjectAction> filter=Filters.and(ObjectAction.Filters.memberOrderOf(association),ObjectAction.Filters.dynamicallyVisible(authSession,adapter,Where.ANYWHERE),ObjectAction.Filters.notBulkOnly(),ObjectAction.Filters.excludeWizardActions(objectSpecification));
   final List<ObjectAction> userActions=adapterSpec.getObjectActions(type,Contributed.INCLUDED,filter);
   associatedActions.addAll(userActions);
   return userActions;

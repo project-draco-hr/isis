@@ -1,0 +1,27 @@
+{
+  final AuthenticationSession session=getAuthenticationSession();
+  final ObjectAdapter adapter=targetAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
+  final Consent visibility=objectAction.isVisible(session,adapter,where);
+  if (visibility.isVetoed()) {
+    return null;
+  }
+  final LinkAndLabel linkAndLabel=cssMenuContext.getCssMenuLinkFactory().newLink(targetAdapterMemento,objectAction,PageAbstract.ID_MENU_LINK,cssMenuContext.getActionPromptProvider());
+  if (linkAndLabel == null) {
+    return null;
+  }
+  final AbstractLink link=linkAndLabel.getLink();
+  final String actionLabel=linkAndLabel.getLabel();
+  final Consent usability=objectAction.isUsable(session,adapter,where);
+  final String reasonDisabledIfAny=usability.getReason();
+  final DescribedAsFacet describedAsFacet=objectAction.getFacet(DescribedAsFacet.class);
+  final String descriptionIfAny=describedAsFacet != null ? describedAsFacet.value() : null;
+  final CssClassFacet cssClassFacet=objectAction.getFacet(CssClassFacet.class);
+  final boolean blobOrClob=returnsBlobOrClob(objectAction);
+  final boolean prototype=isExplorationOrPrototype(objectAction);
+  final String actionIdentifier=actionIdentifierFor(objectAction);
+  Builder builder=newSubMenuItem(actionLabel).link(link).describedAs(descriptionIfAny).enabled(reasonDisabledIfAny).returnsBlobOrClob(blobOrClob).prototyping(prototype).withActionIdentifier(actionIdentifier);
+  if (cssClassFacet != null) {
+    builder.withCssClass(cssClassFacet.value());
+  }
+  return builder;
+}

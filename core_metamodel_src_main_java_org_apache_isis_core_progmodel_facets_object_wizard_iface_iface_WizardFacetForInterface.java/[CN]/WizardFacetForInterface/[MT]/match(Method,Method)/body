@@ -1,0 +1,23 @@
+{
+  final Class<?> declaringClass1=method1.getDeclaringClass();
+  final Class<?> declaringClass2=method2.getDeclaringClass();
+  if (!declaringClass1.isAssignableFrom(declaringClass2) && !declaringClass2.isAssignableFrom(declaringClass1)) {
+    return false;
+  }
+  final String method1Name=method1.getName();
+  final String method2Name=method2.getName();
+  if (!method1Name.equals(method2Name)) {
+    return false;
+  }
+  final Class<?>[] method1ParameterTypes=method1.getParameterTypes();
+  final Class<?>[] method2ParameterTypes=method2.getParameterTypes();
+  if (method1ParameterTypes.length != method2ParameterTypes.length) {
+    return false;
+  }
+  for (int i=0; i < method1ParameterTypes.length; i++) {
+    if (method1ParameterTypes[i] != method2ParameterTypes[i]) {
+      return false;
+    }
+  }
+  return true;
+}

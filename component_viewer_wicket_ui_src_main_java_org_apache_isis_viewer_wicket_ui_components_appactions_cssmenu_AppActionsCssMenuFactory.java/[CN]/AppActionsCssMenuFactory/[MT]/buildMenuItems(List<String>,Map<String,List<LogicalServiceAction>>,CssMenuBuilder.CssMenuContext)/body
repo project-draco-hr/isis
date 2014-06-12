@@ -1,0 +1,25 @@
+{
+  final List<CssMenuItem> menuItems=Lists.newArrayList();
+  for (  String serviceName : serviceNamesInOrder) {
+    final CssMenuItem serviceMenuItem=CssMenuItem.newMenuItem(serviceName).build();
+    final List<LogicalServiceAction> serviceActionsForName=serviceActionsByName.get(serviceName);
+    for (    LogicalServiceAction logicalServiceAction : serviceActionsForName) {
+      final ObjectAdapter serviceAdapter=logicalServiceAction.serviceAdapter;
+      final ObjectSpecification serviceSpec=serviceAdapter.getSpecification();
+      if (serviceSpec.isHidden()) {
+        continue;
+      }
+      final ObjectAdapterMemento serviceAdapterMemento=logicalServiceAction.serviceAdapterMemento;
+      final ObjectAction objectAction=logicalServiceAction.objectAction;
+      final Builder subMenuItemBuilder=serviceMenuItem.newSubMenuItem(serviceAdapterMemento,objectAction,cssMenuContext);
+      if (subMenuItemBuilder == null) {
+        continue;
+      }
+      subMenuItemBuilder.build();
+    }
+    if (serviceMenuItem.hasSubMenuItems()) {
+      menuItems.add(serviceMenuItem);
+    }
+  }
+  return menuItems;
+}

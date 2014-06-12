@@ -1,0 +1,24 @@
+{
+  final List<ObjectAction> associatedActions=Lists.newArrayList();
+  addActions(ActionType.USER,entityModel,association,associatedActions);
+  if (deploymentType.isPrototyping()) {
+    addActions(ActionType.EXPLORATION,entityModel,association,associatedActions);
+    addActions(ActionType.PROTOTYPE,entityModel,association,associatedActions);
+  }
+  Collections.sort(associatedActions,new Comparator<ObjectAction>(){
+    @Override public int compare(    ObjectAction o1,    ObjectAction o2){
+      final MemberOrderFacet m1=o1.getFacet(MemberOrderFacet.class);
+      final MemberOrderFacet m2=o2.getFacet(MemberOrderFacet.class);
+      return memberOrderFacetComparator.compare(m1,m2);
+    }
+  }
+);
+  final ActionLinkFactory linkFactory=new EntityActionLinkFactory(entityModel);
+  final ObjectAdapterMemento adapterMemento=entityModel.getObjectAdapterMemento();
+  return Lists.transform(associatedActions,new Function<ObjectAction,LinkAndLabel>(){
+    @Override public LinkAndLabel apply(    ObjectAction objectAction){
+      return linkFactory.newLink(adapterMemento,objectAction,LinksSelectorPanelAbstract.ID_ADDITIONAL_LINK,actionPromptProvider);
+    }
+  }
+);
+}

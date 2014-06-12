@@ -1,0 +1,19 @@
+{
+  final NotContributedFacet notContributed=action.getFacet(NotContributedFacet.class);
+  if (notContributed != null && notContributed.toActions()) {
+    return;
+  }
+  Builder subMenuItemBuilder=null;
+  final ObjectAdapterMemento targetAdapterMemento=adapterMemento;
+  if (targetAdapterMemento != null) {
+    subMenuItemBuilder=parent.newSubMenuItem(targetAdapterMemento,action,cssMenuContext);
+  }
+ else {
+    if (action.containsDoOpFacet(BulkFacet.class)) {
+      subMenuItemBuilder=parent.newSubMenuItem(action,cssMenuContext);
+    }
+  }
+  if (subMenuItemBuilder != null) {
+    subMenuItemBuilder.build();
+  }
+}
