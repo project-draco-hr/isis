@@ -7,11 +7,11 @@
     for (int i=0; i < arguments.length; i++) {
       executionParameters[i]=unwrap(arguments[i]);
     }
-    final Object object=unwrap(targetAdapter);
+    final Object targetPojo=unwrap(targetAdapter);
     final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
     if (bulkFacet != null && bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
       bulkInteractionContext.setInvokedAs(InvokedAs.REGULAR);
-      bulkInteractionContext.setDomainObjects(Collections.singletonList(object));
+      bulkInteractionContext.setDomainObjects(Collections.singletonList(targetPojo));
     }
     if (command != null && command.getExecutor() == Executor.USER && owningAction != null) {
       if (command.getTarget() != null) {
@@ -60,14 +60,25 @@
       if (command != null) {
         command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
       }
-      final Object result=method.invoke(object,executionParameters);
+      Object result=method.invoke(targetPojo,executionParameters);
       if (LOG.isDebugEnabled()) {
         LOG.debug(" action result " + result);
       }
       if (result == null) {
+        if (targetAdapter.getSpecification().isViewModelCloneable(null)) {
+          final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)targetAdapter.getObject();
+          final Object clone=cloneable.clone();
+          final ObjectAdapter clonedAdapter=getAdapterManager().adapterFor(clone);
+          return InvocationResult.forActionThatReturned(clonedAdapter);
+        }
         return InvocationResult.forActionThatReturned(null);
       }
-      final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
+      ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
+      if (resultAdapter.getSpecification().isViewModelCloneable(resultAdapter)) {
+        final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)result;
+        result=cloneable.clone();
+        resultAdapter=getAdapterManager().adapterFor(result);
+      }
       final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
       resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
       if (command != null) {

@@ -1,5 +1,5 @@
 {
-  editButton=new AjaxButton(ID_EDIT_BUTTON,Model.of("Edit")){
+  editButton=new AjaxButtonWithOnError(ID_EDIT_BUTTON,Model.of("Edit")){
     private static final long serialVersionUID=1L;
     @Override public void validate(){
       try {
@@ -15,9 +15,6 @@
       getEntityModel().resetPropertyModels();
       toEditMode(target);
     }
-    @Override protected void onError(    final AjaxRequestTarget target,    final Form<?> form){
-      toEditMode(target);
-    }
     @Override protected void updateAjaxAttributes(    AjaxRequestAttributes attributes){
       super.updateAjaxAttributes(attributes);
       attributes.getAjaxCallListeners().add(new org.apache.wicket.ajax.attributes.AjaxCallListener(){
@@ -31,86 +28,10 @@
   }
 ;
   markupContainer.add(editButton);
-  okButton=new AjaxButtonWithPreValidateHook(ID_OK_BUTTON,Model.of("OK")){
-    private static final long serialVersionUID=1L;
-    @Override public String preValidate(){
-      try {
-        getEntityModel().load(ConcurrencyChecking.CHECK);
-      }
- catch (      ConcurrencyException ex) {
-        String recognizedErrorMessage=recognizeException(ex);
-        if (recognizedErrorMessage == null) {
-          throw ex;
-        }
-        getEntityModel().load(ConcurrencyChecking.NO_CHECK);
-        getForm().clearInput();
-        getEntityModel().resetPropertyModels();
-        toViewMode(null);
-        toEditMode(null);
-        return recognizedErrorMessage;
-      }
-      return null;
-    }
-    @Override public void validate(){
-      EntityPropertiesForm form=EntityPropertiesForm.this;
-      String preValidationErrorIfAny=form.getPreValidationErrorIfAny();
-      if (preValidationErrorIfAny != null) {
-        feedbackOrNotifyAnyRecognizedError(preValidationErrorIfAny,form);
-        final EntityPage entityPage=new EntityPage(EntityPropertiesForm.this.getModelObject(),null);
-        EntityPropertiesForm.this.setResponsePage(entityPage);
-      }
- else {
-        super.validate();
-      }
-    }
-    @Override protected void onError(    AjaxRequestTarget target,    Form<?> form){
-      super.onError(target,form);
-      toEditMode(target);
-    }
-    @Override protected void onSubmit(    AjaxRequestTarget target,    Form<?> form){
-      if (getForm().hasError()) {
-        return;
-      }
-      final ObjectAdapter adapter=getEntityModel().getObject();
-      final Memento snapshotToRollbackToIfInvalid=new Memento(adapter);
-      getEntityModel().apply();
-      final String invalidReasonIfAny=getEntityModel().getReasonInvalidIfAny();
-      if (invalidReasonIfAny != null) {
-        getForm().error(invalidReasonIfAny);
-        snapshotToRollbackToIfInvalid.recreateObject();
-        toEditMode(null);
-        return;
-      }
-      try {
-        EntityPropertiesForm.this.getTransactionManager().flushTransaction();
-      }
- catch (      RuntimeException ex) {
-        String message=recognizeExceptionAndNotify(ex,EntityPropertiesForm.this);
-        if (message == null) {
-          throw ex;
-        }
-        toEditMode(target);
-        return;
-      }
-      try {
-        getEntityModel().resetPropertyModels();
-      }
- catch (      RuntimeException ex) {
-        throw ex;
-      }
-      toViewMode(null);
-      final ObjectAdapter objectAdapter=getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-      final EntityPage entityPage=new EntityPage(objectAdapter,null);
-      EntityPropertiesForm.this.setResponsePage(entityPage);
-    }
-  }
-;
+  okButton=new AjaxButtonForValidate(ID_OK_BUTTON,Model.of("OK"));
   markupContainer.add(okButton);
-  cancelButton=new AjaxButton(ID_CANCEL_BUTTON,Model.of("Cancel")){
+  cancelButton=new AjaxButtonForCancel(ID_CANCEL_BUTTON,Model.of("Cancel")){
     private static final long serialVersionUID=1L;
-{
-      setDefaultFormProcessing(false);
-    }
     @Override public void validate(){
       try {
         getEntityModel().load(ConcurrencyChecking.CHECK);
@@ -139,9 +60,6 @@
  catch (      RuntimeException ex) {
         throw ex;
       }
-      toViewMode(target);
-    }
-    @Override protected void onError(    final AjaxRequestTarget target,    final Form<?> form){
       toViewMode(target);
     }
   }

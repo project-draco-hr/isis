@@ -9,6 +9,10 @@
     if (existingFacet instanceof MandatoryFacetExplicitForProperty) {
       return;
     }
+    final Class<?> cls=processMethodContext.getCls();
+    if (ViewModel.class.isAssignableFrom(cls)) {
+      return;
+    }
   }
   boolean required=whetherRequired(processMethodContext,annotation);
   MandatoryFacet facet=annotation != null ? new MandatoryFacetDerivedFromJdoColumn(holder,required) : new MandatoryFacetInferredFromAbsenceOfJdoColumn(holder,required);
