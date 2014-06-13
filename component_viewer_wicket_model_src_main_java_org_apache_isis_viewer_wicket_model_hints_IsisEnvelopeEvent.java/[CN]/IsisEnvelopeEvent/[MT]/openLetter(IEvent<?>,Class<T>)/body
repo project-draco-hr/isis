@@ -1,0 +1,14 @@
+{
+  if (!(event.getPayload() instanceof IsisEnvelopeEvent)) {
+    return null;
+  }
+  final IsisEnvelopeEvent ev=(IsisEnvelopeEvent)event.getPayload();
+  final IsisEventLetterAbstract letter=ev.getLetter();
+  if (letter == null) {
+    return null;
+  }
+  if (!letterEventClass.isAssignableFrom(letter.getClass())) {
+    return null;
+  }
+  return letterEventClass.cast(letter);
+}
