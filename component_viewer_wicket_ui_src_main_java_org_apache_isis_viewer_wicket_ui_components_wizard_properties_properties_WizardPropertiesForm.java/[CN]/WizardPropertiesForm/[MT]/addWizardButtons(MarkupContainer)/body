@@ -1,0 +1,62 @@
+{
+  wizardNextButton=new AjaxButtonForValidate(ID_WIZARD_NEXT_BUTTON,Model.of("Next")){
+    private static final long serialVersionUID=1L;
+    @Override protected void doPreApply(){
+      wizardNext();
+    }
+  }
+;
+  markupContainer.add(wizardNextButton);
+  wizardPreviousButton=new AjaxButtonForValidate(ID_WIZARD_PREVIOUS_BUTTON,Model.of("Previous")){
+    private static final long serialVersionUID=1L;
+    @Override protected void doPreApply(){
+      wizardPrevious();
+    }
+  }
+;
+  markupContainer.add(wizardPreviousButton);
+  wizardFinishButton=new AjaxButtonForValidate(ID_WIZARD_FINISH_BUTTON,Model.of("Finish")){
+    private static final long serialVersionUID=1L;
+    @Override protected Object doPostApply(){
+      return wizardFinish();
+    }
+  }
+;
+  markupContainer.add(wizardFinishButton);
+  wizardCancelButton=new Button(ID_WIZARD_CANCEL_BUTTON,Model.of("Cancel")){
+    private static final long serialVersionUID=1L;
+{
+      setDefaultFormProcessing(false);
+    }
+    public void onSubmit(){
+      final PageAbstract page=determinePageToRedirectTo();
+      WizardPropertiesForm.this.setResponsePage(page);
+    }
+    private PageAbstract determinePageToRedirectTo(){
+      final List<EntityModel> list=getBreadcrumbs();
+      for (      EntityModel entityModel : list) {
+        ObjectSpecification objectSpec=entityModel.getTypeOfSpecification();
+        if (!objectSpec.isViewModel()) {
+          ObjectAdapter objectAdapter=entityModel.getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+          return new EntityPage(objectAdapter,null);
+        }
+      }
+      return new HomePage();
+    }
+    private List<EntityModel> getBreadcrumbs(){
+      final BreadcrumbModelProvider session=(BreadcrumbModelProvider)getSession();
+      final BreadcrumbModel breadcrumbModel=session.getBreadcrumbModel();
+      return breadcrumbModel.getList();
+    }
+  }
+;
+  markupContainer.add(wizardCancelButton);
+  wizardNextButton.setOutputMarkupPlaceholderTag(true);
+  wizardPreviousButton.setOutputMarkupPlaceholderTag(true);
+  wizardFinishButton.setOutputMarkupPlaceholderTag(true);
+  wizardCancelButton.setOutputMarkupPlaceholderTag(true);
+  wizardNextButton.add(new JGrowlBehaviour());
+  wizardPreviousButton.add(new JGrowlBehaviour());
+  wizardFinishButton.add(new JGrowlBehaviour());
+  wizardCancelButton.add(new JGrowlBehaviour());
+}

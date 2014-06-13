@@ -1,0 +1,12 @@
+{
+  final ApplicationAdvice applicationAdvice=super.appliesTo(model);
+  if (!applicationAdvice.applies()) {
+    return applicationAdvice;
+  }
+  final EntityModel entityModel=(EntityModel)model;
+  final ObjectSpecification specification=entityModel.getTypeOfSpecification();
+  if (specification.isWizard()) {
+    return ApplicationAdvice.APPLIES_EXCLUSIVELY;
+  }
+  return ApplicationAdvice.DOES_NOT_APPLY;
+}

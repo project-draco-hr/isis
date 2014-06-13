@@ -1,0 +1,59 @@
+{
+  final EntityModel entityModel=(EntityModel)getModel();
+  final ColumnSpans columnSpans=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class).getColumnSpans();
+  renderedFirstField=false;
+  MarkupContainer leftColumn=new WebMarkupContainer(ID_LEFT_COLUMN);
+  add(leftColumn);
+  boolean addedProperties;
+  if (columnSpans.getLeft() > 0) {
+    addedProperties=addPropertiesInColumn(leftColumn,MemberGroupLayoutHint.LEFT,columnSpans);
+    addButtons(leftColumn);
+    addWizardButtons(leftColumn);
+    addFeedbackGui(leftColumn);
+  }
+ else {
+    Components.permanentlyHide(this,ID_LEFT_COLUMN);
+    addedProperties=false;
+  }
+  if (!addedProperties) {
+    Components.permanentlyHide(this,ID_EDIT_BUTTON,ID_OK_BUTTON,ID_CANCEL_BUTTON,ID_WIZARD_NEXT_BUTTON,ID_WIZARD_PREVIOUS_BUTTON,ID_WIZARD_FINISH_BUTTON,ID_WIZARD_CANCEL_BUTTON,ID_FEEDBACK);
+  }
+  if (columnSpans.getMiddle() > 0) {
+    MarkupContainer middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
+    add(middleColumn);
+    addPropertiesInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,columnSpans);
+  }
+ else {
+    Components.permanentlyHide(this,ID_MIDDLE_COLUMN);
+  }
+  if (columnSpans.getRight() > 0) {
+    MarkupContainer rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
+    add(rightColumn);
+    addPropertiesInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,columnSpans);
+  }
+ else {
+    Components.permanentlyHide(this,ID_RIGHT_COLUMN);
+  }
+  if (columnSpans.getCollections() > 0) {
+    final String idCollectionsToShow;
+    final String idCollectionsToHide;
+    int collectionSpan;
+    if (columnSpans.exceedsRow()) {
+      idCollectionsToShow=ID_ENTITY_COLLECTIONS_OVERFLOW;
+      idCollectionsToHide=ID_ENTITY_COLLECTIONS;
+      collectionSpan=12;
+    }
+ else {
+      idCollectionsToShow=ID_ENTITY_COLLECTIONS;
+      idCollectionsToHide=ID_ENTITY_COLLECTIONS_OVERFLOW;
+      collectionSpan=columnSpans.getCollections();
+    }
+    final Component collectionsColumn=getComponentFactoryRegistry().addOrReplaceComponent(this,idCollectionsToShow,ComponentType.ENTITY_COLLECTIONS,entityModel);
+    addClassForSpan(collectionsColumn,collectionSpan);
+    Components.permanentlyHide(this,idCollectionsToHide);
+  }
+ else {
+    Components.permanentlyHide(this,ID_ENTITY_COLLECTIONS);
+    Components.permanentlyHide(this,ID_ENTITY_COLLECTIONS_OVERFLOW);
+  }
+}

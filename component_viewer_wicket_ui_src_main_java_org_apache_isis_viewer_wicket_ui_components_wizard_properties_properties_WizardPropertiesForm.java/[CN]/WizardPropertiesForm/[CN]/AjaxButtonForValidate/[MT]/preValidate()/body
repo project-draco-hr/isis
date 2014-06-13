@@ -1,0 +1,18 @@
+{
+  try {
+    getEntityModel().load(ConcurrencyChecking.CHECK);
+  }
+ catch (  ConcurrencyException ex) {
+    String recognizedErrorMessage=recognizeException(ex);
+    if (recognizedErrorMessage == null) {
+      throw ex;
+    }
+    getEntityModel().load(ConcurrencyChecking.NO_CHECK);
+    getForm().clearInput();
+    getEntityModel().resetPropertyModels();
+    toViewMode(null);
+    toEditMode(null);
+    return recognizedErrorMessage;
+  }
+  return null;
+}
