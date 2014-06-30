@@ -1,5 +1,11 @@
 {
-  if (isWrapper(domainObject)) {
+  if (domainObject instanceof WrappingObject) {
+    final WrappingObject wrapperObject=(WrappingObject)domainObject;
+    final ExecutionMode wrapperMode=wrapperObject.__isis_executionMode();
+    if (wrapperMode != mode) {
+      final Object underlyingDomainObject=wrapperObject.__isis_wrapped();
+      return (T)createProxy(underlyingDomainObject,mode);
+    }
     return domainObject;
   }
   return createProxy(domainObject,mode);

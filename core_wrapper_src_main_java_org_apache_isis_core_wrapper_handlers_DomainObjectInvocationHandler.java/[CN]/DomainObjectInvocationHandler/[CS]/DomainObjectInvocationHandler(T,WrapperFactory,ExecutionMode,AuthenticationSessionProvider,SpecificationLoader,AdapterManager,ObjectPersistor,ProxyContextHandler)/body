@@ -1,12 +1,16 @@
 {
-  super(delegate,embeddedViewer,mode);
+  super(delegate,wrapperFactory,mode);
   this.proxy=proxy;
   this.authenticationSessionProvider=authenticationSessionProvider;
   this.specificationLookup=specificationLookup;
   this.adapterManager=adapterManager;
   this.objectPersistor=objectPersistor;
+  this.executionMode=mode;
   try {
     titleMethod=delegate.getClass().getMethod("title",new Class[]{});
+    __isis_saveMethod=WrapperObject.class.getMethod("__isis_save",new Class[]{});
+    __isis_wrappedMethod=WrapperObject.class.getMethod("__isis_wrapped",new Class[]{});
+    __isis_executionMode=WrapperObject.class.getMethod("__isis_executionMode",new Class[]{});
     saveMethod=WrapperObject.class.getMethod("save",new Class[]{});
     wrappedMethod=WrapperObject.class.getMethod("wrapped",new Class[]{});
   }

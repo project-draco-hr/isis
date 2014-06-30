@@ -19,6 +19,9 @@
   if (isWrappedMethod(method)) {
     return getDelegate();
   }
+  if (isExecutionModeMethod(method)) {
+    return executionMode;
+  }
   final ObjectMember objectMember=locateAndCheckMember(method);
   final String memberName=objectMember.getName();
   final Intent intent=ImperativeFacet.Util.getIntent(objectMember,method);
@@ -57,11 +60,9 @@
     }
   }
   if (objectMember instanceof ObjectAction) {
-    checkVisibility(getAuthenticationSession(),targetAdapter,objectMember);
     if (intent == Intent.CHECK_IF_VALID) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
     }
-    checkUsability(getAuthenticationSession(),targetAdapter,objectMember);
     final ObjectAction noa=(ObjectAction)objectMember;
     return handleActionMethod(args,getAuthenticationSession(),targetAdapter,noa,memberName);
   }

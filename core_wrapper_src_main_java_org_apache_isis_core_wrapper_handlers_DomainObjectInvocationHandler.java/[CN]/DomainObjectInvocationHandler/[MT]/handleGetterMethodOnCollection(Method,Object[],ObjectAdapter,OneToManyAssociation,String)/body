@@ -2,7 +2,9 @@
   if (args.length != 0) {
     throw new IllegalArgumentException("Invoking a 'get' should have no arguments");
   }
-  checkVisibility(getAuthenticationSession(),targetAdapter,otma);
+  if (getExecutionMode().shouldEnforceRules()) {
+    checkVisibility(getAuthenticationSession(),targetAdapter,otma);
+  }
   resolveIfRequired(targetAdapter);
   final ObjectAdapter currentReferencedAdapter=otma.get(targetAdapter);
   final Object currentReferencedObj=AdapterUtils.unwrap(currentReferencedAdapter);

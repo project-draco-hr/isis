@@ -1,6 +1,8 @@
 {
-  final InteractionResult interactionResult=targetNoSpec.isValidResult(targetAdapter);
-  notifyListenersAndVetoIfRequired(interactionResult);
+  if (getExecutionMode().shouldEnforceRules()) {
+    final InteractionResult interactionResult=targetNoSpec.isValidResult(targetAdapter);
+    notifyListenersAndVetoIfRequired(interactionResult);
+  }
   if (getExecutionMode().shouldExecute()) {
     if (targetAdapter.isTransient()) {
       getObjectPersistor().makePersistent(targetAdapter);

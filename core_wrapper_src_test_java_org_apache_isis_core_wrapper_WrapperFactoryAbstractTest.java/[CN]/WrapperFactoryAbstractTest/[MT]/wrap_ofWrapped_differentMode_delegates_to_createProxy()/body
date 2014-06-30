@@ -1,0 +1,8 @@
+{
+  final DomainObject wrappedObject=new DomainObject();
+  final DomainObject domainObject=new WrappedDomainObject(wrappedObject,WrapperFactory.ExecutionMode.EXECUTE);
+  final DomainObject wrappingObject=wrapperFactory.wrap(domainObject,WrapperFactory.ExecutionMode.SKIP_RULES);
+  assertThat(wrappingObject,is(not(domainObject)));
+  assertThat(createProxyCalledWithDomainObject,is(wrappedObject));
+  assertThat(createProxyCalledWithMode,is(WrapperFactory.ExecutionMode.SKIP_RULES));
+}
