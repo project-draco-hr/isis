@@ -1,11 +1,20 @@
 {
+  toDoItemSubscriptions.reset();
   assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.AcceptEvents));
   assertThat(toDoItem.getDependencies().size(),is(1));
   toDoItem.remove(otherToDoItem);
-  @SuppressWarnings("unchecked") final CollectionRemovedFromEvent<ToDoItem,ToDoItem> ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(CollectionRemovedFromEvent.class);
-  assertThat(ev,is(not(nullValue())));
-  ToDoItem source=ev.getSource();
-  assertThat(source,is(equalTo(unwrap(toDoItem))));
-  assertThat(ev.getIdentifier().getMemberName(),is("dependencies"));
-  assertThat(ev.getValue(),is(unwrap(otherToDoItem)));
+  @SuppressWarnings("unchecked") final List<EventObject> receivedEvents=toDoItemSubscriptions.receivedEvents();
+  assertThat(receivedEvents.size(),is(2));
+  final EventObject ev0=receivedEvents.get(1);
+  Assert.assertThat(ev0 instanceof CollectionInteractionEvent,is(true));
+  final CollectionInteractionEvent<ToDoItem,ToDoItem> ciEv=(CollectionInteractionEvent<ToDoItem,ToDoItem>)ev0;
+  assertThat(ciEv.getSource(),is(equalTo(unwrap(toDoItem))));
+  assertThat(ciEv.getIdentifier().getMemberName(),is("dependencies"));
+  assertThat(ciEv.getOf(),is(CollectionInteractionEvent.Of.REMOVE_FROM));
+  assertThat(ciEv.getValue(),is(unwrap(otherToDoItem)));
+  final EventObject ev1=receivedEvents.get(0);
+  Assert.assertThat(ev1 instanceof ActionInteractionEvent,is(true));
+  final ActionInteractionEvent<ToDoItem> aiEv=(ActionInteractionEvent<ToDoItem>)ev1;
+  assertThat(aiEv.getSource(),is(equalTo(unwrap(toDoItem))));
+  assertThat(aiEv.getIdentifier().getMemberName(),is("remove"));
 }

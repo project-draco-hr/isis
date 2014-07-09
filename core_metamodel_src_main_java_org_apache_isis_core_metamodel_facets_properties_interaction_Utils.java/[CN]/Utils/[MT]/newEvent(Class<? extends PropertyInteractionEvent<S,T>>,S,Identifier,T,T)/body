@@ -1,0 +1,24 @@
+{
+  final Constructor<?>[] constructors=type.getConstructors();
+  for (  final Constructor<?> constructor : constructors) {
+    final Class<?>[] parameterTypes=constructor.getParameterTypes();
+    if (parameterTypes.length != 4) {
+      continue;
+    }
+    if (!parameterTypes[0].isAssignableFrom(source.getClass())) {
+      continue;
+    }
+    if (!parameterTypes[1].isAssignableFrom(Identifier.class)) {
+      continue;
+    }
+    if (oldValue != null && !parameterTypes[2].isAssignableFrom(oldValue.getClass())) {
+      continue;
+    }
+    if (newValue != null && !parameterTypes[3].isAssignableFrom(newValue.getClass())) {
+      continue;
+    }
+    final Object event=constructor.newInstance(source,identifier,oldValue,newValue);
+    return (PropertyInteractionEvent<S,T>)event;
+  }
+  throw new NoSuchMethodException(type.getName() + ".<init>(? super " + source.getClass().getName()+ ", "+ Identifier.class.getName()+ ", java.lang.Object, java.lang.Object)");
+}

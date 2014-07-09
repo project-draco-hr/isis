@@ -1,5 +1,5 @@
 {
-  final ActionInvocationFacetFactory facetFactory=new ActionInvocationFacetFactory();
+  final InteractionWithActionFacetFactory facetFactory=new InteractionWithActionFacetFactory();
   facetFactory.setSpecificationLookup(reflector);
   reflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
@@ -10,8 +10,8 @@ class Customer {
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(ActionInvocationFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof ActionInvocationFacetViaMethod);
-  final ActionInvocationFacetViaMethod actionInvocationFacetViaMethod=(ActionInvocationFacetViaMethod)facet;
+  assertTrue(facet instanceof InteractionWithActionFacetAbstract);
+  final InteractionWithActionFacetAbstract actionInvocationFacetViaMethod=(InteractionWithActionFacetAbstract)facet;
   assertEquals(actionMethod,actionInvocationFacetViaMethod.getMethods().get(0));
   assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(actionMethod));
 }

@@ -1,15 +1,15 @@
 {
-  final Response actionPromptResp=domainObjectResource.actionPrompt("RTNE","67","contains");
+  final Response actionPromptResp=domainObjectResource.actionPrompt("RTNE","76","contains");
   final RestfulResponse<ObjectActionRepresentation> actionPromptJsonResp=RestfulResponse.ofT(actionPromptResp);
   assertThat(actionPromptJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   final ObjectActionRepresentation actionPromptRepr=actionPromptJsonResp.getEntity();
   assertThat(actionPromptRepr.getString("memberType"),is("action"));
   final LinkRepresentation selfLink=actionPromptRepr.getLinkWithRel(Rel.SELF);
-  assertThat(selfLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/67/actions/contains")).returning(HttpStatusCode.OK));
+  assertThat(selfLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/76/actions/contains")).returning(HttpStatusCode.OK));
   final LinkRepresentation upLink=actionPromptRepr.getLinkWithRel(Rel.UP);
-  assertThat(upLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/67")).returning(HttpStatusCode.OK).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).title("Untitled Actions Entity"));
+  assertThat(upLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/76")).returning(HttpStatusCode.OK).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).title("Untitled Actions Entity"));
   final LinkRepresentation invokeLink=actionPromptRepr.getLinkWithRel(Rel.INVOKE);
-  assertThat(invokeLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/67/actions/contains/invoke")));
+  assertThat(invokeLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/RTNE/76/actions/contains/invoke")));
   assertThat(invokeLink.getArguments(),is(not(nullValue())));
   assertThat(invokeLink.getArguments().isArray(),is(false));
   assertThat(invokeLink.getArguments().size(),is(2));

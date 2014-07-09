@@ -1,0 +1,14 @@
+{
+  if (Objects.equal(oldValue,newValue)) {
+    return;
+  }
+  try {
+    final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
+    final Class type=value();
+    final PropertyInteractionEvent<?,?> event=Util.newEvent(type,source,identifier,oldValue,newValue);
+    helper.postEvent(event);
+  }
+ catch (  Exception e) {
+    throw new FatalException(e);
+  }
+}

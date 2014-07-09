@@ -1,0 +1,11 @@
+{
+  SomeDomainObject sdo=new SomeDomainObject();
+  Identifier identifier=Identifier.propertyOrCollectionIdentifier(SomeDomainObject.class,"someDateProperty");
+  LocalDate oldValue=new LocalDate(2013,4,1);
+  LocalDate newValue=null;
+  final PropertyInteractionEvent<SomeDomainObject,LocalDate> ev=InteractionWithPropertyClearFacet.Util.newEvent(SomeDatePropertyChangedEvent.class,sdo,identifier,oldValue,newValue);
+  assertThat(ev.getSource(),is(sdo));
+  assertThat(ev.getIdentifier(),is(identifier));
+  assertThat(ev.getOldValue(),is(oldValue));
+  assertThat(ev.getNewValue(),is(nullValue()));
+}

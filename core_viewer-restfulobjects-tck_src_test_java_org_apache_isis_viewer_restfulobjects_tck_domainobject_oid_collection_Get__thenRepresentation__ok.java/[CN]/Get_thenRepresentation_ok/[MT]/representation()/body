@@ -1,20 +1,20 @@
 {
-  final Response collectionResp=domainObjectResource.accessCollection("BSRL","64","visibleAndEditableCollection");
+  final Response collectionResp=domainObjectResource.accessCollection("BSRL","73","visibleAndEditableCollection");
   final RestfulResponse<ObjectCollectionRepresentation> collectionJsonResp=RestfulResponse.ofT(collectionResp);
   assertThat(collectionJsonResp.getStatus().getFamily(),is(Family.SUCCESSFUL));
   final ObjectCollectionRepresentation collectionRepr=collectionJsonResp.getEntity();
   assertThat(collectionRepr.getString("memberType"),is("collection"));
   final LinkRepresentation selfLink=collectionRepr.getLinkWithRel(Rel.SELF);
-  assertThat(selfLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/BSRL/64/collections/visibleAndEditableCollection")).returning(HttpStatusCode.OK).build());
+  assertThat(selfLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("/objects/BSRL/73/collections/visibleAndEditableCollection")).returning(HttpStatusCode.OK).build());
   final LinkRepresentation upLink=collectionRepr.getLinkWithRel(Rel.UP);
-  assertThat(upLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("http://localhost:39393/objects/BSRL/64")).returning(HttpStatusCode.OK).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).title("Untitled Bus Rules Entity").build());
+  assertThat(upLink,isLink(client).httpMethod(RestfulHttpMethod.GET).href(endsWith("http://localhost:39393/objects/BSRL/73")).returning(HttpStatusCode.OK).type(RepresentationType.DOMAIN_OBJECT.getMediaType()).title("Untitled Bus Rules Entity").build());
   final LinkRepresentation addtoLink=collectionRepr.getLinkWithRel(Rel.ADD_TO);
-  assertThat(addtoLink,isLink(client).httpMethod(RestfulHttpMethod.POST).type(RepresentationType.OBJECT_COLLECTION.getMediaType()).href(endsWith("/objects/BSRL/64/collections/visibleAndEditableCollection")).build());
+  assertThat(addtoLink,isLink(client).httpMethod(RestfulHttpMethod.POST).type(RepresentationType.OBJECT_COLLECTION.getMediaType()).href(endsWith("/objects/BSRL/73/collections/visibleAndEditableCollection")).build());
   assertThat(addtoLink.getArguments(),is(not(nullValue())));
   assertThat(addtoLink.getArguments().isArray(),is(false));
   assertThat(addtoLink.getArguments().size(),is(1));
   final LinkRepresentation removeFromLink=collectionRepr.getLinkWithRel(Rel.REMOVE_FROM);
-  assertThat(removeFromLink,isLink(client).httpMethod(RestfulHttpMethod.DELETE).type(RepresentationType.OBJECT_COLLECTION.getMediaType()).href(endsWith("/objects/BSRL/64/collections/visibleAndEditableCollection")).build());
+  assertThat(removeFromLink,isLink(client).httpMethod(RestfulHttpMethod.DELETE).type(RepresentationType.OBJECT_COLLECTION.getMediaType()).href(endsWith("/objects/BSRL/73/collections/visibleAndEditableCollection")).build());
   assertThat(removeFromLink.getArguments(),is(not(nullValue())));
   assertThat(removeFromLink.getArguments().isArray(),is(false));
   assertThat(removeFromLink.getArguments().size(),is(1));
