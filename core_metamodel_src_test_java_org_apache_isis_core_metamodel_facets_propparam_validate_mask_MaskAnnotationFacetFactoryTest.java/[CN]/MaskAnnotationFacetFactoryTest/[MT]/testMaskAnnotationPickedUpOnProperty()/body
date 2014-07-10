@@ -1,0 +1,16 @@
+{
+  final MaskFacetOnPropertyAnnotationFactory facetFactory=new MaskFacetOnPropertyAnnotationFactory();
+  facetFactory.setSpecificationLookup(reflector);
+class Customer {
+    @SuppressWarnings("unused") @Mask("###") public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MaskFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MaskFacetOnPropertyAnnotation);
+  final MaskFacetOnPropertyAnnotation maskFacet=(MaskFacetOnPropertyAnnotation)facet;
+  assertEquals("###",maskFacet.value());
+}

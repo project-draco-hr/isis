@@ -1,0 +1,14 @@
+{
+  final CollectionAddToRemoveFromAndValidateFacetFactory facetFactory=new CollectionAddToRemoveFromAndValidateFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+@SuppressWarnings("hiding") class Order {
+  }
+class Customer {
+    @SuppressWarnings("unused") public Collection<Order> getOrders(){
+      return null;
+    }
+  }
+  final Method collectionAccessorMethod=findMethod(Customer.class,"getOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,collectionAccessorMethod,methodRemover,facetedMethod));
+  assertNull(facetedMethod.getFacet(TypeOfFacet.class));
+}

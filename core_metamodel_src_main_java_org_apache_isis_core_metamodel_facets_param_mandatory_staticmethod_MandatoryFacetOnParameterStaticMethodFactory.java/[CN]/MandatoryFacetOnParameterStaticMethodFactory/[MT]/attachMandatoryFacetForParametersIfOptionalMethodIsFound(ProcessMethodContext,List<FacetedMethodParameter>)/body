@@ -1,0 +1,23 @@
+{
+  if (parameters.isEmpty()) {
+    return;
+  }
+  final Method actionMethod=processMethodContext.getMethod();
+  final String capitalizedName=StringExtensions.asCapitalizedName(actionMethod.getName());
+  final Class<?> cls=processMethodContext.getCls();
+  final Method optionalMethod=MethodFinderUtils.findMethod(cls,MethodScope.CLASS,MethodPrefixConstants.OPTIONAL_PREFIX + capitalizedName,boolean[].class,new Class[0]);
+  if (optionalMethod == null) {
+    return;
+  }
+  try {
+    final boolean[] optionals=invokeOptionalsMethod(optionalMethod,parameters.size());
+    for (int i=0; i < optionals.length; i++) {
+      if (optionals[i]) {
+        FacetUtil.addFacet(new MandatoryFacetOnParameterStaticMethod(parameters.get(i)));
+      }
+    }
+  }
+  finally {
+    processMethodContext.removeMethod(optionalMethod);
+  }
+}

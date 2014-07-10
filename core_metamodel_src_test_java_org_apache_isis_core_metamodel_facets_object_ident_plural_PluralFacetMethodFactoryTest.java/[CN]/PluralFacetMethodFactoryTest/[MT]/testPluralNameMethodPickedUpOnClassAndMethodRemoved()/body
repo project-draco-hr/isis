@@ -1,0 +1,10 @@
+{
+  final Method pluralNameMethod=findMethod(Customer.class,"pluralName");
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PluralFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PluralFacetMethod);
+  final PluralFacetMethod pluralFacet=(PluralFacetMethod)facet;
+  assertEquals("Some plural name",pluralFacet.value());
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(pluralNameMethod));
+}

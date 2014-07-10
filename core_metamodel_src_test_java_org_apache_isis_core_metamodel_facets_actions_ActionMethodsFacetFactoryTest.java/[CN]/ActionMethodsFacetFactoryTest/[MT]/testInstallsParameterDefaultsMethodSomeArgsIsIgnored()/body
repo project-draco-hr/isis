@@ -1,0 +1,16 @@
+{
+  final ActionDefaultsFacetViaMethodFactory facetFactory=new ActionDefaultsFacetViaMethodFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    final int x,    final Long y){
+    }
+    @SuppressWarnings("unused") public Object[] defaultSomeAction(    final int x,    final Long y){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,Long.class});
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionDefaultsFacet.class);
+  assertNull(facet);
+}

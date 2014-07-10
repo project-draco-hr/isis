@@ -1,0 +1,13 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final String capitalizedName=StringExtensions.asJavaBaseNameStripAccessorPrefixIfRequired(method.getName());
+  final Class<?> cls=processMethodContext.getCls();
+  final Method descriptionMethod=MethodFinderUtils.findMethod(cls,MethodScope.CLASS,MethodPrefixConstants.DESCRIPTION_PREFIX + capitalizedName,String.class,new Class[0]);
+  if (descriptionMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(descriptionMethod);
+  final String description=invokeDescriptionMethod(descriptionMethod);
+  final FacetHolder facetedMethod=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new DescribedAsFacetStaticMethod(description,descriptionMethod,facetedMethod));
+}

@@ -1,0 +1,31 @@
+{
+  final ActionChoicesFacetViaMethodFactory facetFactory=new ActionChoicesFacetViaMethodFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+  final ActionParameterChoicesFacetViaMethodFactory facetFactoryForParams=new ActionParameterChoicesFacetViaMethodFactory();
+  facetFactoryForParams.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    final int x,    final long y){
+    }
+    @SuppressWarnings("unused") public int[] choices0SomeAction(){
+      return new int[0];
+    }
+    @SuppressWarnings("unused") public long[] choices1SomeAction(){
+      return new long[0];
+    }
+    @SuppressWarnings("unused") public Object[][] choicesSomeAction(){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
+  final FacetedMethod facetHolderWithParms=FacetedMethod.createForAction(Customer.class,actionMethod);
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetHolderWithParms);
+  facetFactory.process(processMethodContext);
+  try {
+    facetFactoryForParams.process(processMethodContext);
+    fail("exception expected");
+  }
+ catch (  final org.apache.isis.core.metamodel.exceptions.MetaModelException expected) {
+  }
+}

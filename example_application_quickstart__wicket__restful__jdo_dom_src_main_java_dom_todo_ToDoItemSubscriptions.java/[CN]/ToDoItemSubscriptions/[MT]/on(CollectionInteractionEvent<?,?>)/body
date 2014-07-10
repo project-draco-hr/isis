@@ -1,10 +1,30 @@
 {
-  rejectIfRequired();
-  recordEvent(ev);
-  if (ev.getOf() == CollectionInteractionEvent.Of.ADD_TO) {
-    LOG.info(container.titleOf(ev.getSource()) + ", added to " + ev.getIdentifier().getMemberName()+ " : "+ ev.getValue());
+switch (ev.getMode()) {
+case HIDE:
+    if (getSubscriberBehaviour() == Behaviour.HideDependenciesCollection) {
+      if (ev.getIdentifier().getMemberName().equals("dependencies")) {
+        ev.vetoHide();
+      }
+    }
+  if (getSubscriberBehaviour() == Behaviour.HideSimilarToCollection) {
+    if (ev.getIdentifier().getMemberName().equals("similarTo")) {
+      ev.vetoHide();
+    }
   }
+break;
+case DISABLE:
+break;
+case VALIDATE:
+break;
+case EXECUTE:
+rejectIfRequired();
+recordEvent(ev);
+if (ev.getOf() == CollectionInteractionEvent.Of.ADD_TO) {
+LOG.info(container.titleOf(ev.getSource()) + ", added to " + ev.getIdentifier().getMemberName()+ " : "+ ev.getValue());
+}
  else {
-    LOG.info(container.titleOf(ev.getSource()) + ", removed from " + ev.getIdentifier().getMemberName()+ " : "+ ev.getValue());
-  }
+LOG.info(container.titleOf(ev.getSource()) + ", removed from " + ev.getIdentifier().getMemberName()+ " : "+ ev.getValue());
+}
+break;
+}
 }

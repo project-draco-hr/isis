@@ -1,0 +1,14 @@
+{
+  final TypicalLengthFacetOnParameterAnnotationFactory facetFactory=new TypicalLengthFacetOnParameterAnnotationFactory();
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @TypicalLength(20) final int foo){
+    }
+  }
+  final Method method=findMethod(Customer.class,"someAction",new Class[]{int.class});
+  facetFactory.processParams(new ProcessParameterContext(method,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(TypicalLengthFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof TypicalLengthFacetOnParameterAnnotation);
+  final TypicalLengthFacetOnParameterAnnotation typicalLengthFacetAnnotation=(TypicalLengthFacetOnParameterAnnotation)facet;
+  assertEquals(20,typicalLengthFacetAnnotation.value());
+}

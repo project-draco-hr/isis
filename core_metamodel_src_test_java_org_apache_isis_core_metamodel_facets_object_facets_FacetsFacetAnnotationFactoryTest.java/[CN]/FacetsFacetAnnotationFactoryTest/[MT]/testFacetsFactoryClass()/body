@@ -1,0 +1,12 @@
+{
+@Facets(facetFactoryClasses={FacetsFacetAnnotationFactoryTest.CustomerFacetFactory.class,FacetsFacetAnnotationFactoryTest.CustomerNotAFacetFactory.class}) class Customer {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(FacetsFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof FacetsFacetAnnotation);
+  final FacetsFacetAnnotation facetsFacet=(FacetsFacetAnnotation)facet;
+  final Class<? extends FacetFactory>[] facetFactories=facetsFacet.facetFactories();
+  assertEquals(1,facetFactories.length);
+  assertEquals(CustomerFacetFactory.class,facetFactories[0]);
+}

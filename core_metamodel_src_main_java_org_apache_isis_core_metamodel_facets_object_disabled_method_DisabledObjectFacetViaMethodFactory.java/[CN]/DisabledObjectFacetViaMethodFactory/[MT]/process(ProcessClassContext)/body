@@ -1,0 +1,12 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final Class<?>[] params=new Class<?>[1];
+  params[0]=Identifier.Type.class;
+  final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,DISABLED_PREFIX,String.class,params);
+  if (method == null) {
+    return;
+  }
+  FacetUtil.addFacet(new DisabledObjectFacetViaMethod(method,facetHolder));
+  processClassContext.removeMethod(method);
+}

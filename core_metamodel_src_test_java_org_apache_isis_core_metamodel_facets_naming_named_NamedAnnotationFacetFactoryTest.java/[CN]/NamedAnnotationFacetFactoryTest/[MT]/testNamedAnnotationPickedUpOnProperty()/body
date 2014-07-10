@@ -1,0 +1,17 @@
+{
+  final NamedFacetOnMemberFactory facetFactory=new NamedFacetOnMemberFactory();
+  facetFactory.setSpecificationLookup(mockSpecificationLoaderSpi);
+class Customer {
+    @SuppressWarnings("unused") @Named("some name") public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"getNumberOfOrders");
+  expectNoMethodsRemoved();
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NamedFacet.class);
+  assertThat(facet,is(not(nullValue())));
+  assertThat(facet instanceof NamedFacetAbstract,is(true));
+  final NamedFacetAbstract namedFacetAbstract=(NamedFacetAbstract)facet;
+  assertThat(namedFacetAbstract.value(),equalTo("some name"));
+}

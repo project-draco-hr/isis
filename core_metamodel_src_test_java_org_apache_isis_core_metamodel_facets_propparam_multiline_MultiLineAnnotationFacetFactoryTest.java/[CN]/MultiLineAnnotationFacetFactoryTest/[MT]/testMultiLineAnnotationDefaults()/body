@@ -1,0 +1,10 @@
+{
+  final MultiLineFacetOnTypeAnnotationFactory facetFactory=new MultiLineFacetOnTypeAnnotationFactory();
+@MultiLine class Customer {
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MultiLineFacet.class);
+  final MultiLineFacetOnTypeAnnotation multiLineFacetOnTypeAnnotation=(MultiLineFacetOnTypeAnnotation)facet;
+  assertEquals(6,multiLineFacetOnTypeAnnotation.numberOfLines());
+  assertEquals(true,multiLineFacetOnTypeAnnotation.preventWrapping());
+}

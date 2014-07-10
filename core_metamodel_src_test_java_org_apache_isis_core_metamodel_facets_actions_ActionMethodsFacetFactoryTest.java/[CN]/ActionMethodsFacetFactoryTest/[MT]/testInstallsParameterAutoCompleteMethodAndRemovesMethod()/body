@@ -1,0 +1,22 @@
+{
+  final ActionParameterAutoCompleteFacetViaMethodFactory facetFactory=new ActionParameterAutoCompleteFacetViaMethodFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  reflector.setLoadSpecificationStringReturn(voidSpec);
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    final int x,    final long y){
+    }
+    @SuppressWarnings("unused") public List<Integer> autoComplete0SomeAction(    String searchArg){
+      return Collections.emptyList();
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,long.class});
+  final Method autoComplete0Method=findMethod(Customer.class,"autoComplete0SomeAction",new Class[]{String.class});
+  final FacetedMethod facetHolderWithParms=FacetedMethod.createForAction(Customer.class,actionMethod);
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetHolderWithParms));
+  final Facet facet0=facetHolderWithParms.getParameters().get(0).getFacet(ActionParameterAutoCompleteFacet.class);
+  assertNotNull(facet0);
+  assertTrue(facet0 instanceof ActionParameterAutoCompleteFacetViaMethod);
+  final ActionParameterAutoCompleteFacetViaMethod actionAutoCompleteFacetViaMethod0=(ActionParameterAutoCompleteFacetViaMethod)facet0;
+  assertEquals(autoComplete0Method,actionAutoCompleteFacetViaMethod0.getMethods().get(0));
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(autoComplete0Method));
+}

@@ -1,0 +1,15 @@
+{
+  final BigDecimalFacetOnParameterFromJavaxValidationAnnotationFactory facetFactory=new BigDecimalFacetOnParameterFromJavaxValidationAnnotationFactory();
+class Order {
+    @SuppressWarnings("unused") public void updateCost(    @javax.validation.constraints.Digits(integer=14,fraction=4) final BigDecimal cost){
+    }
+  }
+  final Method method=findMethod(Order.class,"updateCost",new Class[]{BigDecimal.class});
+  facetFactory.processParams(new ProcessParameterContext(method,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(BigDecimalValueFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof BigDecimalFacetOnParameterFromJavaxValidationDigitsAnnotation);
+  final BigDecimalFacetOnParameterFromJavaxValidationDigitsAnnotation annotation=(BigDecimalFacetOnParameterFromJavaxValidationDigitsAnnotation)facet;
+  assertEquals(new Integer(18),annotation.getLength());
+  assertEquals(new Integer(4),annotation.getScale());
+}

@@ -1,0 +1,19 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final List<Method> methods=MethodFinderUtils.findMethodsWithAnnotation(cls,MethodScope.OBJECT,Title.class);
+  Collections.sort(methods,new Comparator<Method>(){
+    Comparator<String> comparator=new SequenceComparator();
+    @Override public int compare(    final Method o1,    final Method o2){
+      final Title a1=o1.getAnnotation(Title.class);
+      final Title a2=o2.getAnnotation(Title.class);
+      return comparator.compare(a1.sequence(),a2.sequence());
+    }
+  }
+);
+  if (methods.isEmpty()) {
+    return;
+  }
+  final List<TitleFacetViaTitleAnnotation.TitleComponent> titleComponents=Lists.transform(methods,TitleFacetViaTitleAnnotation.TitleComponent.FROM_METHOD);
+  FacetUtil.addFacet(new TitleFacetViaTitleAnnotation(titleComponents,facetHolder,adapterManager));
+}

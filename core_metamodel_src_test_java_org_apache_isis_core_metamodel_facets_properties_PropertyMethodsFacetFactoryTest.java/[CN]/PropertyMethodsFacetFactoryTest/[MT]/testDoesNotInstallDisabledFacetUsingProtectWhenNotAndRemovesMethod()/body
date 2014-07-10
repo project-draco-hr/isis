@@ -1,0 +1,10 @@
+{
+  final DisabledFacetStaticMethodFacetFactory facetFactory=new DisabledFacetStaticMethodFacetFactory();
+  facetFactory.setSpecificationLookup(reflector);
+  final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getLastName");
+  final Method propertyProtectMethod=findMethod(CustomerStatic.class,"protectLastName");
+  facetFactory.process(new ProcessMethodContext(CustomerStatic.class,null,null,propertyAccessorMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(DisabledFacet.class);
+  assertNull(facet);
+  assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(propertyProtectMethod));
+}

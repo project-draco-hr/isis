@@ -1,0 +1,14 @@
+{
+class Customer implements ViewModel {
+    @Override public String viewModelMemento(){
+      return null;
+    }
+    @Override public void viewModelInit(    String memento){
+    }
+  }
+  facetFactory.process(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ViewModelFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ViewModelFacetInterface);
+  assertNoMethodsRemoved();
+}

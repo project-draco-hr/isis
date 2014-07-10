@@ -1,0 +1,17 @@
+{
+  if (parameters.isEmpty()) {
+    return;
+  }
+  final Method actionMethod=processMethodContext.getMethod();
+  final String capitalizedName=StringExtensions.asCapitalizedName(actionMethod.getName());
+  final Class<?> cls=processMethodContext.getCls();
+  final Method descriptionMethod=MethodFinderUtils.findMethod(cls,MethodScope.CLASS,MethodPrefixConstants.DESCRIPTION_PREFIX + capitalizedName,String[].class,new Class[0]);
+  if (descriptionMethod == null) {
+    return;
+  }
+  processMethodContext.removeMethod(descriptionMethod);
+  final String[] descriptions=invokeDescriptionsMethod(descriptionMethod,parameters.size());
+  for (int i=0; i < descriptions.length; i++) {
+    FacetUtil.addFacet(new DescribedAsFacetStaticMethod(descriptions[i],descriptionMethod,parameters.get(i)));
+  }
+}

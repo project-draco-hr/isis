@@ -1,0 +1,11 @@
+{
+  final RegExFacetFacetOnParameterAnnotationFactory facetFactory=new RegExFacetFacetOnParameterAnnotationFactory();
+class Customer {
+    @SuppressWarnings("unused") @RegEx(validation="^A.*",caseSensitive=false) public int getNumberOfOrders(){
+      return 0;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getNumberOfOrders");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  assertNull(facetedMethod.getFacet(RegExFacet.class));
+}

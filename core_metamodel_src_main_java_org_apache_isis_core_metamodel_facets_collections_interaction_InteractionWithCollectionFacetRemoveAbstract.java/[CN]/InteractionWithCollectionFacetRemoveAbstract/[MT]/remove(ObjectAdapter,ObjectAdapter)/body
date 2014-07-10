@@ -1,0 +1,16 @@
+{
+  if (this.collectionRemoveFromFacet == null) {
+    return;
+  }
+  if (!interactionHelper.hasEventBusService()) {
+    collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter);
+    return;
+  }
+  final Object referencedObject=AdapterUtils.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter);
+  if (!((Collection<?>)collection).contains(referencedObject)) {
+    return;
+  }
+  collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter);
+  interactionHelper.postEventForCollectionRemove(value(),targetAdapter,getIdentified(),referencedObject);
+}

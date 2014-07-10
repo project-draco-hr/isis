@@ -1,0 +1,16 @@
+{
+  final int paramNum=processParameterContext.getParamNum();
+  final Class<?> parameterType=processParameterContext.getMethod().getParameterTypes()[paramNum];
+  final Annotation[] parameterAnnotations=Annotations.getParameterAnnotations(processParameterContext.getMethod())[paramNum];
+  for (  final Annotation parameterAnnotation : parameterAnnotations) {
+    if (parameterAnnotation instanceof DescribedAs) {
+      FacetUtil.addFacet(create((DescribedAs)parameterAnnotation,processParameterContext.getFacetHolder()));
+      return;
+    }
+  }
+  final DescribedAsFacet parameterTypeDescribedAsFacet=getDescribedAsFacet(parameterType);
+  if (parameterTypeDescribedAsFacet != null) {
+    FacetUtil.addFacet(new DescribedAsFacetOnParameterDerivedFromType(parameterTypeDescribedAsFacet,processParameterContext.getFacetHolder()));
+    return;
+  }
+}
