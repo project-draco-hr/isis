@@ -1,0 +1,21 @@
+{
+  if (this.collectionAddToFacet == null) {
+    return;
+  }
+  if (!interactionHelper.hasEventBusService()) {
+    collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
+    return;
+  }
+  final Object referencedObject=ObjectAdapter.Util.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter);
+  if (collection instanceof Set) {
+    Set<?> set=(Set<?>)collection;
+    if (set.contains(referencedObject)) {
+      return;
+    }
+  }
+  collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
+  final CollectionInteractionEvent<?,?> event=collectionInteractionFacet.currentInteraction.get();
+  interactionHelper.postEventForCollection(value(),verify(event),AbstractInteractionEvent.Phase.EXECUTE,targetAdapter,getIdentified(),CollectionInteractionEvent.Of.ADD_TO,referencedObject);
+  collectionInteractionFacet.currentInteraction.set(null);
+}

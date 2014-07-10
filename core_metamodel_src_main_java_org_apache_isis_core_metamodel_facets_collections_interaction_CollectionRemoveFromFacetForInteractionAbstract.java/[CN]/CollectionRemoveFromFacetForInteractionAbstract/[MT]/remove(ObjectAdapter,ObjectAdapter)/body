@@ -1,0 +1,18 @@
+{
+  if (this.collectionRemoveFromFacet == null) {
+    return;
+  }
+  if (!interactionHelper.hasEventBusService()) {
+    collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter);
+    return;
+  }
+  final Object referencedObject=ObjectAdapter.Util.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter);
+  if (!((Collection<?>)collection).contains(referencedObject)) {
+    return;
+  }
+  collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter);
+  final CollectionInteractionEvent<?,?> event=collectionInteractionFacet.currentInteraction.get();
+  interactionHelper.postEventForCollection(value(),verify(event),AbstractInteractionEvent.Phase.EXECUTE,targetAdapter,getIdentified(),CollectionInteractionEvent.Of.REMOVE_FROM,referencedObject);
+  collectionInteractionFacet.currentInteraction.set(null);
+}

@@ -1,0 +1,12 @@
+{
+  final CollectionInteractionEvent<?,?> existingEvent=currentInteraction.get();
+  final CollectionInteractionEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),existingEvent,AbstractInteractionEvent.Phase.DISABLE,ic.getTarget(),getIdentified(),CollectionInteractionEvent.Of.ACCESS,null);
+  if (event == null || !event.isDisabled()) {
+    currentInteraction.set(event);
+    return null;
+  }
+ else {
+    currentInteraction.set(null);
+    return event.getDisabledReason();
+  }
+}

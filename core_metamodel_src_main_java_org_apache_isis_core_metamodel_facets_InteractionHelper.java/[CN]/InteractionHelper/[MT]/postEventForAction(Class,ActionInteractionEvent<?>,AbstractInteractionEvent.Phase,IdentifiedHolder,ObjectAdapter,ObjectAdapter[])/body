@@ -1,0 +1,23 @@
+{
+  if (!hasEventBusService()) {
+    return null;
+  }
+  try {
+    final ActionInteractionEvent<?> event;
+    if (existingEvent != null) {
+      event=existingEvent;
+    }
+ else {
+      final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
+      final Object[] arguments=ObjectAdapter.Util.unwrap(argumentAdapters);
+      final Identifier identifier=identified.getIdentifier();
+      event=newActionInteractionEvent(eventType,source,identifier,arguments);
+    }
+    event.setPhase(phase);
+    getEventBusService().post(event);
+    return event;
+  }
+ catch (  Exception e) {
+    throw new FatalException(e);
+  }
+}

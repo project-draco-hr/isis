@@ -1,0 +1,49 @@
+{
+  final Method method=processMethodContext.getMethod();
+  FacetedMethod holder=processMethodContext.getFacetHolder();
+  final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
+  if (getterFacet == null) {
+    return;
+  }
+  final PropertyInteraction propertyInteraction=Annotations.getAnnotation(method,PropertyInteraction.class);
+  final Class<? extends PropertyInteractionEvent<?,?>> propertyInteractionEventType;
+  final PropertyInteractionFacetAbstract propertyInteractionFacet;
+  if (propertyInteraction != null) {
+    propertyInteractionEventType=propertyInteraction.value();
+    propertyInteractionFacet=new PropertyInteractionFacetAnnotation(propertyInteractionEventType,getterFacet,holder,servicesInjector,getSpecificationLoader());
+  }
+ else {
+    propertyInteractionEventType=PropertyInteractionEvent.Default.class;
+    propertyInteractionFacet=new PropertyInteractionFacetDefault(propertyInteractionEventType,getterFacet,holder,servicesInjector,getSpecificationLoader());
+  }
+  FacetUtil.addFacet(propertyInteractionFacet);
+  final PostsPropertyChangedEvent postsPropertyChangedEvent=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);
+  final PropertySetterFacet setterFacet=holder.getFacet(PropertySetterFacet.class);
+  if (setterFacet != null) {
+    final PropertySetterFacetForInteractionAbstract replacementFacet;
+    if (propertyInteraction != null) {
+      replacementFacet=new PropertySetterFacetForPropertyInteractionAnnotation(propertyInteractionEventType,getterFacet,setterFacet,propertyInteractionFacet,servicesInjector,holder);
+    }
+ else     if (postsPropertyChangedEvent != null) {
+      replacementFacet=new PropertySetterFacetForPostsPropertyChangedEventAnnotation(postsPropertyChangedEvent.value(),getterFacet,setterFacet,propertyInteractionFacet,servicesInjector,holder);
+    }
+ else {
+      replacementFacet=new PropertySetterFacetForPropertyInteractionDefault(PropertyInteractionEvent.Default.class,getterFacet,setterFacet,propertyInteractionFacet,servicesInjector,holder);
+    }
+    FacetUtil.addFacet(replacementFacet);
+  }
+  final PropertyClearFacet clearFacet=holder.getFacet(PropertyClearFacet.class);
+  if (clearFacet != null) {
+    final PropertyClearFacetForInteractionAbstract replacementFacet;
+    if (propertyInteraction != null) {
+      replacementFacet=new PropertyClearFacetForPropertyInteractionAnnotation(propertyInteractionEventType,getterFacet,clearFacet,propertyInteractionFacet,servicesInjector,holder);
+    }
+ else     if (postsPropertyChangedEvent != null) {
+      replacementFacet=new PropertyClearFacetForPostsPropertyChangedEventAnnotation(postsPropertyChangedEvent.value(),getterFacet,clearFacet,propertyInteractionFacet,servicesInjector,holder);
+    }
+ else {
+      replacementFacet=new PropertyClearFacetForPropertyInteractionDefault(PropertyInteractionEvent.Default.class,getterFacet,clearFacet,propertyInteractionFacet,servicesInjector,holder);
+    }
+    FacetUtil.addFacet(replacementFacet);
+  }
+}

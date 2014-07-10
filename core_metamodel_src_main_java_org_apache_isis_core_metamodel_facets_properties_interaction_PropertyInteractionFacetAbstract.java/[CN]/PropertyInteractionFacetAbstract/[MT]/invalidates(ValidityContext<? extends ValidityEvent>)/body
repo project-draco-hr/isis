@@ -1,0 +1,15 @@
+{
+  final PropertyInteractionEvent<?,?> existingEvent=currentInteraction.get();
+  final Object oldValue=getterFacet.getProperty(ic.getTarget());
+  final ProposedHolder ph=(ProposedHolder)ic;
+  final Object proposedValue=ph.getProposed().getObject();
+  final PropertyInteractionEvent<?,?> event=interactionHelper.postEventForProperty(eventType(),existingEvent,AbstractInteractionEvent.Phase.VALIDATE,ic.getTarget(),getIdentified(),oldValue,proposedValue);
+  if (event == null || !event.isInvalid()) {
+    currentInteraction.set(event);
+    return null;
+  }
+ else {
+    currentInteraction.set(null);
+    return event.getInvalidityReason();
+  }
+}

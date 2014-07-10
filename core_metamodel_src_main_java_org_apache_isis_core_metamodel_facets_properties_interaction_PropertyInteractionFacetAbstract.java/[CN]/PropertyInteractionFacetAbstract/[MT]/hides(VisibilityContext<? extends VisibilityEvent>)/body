@@ -1,0 +1,14 @@
+{
+  if (!interactionHelper.hasEventBusService()) {
+    return null;
+  }
+  final PropertyInteractionEvent<?,?> event=interactionHelper.postEventForProperty(eventType(),null,AbstractInteractionEvent.Phase.HIDE,ic.getTarget(),getIdentified(),null,null);
+  if (event == null || !event.isHidden()) {
+    currentInteraction.set(event);
+    return null;
+  }
+ else {
+    currentInteraction.set(null);
+    return "Hidden by subscriber";
+  }
+}

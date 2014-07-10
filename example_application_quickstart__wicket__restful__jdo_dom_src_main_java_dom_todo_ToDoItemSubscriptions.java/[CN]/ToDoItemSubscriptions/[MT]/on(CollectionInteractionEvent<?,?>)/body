@@ -1,18 +1,28 @@
 {
-switch (ev.getMode()) {
+switch (ev.getPhase()) {
 case HIDE:
-    if (getSubscriberBehaviour() == Behaviour.HideDependenciesCollection) {
+    if (getSubscriberBehaviour() == Behaviour.DependenciesCollectionHide) {
       if (ev.getIdentifier().getMemberName().equals("dependencies")) {
-        ev.vetoHide();
+        ev.hide();
       }
     }
-  if (getSubscriberBehaviour() == Behaviour.HideSimilarToCollection) {
+  if (getSubscriberBehaviour() == Behaviour.SimilarToCollectionHide) {
     if (ev.getIdentifier().getMemberName().equals("similarTo")) {
-      ev.vetoHide();
+      ev.hide();
     }
   }
 break;
 case DISABLE:
+if (getSubscriberBehaviour() == Behaviour.DependenciesCollectionDisable) {
+if (ev.getIdentifier().getMemberName().equals("dependencies")) {
+  ev.hide();
+}
+}
+if (getSubscriberBehaviour() == Behaviour.SimilarToCollectionDisable) {
+if (ev.getIdentifier().getMemberName().equals("similarTo")) {
+ev.hide();
+}
+}
 break;
 case VALIDATE:
 break;

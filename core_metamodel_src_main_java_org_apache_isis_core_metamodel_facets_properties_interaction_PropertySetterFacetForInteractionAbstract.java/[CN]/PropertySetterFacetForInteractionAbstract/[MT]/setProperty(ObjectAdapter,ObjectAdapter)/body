@@ -1,0 +1,18 @@
+{
+  if (setterFacet == null) {
+    return;
+  }
+  if (!interactionHelper.hasEventBusService()) {
+    setterFacet.setProperty(targetAdapter,valueAdapter);
+    return;
+  }
+  final Object oldValue=getterFacet.getProperty(targetAdapter);
+  setterFacet.setProperty(targetAdapter,valueAdapter);
+  final Object newValue=getterFacet.getProperty(targetAdapter);
+  if (Objects.equal(oldValue,newValue)) {
+    return;
+  }
+  final PropertyInteractionEvent<?,?> event=propertyInteractionFacet.currentInteraction.get();
+  interactionHelper.postEventForProperty(value(),verify(event),AbstractInteractionEvent.Phase.EXECUTE,targetAdapter,getIdentified(),oldValue,newValue);
+  propertyInteractionFacet.currentInteraction.set(null);
+}
