@@ -1,5 +1,5 @@
 {
-  final InteractionWithActionFacetFactory facetFactory=new InteractionWithActionFacetFactory();
+  final ActionInteractionFacetFactory facetFactory=new ActionInteractionFacetFactory();
   facetFactory.setSpecificationLookup(reflector);
   reflector.setLoadSpecificationStringReturn(stringSpec);
 class Customer {
@@ -10,6 +10,6 @@ class Customer {
   final Method actionMethod=findMethod(Customer.class,"someAction");
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(ActionInvocationFacet.class);
-  final InteractionWithActionFacetAbstract actionInvocationFacetViaMethod=(InteractionWithActionFacetAbstract)facet;
+  final ActionInvocationFacetForInteractionAbstract actionInvocationFacetViaMethod=(ActionInvocationFacetForInteractionAbstract)facet;
   assertEquals(stringSpec,actionInvocationFacetViaMethod.getReturnType());
 }

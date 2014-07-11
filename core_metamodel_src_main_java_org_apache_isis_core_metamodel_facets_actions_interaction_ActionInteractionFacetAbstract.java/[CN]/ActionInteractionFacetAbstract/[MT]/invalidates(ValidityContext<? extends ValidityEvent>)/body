@@ -1,0 +1,13 @@
+{
+  final ActionInteractionEvent<?> existingEvent=currentInteraction.get();
+  final ActionInvocationContext aic=(ActionInvocationContext)ic;
+  final ActionInteractionEvent<?> event=interactionHelper.postEventForAction(eventType(),existingEvent,null,AbstractInteractionEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),aic.getArgs());
+  if (event == null || !event.isInvalid()) {
+    currentInteraction.set(event);
+    return null;
+  }
+ else {
+    currentInteraction.set(null);
+    return event.getInvalidityReason();
+  }
+}

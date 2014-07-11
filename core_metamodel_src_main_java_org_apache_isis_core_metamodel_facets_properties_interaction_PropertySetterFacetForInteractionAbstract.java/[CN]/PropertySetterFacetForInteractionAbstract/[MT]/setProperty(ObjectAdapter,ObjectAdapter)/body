@@ -3,16 +3,23 @@
     return;
   }
   if (!interactionHelper.hasEventBusService()) {
-    setterFacet.setProperty(targetAdapter,valueAdapter);
+    setterFacet.setProperty(targetAdapter,newValueAdapter);
     return;
   }
-  final Object oldValue=getterFacet.getProperty(targetAdapter);
-  setterFacet.setProperty(targetAdapter,valueAdapter);
-  final Object newValue=getterFacet.getProperty(targetAdapter);
-  if (Objects.equal(oldValue,newValue)) {
-    return;
+  try {
+    final PropertyInteractionEvent<?,?> existingEvent=propertyInteractionFacet.currentInteraction.get();
+    final Object oldValue=getterFacet.getProperty(targetAdapter);
+    final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
+    interactionHelper.postEventForProperty(value(),existingEvent,AbstractInteractionEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,newValue);
+    setterFacet.setProperty(targetAdapter,newValueAdapter);
+    final Object actualNewValue=getterFacet.getProperty(targetAdapter);
+    if (Objects.equal(oldValue,actualNewValue)) {
+      return;
+    }
+    final PropertyInteractionEvent<?,?> event=propertyInteractionFacet.currentInteraction.get();
+    interactionHelper.postEventForProperty(value(),verify(event),AbstractInteractionEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
   }
-  final PropertyInteractionEvent<?,?> event=propertyInteractionFacet.currentInteraction.get();
-  interactionHelper.postEventForProperty(value(),verify(event),AbstractInteractionEvent.Phase.EXECUTE,targetAdapter,getIdentified(),oldValue,newValue);
-  propertyInteractionFacet.currentInteraction.set(null);
+  finally {
+    propertyInteractionFacet.currentInteraction.set(null);
+  }
 }

@@ -1,0 +1,64 @@
+{
+  final Constructor<?>[] constructors=type.getConstructors();
+  for (  final Constructor<?> constructor : constructors) {
+    final Class<?>[] parameterTypes=constructor.getParameterTypes();
+    if (parameterTypes.length != 4) {
+      continue;
+    }
+    if (!parameterTypes[0].isAssignableFrom(source.getClass())) {
+      continue;
+    }
+    if (!parameterTypes[1].isAssignableFrom(Identifier.class)) {
+      continue;
+    }
+    if (!parameterTypes[2].isAssignableFrom(CollectionInteractionEvent.Of.class)) {
+      continue;
+    }
+    if (value != null && !parameterTypes[3].isAssignableFrom(value.getClass())) {
+      continue;
+    }
+    final Object event=constructor.newInstance(source,identifier,of,value);
+    return (CollectionInteractionEvent<S,T>)event;
+  }
+  if (phase == AbstractInteractionEvent.Phase.EXECUTED) {
+    if (of == CollectionInteractionEvent.Of.ADD_TO) {
+      for (      final Constructor<?> constructor : constructors) {
+        final Class<?>[] parameterTypes=constructor.getParameterTypes();
+        if (parameterTypes.length != 3) {
+          continue;
+        }
+        if (!parameterTypes[0].isAssignableFrom(source.getClass())) {
+          continue;
+        }
+        if (!parameterTypes[1].isAssignableFrom(Identifier.class)) {
+          continue;
+        }
+        if (value != null && !parameterTypes[2].isAssignableFrom(value.getClass())) {
+          continue;
+        }
+        final Object event=constructor.newInstance(source,identifier,value);
+        return (CollectionInteractionEvent<S,T>)event;
+      }
+    }
+ else     if (of == CollectionInteractionEvent.Of.REMOVE_FROM) {
+      for (      final Constructor<?> constructor : constructors) {
+        final Class<?>[] parameterTypes=constructor.getParameterTypes();
+        if (parameterTypes.length != 3) {
+          continue;
+        }
+        if (!parameterTypes[0].isAssignableFrom(source.getClass())) {
+          continue;
+        }
+        if (!parameterTypes[1].isAssignableFrom(Identifier.class)) {
+          continue;
+        }
+        if (value != null && !parameterTypes[2].isAssignableFrom(value.getClass())) {
+          continue;
+        }
+        final Object event=constructor.newInstance(source,identifier,value);
+        return (CollectionInteractionEvent<S,T>)event;
+      }
+    }
+  }
+  throw new NoSuchMethodException(type.getName() + ".<init>(? super " + source.getClass().getName()+ ", "+ Identifier.class.getName()+ ", java.lang.Object)");
+}

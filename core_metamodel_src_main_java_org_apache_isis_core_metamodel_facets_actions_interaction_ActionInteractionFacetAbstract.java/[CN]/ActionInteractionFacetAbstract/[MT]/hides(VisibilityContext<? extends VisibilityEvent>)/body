@@ -1,0 +1,14 @@
+{
+  if (!interactionHelper.hasEventBusService()) {
+    return null;
+  }
+  final ActionInteractionEvent<?> event=interactionHelper.postEventForAction(eventType(),null,null,AbstractInteractionEvent.Phase.HIDE,getIdentified(),ic.getTarget(),null);
+  if (event == null || !event.isHidden()) {
+    currentInteraction.set(event);
+    return null;
+  }
+ else {
+    currentInteraction.set(null);
+    return "Hidden by subscriber";
+  }
+}

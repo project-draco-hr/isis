@@ -1,0 +1,12 @@
+{
+  final ActionInteractionEvent<?> existingEvent=currentInteraction.get();
+  final ActionInteractionEvent<?> event=interactionHelper.postEventForAction(eventType(),existingEvent,null,AbstractInteractionEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),null);
+  if (event == null || !event.isDisabled()) {
+    currentInteraction.set(event);
+    return null;
+  }
+ else {
+    currentInteraction.set(null);
+    return event.getDisabledReason();
+  }
+}

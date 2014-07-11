@@ -1,0 +1,40 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  try {
+    final Class<?> returnType=actionMethod.getReturnType();
+    final ObjectSpecification returnSpec=getSpecificationLoader().loadSpecification(returnType);
+    if (returnSpec == null) {
+      return;
+    }
+    final Class<?> cls=processMethodContext.getCls();
+    final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
+    final FacetHolder holder=processMethodContext.getFacetHolder();
+    final ActionInteraction actionInteraction=Annotations.getAnnotation(actionMethod,ActionInteraction.class);
+    final Class<? extends ActionInteractionEvent<?>> actionInteractionEventType;
+    final ActionInteractionFacetAbstract actionInteractionFacet;
+    if (actionInteraction != null) {
+      actionInteractionEventType=actionInteraction.value();
+      actionInteractionFacet=new ActionInteractionFacetAnnotation(actionInteractionEventType,holder,servicesInjector,getSpecificationLoader());
+    }
+ else {
+      actionInteractionEventType=ActionInteractionEvent.Default.class;
+      actionInteractionFacet=new ActionInteractionFacetDefault(actionInteractionEventType,holder,servicesInjector,getSpecificationLoader());
+    }
+    FacetUtil.addFacet(actionInteractionFacet);
+    final PostsActionInvokedEvent postsActionInvokedEvent=Annotations.getAnnotation(actionMethod,PostsActionInvokedEvent.class);
+    final ActionInvocationFacetForInteractionAbstract actionInvocationFacet;
+    if (actionInteraction != null) {
+      actionInvocationFacet=new ActionInvocationFacetForActionInteractionAnnotation(actionInteractionEventType,actionMethod,typeSpec,returnSpec,actionInteractionFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+ else     if (postsActionInvokedEvent != null) {
+      actionInvocationFacet=new ActionInvocationFacetForPostsActionInvokedEventAnnotation(postsActionInvokedEvent.value(),actionMethod,typeSpec,returnSpec,actionInteractionFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+ else {
+      actionInvocationFacet=new ActionInvocationFacetForActionInteractionDefault(ActionInteractionEvent.Default.class,actionMethod,typeSpec,returnSpec,actionInteractionFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+    FacetUtil.addFacet(actionInvocationFacet);
+  }
+  finally {
+    processMethodContext.removeMethod(actionMethod);
+  }
+}

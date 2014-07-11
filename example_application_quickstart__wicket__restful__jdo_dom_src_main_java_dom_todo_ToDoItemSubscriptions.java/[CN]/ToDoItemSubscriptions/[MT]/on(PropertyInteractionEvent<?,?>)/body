@@ -1,21 +1,32 @@
 {
+  recordEvent(ev);
 switch (ev.getPhase()) {
 case HIDE:
-    break;
-case DISABLE:
+    if (getSubscriberBehaviour() == Behaviour.DescriptionPropertyHide && ev.getIdentifier().getMemberName().equals("description")) {
+      ev.hide();
+    }
   break;
-case VALIDATE:
+case DISABLE:
+if (getSubscriberBehaviour() == Behaviour.DescriptionPropertyDisable && ev.getIdentifier().getMemberName().equals("description")) {
+  ev.disable("ToDoItemSubscriptions says: description property disabled!");
+}
 break;
-case EXECUTE:
-rejectIfRequired();
-recordEvent(ev);
+case VALIDATE:
+if (getSubscriberBehaviour() == Behaviour.DescriptionPropertyInvalidate && ev.getIdentifier().getMemberName().equals("description")) {
+ev.disable("ToDoItemSubscriptions says: can't change description property to this value!");
+}
+break;
+case EXECUTING:
+break;
+case EXECUTED:
+LOG.info("Received PropertyInteractionEvent, " + container.titleOf(ev.getSource()) + ", changed "+ ev.getIdentifier().getMemberName()+ " : "+ ev.getOldValue()+ " -> "+ ev.getNewValue());
+onExecutedVetoIfRequired();
 if (ev.getIdentifier().getMemberName().contains("description")) {
 String newValue=(String)ev.getNewValue();
 if (newValue.matches(".*demo veto.*")) {
 throw new RecoverableException("oh no you don't! " + ev.getNewValue());
 }
 }
-LOG.info(container.titleOf(ev.getSource()) + ", changed " + ev.getIdentifier().getMemberName()+ " : "+ ev.getOldValue()+ " -> "+ ev.getNewValue());
 break;
 }
 }

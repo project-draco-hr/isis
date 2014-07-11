@@ -1,8 +1,8 @@
 {
-  assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.ActionExecuteAccept));
+  assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.AnyExecuteAccept));
   unwrap(toDoItem).setComplete(true);
   toDoItem.notYetCompleted();
-  assertThat(toDoItem.isComplete(),is(false));
+  assertThat(unwrap(toDoItem).isComplete(),is(false));
   final ActionInteractionEvent<ToDoItem> ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(ActionInteractionEvent.class);
   assertThat(ev,is(not(nullValue())));
   ToDoItem source=ev.getSource();

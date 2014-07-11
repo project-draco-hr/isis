@@ -1,15 +1,30 @@
 {
+  recordEvent(ev);
 switch (ev.getPhase()) {
 case HIDE:
-    break;
-case DISABLE:
+    if (getSubscriberBehaviour() == Behaviour.UpdateCostActionHide) {
+      if (ev.getIdentifier().getMemberName().equals("updateCost")) {
+        ev.hide();
+      }
+    }
   break;
-case VALIDATE:
+case DISABLE:
+if (getSubscriberBehaviour() == Behaviour.UpdateCostActionDisable) {
+  if (ev.getIdentifier().getMemberName().equals("updateCost")) {
+    ev.disable("ToDoItemSubscriptions says: updateCost action disabled!");
+  }
+}
 break;
-case EXECUTE:
-rejectIfRequired();
-recordEvent(ev);
-LOG.info(ev.getIdentifier().getMemberName() + ": " + container.titleOf(ev.getSource()));
+case VALIDATE:
+if (getSubscriberBehaviour() == Behaviour.UpdateCostActionInvalidate && ev.getIdentifier().getMemberName().equals("updateCost")) {
+ev.disable("ToDoItemSubscriptions says: can't invoke updateCostaction with these args!");
+}
+break;
+case EXECUTING:
+break;
+case EXECUTED:
+LOG.info("Received ActionInteractionEvent, " + container.titleOf(ev.getSource()) + ", invoked "+ ev.getIdentifier().getMemberName());
+onExecutedVetoIfRequired();
 break;
 }
 }
