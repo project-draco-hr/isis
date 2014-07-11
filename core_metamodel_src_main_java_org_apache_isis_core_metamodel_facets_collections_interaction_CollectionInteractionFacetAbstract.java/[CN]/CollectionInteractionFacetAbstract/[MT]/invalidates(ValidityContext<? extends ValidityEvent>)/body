@@ -1,14 +1,14 @@
 {
-  final CollectionInteractionEvent<?,?> existingEvent=currentInteraction.get();
-  final ProposedHolder catc=(ProposedHolder)ic;
-  final Object proposed=catc.getProposed().getObject();
-  final CollectionInteractionEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),existingEvent,AbstractInteractionEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),CollectionInteractionEvent.Of.ADD_TO,proposed);
-  if (event == null || !event.isInvalid()) {
-    currentInteraction.set(event);
+  if (!interactionHelper.hasEventBusService()) {
     return null;
   }
- else {
-    currentInteraction.set(null);
+  currentInteraction.set(null);
+  final ProposedHolder catc=(ProposedHolder)ic;
+  final Object proposed=catc.getProposed().getObject();
+  final CollectionInteractionEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),null,AbstractInteractionEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),CollectionInteractionEvent.Of.ADD_TO,proposed);
+  if (event != null && event.isInvalid()) {
     return event.getInvalidityReason();
   }
+  currentInteraction.set(event);
+  return null;
 }

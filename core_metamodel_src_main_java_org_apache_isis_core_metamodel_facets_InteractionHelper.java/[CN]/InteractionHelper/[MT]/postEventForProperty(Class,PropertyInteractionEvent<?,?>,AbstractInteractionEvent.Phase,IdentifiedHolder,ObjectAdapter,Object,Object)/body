@@ -4,12 +4,10 @@
   }
   try {
     final PropertyInteractionEvent<?,?> event;
-    if (existingEvent != null) {
+    if (existingEvent != null && phase.isValidatingOrLater()) {
       event=existingEvent;
-      if (phase.isValidatingOrLater()) {
-        setEventOldValue(event,oldValue);
-        setEventNewValue(event,newValue);
-      }
+      setEventOldValue(event,oldValue);
+      setEventNewValue(event,newValue);
     }
  else {
       final Object source=ObjectAdapter.Util.unwrap(targetAdapter);

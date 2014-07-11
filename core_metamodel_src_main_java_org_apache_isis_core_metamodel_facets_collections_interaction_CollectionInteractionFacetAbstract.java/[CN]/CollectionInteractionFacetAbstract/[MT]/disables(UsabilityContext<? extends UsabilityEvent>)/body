@@ -1,12 +1,11 @@
 {
-  final CollectionInteractionEvent<?,?> existingEvent=currentInteraction.get();
-  final CollectionInteractionEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),existingEvent,AbstractInteractionEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),CollectionInteractionEvent.Of.ACCESS,null);
-  if (event == null || !event.isDisabled()) {
-    currentInteraction.set(event);
+  if (!interactionHelper.hasEventBusService()) {
     return null;
   }
- else {
-    currentInteraction.set(null);
+  currentInteraction.set(null);
+  final CollectionInteractionEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),null,AbstractInteractionEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),CollectionInteractionEvent.Of.ACCESS,null);
+  if (event != null && event.isDisabled()) {
     return event.getDisabledReason();
   }
+  return null;
 }

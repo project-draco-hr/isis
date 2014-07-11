@@ -1,12 +1,11 @@
 {
-  final PropertyInteractionEvent<?,?> existingEvent=currentInteraction.get();
-  final PropertyInteractionEvent<?,?> event=interactionHelper.postEventForProperty(eventType(),existingEvent,AbstractInteractionEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),null,null);
-  if (event == null || !event.isDisabled()) {
-    currentInteraction.set(event);
+  if (!interactionHelper.hasEventBusService()) {
     return null;
   }
- else {
-    currentInteraction.set(null);
+  currentInteraction.set(null);
+  final PropertyInteractionEvent<?,?> event=interactionHelper.postEventForProperty(eventType(),null,AbstractInteractionEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),null,null);
+  if (event != null && event.isDisabled()) {
     return event.getDisabledReason();
   }
+  return null;
 }

@@ -4,12 +4,10 @@
   }
   try {
     final CollectionInteractionEvent<?,?> event;
-    if (existingEvent != null) {
+    if (existingEvent != null && phase.isValidatingOrLater()) {
       event=existingEvent;
-      if (phase.isValidatingOrLater()) {
-        event.setOf(of);
-        setEventValue(event,reference);
-      }
+      event.setOf(of);
+      setEventValue(event,reference);
     }
  else {
       final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
