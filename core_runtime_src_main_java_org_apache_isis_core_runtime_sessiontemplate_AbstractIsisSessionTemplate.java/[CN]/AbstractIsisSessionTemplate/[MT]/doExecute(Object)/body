@@ -1,0 +1,10 @@
+{
+  final PersistenceSession persistenceSession=getPersistenceSession();
+  final IsisTransactionManager transactionManager=getTransactionManager(persistenceSession);
+  transactionManager.executeWithinTransaction(new TransactionalClosureAbstract(){
+    @Override public void execute(){
+      doExecuteWithTransaction(context);
+    }
+  }
+);
+}
