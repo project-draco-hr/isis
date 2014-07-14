@@ -1,0 +1,21 @@
+{
+  final List<ObjectAdapterMemento> mementos=obtainMementos(null);
+  final Predicate<ObjectAdapterMemento> lookupOam=new Predicate<ObjectAdapterMemento>(){
+    @Override public boolean apply(    ObjectAdapterMemento input){
+      final String id=(String)getId(input);
+      return ids.contains(id);
+    }
+  }
+;
+  final Function<String,ObjectAdapterMemento> toOam=new Function<String,ObjectAdapterMemento>(){
+    @Override public ObjectAdapterMemento apply(    String input){
+      if (NULL_PLACEHOLDER.equals(input)) {
+        return null;
+      }
+      final Collection<ObjectAdapterMemento> filteredCollection=Collections2.filter(mementos,lookupOam);
+      return filteredCollection.iterator().next();
+    }
+  }
+;
+  return Collections2.transform(ids,toOam);
+}
