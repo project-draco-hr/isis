@@ -4,7 +4,7 @@
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
   final OneToManyAssociation collection=helper.getCollectionThatIsVisibleForIntent(collectionId,Intent.MUTATE,getResourceContext().getWhere());
   final ObjectSpecification collectionSpec=collection.getSpecification();
-  final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,getResourceContext().getQueryString());
+  final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,getResourceContext().getUrlUnencodedQueryString());
   final Consent consent=collection.isValidToRemove(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());

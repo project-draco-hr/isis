@@ -1,0 +1,13 @@
+{
+  final int i=999999;
+  final Response domainObjectResp=domainObjectResource.propertyDetails("PRMV","40","intProperty");
+  final RestfulResponse<ObjectPropertyRepresentation> domainObjectJsonResp=RestfulResponse.ofT(domainObjectResp);
+  assertThat(domainObjectJsonResp.getStatus().getFamily(),is(Response.Status.Family.SUCCESSFUL));
+  ObjectPropertyRepresentation objectPropertyRepr=domainObjectJsonResp.getEntity();
+  modifyLink=objectPropertyRepr.getLinkWithRel(Rel.MODIFY);
+  argRepr=modifyLink.getArguments().mapPut("value",i);
+  RestfulResponse<JsonRepresentation> result=client.follow(modifyLink,argRepr);
+  assertThat(result.getStatus(),is(RestfulResponse.HttpStatusCode.OK));
+  final JsonRepresentation jsonRepresentation=result.getEntity().as(ObjectPropertyRepresentation.class);
+  assertThat(jsonRepresentation.getInt("value"),is(i));
+}

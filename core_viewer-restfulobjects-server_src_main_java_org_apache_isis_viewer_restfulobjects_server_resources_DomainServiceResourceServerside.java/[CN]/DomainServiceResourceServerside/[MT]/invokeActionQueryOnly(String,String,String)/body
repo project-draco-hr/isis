@@ -1,5 +1,6 @@
 {
-  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLES,xIsisQueryString);
+  final String urlUnencodedQueryString=UrlEncodingUtils.urlDecodeNullSafe(xIsisUrlEncodedQueryString != null ? xIsisUrlEncodedQueryString : httpServletRequest.getQueryString());
+  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLES,urlUnencodedQueryString);
   final JsonRepresentation arguments=getResourceContext().getQueryStringAsJsonRepr();
   final ObjectAdapter serviceAdapter=getServiceAdapter(serviceId);
   final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),serviceAdapter).using(new DomainServiceLinkTo());
