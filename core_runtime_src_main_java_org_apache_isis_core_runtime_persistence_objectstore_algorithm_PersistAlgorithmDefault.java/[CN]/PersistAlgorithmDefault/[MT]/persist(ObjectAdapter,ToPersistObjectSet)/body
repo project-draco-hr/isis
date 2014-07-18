@@ -7,7 +7,6 @@
     if (LOG.isDebugEnabled()) {
       LOG.debug("make persistent " + adapter);
     }
-    CallbackUtils.callCallback(adapter,PersistingCallbackFacet.class);
     toPersistObjectSet.remapAsPersistent(adapter);
     final ResolveState stateWhilePersisting=ResolveState.UPDATING;
     adapter.changeState(stateWhilePersisting);
@@ -32,7 +31,6 @@
       }
     }
     toPersistObjectSet.addCreateObjectCommand(adapter);
-    CallbackUtils.callCallback(adapter,PersistedCallbackFacet.class);
     adapter.changeState(stateWhilePersisting.getEndState());
   }
 }

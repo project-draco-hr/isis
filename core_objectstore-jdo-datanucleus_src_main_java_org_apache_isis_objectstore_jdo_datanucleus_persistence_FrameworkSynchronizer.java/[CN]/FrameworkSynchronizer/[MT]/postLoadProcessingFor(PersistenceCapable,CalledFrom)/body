@@ -5,12 +5,12 @@
       getPersistenceSession().getServicesInjector().injectServicesInto(pojo);
       final Version datastoreVersion=getVersionIfAny(pc);
       final RootOid originalOid;
-      ObjectAdapter originalAdapter=getAdapterManager().getAdapterFor(pojo);
-      if (originalAdapter != null) {
+      ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      if (adapter != null) {
         ensureRootObject(pojo);
-        originalOid=(RootOid)originalAdapter.getOid();
-        final Version originalVersion=originalAdapter.getVersion();
-        getPersistenceSession().remapRecreatedPojo(originalAdapter,pojo);
+        originalOid=(RootOid)adapter.getOid();
+        final Version originalVersion=adapter.getVersion();
+        getPersistenceSession().remapRecreatedPojo(adapter,pojo);
         final RootOid thisOid=originalOid;
         final Version thisVersion=originalVersion;
         final Version otherVersion=datastoreVersion;
@@ -29,21 +29,22 @@
  else {
         final OidGenerator oidGenerator=getOidGenerator();
         originalOid=oidGenerator.createPersistentOrViewModelOid(pojo,null);
-        originalAdapter=getAdapterManager().getAdapterFor(originalOid);
-        if (originalAdapter != null) {
-          getPersistenceSession().remapRecreatedPojo(originalAdapter,pojo);
+        adapter=getAdapterManager().getAdapterFor(originalOid);
+        if (adapter != null) {
+          getPersistenceSession().remapRecreatedPojo(adapter,pojo);
         }
  else {
-          originalAdapter=getPersistenceSession().mapRecreatedPojo(originalOid,pojo);
+          adapter=getPersistenceSession().mapRecreatedPojo(originalOid,pojo);
+          CallbackFacet.Util.callCallback(adapter,LoadedCallbackFacet.class);
         }
       }
-      if (!originalAdapter.isResolved()) {
-        PersistorUtil.startResolving(originalAdapter);
-        PersistorUtil.toEndState(originalAdapter);
+      if (!adapter.isResolved()) {
+        PersistorUtil.startResolving(adapter);
+        PersistorUtil.toEndState(adapter);
       }
-      originalAdapter.setVersion(datastoreVersion);
+      adapter.setVersion(datastoreVersion);
       if (pojo.jdoIsDeleted()) {
-        originalAdapter.changeState(ResolveState.DESTROYED);
+        adapter.changeState(ResolveState.DESTROYED);
       }
       ensureFrameworksInAgreement(pojo);
     }

@@ -1,14 +1,12 @@
 {
   getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
     @Override public void preExecute(){
-      CallbackUtils.callCallback(adapter,RemovingCallbackFacet.class);
     }
     @Override public void execute(){
       final DestroyObjectCommand command=objectStore.createDestroyObjectCommand(adapter);
       getTransactionManager().addCommand(command);
     }
     @Override public void onSuccess(){
-      CallbackUtils.callCallback(adapter,RemovedCallbackFacet.class);
     }
     @Override public void onFailure(){
     }

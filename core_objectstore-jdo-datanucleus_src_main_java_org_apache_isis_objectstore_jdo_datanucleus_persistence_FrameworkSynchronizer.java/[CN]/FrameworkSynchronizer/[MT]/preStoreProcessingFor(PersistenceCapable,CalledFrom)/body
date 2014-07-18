@@ -1,0 +1,17 @@
+{
+  withLogging(pojo,new Runnable(){
+    @Override public void run(){
+      final ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      if (adapter == null) {
+        return;
+      }
+      final RootOid isisOid=(RootOid)adapter.getOid();
+      if (isisOid.isTransient()) {
+        CallbackFacet.Util.callCallback(adapter,PersistingCallbackFacet.class);
+      }
+ else {
+      }
+    }
+  }
+,calledFrom);
+}
