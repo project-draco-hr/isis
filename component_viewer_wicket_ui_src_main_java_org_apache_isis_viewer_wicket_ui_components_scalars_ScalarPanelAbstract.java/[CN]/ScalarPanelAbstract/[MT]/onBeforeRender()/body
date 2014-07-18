@@ -1,6 +1,11 @@
 {
-  if (!hasBeenRendered() || alwaysRebuildGui()) {
-    buildGui();
+  if ((!hasBeenRendered() || alwaysRebuildGui())) {
+    if (!guiForceBuilt) {
+      buildGui();
+    }
+ else {
+      guiForceBuilt=false;
+    }
   }
   final ScalarModel scalarModel=getModel();
   if (scalarModel.isViewMode()) {

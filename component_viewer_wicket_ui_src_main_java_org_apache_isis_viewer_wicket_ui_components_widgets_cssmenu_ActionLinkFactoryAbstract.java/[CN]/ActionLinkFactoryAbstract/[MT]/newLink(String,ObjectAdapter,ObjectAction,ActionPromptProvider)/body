@@ -11,11 +11,34 @@
           ajaxDeferredBehaviour.initiate(target);
         }
  else {
-          final ActionPanel actionPromptPanel=(ActionPanel)getComponentFactoryRegistry().createComponent(ComponentType.ACTION_PROMPT,actionPrompt.getContentId(),actionModel);
-          actionPrompt.setPanel(actionPromptPanel,target);
-          actionPromptPanel.setActionPrompt(actionPrompt);
+          final ActionPanel actionPanel=(ActionPanel)getComponentFactoryRegistry().createComponent(ComponentType.ACTION_PROMPT,actionPrompt.getContentId(),actionModel);
+          actionPrompt.setPanel(actionPanel,target);
+          actionPanel.setActionPrompt(actionPrompt);
           actionPrompt.show(target);
-          target.focusComponent(actionPromptPanel);
+          focusOnFirstParameter(target,actionPanel);
+        }
+      }
+      private void focusOnFirstParameter(      AjaxRequestTarget target,      ActionPanel actionPanel){
+        actionPanel.visitChildren(new IVisitor<Component,Component>(){
+          @Override public void component(          Component object,          IVisit<Component> visit){
+            if (object instanceof ScalarPanelAbstract) {
+              ScalarPanelAbstract spa=(ScalarPanelAbstract)object;
+              spa.forceBuildGui();
+              visit.dontGoDeeper();
+            }
+          }
+        }
+);
+        final Component actionPanelFirstParam=actionPanel.visitChildren(new IVisitor<Component,Component>(){
+          @Override public void component(          Component object,          IVisit<Component> visit){
+            if (object instanceof FormComponent) {
+              visit.stop(object);
+            }
+          }
+        }
+);
+        if (actionPanelFirstParam != null) {
+          target.focusComponent(actionPanelFirstParam);
         }
       }
     }
