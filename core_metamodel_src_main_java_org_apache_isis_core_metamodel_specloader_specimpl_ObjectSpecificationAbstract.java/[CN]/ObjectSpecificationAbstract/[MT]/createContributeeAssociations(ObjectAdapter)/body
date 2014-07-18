@@ -19,6 +19,9 @@
     if (!(serviceAction instanceof ObjectActionImpl)) {
       continue;
     }
+    if (!serviceAction.getSemantics().isSafe()) {
+      continue;
+    }
     contributedActions.add((ObjectActionImpl)serviceAction);
   }
   return Lists.newArrayList(Iterables.transform(contributedActions,createContributeeAssociationFunctor(serviceAdapter,this)));
