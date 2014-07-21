@@ -1,6 +1,7 @@
 {
   initIfRequired();
   for (  final String packagePrefix : Iterables.transform(Splitter.on(",").split(packagePrefixes),trim())) {
+    Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
     Reflections reflections=new Reflections(packagePrefix);
     final Iterable<Class<?>> classes=Iterables.filter(reflections.getTypesAnnotatedWith(DomainService.class),instantiatable());
     for (    final Class<?> cls : classes) {

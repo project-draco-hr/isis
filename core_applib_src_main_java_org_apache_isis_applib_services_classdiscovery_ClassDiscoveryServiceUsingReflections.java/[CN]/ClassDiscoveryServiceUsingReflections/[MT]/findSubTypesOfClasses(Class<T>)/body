@@ -1,4 +1,7 @@
 {
-  final Reflections reflections=new Reflections(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader()),ClasspathHelper.forClass(Object.class),new SubTypesScanner(false));
+  List<Vfs.UrlType> urlTypes=getUrlTypes();
+  Vfs.setDefaultURLTypes(urlTypes);
+  ConfigurationBuilder configuration=ConfigurationBuilder.build(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader()),ClasspathHelper.forClass(Object.class),new SubTypesScanner(false));
+  final Reflections reflections=new Reflections(configuration);
   return reflections.getSubTypesOf(type);
 }
