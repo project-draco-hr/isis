@@ -1,0 +1,11 @@
+{
+  assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.AnyExecuteAccept));
+  unwrap(toDoItem).setComplete(true);
+  toDoItem.notYetCompleted();
+  assertThat(unwrap(toDoItem).isComplete(),is(false));
+  final ActionInteractionEvent<ToDoItem> ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(ActionInteractionEvent.class);
+  assertThat(ev,is(not(nullValue())));
+  ToDoItem source=ev.getSource();
+  assertThat(source,is(equalTo(unwrap(toDoItem))));
+  assertThat(ev.getIdentifier().getMemberName(),is("notYetCompleted"));
+}
