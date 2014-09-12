@@ -1,0 +1,19 @@
+{
+  final ObjectMember.AuthorizationException authorizationException=causalChainOf(ex,ObjectMember.AuthorizationException.class);
+  if (authorizationException != null) {
+    this.authorizationCause=true;
+    this.mainMessage=authorizationException.getMessage();
+  }
+ else {
+    this.authorizationCause=false;
+    if (recognizedMessageIfAny != null) {
+      this.recognized=true;
+      this.mainMessage=recognizedMessageIfAny;
+    }
+ else {
+      this.recognized=false;
+      this.mainMessage=MAIN_MESSAGE_IF_NOT_RECOGNIZED;
+    }
+  }
+  stackTraceDetailList=asStackTrace(ex);
+}

@@ -1,0 +1,15 @@
+{
+  final Consent visibility=isVisible(authenticationSession,target,where);
+  if (visibility.isVetoed()) {
+    throw new AuthorizationException();
+  }
+  final Consent usability=isUsable(authenticationSession,target,where);
+  if (usability.isVetoed()) {
+    throw new AuthorizationException();
+  }
+  final Consent validity=isProposedArgumentSetValid(target,arguments);
+  if (validity.isVetoed()) {
+    throw new RecoverableException(validity.getReason());
+  }
+  return execute(target,arguments);
+}

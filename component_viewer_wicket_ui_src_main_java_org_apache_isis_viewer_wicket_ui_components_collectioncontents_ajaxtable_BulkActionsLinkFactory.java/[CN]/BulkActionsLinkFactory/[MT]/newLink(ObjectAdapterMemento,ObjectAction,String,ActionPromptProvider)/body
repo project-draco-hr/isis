@@ -20,9 +20,6 @@
           command=commandContext.getCommand();
           command.setExecutor(Executor.USER);
         }
- else {
-          command=null;
-        }
         ObjectAdapter lastReturnedAdapter=null;
         int i=0;
         for (        final ObjectAdapter adapter : toggledAdapters) {
@@ -33,7 +30,7 @@
           if (bulkInteractionContext != null) {
             bulkInteractionContext.setIndex(i++);
           }
-          lastReturnedAdapter=objectAction.execute(adapter,new ObjectAdapter[]{});
+          lastReturnedAdapter=objectAction.executeWithRuleChecking(adapter,new ObjectAdapter[]{},getAuthenticationSession(),ActionModel.WHERE_FOR_ACTION_INVOCATION);
         }
         model.clearToggleMementosList();
         toggleboxColumn.clearToggles();

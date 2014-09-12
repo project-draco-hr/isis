@@ -1,14 +1,20 @@
 {
   super(pageParameters,ApplicationActions.INCLUDE,titleString,ComponentType.ENTITY);
   this.model=entityModel;
-  ObjectAdapter objectAdapter;
+  final ObjectAdapter objectAdapter;
   try {
     objectAdapter=entityModel.getObject();
   }
  catch (  RuntimeException ex) {
     removeAnyBookmark(model);
     removeAnyBreadcrumb(model);
-    throw ex;
+    throw new ObjectMember.AuthorizationException(ex);
+  }
+  final AuthenticationSession session=getAuthenticationSession();
+  final ObjectSpecification specification=objectAdapter.getSpecification();
+  final List<ObjectAssociation> visibleAssociation=specification.getAssociations(Contributed.INCLUDED,ObjectAssociation.Filters.dynamicallyVisible(session,objectAdapter,Where.NOWHERE));
+  if (visibleAssociation.isEmpty()) {
+    throw new ObjectMember.AuthorizationException();
   }
   if (!getDeploymentType().isProduction()) {
     getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
