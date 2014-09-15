@@ -1,0 +1,14 @@
+{
+  if (!objectAction.containsDoOpFacet(HomePageFacet.class)) {
+    return null;
+  }
+  final Consent visibility=objectAction.isVisible(getAuthenticationSession(),serviceAdapter,Where.ANYWHERE);
+  if (visibility.isVetoed()) {
+    return null;
+  }
+  final Consent usability=objectAction.isUsable(getAuthenticationSession(),serviceAdapter,Where.ANYWHERE);
+  if (usability.isVetoed()) {
+    return null;
+  }
+  return new ObjectAndAction(serviceAdapter,objectAction);
+}

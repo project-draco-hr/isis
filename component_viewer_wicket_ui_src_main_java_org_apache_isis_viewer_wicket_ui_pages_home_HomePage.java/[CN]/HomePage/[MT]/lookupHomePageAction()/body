@@ -4,8 +4,9 @@
     final ObjectSpecification serviceSpec=serviceAdapter.getSpecification();
     final List<ObjectAction> objectActions=serviceSpec.getObjectActions(Contributed.EXCLUDED);
     for (    final ObjectAction objectAction : objectActions) {
-      if (objectAction.containsFacet(HomePageFacet.class)) {
-        return new ObjectAndAction(serviceAdapter,objectAction);
+      final ObjectAndAction oaa=objectAndActionIfHomePageAndUsable(serviceAdapter,objectAction);
+      if (oaa != null) {
+        return oaa;
       }
     }
   }
