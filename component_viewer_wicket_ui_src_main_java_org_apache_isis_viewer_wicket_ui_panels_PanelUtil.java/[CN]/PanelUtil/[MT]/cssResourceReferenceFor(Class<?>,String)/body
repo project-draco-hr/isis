@@ -3,5 +3,10 @@
   if (url == null) {
     return null;
   }
-  return new CssResourceReference(cls,url);
+  return new CssResourceReference(cls,url){
+    @Override public Iterable<? extends HeaderItem> getDependencies(){
+      return Lists.newArrayList(CssHeaderItem.forReference(Bootstrap.getSettings().getCssResourceReference()));
+    }
+  }
+;
 }
