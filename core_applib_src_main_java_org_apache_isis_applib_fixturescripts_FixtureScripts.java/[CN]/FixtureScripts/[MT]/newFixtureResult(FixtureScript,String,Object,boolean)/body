@@ -13,6 +13,9 @@ case IGNORE:
   return null;
 }
 }
-String mementoFor=mementoFor(script,subkey,object,firstTime);
-return getContainer().newViewModelInstance(FixtureResult.class,mementoFor);
+final FixtureResult fixtureResult=new FixtureResult();
+fixtureResult.setFixtureScriptClassName(firstTime ? script.getClass().getName() : null);
+fixtureResult.setKey(script.pathWith(subkey));
+fixtureResult.setObject(object);
+return fixtureResult;
 }

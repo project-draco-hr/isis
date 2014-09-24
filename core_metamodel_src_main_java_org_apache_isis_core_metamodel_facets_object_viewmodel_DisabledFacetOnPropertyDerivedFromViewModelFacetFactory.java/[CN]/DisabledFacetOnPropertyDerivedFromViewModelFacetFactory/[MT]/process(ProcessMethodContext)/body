@@ -1,0 +1,10 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final Class<?> declaringClass=method.getDeclaringClass();
+  final ObjectSpecification spec=getSpecificationLoader().loadSpecification(declaringClass);
+  if (!spec.containsDoOpFacet(ViewModelFacet.class)) {
+    return;
+  }
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(new DisabledFacetOnPropertyDerivedFromViewModel(facetHolder));
+}
