@@ -5,12 +5,13 @@
   if (spec == null) {
     return null;
   }
+  final PersistenceSession persistenceSession=resourceContext.getPersistenceSession();
   if (spec.containsFacet(ViewModelFacet.class)) {
-    if (!rootOid.getIdentifier().startsWith(OidMarshaller.VIEWMODEL_INDICATOR)) {
-      rootOid=RootOidDefault.create(rootOid.getObjectSpecId(),OidMarshaller.VIEWMODEL_INDICATOR + rootOid.getIdentifier());
+    if (!rootOid.isViewModel()) {
+      rootOid=new RootOidDefault(rootOid.getObjectSpecId(),rootOid.getIdentifier(),Oid.State.VIEWMODEL);
     }
     try {
-      return resourceContext.getPersistenceSession().getAdapterManager().adapterFor(rootOid);
+      return persistenceSession.getAdapterManager().adapterFor(rootOid);
     }
  catch (    final ObjectNotFoundException ex) {
       return null;
@@ -21,7 +22,7 @@ catch (    final PojoRecreationException ex) {
   }
  else {
     try {
-      ObjectAdapter objectAdapter=resourceContext.getPersistenceSession().loadObject(rootOid);
+      ObjectAdapter objectAdapter=persistenceSession.loadObject(rootOid);
       return objectAdapter.isTransient() ? null : objectAdapter;
     }
  catch (    final ObjectNotFoundException ex) {
