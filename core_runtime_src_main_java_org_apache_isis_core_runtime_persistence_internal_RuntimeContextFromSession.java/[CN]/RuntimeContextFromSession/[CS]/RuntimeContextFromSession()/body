@@ -21,6 +21,12 @@
     @Override public ObjectAdapter adapterFor(    final Object pojo,    final ObjectAdapter ownerAdapter,    final OneToManyAssociation collection){
       return getRuntimeAdapterManager().adapterFor(pojo,ownerAdapter,collection);
     }
+    @Override public ObjectAdapter mapRecreatedPojo(    Oid oid,    Object recreatedPojo){
+      return getRuntimeAdapterManager().mapRecreatedPojo(oid,recreatedPojo);
+    }
+    @Override public void removeAdapter(    ObjectAdapter adapter){
+      getRuntimeAdapterManager().removeAdapter(adapter);
+    }
     @Override public ObjectAdapter adapterFor(    TypedOid oid){
       return getRuntimeAdapterManager().adapterFor(oid);
     }
@@ -75,6 +81,9 @@
     }
     @Override public ObjectAdapter createViewModelInstance(    ObjectSpecification spec,    String memento){
       return getPersistenceSession().createViewModelInstance(spec,memento);
+    }
+    @Override public ObjectAdapter existingViewModelInstance(    final Object viewModelPojo){
+      return getPersistenceSession().existingViewModelInstance(viewModelPojo);
     }
     @Override public ObjectAdapter createAggregatedInstance(    final ObjectSpecification spec,    final ObjectAdapter parent){
       return getPersistenceSession().createAggregatedInstance(spec,parent);

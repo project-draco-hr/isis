@@ -1,0 +1,14 @@
+{
+  final Class<?> viewModelClass=viewModelPojo.getClass();
+  final ObjectSpecification spec=getSpecificationLookup().loadSpecification(viewModelClass);
+  if (!spec.containsFacet(ViewModelFacet.class)) {
+    throw new IsisException("Type must be a ViewModel: " + viewModelClass);
+  }
+  final ObjectAdapter adapter=doExistingViewModelInstance(viewModelPojo);
+  if (adapter.getOid().isViewModel()) {
+    return (T)adapter.getObject();
+  }
+ else {
+    throw new IsisException("Object is not a ViewModel (imple,e");
+  }
+}

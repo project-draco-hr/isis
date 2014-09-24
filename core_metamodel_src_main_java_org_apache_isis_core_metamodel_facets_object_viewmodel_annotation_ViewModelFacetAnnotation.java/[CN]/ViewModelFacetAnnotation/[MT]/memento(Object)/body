@@ -1,0 +1,42 @@
+{
+  final MementoService mementoService=servicesInjector.lookupService(MementoService.class);
+  final BookmarkService bookmarkService=servicesInjector.lookupService(BookmarkService.class);
+  final MementoService.Memento memento=mementoService.create();
+  boolean createdTemporaryAdapter=false;
+  ObjectAdapter viewModelAdapter=adapterManager.getAdapterFor(viewModelPojo);
+  if (viewModelAdapter == null) {
+    final ObjectSpecification objectSpecification=specificationLoader.loadSpecification(viewModelPojo.getClass());
+    final ObjectSpecId objectSpecId=objectSpecification.getSpecId();
+    viewModelAdapter=adapterManager.mapRecreatedPojo(RootOidDefault.create(objectSpecId,UUID.randomUUID().toString()),viewModelPojo);
+    createdTemporaryAdapter=true;
+  }
+  try {
+    final ObjectSpecification spec=viewModelAdapter.getSpecification();
+    final List<OneToOneAssociation> properties=spec.getProperties(Contributed.EXCLUDED);
+    for (    OneToOneAssociation property : properties) {
+      if (!property.containsDoOpFacet(PropertySetterFacet.class)) {
+        continue;
+      }
+      if (property.isNotPersisted()) {
+        continue;
+      }
+      final ObjectAdapter propertyValueAdapter=property.get(adapterManager.adapterFor(viewModelPojo));
+      if (propertyValueAdapter != null) {
+        final Object propertyValue=propertyValueAdapter.getObject();
+        if (mementoService.canSet(propertyValue)) {
+          memento.set(property.getId(),propertyValue);
+        }
+ else {
+          final Bookmark propertyValueBookmark=bookmarkService.bookmarkFor(propertyValue);
+          memento.set(property.getId() + ".bookmark",propertyValueBookmark);
+        }
+      }
+    }
+    return memento.asString();
+  }
+  finally {
+    if (createdTemporaryAdapter) {
+      adapterManager.removeAdapter(viewModelAdapter);
+    }
+  }
+}

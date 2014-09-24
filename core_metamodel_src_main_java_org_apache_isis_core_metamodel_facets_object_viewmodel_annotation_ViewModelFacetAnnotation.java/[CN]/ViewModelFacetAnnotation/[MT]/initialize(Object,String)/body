@@ -1,0 +1,29 @@
+{
+  final MementoService mementoService=servicesInjector.lookupService(MementoService.class);
+  final BookmarkService bookmarkService=servicesInjector.lookupService(BookmarkService.class);
+  final MementoService.Memento memento=mementoService.parse(mementoStr);
+  final Set<String> mementoKeys=memento.keySet();
+  ObjectAdapter viewModelAdapter=adapterManager.getAdapterFor(viewModelPojo);
+  if (viewModelAdapter == null) {
+    final ObjectSpecification objectSpecification=specificationLoader.loadSpecification(viewModelPojo.getClass());
+    final ObjectSpecId objectSpecId=objectSpecification.getSpecId();
+    viewModelAdapter=adapterManager.mapRecreatedPojo(new RootOidDefault(objectSpecId,mementoStr,Oid.State.VIEWMODEL),viewModelPojo);
+  }
+  final ObjectSpecification spec=viewModelAdapter.getSpecification();
+  final List<OneToOneAssociation> properties=spec.getProperties(Contributed.EXCLUDED);
+  for (  OneToOneAssociation property : properties) {
+    final String propertyId=property.getId();
+    Object propertyValue=null;
+    if (mementoKeys.contains(propertyId)) {
+      final Class<?> propertyType=property.getSpecification().getCorrespondingClass();
+      propertyValue=memento.get(propertyId,propertyType);
+    }
+ else     if (mementoKeys.contains(propertyId + ".bookmark")) {
+      final Bookmark propertyValueBookmark=memento.get(propertyId,Bookmark.class);
+      propertyValue=bookmarkService.lookup(propertyValueBookmark);
+    }
+    if (propertyValue != null) {
+      property.set(viewModelAdapter,adapterManager.adapterFor(propertyValue));
+    }
+  }
+}
