@@ -6,20 +6,20 @@
   servicesInjector.setServices(services);
   servicesInjector.init();
   final ServiceInitializer serviceInitializer=new ServiceInitializer();
-  serviceInitializer.validate(getConfiguration(),container,services);
+  serviceInitializer.validate(getConfiguration(),services);
   IsisContext.openSession(new InitialisationSession());
   try {
-    IsisContext.getTransactionManager().startTransaction();
+    getTransactionManager().startTransaction();
     try {
       serviceInitializer.postConstruct();
       return serviceInitializer;
     }
  catch (    RuntimeException ex) {
-      IsisContext.getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
       return serviceInitializer;
     }
  finally {
-      IsisContext.getTransactionManager().endTransaction();
+      getTransactionManager().endTransaction();
     }
   }
   finally {

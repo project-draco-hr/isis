@@ -1,0 +1,17 @@
+{
+  final Class<?> serviceClass=service.getClass();
+  final Method postConstructMethod=postConstructMethodsByServiceClass.get(serviceClass);
+  if (postConstructMethod == null) {
+    return;
+  }
+  final int numParams=postConstructMethod.getParameterTypes().length;
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("... calling @PostConstruct method: " + serviceClass.getName() + ": "+ postConstructMethod.getName());
+  }
+  if (numParams == 0) {
+    MethodExtensions.invoke(postConstructMethod,service);
+  }
+ else {
+    MethodExtensions.invoke(postConstructMethod,service,new Object[]{props});
+  }
+}

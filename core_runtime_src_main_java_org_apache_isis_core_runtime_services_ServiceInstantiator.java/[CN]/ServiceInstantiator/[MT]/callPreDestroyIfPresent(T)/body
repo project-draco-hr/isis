@@ -1,0 +1,16 @@
+{
+  final Class<?> serviceClass=service.getClass();
+  final Method preDestroyMethod=preDestroyMethodsByServiceClass.get(serviceClass);
+  if (preDestroyMethod == null) {
+    return;
+  }
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("... calling @PreDestroy method: " + serviceClass.getName() + ": "+ preDestroyMethod.getName());
+  }
+  try {
+    MethodExtensions.invoke(preDestroyMethod,service);
+  }
+ catch (  Exception ex) {
+    LOG.warn("... @PreDestroy method threw exception - continuing anyway",ex);
+  }
+}

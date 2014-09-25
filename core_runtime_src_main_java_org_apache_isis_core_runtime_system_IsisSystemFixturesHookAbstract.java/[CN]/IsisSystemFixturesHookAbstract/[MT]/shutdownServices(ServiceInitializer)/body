@@ -1,15 +1,15 @@
 {
   IsisContext.openSession(new InitialisationSession());
   try {
-    IsisContext.getTransactionManager().startTransaction();
+    getTransactionManager().startTransaction();
     try {
       serviceInitializer.preDestroy();
     }
  catch (    RuntimeException ex) {
-      IsisContext.getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
     }
  finally {
-      IsisContext.getTransactionManager().endTransaction();
+      getTransactionManager().endTransaction();
     }
   }
   finally {

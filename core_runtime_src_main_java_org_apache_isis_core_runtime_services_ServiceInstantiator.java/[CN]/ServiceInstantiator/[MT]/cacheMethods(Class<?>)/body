@@ -1,0 +1,50 @@
+{
+  final Method[] methods=serviceClass.getMethods();
+  Method postConstructMethod=null;
+  for (  final Method method : methods) {
+    final PostConstruct postConstructAnnotation=method.getAnnotation(PostConstruct.class);
+    if (postConstructAnnotation == null) {
+      continue;
+    }
+    if (postConstructMethod != null) {
+      throw new RuntimeException("Found more than one @PostConstruct method; service is: " + serviceClass.getName() + ", found "+ postConstructMethod.getName()+ " and "+ method.getName());
+    }
+    final Class<?>[] parameterTypes=method.getParameterTypes();
+switch (parameterTypes.length) {
+case 0:
+      break;
+case 1:
+    if (Map.class != parameterTypes[0]) {
+      throw new RuntimeException("@PostConstruct method must be no-arg or 1-arg accepting java.util.Map; method is: " + serviceClass.getName() + "#"+ method.getName());
+    }
+  break;
+default :
+throw new RuntimeException("@PostConstruct method must be no-arg or 1-arg accepting java.util.Map; method is: " + serviceClass.getName() + "#"+ method.getName());
+}
+postConstructMethod=method;
+}
+Method preDestroyMethod=null;
+for (final Method method : methods) {
+final PreDestroy preDestroyAnnotation=method.getAnnotation(PreDestroy.class);
+if (preDestroyAnnotation == null) {
+continue;
+}
+if (preDestroyMethod != null) {
+throw new RuntimeException("Found more than one @PreDestroy method; service is: " + serviceClass.getName() + ", found "+ preDestroyMethod.getName()+ " and "+ method.getName());
+}
+final Class<?>[] parameterTypes=method.getParameterTypes();
+switch (parameterTypes.length) {
+case 0:
+break;
+default :
+throw new RuntimeException("@PreDestroy method must be no-arg; method is: " + serviceClass.getName() + "#"+ method.getName());
+}
+preDestroyMethod=method;
+}
+if (postConstructMethod != null) {
+postConstructMethodsByServiceClass.put(serviceClass,postConstructMethod);
+}
+if (preDestroyMethod != null) {
+preDestroyMethodsByServiceClass.put(serviceClass,preDestroyMethod);
+}
+}

@@ -15,12 +15,16 @@
     proxyObject.setHandler(new MethodHandler(){
       private ThreadLocal<T> serviceByThread=new ThreadLocal<T>();
       @Override public Object invoke(      final Object proxied,      final Method proxyMethod,      final Method proxiedMethod,      final Object[] args) throws Throwable {
+        cacheMethodsIfNecessary(cls);
         if (proxyMethod.getName().equals("__isis_startRequest")) {
           T service=instantiate(cls);
+          callPostConstructIfPresent(service);
           serviceByThread.set(service);
           return null;
         }
  else         if (proxyMethod.getName().equals("__isis_endRequest")) {
+          final T service=serviceByThread.get();
+          callPreDestroyIfPresent(service);
           serviceByThread.set(null);
           return null;
         }
