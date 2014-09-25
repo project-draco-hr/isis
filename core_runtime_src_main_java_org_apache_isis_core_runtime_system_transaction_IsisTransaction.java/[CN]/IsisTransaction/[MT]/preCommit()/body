@@ -11,7 +11,9 @@
     return;
   }
   try {
-    preCommitServices();
+    final Set<Entry<AdapterAndProperty,PreAndPostValues>> changedObjectProperties=getChangedObjectProperties();
+    ensureAnySafeSemanticsHonoured(changedObjectProperties);
+    preCommitServices(changedObjectProperties);
   }
  catch (  final RuntimeException ex) {
     setAbortCause(new IsisTransactionManagerException(ex));

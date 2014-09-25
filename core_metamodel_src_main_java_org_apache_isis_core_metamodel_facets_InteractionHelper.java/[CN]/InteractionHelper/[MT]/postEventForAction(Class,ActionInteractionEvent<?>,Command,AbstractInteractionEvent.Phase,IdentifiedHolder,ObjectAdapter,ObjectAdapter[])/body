@@ -22,6 +22,10 @@
       final Identifier identifier=identified.getIdentifier();
       event=newActionInteractionEvent(eventType,identifier,source,arguments);
     }
+    if (identified instanceof ObjectAction) {
+      final ObjectAction objectAction=(ObjectAction)identified;
+      event.setActionSemantics(objectAction.getSemantics());
+    }
     event.setPhase(phase);
     getEventBusService().post(event);
     return event;
