@@ -5,8 +5,13 @@
     buf.append("- Completed!");
   }
  else {
-    if (getDueBy() != null) {
-      buf.append(" due by",getDueBy());
+    try {
+      final LocalDate dueBy=wrapperFactory.wrap(this).getDueBy();
+      if (dueBy != null) {
+        buf.append(" due by",dueBy);
+      }
+    }
+ catch (    HiddenException ex) {
     }
   }
   return buf.toString();
