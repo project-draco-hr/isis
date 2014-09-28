@@ -8,12 +8,12 @@
       ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",subMenuItems){
         @Override protected void populateItem(        ListItem<CssMenuItem> listItem){
           CssMenuItem subMenuItem=listItem.getModelObject();
-          AbstractLink subMenuItemLink=subMenuItem.getLink();
-          subMenuItemLink.setBody(Model.of(subMenuItem.getName()));
-          if (!subMenuItem.isEnabled()) {
-            listItem.add(new CssClassNameAppender("disabled"));
+          if (subMenuItem.hasSubMenuItems()) {
+            addFolderItem(subMenuItem,listItem);
           }
-          listItem.add(subMenuItemLink);
+ else {
+            addLeafItem(subMenuItem,listItem);
+          }
         }
       }
 ;
