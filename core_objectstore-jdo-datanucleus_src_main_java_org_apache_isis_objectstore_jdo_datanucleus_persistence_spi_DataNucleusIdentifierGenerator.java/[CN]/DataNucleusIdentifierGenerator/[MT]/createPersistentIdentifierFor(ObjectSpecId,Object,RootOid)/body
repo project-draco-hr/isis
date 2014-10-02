@@ -2,9 +2,10 @@
   if (!(pojo instanceof PersistenceCapable)) {
     return "1";
   }
-  if (pojo instanceof ViewModel) {
-    ViewModel viewModel=(ViewModel)pojo;
-    return viewModel.viewModelMemento();
+  final ObjectSpecification spec=getSpecificationLookup().lookupBySpecId(objectSpecId);
+  if (spec.containsFacet(ViewModelFacet.class)) {
+    ViewModelFacet viewModelFacet=spec.getFacet(ViewModelFacet.class);
+    return viewModelFacet.memento(pojo);
   }
   final Object jdoOid=getJdoPersistenceManager().getObjectId(pojo);
   return JdoObjectIdSerializer.toOidIdentifier(jdoOid);
