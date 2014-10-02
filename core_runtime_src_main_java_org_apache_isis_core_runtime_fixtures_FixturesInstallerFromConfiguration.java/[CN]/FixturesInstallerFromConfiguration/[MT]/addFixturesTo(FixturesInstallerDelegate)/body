@@ -1,14 +1,9 @@
 {
-  String fixturePrefix=getConfiguration().getString(NAKEDOBJECTS_FIXTURES_PREFIX);
-  fixturePrefix=fixturePrefix == null ? "" : fixturePrefix.trim();
-  if (fixturePrefix.length() > 0 && !fixturePrefix.endsWith(ConfigurationConstants.DELIMITER)) {
-    fixturePrefix=fixturePrefix + ConfigurationConstants.DELIMITER;
-  }
+  final FixtureConfig fixtureConfig=getFixtureConfig();
   try {
-    final String[] fixtureList=getConfiguration().getList(NAKEDOBJECTS_FIXTURES);
     boolean fixtureLoaded=false;
-    for (    final String element : fixtureList) {
-      final String fixtureFullyQualifiedName=fixturePrefix + element;
+    for (    final String element : fixtureConfig.getFixtures()) {
+      final String fixtureFullyQualifiedName=fixtureConfig.getFixturePrefix() + element;
       LOG.info("  adding fixture " + fixtureFullyQualifiedName);
       final Object fixture=InstanceUtil.createInstance(fixtureFullyQualifiedName);
       fixtureLoaded=true;

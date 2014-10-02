@@ -1,0 +1,12 @@
+{
+  Enumeration<String> initParameterNames=servletContext.getInitParameterNames();
+  final Map<String,String> map=Maps.newTreeMap();
+  while (initParameterNames.hasMoreElements()) {
+    final String initParameterName=initParameterNames.nextElement();
+    final String initParameterValue=servletContext.getInitParameter(initParameterName);
+    if (initParameterName.startsWith("isis.")) {
+      map.put(initParameterName,initParameterValue);
+    }
+  }
+  return map;
+}

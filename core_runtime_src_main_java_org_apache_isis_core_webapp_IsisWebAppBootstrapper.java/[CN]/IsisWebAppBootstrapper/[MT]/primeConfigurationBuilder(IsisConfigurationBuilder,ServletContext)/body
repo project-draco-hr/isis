@@ -1,9 +1,11 @@
 {
   LOG.info("loading properties from option handlers");
-  final List<IsisConfigurationBuilderPrimer> isisConfigurationBuilderPrimers=(List<IsisConfigurationBuilderPrimer>)servletContext.getAttribute(WebAppConstants.CONFIGURATION_PRIMERS_KEY);
-  if (isisConfigurationBuilderPrimers == null) {
-    return;
+  final List<IsisConfigurationBuilderPrimer> isisConfigurationBuilderPrimers=Lists.newArrayList();
+  final List<IsisConfigurationBuilderPrimer> primers=(List<IsisConfigurationBuilderPrimer>)servletContext.getAttribute(WebAppConstants.CONFIGURATION_PRIMERS_KEY);
+  if (primers != null) {
+    isisConfigurationBuilderPrimers.addAll(primers);
   }
+  isisConfigurationBuilderPrimers.add(new OptionHandlerFixtureFromInitParameters(servletContext));
   for (  final IsisConfigurationBuilderPrimer isisConfigurationBuilderPrimer : isisConfigurationBuilderPrimers) {
     LOG.debug("priming configurations for " + isisConfigurationBuilderPrimer);
     isisConfigurationBuilderPrimer.primeConfigurationBuilder(isisConfigurationBuilder);
