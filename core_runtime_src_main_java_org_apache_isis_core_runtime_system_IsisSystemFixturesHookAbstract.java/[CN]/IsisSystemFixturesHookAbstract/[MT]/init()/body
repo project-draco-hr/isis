@@ -10,11 +10,7 @@
   LOG.info("resource stream source: " + getConfiguration().getResourceStreamSource());
   localeInitializer.initLocale(getConfiguration());
   timeZoneInitializer.initTimeZone(getConfiguration());
-  int splashDelay=SPLASH_DELAY_DEFAULT;
   try {
-    final TemplateImageLoader splashLoader=obtainTemplateImageLoader();
-    splashLoader.init();
-    showSplash(splashLoader);
     sessionFactory=doCreateSessionFactory(deploymentType);
     IsisContext.setConfiguration(getConfiguration());
     initContext(sessionFactory);
@@ -24,10 +20,6 @@
   }
  catch (  final IsisSystemException ex) {
     LOG.error("failed to initialise",ex);
-    splashDelay=0;
     throw new RuntimeException(ex);
-  }
- finally {
-    removeSplash(splashDelay);
   }
 }
