@@ -1,0 +1,11 @@
+{
+  for (  final Object service : services) {
+    final Class<?> serviceClass=service.getClass();
+    boolean canInject=isInjectorFieldFor(field,serviceClass);
+    if (canInject) {
+      field.setAccessible(true);
+      invokeInjectorField(field,object,service);
+      return;
+    }
+  }
+}

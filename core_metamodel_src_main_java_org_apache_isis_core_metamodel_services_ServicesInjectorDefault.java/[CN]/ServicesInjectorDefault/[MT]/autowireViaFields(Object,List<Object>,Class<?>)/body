@@ -8,14 +8,7 @@
   }
 );
   for (  final Field field : injectFields) {
-    for (    final Object service : services) {
-      final Class<?> serviceClass=service.getClass();
-      boolean isInjectorField=isInjectorFieldFor(field,serviceClass);
-      if (isInjectorField) {
-        field.setAccessible(true);
-        invokeInjectorField(field,object,service);
-      }
-    }
+    autowire(object,field,services);
   }
   final Class<?> superclass=cls.getSuperclass();
   if (superclass != null) {

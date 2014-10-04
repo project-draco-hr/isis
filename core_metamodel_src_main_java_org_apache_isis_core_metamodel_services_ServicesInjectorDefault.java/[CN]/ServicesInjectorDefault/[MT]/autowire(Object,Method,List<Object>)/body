@@ -1,0 +1,11 @@
+{
+  for (  final Object service : services) {
+    final Class<?> serviceClass=service.getClass();
+    boolean isInjectorMethod=isInjectorMethodFor(prefixedMethod,serviceClass);
+    if (isInjectorMethod) {
+      prefixedMethod.setAccessible(true);
+      invokeInjectorMethod(prefixedMethod,object,service);
+      return;
+    }
+  }
+}
