@@ -1,0 +1,13 @@
+{
+  final IsisConfiguration configuration=getConfiguration();
+  final AuthenticationManager authenticationManager=obtainAuthenticationManager(deploymentType);
+  final AuthorizationManager authorizationManager=obtainAuthorizationManager(deploymentType);
+  final OidMarshaller oidMarshaller=obtainOidMarshaller();
+  final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,persistenceSessionFactory);
+  final SpecificationLoaderSpi reflector=obtainSpecificationLoaderSpi(deploymentType,persistenceSessionFactory,metaModelRefiners);
+  final DomainObjectContainer container=obtainContainer();
+  final List<Object> services=obtainServices();
+  final RuntimeContextFromSession runtimeContext=obtainRuntimeContextFromSession();
+  runtimeContext.injectInto(reflector);
+  return newIsisSessionFactory(deploymentType,persistenceSessionFactory,configuration,authenticationManager,authorizationManager,oidMarshaller,reflector,container,services);
+}
