@@ -1,5 +1,4 @@
 {
-  ensureThatState(container,is(not(nullValue())));
   ensureThatState(serviceList,is(notNullValue()));
   if (!deploymentType.isProduction() && !Clock.isInitialized()) {
     FixtureClock.initialize();
@@ -17,12 +16,9 @@
   runtimeContext=persistenceSessionFactoryDelegate.createRuntimeContext(getConfiguration());
   ensureThatState(runtimeContext,is(not(nullValue())));
   getSpecificationLoader().injectInto(runtimeContext);
-  runtimeContext.injectInto(container);
-  runtimeContext.setContainer(container);
   for (  Object service : serviceList) {
     runtimeContext.injectInto(service);
   }
-  servicesInjector.setContainer(container);
   servicesInjector.setServices(serviceList);
   servicesInjector.init();
 }

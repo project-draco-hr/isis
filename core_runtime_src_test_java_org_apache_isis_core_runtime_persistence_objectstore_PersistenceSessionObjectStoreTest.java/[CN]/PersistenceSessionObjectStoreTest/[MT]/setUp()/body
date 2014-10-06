@@ -23,9 +23,7 @@
   final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession();
   final DomainObjectContainerDefault container=new DomainObjectContainerDefault();
   runtimeContext.injectInto(container);
-  runtimeContext.setContainer(container);
   servicesInjector=new ServicesInjectorDefault();
-  servicesInjector.setContainer(container);
   adapterManager=new AdapterManagerDefault(new PojoRecreatorDefault());
   adapterFactory=new PojoAdapterFactory();
   persistenceSession=new PersistenceSession(mockPersistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,new OidGenerator(new IdentifierGeneratorDefault()),adapterManager,mockPersistAlgorithm,mockObjectStore){
@@ -34,7 +32,7 @@
     }
   }
 ;
-  servicesInjector.setServices(Collections.emptyList());
+  servicesInjector.setServices(Collections.<Object>singletonList(container));
   context.checking(new Expectations(){
 {
       allowing(mockAuthenticationSession).getUserName();
