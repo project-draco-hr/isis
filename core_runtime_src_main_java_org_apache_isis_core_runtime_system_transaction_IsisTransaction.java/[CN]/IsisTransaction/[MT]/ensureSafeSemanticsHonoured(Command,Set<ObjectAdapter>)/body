@@ -1,9 +1,4 @@
 {
-  final CommandContext commandContext=getServiceOrNull(CommandContext.class);
-  if (commandContext == null) {
-    return;
-  }
-  final Command command=commandContext.getCommand();
   if (!(command instanceof Command2)) {
     return;
   }
@@ -20,7 +15,6 @@
     if (!actionSemantics.isSafe()) {
       return;
     }
-    final Set<ObjectAdapter> changedAdapters=findChangedAdapters(changedObjectProperties);
     if (!changedAdapters.isEmpty()) {
       final String msg="Action '" + event.getIdentifier().toFullIdentityString() + "'"+ " (with safe semantics)"+ " caused "+ changedAdapters.size()+ " object"+ (changedAdapters.size() != 1 ? "s" : "")+ " to be modified";
       LOG.error(msg);
