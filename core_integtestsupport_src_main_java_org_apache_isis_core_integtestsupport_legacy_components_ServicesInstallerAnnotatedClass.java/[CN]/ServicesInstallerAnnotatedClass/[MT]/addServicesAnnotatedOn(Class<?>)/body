@@ -1,5 +1,9 @@
 {
   final List<Object> services=new ArrayList<Object>();
   addServicesAnnotatedOn(javaClass,services);
+  final DomainObjectContainer doc=lookupContainerIn(services);
+  if (doc == null) {
+    services.add(new DomainObjectContainerDefault());
+  }
   addServices(services);
 }
