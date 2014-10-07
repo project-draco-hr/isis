@@ -2,14 +2,14 @@
   final IsisTransactionManager transactionManager=getTransactionManager();
   final IsisTransaction transaction=transactionManager.getTransaction();
   if (transaction == null) {
-    transactionManager.startTransaction();
+    startTransactionForUser(transactionManager);
     return;
   }
   final State state=transaction.getState();
 switch (state) {
 case COMMITTED:
 case ABORTED:
-    transactionManager.startTransaction();
+    startTransactionForUser(transactionManager);
   break;
 case IN_PROGRESS:
 break;

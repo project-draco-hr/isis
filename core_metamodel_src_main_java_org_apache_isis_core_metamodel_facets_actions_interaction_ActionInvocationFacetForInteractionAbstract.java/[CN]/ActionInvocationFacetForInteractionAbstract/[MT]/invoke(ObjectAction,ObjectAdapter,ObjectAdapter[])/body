@@ -4,7 +4,7 @@
     final Command command=commandContext != null ? commandContext.getCommand() : null;
     final ActionInteractionEvent<?> existingEvent=actionInteractionFacet.currentInteraction.get();
     final ActionInteractionEvent<?> event=interactionHelper.postEventForAction(eventType,existingEvent,command,AbstractInteractionEvent.Phase.EXECUTING,owningAction,targetAdapter,arguments);
-    final InvocationResult invocationResult=internalInvoke(owningAction,targetAdapter,arguments);
+    final InvocationResult invocationResult=internalInvoke(command,owningAction,targetAdapter,arguments);
     if (invocationResult.getWhetherInvoked()) {
       interactionHelper.postEventForAction(eventType,verify(event),command,AbstractInteractionEvent.Phase.EXECUTED,owningAction,targetAdapter,arguments);
     }

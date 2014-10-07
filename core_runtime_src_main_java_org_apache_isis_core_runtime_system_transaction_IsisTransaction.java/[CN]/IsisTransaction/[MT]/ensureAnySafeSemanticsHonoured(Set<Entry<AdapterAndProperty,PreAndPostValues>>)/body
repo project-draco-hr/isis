@@ -12,30 +12,35 @@
   if (event == null) {
     return;
   }
-  final ActionSemantics.Of actionSemantics=event.getActionSemantics();
-  if (actionSemantics == null) {
-    return;
-  }
-  if (!actionSemantics.isSafe()) {
-    return;
-  }
-  final Set<ObjectAdapter> changedAdapters=findChangedAdapters(changedObjectProperties);
-  if (!changedAdapters.isEmpty()) {
-    final String msg="Action '" + event.getIdentifier().toFullIdentityString() + "'"+ " (with safe semantics)"+ " caused "+ changedAdapters.size()+ " object"+ (changedAdapters.size() != 1 ? "s" : "")+ " to be modified";
-    LOG.error(msg);
-    for (    ObjectAdapter changedAdapter : changedAdapters) {
-      final StringBuilder builder=new StringBuilder("  > ").append(changedAdapter.getSpecification().getFullIdentifier()).append(": ");
-      if (!changedAdapter.isDestroyed()) {
-        builder.append(changedAdapter.titleString(null));
-      }
+  try {
+    final ActionSemantics.Of actionSemantics=event.getActionSemantics();
+    if (actionSemantics == null) {
+      return;
+    }
+    if (!actionSemantics.isSafe()) {
+      return;
+    }
+    final Set<ObjectAdapter> changedAdapters=findChangedAdapters(changedObjectProperties);
+    if (!changedAdapters.isEmpty()) {
+      final String msg="Action '" + event.getIdentifier().toFullIdentityString() + "'"+ " (with safe semantics)"+ " caused "+ changedAdapters.size()+ " object"+ (changedAdapters.size() != 1 ? "s" : "")+ " to be modified";
+      LOG.error(msg);
+      for (      ObjectAdapter changedAdapter : changedAdapters) {
+        final StringBuilder builder=new StringBuilder("  > ").append(changedAdapter.getSpecification().getFullIdentifier()).append(": ");
+        if (!changedAdapter.isDestroyed()) {
+          builder.append(changedAdapter.titleString(null));
+        }
  else {
-        builder.append("(deleted object)");
+          builder.append("(deleted object)");
+        }
+        LOG.error(builder.toString());
       }
-      LOG.error(builder.toString());
+      final boolean enforceSafeSemantics=getConfiguration().getBoolean(PersistenceConstants.ENFORCE_SAFE_SEMANTICS,PersistenceConstants.ENFORCE_SAFE_SEMANTICS_DEFAULT);
+      if (enforceSafeSemantics) {
+        throw new RecoverableException(msg);
+      }
     }
-    final boolean enforceSafeSemantics=IsisContext.getConfiguration().getBoolean(PersistenceConstants.ENFORCE_SAFE_SEMANTICS,PersistenceConstants.ENFORCE_SAFE_SEMANTICS_DEFAULT);
-    if (enforceSafeSemantics) {
-      throw new RecoverableException(msg);
-    }
+  }
+  finally {
+    command2.setActionInteractionEvent(null);
   }
 }
