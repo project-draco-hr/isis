@@ -56,11 +56,21 @@
         }
 ;
         String name=nameFor(componentFactory);
+        boolean isEnabled=componentFactory != selectorPanel.selectedComponentFactory;
+        if (isEnabled) {
+          item.add(new CssClassAppender("bg-success"));
+          item.add(new CssClassRemover("bg-info"));
+          link.add(AttributeModifier.replace("title","Show as " + name));
+        }
+ else {
+          item.add(new CssClassAppender("bg-info"));
+          item.add(new CssClassRemover("bg-success"));
+        }
         Label viewTitleLabel=new Label(ID_VIEW_TITLE,name);
         viewTitleLabel.add(new CssClassAppender(StringExtensions.asLowerDashed(name)));
         link.add(viewTitleLabel);
         item.add(link);
-        link.setEnabled(componentFactory != selectorPanel.selectedComponentFactory);
+        link.setEnabled(isEnabled);
       }
       private String nameFor(      final ComponentFactory componentFactory){
         return componentFactory instanceof CollectionContentsAsUnresolvedPanelFactory ? "hide" : componentFactory.getName();
