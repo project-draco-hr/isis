@@ -1,11 +1,13 @@
 {
   adapterByPojoMap.put(key(pojo),adapter);
   if (LOG.isDebugEnabled()) {
-    LOG.debug("add adapter: #" + Long.toHexString(pojo.hashCode()) + " -> #"+ Long.toHexString(adapter.hashCode()));
-  }
-  if (adapter.isResolved()) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("add " + new ToString(pojo) + " as "+ adapter);
+    LOG.debug("add adapter: #" + key(pojo) + " -> #"+ Long.toHexString(adapter.hashCode()));
+    if (adapter.isResolved()) {
+      if (pojo instanceof RequestScopedService) {
+      }
+ else {
+        LOG.debug("add " + new ToString(pojo) + " as "+ adapter);
+      }
     }
   }
 }
