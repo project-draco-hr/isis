@@ -1,7 +1,7 @@
 {
   init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS);
-  final String objectStr=DomainResourceHelper.asStringUtf8(object);
-  final JsonRepresentation objectRepr=DomainResourceHelper.readAsMap(objectStr);
+  final String objectStr=Util.asStringUtf8(object);
+  final JsonRepresentation objectRepr=Util.readAsMap(objectStr);
   if (!objectRepr.isMap()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Body is not a map; got %s",objectRepr);
   }
@@ -10,11 +10,12 @@
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Could not determine type of domain object to persist (no class with domainType Id of '%s')",domainType);
   }
   final ObjectAdapter objectAdapter=getResourceContext().getPersistenceSession().createTransientInstance(domainTypeSpec);
+  final ObjectAdapterUpdateHelper updateHelper=new ObjectAdapterUpdateHelper(getResourceContext(),objectAdapter);
   final JsonRepresentation propertiesList=objectRepr.getArrayEnsured("members[objectMemberType=property]");
   if (propertiesList == null) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.BAD_REQUEST,"Could not find properties list (no members[objectMemberType=property]); got %s",objectRepr);
   }
-  if (!DomainResourceHelper.copyOverProperties(getResourceContext(),objectAdapter,propertiesList)) {
+  if (!updateHelper.copyOverProperties(propertiesList)) {
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,"Illegal property value");
   }
   final Consent validity=objectAdapter.getSpecification().isValid(objectAdapter);
@@ -22,5 +23,5 @@
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,validity.getReason());
   }
   getResourceContext().getPersistenceSession().makePersistent(objectAdapter);
-  return new DomainResourceHelper(getResourceContext(),objectAdapter).objectRepresentation();
+  return getDomainResourceHelper(objectAdapter).objectRepresentation();
 }

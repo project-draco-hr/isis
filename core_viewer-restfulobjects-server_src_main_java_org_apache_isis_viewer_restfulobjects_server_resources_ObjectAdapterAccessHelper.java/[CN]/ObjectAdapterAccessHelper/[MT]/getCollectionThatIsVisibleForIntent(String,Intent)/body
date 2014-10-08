@@ -1,0 +1,17 @@
+{
+  final Where where=resourceContext.getWhere();
+  final ObjectAssociation association;
+  try {
+    final ObjectSpecification specification=objectAdapter.getSpecification();
+    association=specification.getAssociation(collectionId);
+  }
+ catch (  Exception ex) {
+    Util.throwNotFoundException(collectionId,MemberType.COLLECTION);
+    return null;
+  }
+  if (association == null || !association.isOneToManyAssociation()) {
+    Util.throwNotFoundException(collectionId,MemberType.COLLECTION);
+  }
+  final OneToManyAssociation collection=(OneToManyAssociation)association;
+  return memberThatIsVisibleForIntent(collection,MemberType.COLLECTION,intent);
+}

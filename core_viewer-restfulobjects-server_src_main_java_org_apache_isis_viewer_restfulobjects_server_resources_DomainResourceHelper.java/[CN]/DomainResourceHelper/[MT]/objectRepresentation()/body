@@ -1,10 +1,3 @@
 {
-  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(resourceContext,null,JsonRepresentation.newMap());
-  renderer.with(objectAdapter).includesSelf();
-  final ResponseBuilder respBuilder=ResourceAbstract.responseOfOk(renderer,Caching.NONE);
-  final Version version=objectAdapter.getVersion();
-  if (version != null && version.getTime() != null) {
-    respBuilder.tag(ETAG_FORMAT.format(version.getTime()));
-  }
-  return respBuilder.build();
+  return generatorService.objectRepresentation(this);
 }

@@ -1,0 +1,12 @@
+{
+  final ResourceContext resourceContext=responseContext.getResourceContext();
+  final ObjectAdapter objectAdapter=responseContext.getObjectAdapter();
+  final ObjectAdapterLinkTo adapterLinkTo=responseContext.getAdapterLinkTo();
+  ObjectAdapterAccessHelper accessHelper=new ObjectAdapterAccessHelper(resourceContext,objectAdapter);
+  final OneToManyAssociation collection=accessHelper.getCollectionThatIsVisibleForIntent(collectionId,ObjectAdapterAccessHelper.Intent.ACCESS);
+  final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(resourceContext,null,null,JsonRepresentation.newMap());
+  renderer.with(new ObjectAndCollection(objectAdapter,collection)).usingLinkTo(adapterLinkTo);
+  memberMode.apply(renderer);
+  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,caching);
+  return buildResponse(responseBuilder);
+}

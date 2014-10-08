@@ -1,0 +1,16 @@
+{
+  final Where where=resourceContext.getWhere();
+  final ObjectAction action;
+  try {
+    final ObjectSpecification specification=objectAdapter.getSpecification();
+    action=specification.getObjectAction(actionId);
+  }
+ catch (  Exception ex) {
+    Util.throwNotFoundException(actionId,MemberType.ACTION);
+    return null;
+  }
+  if (action == null) {
+    Util.throwNotFoundException(actionId,MemberType.ACTION);
+  }
+  return memberThatIsVisibleForIntent(action,MemberType.ACTION,intent);
+}

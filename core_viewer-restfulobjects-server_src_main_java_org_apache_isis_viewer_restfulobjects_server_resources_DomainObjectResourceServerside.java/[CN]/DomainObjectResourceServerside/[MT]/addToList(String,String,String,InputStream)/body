@@ -1,18 +1,19 @@
 {
   init(Where.PARENTED_TABLES);
   final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,instanceId);
-  final DomainResourceHelper helper=new DomainResourceHelper(getResourceContext(),objectAdapter);
-  final OneToManyAssociation collection=helper.getCollectionThatIsVisibleForIntent(collectionId,Intent.MUTATE,getResourceContext().getWhere());
+  final DomainResourceHelper helper=getDomainResourceHelper(objectAdapter);
+  final ObjectAdapterAccessHelper accessHelper=new ObjectAdapterAccessHelper(getResourceContext(),objectAdapter);
+  final OneToManyAssociation collection=accessHelper.getCollectionThatIsVisibleForIntent(collectionId,ObjectAdapterAccessHelper.Intent.MUTATE);
   if (!collection.getCollectionSemantics().isListOrArray()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.METHOD_NOT_ALLOWED,"Collection '%s' does not have list or array semantics",collectionId);
   }
   final ObjectSpecification collectionSpec=collection.getSpecification();
-  final String bodyAsString=DomainResourceHelper.asStringUtf8(body);
-  final ObjectAdapter argAdapter=helper.parseAsMapWithSingleValue(collectionSpec,bodyAsString);
+  final String bodyAsString=Util.asStringUtf8(body);
+  final ObjectAdapter argAdapter=new JsonParserHelper(getResourceContext(),collectionSpec).parseAsMapWithSingleValue(bodyAsString);
   final Consent consent=collection.isValidToAdd(objectAdapter,argAdapter);
   if (consent.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
   collection.addElement(objectAdapter,argAdapter);
-  return helper.collectionDetails(collectionId,MemberMode.MUTATING,Caching.NONE,getResourceContext().getWhere());
+  return helper.collectionDetails(collectionId,ResponseGeneratorService.MemberMode.MUTATING,Caching.NONE);
 }
