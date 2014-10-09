@@ -1,0 +1,53 @@
+{
+  Key key;
+  final List<Key> resourcePaths=Lists.newArrayList();
+  if (resourceClass != null) {
+    if (iconName != null) {
+      key=this;
+      do {
+        for (        String suffix : suffices) {
+          resourcePaths.add(new Key(key.getResourceClass(),key.getResourceClass().getSimpleName() + "-" + iconName+ "."+ suffix));
+        }
+        for (        String suffix : suffices) {
+          resourcePaths.add(new Key(key.getResourceClass(),iconName + "." + suffix));
+        }
+      }
+ while ((key=key.superKey()) != null);
+      key=this;
+      do {
+        for (        String suffix : suffices) {
+          resourcePaths.add(new Key(null,key.getResourceClass().getSimpleName() + "-" + iconName+ "."+ suffix));
+        }
+      }
+ while ((key=key.superKey()) != null);
+      for (      String suffix : suffices) {
+        resourcePaths.add(new Key(null,iconName + "." + suffix));
+      }
+    }
+    key=this;
+    do {
+      for (      String suffix : suffices) {
+        resourcePaths.add(new Key(key.getResourceClass(),key.getResourceClass().getSimpleName() + "." + suffix));
+      }
+    }
+ while ((key=key.superKey()) != null);
+    key=this;
+    do {
+      for (      String suffix : suffices) {
+        resourcePaths.add(new Key(null,key.getResourceClass().getSimpleName() + "." + suffix));
+      }
+    }
+ while ((key=key.superKey()) != null);
+  }
+ else {
+    if (iconName != null) {
+      for (      String suffix : suffices) {
+        resourcePaths.add(new Key(null,iconName + "." + suffix));
+      }
+    }
+  }
+  for (  String suffix : suffices) {
+    resourcePaths.add(new Key(null,"Default" + "." + suffix));
+  }
+  return Collections.unmodifiableList(resourcePaths);
+}
