@@ -3,6 +3,8 @@
   facetFactory.setSpecificationLookup(reflector);
   final PropertyModifyFacetFactory facetFactoryForModify=new PropertyModifyFacetFactory();
   facetFactoryForModify.setSpecificationLookup(reflector);
+  final DisabledFacetOnPropertyInferredFactory disabledFacetOnPropertyInferredFactory=new DisabledFacetOnPropertyInferredFactory();
+  disabledFacetOnPropertyInferredFactory.setSpecificationLookup(reflector);
 class Customer {
     @SuppressWarnings("unused") public String getFirstName(){
       return null;
@@ -14,10 +16,10 @@ class Customer {
   final ProcessMethodContext processMethodContext=new ProcessMethodContext(Customer.class,null,null,propertyAccessorMethod,methodRemover,facetedMethod);
   facetFactory.process(processMethodContext);
   facetFactoryForModify.process(processMethodContext);
+  disabledFacetOnPropertyInferredFactory.process(processMethodContext);
   Facet facet=facetedMethod.getFacet(NotPersistedFacet.class);
   assertNotNull(facet);
   assertTrue(facet instanceof NotPersistableFacetInferred);
   facet=facetedMethod.getFacet(DisabledFacet.class);
-  assertNotNull(facet);
-  assertTrue(facet instanceof DisabledFacetAlwaysEverywhere);
+  assertNull(facet);
 }
