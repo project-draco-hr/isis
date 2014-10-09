@@ -1,3 +1,5 @@
 {
-  return generatorService.invokeAction(this,actionId,arguments);
+  ObjectAdapterAccessHelper accessHelper=new ObjectAdapterAccessHelper(representationServiceContext,objectAdapter);
+  final ObjectAction action=accessHelper.getObjectActionThatIsVisibleForIntent(actionId,ObjectAdapterAccessHelper.Intent.MUTATE);
+  return invokeActionUsingAdapters(action,arguments,ActionResultReprRenderer.SelfLink.EXCLUDED);
 }

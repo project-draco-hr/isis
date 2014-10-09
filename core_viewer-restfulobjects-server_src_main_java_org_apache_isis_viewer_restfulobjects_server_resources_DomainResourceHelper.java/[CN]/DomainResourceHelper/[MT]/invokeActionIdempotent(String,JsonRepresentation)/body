@@ -1,3 +1,9 @@
 {
-  return generatorService.invokeActionIdempotent(this,actionId,arguments);
+  final ObjectAdapterAccessHelper accessHelper=new ObjectAdapterAccessHelper(representationServiceContext,objectAdapter);
+  final ObjectAction action=accessHelper.getObjectActionThatIsVisibleForIntent(actionId,ObjectAdapterAccessHelper.Intent.MUTATE);
+  final ActionSemantics.Of actionSemantics=action.getSemantics();
+  if (!actionSemantics.isIdempotentInNature()) {
+    throw RestfulObjectsApplicationException.createWithMessage(RestfulResponse.HttpStatusCode.METHOD_NOT_ALLOWED,"Method not allowed; action '%s' is not idempotent",action.getId());
+  }
+  return invokeActionUsingAdapters(action,arguments,ActionResultReprRenderer.SelfLink.EXCLUDED);
 }

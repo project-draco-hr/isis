@@ -40,13 +40,13 @@ catch (    Exception ex) {
     argRepr.mapPut("invalidReason",reason);
     throw new IllegalArgumentException(reason);
   }
-  final String oidFromHref=UrlParserUtils.encodedOidFromLink(argValueRepr);
+  final String oidFromHref=encodedOidFromLink(argValueRepr);
   if (oidFromHref == null) {
     final String reason="Could not parse 'href' to identify the object's OID";
     argRepr.mapPut("invalidReason",reason);
     throw new IllegalArgumentException(reason);
   }
-  final ObjectAdapter objectAdapter=OidUtils.getObjectAdapterElseNull(resourceContext,oidFromHref);
+  final ObjectAdapter objectAdapter=OidUtils.getObjectAdapterElseNull(rendererContext,oidFromHref);
   if (objectAdapter == null) {
     final String reason="'href' does not reference a known entity";
     argRepr.mapPut("invalidReason",reason);

@@ -1,0 +1,10 @@
+{
+  final RepresentationService.Context rendererContext=representationServiceContext;
+  final ObjectAdapter objectAdapter=this.objectAdapter;
+  final ObjectActionArgHelper argHelper=new ObjectActionArgHelper(rendererContext,objectAdapter,action);
+  final List<ObjectAdapter> argAdapters=argHelper.parseAndValidateArguments(arguments);
+  final ObjectAdapter[] argArray2=argAdapters.toArray(new ObjectAdapter[0]);
+  final ObjectAdapter returnedAdapter=action.execute(objectAdapter,argArray2);
+  final ObjectAndActionInvocation objectAndActionInvocation=new ObjectAndActionInvocation(this.objectAdapter,action,arguments,returnedAdapter);
+  return representationService.actionResult(representationServiceContext,objectAndActionInvocation,selfLink);
+}

@@ -1,16 +1,16 @@
 {
-  final Where where=resourceContext.getWhere();
+  final Where where=rendererContext.getWhere();
   final ObjectAssociation association;
   try {
     final ObjectSpecification specification=objectAdapter.getSpecification();
     association=specification.getAssociation(propertyId);
   }
  catch (  Exception ex) {
-    Util.throwNotFoundException(propertyId,MemberType.PROPERTY);
+    throwNotFoundException(propertyId,MemberType.PROPERTY);
     return null;
   }
   if (association == null || !association.isOneToOneAssociation()) {
-    Util.throwNotFoundException(propertyId,MemberType.PROPERTY);
+    throwNotFoundException(propertyId,MemberType.PROPERTY);
   }
   final OneToOneAssociation property=(OneToOneAssociation)association;
   return memberThatIsVisibleForIntent(property,MemberType.PROPERTY,intent);

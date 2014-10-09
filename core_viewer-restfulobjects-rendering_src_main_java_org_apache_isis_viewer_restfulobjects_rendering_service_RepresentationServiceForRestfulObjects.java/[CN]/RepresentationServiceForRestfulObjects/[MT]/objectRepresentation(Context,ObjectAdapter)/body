@@ -1,0 +1,10 @@
+{
+  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(resourceContext,null,JsonRepresentation.newMap());
+  renderer.with(objectAdapter).includesSelf();
+  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE);
+  final Version version=objectAdapter.getVersion();
+  if (version != null && version.getTime() != null) {
+    responseBuilder.tag(ETAG_FORMAT.format(version.getTime()));
+  }
+  return buildResponse(responseBuilder);
+}
