@@ -60,7 +60,9 @@
         if (isEnabled) {
           item.add(new CssClassAppender("bg-success"));
           item.add(new CssClassRemover("bg-info"));
-          link.add(AttributeModifier.replace("title","Show as " + name));
+          TooltipConfig tooltipConfig=new TooltipConfig();
+          tooltipConfig.withPlacement(TooltipConfig.Placement.left);
+          item.add(new TooltipBehavior(Model.of("Show as " + name),tooltipConfig));
         }
  else {
           item.add(new CssClassAppender("bg-info"));
@@ -84,7 +86,7 @@
     Component component=underlyingViews[i];
     if (component != null) {
       if (i != selected) {
-        component.add(new AttributeAppender("class"," " + INVISIBLE_CLASS));
+        component.add(new CssClassAppender(INVISIBLE_CLASS));
       }
  else {
         selectedComponent=component;
