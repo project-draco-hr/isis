@@ -1,0 +1,62 @@
+{
+  ImageResourceCacheKey key;
+  final List<ImageResourceCacheKey> resourcePaths=Lists.newArrayList();
+  boolean generated=false;
+  if (resourceName != null) {
+    final Class<?> resourceClass=ClassUtil.forNameElseNull(resourceName);
+    if (resourceClass != null) {
+      for (      String suffix : suffices) {
+        resourcePaths.add(new ImageResourceCacheKey(resourceClass,resourceClass.getSimpleName() + "." + suffix));
+      }
+      generated=true;
+    }
+  }
+  if (!generated && resourceClass != null) {
+    if (resourceName != null) {
+      key=this;
+      do {
+        for (        String suffix : suffices) {
+          resourcePaths.add(new ImageResourceCacheKey(key.getResourceClass(),key.getResourceClass().getSimpleName() + "-" + resourceName+ "."+ suffix));
+        }
+        for (        String suffix : suffices) {
+          resourcePaths.add(new ImageResourceCacheKey(key.getResourceClass(),resourceName + "." + suffix));
+        }
+      }
+ while ((key=key.superKey()) != null);
+      key=this;
+      do {
+        for (        String suffix : suffices) {
+          resourcePaths.add(new ImageResourceCacheKey(null,key.getResourceClass().getSimpleName() + "-" + resourceName+ "."+ suffix));
+        }
+      }
+ while ((key=key.superKey()) != null);
+      for (      String suffix : suffices) {
+        resourcePaths.add(new ImageResourceCacheKey(null,resourceName + "." + suffix));
+      }
+    }
+    key=this;
+    do {
+      for (      String suffix : suffices) {
+        resourcePaths.add(new ImageResourceCacheKey(key.getResourceClass(),key.getResourceClass().getSimpleName() + "." + suffix));
+      }
+    }
+ while ((key=key.superKey()) != null);
+    key=this;
+    do {
+      for (      String suffix : suffices) {
+        resourcePaths.add(new ImageResourceCacheKey(null,key.getResourceClass().getSimpleName() + "." + suffix));
+      }
+    }
+ while ((key=key.superKey()) != null);
+    generated=true;
+  }
+  if (!generated && resourceName != null) {
+    for (    String suffix : suffices) {
+      resourcePaths.add(new ImageResourceCacheKey(null,resourceName + "." + suffix));
+    }
+  }
+  for (  String suffix : suffices) {
+    resourcePaths.add(new ImageResourceCacheKey(null,"Default" + "." + suffix));
+  }
+  return Collections.unmodifiableList(resourcePaths);
+}

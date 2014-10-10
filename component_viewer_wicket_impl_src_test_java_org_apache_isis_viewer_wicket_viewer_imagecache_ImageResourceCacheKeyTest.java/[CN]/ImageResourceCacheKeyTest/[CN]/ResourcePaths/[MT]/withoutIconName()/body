@@ -1,0 +1,20 @@
+{
+  key=new ImageResourceCacheKey(SomeSubclass.class,null);
+  final List<ImageResourceCacheKey> keys=key.resourcePaths("png","jpg","jpeg");
+  final Iterator<ImageResourceCacheKey> iterator=keys.iterator();
+  assertNext(iterator,SomeSubclass.class,"SomeSubclass.png");
+  assertNext(iterator,SomeSubclass.class,"SomeSubclass.jpg");
+  assertNext(iterator,SomeSubclass.class,"SomeSubclass.jpeg");
+  assertNext(iterator,SomeSuperclass.class,"SomeSuperclass.png");
+  assertNext(iterator,SomeSuperclass.class,"SomeSuperclass.jpg");
+  assertNext(iterator,SomeSuperclass.class,"SomeSuperclass.jpeg");
+  assertNext(iterator,null,"SomeSubclass.png");
+  assertNext(iterator,null,"SomeSubclass.jpg");
+  assertNext(iterator,null,"SomeSubclass.jpeg");
+  assertNext(iterator,null,"SomeSuperclass.png");
+  assertNext(iterator,null,"SomeSuperclass.jpg");
+  assertNext(iterator,null,"SomeSuperclass.jpeg");
+  assertNext(iterator,null,"Default.png");
+  assertNext(iterator,null,"Default.jpg");
+  assertNext(iterator,null,"Default.jpeg");
+}

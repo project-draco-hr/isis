@@ -1,0 +1,16 @@
+{
+  final List<ImageResourceCacheKey> keys=key.resourcePaths(IMAGE_SUFFICES);
+  for (  ImageResourceCacheKey resourceKey : keys) {
+    Class<?> resourceClass=resourceKey.getResourceClass();
+    if (resourceClass == null) {
+      resourceClass=Images.class;
+    }
+    final String iconName=resourceKey.getResourceName();
+    final InputStream resourceAsStream=resourceClass.getResourceAsStream(iconName);
+    if (resourceAsStream != null) {
+      closeSafely(resourceAsStream);
+      return new PackageResourceReference(resourceClass,iconName);
+    }
+  }
+  return fallbackResource;
+}
