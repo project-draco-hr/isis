@@ -1,0 +1,14 @@
+{
+  final FixtureResult fixtureResult=fixtureResultByKey.get(key);
+  if (fixtureResult == null) {
+    return null;
+  }
+  final Object object=fixtureResult.getObject();
+  if (object == null) {
+    throw new IllegalStateException("Fixture result exists but has NULL object");
+  }
+  if (!cls.isAssignableFrom(object.getClass())) {
+    throw new IllegalStateException(String.format("Fixture result exists and contains object but is of type %s, not %s",object.getClass().getName(),cls.getName()));
+  }
+  return (T)object;
+}

@@ -1,8 +1,10 @@
 {
   final boolean firstTime=!fixtureScriptList.contains(fixtureScript);
-  final FixtureResult fr=fixtureScripts.newFixtureResult(fixtureScript,key,object,firstTime);
-  if (fr != null) {
-    list.add(fr);
+  final FixtureResult fixtureResult=fixtureScripts.newFixtureResult(fixtureScript,key,object,firstTime);
+  if (fixtureResult != null) {
+    list.add(fixtureResult);
+    fixtureResultByKey.put(fixtureResult.getKey(),fixtureResult);
+    executionContext.trace(fixtureResult);
     if (firstTime) {
       fixtureScriptList.add(fixtureScript);
     }
