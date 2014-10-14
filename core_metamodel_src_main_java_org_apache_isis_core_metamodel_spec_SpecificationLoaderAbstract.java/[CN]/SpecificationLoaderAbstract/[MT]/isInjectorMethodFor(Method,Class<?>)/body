@@ -1,0 +1,15 @@
+{
+  Map<Class<?>,Boolean> classBooleanMap=isInjectorMethod.get(method);
+  if (classBooleanMap == null) {
+synchronized (isInjectorMethod) {
+      classBooleanMap=Maps.newConcurrentMap();
+      isInjectorMethod.put(method,classBooleanMap);
+    }
+  }
+  Boolean result=classBooleanMap.get(serviceClass);
+  if (result == null) {
+    result=determineIsInjectorMethodFor(method,serviceClass);
+    classBooleanMap.put(serviceClass,result);
+  }
+  return result;
+}
