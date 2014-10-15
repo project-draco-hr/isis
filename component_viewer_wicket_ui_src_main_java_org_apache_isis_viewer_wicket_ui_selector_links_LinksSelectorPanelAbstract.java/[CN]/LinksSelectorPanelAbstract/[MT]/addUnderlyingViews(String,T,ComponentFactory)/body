@@ -53,29 +53,24 @@
             selectorPanel.onSelect(target);
             target.add(selectorPanel,views);
           }
+          @Override protected void onComponentTag(          ComponentTag tag){
+            super.onComponentTag(tag);
+            Buttons.fixDisabledState(this,tag);
+          }
         }
 ;
         String name=nameFor(componentFactory);
         boolean isEnabled=componentFactory != selectorPanel.selectedComponentFactory;
-        if (isEnabled) {
-          item.add(new CssClassAppender("bg-success"));
-          item.add(new CssClassRemover("bg-primary"));
-          TooltipConfig tooltipConfig=new TooltipConfig();
-          tooltipConfig.withPlacement(TooltipConfig.Placement.left);
-          item.add(new TooltipBehavior(Model.of("Show as " + name),tooltipConfig));
-        }
- else {
-          item.add(new CssClassAppender("bg-primary"));
-          item.add(new CssClassRemover("bg-success"));
+        if (!isEnabled) {
+          item.add(new CssClassAppender("active"));
         }
         Label viewTitleLabel=new Label(ID_VIEW_TITLE,name);
-        viewTitleLabel.add(new CssClassAppender(StringExtensions.asLowerDashed(name)));
         link.add(viewTitleLabel);
         item.add(link);
         link.setEnabled(isEnabled);
       }
       private String nameFor(      final ComponentFactory componentFactory){
-        return componentFactory instanceof CollectionContentsAsUnresolvedPanelFactory ? "hideIcon" : componentFactory.getName();
+        return componentFactory instanceof CollectionContentsAsUnresolvedPanelFactory ? "Hide" : componentFactory.getName();
       }
     }
 ;
