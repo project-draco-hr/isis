@@ -20,10 +20,14 @@
     permanentlyHide(ID_VIEWS);
   }
  else {
-    final Model<ComponentFactory> componentFactoryModel=new Model<ComponentFactory>();
+    final Model<ComponentFactory> componentFactoryModel=new Model<>();
     selectorPanel.selectedComponentFactory=componentFactories.get(selected);
     componentFactoryModel.setObject(selectorPanel.selectedComponentFactory);
     final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
+    final Label viewButtonTitle=new Label(ID_VIEW_BUTTON_TITLE,"Hidden");
+    views.addOrReplace(viewButtonTitle);
+    final Label viewButtonIcon=new Label(ID_VIEW_BUTTON_ICON,"");
+    views.addOrReplace(viewButtonIcon);
     final WebMarkupContainer container=new WebMarkupContainer(ID_VIEW_LIST);
     views.addOrReplace(container);
     views.setOutputMarkupId(true);
@@ -59,18 +63,50 @@
           }
         }
 ;
-        String name=nameFor(componentFactory);
+        IModel<String> title=nameFor(componentFactory);
+        Label viewItemTitleLabel=new Label(ID_VIEW_ITEM_TITLE,title);
+        link.add(viewItemTitleLabel);
+        Label viewItemIcon=new Label(ID_VIEW_ITEM_ICON,"");
+        link.add(viewItemIcon);
         boolean isEnabled=componentFactory != selectorPanel.selectedComponentFactory;
         if (!isEnabled) {
-          item.add(new CssClassAppender("active"));
+          viewButtonTitle.setDefaultModel(title);
+          IModel<String> cssClass=cssClassFor(componentFactory,viewButtonIcon);
+          viewButtonIcon.add(AttributeModifier.replace("class","ViewLinkItem " + cssClass.getObject()));
+          link.setVisible(false);
         }
-        Label viewTitleLabel=new Label(ID_VIEW_TITLE,name);
-        link.add(viewTitleLabel);
+ else {
+          IModel<String> cssClass=cssClassFor(componentFactory,viewItemIcon);
+          viewItemIcon.add(new CssClassAppender(cssClass));
+        }
         item.add(link);
-        link.setEnabled(isEnabled);
       }
-      private String nameFor(      final ComponentFactory componentFactory){
-        return componentFactory instanceof CollectionContentsAsUnresolvedPanelFactory ? "Hide" : componentFactory.getName();
+      private IModel<String> cssClassFor(      final ComponentFactory componentFactory,      Label viewIcon){
+        IModel<String> cssClass=null;
+        if (componentFactory instanceof CollectionContentsAsFactory) {
+          CollectionContentsAsFactory collectionContentsAsFactory=(CollectionContentsAsFactory)componentFactory;
+          cssClass=collectionContentsAsFactory.getCssClass();
+          viewIcon.setDefaultModelObject("");
+          viewIcon.setEscapeModelStrings(true);
+        }
+        if (cssClass == null) {
+          String name=componentFactory.getName();
+          cssClass=Model.of(StringExtensions.asLowerDashed(name));
+          viewIcon.setDefaultModelObject("&#160;&#160;&#160;&#160;&#160;&#160;");
+          viewIcon.setEscapeModelStrings(false);
+        }
+        return cssClass;
+      }
+      private IModel<String> nameFor(      final ComponentFactory componentFactory){
+        IModel<String> name=null;
+        if (componentFactory instanceof CollectionContentsAsFactory) {
+          CollectionContentsAsFactory collectionContentsAsFactory=(CollectionContentsAsFactory)componentFactory;
+          name=collectionContentsAsFactory.getTitleLabel();
+        }
+        if (name == null) {
+          name=Model.of(componentFactory.getName());
+        }
+        return name;
       }
     }
 ;
