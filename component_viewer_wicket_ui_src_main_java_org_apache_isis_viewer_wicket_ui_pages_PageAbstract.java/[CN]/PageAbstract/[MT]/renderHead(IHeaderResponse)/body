@@ -3,14 +3,10 @@
   response.render(new PriorityHeaderItem(JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference())));
   response.render(CssHeaderItem.forReference(FontAwesomeCssReference.instance()));
   response.render(CssHeaderItem.forReference(new CssResourceReference(PageAbstract.class,"bootstrap-overrides.css")));
-  response.render(JavaScriptReferenceHeaderItem.forReference(JQUERY_JGROWL_JS));
   response.render(JavaScriptReferenceHeaderItem.forReference(JQUERY_LIVEQUERY_JS));
   response.render(JavaScriptReferenceHeaderItem.forReference(JQUERY_ISIS_WICKET_VIEWER_JS));
-  final String feedbackMsg=JGrowlUtil.asJGrowlCalls(getMessageBroker());
-  if (!Strings.isNullOrEmpty(feedbackMsg)) {
-    final OnDomReadyHeaderItem forScript=OnDomReadyHeaderItem.forScript(feedbackMsg);
-    response.render(forScript);
-  }
+  JGrowlBehaviour jGrowlBehaviour=new JGrowlBehaviour();
+  jGrowlBehaviour.renderFeedbackMessages(response);
   if (getConfiguration().getBoolean(REGULAR_CASE_KEY,false)) {
     response.render(CssReferenceHeaderItem.forReference(PanelUtil.cssResourceReferenceFor(Overlays.class,"regular-case")));
   }
