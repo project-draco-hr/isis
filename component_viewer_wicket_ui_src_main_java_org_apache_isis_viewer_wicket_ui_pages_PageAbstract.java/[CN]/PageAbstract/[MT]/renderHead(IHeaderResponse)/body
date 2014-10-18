@@ -16,5 +16,9 @@
   if (applicationJs != null) {
     response.render(JavaScriptReferenceHeaderItem.forUrl(applicationJs));
   }
-  response.render(JavaScriptHeaderItem.forReference(BootlintJavaScriptReference.INSTANCE));
+  WebClientInfo clientInfo=WebSession.get().getClientInfo();
+  ClientProperties properties=clientInfo.getProperties();
+  if (!(properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() < 9)) {
+    response.render(JavaScriptHeaderItem.forReference(BootlintJavaScriptReference.INSTANCE));
+  }
 }
