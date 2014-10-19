@@ -1,14 +1,17 @@
 {
+  final BookmarkedPagesModel bookmarkedPagesModel=getModel();
+  Component helpText=addHelpText(bookmarkedPagesModel);
+  addOrReplace(helpText);
   final WebMarkupContainer container=new WebMarkupContainer(ID_BOOKMARK_LIST){
     private static final long serialVersionUID=1L;
     @Override public void renderHead(    IHeaderResponse response){
+      response.render(CssHeaderItem.forReference(new CssResourceReference(BookmarkedPagesPanel.class,"BookmarkedPagesPanel.css")));
       response.render(JavaScriptReferenceHeaderItem.forReference(SLIDE_PANEL_JS));
     }
   }
 ;
   container.setOutputMarkupId(true);
   add(container);
-  final BookmarkedPagesModel bookmarkedPagesModel=getModel();
   final AjaxLink<Void> clearAllBookmarksLink=new AjaxLink<Void>(CLEAR_BOOKMARKS){
     private static final long serialVersionUID=1L;
     @Override public void onClick(    AjaxRequestTarget target){
@@ -71,7 +74,7 @@
         link.add(label);
         item.add(link);
         if (bookmarkedPagesModel.isCurrent(pageParameters)) {
-          item.add(new CssClassAppender("currentBookmark"));
+          item.add(new CssClassAppender("disabled"));
         }
         item.add(new CssClassAppender("bookmarkDepth" + node.getDepth()));
       }

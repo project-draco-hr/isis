@@ -24,8 +24,11 @@
       panel.add(form);
       form.add(textField);
       textField.setOutputMarkupId(true);
+      CharSequence modalId=Strings2.escapeMarkupId(simpleClipboardModalWindow.getMarkupId());
+      CharSequence textFieldId=Strings2.escapeMarkupId(textField.getMarkupId());
+      target.appendJavaScript(String.format("$('#%s').one('shown.bs.modal', function(){Wicket.$('%s').select();});",modalId,textFieldId));
       simpleClipboardModalWindow.setPanel(panel,target);
-      simpleClipboardModalWindow.show(target);
+      simpleClipboardModalWindow.showPrompt(target);
       target.focusComponent(textField);
     }
   }

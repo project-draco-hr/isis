@@ -1,17 +1,22 @@
 {
-  final CheckBox checkBox=new CheckBox(id,new Model<Boolean>(){
+  final CheckBoxX checkBox=new CheckBoxX(id,new Model<Boolean>(){
     private static final long serialVersionUID=1L;
     @Override public Boolean getObject(){
       final ScalarModel model=getModel();
       final ObjectAdapter adapter=model.getObject();
-      return adapter != null ? (Boolean)adapter.getObject() : false;
+      return adapter != null ? (Boolean)adapter.getObject() : null;
     }
     @Override public void setObject(    final Boolean object){
       final ObjectAdapter adapter=getAdapterManager().adapterFor(object);
       getModel().setObject(adapter);
     }
   }
-);
+){
+    @Override public CheckBoxXConfig getConfig(){
+      return BooleanPanel.this.getModel().isRequired() ? TWO_STATE_CONFIG : THREE_STATE_CONFIG;
+    }
+  }
+;
   checkBox.setOutputMarkupId(true);
   checkBox.setEnabled(false);
   final ObjectSpecification objectSpecification=getModel().getTypeOfSpecification();

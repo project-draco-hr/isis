@@ -1,0 +1,25 @@
+{
+  super(id);
+  ListView<CssMenuItem> menuItemsView=new ListView<CssMenuItem>("menuItems",menuItems){
+    @Override protected void populateItem(    ListItem<CssMenuItem> listItem){
+      CssMenuItem menuItem=listItem.getModelObject();
+      listItem.add(new Label("name",menuItem.getName()));
+      List<CssMenuItem> subMenuItems=menuItem.getSubMenuItems();
+      ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",subMenuItems){
+        @Override protected void populateItem(        ListItem<CssMenuItem> listItem){
+          CssMenuItem subMenuItem=listItem.getModelObject();
+          if (subMenuItem.hasSubMenuItems()) {
+            addFolderItem(subMenuItem,listItem);
+          }
+ else {
+            addLeafItem(subMenuItem,listItem);
+          }
+        }
+      }
+;
+      listItem.add(subMenuItemsView);
+    }
+  }
+;
+  add(menuItemsView);
+}

@@ -13,7 +13,6 @@
           final StringBuilder builder=new StringBuilder();
           String errorMessagesIfAny=JGrowlUtil.asJGrowlCalls(IsisContext.getMessageBroker());
           builder.append(errorMessagesIfAny);
-          builder.append("Wicket.Window.get().autoSizeWindow();\n");
           String buf=builder.toString();
           target.appendJavaScript(buf);
           target.add(form);
@@ -25,9 +24,6 @@
  */
     @Override protected void onError(    AjaxRequestTarget target,    Form<?> form){
       super.onError(target,form);
-      if (actionPromptIfAny != null) {
-        target.appendJavaScript("window.setTimeout(" + "function() {\n " + "  var ww = Wicket.Window.get();\n "+ "  ww.autoSizeWindow();\n "+ "}\n, 0);\n");
-      }
       target.add(form);
     }
   }
@@ -38,7 +34,7 @@
     private static final long serialVersionUID=1L;
     @Override public void onSubmit(    final AjaxRequestTarget target,    Form<?> form){
       if (actionPromptIfAny != null) {
-        actionPromptIfAny.close(target);
+        actionPromptIfAny.closePrompt(target);
       }
     }
   }

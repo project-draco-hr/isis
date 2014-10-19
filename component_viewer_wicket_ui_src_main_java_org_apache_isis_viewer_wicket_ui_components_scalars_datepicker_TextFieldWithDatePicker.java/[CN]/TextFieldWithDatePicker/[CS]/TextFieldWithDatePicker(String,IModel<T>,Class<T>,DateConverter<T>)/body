@@ -1,0 +1,14 @@
+{
+  super(id,model,type);
+  setOutputMarkupId(true);
+  this.converter=converter;
+  this.config=new DateTimeConfig();
+  String datePickerPattern=getPattern(converter,getLocale());
+  datePickerPattern=datePickerPattern.replace('d','D');
+  datePickerPattern=datePickerPattern.replace('y','Y');
+  config.withFormat(datePickerPattern);
+  config.calendarWeeks(true);
+  if (datePickerPattern.contains("HH")) {
+    config.sideBySide(true);
+  }
+}

@@ -2,6 +2,8 @@
   try {
     super.init();
     configureWebJars();
+    configureWicketBootstrap();
+    configureWicketSelect2();
     String isisConfigDir=getServletContext().getInitParameter("isis.config.dir");
     configureLogging(isisConfigDir);
     getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
@@ -13,7 +15,8 @@
     final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
     injector.injectMembers(this);
     final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
-    this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(deploymentType,configuration));
+    this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
+    getDebugSettings().setAjaxDebugModeEnabled(determineAjaxDebugModeEnabled(configuration));
     initWicketComponentInjection(injector);
     buildCssBundle();
     filterJavascriptContributions();

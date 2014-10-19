@@ -1,0 +1,17 @@
+{
+  IModel<String> helpTextModel=new AbstractReadOnlyModel<String>(){
+    @Override public String getObject(){
+      return bookmarkedPagesModel.isEmpty() ? "You have no bookmarks!" : "";
+    }
+  }
+;
+  Label helpText=new Label(ID_BOOKMARKS_HELP_TEXT,helpTextModel){
+    @Override protected void onConfigure(){
+      super.onConfigure();
+      setVisible(!Strings.isEmpty(getDefaultModelObjectAsString()));
+    }
+  }
+;
+  helpText.setOutputMarkupPlaceholderTag(true);
+  return helpText;
+}
