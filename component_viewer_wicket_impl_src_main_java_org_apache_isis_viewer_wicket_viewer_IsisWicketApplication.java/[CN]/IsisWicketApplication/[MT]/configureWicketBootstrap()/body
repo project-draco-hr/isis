@@ -1,4 +1,11 @@
 {
-  IBootstrapSettings settings=new BootstrapSettings();
+  final IBootstrapSettings settings=new BootstrapSettings();
   Bootstrap.install(this,settings);
+  getHeaderContributorListenerCollection().add(new IHeaderContributor(){
+    @Override public void renderHead(    IHeaderResponse response){
+      BootstrapBaseBehavior bootstrapBaseBehavior=new BootstrapBaseBehavior();
+      bootstrapBaseBehavior.renderHead(settings,response);
+    }
+  }
+);
 }
