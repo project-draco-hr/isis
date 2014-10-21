@@ -7,7 +7,10 @@
   addOrReplace(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(textField));
   if (getModel().isRequired()) {
-    scalarName.add(new CssClassAppender("mandatory"));
+    final String label=scalarName.getDefaultModelObjectAsString();
+    if (!Strings.isNullOrEmpty(label)) {
+      scalarName.add(new CssClassAppender("mandatory"));
+    }
   }
   addOrReplace(scalarName);
   final String describedAs=getModel().getDescribedAs();
