@@ -1,0 +1,18 @@
+{
+  final CssClassFaFacetOnMemberFactory facetFactory=new CssClassFaFacetOnMemberFactory();
+  facetFactory.setSpecificationLookup(mockSpecificationLoaderSpi);
+class Customer {
+    @CssClassFa(value="fa fa-foo") public String foo(){
+      return "Joe";
+    }
+  }
+  expectNoMethodsRemoved();
+  final Method actionMethod=findMethod(Customer.class,"foo",new Class[]{});
+  facetedMethod=FacetedMethod.createForAction(Customer.class,actionMethod);
+  facetFactory.process(new FacetFactory.ProcessMethodContext(Customer.class,null,null,facetedMethod.getMethod(),mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CssClassFaFacet.class);
+  assertThat(facet,is(not(nullValue())));
+  assertThat(facet instanceof CssClassFaFacetAbstract,is(true));
+  final CssClassFaFacetAbstract cssClassFacetAbstract=(CssClassFaFacetAbstract)facet;
+  assertThat(cssClassFacetAbstract.value(),equalTo("fa fa-foo"));
+}

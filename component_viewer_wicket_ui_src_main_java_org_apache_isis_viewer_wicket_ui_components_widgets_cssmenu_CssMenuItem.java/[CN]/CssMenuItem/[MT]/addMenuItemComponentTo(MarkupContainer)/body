@@ -14,9 +14,18 @@
       link.add(new CssClassAppender("prototype"));
     }
     if (this.cssClass != null) {
-      markupContainer.add(new CssClassAppender(this.cssClass));
+      link.add(new CssClassAppender(this.cssClass));
     }
     link.add(new CssClassAppender(this.actionIdentifier));
+    String cssClassFa=getCssClassFa();
+    if (Strings.isNullOrEmpty(cssClassFa)) {
+      Components.permanentlyHide(link,"menuLinkFontAwesome");
+    }
+ else {
+      Label dummy=new Label("menuLinkFontAwesome","");
+      dummy.add(new CssClassAppender(cssClassFa));
+      link.add(dummy);
+    }
     Components.permanentlyHide(markupContainer,CssMenuItem.ID_MENU_LABEL);
     return link;
   }

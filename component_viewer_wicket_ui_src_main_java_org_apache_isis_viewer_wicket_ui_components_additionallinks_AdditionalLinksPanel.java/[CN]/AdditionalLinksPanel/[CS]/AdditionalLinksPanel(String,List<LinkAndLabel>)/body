@@ -10,6 +10,15 @@
     @Override protected void populateItem(    ListItem<LinkAndLabel> item){
       final LinkAndLabel linkAndLabel=item.getModelObject();
       final AbstractLink link=linkAndLabel.getLink();
+      String cssClassFa=linkAndLabel.getCssClassFa();
+      if (Strings.isNullOrEmpty(cssClassFa)) {
+        Components.permanentlyHide(link,ID_ADDITIONAL_LINK_FONT_AWESOME);
+      }
+ else {
+        Label dummy=new Label(ID_ADDITIONAL_LINK_FONT_AWESOME,"");
+        link.addOrReplace(dummy);
+        dummy.add(new CssClassAppender(cssClassFa));
+      }
       Label viewTitleLabel=new Label(ID_ADDITIONAL_LINK_TITLE,linkAndLabel.getLabel());
       String disabledReasonIfAny=linkAndLabel.getDisabledReasonIfAny();
       if (disabledReasonIfAny != null) {
