@@ -1,0 +1,13 @@
+{
+  final CssClassFaFacetOnTypeAnnotationFactory facetFactory=new CssClassFaFacetOnTypeAnnotationFactory();
+  facetFactory.setSpecificationLookup(mockSpecificationLoaderSpi);
+@CssClassFa("fa-foo") class Customer {
+  }
+  expectNoMethodsRemoved();
+  facetFactory.process(new FacetFactory.ProcessClassContext(Customer.class,null,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CssClassFaFacet.class);
+  assertThat(facet,is(not(nullValue())));
+  assertThat(facet instanceof CssClassFaFacetAbstract,is(true));
+  final CssClassFaFacetAbstract cssClassFacetAbstract=(CssClassFaFacetAbstract)facet;
+  assertThat(cssClassFacetAbstract.value(),equalTo("fa fa-foo"));
+}

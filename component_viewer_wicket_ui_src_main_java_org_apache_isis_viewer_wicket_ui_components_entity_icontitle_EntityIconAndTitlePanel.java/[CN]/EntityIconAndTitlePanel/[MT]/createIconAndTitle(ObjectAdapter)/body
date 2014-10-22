@@ -1,8 +1,19 @@
 {
   final AbstractLink link=createLinkWrapper();
-  String title=determineTitle();
+  final String title=determineTitle();
+  final String iconName=adapter.getIconName();
+  final CssClassFaFacet cssClassFaFacet=adapter.getSpecification().getFacet(CssClassFaFacet.class);
+  if (iconName != null || cssClassFaFacet == null) {
+    link.addOrReplace(this.image=newImage(ID_ENTITY_ICON,adapter));
+    Components.permanentlyHide(link,ID_ENTITY_FONT_AWESOME);
+  }
+ else {
+    Label dummy=new Label(ID_ENTITY_FONT_AWESOME,"");
+    link.addOrReplace(dummy);
+    dummy.add(new CssClassAppender(cssClassFaFacet.value() + " fa-2x"));
+    Components.permanentlyHide(link,ID_ENTITY_ICON);
+  }
   link.addOrReplace(this.label=newLabel(ID_ENTITY_TITLE,titleAbbreviated(title)));
-  link.addOrReplace(this.image=newImage(ID_ENTITY_ICON,adapter));
   String entityTypeName=adapter.getSpecification().getSingularName();
   link.add(new AttributeModifier("title",entityTypeName + ": " + title));
   return link;
