@@ -14,19 +14,19 @@
       WebMarkupContainer header;
       if (column.isSortable()) {
         header=newSortableHeader("header",column.getSortProperty(),stateLocator);
+        if (column instanceof IStyledColumn) {
+          CssAttributeBehavior cssAttributeBehavior=new CssAttributeBehavior(){
+            private static final long serialVersionUID=1L;
+            @Override protected String getCssClass(){
+              return ((IStyledColumn<?,S>)column).getCssClass();
+            }
+          }
+;
+          header.add(cssAttributeBehavior);
+        }
       }
  else {
         header=new WebMarkupContainer("header");
-      }
-      if (column instanceof IStyledColumn) {
-        CssAttributeBehavior cssAttributeBehavior=new CssAttributeBehavior(){
-          private static final long serialVersionUID=1L;
-          @Override protected String getCssClass(){
-            return ((IStyledColumn<?,S>)column).getCssClass();
-          }
-        }
-;
-        header.add(cssAttributeBehavior);
       }
       item.add(header);
       item.setRenderBodyOnly(true);

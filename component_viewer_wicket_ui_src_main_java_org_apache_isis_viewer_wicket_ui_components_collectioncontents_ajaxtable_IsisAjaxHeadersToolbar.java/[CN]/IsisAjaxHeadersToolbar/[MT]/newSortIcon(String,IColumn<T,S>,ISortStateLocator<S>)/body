@@ -2,17 +2,19 @@
   return new WebComponent(id){
     @Override protected void onComponentTag(    ComponentTag tag){
       super.onComponentTag(tag);
-      ISortState<S> sortState=stateLocator.getSortState();
-      S sortProperty=column.getSortProperty();
-      SortOrder sortOrder=sortProperty == null ? SortOrder.NONE : sortState.getPropertySortOrder(sortProperty);
-      if (sortOrder == SortOrder.ASCENDING) {
-        Attributes.addClass(tag,CLASS_SORT_UP);
-      }
- else       if (sortOrder == SortOrder.DESCENDING) {
-        Attributes.addClass(tag,CLASS_SORT_DOWN);
-      }
+      if (column.isSortable()) {
+        ISortState<S> sortState=stateLocator.getSortState();
+        S sortProperty=column.getSortProperty();
+        SortOrder sortOrder=sortProperty == null ? SortOrder.NONE : sortState.getPropertySortOrder(sortProperty);
+        if (sortOrder == SortOrder.ASCENDING) {
+          Attributes.addClass(tag,CLASS_SORT_UP);
+        }
+ else         if (sortOrder == SortOrder.DESCENDING) {
+          Attributes.addClass(tag,CLASS_SORT_DOWN);
+        }
  else {
-        Attributes.addClass(tag,CLASS_SORT_NONE);
+          Attributes.addClass(tag,CLASS_SORT_NONE);
+        }
       }
     }
   }
