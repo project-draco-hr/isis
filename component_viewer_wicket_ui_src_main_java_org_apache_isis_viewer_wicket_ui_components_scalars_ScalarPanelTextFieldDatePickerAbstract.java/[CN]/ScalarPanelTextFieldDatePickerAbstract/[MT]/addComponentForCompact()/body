@@ -1,4 +1,5 @@
 {
+  Fragment compactFragment=getCompactFragment(CompactType.INPUT_TEXT);
   final AbstractTextComponent<T> textField=createTextField(ID_SCALAR_IF_COMPACT);
   final IModel<T> model=textField.getModel();
   final T object=model.getObject();
@@ -8,6 +9,7 @@
   final String dateTimePattern=converter.getDateTimePattern(getLocale());
   final int length=dateTimePattern.length() + lengthAdjust;
   textField.add(new AttributeModifier("size",Model.of("" + length)));
-  addOrReplace(textField);
+  compactFragment.add(textField);
+  scalarTypeContainer.addOrReplace(compactFragment);
   return textField;
 }

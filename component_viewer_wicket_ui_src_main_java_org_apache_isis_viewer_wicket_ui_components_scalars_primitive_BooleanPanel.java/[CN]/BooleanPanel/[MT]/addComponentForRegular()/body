@@ -2,7 +2,9 @@
   final String name=getModel().getName();
   checkBox=createCheckBox(ID_SCALAR_VALUE);
   checkBox.setLabel(Model.of(name));
-  final FormComponentLabel labelIfRegular=new FormComponentLabel(ID_SCALAR_IF_REGULAR,checkBox);
+  final MarkupContainer labelIfRegular=new MarkupContainer(ID_SCALAR_IF_REGULAR){
+  }
+;
   labelIfRegular.add(checkBox);
   if (getModel().isRequired()) {
     labelIfRegular.add(new CssClassAppender("mandatory"));
@@ -12,7 +14,7 @@
     labelIfRegular.add(new AttributeModifier("title",Model.of(describedAs)));
   }
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(checkBox));
-  addOrReplace(scalarName);
+  labelIfRegular.add(scalarName);
   addOrReplace(labelIfRegular);
   addFeedbackTo(labelIfRegular,checkBox);
   addAdditionalLinksTo(labelIfRegular);

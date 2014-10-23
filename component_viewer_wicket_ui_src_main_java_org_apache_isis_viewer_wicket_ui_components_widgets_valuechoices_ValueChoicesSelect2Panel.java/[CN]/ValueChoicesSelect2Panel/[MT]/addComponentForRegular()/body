@@ -2,20 +2,20 @@
   final IModel<ObjectAdapterMemento> modelObject=ScalarModelWithPending.Util.createModel(this);
   final ObjectAdapter[] actionArgsHint=getScalarModel().getActionArgsHint();
   if (select2Field == null) {
-    select2Field=Select2ChoiceUtil.newSelect2Choice(ID_VALUE_ID,modelObject,getScalarModel());
+    select2Field=Select2ChoiceUtil.newSelect2Choice(ID_SCALAR_VALUE,modelObject,getScalarModel());
     setChoices(actionArgsHint);
     addStandardSemantics();
   }
  else {
     select2Field.clearInput();
   }
-  final FormComponentLabel labelIfRegular=createFormComponentLabel();
+  final MarkupContainer labelIfRegular=createFormComponentLabel();
   if (getModel().isRequired()) {
     labelIfRegular.add(new CssClassAppender("mandatory"));
   }
   addOrReplace(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(select2Field));
-  addOrReplace(scalarName);
+  labelIfRegular.addOrReplace(scalarName);
   addFeedbackTo(labelIfRegular,select2Field);
   addAdditionalLinksTo(labelIfRegular);
   return labelIfRegular;
