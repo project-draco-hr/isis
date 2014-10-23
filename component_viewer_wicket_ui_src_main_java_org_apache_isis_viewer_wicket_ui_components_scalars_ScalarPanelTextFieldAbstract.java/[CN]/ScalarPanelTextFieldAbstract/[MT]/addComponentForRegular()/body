@@ -3,8 +3,8 @@
   textField.setOutputMarkupId(true);
   addStandardSemantics();
   addSemantics();
-  final FormComponentLabel labelIfRegular=createFormComponentLabel();
-  addOrReplace(labelIfRegular);
+  final MarkupContainer labelIfRegular=createFormComponentLabel();
+  scalarTypeContainer.add(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(textField));
   final LabelAtFacet facet=getModel().getFacet(LabelAtFacet.class);
   scalarName.add(new AttributeModifier("title","labelAt=" + (facet != null ? facet.value() : "(null)")));
@@ -14,7 +14,7 @@
       scalarName.add(new CssClassAppender("mandatory"));
     }
   }
-  addOrReplace(scalarName);
+  labelIfRegular.add(scalarName);
   final String describedAs=getModel().getDescribedAs();
   if (describedAs != null) {
     labelIfRegular.add(new AttributeModifier("title",Model.of(describedAs)));
