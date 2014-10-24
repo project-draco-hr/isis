@@ -1,7 +1,8 @@
 {
   Fragment leafItem=new Fragment("content","leafItem",ApplicationActionsPanel.this);
   AbstractLink subMenuItemLink=menuItem.getLink();
-  subMenuItemLink.setBody(Model.of(menuItem.getName()));
+  Label menuItemLabel=new Label("menuLinkLabel",menuItem.getName());
+  subMenuItemLink.add(menuItemLabel);
   if (!menuItem.isEnabled()) {
     listItem.add(new CssClassNameAppender("disabled"));
   }
@@ -12,12 +13,12 @@
   listItem.add(leafItem);
   String cssClassFa=menuItem.getCssClassFa();
   if (Strings.isNullOrEmpty(cssClassFa)) {
-    Components.permanentlyHide(leafItem,"menuLinkFontAwesome");
+    Components.permanentlyHide(subMenuItemLink,"menuLinkFontAwesome");
     subMenuItemLink.add(new CssClassAppender("menuLinkSpacer"));
   }
  else {
     Label dummy=new Label("menuLinkFontAwesome","");
     dummy.add(new CssClassAppender(cssClassFa));
-    leafItem.add(dummy);
+    subMenuItemLink.add(dummy);
   }
 }
