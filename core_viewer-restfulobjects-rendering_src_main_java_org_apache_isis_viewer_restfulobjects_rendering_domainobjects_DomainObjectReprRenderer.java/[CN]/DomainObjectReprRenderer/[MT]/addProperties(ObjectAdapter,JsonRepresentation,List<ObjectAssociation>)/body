@@ -1,0 +1,26 @@
+{
+  final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("members");
+  for (  final ObjectAssociation assoc : associations) {
+    if (mode.checkVisibility()) {
+      final Consent visibility=assoc.isVisible(getRendererContext().getAuthenticationSession(),objectAdapter,rendererContext.getWhere());
+      if (!visibility.isAllowed()) {
+        continue;
+      }
+    }
+    if (!(assoc instanceof OneToOneAssociation)) {
+      continue;
+    }
+    final OneToOneAssociation property=(OneToOneAssociation)assoc;
+    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(getRendererContext(),linkFollower,property.getId(),JsonRepresentation.newMap());
+    renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(linkToBuilder);
+    if (mode.isArgs()) {
+      renderer.asArguments();
+    }
+    if (mode.isEventSerialization()) {
+      renderer.asEventSerialization();
+    }
+    final JsonRepresentation propertyValueRepresentation=renderer.render();
+    final JsonRepresentation propertyRepr=rendererContext.objectPropertyValuesOnly() ? propertyValueRepresentation.getRepresentation("value") : propertyValueRepresentation;
+    members.mapPut(assoc.getId(),propertyRepr);
+  }
+}

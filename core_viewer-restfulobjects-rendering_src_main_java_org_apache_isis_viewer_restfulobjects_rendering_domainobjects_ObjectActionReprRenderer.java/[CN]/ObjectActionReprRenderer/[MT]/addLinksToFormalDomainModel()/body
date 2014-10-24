@@ -1,3 +1,7 @@
 {
-  getLinks().arrayAdd(ActionDescriptionReprRenderer.newLinkToBuilder(rendererContext,Rel.DESCRIBEDBY,objectAdapter.getSpecification(),objectMember).build());
+  if (rendererContext.suppressDescribedByLinks()) {
+    return;
+  }
+  final JsonRepresentation link=ActionDescriptionReprRenderer.newLinkToBuilder(rendererContext,Rel.DESCRIBEDBY,objectAdapter.getSpecification(),objectMember).build();
+  getLinks().arrayAdd(link);
 }

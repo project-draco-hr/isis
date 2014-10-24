@@ -11,6 +11,8 @@
   }
   final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),null,JsonRepresentation.newMap());
   final JsonRepresentation domainObjectRepr=renderer.with(objectAdapter).asUpdatePropertiesLinkArguments().render();
-  final LinkBuilder updateLinkBuilder=LinkBuilder.newBuilder(getRendererContext(),Rel.UPDATE.getName(),RepresentationType.DOMAIN_OBJECT,"objects/%s/%s",getDomainType(),getInstanceId()).withHttpMethod(RestfulHttpMethod.PUT).withArguments(domainObjectRepr);
-  getLinks().arrayAdd(updateLinkBuilder.build());
+  if (!rendererContext.suppressUpdateLink()) {
+    final LinkBuilder updateLinkBuilder=LinkBuilder.newBuilder(getRendererContext(),Rel.UPDATE.getName(),RepresentationType.DOMAIN_OBJECT,"objects/%s/%s",getDomainType(),getInstanceId()).withHttpMethod(RestfulHttpMethod.PUT).withArguments(domainObjectRepr);
+    getLinks().arrayAdd(updateLinkBuilder.build());
+  }
 }

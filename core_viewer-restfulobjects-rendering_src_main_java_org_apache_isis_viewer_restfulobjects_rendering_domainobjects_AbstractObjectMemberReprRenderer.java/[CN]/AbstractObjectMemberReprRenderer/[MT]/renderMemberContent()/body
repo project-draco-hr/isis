@@ -1,9 +1,11 @@
 {
-  representation.mapPut("id",objectMember.getId());
+  if (!rendererContext.suppressMemberId()) {
+    representation.mapPut("id",objectMember.getId());
+  }
   if (!mode.isArguments()) {
     representation.mapPut("memberType",objectMemberType.getName());
   }
-  if (mode.isInline()) {
+  if (mode.isInline() && !rendererContext.suppressMemberLinks()) {
     addDetailsLinkIfPersistent();
   }
   if (mode.isStandalone()) {
@@ -13,8 +15,10 @@
     addLinkToUp();
   }
   if (mode.isFollowed() || mode.isStandalone() || mode.isMutated()) {
-    addMutatorsIfEnabled();
-    putExtensionsIsisProprietary();
+    addMutatorLinksIfEnabled();
+    if (!mode.isInline() || !rendererContext.suppressUpdateLink()) {
+      putExtensionsIsisProprietary();
+    }
     addLinksToFormalDomainModel();
     addLinksIsisProprietary();
   }

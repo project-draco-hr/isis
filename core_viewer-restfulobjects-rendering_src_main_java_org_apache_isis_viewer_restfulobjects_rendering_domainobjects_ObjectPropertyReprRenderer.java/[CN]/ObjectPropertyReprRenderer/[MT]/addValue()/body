@@ -14,14 +14,19 @@
       }
     }
  else     if (specClass == java.math.BigInteger.class) {
+      final BigIntegerValueFacet bigIntegerValueFacet=getFacet(BigIntegerValueFacet.class,objectMember,valueAdapter != null ? valueAdapter.getSpecification() : null);
+      if (bigIntegerValueFacet != null) {
+        format=String.format("big-integer");
+      }
     }
-    JsonValueEncoder.appendValueAndFormat(spec,valueAdapter,representation,format);
-    return;
+    return JsonValueEncoder.appendValueAndFormat(spec,valueAdapter,representation,format,rendererContext.suppressMemberExtensions());
   }
   final RenderFacet renderFacet=objectMember.getFacet(RenderFacet.class);
   boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY && rendererContext.canEagerlyRender(valueAdapter);
   if (valueAdapter == null) {
-    representation.mapPut("value",NullNode.getInstance());
+    final NullNode value=NullNode.getInstance();
+    representation.mapPut("value",value);
+    return value;
   }
  else {
     final TitleFacet titleFacet=spec.getFacet(TitleFacet.class);
@@ -35,6 +40,8 @@
       }
       valueLinkBuilder.withValue(renderer.render());
     }
-    representation.mapPut("value",valueLinkBuilder.build());
+    final JsonRepresentation valueJsonRepr=valueLinkBuilder.build();
+    representation.mapPut("value",valueJsonRepr);
+    return valueJsonRepr;
   }
 }

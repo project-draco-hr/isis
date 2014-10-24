@@ -22,13 +22,13 @@
     }
   }
   withMembers(objectAdapter);
-  if (mode.includeDescribedBy()) {
+  if (mode.includeDescribedBy() && !rendererContext.suppressDescribedByLinks()) {
     addLinkToDescribedBy();
   }
   if (isService && mode.includeUp()) {
     addLinkToUp();
   }
-  if (!mode.isArgs()) {
+  if (!mode.isArgs() && !rendererContext.objectPropertyValuesOnly()) {
     addPersistLinkIfTransientAndPersistable();
     addUpdatePropertiesLinkIfRequired();
     getExtensions().mapPut("isService",isService);

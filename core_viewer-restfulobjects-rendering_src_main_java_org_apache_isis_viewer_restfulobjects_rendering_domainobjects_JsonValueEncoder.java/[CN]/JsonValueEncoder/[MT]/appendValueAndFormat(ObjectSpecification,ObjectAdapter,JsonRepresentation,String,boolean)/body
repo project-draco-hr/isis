@@ -1,7 +1,7 @@
 {
   final JsonValueConverter jvc=converterBySpec.get(objectSpec.getSpecId());
   if (jvc != null) {
-    jvc.appendValueAndFormat(objectAdapter,format,repr);
+    return jvc.appendValueAndFormat(objectAdapter,format,repr,suppressExtensions);
   }
  else {
     final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
@@ -10,6 +10,7 @@
     }
     Object value=objectAdapter != null ? encodableFacet.toEncodedString(objectAdapter) : NullNode.getInstance();
     repr.mapPut("value",value);
-    appendFormats(repr,"string","string");
+    appendFormats(repr,"string","string",suppressExtensions);
+    return value;
   }
 }

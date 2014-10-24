@@ -1,3 +1,7 @@
 {
-  getLinks().arrayAdd(PropertyDescriptionReprRenderer.newLinkToBuilder(getRendererContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification(),objectMember).build());
+  if (rendererContext.suppressDescribedByLinks()) {
+    return;
+  }
+  final JsonRepresentation link=PropertyDescriptionReprRenderer.newLinkToBuilder(getRendererContext(),Rel.DESCRIBEDBY,objectAdapter.getSpecification(),objectMember).build();
+  getLinks().arrayAdd(link);
 }

@@ -1,4 +1,7 @@
 {
-  final LinkBuilder linkBuilder=CollectionDescriptionReprRenderer.newLinkToBuilder(rendererContext,Rel.DESCRIBEDBY,objectAdapter.getSpecification(),objectMember);
-  getLinks().arrayAdd(linkBuilder.build());
+  if (rendererContext.suppressDescribedByLinks()) {
+    return;
+  }
+  final JsonRepresentation link=CollectionDescriptionReprRenderer.newLinkToBuilder(rendererContext,Rel.DESCRIBEDBY,objectAdapter.getSpecification(),objectMember).build();
+  getLinks().arrayAdd(link);
 }

@@ -1,7 +1,6 @@
 {
   renderMemberContent();
-  final RenderFacet renderFacet=objectMember.getFacet(RenderFacet.class);
-  boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY;
+  boolean eagerlyRender=rendererContext.honorUiHints() && renderEagerly();
   if ((mode.isInline() && eagerlyRender) || mode.isStandalone() || mode.isMutated()|| mode.isEventSerialization()|| !objectAdapter.representsPersistent()) {
     addValue();
   }

@@ -1,10 +1,15 @@
 {
   final JsonRepresentation appendTo=mode.isUpdatePropertiesLinkArgs() ? representation : JsonRepresentation.newMap();
-  final List<ObjectAssociation> associations=objectAdapter.getSpecification().getAssociations(Contributed.EXCLUDED);
-  addAssociations(objectAdapter,appendTo,associations);
-  if (mode.isRegular()) {
-    final List<ObjectAction> actions=objectAdapter.getSpecification().getObjectActions(Contributed.INCLUDED);
-    addActions(objectAdapter,actions,appendTo);
+  final List<ObjectAssociation> associations=objectAdapter.getSpecification().getAssociations(Contributed.INCLUDED);
+  addProperties(objectAdapter,appendTo,associations);
+  if (!rendererContext.objectPropertyValuesOnly()) {
+    if (!mode.isArgs()) {
+      addCollections(objectAdapter,appendTo,associations);
+    }
+    if (mode.isRegular()) {
+      final List<ObjectAction> actions=objectAdapter.getSpecification().getObjectActions(Contributed.INCLUDED);
+      addActions(objectAdapter,actions,appendTo);
+    }
   }
   if (!mode.isUpdatePropertiesLinkArgs()) {
     representation.mapPut("members",appendTo);

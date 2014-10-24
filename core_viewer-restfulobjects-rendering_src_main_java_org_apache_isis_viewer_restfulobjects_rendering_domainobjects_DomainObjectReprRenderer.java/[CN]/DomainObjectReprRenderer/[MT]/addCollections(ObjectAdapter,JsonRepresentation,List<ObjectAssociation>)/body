@@ -1,0 +1,21 @@
+{
+  final LinkFollowSpecs linkFollower=getLinkFollowSpecs().follow("members");
+  for (  final ObjectAssociation assoc : associations) {
+    if (mode.checkVisibility()) {
+      final Consent visibility=assoc.isVisible(getRendererContext().getAuthenticationSession(),objectAdapter,rendererContext.getWhere());
+      if (!visibility.isAllowed()) {
+        continue;
+      }
+    }
+    if (!(assoc instanceof OneToManyAssociation)) {
+      continue;
+    }
+    final OneToManyAssociation collection=(OneToManyAssociation)assoc;
+    final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(getRendererContext(),linkFollower,collection.getId(),JsonRepresentation.newMap());
+    renderer.with(new ObjectAndCollection(objectAdapter,collection)).usingLinkTo(linkToBuilder);
+    if (mode.isEventSerialization()) {
+      renderer.asEventSerialization();
+    }
+    members.mapPut(assoc.getId(),renderer.render());
+  }
+}
