@@ -1,0 +1,14 @@
+{
+  final LabelAtFacetOnParameterAnnotationFactory facetFactory=new LabelAtFacetOnParameterAnnotationFactory();
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @LabelAt(LabelAt.Position.LEFT) final String foo){
+    }
+  }
+  final Method method=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  facetFactory.processParams(new ProcessParameterContext(method,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(LabelAtFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof LabelAtFacetOnParameterAnnotation);
+  final LabelAtFacetOnParameterAnnotation labelAtFacetAnnotation=(LabelAtFacetOnParameterAnnotation)facet;
+  assertEquals(LabelAt.Position.LEFT,labelAtFacetAnnotation.value());
+}

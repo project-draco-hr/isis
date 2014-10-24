@@ -1,20 +1,21 @@
 {
-  final List<Facet> facets=new ArrayList<Facet>();
-  final FacetedMethod facetedMethod=processMethodContext.getFacetHolder();
-  facets.add(new NamedFacetNone(facetedMethod));
-  facets.add(new DescribedAsFacetNone(facetedMethod));
-  facets.add(new HelpFacetNone(facetedMethod));
-  final FeatureType featureType=facetedMethod.getFeatureType();
+  final List<Facet> facets=Lists.newArrayList();
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  facets.add(new NamedFacetNone(facetHolder));
+  facets.add(new DescribedAsFacetNone(facetHolder));
+  facets.add(new HelpFacetNone(facetHolder));
+  final FeatureType featureType=facetHolder.getFeatureType();
   if (featureType.isProperty()) {
-    facets.add(new MaxLengthFacetUnlimited(facetedMethod));
-    facets.add(new MultiLineFacetNone(true,facetedMethod));
+    facets.add(new MaxLengthFacetUnlimited(facetHolder));
+    facets.add(new MultiLineFacetNone(true,facetHolder));
+    facets.add(newLabelAtFacetIfAny(facetHolder,"properties","property","props","prop"));
   }
   if (featureType.isAction()) {
-    facets.add(new ActionDefaultsFacetNone(facetedMethod));
-    facets.add(new ActionChoicesFacetNone(facetedMethod));
+    facets.add(new ActionDefaultsFacetNone(facetHolder));
+    facets.add(new ActionChoicesFacetNone(facetHolder));
   }
   if (featureType.isCollection()) {
-    facets.add(new PagedFacetDefault(facetedMethod,getConfiguration().getInteger("isis.viewers.paged.parented",PAGE_SIZE_PARENTED_DEFAULT)));
+    facets.add(new PagedFacetFromConfiguration(getPagedConfigSetting("parented",PAGE_SIZE_PARENTED_DEFAULT),facetHolder));
   }
   FacetUtil.addFacets(facets);
 }

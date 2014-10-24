@@ -6,6 +6,8 @@
   final FormComponentLabel labelIfRegular=createFormComponentLabel();
   addOrReplace(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(textField));
+  final LabelAtFacet facet=getModel().getFacet(LabelAtFacet.class);
+  scalarName.add(new AttributeModifier("title","labelAt=" + (facet != null ? facet.value() : "(null)")));
   if (getModel().isRequired()) {
     final String label=scalarName.getDefaultModelObjectAsString();
     if (!Strings.isNullOrEmpty(label)) {

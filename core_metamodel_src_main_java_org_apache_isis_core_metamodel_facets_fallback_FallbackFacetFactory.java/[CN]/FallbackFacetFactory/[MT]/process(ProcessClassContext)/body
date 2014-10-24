@@ -1,9 +1,10 @@
 {
-  final FacetHolder facetHolder=processClassContaxt.getFacetHolder();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
   final DescribedAsFacetNone describedAsFacet=new DescribedAsFacetNone(facetHolder);
   final NotPersistableFacetNull notPersistableFacet=new NotPersistableFacetNull(facetHolder);
   final TitleFacetNone titleFacet=new TitleFacetNone(facetHolder);
-  final PagedFacetDefault pagedFacet=new PagedFacetDefault(facetHolder,getConfiguration().getInteger("isis.viewers.paged.standalone",PAGE_SIZE_STANDALONE_DEFAULT));
+  final int pagedStandalone=getPagedConfigSetting("standalone",PAGE_SIZE_STANDALONE_DEFAULT);
+  final PagedFacetFromConfiguration pagedFacet=new PagedFacetFromConfiguration(pagedStandalone,facetHolder);
   final Facet[] facets=new Facet[]{describedAsFacet,notPersistableFacet,titleFacet,pagedFacet};
   FacetUtil.addFacets(facets);
 }
