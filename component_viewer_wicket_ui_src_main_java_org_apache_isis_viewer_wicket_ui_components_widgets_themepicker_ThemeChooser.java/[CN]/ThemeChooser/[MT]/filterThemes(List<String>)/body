@@ -1,0 +1,18 @@
+{
+  List<String> enabledThemes;
+  final String[] enabledThemesArray=getConfiguration().getList(ENABLED_THEMES_KEY);
+  if (enabledThemesArray.length > 0) {
+    final HashSet<String> enabledThemesSet=Sets.newHashSet(enabledThemesArray);
+    Iterable<String> enabled=Iterables.filter(allThemes,new Predicate<String>(){
+      @Override public boolean apply(      String themeName){
+        return enabledThemesSet.contains(themeName);
+      }
+    }
+);
+    enabledThemes=Lists.newArrayList(enabled);
+  }
+ else {
+    enabledThemes=allThemes;
+  }
+  return enabledThemes;
+}
