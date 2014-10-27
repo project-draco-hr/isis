@@ -1,0 +1,19 @@
+{
+  ITheme theme;
+  try {
+    if ("bootstrap-theme".equals(themeName)) {
+      theme=new BootstrapThemeTheme();
+    }
+ else     if (themeName.startsWith("veg")) {
+      theme=VegibitTheme.valueOf(themeName);
+    }
+ else {
+      theme=BootswatchTheme.valueOf(themeName);
+    }
+  }
+ catch (  Exception x) {
+    LOG.warn("Cannot find a theme with name '" + themeName + "' in all available theme providers: "+ x.getMessage());
+    theme=new BootstrapThemeTheme();
+  }
+  return theme;
+}

@@ -1,0 +1,14 @@
+{
+  IBootstrapSettings bootstrapSettings=Bootstrap.getSettings();
+  ITheme theme=getThemeByName(activeTheme);
+  getActiveThemeProvider().setActiveTheme(theme);
+  if (theme instanceof BootstrapThemeTheme) {
+    bootstrapSettings.setThemeProvider(new SingleThemeProvider(theme));
+  }
+ else   if (theme instanceof BootswatchTheme) {
+    bootstrapSettings.setThemeProvider(new BootswatchThemeProvider((BootswatchTheme)theme));
+  }
+ else   if (theme instanceof VegibitTheme) {
+    bootstrapSettings.setThemeProvider(new VegibitThemeProvider((VegibitTheme)theme));
+  }
+}
