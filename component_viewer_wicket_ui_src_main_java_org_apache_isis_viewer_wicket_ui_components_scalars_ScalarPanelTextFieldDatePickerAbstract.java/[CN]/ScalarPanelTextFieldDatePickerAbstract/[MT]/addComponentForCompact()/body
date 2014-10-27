@@ -1,16 +1,12 @@
 {
-  Fragment compactFragment=getCompactFragment(CompactType.INPUT_TEXT);
-  final AbstractTextComponent<T> textField=createTextField(ID_SCALAR_IF_COMPACT);
-  textField.add(new CssClassAppender("date"));
-  final IModel<T> model=textField.getModel();
-  final T object=model.getObject();
-  model.setObject(object);
-  textField.setEnabled(false);
+  Fragment compactFragment=getCompactFragment(CompactType.SPAN);
+  final Label label=new Label(ID_SCALAR_IF_COMPACT,newTextFieldValueModel());
+  label.setEnabled(false);
   final int lengthAdjust=getLengthAdjustHint() != null ? getLengthAdjustHint() : 1;
   final String dateTimePattern=converter.getDateTimePattern(getLocale());
   final int length=dateTimePattern.length() + lengthAdjust;
-  textField.add(new AttributeModifier("size",Model.of("" + length)));
-  compactFragment.add(textField);
+  label.add(new AttributeModifier("size",Model.of("" + length)));
+  compactFragment.add(label);
   scalarTypeContainer.addOrReplace(compactFragment);
-  return textField;
+  return label;
 }
