@@ -13,6 +13,18 @@
     result=pm.getObjectById(cls,jdoObjectId);
   }
  catch (  final RuntimeException e) {
+    final List<ExceptionRecognizer> exceptionRecognizers=getPersistenceSession().getServicesInjector().lookupServices(ExceptionRecognizer.class);
+    for (    ExceptionRecognizer exceptionRecognizer : exceptionRecognizers) {
+      if (exceptionRecognizer instanceof ExceptionRecognizer2) {
+        final ExceptionRecognizer2 recognizer=(ExceptionRecognizer2)exceptionRecognizer;
+        final ExceptionRecognizer2.Recognition recognition=recognizer.recognize2(e);
+        if (recognition != null) {
+          if (recognition.getCategory() == ExceptionRecognizer2.Category.NOT_FOUND) {
+            throw new ObjectNotFoundException(oid);
+          }
+        }
+      }
+    }
     throw e;
   }
   if (result == null) {
