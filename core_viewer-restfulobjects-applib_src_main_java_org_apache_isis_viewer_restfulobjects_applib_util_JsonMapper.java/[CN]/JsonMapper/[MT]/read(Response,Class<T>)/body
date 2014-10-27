@@ -1,12 +1,8 @@
 {
   final ClientResponse<?> clientResponse=(ClientResponse<?>)response;
-  final Object entityObj=clientResponse.getEntity(String.class);
-  if (entityObj == null) {
+  final String entity=clientResponse.getEntity(String.class);
+  if (entity == null) {
     return null;
   }
-  if (!(entityObj instanceof String)) {
-    throw new IllegalArgumentException("response entity must be a String (was " + entityObj.getClass().getName() + ")");
-  }
-  final String entity=(String)entityObj;
   return read(entity,requiredType);
 }
