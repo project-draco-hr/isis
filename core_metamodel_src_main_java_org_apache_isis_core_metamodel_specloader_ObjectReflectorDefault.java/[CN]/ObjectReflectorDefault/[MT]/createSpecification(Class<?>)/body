@@ -5,16 +5,15 @@
   final ObjectInstantiator objectInstantiator=getRuntimeContext().getObjectInstantiator();
   final SpecificationContext specContext=new SpecificationContext(getDeploymentCategory(),authenticationSessionProvider,servicesProvider,objectInstantiator,specificationLookup,facetProcessor);
   final AdapterManager adapterMap=getRuntimeContext().getAdapterManager();
-  final ObjectMemberContext objectMemberContext=new ObjectMemberContext(getDeploymentCategory(),authenticationSessionProvider,specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),collectionTypeRegistry,servicesProvider);
+  final ObjectMemberContext objectMemberContext=new ObjectMemberContext(getDeploymentCategory(),authenticationSessionProvider,specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),servicesProvider);
   if (FreeStandingList.class.isAssignableFrom(cls)) {
     return new ObjectSpecificationOnStandaloneList(specContext,objectMemberContext);
   }
  else {
     final SpecificationLoaderSpi specificationLoader=this;
-    final IntrospectionContext introspectionContext=new IntrospectionContext(getClassSubstitutor());
     final ServicesInjector dependencyInjector=getRuntimeContext().getDependencyInjector();
     final CreateObjectContext createObjectContext=new CreateObjectContext(adapterMap,dependencyInjector);
     final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(specificationLoader,classSubstitutor,specificationTraverser,facetProcessor);
-    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,introspectionContext,specContext,objectMemberContext,createObjectContext);
+    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,specContext,objectMemberContext,createObjectContext);
   }
 }
