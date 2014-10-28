@@ -1,0 +1,16 @@
+{
+  if (cls.getName().startsWith("org.datanucleus")) {
+    return getClass(cls.getSuperclass());
+  }
+  if (shouldIgnore(cls)) {
+    return null;
+  }
+  final Class<?> superclass=cls.getSuperclass();
+  if (superclass != null && superclass.isEnum()) {
+    return superclass;
+  }
+  if (ClassUtil.directlyImplements(cls,JavassistEnhanced.class)) {
+    return getClass(cls.getSuperclass());
+  }
+  return cls;
+}

@@ -3,7 +3,6 @@
     LOG.debug("installing " + this.getClass().getName());
   }
   ObjectAdapterFactory adapterFactory=persistenceSessionFactory.getAdapterFactory();
-  ObjectFactory objectFactory=persistenceSessionFactory.getObjectFactory();
   PojoRecreator pojoRecreator=persistenceSessionFactory.getPojoRecreator();
   IdentifierGenerator identifierGenerator=persistenceSessionFactory.getIdentifierGenerator();
   ServicesInjectorSpi servicesInjector=persistenceSessionFactory.getServicesInjector();
@@ -16,7 +15,7 @@
     final String level=getConfiguration().getString(LOGGING_PROPERTY + ".level","debug");
     objectStore=new IsisObjectStoreLogger(objectStore,level);
   }
-  final PersistenceSession persistenceSession=new PersistenceSession(persistenceSessionFactory,adapterFactory,objectFactory,servicesInjector,identifierGenerator,adapterManager,persistAlgorithm,objectStore);
+  final PersistenceSession persistenceSession=new PersistenceSession(persistenceSessionFactory,adapterFactory,servicesInjector,identifierGenerator,adapterManager,persistAlgorithm,objectStore);
   final IsisTransactionManager transactionManager=createTransactionManager(persistenceSession,objectStore,servicesInjector);
   ensureThatArg(persistenceSession,is(not(nullValue())));
   ensureThatArg(transactionManager,is(not(nullValue())));

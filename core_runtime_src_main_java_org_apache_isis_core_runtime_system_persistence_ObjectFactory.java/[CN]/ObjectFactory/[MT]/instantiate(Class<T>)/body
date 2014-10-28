@@ -1,0 +1,13 @@
+{
+  if (mode == Mode.STRICT && getServicesInjector() == null) {
+    throw new IllegalStateException("ServicesInjector is not available (no open session)");
+  }
+  if (Modifier.isAbstract(cls.getModifiers())) {
+    throw new ObjectInstantiationException("Cannot create an instance of an abstract class: " + cls);
+  }
+  final T newInstance=doInstantiate(cls);
+  if (getServicesInjector() != null) {
+    getServicesInjector().injectServicesInto(newInstance);
+  }
+  return newInstance;
+}
