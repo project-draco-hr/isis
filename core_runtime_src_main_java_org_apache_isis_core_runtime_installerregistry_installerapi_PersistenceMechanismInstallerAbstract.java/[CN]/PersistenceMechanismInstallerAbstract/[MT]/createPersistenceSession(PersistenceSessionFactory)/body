@@ -3,8 +3,7 @@
     LOG.debug("installing " + this.getClass().getName());
   }
   ObjectAdapterFactory adapterFactory=persistenceSessionFactory.getAdapterFactory();
-  PojoRecreator pojoRecreator=persistenceSessionFactory.getPojoRecreator();
-  IdentifierGenerator identifierGenerator=persistenceSessionFactory.getIdentifierGenerator();
+  PojoRecreator pojoRecreator=new PojoRecreatorUnified(getConfiguration());
   ServicesInjectorSpi servicesInjector=persistenceSessionFactory.getServicesInjector();
   final AdapterManagerDefault adapterManager=new AdapterManagerDefault(pojoRecreator);
   ObjectStoreSpi objectStore=createObjectStore(getConfiguration(),adapterFactory,adapterManager);
@@ -13,10 +12,8 @@
     final String level=getConfiguration().getString(LOGGING_PROPERTY + ".level","debug");
     objectStore=new IsisObjectStoreLogger(objectStore,level);
   }
-  final PersistenceSession persistenceSession=new PersistenceSession(persistenceSessionFactory,adapterFactory,servicesInjector,identifierGenerator,adapterManager,objectStore,getConfiguration());
-  final IsisTransactionManager transactionManager=createTransactionManager(persistenceSession,objectStore,servicesInjector);
-  ensureThatArg(persistenceSession,is(not(nullValue())));
-  ensureThatArg(transactionManager,is(not(nullValue())));
+  final PersistenceSession persistenceSession=new PersistenceSession(persistenceSessionFactory,adapterFactory,servicesInjector,adapterManager,objectStore,getConfiguration());
+  final IsisTransactionManager transactionManager=new IsisTransactionManager(persistenceSession,objectStore,servicesInjector);
   persistenceSession.setDirtiableSupport(true);
   persistenceSession.setTransactionManager(transactionManager);
   return persistenceSession;
