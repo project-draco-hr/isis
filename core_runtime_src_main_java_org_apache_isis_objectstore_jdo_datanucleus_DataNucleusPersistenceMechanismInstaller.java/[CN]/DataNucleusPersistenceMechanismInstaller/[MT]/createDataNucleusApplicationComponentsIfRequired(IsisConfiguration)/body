@@ -1,10 +1,10 @@
 {
-  if (applicationComponents != null && !applicationComponents.isStale()) {
-    return;
+  if (applicationComponents == null || applicationComponents.isStale()) {
+    final IsisConfiguration dataNucleusConfig=configuration.createSubset(ISIS_CONFIG_PREFIX);
+    final Map<String,String> props=dataNucleusConfig.asMap();
+    addDataNucleusPropertiesIfRequired(props);
+    final Set<String> classesToBePersisted=catalogClassesToBePersisted(configuration,getSpecificationLoader().allSpecifications());
+    applicationComponents=new DataNucleusApplicationComponents(props,classesToBePersisted);
   }
-  final IsisConfiguration dataNucleusConfig=configuration.createSubset(ISIS_CONFIG_PREFIX);
-  final Map<String,String> props=dataNucleusConfig.asMap();
-  addDataNucleusPropertiesIfRequired(props);
-  final Set<String> classesToBePersisted=catalogClassesToBePersisted(configuration,getSpecificationLoader().allSpecifications());
-  applicationComponents=new DataNucleusApplicationComponents(props,classesToBePersisted);
+  return applicationComponents;
 }

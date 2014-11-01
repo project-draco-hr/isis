@@ -1,0 +1,16 @@
+{
+  ensureThatArg(persistenceSessionFactory,is(not(nullValue())),"persistence session factory required");
+  ensureThatArg(servicesInjector,is(not(nullValue())),"services injector required");
+  ensureThatArg(objectStore,is(not(nullValue())),"object store required");
+  this.persistenceSessionFactory=persistenceSessionFactory;
+  this.servicesInjector=servicesInjector;
+  this.objectAdapterFactory=new PojoAdapterFactory();
+  this.oidGenerator=new OidGenerator(new IdentifierGeneratorUnified(configuration));
+  this.adapterManager=new AdapterManagerDefault(new PojoRecreatorUnified(configuration));
+  this.persistAlgorithm=new PersistAlgorithmUnified(configuration);
+  setState(State.NOT_INITIALIZED);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("creating " + this);
+  }
+  this.objectStore=objectStore;
+}

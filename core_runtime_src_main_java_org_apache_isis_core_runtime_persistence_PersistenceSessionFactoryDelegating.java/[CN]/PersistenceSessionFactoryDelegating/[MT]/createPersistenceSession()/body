@@ -1,3 +1,13 @@
 {
-  return persistenceSessionFactoryDelegate.createPersistenceSession(this);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("installing " + this.getClass().getName());
+  }
+  ServicesInjectorSpi servicesInjector=getServicesInjector();
+  final ObjectStoreSpi objectStore=persistenceSessionFactoryDelegate.createObjectStore(getConfiguration());
+  ensureThatArg(objectStore,is(not(nullValue())));
+  final PersistenceSession persistenceSession=new PersistenceSession(this,servicesInjector,objectStore,getConfiguration());
+  final IsisTransactionManager transactionManager=new IsisTransactionManager(persistenceSession,objectStore,servicesInjector);
+  persistenceSession.setDirtiableSupport(true);
+  persistenceSession.setTransactionManager(transactionManager);
+  return persistenceSession;
 }

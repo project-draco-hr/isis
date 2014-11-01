@@ -3,11 +3,7 @@
   if (!deploymentType.isProduction() && !Clock.isInitialized()) {
     FixtureClock.initialize();
   }
-  adapterFactory=persistenceSessionFactoryDelegate.createAdapterFactory(getConfiguration());
-  ensureThatState(adapterFactory,is(not(nullValue())));
-  servicesInjector=persistenceSessionFactoryDelegate.createServicesInjector(getConfiguration());
-  ensureThatState(servicesInjector,is(not(nullValue())));
-  runtimeContext=persistenceSessionFactoryDelegate.createRuntimeContext(getConfiguration());
+  runtimeContext=createRuntimeContext(getConfiguration());
   ensureThatState(runtimeContext,is(not(nullValue())));
   runtimeContext.injectInto(servicesInjector);
   getSpecificationLoader().injectInto(runtimeContext);
