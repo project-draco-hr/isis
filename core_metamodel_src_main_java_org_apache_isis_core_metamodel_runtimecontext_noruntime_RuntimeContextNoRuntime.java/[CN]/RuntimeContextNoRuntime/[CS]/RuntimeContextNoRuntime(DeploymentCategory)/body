@@ -24,7 +24,13 @@
     }
   }
 ;
-  adapterManager=new AdapterManagerAbstract(){
+  adapterManager=new AdapterManager(){
+    @Override public void injectInto(    final Object candidate){
+      if (AdapterManagerAware.class.isAssignableFrom(candidate.getClass())) {
+        final AdapterManagerAware cast=AdapterManagerAware.class.cast(candidate);
+        cast.setAdapterManager(this);
+      }
+    }
     @Override public ObjectAdapter getAdapterFor(    final Object pojo){
       throw new UnsupportedOperationException("Not supported by this implementation of RuntimeContext");
     }
