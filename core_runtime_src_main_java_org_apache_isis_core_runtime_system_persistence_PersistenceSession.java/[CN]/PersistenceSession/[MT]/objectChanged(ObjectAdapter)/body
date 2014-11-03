@@ -1,6 +1,5 @@
 {
   if (adapter.isTransient() || (adapter.isParented() && adapter.getAggregateRoot().isTransient())) {
-    addObjectChangedForPresentationLayer(adapter);
     return;
   }
   if (adapter.respondToChangesInPersistentObjects()) {
@@ -8,9 +7,5 @@
       return;
     }
     addObjectChangedForPersistenceLayer(adapter);
-    addObjectChangedForPresentationLayer(adapter);
-  }
-  if (adapter.respondToChangesInPersistentObjects() || adapter.isTransient()) {
-    addObjectChangedForPresentationLayer(adapter);
   }
 }
