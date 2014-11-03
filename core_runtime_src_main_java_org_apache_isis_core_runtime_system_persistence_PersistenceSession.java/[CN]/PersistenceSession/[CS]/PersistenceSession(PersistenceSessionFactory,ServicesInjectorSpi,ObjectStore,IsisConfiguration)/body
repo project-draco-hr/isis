@@ -8,9 +8,11 @@
   this.oidGenerator=new OidGenerator(new IdentifierGeneratorUnified(configuration));
   this.adapterManager=new AdapterManagerDefault(new PojoRecreatorUnified(configuration));
   this.persistAlgorithm=new PersistAlgorithmUnified(configuration);
+  this.objectStore=objectStore;
+  this.persistenceQueryFactory=new PersistenceQueryFactory(getSpecificationLoader(),adapterManager);
+  this.transactionManager=new IsisTransactionManager(this,objectStore,servicesInjector);
   setState(State.NOT_INITIALIZED);
   if (LOG.isDebugEnabled()) {
     LOG.debug("creating " + this);
   }
-  this.objectStore=objectStore;
 }

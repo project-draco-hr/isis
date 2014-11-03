@@ -9,7 +9,7 @@
   if (field.isVisible(IsisContext.getAuthenticationSession(),adapter,where).isVetoed()) {
     throw new ForbiddenException(field,ForbiddenException.VISIBLE);
   }
-  IsisContext.getPersistenceSession().resolveField(adapter,field);
+  ResolveFieldUtil.resolveField(adapter,field);
   Consent usable=field.isUsable(IsisContext.getAuthenticationSession(),adapter,where);
   if (usable.isAllowed()) {
     usable=((OneToManyAssociation)field).isValidToRemove(adapter,element);

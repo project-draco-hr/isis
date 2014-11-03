@@ -1,13 +1,7 @@
 {
   final PersistenceSessionFactory persistenceSessionFactory=getPersistenceSessionFactory();
-  if (persistenceSessionFactory instanceof FixturesInstalledFlag) {
-    final FixturesInstalledFlag fixturesInstalledFlag=(FixturesInstalledFlag)persistenceSessionFactory;
-    if (fixturesInstalledFlag.isFixturesInstalled() == null) {
-      fixturesInstalledFlag.setFixturesInstalled(objectStore.isFixturesInstalled());
-    }
-    return fixturesInstalledFlag.isFixturesInstalled();
+  if (persistenceSessionFactory.isFixturesInstalled() == null) {
+    persistenceSessionFactory.setFixturesInstalled(objectStore.isFixturesInstalled());
   }
- else {
-    return objectStore.isFixturesInstalled();
-  }
+  return persistenceSessionFactory.isFixturesInstalled();
 }
