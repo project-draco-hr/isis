@@ -1,0 +1,12 @@
+{
+  if (!(model instanceof EntityCollectionModel)) {
+    return false;
+  }
+  final EntityCollectionModel entityCollectionModel=(EntityCollectionModel)model;
+  if (!entityCollectionModel.isParented()) {
+    return false;
+  }
+  final OneToManyAssociation collection=entityCollectionModel.getCollectionMemento().getCollection();
+  RenderFacet renderFacet=collection.getFacet(RenderFacet.class);
+  return renderFacet != null && renderFacet.value() == Type.EAGERLY;
+}

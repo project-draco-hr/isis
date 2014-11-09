@@ -1,21 +1,7 @@
 {
   final List<ComponentFactory> componentFactories=findOtherComponentFactories(model,factory);
   final int selected=honourViewHintElseDefault(componentFactories,model);
-  final CollectionContentsLinksSelectorPanel selectorPanel=this;
-  final Component[] underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
-  int i=0;
-  final EntityCollectionModel emptyModel=model.asDummy();
-  for (  ComponentFactory componentFactory : componentFactories) {
-    final String underlyingId=underlyingIdPrefix + "-" + i;
-    Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
-    underlyingViews[i++]=underlyingView;
-    selectorPanel.addOrReplace(underlyingView);
-  }
-  while (i < MAX_NUM_UNDERLYING_VIEWS) {
-    String underlyingId=underlyingIdPrefix + "-" + i;
-    permanentlyHide(underlyingId);
-    i++;
-  }
+  final CollectionContentsSelectorDropdownPanel selectorPanel=this;
   if (componentFactories.size() <= 1) {
     permanentlyHide(ID_VIEWS);
   }
@@ -40,21 +26,9 @@
         final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
           private static final long serialVersionUID=1L;
           @Override public void onClick(          AjaxRequestTarget target){
-            CollectionContentsLinksSelectorPanel linksSelectorPanel=CollectionContentsLinksSelectorPanel.this;
+            CollectionContentsSelectorDropdownPanel linksSelectorPanel=CollectionContentsSelectorDropdownPanel.this;
             linksSelectorPanel.setViewHintAndBroadcast(underlyingViewNum,target);
-            final EntityCollectionModel dummyModel=model.asDummy();
-            for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
-              final Component component=underlyingViews[i];
-              if (component == null) {
-                continue;
-              }
-              final boolean isSelected=i == underlyingViewNum;
-              applyCssVisibility(component,isSelected);
-              component.setDefaultModel(isSelected ? model : dummyModel);
-            }
             selectorPanel.selectedComponentFactory=componentFactory;
-            selectorPanel.selectedComponent=underlyingViews[underlyingViewNum];
-            selectorPanel.onSelect(target);
             target.add(selectorPanel,views);
           }
           @Override protected void onComponentTag(          ComponentTag tag){
@@ -112,16 +86,5 @@
 ;
     container.add(listView);
     addOrReplace(views);
-  }
-  for (i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
-    Component component=underlyingViews[i];
-    if (component != null) {
-      if (i != selected) {
-        component.add(new CssClassAppender(INVISIBLE_CLASS));
-      }
- else {
-        selectedComponent=component;
-      }
-    }
   }
 }

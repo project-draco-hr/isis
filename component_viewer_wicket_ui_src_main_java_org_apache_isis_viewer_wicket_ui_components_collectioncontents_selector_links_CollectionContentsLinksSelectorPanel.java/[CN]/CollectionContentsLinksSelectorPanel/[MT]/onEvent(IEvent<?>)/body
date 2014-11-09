@@ -1,0 +1,36 @@
+{
+  super.onEvent(event);
+  final IsisUiHintEvent uiHintEvent=IsisEnvelopeEvent.openLetter(event,IsisUiHintEvent.class);
+  if (uiHintEvent == null) {
+    return;
+  }
+  final UiHintContainer uiHintContainer=uiHintEvent.getUiHintContainer();
+  int underlyingViewNum=0;
+  String viewStr=uiHintContainer.getHint(this.selectorDropdownPanel,UIHINT_VIEW);
+  if (viewStr != null) {
+    try {
+      int view=Integer.parseInt(viewStr);
+      if (view >= 0 && view < componentFactories.size()) {
+        underlyingViewNum=view;
+      }
+    }
+ catch (    NumberFormatException ex) {
+    }
+  }
+  final EntityCollectionModel dummyModel=getModel().asDummy();
+  for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
+    final Component component=underlyingViews[i];
+    if (component == null) {
+      continue;
+    }
+    final boolean isSelected=i == underlyingViewNum;
+    applyCssVisibility(component,isSelected);
+    component.setDefaultModel(isSelected ? getModel() : dummyModel);
+  }
+  this.selectedComponentFactory=componentFactory;
+  this.selectedComponent=underlyingViews[underlyingViewNum];
+  final AjaxRequestTarget target=uiHintEvent.getTarget();
+  if (target != null) {
+    target.add(this,selectorDropdownPanel);
+  }
+}
