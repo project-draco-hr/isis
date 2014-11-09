@@ -4,7 +4,7 @@
   final CollectionContentsLinksSelectorPanel selectorPanel=this;
   final Component[] underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
   int i=0;
-  final EntityCollectionModel emptyModel=dummyOf(model);
+  final EntityCollectionModel emptyModel=model.asDummy();
   for (  ComponentFactory componentFactory : componentFactories) {
     final String underlyingId=underlyingIdPrefix + "-" + i;
     Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
@@ -42,7 +42,7 @@
           @Override public void onClick(          AjaxRequestTarget target){
             CollectionContentsLinksSelectorPanel linksSelectorPanel=CollectionContentsLinksSelectorPanel.this;
             linksSelectorPanel.setViewHintAndBroadcast(underlyingViewNum,target);
-            final EntityCollectionModel dummyModel=dummyOf(model);
+            final EntityCollectionModel dummyModel=model.asDummy();
             for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
               final Component component=underlyingViews[i];
               if (component == null) {
