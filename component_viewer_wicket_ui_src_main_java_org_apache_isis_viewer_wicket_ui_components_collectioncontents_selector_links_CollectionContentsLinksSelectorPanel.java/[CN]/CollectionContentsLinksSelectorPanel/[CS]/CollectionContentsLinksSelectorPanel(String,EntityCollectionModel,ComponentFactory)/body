@@ -1,6 +1,8 @@
 {
   super(id,model);
-  componentFactory=factory;
+  this.ignoreFactory=ignoreFactory;
   this.underlyingIdPrefix=ComponentType.COLLECTION_CONTENTS.toString();
-  this.componentType=factory.getComponentType();
+  this.componentType=ignoreFactory.getComponentType();
+  selectorHelper=new CollectionContentsSelectorHelper(model,getComponentFactoryRegistry(),ignoreFactory);
+  componentFactories=selectorHelper.findOtherComponentFactories();
 }

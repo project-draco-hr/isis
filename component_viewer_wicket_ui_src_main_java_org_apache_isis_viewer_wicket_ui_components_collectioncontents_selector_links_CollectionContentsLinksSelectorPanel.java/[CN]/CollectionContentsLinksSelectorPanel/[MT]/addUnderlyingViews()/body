@@ -1,0 +1,40 @@
+{
+  final EntityCollectionModel model=getModel();
+  final int selected=selectorHelper.honourViewHintElseDefault(this);
+  underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
+  int i=0;
+  final EntityCollectionModel emptyModel=model.asDummy();
+  for (  ComponentFactory componentFactory : componentFactories) {
+    final String underlyingId=underlyingIdPrefix + "-" + i;
+    Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
+    underlyingViews[i++]=underlyingView;
+    this.addOrReplace(underlyingView);
+  }
+  while (i < MAX_NUM_UNDERLYING_VIEWS) {
+    String underlyingId=underlyingIdPrefix + "-" + i;
+    permanentlyHide(underlyingId);
+    i++;
+  }
+  if (componentFactories.size() <= 1) {
+    permanentlyHide(ID_SELECTOR_DROPDOWN);
+  }
+ else {
+    final Model<ComponentFactory> componentFactoryModel=new Model<>();
+    this.selectedComponentFactory=componentFactories.get(selected);
+    componentFactoryModel.setObject(this.selectedComponentFactory);
+    selectorDropdownPanel=new CollectionContentsSelectorDropdownPanel(ID_SELECTOR_DROPDOWN,getModel(),ignoreFactory);
+    this.setOutputMarkupId(true);
+    addOrReplace(selectorDropdownPanel);
+  }
+  for (i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
+    Component component=underlyingViews[i];
+    if (component != null) {
+      if (i != selected) {
+        component.add(new CssClassAppender(INVISIBLE_CLASS));
+      }
+ else {
+        selectedComponent=component;
+      }
+    }
+  }
+}

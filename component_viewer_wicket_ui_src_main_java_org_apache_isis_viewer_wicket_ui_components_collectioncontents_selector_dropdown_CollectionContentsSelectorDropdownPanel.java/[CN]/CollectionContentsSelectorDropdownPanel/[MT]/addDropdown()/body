@@ -1,0 +1,89 @@
+{
+  final List<ComponentFactory> componentFactories=selectorHelper.findOtherComponentFactories();
+  final int selected=selectorHelper.honourViewHintElseDefault(this);
+  if (componentFactories.size() <= 1) {
+    permanentlyHide(ID_VIEWS);
+  }
+ else {
+    final Model<ComponentFactory> componentFactoryModel=new Model<>();
+    this.selectedComponentFactory=componentFactories.get(selected);
+    componentFactoryModel.setObject(this.selectedComponentFactory);
+    final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
+    final Label viewButtonTitle=new Label(ID_VIEW_BUTTON_TITLE,"Hidden");
+    views.addOrReplace(viewButtonTitle);
+    final Label viewButtonIcon=new Label(ID_VIEW_BUTTON_ICON,"");
+    views.addOrReplace(viewButtonIcon);
+    final WebMarkupContainer container=new WebMarkupContainer(ID_VIEW_LIST);
+    views.addOrReplace(container);
+    views.setOutputMarkupId(true);
+    this.setOutputMarkupId(true);
+    final ListView<ComponentFactory> listView=new ListView<ComponentFactory>(ID_VIEW_ITEM,componentFactories){
+      private static final long serialVersionUID=1L;
+      @Override protected void populateItem(      ListItem<ComponentFactory> item){
+        final int underlyingViewNum=item.getIndex();
+        final ComponentFactory componentFactory=item.getModelObject();
+        final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
+          private static final long serialVersionUID=1L;
+          @Override public void onClick(          AjaxRequestTarget target){
+            CollectionContentsSelectorDropdownPanel linksSelectorPanel=CollectionContentsSelectorDropdownPanel.this;
+            linksSelectorPanel.setViewHintAndBroadcast(underlyingViewNum,target);
+            CollectionContentsSelectorDropdownPanel.this.selectedComponentFactory=componentFactory;
+            target.add(CollectionContentsSelectorDropdownPanel.this,views);
+          }
+          @Override protected void onComponentTag(          ComponentTag tag){
+            super.onComponentTag(tag);
+            Buttons.fixDisabledState(this,tag);
+          }
+        }
+;
+        IModel<String> title=nameFor(componentFactory);
+        Label viewItemTitleLabel=new Label(ID_VIEW_ITEM_TITLE,title);
+        link.add(viewItemTitleLabel);
+        Label viewItemIcon=new Label(ID_VIEW_ITEM_ICON,"");
+        link.add(viewItemIcon);
+        boolean isEnabled=componentFactory != CollectionContentsSelectorDropdownPanel.this.selectedComponentFactory;
+        if (!isEnabled) {
+          viewButtonTitle.setDefaultModel(title);
+          IModel<String> cssClass=cssClassFor(componentFactory,viewButtonIcon);
+          viewButtonIcon.add(AttributeModifier.replace("class","ViewLinkItem " + cssClass.getObject()));
+          link.setVisible(false);
+        }
+ else {
+          IModel<String> cssClass=cssClassFor(componentFactory,viewItemIcon);
+          viewItemIcon.add(new CssClassAppender(cssClass));
+        }
+        item.add(link);
+      }
+      private IModel<String> cssClassFor(      final ComponentFactory componentFactory,      Label viewIcon){
+        IModel<String> cssClass=null;
+        if (componentFactory instanceof CollectionContentsAsFactory) {
+          CollectionContentsAsFactory collectionContentsAsFactory=(CollectionContentsAsFactory)componentFactory;
+          cssClass=collectionContentsAsFactory.getCssClass();
+          viewIcon.setDefaultModelObject("");
+          viewIcon.setEscapeModelStrings(true);
+        }
+        if (cssClass == null) {
+          String name=componentFactory.getName();
+          cssClass=Model.of(StringExtensions.asLowerDashed(name));
+          viewIcon.setDefaultModelObject("&#160;&#160;&#160;&#160;&#160;");
+          viewIcon.setEscapeModelStrings(false);
+        }
+        return cssClass;
+      }
+      private IModel<String> nameFor(      final ComponentFactory componentFactory){
+        IModel<String> name=null;
+        if (componentFactory instanceof CollectionContentsAsFactory) {
+          CollectionContentsAsFactory collectionContentsAsFactory=(CollectionContentsAsFactory)componentFactory;
+          name=collectionContentsAsFactory.getTitleLabel();
+        }
+        if (name == null) {
+          name=Model.of(componentFactory.getName());
+        }
+        return name;
+      }
+    }
+;
+    container.add(listView);
+    addOrReplace(views);
+  }
+}

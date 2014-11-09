@@ -1,0 +1,21 @@
+{
+  final UiHintContainer hintContainer=getUiHintContainer(component);
+  if (hintContainer != null) {
+    String viewStr=hintContainer.getHint(component,UIHINT_VIEW);
+    if (viewStr != null) {
+      try {
+        int view=Integer.parseInt(viewStr);
+        if (view >= 0 && view < componentFactories.size()) {
+          return view;
+        }
+      }
+ catch (      NumberFormatException ex) {
+      }
+    }
+  }
+  int initialFactory=determineInitialFactory(componentFactories,model);
+  if (hintContainer != null) {
+    hintContainer.setHint(component,UIHINT_VIEW,"" + initialFactory);
+  }
+  return initialFactory;
+}
