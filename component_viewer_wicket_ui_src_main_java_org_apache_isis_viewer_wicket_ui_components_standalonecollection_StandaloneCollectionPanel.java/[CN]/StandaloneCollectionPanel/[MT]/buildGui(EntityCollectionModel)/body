@@ -2,6 +2,22 @@
   ActionModel actionModel=entityCollectionModel.getActionModelHint();
   ObjectAction action=actionModel.getActionMemento().getAction();
   addOrReplace(new Label(StandaloneCollectionPanel.ID_ACTION_NAME,Model.of(action.getName())));
+  final CollectionSelectorHelper selectorHelper=new CollectionSelectorHelper(entityCollectionModel,getComponentFactoryRegistry(),new CollectionContentsMultipleViewsPanelFactory());
+  final List<ComponentFactory> componentFactories=selectorHelper.findOtherComponentFactories();
+  if (componentFactories.size() <= 1) {
+    permanentlyHide(ID_SELECTOR_DROPDOWN);
+  }
+ else {
+    CollectionSelectorPanel selectorDropdownPanel;
+    selectorDropdownPanel=new CollectionSelectorPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,new CollectionContentsMultipleViewsPanelFactory());
+    final Model<ComponentFactory> componentFactoryModel=new Model<>();
+    final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
+    ComponentFactory selectedComponentFactory=componentFactories.get(selected);
+    componentFactoryModel.setObject(selectedComponentFactory);
+    this.setOutputMarkupId(true);
+    addOrReplace(selectorDropdownPanel);
+    this.selectorDropdownPanel=selectorDropdownPanel;
+  }
   final ComponentFactoryRegistry componentFactoryRegistry=getComponentFactoryRegistry();
   componentFactoryRegistry.addOrReplaceComponent(this,ComponentType.COLLECTION_CONTENTS,entityCollectionModel);
 }
