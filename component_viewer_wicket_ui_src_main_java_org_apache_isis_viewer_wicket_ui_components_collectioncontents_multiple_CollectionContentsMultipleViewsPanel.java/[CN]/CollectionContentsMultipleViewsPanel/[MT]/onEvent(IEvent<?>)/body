@@ -6,8 +6,12 @@
   }
   final UiHintContainer uiHintContainer=uiHintEvent.getUiHintContainer();
   int underlyingViewNum=0;
-  String viewStr=uiHintContainer.getHint(this.getSelectorDropdownPanel(),UIHINT_VIEW);
-  List<ComponentFactory> componentFactories=selectorHelper.findOtherComponentFactories(getComponentFactoryRegistry());
+  final CollectionSelectorPanel selectorDropdownPanel=this.getSelectorDropdownPanel();
+  if (selectorDropdownPanel == null) {
+    return;
+  }
+  String viewStr=uiHintContainer.getHint(selectorDropdownPanel,UIHINT_VIEW);
+  List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
   if (viewStr != null) {
     try {
       int view=Integer.parseInt(viewStr);
@@ -32,6 +36,6 @@
   this.selectedComponent=underlyingViews[underlyingViewNum];
   final AjaxRequestTarget target=uiHintEvent.getTarget();
   if (target != null) {
-    target.add(this,getSelectorDropdownPanel());
+    target.add(this,selectorDropdownPanel);
   }
 }

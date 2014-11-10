@@ -7,7 +7,7 @@
     if (toggleboxColumn != null) {
       columns.add(toggleboxColumn);
     }
-    bulkActionsProvider.configureBulkActionsProvider(toggleboxColumn);
+    bulkActionsProvider.configureBulkActions(toggleboxColumn);
   }
   final EntityCollectionModel model=getModel();
   addTitleColumn(columns,model.getParentObjectAdapterMemento(),getSettings().getMaxTitleLengthInStandaloneTables(),getSettings().getMaxTitleLengthInStandaloneTables());
@@ -17,16 +17,13 @@
   addOrReplace(dataTable);
   dataTable.honourHints();
   if (toggleboxColumn != null) {
-    final SelectionHandler handler=new SelectionHandler(){
+    final OnConcurrencyExceptionHandler handler2=new OnConcurrencyExceptionHandler(){
       private static final long serialVersionUID=1L;
-      @Override public void onSelected(      final Component context,      final ObjectAdapter selectedAdapter,      final AjaxRequestTarget ajaxRequestTarget){
-        model.toggleSelectionOn(selectedAdapter);
-      }
       @Override public void onConcurrencyException(      final Component context,      final ObjectAdapter selectedAdapter,      final ConcurrencyException ex,      final AjaxRequestTarget ajaxRequestTarget){
         ajaxRequestTarget.add(dataTable);
       }
     }
 ;
-    toggleboxColumn.setHandler(handler);
+    toggleboxColumn.setOnConcurrencyExceptionHandler(handler2);
   }
 }

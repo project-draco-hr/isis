@@ -13,14 +13,14 @@
       ObjectAdapter selectedAdapter=null;
       try {
         selectedAdapter=entityModel.load(ConcurrencyChecking.CHECK);
-        if (handler != null) {
-          handler.onSelected(this,selectedAdapter,target);
+        if (onSelectionHandler != null) {
+          onSelectionHandler.onSelected(this,selectedAdapter,target);
         }
       }
  catch (      ConcurrencyException ex) {
         selectedAdapter=entityModel.load(ConcurrencyChecking.CHECK);
-        if (handler != null) {
-          handler.onConcurrencyException(this,selectedAdapter,ex,target);
+        if (onConcurrencyExceptionHandler != null) {
+          onConcurrencyExceptionHandler.onConcurrencyException(this,selectedAdapter,ex,target);
         }
         entityModel.setException(ex);
       }

@@ -1,15 +1,20 @@
 {
   final EntityCollectionModel model=getModel();
-  final int selected=selectorHelper.honourViewHintElseDefault(getSelectorDropdownPanel());
-  final List<ComponentFactory> componentFactories=selectorHelper.findOtherComponentFactories(getComponentFactoryRegistry());
-  underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
+  final CollectionSelectorPanel selectorDropdownPanelIfAny=getSelectorDropdownPanel();
+  final int selected=selectorDropdownPanelIfAny != null ? selectorHelper.honourViewHintElseDefault(selectorDropdownPanelIfAny) : 0;
+  final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
   int i=0;
+  underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
   final EntityCollectionModel emptyModel=model.asDummy();
   for (  ComponentFactory componentFactory : componentFactories) {
     final String underlyingId=underlyingIdPrefix + "-" + i;
     Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
     underlyingViews[i++]=underlyingView;
     this.addOrReplace(underlyingView);
+  }
+  if (selectorDropdownPanelIfAny != null) {
+  }
+ else {
   }
   while (i < MAX_NUM_UNDERLYING_VIEWS) {
     String underlyingId=underlyingIdPrefix + "-" + i;
