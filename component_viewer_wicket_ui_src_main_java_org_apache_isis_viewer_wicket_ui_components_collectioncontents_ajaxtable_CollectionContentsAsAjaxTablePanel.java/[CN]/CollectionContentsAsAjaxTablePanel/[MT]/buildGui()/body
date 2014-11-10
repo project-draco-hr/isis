@@ -1,26 +1,32 @@
 {
-  final EntityCollectionModel model=getModel();
   final List<IColumn<ObjectAdapter,String>> columns=Lists.newArrayList();
-  List<ObjectAction> bulkActions=bulkActionsHelper.getBulkActions();
-  final ObjectAdapterToggleboxColumn toggleboxColumn=addToggleboxColumnIfRequired(columns,bulkActions);
+  final BulkActionsProvider bulkActionsProvider=getBulkActionsProvider();
+  ObjectAdapterToggleboxColumn toggleboxColumn=null;
+  if (bulkActionsProvider != null) {
+    toggleboxColumn=bulkActionsProvider.createToggleboxColumn();
+    if (toggleboxColumn != null) {
+      columns.add(toggleboxColumn);
+    }
+    bulkActionsProvider.configureBulkActionsProvider(toggleboxColumn);
+  }
+  final EntityCollectionModel model=getModel();
   addTitleColumn(columns,model.getParentObjectAdapterMemento(),getSettings().getMaxTitleLengthInStandaloneTables(),getSettings().getMaxTitleLengthInStandaloneTables());
   addPropertyColumnsIfRequired(columns);
   final SortableDataProvider<ObjectAdapter,String> dataProvider=new CollectionContentsSortableDataProvider(model);
   dataTable=new IsisAjaxFallbackDataTable<>(ID_TABLE,columns,dataProvider,model.getPageSize());
   addOrReplace(dataTable);
   dataTable.honourHints();
-  addActionPromptModalWindow();
-  if (bulkActions.isEmpty() || getModel().isParented()) {
-    permanentlyHide(ID_ENTITY_ACTIONS);
-  }
- else {
-    BulkActionsLinkFactory linkFactory=new BulkActionsLinkFactory(getModel(),dataTable);
-    linkFactory.setToggleboxColumn(toggleboxColumn);
-    actionLinkFactoryDelegating=new ActionLinkFactoryDelegating();
-    actionPromptProviderDelegating=new ActionPromptProviderDelegating();
-    getBulkActionsProvider().configureBulkActionsProvider(linkFactory,this);
-    final CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(null,bulkActions,actionLinkFactoryDelegating,actionPromptProviderDelegating,null);
-    final CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ID_ENTITY_ACTIONS,"Actions");
-    this.addOrReplace(cssMenuPanel);
+  if (toggleboxColumn != null) {
+    final SelectionHandler handler=new SelectionHandler(){
+      private static final long serialVersionUID=1L;
+      @Override public void onSelected(      final Component context,      final ObjectAdapter selectedAdapter,      final AjaxRequestTarget ajaxRequestTarget){
+        model.toggleSelectionOn(selectedAdapter);
+      }
+      @Override public void onConcurrencyException(      final Component context,      final ObjectAdapter selectedAdapter,      final ConcurrencyException ex,      final AjaxRequestTarget ajaxRequestTarget){
+        ajaxRequestTarget.add(dataTable);
+      }
+    }
+;
+    toggleboxColumn.setHandler(handler);
   }
 }
