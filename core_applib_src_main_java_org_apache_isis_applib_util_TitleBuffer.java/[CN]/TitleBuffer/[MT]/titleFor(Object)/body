@@ -2,17 +2,17 @@
   if (object == null) {
     return null;
   }
- else {
-    Method method;
-    try {
-      method=object.getClass().getMethod("title",NO_PARAMETER_TYPES);
-      return (String)method.invoke(object,NO_ARGUMENTS);
-    }
- catch (    final SecurityException|IllegalArgumentException|IllegalAccessException|InvocationTargetException e) {
-      throw new TitleBufferException(e);
-    }
-catch (    final NoSuchMethodException e) {
-      return object.toString();
-    }
+  if (object instanceof String) {
+    return object.toString();
+  }
+  try {
+    Method method=object.getClass().getMethod("title",NO_PARAMETER_TYPES);
+    return (String)method.invoke(object,NO_ARGUMENTS);
+  }
+ catch (  final SecurityException|IllegalArgumentException|IllegalAccessException|InvocationTargetException e) {
+    throw new TitleBufferException(e);
+  }
+catch (  final NoSuchMethodException e) {
+    return object.toString();
   }
 }
