@@ -1,6 +1,7 @@
 {
   final EntityCollectionModel model=getModel();
-  final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
+  final int selected=selectorHelper.honourViewHintElseDefault(getSelectorDropdownPanel());
+  final List<ComponentFactory> componentFactories=selectorHelper.findOtherComponentFactories();
   underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
   int i=0;
   final EntityCollectionModel emptyModel=model.asDummy();
@@ -15,17 +16,7 @@
     permanentlyHide(underlyingId);
     i++;
   }
-  if (componentFactories.size() <= 1) {
-    permanentlyHide(ID_SELECTOR_DROPDOWN);
-  }
- else {
-    final Model<ComponentFactory> componentFactoryModel=new Model<>();
-    this.selectedComponentFactory=componentFactories.get(selected);
-    componentFactoryModel.setObject(this.selectedComponentFactory);
-    selectorDropdownPanel=new CollectionContentsSelectorDropdownPanel(ID_SELECTOR_DROPDOWN,getModel(),ignoreFactory);
-    this.setOutputMarkupId(true);
-    addOrReplace(selectorDropdownPanel);
-  }
+  this.setOutputMarkupId(true);
   for (i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
     Component component=underlyingViews[i];
     if (component != null) {

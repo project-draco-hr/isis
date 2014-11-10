@@ -8,10 +8,26 @@
   final OneToManyAssociation otma=(OneToManyAssociation)association;
   final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityModel,otma);
   fieldset.addOrReplace(collectionPanel);
-  labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
+  Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
   fieldset.add(labelComponent);
   final EntityCollectionModel entityCollectionModel=collectionPanel.getModel();
   List<LinkAndLabel> links=entityCollectionModel.getLinks();
   AdditionalLinksPanel additionalLinks=new AdditionalLinksPanel(ID_ADDITIONAL_LINKS,links);
   fieldset.addOrReplace(additionalLinks);
+  CollectionContentsSelectorHelper selectorHelper=new CollectionContentsSelectorHelper(entityCollectionModel,getComponentFactoryRegistry(),new CollectionContentsLinksSelectorPanelFactory());
+  final List<ComponentFactory> componentFactories=selectorHelper.findOtherComponentFactories();
+  if (componentFactories.size() <= 1) {
+    permanentlyHide(ID_SELECTOR_DROPDOWN);
+  }
+ else {
+    CollectionContentsSelectorDropdownPanel selectorDropdownPanel;
+    selectorDropdownPanel=new CollectionContentsSelectorDropdownPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,new CollectionContentsLinksSelectorPanelFactory());
+    final Model<ComponentFactory> componentFactoryModel=new Model<>();
+    final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
+    this.selectedComponentFactory=componentFactories.get(selected);
+    componentFactoryModel.setObject(this.selectedComponentFactory);
+    this.setOutputMarkupId(true);
+    fieldset.addOrReplace(selectorDropdownPanel);
+    collectionPanel.setSelectorDropdownPanel(selectorDropdownPanel);
+  }
 }
