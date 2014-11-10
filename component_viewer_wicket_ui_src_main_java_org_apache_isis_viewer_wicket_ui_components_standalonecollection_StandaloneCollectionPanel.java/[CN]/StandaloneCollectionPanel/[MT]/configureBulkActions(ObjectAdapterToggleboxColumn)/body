@@ -1,7 +1,12 @@
 {
   final BulkActionsLinkFactory linkFactory=new BulkActionsLinkFactory(getModel(),toggleboxColumn);
   final List<ObjectAction> bulkActions=bulkActionsHelper.getBulkActions();
-  final CssMenuBuilder cssMenuBuilder=new CssMenuBuilder(null,bulkActions,linkFactory,this,null);
-  final CssMenuPanel cssMenuPanel=cssMenuBuilder.buildPanel(ID_ENTITY_ACTIONS,"Actions");
-  addOrReplace(cssMenuPanel);
+  List<LinkAndLabel> links=Lists.transform(bulkActions,new Function<ObjectAction,LinkAndLabel>(){
+    @Override public LinkAndLabel apply(    ObjectAction objectAction){
+      return linkFactory.newLink(null,objectAction,ID_ADDITIONAL_LINK,StandaloneCollectionPanel.this);
+    }
+  }
+);
+  AdditionalLinksPanel additionalLinks=new AdditionalLinksPanel(ID_ADDITIONAL_LINKS,links);
+  addOrReplace(additionalLinks);
 }
