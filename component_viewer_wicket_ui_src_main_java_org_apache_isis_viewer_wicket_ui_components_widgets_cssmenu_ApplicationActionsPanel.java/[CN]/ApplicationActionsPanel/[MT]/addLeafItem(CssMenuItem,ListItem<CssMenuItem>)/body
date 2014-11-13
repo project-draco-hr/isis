@@ -1,27 +1,34 @@
 {
-  Fragment leafItem=new Fragment("content","leafItem",ApplicationActionsPanel.this);
-  AbstractLink subMenuItemLink=menuItem.getLink();
-  Label menuItemLabel=new Label("menuLinkLabel",menuItem.getName());
-  subMenuItemLink.addOrReplace(menuItemLabel);
-  if (!menuItem.isEnabled()) {
-    listItem.add(new CssClassNameAppender("disabled"));
-    subMenuItemLink.setEnabled(false);
-    TooltipBehavior tooltipBehavior=new TooltipBehavior(Model.of(menuItem.getDisabledReason()));
-    listItem.add(tooltipBehavior);
-  }
-  if (menuItem.isPrototyping()) {
-    subMenuItemLink.add(new CssClassNameAppender("btn btn-warning"));
-  }
-  leafItem.add(subMenuItemLink);
-  listItem.add(leafItem);
-  String cssClassFa=menuItem.getCssClassFa();
-  if (Strings.isNullOrEmpty(cssClassFa)) {
-    Components.permanentlyHide(subMenuItemLink,"menuLinkFontAwesome");
-    subMenuItemLink.add(new CssClassAppender("menuLinkSpacer"));
+  Fragment leafItem;
+  if (!menuItem.isSeparator()) {
+    leafItem=new Fragment("content","leafItem",ApplicationActionsPanel.this);
+    AbstractLink subMenuItemLink=menuItem.getLink();
+    Label menuItemLabel=new Label("menuLinkLabel",menuItem.getName());
+    subMenuItemLink.addOrReplace(menuItemLabel);
+    if (!menuItem.isEnabled()) {
+      listItem.add(new CssClassNameAppender("disabled"));
+      subMenuItemLink.setEnabled(false);
+      TooltipBehavior tooltipBehavior=new TooltipBehavior(Model.of(menuItem.getDisabledReason()));
+      listItem.add(tooltipBehavior);
+    }
+    if (menuItem.isPrototyping()) {
+      subMenuItemLink.add(new CssClassNameAppender("prototype"));
+    }
+    leafItem.add(subMenuItemLink);
+    String cssClassFa=menuItem.getCssClassFa();
+    if (Strings.isNullOrEmpty(cssClassFa)) {
+      Components.permanentlyHide(subMenuItemLink,"menuLinkFontAwesome");
+      subMenuItemLink.add(new CssClassAppender("menuLinkSpacer"));
+    }
+ else {
+      Label dummy=new Label("menuLinkFontAwesome","");
+      dummy.add(new CssClassAppender(cssClassFa));
+      subMenuItemLink.addOrReplace(dummy);
+    }
   }
  else {
-    Label dummy=new Label("menuLinkFontAwesome","");
-    dummy.add(new CssClassAppender(cssClassFa));
-    subMenuItemLink.addOrReplace(dummy);
+    leafItem=new Fragment("content","empty",ApplicationActionsPanel.this);
+    listItem.add(new CssClassNameAppender("divider"));
   }
+  listItem.add(leafItem);
 }

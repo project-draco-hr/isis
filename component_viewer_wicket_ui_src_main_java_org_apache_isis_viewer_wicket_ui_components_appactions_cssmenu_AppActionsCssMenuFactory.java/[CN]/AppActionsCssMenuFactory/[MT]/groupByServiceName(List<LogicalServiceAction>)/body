@@ -1,12 +1,17 @@
 {
   final Map<String,List<LogicalServiceAction>> serviceActionsByName=Maps.newTreeMap();
+  ObjectAdapter lastServiceAdapter=null;
   for (  LogicalServiceAction serviceAction : serviceActions) {
     List<LogicalServiceAction> serviceActionsForName=serviceActionsByName.get(serviceAction.serviceName);
     if (serviceActionsForName == null) {
       serviceActionsForName=Lists.newArrayList();
       serviceActionsByName.put(serviceAction.serviceName,serviceActionsForName);
     }
+ else {
+      serviceAction.separator=lastServiceAdapter != serviceAction.serviceAdapter;
+    }
     serviceActionsForName.add(serviceAction);
+    lastServiceAdapter=serviceAction.serviceAdapter;
   }
   return serviceActionsByName;
 }
