@@ -3,8 +3,8 @@
   final String mainMessage=exceptionModel.getMainMessage();
   final Label label=new Label(ID_MAIN_MESSAGE,mainMessage);
   add(label);
-  final boolean authorizationException=exceptionModel.isAuthorizationException();
-  if (authorizationException) {
+  final boolean suppressDetail=exceptionModel.isAuthorizationException() || exceptionModel.isRecognized();
+  if (suppressDetail) {
     Components.permanentlyHide(this,ID_EXCEPTION_DETAIL);
   }
  else {
