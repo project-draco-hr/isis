@@ -13,25 +13,46 @@
     final T newInstance=proxySubclass.newInstance();
     final ProxyObject proxyObject=(ProxyObject)newInstance;
     proxyObject.setHandler(new MethodHandler(){
-      private ThreadLocal<T> serviceByThread=new ThreadLocal<T>();
+      private ThreadLocal<T> serviceByThread=new ThreadLocal<>();
       @Override public Object invoke(      final Object proxied,      final Method proxyMethod,      final Method proxiedMethod,      final Object[] args) throws Throwable {
         cacheMethodsIfNecessary(cls);
         if (proxyMethod.getName().equals("__isis_startRequest")) {
           T service=instantiate(cls);
-          callPostConstructIfPresent(service);
           serviceByThread.set(service);
+          ServicesInjector servicesInjector=(ServicesInjector)args[0];
+          servicesInjector.injectServicesInto(service);
+          return null;
+        }
+ else         if (proxyMethod.getName().equals("__isis_postConstruct")) {
+          final T service=serviceByThread.get();
+          callPostConstructIfPresent(service);
+          return null;
+        }
+ else         if (proxyMethod.getName().equals("__isis_preDestroy")) {
+          final T service=serviceByThread.get();
+          callPreDestroyIfPresent(service);
           return null;
         }
  else         if (proxyMethod.getName().equals("__isis_endRequest")) {
-          final T service=serviceByThread.get();
-          callPreDestroyIfPresent(service);
           serviceByThread.set(null);
           return null;
+        }
+ else         if (proxyMethod.getName().equals("hashCode") && proxyMethod.getParameterTypes().length == 0) {
+          final T service=serviceByThread.get();
+          return service != null ? service.hashCode() : this.hashCode();
+        }
+ else         if (proxyMethod.getName().equals("equals") && proxyMethod.getParameterTypes().length == 1 && proxyMethod.getParameterTypes()[0] == Object.class) {
+          final T service=serviceByThread.get();
+          return service != null ? service.equals(args[0]) : this.equals(args[0]);
+        }
+ else         if (proxyMethod.getName().equals("toString") && proxyMethod.getParameterTypes().length == 0) {
+          final T service=serviceByThread.get();
+          return service != null ? service.toString() : this.toString();
         }
  else {
           T service=serviceByThread.get();
           if (service == null) {
-            throw new IllegalStateException("No service found for thread; make sure ((RequestScopedService)service).__isis_startRequest() is called first");
+            return null;
           }
           final Object proxiedReturn=proxyMethod.invoke(service,args);
           return proxiedReturn;

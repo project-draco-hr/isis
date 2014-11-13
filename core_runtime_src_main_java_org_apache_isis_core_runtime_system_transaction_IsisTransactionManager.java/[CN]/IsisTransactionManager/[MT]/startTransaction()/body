@@ -2,10 +2,9 @@
   boolean noneInProgress=false;
   if (getTransaction() == null || getTransaction().getState().isComplete()) {
     noneInProgress=true;
-    final List<Object> registeredServices=servicesInjector.getRegisteredServices();
-    startRequestOnRequestScopedServices(registeredServices);
+    startRequestOnRequestScopedServices();
     createCommandIfConfigured();
-    initOtherApplibServicesIfConfigured(registeredServices);
+    initOtherApplibServicesIfConfigured();
     IsisTransaction isisTransaction=createTransaction();
     transactionLevel=0;
     transactionalResource.startTransaction();

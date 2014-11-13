@@ -13,17 +13,14 @@
     new Thread(){
       public void run(){
         try {
-          ((RequestScopedService)calculator).__isis_startRequest();
+          ((RequestScopedService)calculator).__isis_startRequest(mockServiceInjector);
           while (steps[0] > 0) {
             try {
               calculator.add((j + 1));
               totals[j]=calculator.getTotal();
               barrier.await();
             }
- catch (            InterruptedException e) {
-              throw new RuntimeException(e);
-            }
-catch (            BrokenBarrierException e) {
+ catch (            InterruptedException|BrokenBarrierException e) {
               throw new RuntimeException(e);
             }
           }

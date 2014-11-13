@@ -1,0 +1,14 @@
+{
+  return new SubscriberExceptionHandler(){
+    @Override public void handleException(    Throwable exception,    SubscriberExceptionContext context){
+      final List<Throwable> causalChain=Throwables.getCausalChain(exception);
+      for (      Throwable cause : causalChain) {
+        if (cause instanceof RecoverableException || cause instanceof NonRecoverableException) {
+          getTransactionManager().getTransaction().setAbortCause(new IsisApplicationException(exception));
+          return;
+        }
+      }
+    }
+  }
+;
+}
