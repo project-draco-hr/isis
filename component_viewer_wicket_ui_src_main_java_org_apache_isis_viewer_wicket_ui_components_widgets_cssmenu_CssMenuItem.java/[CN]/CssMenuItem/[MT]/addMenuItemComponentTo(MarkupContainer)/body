@@ -1,7 +1,7 @@
 {
   final AbstractLink link=getLink();
   final Label label=new Label(CssMenuItem.ID_MENU_LABEL,Model.of(this.getName()));
-  if (this.isEnabled() && link != null) {
+  if (link != null) {
     markupContainer.add(link);
     link.add(label);
     if (this.description != null) {
@@ -12,10 +12,6 @@
     }
     if (this.prototype) {
       link.add(new CssClassAppender("prototype"));
-      link.add(new CssClassAppender("btn-default"));
-    }
- else {
-      link.add(new CssClassAppender("btn-default"));
     }
     if (this.cssClass != null) {
       link.add(new CssClassAppender(this.cssClass));
@@ -29,6 +25,11 @@
       Label dummy=new Label("menuLinkFontAwesome","");
       dummy.add(new CssClassAppender(cssClassFa));
       link.add(dummy);
+    }
+    if (!this.isEnabled()) {
+      link.add(new AttributeModifier("title",Model.of(this.getDisabledReason())));
+      link.add(new CssClassAppender("disabled"));
+      link.setEnabled(false);
     }
     Components.permanentlyHide(markupContainer,CssMenuItem.ID_MENU_LABEL);
     return link;
