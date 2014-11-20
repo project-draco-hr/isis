@@ -1,0 +1,23 @@
+{
+  final Map<Pattern,String> faIconByPattern=Maps.newLinkedHashMap();
+  if (cssClassFaPatterns != null) {
+    final StringTokenizer regexToFaIcons=new StringTokenizer(cssClassFaPatterns,ConfigurationConstants.LIST_SEPARATOR);
+    final Map<String,String> faIconByRegex=Maps.newLinkedHashMap();
+    while (regexToFaIcons.hasMoreTokens()) {
+      String regexToFaIcon=regexToFaIcons.nextToken().trim();
+      if (Strings.isNullOrEmpty(regexToFaIcon)) {
+        continue;
+      }
+      final Matcher matcher=FA_ICON_REGEX_PATTERN.matcher(regexToFaIcon);
+      if (matcher.matches()) {
+        faIconByRegex.put(matcher.group(1),matcher.group(2));
+      }
+    }
+    for (    Map.Entry<String,String> entry : faIconByRegex.entrySet()) {
+      final String regex=entry.getKey();
+      final String faIcon=entry.getValue();
+      faIconByPattern.put(Pattern.compile(regex),faIcon);
+    }
+  }
+  return faIconByPattern;
+}

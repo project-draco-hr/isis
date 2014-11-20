@@ -15,13 +15,13 @@
     if (serviceName.equals("")) {
       continue;
     }
-    final Matcher matcher=regex.matcher(serviceName);
+    final Matcher matcher=POSITIONED_SERVICE_REGEX.matcher(serviceName);
     Integer order=Integer.MAX_VALUE;
     if (matcher.matches()) {
       order=Integer.parseInt(matcher.group(2));
       serviceName=matcher.group(3);
     }
-    final String service=ServicesInstallerUtils.fullyQualifiedServiceName(servicePrefix,serviceName);
+    final String service=fullyQualifiedServiceName(servicePrefix,serviceName);
     ServicesInstallerUtils.appendInPosition(positionedServices,"" + order,service);
   }
 }
