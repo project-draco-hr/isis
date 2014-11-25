@@ -16,14 +16,17 @@
     final WebMarkupContainer memberGroupRvContainer=new WebMarkupContainer(memberGroupRv.newChildId());
     memberGroupRv.add(memberGroupRvContainer);
     memberGroupRvContainer.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
+    final List<LinkAndLabel> memberGroupActions=Lists.newArrayList();
     final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
     memberGroupRvContainer.add(propertyRv);
     @SuppressWarnings("unused") Component component;
     for (    final ObjectAssociation association : associationsInGroup) {
       final WebMarkupContainer propertyRvContainer=new UiHintPathSignificantWebMarkupContainer(propertyRv.newChildId());
       propertyRv.add(propertyRvContainer);
-      addPropertyToForm(entityModel,association,propertyRvContainer);
+      addPropertyToForm(entityModel,(OneToOneAssociation)association,propertyRvContainer,memberGroupActions);
     }
+    memberGroupActions.clear();
+    AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,"additionalLinks",memberGroupActions);
   }
   addClassForSpan(markupContainer,span);
   return !groupNames.isEmpty();
