@@ -9,14 +9,12 @@
         target.add(form);
       }
  else {
-        if (actionPromptIfAny != null) {
-          final StringBuilder builder=new StringBuilder();
-          String errorMessagesIfAny=JGrowlUtil.asJGrowlCalls(IsisContext.getMessageBroker());
-          builder.append(errorMessagesIfAny);
-          String buf=builder.toString();
-          target.appendJavaScript(buf);
-          target.add(form);
-        }
+        final StringBuilder builder=new StringBuilder();
+        String errorMessagesIfAny=JGrowlUtil.asJGrowlCalls(IsisContext.getMessageBroker());
+        builder.append(errorMessagesIfAny);
+        String buf=builder.toString();
+        target.appendJavaScript(buf);
+        target.add(form);
       }
     }
     /** 
@@ -33,6 +31,7 @@
   AjaxButton cancelButton=new AjaxButton(ID_CANCEL_BUTTON,new ResourceModel("cancelLabel")){
     private static final long serialVersionUID=1L;
     @Override public void onSubmit(    final AjaxRequestTarget target,    Form<?> form){
+      final ActionPrompt actionPromptIfAny=ActionPromptProvider.Util.getFrom(ActionParametersFormPanel.this).getActionPrompt();
       if (actionPromptIfAny != null) {
         actionPromptIfAny.closePrompt(target);
       }
