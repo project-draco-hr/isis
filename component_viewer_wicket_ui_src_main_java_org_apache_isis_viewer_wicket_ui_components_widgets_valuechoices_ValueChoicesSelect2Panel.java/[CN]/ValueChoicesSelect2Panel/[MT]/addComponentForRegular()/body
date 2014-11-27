@@ -16,8 +16,10 @@
   addOrReplace(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(select2Field));
   labelIfRegular.addOrReplace(scalarName);
-  applyLabelAtRule(scalarName,labelIfRegular);
+  final List<LinkAndLabel> entityActions=Lists.newArrayList();
+  EntityActionUtil.appendAdditionalLinksForAssociation(this.scalarModel,getDeploymentType(),ID_ADDITIONAL_LINK,entityActions);
+  addPositioningCssTo(labelIfRegular,entityActions);
   addFeedbackTo(labelIfRegular,select2Field);
-  addAdditionalLinksTo(labelIfRegular);
+  AdditionalLinksPanel.addAdditionalLinks(labelIfRegular,ID_ADDITIONAL_LINKS,entityActions,AdditionalLinksPanel.Style.INLINE_LIST);
   return labelIfRegular;
 }

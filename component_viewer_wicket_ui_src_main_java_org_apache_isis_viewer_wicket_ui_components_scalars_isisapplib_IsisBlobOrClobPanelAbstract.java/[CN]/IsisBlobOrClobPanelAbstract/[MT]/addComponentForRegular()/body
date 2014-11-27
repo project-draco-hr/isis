@@ -5,7 +5,9 @@
   labelIfRegular.add(fileUploadField);
   final Label scalarName=new Label(ID_SCALAR_NAME,getModel().getName());
   labelIfRegular.add(scalarName);
-  applyLabelAtRule(scalarName,labelIfRegular);
+  final List<LinkAndLabel> entityActions=Lists.newArrayList();
+  EntityActionUtil.appendAdditionalLinksForAssociation(this.scalarModel,getDeploymentType(),ID_ADDITIONAL_LINK,entityActions);
+  addPositioningCssTo(labelIfRegular,entityActions);
   wicketImage=asWicketImage(ID_IMAGE);
   if (wicketImage != null) {
     wicketImage.setOutputMarkupId(true);
@@ -18,6 +20,6 @@
   updateDownloadLink(ID_SCALAR_IF_REGULAR_DOWNLOAD,labelIfRegular);
   addOrReplace(labelIfRegular);
   addFeedbackTo(labelIfRegular,fileUploadField);
-  addAdditionalLinksTo(labelIfRegular);
+  AdditionalLinksPanel.addAdditionalLinks(labelIfRegular,ID_ADDITIONAL_LINKS,entityActions,AdditionalLinksPanel.Style.INLINE_LIST);
   return labelIfRegular;
 }

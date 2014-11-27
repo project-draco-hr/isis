@@ -13,9 +13,11 @@
   }
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(checkBox));
   labelIfRegular.add(scalarName);
-  applyLabelAtRule(scalarName,labelIfRegular);
+  final List<LinkAndLabel> entityActions=Lists.newArrayList();
+  EntityActionUtil.appendAdditionalLinksForAssociation(this.scalarModel,getDeploymentType(),ID_ADDITIONAL_LINK,entityActions);
+  addPositioningCssTo(labelIfRegular,entityActions);
   addOrReplace(labelIfRegular);
   addFeedbackTo(labelIfRegular,checkBox);
-  addAdditionalLinksTo(labelIfRegular);
+  AdditionalLinksPanel.addAdditionalLinks(labelIfRegular,ID_ADDITIONAL_LINKS,entityActions,AdditionalLinksPanel.Style.INLINE_LIST);
   return labelIfRegular;
 }

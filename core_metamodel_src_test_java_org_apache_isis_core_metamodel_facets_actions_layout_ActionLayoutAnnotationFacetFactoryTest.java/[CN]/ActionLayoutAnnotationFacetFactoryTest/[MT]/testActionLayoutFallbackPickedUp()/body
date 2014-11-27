@@ -1,0 +1,13 @@
+{
+  final ActionLayoutFacetFactory facetFactory=new ActionLayoutFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") public String foo(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"foo");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionLayoutFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ActionLayoutFacetFallback);
+}

@@ -14,10 +14,12 @@
   }
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(entityLink));
   labelIfRegular.add(scalarName);
-  applyLabelAtRule(scalarName,labelIfRegular);
+  final List<LinkAndLabel> entityActions=Lists.newArrayList();
+  EntityActionUtil.appendAdditionalLinksForAssociation(this.scalarModel,getDeploymentType(),ID_ADDITIONAL_LINK,entityActions);
+  addPositioningCssTo(labelIfRegular,entityActions);
   addOrReplace(labelIfRegular);
   addFeedbackTo(labelIfRegular,entityLink);
-  addAdditionalLinksTo(labelIfRegular);
+  AdditionalLinksPanel.addAdditionalLinks(labelIfRegular,ID_ADDITIONAL_LINKS,entityActions,AdditionalLinksPanel.Style.INLINE_LIST);
   entityLink.setRequired(getModel().isRequired());
   entityLink.add(new IValidator<ObjectAdapter>(){
     private static final long serialVersionUID=1L;

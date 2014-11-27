@@ -6,7 +6,9 @@
   final MarkupContainer labelIfRegular=createFormComponentLabel();
   scalarTypeContainer.add(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(textField));
-  applyLabelAtRule(scalarName,labelIfRegular);
+  final List<LinkAndLabel> entityActions=Lists.newArrayList();
+  EntityActionUtil.appendAdditionalLinksForAssociation(this.scalarModel,getDeploymentType(),ID_ADDITIONAL_LINK,entityActions);
+  addPositioningCssTo(labelIfRegular,entityActions);
   if (getModel().isRequired()) {
     final String label=scalarName.getDefaultModelObjectAsString();
     if (!Strings.isNullOrEmpty(label)) {
@@ -19,6 +21,6 @@
     labelIfRegular.add(new AttributeModifier("title",Model.of(describedAs)));
   }
   addFeedbackTo(labelIfRegular,textField);
-  addAdditionalLinksTo(labelIfRegular);
+  AdditionalLinksPanel.addAdditionalLinks(labelIfRegular,ID_ADDITIONAL_LINKS,entityActions,AdditionalLinksPanel.Style.INLINE_LIST);
   return labelIfRegular;
 }
