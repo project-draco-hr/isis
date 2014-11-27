@@ -1,0 +1,14 @@
+{
+  final PropParamLayoutFacetForParameterLayoutAnnotationFactory facetFactory=new PropParamLayoutFacetForParameterLayoutAnnotationFactory();
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @ParameterLayout(labelPosition=LabelPosition.LEFT) final String foo){
+    }
+  }
+  final Method method=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  facetFactory.processParams(new FacetFactory.ProcessParameterContext(method,0,facetedMethodParameter));
+  final Facet facet=facetedMethodParameter.getFacet(PropParamLayoutFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PropParamLayoutFacetForParameterLayoutAnnotation);
+  final PropParamLayoutFacetForParameterLayoutAnnotation layoutAnnotation=(PropParamLayoutFacetForParameterLayoutAnnotation)facet;
+  assertEquals(LabelPosition.LEFT,layoutAnnotation.label());
+}
