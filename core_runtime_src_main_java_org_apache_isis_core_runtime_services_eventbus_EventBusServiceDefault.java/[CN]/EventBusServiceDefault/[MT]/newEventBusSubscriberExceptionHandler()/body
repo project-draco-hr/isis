@@ -1,14 +1,34 @@
 {
   return new SubscriberExceptionHandler(){
     @Override public void handleException(    Throwable exception,    SubscriberExceptionContext context){
-      final List<Throwable> causalChain=Throwables.getCausalChain(exception);
-      for (      Throwable cause : causalChain) {
-        if (cause instanceof RecoverableException || cause instanceof NonRecoverableException) {
-          getTransactionManager().getTransaction().setAbortCause(new IsisApplicationException(exception));
-          return;
-        }
+      Object event=context.getEvent();
+      if (!(event instanceof AbstractInteractionEvent)) {
+        return;
       }
-    }
-  }
+      final AbstractInteractionEvent<?> interactionEvent=(AbstractInteractionEvent<?>)event;
+      final Phase phase=interactionEvent.getPhase();
+switch (phase) {
+case HIDE:
+        interactionEvent.hide();
+      break;
+case DISABLE:
+    interactionEvent.disable(exception.getMessage() != null ? exception.getMessage() : exception.getClass().getName() + " thrown.");
+  break;
+case VALIDATE:
+interactionEvent.invalidate(exception.getMessage() != null ? exception.getMessage() : exception.getClass().getName() + " thrown.");
+break;
+case EXECUTING:
+case EXECUTED:
+final List<Throwable> causalChain=Throwables.getCausalChain(exception);
+for (Throwable cause : causalChain) {
+if (cause instanceof RecoverableException || cause instanceof NonRecoverableException) {
+getTransactionManager().getTransaction().setAbortCause(new IsisApplicationException(exception));
+return;
+}
+}
+break;
+}
+}
+}
 ;
 }
