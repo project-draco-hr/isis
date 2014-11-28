@@ -1,7 +1,9 @@
 {
   ensureNotInitialized();
   reflector=new ObjectReflectorDefault(configuration,programmingModel,facetDecorators,metaModelValidator);
-  reflector.setServices(services);
+  final ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault();
+  servicesInjector.setServices(services);
+  reflector.setServiceInjector(servicesInjector);
   runtimeContext.injectInto(reflector);
   reflector.injectInto(runtimeContext);
   validationFailures=reflector.initAndValidate();
