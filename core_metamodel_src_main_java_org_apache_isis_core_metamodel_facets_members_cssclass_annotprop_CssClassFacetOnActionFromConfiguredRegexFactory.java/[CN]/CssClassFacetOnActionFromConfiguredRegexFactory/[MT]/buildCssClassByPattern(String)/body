@@ -1,0 +1,23 @@
+{
+  final Map<Pattern,String> cssClassByPattern=Maps.newLinkedHashMap();
+  if (cssClassPatterns != null) {
+    final StringTokenizer regexToCssClasses=new StringTokenizer(cssClassPatterns,ConfigurationConstants.LIST_SEPARATOR);
+    final Map<String,String> cssClassByRegex=Maps.newLinkedHashMap();
+    while (regexToCssClasses.hasMoreTokens()) {
+      String regexToCssClass=regexToCssClasses.nextToken().trim();
+      if (Strings.isNullOrEmpty(regexToCssClass)) {
+        continue;
+      }
+      final Matcher matcher=CSS_CLASS_REGEX_PATTERN.matcher(regexToCssClass);
+      if (matcher.matches()) {
+        cssClassByRegex.put(matcher.group(1),matcher.group(2));
+      }
+    }
+    for (    Map.Entry<String,String> entry : cssClassByRegex.entrySet()) {
+      final String regex=entry.getKey();
+      final String faIcon=entry.getValue();
+      cssClassByPattern.put(Pattern.compile(regex),faIcon);
+    }
+  }
+  return cssClassByPattern;
+}

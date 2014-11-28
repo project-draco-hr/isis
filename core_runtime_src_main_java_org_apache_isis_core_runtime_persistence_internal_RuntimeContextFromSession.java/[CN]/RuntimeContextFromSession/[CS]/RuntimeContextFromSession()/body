@@ -70,7 +70,7 @@
       return getPersistenceSession().getServices();
     }
     @Override public <T>T lookupService(    Class<T> cls){
-      return getPersistenceSession().getServicesInjector().lookupService(cls);
+      return servicesInjectorDelegator.lookupService(cls);
     }
   }
 ;
@@ -134,30 +134,6 @@
       final ObjectAdapter instances=getPersistenceSession().findInstances(query,QueryCardinality.SINGLE);
       final List<ObjectAdapter> list=CollectionFacetUtils.convertToAdapterList(instances);
       return list.size() > 0 ? list.get(0) : null;
-    }
-  }
-;
-  this.servicesInjector=new ServicesInjector(){
-    @Override public void injectServicesInto(    final Object object){
-      getPersistenceSession().getServicesInjector().injectServicesInto(object);
-    }
-    @Override public void injectServicesInto(    List<Object> objects){
-      getPersistenceSession().getServicesInjector().injectServicesInto(objects);
-    }
-    @Override public <T>T lookupService(    Class<T> serviceClass){
-      return getPersistenceSession().getServicesInjector().lookupService(serviceClass);
-    }
-    @Override public <T>List<T> lookupServices(    Class<T> serviceClass){
-      return getPersistenceSession().getServicesInjector().lookupServices(serviceClass);
-    }
-    @Override public void injectInto(    Object candidate){
-      if (ServicesInjectorAware.class.isAssignableFrom(candidate.getClass())) {
-        final ServicesInjectorAware cast=ServicesInjectorAware.class.cast(candidate);
-        cast.setServicesInjector(this);
-      }
-    }
-    @Override public List<Object> getRegisteredServices(){
-      return getPersistenceSession().getServicesInjector().getRegisteredServices();
     }
   }
 ;

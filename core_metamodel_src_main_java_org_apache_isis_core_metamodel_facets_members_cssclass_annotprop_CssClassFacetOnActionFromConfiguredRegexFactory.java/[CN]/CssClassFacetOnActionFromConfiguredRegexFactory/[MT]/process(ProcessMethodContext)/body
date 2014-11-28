@@ -1,0 +1,15 @@
+{
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  if (facetHolder.containsDoOpFacet(CssClassFacet.class)) {
+    return;
+  }
+  final Method method=processMethodContext.getMethod();
+  final String name=method.getName();
+  final Class<?> owningType=facetHolder.getOwningType();
+  final Object service=servicesInjector.lookupService(owningType);
+  if (service != null) {
+    return;
+  }
+  CssClassFacet cssClassFacet=createFromConfiguredRegexIfPossible(name,facetHolder);
+  FacetUtil.addFacet(cssClassFacet);
+}
