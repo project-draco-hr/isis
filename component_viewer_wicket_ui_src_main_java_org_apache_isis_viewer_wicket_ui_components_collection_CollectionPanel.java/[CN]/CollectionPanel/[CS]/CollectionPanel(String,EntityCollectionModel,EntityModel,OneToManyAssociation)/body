@@ -1,6 +1,7 @@
 {
   super(id,collectionModel);
   final List<LinkAndLabel> entityActionLinks=Lists.newArrayList();
-  EntityActionUtil.appendAdditionalLinksForAssociation(entityModel,otma,getDeploymentType(),"additionalLink",entityActionLinks);
+  final List<ObjectAction> associatedActions=EntityActionUtil.getObjectActionsForAssociation(entityModel,otma,getDeploymentType());
+  entityActionLinks.addAll(EntityActionUtil.asLinkAndLabelsForAdditionalLinksPanel(entityModel,associatedActions));
   collectionModel.addEntityActions(entityActionLinks);
 }

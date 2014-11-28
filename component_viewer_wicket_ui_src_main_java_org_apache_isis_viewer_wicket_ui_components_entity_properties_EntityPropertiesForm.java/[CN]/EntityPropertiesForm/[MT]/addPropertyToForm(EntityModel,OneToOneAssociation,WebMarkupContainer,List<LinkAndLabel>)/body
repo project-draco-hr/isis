@@ -3,7 +3,8 @@
   final PropertyMemento pm=new PropertyMemento(otoa);
   final ScalarModel scalarModel=entityModel.getPropertyModel(pm);
   final Component component=getComponentFactoryRegistry().addOrReplaceComponent(container,ID_PROPERTY,ComponentType.SCALAR_NAME_AND_VALUE,scalarModel);
-  EntityActionUtil.appendAdditionalLinksForAssociation(entityModel,otoa,getDeploymentType(),ID_ADDITIONAL_LINK,entityActions);
+  final List<ObjectAction> associatedActions=EntityActionUtil.getObjectActionsForAssociation(entityModel,otoa,getDeploymentType());
+  entityActions.addAll(EntityActionUtil.asLinkAndLabelsForAdditionalLinksPanel(entityModel,associatedActions));
   if (!renderedFirstField) {
     component.add(new CssClassAppender("first-field"));
     renderedFirstField=true;
