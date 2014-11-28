@@ -3,29 +3,33 @@
     @Override public void handleException(    Throwable exception,    SubscriberExceptionContext context){
       Object event=context.getEvent();
       if (!(event instanceof AbstractInteractionEvent)) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Ignoring exception '%s' (%s), not a subclass of AbstractInteractionEvent",exception.getMessage(),exception.getClass().getName());
+        }
         return;
       }
       final AbstractInteractionEvent<?> interactionEvent=(AbstractInteractionEvent<?>)event;
       final Phase phase=interactionEvent.getPhase();
 switch (phase) {
 case HIDE:
-        interactionEvent.hide();
-      break;
+        LOG.warn("Exception '%s' (%s) thrown during HIDE phase, to be safe will veto (hide) the interaction event");
+      interactionEvent.hide();
+    break;
 case DISABLE:
-    interactionEvent.disable(exception.getMessage() != null ? exception.getMessage() : exception.getClass().getName() + " thrown.");
-  break;
+  LOG.warn("Exception '%s' (%s) thrown during DISABLE phase, to be safe will veto (disable) the interaction event");
+interactionEvent.disable(exception.getMessage() != null ? exception.getMessage() : exception.getClass().getName() + " thrown.");
+break;
 case VALIDATE:
+LOG.warn("Exception '%s' (%s) thrown during VALIDATE phase, to be safe will veto (invalidate) the interaction event");
 interactionEvent.invalidate(exception.getMessage() != null ? exception.getMessage() : exception.getClass().getName() + " thrown.");
 break;
 case EXECUTING:
+LOG.warn("Exception '%s' (%s) thrown during EXECUTING phase, to be safe will abort the transaction");
+abortTransaction(exception);
+break;
 case EXECUTED:
-final List<Throwable> causalChain=Throwables.getCausalChain(exception);
-for (Throwable cause : causalChain) {
-if (cause instanceof RecoverableException || cause instanceof NonRecoverableException) {
-getTransactionManager().getTransaction().setAbortCause(new IsisApplicationException(exception));
-return;
-}
-}
+LOG.warn("Exception '%s' (%s) thrown during EXECUTED phase, to be safe will abort the transaction");
+abortTransaction(exception);
 break;
 }
 }
