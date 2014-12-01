@@ -1,9 +1,10 @@
 {
   try {
-    return actionModel.getObject();
+    final ObjectAdapter resultAdapter=this.getObject();
+    return resultAdapter;
   }
  catch (  RuntimeException ex) {
-    final RecoverableException appEx=ActionModel.getApplicationExceptionIfAny(ex);
+    final RecoverableException appEx=getApplicationExceptionIfAny(ex);
     if (appEx != null) {
       IsisContext.getMessageBroker().setApplicationError(appEx.getMessage());
       return null;
