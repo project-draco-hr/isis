@@ -12,7 +12,10 @@
     }
  else {
       this.recognized=false;
-      this.mainMessage=MAIN_MESSAGE_IF_NOT_RECOGNIZED;
+      Iterable<NonRecoverableException> appEx=Iterables.filter(Throwables.getCausalChain(ex),NonRecoverableException.class);
+      Iterator<NonRecoverableException> iterator=appEx.iterator();
+      NonRecoverableException nonRecoverableException=iterator.hasNext() ? iterator.next() : null;
+      this.mainMessage=nonRecoverableException != null ? nonRecoverableException.getMessage() : MAIN_MESSAGE_IF_NOT_RECOGNIZED;
     }
   }
   stackTraceDetailList=asStackTrace(ex);
