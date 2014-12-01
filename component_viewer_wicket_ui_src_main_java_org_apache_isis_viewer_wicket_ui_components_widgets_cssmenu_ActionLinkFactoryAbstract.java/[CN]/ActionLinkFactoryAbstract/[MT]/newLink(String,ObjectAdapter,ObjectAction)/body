@@ -4,11 +4,12 @@
   final AbstractLink link=new AjaxLink<Object>(linkId){
     private static final long serialVersionUID=1L;
     @Override public void onClick(    AjaxRequestTarget target){
-      final ActionPrompt actionPrompt=ActionPromptProvider.Util.getFrom(getPage()).getActionPrompt();
       if (ajaxDeferredBehaviour != null) {
         ajaxDeferredBehaviour.initiate(target);
       }
  else {
+        final ActionPromptProvider promptProvider=ActionPromptProvider.Util.getFrom(getPage());
+        final ActionPrompt actionPrompt=promptProvider.getActionPrompt();
         ActionPromptHeaderPanel titlePanel=new ActionPromptHeaderPanel(actionPrompt.getTitleId(),actionModel);
         final ActionPanel actionPanel=(ActionPanel)getComponentFactoryRegistry().createComponent(ComponentType.ACTION_PROMPT,actionPrompt.getContentId(),actionModel);
         actionPanel.setShowHeader(false);
