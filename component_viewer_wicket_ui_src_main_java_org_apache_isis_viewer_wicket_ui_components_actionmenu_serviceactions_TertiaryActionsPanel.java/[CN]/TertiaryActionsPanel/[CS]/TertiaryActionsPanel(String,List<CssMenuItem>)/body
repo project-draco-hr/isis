@@ -1,0 +1,18 @@
+{
+  super(id);
+  addLogoutLink(this);
+  List<CssMenuItem> subMenuItems=flatten(menuItems);
+  ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",subMenuItems){
+    @Override protected void populateItem(    ListItem<CssMenuItem> listItem){
+      CssMenuItem subMenuItem=listItem.getModelObject();
+      if (subMenuItem.hasSubMenuItems()) {
+        addFolderItem(subMenuItem,listItem);
+      }
+ else {
+        addLeafItem(subMenuItem,listItem);
+      }
+    }
+  }
+;
+  add(subMenuItemsView);
+}

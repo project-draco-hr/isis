@@ -1,0 +1,20 @@
+{
+  listItem.add(new CssClassAppender("dropdown-submenu"));
+  Fragment folderItem=new Fragment("content","folderItem",ServiceActionsPanel.this);
+  listItem.add(folderItem);
+  folderItem.add(new Label("folderName",subMenuItem.getName()));
+  final List<CssMenuItem> menuItems=withSeparators(subMenuItem);
+  ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",menuItems){
+    @Override protected void populateItem(    ListItem<CssMenuItem> listItem){
+      CssMenuItem subMenuItem=listItem.getModelObject();
+      if (subMenuItem.hasSubMenuItems()) {
+        addFolderItem(subMenuItem,listItem);
+      }
+ else {
+        addLeafItem(subMenuItem,listItem);
+      }
+    }
+  }
+;
+  folderItem.add(subMenuItemsView);
+}
