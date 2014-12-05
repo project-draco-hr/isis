@@ -1,0 +1,24 @@
+{
+  final FacetHolder holder=processMemberContext.getFacetHolder();
+  Properties properties=processMemberContext.metadataProperties("actionLayout");
+  if (properties == null) {
+    properties=processMemberContext.metadataProperties("layout");
+  }
+  CssClassFacet cssClassFacet=CssClassFacetOnActionFromLayoutProperties.create(properties,holder);
+  FacetUtil.addFacet(cssClassFacet);
+  CssClassFaFacet cssClassFaFacet=CssClassFaFacetOnActionFromLayoutProperties.create(properties,holder);
+  FacetUtil.addFacet(cssClassFaFacet);
+  DescribedAsFacet describedAsFacet=DescribedAsFacetOnActionFromLayoutProperties.create(properties,holder);
+  FacetUtil.addFacet(describedAsFacet);
+  HiddenFacet hiddenFacet=HiddenFacetOnActionFromLayoutProperties.create(properties,holder);
+  FacetUtil.addFacet(hiddenFacet);
+  NamedFacet namedFacet=NamedFacetOnActionFromLayoutProperties.create(properties,holder);
+  FacetUtil.addFacet(namedFacet);
+  ActionPositionFacet actionPositionFacet=ActionPositionFacetOnActionFromLayoutProperties.create(properties,holder);
+  if (actionPositionFacet == null) {
+    actionPositionFacet=new ActionPositionFacetFallback(holder);
+  }
+  FacetUtil.addFacet(actionPositionFacet);
+  PrototypeFacet prototypeFacet=PrototypeFacetOnActionFromLayoutProperties.create(properties,holder);
+  FacetUtil.addFacet(prototypeFacet);
+}
