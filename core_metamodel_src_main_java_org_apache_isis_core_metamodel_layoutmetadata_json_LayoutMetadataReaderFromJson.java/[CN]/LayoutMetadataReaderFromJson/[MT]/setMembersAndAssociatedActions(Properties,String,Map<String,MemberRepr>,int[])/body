@@ -5,33 +5,44 @@
       props.setProperty("member." + memberName + ".memberOrder.name",memberGroupName);
     }
     final MemberRepr memberRepr=members.get(memberName);
-    final NamedFacetRepr named=memberRepr.named;
-    if (named != null) {
-      props.setProperty("member." + memberName + ".named.value",named.value);
+    final Map<String,ActionRepr> actions=memberRepr.actions;
+    if (actions != null) {
+      int actSeq=0;
+      for (      final String actionName : actions.keySet()) {
+        final ActionRepr actionRepr=actions.get(actionName);
+        String nameKey="action." + actionName + ".memberOrder.name";
+        props.setProperty(nameKey,memberName);
+        setRemainingActionProperties(props,"action",actionName,actionRepr,++actSeq);
+      }
     }
-    final DescribedAsFacetRepr describedAs=memberRepr.describedAs;
-    if (describedAs != null) {
-      props.setProperty("member." + memberName + ".describedAs.value",describedAs.value);
+    final PropertyLayoutFacetRepr propertyLayout=memberRepr.propertyLayout;
+    if (propertyLayout != null) {
+      props.setProperty("member." + memberName + ".propertyLayout.cssClass",propertyLayout.cssClass);
+      props.setProperty("member." + memberName + ".propertyLayout.describedAs",propertyLayout.describedAs);
+      props.setProperty("member." + memberName + ".propertyLayout.hidden","" + propertyLayout.hidden);
+      props.setProperty("member." + memberName + ".propertyLayout.labelPosition","" + propertyLayout.labelPosition);
+      props.setProperty("member." + memberName + ".propertyLayout.multiLine","" + propertyLayout.multiLine);
+      props.setProperty("member." + memberName + ".propertyLayout.named",propertyLayout.named);
+      props.setProperty("member." + memberName + ".propertyLayout.renderedAsDayBefore","" + propertyLayout.renderedAsDayBefore);
+      props.setProperty("member." + memberName + ".propertyLayout.typicalLength","" + propertyLayout.typicalLength);
+    }
+    final CollectionLayoutFacetRepr collectionLayout=memberRepr.collectionLayout;
+    if (collectionLayout != null) {
+      props.setProperty("member." + memberName + ".collectionLayout.cssClass",collectionLayout.cssClass);
+      props.setProperty("member." + memberName + ".collectionLayout.describedAs",collectionLayout.describedAs);
+      props.setProperty("member." + memberName + ".collectionLayout.hidden","" + collectionLayout.hidden);
+      props.setProperty("member." + memberName + ".collectionLayout.named",collectionLayout.named);
+      props.setProperty("member." + memberName + ".collectionLayout.paged","" + collectionLayout.paged);
+      props.setProperty("member." + memberName + ".collectionLayout.render","" + collectionLayout.render);
+      props.setProperty("member." + memberName + ".collectionLayout.sortedBy","" + collectionLayout.sortedBy);
     }
     final CssClassFacetRepr cssClass=memberRepr.cssClass;
     if (cssClass != null) {
       props.setProperty("member." + memberName + ".cssClass.value",cssClass.value);
     }
-    final TypicalLengthFacetRepr typicalLength=memberRepr.typicalLength;
-    if (typicalLength != null) {
-      props.setProperty("member." + memberName + ".typicalLength.value","" + typicalLength.value);
-    }
-    final MultiLineFacetRepr multiLine=memberRepr.multiLine;
-    if (multiLine != null) {
-      props.setProperty("member." + memberName + ".multiLine.numberOfLines","" + multiLine.numberOfLines);
-    }
-    final PropertyLayoutFacetRepr propertyLayout=memberRepr.propertyLayout;
-    if (propertyLayout != null) {
-      props.setProperty("member." + memberName + ".propertyLayout.labelPosition","" + propertyLayout.labelPosition);
-    }
-    final PagedFacetRepr paged=memberRepr.paged;
-    if (paged != null) {
-      props.setProperty("member." + memberName + ".paged.value","" + paged.value);
+    final DescribedAsFacetRepr describedAs=memberRepr.describedAs;
+    if (describedAs != null) {
+      props.setProperty("member." + memberName + ".describedAs.value",describedAs.value);
     }
     final DisabledFacetRepr disabled=memberRepr.disabled;
     if (disabled != null) {
@@ -49,20 +60,26 @@
       final Where hiddenWhere=hidden.where != null ? hidden.where : Where.ANYWHERE;
       props.setProperty("member." + memberName + ".hidden.where",hiddenWhere.toString());
     }
+    final NamedFacetRepr named=memberRepr.named;
+    if (named != null) {
+      props.setProperty("member." + memberName + ".named.value",named.value);
+    }
+    final MultiLineFacetRepr multiLine=memberRepr.multiLine;
+    if (multiLine != null) {
+      props.setProperty("member." + memberName + ".multiLine.numberOfLines","" + multiLine.numberOfLines);
+    }
+    final TypicalLengthFacetRepr typicalLength=memberRepr.typicalLength;
+    if (typicalLength != null) {
+      props.setProperty("member." + memberName + ".typicalLength.value","" + typicalLength.value);
+    }
+    final PagedFacetRepr paged=memberRepr.paged;
+    if (paged != null) {
+      props.setProperty("member." + memberName + ".paged.value","" + paged.value);
+    }
     final RenderFacetRepr render=memberRepr.render;
     if (render != null) {
       final Type renderType=render.value != null ? render.value : Render.Type.EAGERLY;
       props.setProperty("member." + memberName + ".render.value",renderType.toString());
-    }
-    final Map<String,ActionRepr> actions=memberRepr.actions;
-    if (actions != null) {
-      int actSeq=0;
-      for (      final String actionName : actions.keySet()) {
-        final ActionRepr actionRepr=actions.get(actionName);
-        String nameKey="action." + actionName + ".memberOrder.name";
-        props.setProperty(nameKey,memberName);
-        setRemainingActionProperties(props,"action",actionName,actionRepr,++actSeq);
-      }
     }
   }
 }

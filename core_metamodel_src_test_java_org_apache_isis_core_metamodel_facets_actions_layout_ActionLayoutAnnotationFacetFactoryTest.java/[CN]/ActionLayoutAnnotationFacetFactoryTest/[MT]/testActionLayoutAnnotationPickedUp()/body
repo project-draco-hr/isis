@@ -1,5 +1,5 @@
 {
-  final ActionLayoutFacetFactory facetFactory=new ActionLayoutFacetFactory();
+  final ActionLayoutFactory facetFactory=new ActionLayoutFactory();
 class Customer {
     @SuppressWarnings("unused") @ActionLayout(position=ActionLayout.Position.PANEL) public String foz(){
       return null;
@@ -7,9 +7,9 @@ class Customer {
   }
   final Method method=findMethod(Customer.class,"foz");
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
-  final Facet facet=facetedMethod.getFacet(ActionLayoutFacet.class);
+  final Facet facet=facetedMethod.getFacet(ActionPositionFacet.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof ActionLayoutFacetAnnotation);
-  final ActionLayoutFacetAnnotation actionLayoutFacetAnnotation=(ActionLayoutFacetAnnotation)facet;
+  assertTrue(facet instanceof ActionPositionFacetForActionLayoutAnnotation);
+  final ActionPositionFacetForActionLayoutAnnotation actionLayoutFacetAnnotation=(ActionPositionFacetForActionLayoutAnnotation)facet;
   assertEquals(ActionLayout.Position.PANEL,actionLayoutFacetAnnotation.position());
 }
