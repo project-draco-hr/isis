@@ -1,0 +1,15 @@
+{
+  try {
+    if (getDatastoreMapping(0).getObject(resultSet,exprIndex[0]) == null || getDatastoreMapping(1).getObject(resultSet,exprIndex[1]) == null) {
+      return null;
+    }
+  }
+ catch (  final Exception e) {
+  }
+  final long amount=getDatastoreMapping(0).getLong(resultSet,exprIndex[0]);
+  final String currency=getDatastoreMapping(1).getString(resultSet,exprIndex[1]);
+  if (currency == null) {
+    return null;
+  }
+  return new Money(((Long)amount).doubleValue() / 100,currency);
+}
