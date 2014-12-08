@@ -1,0 +1,11 @@
+{
+  final List<LayoutMetadataReader> layoutMetadataReaders=Lists.newArrayList();
+  final String[] layoutMetadataReaderClassNames=configuration.getList(ReflectorConstants.LAYOUT_METADATA_READER_LIST,ReflectorConstants.LAYOUT_METADATA_READER_LIST_DEFAULT);
+  if (layoutMetadataReaderClassNames != null) {
+    for (    final String layoutMetadataReaderClassName : layoutMetadataReaderClassNames) {
+      final LayoutMetadataReader layoutMetadataReader=InstanceUtil.createInstance(layoutMetadataReaderClassName,LayoutMetadataReader.class);
+      layoutMetadataReaders.add(layoutMetadataReader);
+    }
+  }
+  return layoutMetadataReaders;
+}
