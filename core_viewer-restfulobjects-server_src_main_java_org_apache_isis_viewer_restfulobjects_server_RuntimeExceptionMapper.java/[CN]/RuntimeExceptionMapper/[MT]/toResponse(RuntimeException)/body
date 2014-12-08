@@ -1,4 +1,12 @@
 {
+  final IsisTransaction currentTransaction=IsisContext.getTransactionManager().getTransaction();
+  final Throwable rootCause=Throwables.getRootCause(ex);
+  final List<Throwable> causalChain=Throwables.getCausalChain(ex);
+  for (  Throwable throwable : causalChain) {
+    if (throwable == rootCause) {
+      currentTransaction.clearAbortCause();
+    }
+  }
   HttpStatusCode statusCode=HttpStatusCode.INTERNAL_SERVER_ERROR;
   if (ex instanceof Failure) {
     Failure failure=(Failure)ex;
