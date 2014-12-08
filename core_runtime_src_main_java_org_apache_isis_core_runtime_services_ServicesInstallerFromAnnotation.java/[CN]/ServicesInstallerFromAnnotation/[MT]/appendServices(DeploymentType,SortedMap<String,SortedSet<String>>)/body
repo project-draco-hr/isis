@@ -1,14 +1,13 @@
 {
   initIfRequired();
-  for (  final String packagePrefix : Iterables.transform(Splitter.on(",").split(packagePrefixes),trim())) {
-    Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
-    Reflections reflections=new Reflections(packagePrefix);
-    final Iterable<Class<?>> classes=Iterables.filter(reflections.getTypesAnnotatedWith(DomainService.class),instantiatable());
-    for (    final Class<?> cls : classes) {
-      final DomainService domainService=cls.getAnnotation(DomainService.class);
-      final String order=domainService.menuOrder();
-      final String serviceName=cls.getName();
-      ServicesInstallerUtils.appendInPosition(positionedServices,order,serviceName);
-    }
+  final List<String> packagePrefixList=asList(packagePrefixes);
+  Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
+  final Reflections reflections=new Reflections(packagePrefixList);
+  final Iterable<Class<?>> domainServiceClasses=Iterables.filter(reflections.getTypesAnnotatedWith(DomainService.class),instantiatable());
+  for (  final Class<?> cls : domainServiceClasses) {
+    final DomainService domainService=cls.getAnnotation(DomainService.class);
+    final String order=domainService.menuOrder();
+    final String serviceName=cls.getName();
+    ServicesInstallerUtils.appendInPosition(positionedServices,order,serviceName);
   }
 }
