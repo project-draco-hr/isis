@@ -1,0 +1,14 @@
+{
+class Customer {
+  }
+@DomainService(menuOrder="1") @DomainServiceLayout(menuOrder="123",menuBar=DomainServiceLayout.MenuBar.SECONDARY) class Customers {
+  }
+  facetFactory.process(new ProcessClassContext(Customers.class,null,methodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(DomainServiceLayoutFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DomainServiceLayoutFacetAnnotation);
+  DomainServiceLayoutFacetAnnotation domainServiceLayoutFacet=(DomainServiceLayoutFacetAnnotation)facet;
+  Assert.assertThat(domainServiceLayoutFacet.getMenuOrder(),is("123"));
+  Assert.assertThat(domainServiceLayoutFacet.getMenuBar(),is(DomainServiceLayout.MenuBar.SECONDARY));
+  assertNoMethodsRemoved();
+}

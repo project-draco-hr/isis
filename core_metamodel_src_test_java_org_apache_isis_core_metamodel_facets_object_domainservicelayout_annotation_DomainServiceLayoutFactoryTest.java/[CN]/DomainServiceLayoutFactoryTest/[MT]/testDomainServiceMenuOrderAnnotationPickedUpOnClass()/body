@@ -1,0 +1,13 @@
+{
+class Customer {
+  }
+@DomainService(menuOrder="123") class Customers {
+  }
+  facetFactory.process(new ProcessClassContext(Customers.class,null,methodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(DomainServiceLayoutFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof DomainServiceLayoutFacetAnnotation);
+  DomainServiceLayoutFacetAnnotation domainServiceLayoutFacet=(DomainServiceLayoutFacetAnnotation)facet;
+  Assert.assertThat(domainServiceLayoutFacet.getMenuOrder(),is("123"));
+  assertNoMethodsRemoved();
+}

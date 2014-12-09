@@ -1,0 +1,15 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final DomainService domainService=Annotations.getAnnotation(cls,DomainService.class);
+  final DomainServiceLayout domainServiceLayout=Annotations.getAnnotation(cls,DomainServiceLayout.class);
+  if (domainService == null && domainServiceLayout == null) {
+    return;
+  }
+  final String domainServiceMenuOrder=domainService != null && !domainService.menuOrder().equals("" + Integer.MAX_VALUE) ? domainService.menuOrder() : null;
+  final String domainServiceLayoutMenuOrder=domainServiceLayout != null && !domainServiceLayout.menuOrder().equals("" + Integer.MAX_VALUE) ? domainServiceLayout.menuOrder() : null;
+  final String menuOrder=coalesce(domainServiceLayoutMenuOrder,domainServiceMenuOrder);
+  DomainServiceLayout.MenuBar menuBar=domainServiceLayout != null ? domainServiceLayout.menuBar() : DomainServiceLayout.MenuBar.PRIMARY;
+  FacetUtil.addFacet(new DomainServiceLayoutFacetAnnotation(facetHolder,menuBar,menuOrder));
+  FacetUtil.addFacet(NamedFacetForDomainServiceLayoutAnnotation.create(domainServiceLayout,facetHolder));
+}
