@@ -3,11 +3,16 @@
   if (pos == 0) {
     return null;
   }
+  final String type;
   if (pos != -1) {
-    final String type=serviceName.substring(0,pos);
-    final Class<?> cls=loadClass(type);
-    return serviceInstantiator.createInstance(cls);
+    type=serviceName.substring(0,pos);
   }
-  final Class<?> cls=loadClass(serviceName);
+ else {
+    type=serviceName;
+  }
+  final Class<?> cls=loadClass(type);
+  if (cls.isAnonymousClass()) {
+    return null;
+  }
   return serviceInstantiator.createInstance(cls);
 }
