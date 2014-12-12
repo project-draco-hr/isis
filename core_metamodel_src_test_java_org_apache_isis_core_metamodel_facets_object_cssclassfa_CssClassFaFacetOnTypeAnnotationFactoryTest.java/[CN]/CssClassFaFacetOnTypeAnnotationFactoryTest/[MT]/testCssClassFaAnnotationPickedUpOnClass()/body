@@ -7,7 +7,8 @@
   facetFactory.process(new FacetFactory.ProcessClassContext(Customer.class,null,mockMethodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(CssClassFaFacet.class);
   assertThat(facet,is(not(nullValue())));
-  assertThat(facet instanceof CssClassFaFacetAbstract,is(true));
+  assertThat(facet,is(instanceOf(CssClassFaFacetAbstract.class)));
   final CssClassFaFacetAbstract cssClassFacetAbstract=(CssClassFaFacetAbstract)facet;
   assertThat(cssClassFacetAbstract.value(),equalTo("fa fa-fw fa-foo"));
+  assertThat(cssClassFacetAbstract.getPosition(),equalTo(ActionLayout.CssClassFaPosition.LEFT));
 }

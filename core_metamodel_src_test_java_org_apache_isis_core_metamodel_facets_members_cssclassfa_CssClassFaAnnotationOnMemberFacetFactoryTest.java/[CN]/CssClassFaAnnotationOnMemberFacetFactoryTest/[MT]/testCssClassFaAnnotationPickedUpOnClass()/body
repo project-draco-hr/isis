@@ -12,7 +12,8 @@ class Customer {
   facetFactory.process(new FacetFactory.ProcessMethodContext(Customer.class,null,null,facetedMethod.getMethod(),mockMethodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(CssClassFaFacet.class);
   assertThat(facet,is(not(nullValue())));
-  assertThat(facet instanceof CssClassFaFacetAbstract,is(true));
+  assertThat(facet,is(instanceOf(CssClassFaFacetAbstract.class)));
   final CssClassFaFacetAbstract cssClassFacetAbstract=(CssClassFaFacetAbstract)facet;
   assertThat(cssClassFacetAbstract.value(),equalTo("fa fa-fw fa-foo"));
+  assertThat(cssClassFacetAbstract.getPosition(),is(ActionLayout.CssClassFaPosition.LEFT));
 }

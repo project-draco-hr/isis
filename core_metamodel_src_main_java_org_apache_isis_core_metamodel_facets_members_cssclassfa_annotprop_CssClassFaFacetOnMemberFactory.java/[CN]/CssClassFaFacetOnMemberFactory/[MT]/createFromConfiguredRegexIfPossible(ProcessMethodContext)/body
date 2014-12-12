@@ -1,5 +1,17 @@
 {
   final Method method=processMethodContext.getMethod();
   String value=faIconIfAnyFor(method);
-  return value != null ? new CssClassFaFacetOnMemberFromConfiguredRegex(value,processMethodContext.getFacetHolder()) : null;
+  ActionLayout.CssClassFaPosition position=ActionLayout.CssClassFaPosition.LEFT;
+  if (value != null) {
+    int idxOfSeparator=value.indexOf(':');
+    if (idxOfSeparator > -1) {
+      value=value.substring(0,idxOfSeparator);
+      String rest=value.substring(idxOfSeparator + 1);
+      position=ActionLayout.CssClassFaPosition.valueOf(rest.toUpperCase());
+    }
+    return new CssClassFaFacetOnMemberFromConfiguredRegex(value,position,processMethodContext.getFacetHolder());
+  }
+ else {
+    return null;
+  }
 }

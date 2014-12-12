@@ -1,0 +1,16 @@
+{
+  final ActionLayoutFactory facetFactory=new ActionLayoutFactory();
+class Customer {
+    @SuppressWarnings("unused") @ActionLayout(cssClassFa="font-awesome",cssClassFaPosition=ActionLayout.CssClassFaPosition.RIGHT) public String foz(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"foz");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  Facet facet=facetedMethod.getFacet(CssClassFaFacet.class);
+  assertThat(facet,is(notNullValue()));
+  assertThat(facet,is(instanceOf(CssClassFaFacetForActionLayoutAnnotation.class)));
+  CssClassFaFacetForActionLayoutAnnotation classFaFacetForActionLayoutAnnotation=(CssClassFaFacetForActionLayoutAnnotation)facet;
+  assertThat(classFaFacetForActionLayoutAnnotation.value(),is(equalTo("fa fa-fw font-awesome")));
+  assertThat(classFaFacetForActionLayoutAnnotation.getPosition(),is(ActionLayout.CssClassFaPosition.RIGHT));
+}

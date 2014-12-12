@@ -18,13 +18,8 @@
     }
     link.add(new CssClassAppender(this.actionIdentifier));
     String cssClassFa=getCssClassFa();
-    if (Strings.isNullOrEmpty(cssClassFa)) {
-      Components.permanentlyHide(link,"menuLinkFontAwesome");
-    }
- else {
-      Label dummy=new Label("menuLinkFontAwesome","");
-      dummy.add(new CssClassAppender(cssClassFa));
-      link.add(dummy);
+    if (!Strings.isNullOrEmpty(cssClassFa)) {
+      label.add(new CssClassFaBehavior(cssClassFa,getCssClassFaPosition()));
     }
     if (!this.isEnabled()) {
       link.add(new AttributeModifier("title",Model.of(this.getDisabledReason())));
