@@ -1,8 +1,8 @@
 {
   super(id);
   addLogoutLink(this);
-  List<CssMenuItem> subMenuItems=flatten(menuItems);
-  ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",subMenuItems){
+  final List<CssMenuItem> subMenuItems=flatten(menuItems);
+  final ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",subMenuItems){
     @Override protected void populateItem(    ListItem<CssMenuItem> listItem){
       CssMenuItem subMenuItem=listItem.getModelObject();
       if (subMenuItem.hasSubMenuItems()) {
@@ -14,5 +14,13 @@
     }
   }
 ;
-  add(subMenuItemsView);
+  WebComponent divider=new WebComponent("divider"){
+    @Override protected void onConfigure(){
+      super.onConfigure();
+      subMenuItemsView.configure();
+      setVisible(!subMenuItems.isEmpty());
+    }
+  }
+;
+  add(subMenuItemsView,divider);
 }
