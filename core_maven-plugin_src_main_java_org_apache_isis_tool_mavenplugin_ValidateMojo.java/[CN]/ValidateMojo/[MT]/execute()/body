@@ -1,6 +1,7 @@
 {
-  final List<Object> serviceList=getServiceList();
-  if (serviceList.size() == 0) {
+  final Plugin plugin=MavenProjects.lookupPlugin(mavenProject,CURRENT_PLUGIN_KEY);
+  final List<Object> serviceList=plugin != null ? serviceListFor(plugin) : null;
+  if (serviceList == null || serviceList.size() == 0) {
     return;
   }
   getLog().info("Found " + serviceList.size() + " services");

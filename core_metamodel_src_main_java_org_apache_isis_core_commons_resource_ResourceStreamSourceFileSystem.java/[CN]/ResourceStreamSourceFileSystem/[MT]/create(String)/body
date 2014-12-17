@@ -1,3 +1,18 @@
 {
-  return directory2 != null ? new ResourceStreamSourceFileSystem(directory2) : null;
+  if (directory == null) {
+    return null;
+  }
+  final File file=new File(directory);
+  if (!file.exists()) {
+    return null;
+  }
+  if (!file.isDirectory()) {
+    return null;
+  }
+  try {
+    return new ResourceStreamSourceFileSystem(file.getCanonicalPath());
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
 }
