@@ -1,6 +1,10 @@
 {
-  Log4j.configureIfRequired();
-  ValidationFailures validationFailures=bootIsisThenShutdown();
+  final List<Object> serviceList=getServiceList();
+  if (serviceList.size() == 0) {
+    return;
+  }
+  getLog().info("Found " + serviceList.size() + " services");
+  final ValidationFailures validationFailures=bootIsisThenShutdown(serviceList);
   if (validationFailures.occurred()) {
     throwFailureException(validationFailures.getNumberOfMessages() + " problems found.",validationFailures.getMessages());
   }

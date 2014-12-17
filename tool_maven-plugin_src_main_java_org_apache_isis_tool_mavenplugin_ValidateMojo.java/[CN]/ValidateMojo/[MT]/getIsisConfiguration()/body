@@ -1,0 +1,20 @@
+{
+  final Plugin plugin=MavenProjects.lookupPlugin(mavenProject,CURRENT_PLUGIN_KEY);
+  if (plugin == null) {
+    return null;
+  }
+  final Xpp3Dom configuration=(Xpp3Dom)plugin.getConfiguration();
+  if (configuration == null) {
+    throwFailureException("Configuration error","No <configuration> element found");
+  }
+  final Xpp3Dom servicesEl=configuration.getChild("isisConfigDir");
+  if (servicesEl == null) {
+    throwFailureException("Configuration error","No <configuration>/<isisConfigDir> element found");
+  }
+  final String isisConfigDir=Xpp3Doms.GET_VALUE.apply(servicesEl);
+  final File basedir=mavenProject.getBasedir();
+  final String absoluteConfigDir=new File(basedir,isisConfigDir).getAbsolutePath();
+  final IsisConfigurationBuilderDefault configBuilder=new IsisConfigurationBuilderDefault(absoluteConfigDir);
+  configBuilder.addDefaultConfigurationResources();
+  return configBuilder.getConfiguration();
+}

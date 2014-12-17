@@ -1,0 +1,11 @@
+{
+  IsisConfiguration isisConfiguration=getIsisConfiguration();
+  if (isisConfiguration == null) {
+    return Collections.emptyList();
+  }
+  final ServicesInstallerFromConfigurationAndAnnotation servicesInstaller=new ServicesInstallerFromConfigurationAndAnnotation();
+  servicesInstaller.setIgnoreFailures(true);
+  servicesInstaller.setConfiguration(isisConfiguration);
+  servicesInstaller.init();
+  return servicesInstaller.getServices(DeploymentType.SERVER_PROTOTYPE);
+}
