@@ -1,9 +1,12 @@
 {
   try {
     LOG.debug("loading class for service: " + className);
-    return Thread.currentThread().getContextClassLoader().loadClass(className);
+    return Class.forName(className);
   }
  catch (  final ClassNotFoundException ex) {
+    if (ignoreFailures) {
+      return null;
+    }
     throw new InitialisationException(String.format("Cannot find class '%s' for service",className));
   }
 }
