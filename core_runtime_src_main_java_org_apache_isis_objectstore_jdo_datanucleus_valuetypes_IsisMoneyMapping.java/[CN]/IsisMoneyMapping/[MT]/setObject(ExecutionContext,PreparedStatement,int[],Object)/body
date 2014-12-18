@@ -1,11 +1,11 @@
 {
-  final Money m=((Money)value);
-  if (m == null) {
-    getDatastoreMapping(0).setLong(preparedStmt,exprIndex[0],0l);
-    getDatastoreMapping(1).setString(preparedStmt,exprIndex[1],null);
-  }
- else {
+  if (value instanceof Money) {
+    final Money m=((Money)value);
     getDatastoreMapping(0).setLong(preparedStmt,exprIndex[0],m.longValue());
     getDatastoreMapping(1).setString(preparedStmt,exprIndex[1],m.getCurrency());
+  }
+ else {
+    getDatastoreMapping(0).setLong(preparedStmt,exprIndex[0],0l);
+    getDatastoreMapping(1).setString(preparedStmt,exprIndex[1],null);
   }
 }
