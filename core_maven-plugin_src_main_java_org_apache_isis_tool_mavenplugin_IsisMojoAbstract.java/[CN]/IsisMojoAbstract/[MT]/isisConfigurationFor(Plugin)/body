@@ -1,18 +1,18 @@
 {
   final Xpp3Dom configuration=(Xpp3Dom)plugin.getConfiguration();
   if (configuration == null) {
-    reporter.throwFailureException("Configuration error","No <configuration> element found");
+    context.throwFailureException("Configuration error","No <configuration> element found");
   }
   final Xpp3Dom servicesEl=configuration.getChild("isisConfigDir");
   if (servicesEl == null) {
-    reporter.throwFailureException("Configuration error","No <configuration>/<isisConfigDir> element found");
+    context.throwFailureException("Configuration error","No <configuration>/<isisConfigDir> element found");
   }
   final String isisConfigDir=Xpp3Doms.GET_VALUE.apply(servicesEl);
   final File basedir=mavenProject.getBasedir();
   final File file=new File(basedir,isisConfigDir);
   final String absoluteConfigDir=file.getAbsolutePath();
   if (!file.exists() || !file.isDirectory()) {
-    reporter.throwFailureException("Configuration error",String.format("isisConfigDir (%s) does not exist or is not a directory",absoluteConfigDir));
+    context.throwFailureException("Configuration error",String.format("isisConfigDir (%s) does not exist or is not a directory",absoluteConfigDir));
   }
   final IsisConfigurationBuilderDefault configBuilder=new IsisConfigurationBuilderDefault(absoluteConfigDir);
   configBuilder.addDefaultConfigurationResources();
