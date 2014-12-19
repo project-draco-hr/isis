@@ -1,0 +1,10 @@
+{
+  final File file=getIsisConfigDir();
+  final String absoluteConfigDir=file.getAbsolutePath();
+  if (!file.exists() || !file.isDirectory()) {
+    context.throwFailureException("Configuration error",String.format("isisConfigDir (%s) does not exist or is not a directory",absoluteConfigDir));
+  }
+  final IsisConfigurationBuilderDefault configBuilder=new IsisConfigurationBuilderDefault(absoluteConfigDir);
+  configBuilder.addDefaultConfigurationResources();
+  return configBuilder.getConfiguration();
+}
