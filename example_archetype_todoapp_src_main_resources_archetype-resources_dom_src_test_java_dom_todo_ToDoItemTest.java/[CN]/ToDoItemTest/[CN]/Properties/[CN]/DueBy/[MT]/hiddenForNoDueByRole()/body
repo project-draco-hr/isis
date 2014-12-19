@@ -1,0 +1,12 @@
+{
+  final UserMemento userWithRole=new UserMemento("user",new RoleMemento("realm1:noDueBy_role"));
+  context.checking(new Expectations(){
+{
+      allowing(mockContainer).getUser();
+      will(returnValue(userWithRole));
+    }
+  }
+);
+  toDoItem.container=mockContainer;
+  assertThat(toDoItem.hideDueBy(),is(true));
+}
