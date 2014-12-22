@@ -9,9 +9,9 @@
         final List<ObjectAdapterMemento> toggleMementosList=model.getToggleMementosList();
         final Iterable<ObjectAdapter> toggledAdapters=Iterables.transform(toggleMementosList,ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking));
         final List<Object> domainObjects=Lists.newArrayList(Iterables.transform(toggledAdapters,ObjectAdapter.Functions.getObject()));
-        final Bulk.InteractionContext bulkInteractionContext=Bulk.InteractionContext.current.get();
+        final BulkInteractionContext bulkInteractionContext=BulkInteractionContext.current.get();
         if (bulkInteractionContext != null) {
-          bulkInteractionContext.setInvokedAs(InvokedAs.BULK);
+          bulkInteractionContext.setInvokedAs(BulkInteractionContext.InvokedAs.BULK);
           bulkInteractionContext.setDomainObjects(domainObjects);
         }
         final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);

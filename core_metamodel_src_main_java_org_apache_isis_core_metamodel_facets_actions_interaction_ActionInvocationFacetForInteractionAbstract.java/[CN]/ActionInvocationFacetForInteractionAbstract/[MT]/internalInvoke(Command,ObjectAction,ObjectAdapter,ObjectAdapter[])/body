@@ -1,5 +1,5 @@
 {
-  final Bulk.InteractionContext bulkInteractionContext=getServicesInjector().lookupService(Bulk.InteractionContext.class);
+  final BulkInteractionContext bulkInteractionContext=getServicesInjector().lookupService(BulkInteractionContext.class);
   try {
     final Object[] executionParameters=new Object[arguments.length];
     for (int i=0; i < arguments.length; i++) {
@@ -8,7 +8,7 @@
     final Object targetPojo=unwrap(targetAdapter);
     final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
     if (bulkFacet != null && bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
-      bulkInteractionContext.setInvokedAs(Bulk.InteractionContext.InvokedAs.REGULAR);
+      bulkInteractionContext.setInvokedAs(BulkInteractionContext.InvokedAs.REGULAR);
       bulkInteractionContext.setDomainObjects(Collections.singletonList(targetPojo));
     }
     if (command != null && command.getExecutor() == Command.Executor.USER && owningAction != null) {
