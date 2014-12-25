@@ -1,0 +1,15 @@
+{
+  if (!DEMO_MODE_USING_CREDENTIALS_AS_QUERYARGS) {
+    return super.newWebRequest(servletRequest,filterPath);
+  }
+  try {
+    String uname=servletRequest.getParameter("user");
+    if (uname != null) {
+      servletRequest.getSession().invalidate();
+    }
+  }
+ catch (  Exception e) {
+  }
+  WebRequest request=super.newWebRequest(servletRequest,filterPath);
+  return request;
+}
