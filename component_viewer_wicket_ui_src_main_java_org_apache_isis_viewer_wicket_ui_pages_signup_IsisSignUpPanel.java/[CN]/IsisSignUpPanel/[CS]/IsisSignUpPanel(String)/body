@@ -1,0 +1,19 @@
+{
+  super(id);
+  addOrReplace(new NotificationPanel("feedback"));
+  Form<Void> form=new Form<>("signUpForm");
+  addOrReplace(form);
+  final TextField<String> emailField=new TextField<>("email",Model.of(""));
+  emailField.add(EmailAddressValidator.getInstance());
+  final PasswordTextField passwordField=new PasswordTextField("password",Model.of(""));
+  Button signUpButton=new Button("signUp"){
+    @Override public void onSubmit(){
+      super.onSubmit();
+      String email=emailField.getModelObject();
+      String password=passwordField.getModelObject();
+      emailService.send(new UserCreationEvent(email,password));
+    }
+  }
+;
+  form.add(emailField,passwordField,signUpButton);
+}
