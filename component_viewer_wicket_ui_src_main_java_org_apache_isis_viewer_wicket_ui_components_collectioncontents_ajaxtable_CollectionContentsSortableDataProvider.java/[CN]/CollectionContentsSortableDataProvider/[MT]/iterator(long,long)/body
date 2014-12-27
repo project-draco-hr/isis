@@ -1,4 +1,8 @@
 {
-  List<ObjectAdapter> adapters=sortedIfRequired(model.getObject(),this.getSort());
-  return adapters.subList((int)first,(int)(first + count)).iterator();
+  final List<ObjectAdapter> unfilteredAdapters=model.getObject();
+  final List<ObjectAdapter> filteredAdapters=Lists.newArrayList(Iterables.filter(unfilteredAdapters,ignoreHidden()));
+  List<ObjectAdapter> adapters=sortedIfRequired(filteredAdapters,this.getSort());
+  final int from=(int)first;
+  final int toIndex=Math.min((int)(first + count),adapters.size());
+  return adapters.subList(from,toIndex).iterator();
 }
