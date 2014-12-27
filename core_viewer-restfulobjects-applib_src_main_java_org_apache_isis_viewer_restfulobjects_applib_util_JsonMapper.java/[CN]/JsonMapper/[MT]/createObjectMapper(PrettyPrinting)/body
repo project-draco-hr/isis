@@ -1,9 +1,7 @@
 {
-  DeserializerFactoryConfig deserializerFactoryConfig=new DeserializerFactoryConfig();
-  JsonRepresentationDeserializerFactory deserializerFactory=new JsonRepresentationDeserializerFactory(deserializerFactoryConfig);
-  final DefaultDeserializationContext deserializerProvider=new DefaultDeserializationContext.Impl(deserializerFactory);
-  final ObjectMapper objectMapper=new ObjectMapper(null,null,deserializerProvider);
+  final ObjectMapper objectMapper=new ObjectMapper();
   final SimpleModule jsonModule=new SimpleModule("json",new Version(1,0,0,null,"org.apache","isis"));
+  jsonModule.addDeserializer(JsonRepresentation.class,new JsonRepresentationDeserializer());
   jsonModule.addSerializer(JsonRepresentation.class,new JsonRepresentationSerializer());
   objectMapper.registerModule(jsonModule);
   if (prettyPrinting == PrettyPrinting.ENABLE) {
