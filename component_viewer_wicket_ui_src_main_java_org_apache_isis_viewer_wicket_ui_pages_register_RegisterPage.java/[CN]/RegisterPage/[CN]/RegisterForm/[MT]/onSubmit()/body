@@ -1,0 +1,19 @@
+{
+  IsisContext.openSession(new InitialisationSession());
+  final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+  IsisContext.getTransactionManager().executeWithinTransaction(new TransactionalClosure(){
+    @Override public void preExecute(){
+    }
+    @Override public void execute(){
+      userRegistrationService.registerUser(username,password);
+    }
+    @Override public void onSuccess(){
+    }
+    @Override public void onFailure(){
+    }
+  }
+);
+  IsisContext.closeSession();
+  signIn(getUsername(),getPassword());
+  setResponsePage(getApplication().getHomePage());
+}
