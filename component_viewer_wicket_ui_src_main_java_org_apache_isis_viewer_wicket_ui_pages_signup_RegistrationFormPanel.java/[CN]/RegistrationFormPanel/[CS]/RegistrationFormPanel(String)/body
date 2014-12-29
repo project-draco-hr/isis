@@ -6,6 +6,7 @@
   final RequiredTextField<String> emailField=new RequiredTextField<>("email",Model.of(""));
   emailField.setLabel(new ResourceModel("emailLabel"));
   emailField.add(EmailAddressValidator.getInstance());
+  emailField.add(EmailAvailableValidator.getInstance());
   FormGroup formGroup=new FormGroup("formGroup",emailField);
   form.add(formGroup);
   formGroup.add(emailField);
@@ -18,8 +19,7 @@
       if (emailSent) {
         Map<String,String> map=new HashMap<>();
         map.put("email",email);
-        IModel<Map<String,String>> model=Model.ofMap(map);
-        String emailSentMessage=getString("emailSentMessage",model);
+        String emailSentMessage=getString("emailSentMessage",Model.ofMap(map));
         success(emailSentMessage);
       }
     }

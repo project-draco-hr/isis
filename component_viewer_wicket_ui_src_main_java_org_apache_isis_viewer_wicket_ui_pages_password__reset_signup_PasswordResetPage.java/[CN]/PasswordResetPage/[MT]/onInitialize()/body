@@ -1,4 +1,12 @@
 {
   super.onInitialize();
-  addPasswordResetPanel();
+  StringValue uuidValue=getPageParameters().get(0);
+  if (uuidValue.isEmpty()) {
+    addPasswordResetPanel("passwordResetPanel");
+  }
+ else {
+    String uuid=uuidValue.toString();
+    AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+    String email=accountConfirmationMap.get(uuid);
+  }
 }
