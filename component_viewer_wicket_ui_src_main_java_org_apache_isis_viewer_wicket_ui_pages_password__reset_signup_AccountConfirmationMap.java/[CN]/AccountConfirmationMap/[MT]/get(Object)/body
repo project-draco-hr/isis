@@ -1,0 +1,17 @@
+{
+  String result=null;
+  Value value;
+synchronized (this) {
+    value=(Value)super.get(key);
+  }
+  if (value != null) {
+    Duration elapsedTime=Time.now().subtract(value.creationTime);
+    if (lifetime.greaterThan(elapsedTime)) {
+      result=value.email;
+    }
+ else {
+      remove(key);
+    }
+  }
+  return result;
+}
