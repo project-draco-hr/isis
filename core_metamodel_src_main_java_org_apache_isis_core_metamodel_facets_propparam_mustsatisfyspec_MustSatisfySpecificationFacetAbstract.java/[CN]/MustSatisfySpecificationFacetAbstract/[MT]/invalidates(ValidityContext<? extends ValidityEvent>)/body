@@ -1,0 +1,16 @@
+{
+  if (!(validityContext instanceof ProposedHolder)) {
+    return null;
+  }
+  final ProposedHolder proposedHolder=(ProposedHolder)validityContext;
+  final ObjectAdapter proposedAdapter=proposedHolder.getProposed();
+  if (proposedAdapter == null) {
+    return null;
+  }
+  final Object proposedObject=proposedAdapter.getObject();
+  final ReasonBuffer buf=new ReasonBuffer();
+  for (  final Specification specification : specifications) {
+    buf.append(specification.satisfies(proposedObject));
+  }
+  return buf.getReason();
+}
