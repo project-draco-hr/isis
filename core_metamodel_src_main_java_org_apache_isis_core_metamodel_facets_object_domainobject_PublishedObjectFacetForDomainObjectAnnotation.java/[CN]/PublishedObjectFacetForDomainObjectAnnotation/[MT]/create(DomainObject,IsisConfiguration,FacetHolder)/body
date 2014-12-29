@@ -1,0 +1,16 @@
+{
+  final PublishingPolicy publishingPolicy=domainObject.publishing();
+switch (publishingPolicy) {
+case AS_CONFIGURED:
+    if (holder.containsDoOpFacet(PublishedObjectFacet.class)) {
+      return null;
+    }
+  final PublishObjectsConfiguration setting=PublishObjectsConfiguration.parse(configuration);
+return setting == PublishObjectsConfiguration.ALL ? new PublishedObjectFacetForDomainObjectAnnotation(newPayloadFactory(domainObject.publishingPayloadFactory()),holder) : null;
+case DISABLED:
+return null;
+case ENABLED:
+return new PublishedObjectFacetForDomainObjectAnnotation(newPayloadFactory(domainObject.publishingPayloadFactory()),holder);
+}
+return null;
+}

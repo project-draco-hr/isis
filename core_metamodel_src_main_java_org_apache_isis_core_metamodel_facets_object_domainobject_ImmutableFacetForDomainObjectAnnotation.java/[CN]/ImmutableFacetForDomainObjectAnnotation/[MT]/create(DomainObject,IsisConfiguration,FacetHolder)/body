@@ -1,0 +1,17 @@
+{
+  final EditPolicy editPolicy=domainObject.editing();
+  final String disabledReason=domainObject.editingDisabledReason();
+switch (editPolicy) {
+case AS_CONFIGURED:
+    if (holder.containsDoOpFacet(ImmutableFacet.class)) {
+      return null;
+    }
+  final EditingObjectsConfiguration setting=EditingObjectsConfiguration.parse(configuration);
+return setting == EditingObjectsConfiguration.NONE ? new ImmutableFacetForDomainObjectAnnotation(disabledReason,holder) : null;
+case DISABLED:
+return new ImmutableFacetForDomainObjectAnnotation(disabledReason,holder);
+case ENABLED:
+return null;
+}
+return null;
+}

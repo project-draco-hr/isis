@@ -1,0 +1,9 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  if (HasTransactionId.class.isAssignableFrom(cls)) {
+    return;
+  }
+  FacetUtil.addFacet(AuditableFacetForDomainObjectAnnotation.create(domainObject,configuration,facetHolder));
+}

@@ -1,0 +1,16 @@
+{
+  final DomainObject.AuditingPolicy auditingPolicy=domainObject.auditing();
+switch (auditingPolicy) {
+case AS_CONFIGURED:
+    if (holder.containsDoOpFacet(AuditableFacet.class)) {
+      return null;
+    }
+  final AuditObjectsConfiguration setting=AuditObjectsConfiguration.parse(configuration);
+return setting.asEnablement() == Enablement.ENABLED ? new AuditableFacetForDomainObjectAnnotation(Enablement.ENABLED,holder) : null;
+case DISABLED:
+return null;
+case ENABLED:
+return new AuditableFacetForDomainObjectAnnotation(Enablement.ENABLED,holder);
+}
+return null;
+}
