@@ -1,0 +1,18 @@
+{
+  super(id);
+  addOrReplace(new NotificationPanel("feedback"));
+  StatelessForm<Void> form=new StatelessForm<>("signUpForm");
+  addOrReplace(form);
+  final TextField<String> emailField=new TextField<>("email",Model.of(""));
+  emailField.add(EmailAddressValidator.getInstance());
+  Button signUpButton=new Button("signUp"){
+    @Override public void onSubmit(){
+      super.onSubmit();
+      String email=emailField.getModelObject();
+      String confirmationUrl=createUrl(email);
+      emailService.send(new EmailRegistrationEvent(email,confirmationUrl));
+    }
+  }
+;
+  form.add(emailField,signUpButton);
+}

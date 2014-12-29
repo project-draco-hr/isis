@@ -1,0 +1,9 @@
+{
+  IsisContext.openSession(new InitialisationSession());
+  Class<? extends Page> signUpPageClass=pageClassRegistry.getPageClass(PageType.SIGN_UP);
+  BookmarkablePageLink<Void> signUpLink=new BookmarkablePageLink<>(id,signUpPageClass);
+  final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+  signUpLink.setVisibilityAllowed(true);
+  IsisContext.closeSession();
+  getSignInForm().addOrReplace(signUpLink);
+}

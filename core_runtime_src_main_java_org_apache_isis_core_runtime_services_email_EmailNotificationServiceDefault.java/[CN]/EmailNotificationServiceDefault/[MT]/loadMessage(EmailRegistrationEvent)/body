@@ -1,0 +1,14 @@
+{
+  String message;
+  try {
+    URL emailVerificationTemplateUrl=Resources.getResource(EmailNotificationServiceDefault.class,"EmailVerificationTemplate.html");
+    String emailVerificationTemplate=Resources.toString(emailVerificationTemplateUrl,Charsets.UTF_8);
+    message=emailVerificationTemplate.replace("${email}",emailRegistrationEvent.getEmail());
+    message=message.replace("${confirmationUrl}",emailRegistrationEvent.getConfirmationUrl());
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+    message="Problem: " + e.getMessage();
+  }
+  return message;
+}

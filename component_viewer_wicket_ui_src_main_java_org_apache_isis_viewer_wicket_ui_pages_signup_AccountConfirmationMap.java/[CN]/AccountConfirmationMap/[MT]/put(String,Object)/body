@@ -1,0 +1,13 @@
+{
+  if (!(bufferedResponse instanceof String)) {
+    throw new IllegalArgumentException(AccountConfirmationMap.class.getSimpleName() + " can store only instances of " + String.class.getSimpleName());
+  }
+  Value value=new Value();
+  value.creationTime=Time.now();
+  value.email=(String)bufferedResponse;
+  Value oldValue;
+synchronized (this) {
+    oldValue=(Value)super.put(key,value);
+  }
+  return oldValue != null ? oldValue.email : null;
+}

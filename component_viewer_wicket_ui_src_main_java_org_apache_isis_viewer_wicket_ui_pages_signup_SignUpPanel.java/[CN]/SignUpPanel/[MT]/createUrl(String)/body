@@ -1,0 +1,12 @@
+{
+  String uuid=UUID.randomUUID().toString();
+  uuid=uuid.replace("-","");
+  AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+  accountConfirmationMap.put(uuid,email);
+  PageParameters parameters=new PageParameters();
+  parameters.set(0,uuid);
+  CharSequence relativeUrl=urlFor(RegisterPage.class,parameters);
+  UrlRenderer urlRenderer=getRequestCycle().getUrlRenderer();
+  String fullUrl=urlRenderer.renderFullUrl(Url.parse(relativeUrl));
+  return fullUrl;
+}

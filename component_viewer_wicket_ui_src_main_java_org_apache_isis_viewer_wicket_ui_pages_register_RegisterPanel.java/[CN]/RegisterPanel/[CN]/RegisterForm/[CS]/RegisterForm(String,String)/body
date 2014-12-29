@@ -1,0 +1,20 @@
+{
+  super(id);
+  this.uuid=uuid;
+  String email=getEmail();
+  final Registree registree=new Registree();
+  registree.setEmail(email);
+  setModel(new CompoundPropertyModel<>(registree));
+  add(new RequiredTextField<String>("username"));
+  PasswordTextField password=new PasswordTextField("password");
+  add(password);
+  PasswordTextField verifyPassword=new PasswordTextField("verifyPassword");
+  add(verifyPassword);
+  add(new EqualPasswordInputValidator(password,verifyPassword));
+  add(new TextField<>("email",new AbstractReadOnlyModel<String>(){
+    @Override public String getObject(){
+      return registree.getEmail();
+    }
+  }
+));
+}
