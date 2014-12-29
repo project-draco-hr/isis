@@ -5,16 +5,9 @@
   final Registree registree=new Registree();
   registree.setEmail(email);
   setModel(new CompoundPropertyModel<>(registree));
-  add(new RequiredTextField<String>("username"));
-  PasswordTextField password=new PasswordTextField("password");
-  add(password);
-  PasswordTextField verifyPassword=new PasswordTextField("verifyPassword");
-  add(verifyPassword);
-  add(new EqualPasswordInputValidator(password,verifyPassword));
-  add(new TextField<>("email",new AbstractReadOnlyModel<String>(){
-    @Override public String getObject(){
-      return registree.getEmail();
-    }
-  }
-));
+  addUsername();
+  PasswordTextField password=addPassword();
+  PasswordTextField confirmPassword=addConfirmPassword();
+  add(new EqualPasswordInputValidator(password,confirmPassword));
+  addEmail(registree);
 }
