@@ -5,6 +5,11 @@
     properties=processMethodContext.metadataProperties("layout");
   }
   final ActionLayout actionLayout=Annotations.getAnnotation(processMethodContext.getMethod(),ActionLayout.class);
+  BookmarkPolicyFacet bookmarkableFacet=BookmarkPolicyFacetOnActionFromLayoutProperties.create(properties,holder);
+  if (bookmarkableFacet == null) {
+    bookmarkableFacet=BookmarkPolicyFacetForActionLayoutAnnotation.create(actionLayout,holder);
+  }
+  FacetUtil.addFacet(bookmarkableFacet);
   CssClassFacet cssClassFacet=CssClassFacetOnActionFromLayoutProperties.create(properties,holder);
   if (cssClassFacet == null) {
     cssClassFacet=CssClassFacetForActionLayoutAnnotation.create(actionLayout,holder);
