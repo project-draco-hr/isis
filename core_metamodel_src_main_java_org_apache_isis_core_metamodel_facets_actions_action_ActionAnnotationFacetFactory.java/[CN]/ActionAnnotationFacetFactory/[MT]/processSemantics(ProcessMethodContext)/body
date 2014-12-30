@@ -1,0 +1,12 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final Action action=Annotations.getAnnotation(method,Action.class);
+  final FacetHolder holder=processMethodContext.getFacetHolder();
+  ActionSemanticsFacet facet;
+  final ActionSemantics actionSemantics=Annotations.getAnnotation(method,ActionSemantics.class);
+  facet=ActionSemanticsFacetAnnotation.create(actionSemantics,holder);
+  if (facet == null) {
+    facet=ActionSemanticsFacetForActionAnnotation.create(action,holder);
+  }
+  FacetUtil.addFacet(facet);
+}

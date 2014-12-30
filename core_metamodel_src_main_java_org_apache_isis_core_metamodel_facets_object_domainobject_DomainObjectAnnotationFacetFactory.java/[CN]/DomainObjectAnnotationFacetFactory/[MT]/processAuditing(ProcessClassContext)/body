@@ -1,9 +1,15 @@
 {
   final Class<?> cls=processClassContext.getCls();
   final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
-  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final FacetHolder holder=processClassContext.getFacetHolder();
   if (HasTransactionId.class.isAssignableFrom(cls)) {
     return;
   }
-  FacetUtil.addFacet(AuditableFacetForDomainObjectAnnotation.create(domainObject,configuration,facetHolder));
+  AuditableFacet auditableFacet;
+  final Audited annotation=Annotations.getAnnotation(cls,Audited.class);
+  auditableFacet=AuditableFacetAuditedAnnotation.create(annotation,holder);
+  if (auditableFacet == null) {
+    auditableFacet=AuditableFacetForDomainObjectAnnotation.create(domainObject,configuration,holder);
+  }
+  FacetUtil.addFacet(auditableFacet);
 }

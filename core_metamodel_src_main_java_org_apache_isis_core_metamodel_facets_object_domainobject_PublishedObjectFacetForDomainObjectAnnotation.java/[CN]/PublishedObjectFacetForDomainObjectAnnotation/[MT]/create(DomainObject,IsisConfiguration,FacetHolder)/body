@@ -1,16 +1,21 @@
 {
-  final PublishingPolicy publishingPolicy=domainObject.publishing();
-switch (publishingPolicy) {
+  if (domainObject == null) {
+    return null;
+  }
+  final Publishing publishing=domainObject.publishing();
+switch (publishing) {
 case AS_CONFIGURED:
-    if (holder.containsDoOpFacet(PublishedObjectFacet.class)) {
-      return null;
-    }
-  final PublishObjectsConfiguration setting=PublishObjectsConfiguration.parse(configuration);
-return setting == PublishObjectsConfiguration.ALL ? new PublishedObjectFacetForDomainObjectAnnotation(newPayloadFactory(domainObject.publishingPayloadFactory()),holder) : null;
+    final PublishObjectsConfiguration setting=PublishObjectsConfiguration.parse(configuration);
+switch (setting) {
+case NONE:
+    return null;
+default :
+  return new PublishedObjectFacetForDomainObjectAnnotationAsConfigured(newPayloadFactory(domainObject),holder);
+}
 case DISABLED:
 return null;
 case ENABLED:
-return new PublishedObjectFacetForDomainObjectAnnotation(newPayloadFactory(domainObject.publishingPayloadFactory()),holder);
+return new PublishedObjectFacetForDomainObjectAnnotation(newPayloadFactory(domainObject),holder);
 }
 return null;
 }

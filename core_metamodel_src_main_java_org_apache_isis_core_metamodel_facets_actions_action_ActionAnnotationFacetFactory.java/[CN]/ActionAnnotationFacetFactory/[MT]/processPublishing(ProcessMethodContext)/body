@@ -1,0 +1,15 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final Action action=Annotations.getAnnotation(method,Action.class);
+  final FacetHolder holder=processMethodContext.getFacetHolder();
+  if (HasTransactionId.class.isAssignableFrom(processMethodContext.getCls())) {
+    return;
+  }
+  PublishedActionFacet publishedActionFacet;
+  final PublishedAction annotation=Annotations.getAnnotation(processMethodContext.getMethod(),PublishedAction.class);
+  publishedActionFacet=PublishedActionFacetAnnotation.create(annotation,holder);
+  if (publishedActionFacet == null) {
+    publishedActionFacet=PublishedActionFacetForActionAnnotation.create(action,configuration,holder);
+  }
+  FacetUtil.addFacet(publishedActionFacet);
+}

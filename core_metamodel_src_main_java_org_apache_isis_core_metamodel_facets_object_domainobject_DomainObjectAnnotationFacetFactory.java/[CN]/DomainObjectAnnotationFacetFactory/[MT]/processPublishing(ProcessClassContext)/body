@@ -2,5 +2,14 @@
   final Class<?> cls=processClassContext.getCls();
   final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
-  FacetUtil.addFacet(PublishedObjectFacetForDomainObjectAnnotation.create(domainObject,configuration,facetHolder));
+  if (HasTransactionId.class.isAssignableFrom(cls)) {
+    return;
+  }
+  PublishedObjectFacet publishedObjectFacet;
+  final PublishedObject publishedObject=Annotations.getAnnotation(processClassContext.getCls(),PublishedObject.class);
+  publishedObjectFacet=PublishedObjectFacetAnnotation.create(publishedObject,processClassContext.getFacetHolder());
+  if (publishedObjectFacet == null) {
+    publishedObjectFacet=PublishedObjectFacetForDomainObjectAnnotation.create(domainObject,configuration,facetHolder);
+  }
+  FacetUtil.addFacet(publishedObjectFacet);
 }

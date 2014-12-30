@@ -12,13 +12,13 @@
   if (HasTransactionId.class.isAssignableFrom(cls)) {
     return;
   }
-  final ActionCategorization categorization=ActionCategorization.parse(configuration.getString(COMMAND_ACTIONS_KEY));
-  if (categorization == ActionCategorization.NONE) {
+  final ActionConfiguration setting=ActionConfiguration.parse(configuration);
+  if (setting == ActionConfiguration.NONE) {
     return;
   }
-  if (actionSemanticsFacet.value() == Of.SAFE && categorization == ActionCategorization.IGNORE_SAFE) {
+  if (actionSemanticsFacet.value() == Of.SAFE && setting == ActionConfiguration.IGNORE_SAFE) {
     return;
   }
   final Command annotation=Annotations.getAnnotation(method,Command.class);
-  FacetUtil.addFacet(create(annotation,facetHolder));
+  FacetUtil.addFacet(CommandFacetFromConfiguration.create(facetHolder));
 }
