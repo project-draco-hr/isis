@@ -1,18 +1,19 @@
 {
   super(id);
   addOrReplace(new NotificationPanel("feedback"));
-  StatelessForm<Void> form=new StatelessForm<>("signUpForm");
+  StatelessForm<Void> form=new StatelessForm<>("passwordResetForm");
   addOrReplace(form);
-  final RequiredTextField<String> emailField=new RequiredTextField<>("email",Model.of(""));
-  emailField.setLabel(new ResourceModel("emailLabel"));
-  emailField.add(EmailAddressValidator.getInstance());
-  FormGroup formGroup=new FormGroup("formGroup",emailField);
-  form.add(formGroup);
-  formGroup.add(emailField);
+  final PasswordTextField passwordField=new PasswordTextField("password",Model.of(""));
+  passwordField.setLabel(new ResourceModel("passwordLabel"));
+  form.add(passwordField);
+  final PasswordTextField confirmPasswordField=new PasswordTextField("confirmPassword",Model.of(""));
+  confirmPasswordField.setLabel(new ResourceModel("confirmPasswordLabel"));
+  form.add(confirmPasswordField);
+  form.add(new EqualPasswordInputValidator(passwordField,confirmPasswordField));
   Button signUpButton=new Button("passwordResetSubmit"){
     @Override public void onSubmit(){
       super.onSubmit();
-      String email=emailField.getModelObject();
+      String email=confirmPasswordField.getModelObject();
       String confirmationUrl=createUrl(email);
       boolean emailSent=emailService.send(new EmailRegistrationEvent(email,confirmationUrl));
       if (emailSent) {
