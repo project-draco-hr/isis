@@ -5,16 +5,21 @@
   if (getterFacet == null) {
     return;
   }
+  final Property property=Annotations.getAnnotation(method,Property.class);
   final PropertyInteraction propertyInteraction=Annotations.getAnnotation(method,PropertyInteraction.class);
   final Class<? extends PropertyInteractionEvent<?,?>> propertyInteractionEventType;
   final PropertyInteractionFacetAbstract propertyInteractionFacet;
-  if (propertyInteraction != null) {
+  if (property != null && property.interaction() != null) {
+    propertyInteractionEventType=property.interaction();
+    propertyInteractionFacet=new PropertyInteractionFacetForPropertyAnnotation(propertyInteractionEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+  }
+ else   if (propertyInteraction != null) {
     propertyInteractionEventType=propertyInteraction.value();
-    propertyInteractionFacet=new PropertyInteractionFacetAnnotation(propertyInteractionEventType,getterFacet,holder,servicesInjector,getSpecificationLoader());
+    propertyInteractionFacet=new PropertyInteractionFacetAnnotation(propertyInteractionEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
   }
  else {
     propertyInteractionEventType=PropertyInteractionEvent.Default.class;
-    propertyInteractionFacet=new PropertyInteractionFacetDefault(propertyInteractionEventType,getterFacet,holder,servicesInjector,getSpecificationLoader());
+    propertyInteractionFacet=new PropertyInteractionFacetDefault(propertyInteractionEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
   }
   FacetUtil.addFacet(propertyInteractionFacet);
   final PostsPropertyChangedEvent postsPropertyChangedEvent=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);

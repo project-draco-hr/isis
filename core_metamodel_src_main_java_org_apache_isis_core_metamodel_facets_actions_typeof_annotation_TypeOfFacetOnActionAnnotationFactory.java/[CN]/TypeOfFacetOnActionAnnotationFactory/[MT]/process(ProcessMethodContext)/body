@@ -10,9 +10,14 @@
     FacetUtil.addFacet(new TypeOfFacetInferredFromArray(componentType,processMethodContext.getFacetHolder(),getSpecificationLoader()));
     return;
   }
+  final Collection collection=Annotations.getAnnotation(method,Collection.class);
+  if (collection != null && collection.typeOf() != null) {
+    FacetUtil.addFacet(new TypeOfFacetForActionAnnotation(collection.typeOf(),getSpecificationLoader(),processMethodContext.getFacetHolder()));
+    return;
+  }
   final TypeOf annotation=Annotations.getAnnotation(method,TypeOf.class);
   if (annotation != null) {
-    FacetUtil.addFacet(new TypeOfFacetOnActionAnnotation(annotation.value(),processMethodContext.getFacetHolder(),getSpecificationLoader()));
+    FacetUtil.addFacet(new TypeOfFacetOnActionAnnotation(annotation.value(),getSpecificationLoader(),processMethodContext.getFacetHolder()));
     return;
   }
   final Type type=method.getGenericReturnType();
