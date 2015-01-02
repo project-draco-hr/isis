@@ -1,2 +1,8 @@
 {
+  final JDOPersistenceManagerFactory jdopmf=(JDOPersistenceManagerFactory)persistenceManagerFactory;
+  final NucleusContext nucleusContext=jdopmf.getNucleusContext();
+  final StoreManager storeManager=NucleusContextHelper.createStoreManagerForProperties(new HashMap<String,Object>(props),jdopmf.getPersistenceProperties(),nucleusContext.getClassLoaderResolver(ClassLoader.getSystemClassLoader()),nucleusContext);
+  if (storeManager instanceof SchemaAwareStoreManager) {
+    ((SchemaAwareStoreManager)storeManager).createSchemaForClasses(classesToBePersisted,asProperties(props));
+  }
 }

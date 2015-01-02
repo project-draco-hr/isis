@@ -2,7 +2,7 @@
   final String persistableClassNames=Joiner.on(',').join(persistableClassNameSet);
   props.put("datanucleus.autoStartClassNames",persistableClassNames);
   persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(props);
-  final boolean createSchema=Boolean.parseBoolean(props.get("datanucleus.autoCreateSchema"));
+  final boolean createSchema=(Boolean.parseBoolean(props.get(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_SCHEMA)) || Boolean.parseBoolean(props.get(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL)));
   if (createSchema) {
     createSchema(props,persistableClassNameSet);
   }
