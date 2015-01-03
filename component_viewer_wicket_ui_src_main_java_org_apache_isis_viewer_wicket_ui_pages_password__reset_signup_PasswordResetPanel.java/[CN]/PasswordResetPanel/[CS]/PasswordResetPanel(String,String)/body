@@ -13,15 +13,21 @@
   Button signUpButton=new Button("passwordResetSubmit"){
     @Override public void onSubmit(){
       super.onSubmit();
-      String email=confirmPasswordField.getModelObject();
-      String confirmationUrl=createUrl(email);
-      boolean emailSent=emailService.send(new EmailRegistrationEvent(email,confirmationUrl));
-      if (emailSent) {
-        Map<String,String> map=new HashMap<>();
-        map.put("email",email);
-        IModel<Map<String,String>> model=Model.ofMap(map);
-        String emailSentMessage=getString("emailSentMessage",model);
-        success(emailSentMessage);
+      final String password=confirmPasswordField.getModelObject();
+      AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+      final String email=accountConfirmationMap.remove(uuid);
+      Boolean passwordUpdated=IsisContext.doInSession(new Callable<Boolean>(){
+        @Override public Boolean call() throws Exception {
+          UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+          return userRegistrationService.updatePasswordByEmail(email,password);
+        }
+      }
+);
+      if (passwordUpdated) {
+        success(createPasswordChangeSuccessfulMessage());
+      }
+ else {
+        error(getString("passwordChangeUnsuccessful"));
       }
     }
   }

@@ -1,0 +1,17 @@
+{
+  boolean noSession=!inSession();
+  try {
+    if (noSession) {
+      openSession(new InitialisationSession());
+    }
+    return callable.call();
+  }
+ catch (  Exception x) {
+    throw new RuntimeException(String.format("An error occurred while executing code in %s session",noSession ? "a temporary" : "a"),x);
+  }
+ finally {
+    if (noSession) {
+      closeSession();
+    }
+  }
+}

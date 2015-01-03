@@ -1,9 +1,12 @@
 {
-  IsisContext.openSession(new InitialisationSession());
   Class<? extends Page> passwdResetPageClass=pageClassRegistry.getPageClass(PageType.PASSWORD_RESET);
-  BookmarkablePageLink<Void> passwdResetLink=new BookmarkablePageLink<>(id,passwdResetPageClass);
-  final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
-  passwdResetLink.setVisibilityAllowed(true);
-  IsisContext.closeSession();
+  final BookmarkablePageLink<Void> passwdResetLink=new BookmarkablePageLink<>(id,passwdResetPageClass);
+  IsisContext.doInSession(new Runnable(){
+    @Override public void run(){
+      final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+      passwdResetLink.setVisibilityAllowed(userRegistrationService != null);
+    }
+  }
+);
   getSignInForm().addOrReplace(passwdResetLink);
 }
