@@ -3,16 +3,10 @@
   IsisContext.doInSession(new Runnable(){
     @Override public void run(){
       final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
-      IsisContext.getTransactionManager().executeWithinTransaction(new TransactionalClosure(){
-        @Override public void preExecute(){
-        }
+      IsisContext.getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
         @Override public void execute(){
           userRegistrationService.registerUser(registree.getUsername(),registree.getPassword(),registree.getEmail());
           removeAccountConfirmation();
-        }
-        @Override public void onSuccess(){
-        }
-        @Override public void onFailure(){
         }
       }
 );

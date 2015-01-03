@@ -1,6 +1,5 @@
 {
   super(id);
-  addOrReplace(new NotificationPanel("feedback"));
   StatelessForm<Void> form=new StatelessForm<>("passwordResetForm");
   addOrReplace(form);
   final PasswordTextField passwordField=new PasswordTextField("password",Model.of(""));
@@ -14,16 +13,17 @@
     @Override public void onSubmit(){
       super.onSubmit();
       final String password=confirmPasswordField.getModelObject();
-      AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
-      final String email=accountConfirmationMap.remove(uuid);
+      final AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
       Boolean passwordUpdated=IsisContext.doInSession(new Callable<Boolean>(){
         @Override public Boolean call() throws Exception {
+          String email=accountConfirmationMap.get(uuid);
           UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
           return userRegistrationService.updatePasswordByEmail(email,password);
         }
       }
 );
       if (passwordUpdated) {
+        accountConfirmationMap.remove(uuid);
         success(createPasswordChangeSuccessfulMessage());
       }
  else {

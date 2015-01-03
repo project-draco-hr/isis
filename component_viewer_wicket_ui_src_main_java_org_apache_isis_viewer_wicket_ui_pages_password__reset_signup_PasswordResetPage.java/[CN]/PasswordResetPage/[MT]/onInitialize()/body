@@ -1,11 +1,33 @@
 {
   super.onInitialize();
+  add(new NotificationPanel("feedback"));
   StringValue uuidValue=getPageParameters().get(0);
   if (uuidValue.isEmpty()) {
     addPasswordResetEmailPanel(ID_CONTENT_PANEL);
   }
  else {
     String uuid=uuidValue.toString();
-    addPasswordResetPanel(ID_CONTENT_PANEL,uuid);
+    AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+    final String email=accountConfirmationMap.get(uuid);
+    if (Strings.isEmpty(email)) {
+      error(getString("passwordResetExpiredOrInvalidToken"));
+      addOrReplace(addPasswordResetEmailPanel(ID_CONTENT_PANEL));
+    }
+ else {
+      Boolean emailExists=IsisContext.doInSession(new Callable<Boolean>(){
+        @Override public Boolean call() throws Exception {
+          UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+          return userRegistrationService.emailExists(email);
+        }
+      }
+);
+      if (!emailExists) {
+        error(getString("noUserForAnEmailValidToken"));
+        addOrReplace(addPasswordResetEmailPanel(ID_CONTENT_PANEL));
+      }
+ else {
+        addPasswordResetPanel(ID_CONTENT_PANEL,uuid);
+      }
+    }
   }
 }
