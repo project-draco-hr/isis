@@ -6,20 +6,21 @@
     Email email=new HtmlEmail();
     email.setAuthenticator(new DefaultAuthenticator(senderEmailAddress,senderEmailPasswd));
     email.setHostName(getSenderEmailHostName());
-    email.setSmtpPort(getSenderEmailPort());
+    Integer senderEmailPort=getSenderEmailPort();
+    email.setSmtpPort(senderEmailPort);
     email.setStartTLSEnabled(getSenderEmailTlsEnabled());
     Properties properties=email.getMailSession().getProperties();
     properties.put("mail.smtps.auth","true");
     properties.put("mail.debug","true");
-    properties.put("mail.smtps.port","587");
-    properties.put("mail.smtps.socketFactory.port","587");
+    properties.put("mail.smtps.port","" + senderEmailPort);
+    properties.put("mail.smtps.socketFactory.port","" + senderEmailPort);
     properties.put("mail.smtps.socketFactory.class","javax.net.ssl.SSLSocketFactory");
     properties.put("mail.smtps.socketFactory.fallback","false");
-    properties.put("mail.smtp.starttls.enable","true");
+    properties.put("mail.smtp.starttls.enable","" + getSenderEmailTlsEnabled());
     email.setFrom(senderEmailAddress);
-    email.setSubject(subject);
+    email.setSubject(calculateSubject(emailEvent));
     email.setMsg(body);
-    email.addTo("martin.grigorov@gmail.com");
+    email.addTo(emailEvent.getEmail());
     email.send();
   }
  catch (  EmailException ex) {
