@@ -14,6 +14,10 @@
   }
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(entityLink));
   labelIfRegular.add(scalarName);
+  NamedFacet namedFacet=getModel().getFacet(NamedFacet.class);
+  if (namedFacet != null) {
+    scalarName.setEscapeModelStrings(namedFacet.escaped());
+  }
   final List<LinkAndLabel> entityActions=EntityActionUtil.getEntityActionLinksForAssociation(this.scalarModel,getDeploymentType());
   addPositioningCssTo(labelIfRegular,entityActions);
   addOrReplace(labelIfRegular);

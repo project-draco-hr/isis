@@ -6,6 +6,10 @@
   final MarkupContainer labelIfRegular=createFormComponentLabel();
   scalarTypeContainer.add(labelIfRegular);
   final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(textField));
+  NamedFacet namedFacet=getModel().getFacet(NamedFacet.class);
+  if (namedFacet != null) {
+    scalarName.setEscapeModelStrings(namedFacet.escaped());
+  }
   final List<LinkAndLabel> entityActions=EntityActionUtil.getEntityActionLinksForAssociation(this.scalarModel,getDeploymentType());
   addPositioningCssTo(labelIfRegular,entityActions);
   if (getModel().isRequired()) {
