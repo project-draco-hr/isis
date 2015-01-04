@@ -16,7 +16,8 @@
       String email=emailField.getModelObject();
       String confirmationUrl=createUrl(email);
       emailService.init();
-      boolean emailSent=emailService.send(new EmailRegistrationEvent(email,confirmationUrl));
+      final EmailRegistrationEvent emailRegistrationEvent=new EmailRegistrationEvent(email,confirmationUrl,applicationName);
+      boolean emailSent=emailService.send(emailRegistrationEvent);
       if (emailSent) {
         Map<String,String> map=new HashMap<>();
         map.put("email",email);

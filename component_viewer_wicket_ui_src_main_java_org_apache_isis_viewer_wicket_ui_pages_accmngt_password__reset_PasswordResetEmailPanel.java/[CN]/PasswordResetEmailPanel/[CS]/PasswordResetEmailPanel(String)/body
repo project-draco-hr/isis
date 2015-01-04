@@ -14,7 +14,8 @@
       super.onSubmit();
       String email=emailField.getModelObject();
       String confirmationUrl=createUrl(email);
-      boolean emailSent=emailService.send(new PasswordResetEvent(email,confirmationUrl));
+      final PasswordResetEvent passwordResetEvent=new PasswordResetEvent(email,confirmationUrl,applicationName);
+      boolean emailSent=emailService.send(passwordResetEvent);
       if (emailSent) {
         Map<String,String> map=new HashMap<>();
         map.put("email",email);
