@@ -1,0 +1,15 @@
+{
+  final CollectionLayoutFactory facetFactory=new CollectionLayoutFactory();
+class Customer {
+    @SuppressWarnings("unused") @CollectionLayout(named="1st names") public SortedSet<String> getFirstNames(){
+      return Sets.newTreeSet();
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstNames");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  final NamedFacet facet=facetedMethod.getFacet(NamedFacet.class);
+  assertThat(facet,is(notNullValue()));
+  assertThat(facet,is(instanceOf(NamedFacetForCollectionLayoutAnnotation.class)));
+  assertThat(facet.value(),is(equalTo("1st names")));
+  assertThat(facet.escaped(),is(true));
+}
