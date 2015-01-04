@@ -1,15 +1,12 @@
 {
   boolean mailSent=true;
   try {
-    String senderEmailAddress=getSenderEmailAddress();
-    String senderEmailPasswd=getSenderEmailPassword();
-    Email email=new HtmlEmail();
-    email.setAuthenticator(new DefaultAuthenticator(senderEmailAddress,senderEmailPasswd));
+    final Email email=new HtmlEmail();
+    email.setAuthenticator(new DefaultAuthenticator(senderEmailAddress,senderEmailPassword));
     email.setHostName(getSenderEmailHostName());
-    Integer senderEmailPort=getSenderEmailPort();
     email.setSmtpPort(senderEmailPort);
     email.setStartTLSEnabled(getSenderEmailTlsEnabled());
-    Properties properties=email.getMailSession().getProperties();
+    final Properties properties=email.getMailSession().getProperties();
     properties.put("mail.smtps.auth","true");
     properties.put("mail.debug","true");
     properties.put("mail.smtps.port","" + senderEmailPort);
@@ -24,7 +21,7 @@
     email.send();
   }
  catch (  EmailException ex) {
-    LOGGER.error("An error occurred while trying to send an email about user email verification",ex);
+    LOG.error("An error occurred while trying to send an email about user email verification",ex);
     mailSent=false;
   }
   return mailSent;
