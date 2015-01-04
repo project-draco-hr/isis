@@ -1,0 +1,32 @@
+{
+  super(id);
+  addOrReplace(new NotificationPanel("feedback"));
+  StatelessForm<Void> form=new StatelessForm<>("signUpForm");
+  addOrReplace(form);
+  final RequiredTextField<String> emailField=new RequiredTextField<>("email",Model.of(""));
+  emailField.setLabel(new ResourceModel("emailLabel"));
+  emailField.add(EmailAddressValidator.getInstance());
+  emailField.add(EmailAvailableValidator.DOESNT_EXIST);
+  FormGroup formGroup=new FormGroup("formGroup",emailField);
+  form.add(formGroup);
+  formGroup.add(emailField);
+  Button signUpButton=new Button("signUp"){
+    @Override public void onSubmit(){
+      super.onSubmit();
+      String email=emailField.getModelObject();
+      String confirmationUrl=createUrl(email);
+      emailNotificationService.init();
+      emailService.init();
+      final EmailRegistrationEvent emailRegistrationEvent=new EmailRegistrationEvent(email,confirmationUrl,applicationName);
+      boolean emailSent=emailNotificationService.send(emailRegistrationEvent);
+      if (emailSent) {
+        Map<String,String> map=new HashMap<>();
+        map.put("email",email);
+        String emailSentMessage=getString("emailSentMessage",Model.ofMap(map));
+        success(emailSentMessage);
+      }
+    }
+  }
+;
+  form.add(signUpButton);
+}

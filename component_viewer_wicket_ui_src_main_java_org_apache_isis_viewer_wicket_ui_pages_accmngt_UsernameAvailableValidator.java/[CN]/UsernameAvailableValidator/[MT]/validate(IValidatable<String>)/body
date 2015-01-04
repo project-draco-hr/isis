@@ -1,0 +1,13 @@
+{
+  IsisContext.doInSession(new Runnable(){
+    @Override public void run(){
+      UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+      String username=validatable.getValue();
+      boolean usernameExists=userRegistrationService.usernameExists(username);
+      if (usernameExists) {
+        validatable.error(new ValidationError().addKey("usernameIsNotAvailable"));
+      }
+    }
+  }
+);
+}

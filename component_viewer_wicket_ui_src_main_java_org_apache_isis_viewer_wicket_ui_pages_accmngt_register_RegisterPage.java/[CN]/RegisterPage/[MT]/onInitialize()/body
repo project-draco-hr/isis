@@ -1,0 +1,19 @@
+{
+  super.onInitialize();
+  add(new NotificationPanel("feedback"));
+  final StringValue uuidValue=getPageParameters().get(0);
+  if (uuidValue.isEmpty()) {
+    goToSignUpPage();
+  }
+ else {
+    String uuid=uuidValue.toString();
+    AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+    final String email=accountConfirmationMap.get(uuid);
+    if (Strings.isEmpty(email)) {
+      goToSignUpPage();
+    }
+ else {
+      addOrReplace(new RegisterPanel("content",uuidValue.toString()));
+    }
+  }
+}

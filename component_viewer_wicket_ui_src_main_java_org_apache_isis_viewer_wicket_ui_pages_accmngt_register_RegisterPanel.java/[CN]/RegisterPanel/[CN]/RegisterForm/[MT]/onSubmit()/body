@@ -1,0 +1,18 @@
+{
+  final Registree registree=getModelObject();
+  IsisContext.doInSession(new Runnable(){
+    @Override public void run(){
+      final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+      IsisContext.getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
+        @Override public void execute(){
+          userRegistrationService.registerUser(registree.getUsername(),registree.getPassword(),registree.getEmail());
+          removeAccountConfirmation();
+        }
+      }
+);
+    }
+  }
+);
+  signIn(registree.getUsername(),registree.getPassword());
+  setResponsePage(getApplication().getHomePage());
+}
