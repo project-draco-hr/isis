@@ -1,13 +1,6 @@
 {
-  Class<? extends Page> signUpPageClass=pageClassRegistry.getPageClass(PageType.SIGN_UP);
+  final Class<? extends Page> signUpPageClass=pageClassRegistry.getPageClass(PageType.SIGN_UP);
   final BookmarkablePageLink<Void> signUpLink=new BookmarkablePageLink<>(id,signUpPageClass);
-  IsisContext.doInSession(new Runnable(){
-    @Override public void run(){
-      final UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
-      signUpLink.setVisibilityAllowed(userRegistrationService != null);
-    }
-  }
-);
-  IsisContext.closeSession();
+  setVisibilityAllowedBasedOnAvailableServices(signUpLink);
   getSignInForm().addOrReplace(signUpLink);
 }
