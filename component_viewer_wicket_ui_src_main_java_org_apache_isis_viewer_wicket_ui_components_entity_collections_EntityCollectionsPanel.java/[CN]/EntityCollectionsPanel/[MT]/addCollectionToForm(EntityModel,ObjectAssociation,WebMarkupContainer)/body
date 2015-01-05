@@ -9,6 +9,8 @@
   final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityModel,otma);
   fieldset.addOrReplace(collectionPanel);
   Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
+  final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
+  labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
   final String description=association.getDescription();
   if (description != null) {
     labelComponent.add(new AttributeAppender("title",Model.of(description)));
