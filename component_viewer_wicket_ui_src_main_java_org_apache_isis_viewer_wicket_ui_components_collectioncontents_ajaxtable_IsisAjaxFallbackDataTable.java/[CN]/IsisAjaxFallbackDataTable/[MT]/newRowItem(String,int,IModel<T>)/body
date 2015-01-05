@@ -4,10 +4,10 @@
       super.onComponentTag(tag);
       if (model instanceof EntityModel) {
         EntityModel entityModel=(EntityModel)model;
-        String cssClass=entityModel.getTypeOfSpecification().getCssClass(entityModel.getObject());
-        if (!Strings.isEmpty(cssClass)) {
-          tag.append("class",cssClass," ");
-        }
+        final ObjectAdapter objectAdapter=entityModel.getObject();
+        final ObjectSpecification typeOfSpecification=entityModel.getTypeOfSpecification();
+        String cssClass=typeOfSpecification.getCssClass(objectAdapter);
+        CssClassAppender.appendCssClassTo(tag,cssClass);
       }
     }
   }
