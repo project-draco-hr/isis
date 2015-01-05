@@ -1,0 +1,14 @@
+{
+  final ParameterLayoutFactory facetFactory=new ParameterLayoutFactory();
+class Customer {
+    @SuppressWarnings("unused") public void someAction(    @ParameterLayout(named=NAME,namedEscaped=false) final String foo){
+    }
+  }
+  final Method method=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  facetFactory.processParams(new FacetFactory.ProcessParameterContext(method,0,facetedMethodParameter));
+  final NamedFacet facet=facetedMethodParameter.getFacet(NamedFacet.class);
+  assertThat(facet,is(notNullValue()));
+  assertThat(facet,is(instanceOf(NamedFacetForParameterLayoutAnnotation.class)));
+  assertThat(facet.value(),is(equalTo(NAME)));
+  assertThat(facet.escaped(),is(false));
+}

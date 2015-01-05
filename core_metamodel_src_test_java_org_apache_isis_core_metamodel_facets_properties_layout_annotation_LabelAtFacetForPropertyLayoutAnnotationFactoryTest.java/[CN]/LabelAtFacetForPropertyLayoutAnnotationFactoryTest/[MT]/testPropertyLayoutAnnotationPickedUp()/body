@@ -8,8 +8,8 @@ class Customer {
   final Method method=findMethod(Customer.class,"getFirstName");
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(LabelAtFacet.class);
-  assertNotNull(facet);
-  assertTrue(facet instanceof LabelAtFacetForPropertyLayoutAnnotation);
+  assertThat(facet,is(notNullValue()));
+  assertThat(facet,is(instanceOf(LabelAtFacetForPropertyLayoutAnnotation.class)));
   final LabelAtFacetForPropertyLayoutAnnotation layoutAnnotation=(LabelAtFacetForPropertyLayoutAnnotation)facet;
-  assertEquals(LabelPosition.LEFT,layoutAnnotation.label());
+  assertThat(layoutAnnotation.label(),is(equalTo(LabelPosition.LEFT)));
 }
