@@ -23,7 +23,9 @@
         map.put("email",email);
         IModel<Map<String,String>> model=Model.ofMap(map);
         String emailSentMessage=getString("emailSentMessage",model);
-        success(emailSentMessage);
+        CookieUtils cookieUtils=new CookieUtils();
+        cookieUtils.save(AccountManagementPageAbstract.FEEDBACK_COOKIE_NAME,emailSentMessage);
+        goToSignInPage();
       }
     }
   }
