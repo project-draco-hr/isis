@@ -3,7 +3,12 @@
     @Override public void run(){
       final UserRegistrationService userRegistrationService=lookupService(UserRegistrationService.class);
       final EmailNotificationService emailNotificationService=lookupService(EmailNotificationService.class);
-      component.setVisibilityAllowed(userRegistrationService != null && emailNotificationService.isConfigured());
+      final boolean visibilityAllowed=userRegistrationService != null && emailNotificationService.isConfigured();
+      for (      final Component component : components) {
+        if (component.isVisibilityAllowed()) {
+          component.setVisibilityAllowed(visibilityAllowed);
+        }
+      }
     }
   }
 );
