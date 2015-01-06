@@ -6,6 +6,8 @@
   ScalarModel model=getModel();
   final CssClassFacet facet=model.getFacet(CssClassFacet.class);
   if (facet != null) {
-    CssClassAppender.appendCssClassTo(this,facet.value());
+    final ObjectAdapter parentAdapter=model.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.NO_CHECK);
+    final String cssClass=facet.cssClass(parentAdapter);
+    CssClassAppender.appendCssClassTo(this,cssClass);
   }
 }
