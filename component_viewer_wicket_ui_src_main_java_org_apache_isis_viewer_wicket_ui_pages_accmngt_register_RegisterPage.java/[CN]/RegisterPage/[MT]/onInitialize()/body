@@ -3,14 +3,14 @@
   add(new NotificationPanel("feedback"));
   final StringValue uuidValue=getPageParameters().get(0);
   if (uuidValue.isEmpty()) {
-    goToSignUpPage();
+    pageNavigationService.navigateTo(PageType.SIGN_IN);
   }
  else {
     String uuid=uuidValue.toString();
     AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
     final String email=accountConfirmationMap.get(uuid);
     if (Strings.isEmpty(email)) {
-      goToSignUpPage();
+      pageNavigationService.navigateTo(PageType.SIGN_IN);
     }
  else {
       addOrReplace(new RegisterPanel("content",uuidValue.toString()));
