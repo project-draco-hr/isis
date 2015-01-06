@@ -1,0 +1,14 @@
+{
+  pojo=new DomainObjectInCssClassMethod();
+  mockFacetHolder=mockery.mock(FacetHolder.class);
+  mockOwningAdapter=mockery.mock(ObjectAdapter.class);
+  final Method iconNameMethod=DomainObjectInCssClassMethod.class.getMethod("cssClass");
+  facet=new CssClassFacetMethod(iconNameMethod,mockFacetHolder);
+  mockery.checking(new Expectations(){
+{
+      allowing(mockOwningAdapter).getObject();
+      will(returnValue(pojo));
+    }
+  }
+);
+}
