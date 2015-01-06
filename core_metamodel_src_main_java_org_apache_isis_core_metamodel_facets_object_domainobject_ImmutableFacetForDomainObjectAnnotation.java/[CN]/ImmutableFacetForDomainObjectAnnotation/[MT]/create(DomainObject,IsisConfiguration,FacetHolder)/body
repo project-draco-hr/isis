@@ -1,16 +1,13 @@
 {
-  if (domainObject == null) {
-    return null;
-  }
-  final Editing editing=domainObject.editing();
-  final String disabledReason=domainObject.editingDisabledReason();
+  final Editing editing=domainObject != null ? domainObject.editing() : Editing.AS_CONFIGURED;
+  final String disabledReason=domainObject != null ? domainObject.editingDisabledReason() : "Disabled";
 switch (editing) {
 case AS_CONFIGURED:
     if (holder.containsDoOpFacet(ImmutableFacet.class)) {
       return null;
     }
   final EditingObjectsConfiguration setting=EditingObjectsConfiguration.parse(configuration);
-return setting == EditingObjectsConfiguration.NONE ? new ImmutableFacetForDomainObjectAnnotation(disabledReason,holder) : null;
+return setting == EditingObjectsConfiguration.FALSE ? new ImmutableFacetForDomainObjectAnnotation(disabledReason,holder) : null;
 case DISABLED:
 return new ImmutableFacetForDomainObjectAnnotation(disabledReason,holder);
 case ENABLED:

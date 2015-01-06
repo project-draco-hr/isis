@@ -2,6 +2,13 @@
   if (action == null) {
     return null;
   }
+  final ActionSemanticsFacet actionSemanticsFacet=holder.getFacet(ActionSemanticsFacet.class);
+  if (actionSemanticsFacet == null) {
+    throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
+  }
+  if (holder.containsDoOpFacet(CommandFacet.class)) {
+    return null;
+  }
   final Publishing publishing=action.publishing();
 switch (publishing) {
 case AS_CONFIGURED:
@@ -9,8 +16,12 @@ case AS_CONFIGURED:
 switch (setting) {
 case NONE:
     return null;
+case IGNORE_SAFE:
+  if (actionSemanticsFacet.value() == ActionSemantics.Of.SAFE) {
+    return null;
+  }
 default :
-  return new PublishedActionFacetForActionAnnotation(newPayloadFactory(action),holder);
+return new PublishedActionFacetForActionAnnotation(newPayloadFactory(action),holder);
 }
 case DISABLED:
 return null;
