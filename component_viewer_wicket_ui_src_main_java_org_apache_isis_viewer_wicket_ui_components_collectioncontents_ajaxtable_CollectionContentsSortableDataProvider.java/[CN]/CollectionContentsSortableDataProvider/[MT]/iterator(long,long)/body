@@ -1,4 +1,7 @@
 {
-  List<ObjectAdapter> adapters=sortedIfRequired(model.getObject(),this.getSort());
-  return adapters.subList((int)first,(int)(first + count)).iterator();
+  final List<ObjectAdapter> adapters=model.getObject();
+  final Iterable<ObjectAdapter> visibleAdapters=Iterables.filter(adapters,ignoreHidden());
+  final List<ObjectAdapter> sortedVisibleAdapters=sortedCopy(visibleAdapters,getSort());
+  final List<ObjectAdapter> pagedAdapters=subList(first,count,sortedVisibleAdapters);
+  return pagedAdapters.iterator();
 }

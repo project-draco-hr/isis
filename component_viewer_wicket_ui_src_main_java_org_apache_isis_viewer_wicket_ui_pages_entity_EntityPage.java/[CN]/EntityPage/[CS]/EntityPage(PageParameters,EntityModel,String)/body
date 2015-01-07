@@ -5,10 +5,13 @@
   try {
     objectAdapter=entityModel.getObject();
   }
- catch (  RuntimeException ex) {
+ catch (  final RuntimeException ex) {
     removeAnyBookmark(model);
     removeAnyBreadcrumb(model);
     throw new ObjectMember.AuthorizationException(ex);
+  }
+  if (!isVisible(objectAdapter)) {
+    throw new ObjectMember.AuthorizationException();
   }
   final AuthenticationSession session=getAuthenticationSession();
   final ObjectSpecification specification=objectAdapter.getSpecification();
@@ -20,7 +23,7 @@
     getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
   }
   if (titleString == null) {
-    String titleStr=objectAdapter.titleString(null);
+    final String titleStr=objectAdapter.titleString(null);
     setTitle(titleStr);
   }
   addChildComponents(themeDiv,model);
