@@ -8,6 +8,16 @@
           if (throwableMessage != null && throwableMessage.contains(message)) {
             return false;
           }
+          if (throwable instanceof JDODataStoreException) {
+            final JDODataStoreException jdoDataStoreException=(JDODataStoreException)throwable;
+            final Throwable[] nestedExceptions=jdoDataStoreException.getNestedExceptions();
+            for (            Throwable nestedException : nestedExceptions) {
+              final String nestedThrowableMessage=nestedException.getMessage();
+              if (nestedThrowableMessage != null && nestedThrowableMessage.contains(message)) {
+                return false;
+              }
+            }
+          }
         }
       }
       return true;
