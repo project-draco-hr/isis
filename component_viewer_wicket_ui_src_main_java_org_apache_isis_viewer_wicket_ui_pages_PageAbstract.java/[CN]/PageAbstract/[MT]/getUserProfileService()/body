@@ -2,8 +2,16 @@
   final UserProfileService userProfileService=lookupService(UserProfileService.class);
   return new UserProfileService(){
     @Override public String userProfileName(){
-      final String userProfileName=userProfileService != null ? userProfileService.userProfileName() : null;
-      return userProfileName != null ? userProfileName : getAuthenticationSession().getUserName();
+      if (PageAbstract.this instanceof ErrorPage) {
+        return getAuthenticationSession().getUserName();
+      }
+      try {
+        final String userProfileName=userProfileService != null ? userProfileService.userProfileName() : null;
+        return userProfileName != null ? userProfileName : getAuthenticationSession().getUserName();
+      }
+ catch (      final Exception e) {
+        return getAuthenticationSession().getUserName();
+      }
     }
   }
 ;
