@@ -6,7 +6,7 @@
   contributeThemeSpecificOverrides(response);
   response.render(JavaScriptReferenceHeaderItem.forReference(JQUERY_LIVEQUERY_JS));
   response.render(JavaScriptReferenceHeaderItem.forReference(JQUERY_ISIS_WICKET_VIEWER_JS));
-  JGrowlBehaviour jGrowlBehaviour=new JGrowlBehaviour();
+  final JGrowlBehaviour jGrowlBehaviour=new JGrowlBehaviour();
   jGrowlBehaviour.renderFeedbackMessages(response);
   if (applicationCss != null) {
     response.render(CssReferenceHeaderItem.forUrl(applicationCss));
@@ -14,9 +14,7 @@
   if (applicationJs != null) {
     response.render(JavaScriptReferenceHeaderItem.forUrl(applicationJs));
   }
-  WebClientInfo clientInfo=WebSession.get().getClientInfo();
-  ClientProperties properties=clientInfo.getProperties();
-  if (!(properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() < 9)) {
-    response.render(JavaScriptHeaderItem.forReference(BootlintJavaScriptReference.INSTANCE));
+  if (isModernBrowser()) {
+    addBootLint(response);
   }
 }
