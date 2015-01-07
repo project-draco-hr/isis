@@ -1,5 +1,10 @@
 {
   final UserProfileService userProfileService=lookupService(UserProfileService.class);
-  final String userProfileName=getAuthenticationSession().getUserName();
-  return userProfileService != null ? userProfileService : new UserProfileService.Default(userProfileName);
+  return new UserProfileService(){
+    @Override public String userProfileName(){
+      final String userProfileName=userProfileService != null ? userProfileService.userProfileName() : null;
+      return userProfileName != null ? userProfileName : getAuthenticationSession().getUserName();
+    }
+  }
+;
 }
