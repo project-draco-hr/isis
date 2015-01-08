@@ -1,6 +1,6 @@
 {
   AdapterManagerDefault adapterManager=IsisContext.getPersistenceSession().getAdapterManager();
-  ObjectAdapter objectAdapter=adapterManager.adapterFor(pojo);
+  ObjectAdapter objectAdapter=adapterManager.adapterFor(domainObject);
   PageParameters pageParameters=EntityModel.createPageParameters(objectAdapter);
   final Class<? extends Page> pageClass=pageClassRegistry.getPageClass(PageType.ENTITY);
   RequestCycle requestCycle=RequestCycle.get();
@@ -10,6 +10,6 @@
     return new URI(fullUrl);
   }
  catch (  URISyntaxException x) {
-    throw new RuntimeException("Cannot create a deeplink to object: " + pojo,x);
+    throw new RuntimeException("Cannot create a deep link to domain object: " + domainObject,x);
   }
 }
