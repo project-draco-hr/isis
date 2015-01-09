@@ -3,10 +3,10 @@
   final FacetHolder holder=processMethodContext.getFacetHolder();
   final Collection collection=Annotations.getAnnotation(method,Collection.class);
   final CollectionInteraction collectionInteraction=Annotations.getAnnotation(method,CollectionInteraction.class);
-  final Class<? extends CollectionInteractionEvent<?,?>> collectionInteractionEventType;
+  final Class<? extends CollectionDomainEvent<?,?>> collectionInteractionEventType;
   final CollectionInteractionFacetAbstract collectionInteractionFacet;
-  if (collection != null && collection.interaction() != null) {
-    collectionInteractionEventType=collection.interaction();
+  if (collection != null && collection.domainEvent() != null) {
+    collectionInteractionEventType=collection.domainEvent();
     collectionInteractionFacet=new CollectionInteractionFacetForCollectionAnnotation(collectionInteractionEventType,servicesInjector,getSpecificationLoader(),holder);
   }
  else   if (collectionInteraction != null) {
@@ -14,7 +14,7 @@
     collectionInteractionFacet=new CollectionInteractionFacetAnnotation(collectionInteractionEventType,servicesInjector,getSpecificationLoader(),holder);
   }
  else {
-    collectionInteractionEventType=CollectionInteractionEvent.Default.class;
+    collectionInteractionEventType=CollectionDomainEvent.Default.class;
     collectionInteractionFacet=new CollectionInteractionFacetDefault(collectionInteractionEventType,servicesInjector,getSpecificationLoader(),holder);
   }
   FacetUtil.addFacet(collectionInteractionFacet);

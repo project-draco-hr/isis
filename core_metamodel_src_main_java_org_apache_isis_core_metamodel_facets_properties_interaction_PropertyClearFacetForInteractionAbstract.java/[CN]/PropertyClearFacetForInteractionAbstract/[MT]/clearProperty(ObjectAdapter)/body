@@ -7,18 +7,18 @@
     return;
   }
   try {
-    final PropertyInteractionEvent<?,?> existingEvent=propertyInteractionFacet.currentInteraction.get();
+    final PropertyDomainEvent<?,?> existingEvent=propertyDomainEventFacet.currentInteraction.get();
     final Object oldValue=getterFacet.getProperty(targetAdapter);
-    interactionHelper.postEventForProperty(value(),existingEvent,AbstractInteractionEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,null);
+    interactionHelper.postEventForProperty(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,null);
     clearFacet.clearProperty(targetAdapter);
     final Object actualNewValue=getterFacet.getProperty(targetAdapter);
     if (Objects.equal(oldValue,actualNewValue)) {
       return;
     }
-    final PropertyInteractionEvent<?,?> event=propertyInteractionFacet.currentInteraction.get();
+    final PropertyDomainEvent<?,?> event=propertyDomainEventFacet.currentInteraction.get();
     interactionHelper.postEventForProperty(value(),verify(event),AbstractInteractionEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
   }
   finally {
-    propertyInteractionFacet.currentInteraction.set(null);
+    propertyDomainEventFacet.currentInteraction.set(null);
   }
 }
