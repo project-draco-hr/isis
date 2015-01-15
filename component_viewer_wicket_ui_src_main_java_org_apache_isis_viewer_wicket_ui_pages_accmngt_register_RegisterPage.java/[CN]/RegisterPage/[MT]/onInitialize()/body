@@ -13,7 +13,13 @@
       pageNavigationService.navigateTo(PageType.SIGN_IN);
     }
  else {
-      addOrReplace(new RegisterPanel("content",uuidValue.toString()));
+      UserDetails userDetails=newUserDetails();
+      addOrReplace(new RegisterPanel("content",userDetails,uuidValue.toString()){
+        @Override protected MarkupContainer newExtraFieldsContainer(        String id){
+          return RegisterPage.this.newExtraFieldsContainer(id);
+        }
+      }
+);
     }
   }
 }

@@ -2,5 +2,11 @@
   AuthenticationRequest authenticationRequest=new AuthenticationRequestPassword(username,password);
   authenticationRequest.setRoles(Arrays.asList(USER_ROLE));
   authenticationSession=getAuthenticationManager().authenticate(authenticationRequest);
-  return authenticationSession != null;
+  if (authenticationSession != null) {
+    log(SessionLoggingService.Type.LOGIN,username,SessionLoggingService.CausedBy.USER);
+    return true;
+  }
+ else {
+    return false;
+  }
 }
