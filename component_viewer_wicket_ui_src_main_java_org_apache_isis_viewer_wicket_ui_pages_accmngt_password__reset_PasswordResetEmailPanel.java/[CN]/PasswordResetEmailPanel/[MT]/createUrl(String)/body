@@ -5,7 +5,8 @@
   accountConfirmationMap.put(uuid,email);
   PageParameters parameters=new PageParameters();
   parameters.set(0,uuid);
-  CharSequence relativeUrl=urlFor(PasswordResetPage.class,parameters);
+  Class<? extends Page> passwordResetPage=pageClassRegistry.getPageClass(PageType.PASSWORD_RESET);
+  CharSequence relativeUrl=urlFor(passwordResetPage,parameters);
   UrlRenderer urlRenderer=getRequestCycle().getUrlRenderer();
   String fullUrl=urlRenderer.renderFullUrl(Url.parse(relativeUrl));
   return fullUrl;
