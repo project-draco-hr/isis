@@ -3,7 +3,8 @@
   if (sessionLoggingService != null) {
     IsisContext.doInSession(new Runnable(){
       @Override public void run(){
-        sessionLoggingService.log(type,username,new Date(),causedBy);
+        int sessionHashCode=System.identityHashCode(AuthenticatedWebSessionForIsis.this);
+        sessionLoggingService.log(type,username,new Date(),causedBy,Integer.toString(sessionHashCode));
       }
     }
 );
