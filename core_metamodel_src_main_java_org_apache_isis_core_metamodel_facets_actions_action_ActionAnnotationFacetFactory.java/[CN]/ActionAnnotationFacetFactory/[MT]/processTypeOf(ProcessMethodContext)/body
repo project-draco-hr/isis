@@ -1,2 +1,62 @@
 {
+  final Method method=processMethodContext.getMethod();
+  final Action action=Annotations.getAnnotation(method,Action.class);
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  final Class<?> methodReturnType=method.getReturnType();
+  if (!collectionTypeRegistry.isCollectionType(methodReturnType) && !collectionTypeRegistry.isArrayType(methodReturnType)) {
+    return;
+  }
+  final Class<?> returnType=method.getReturnType();
+  if (returnType.isArray()) {
+    final Class<?> componentType=returnType.getComponentType();
+    FacetUtil.addFacet(new TypeOfFacetInferredFromArray(componentType,holder,getSpecificationLoader()));
+    return;
+  }
+  if (action != null) {
+    final Class<?> typeOf=action.typeOf();
+    if (typeOf != null && typeOf != Object.class) {
+      FacetUtil.addFacet(new TypeOfFacetForActionAnnotation(typeOf,getSpecificationLoader(),holder));
+      return;
+    }
+  }
+  final TypeOf annotation=Annotations.getAnnotation(method,TypeOf.class);
+  if (annotation != null) {
+    FacetUtil.addFacet(new TypeOfFacetOnActionAnnotation(annotation.value(),getSpecificationLoader(),holder));
+    return;
+  }
+  final Type type=method.getGenericReturnType();
+  if (!(type instanceof ParameterizedType)) {
+    return;
+  }
+  final ParameterizedType methodParameterizedType=(ParameterizedType)type;
+  final Type[] methodActualTypeArguments=methodParameterizedType.getActualTypeArguments();
+  if (methodActualTypeArguments.length == 0) {
+    return;
+  }
+  final Object methodActualTypeArgument=methodActualTypeArguments[0];
+  if (methodActualTypeArgument instanceof Class) {
+    final Class<?> actualType=(Class<?>)methodActualTypeArgument;
+    FacetUtil.addFacet(new TypeOfFacetInferredFromGenerics(actualType,holder,getSpecificationLoader()));
+    return;
+  }
+  if (methodActualTypeArgument instanceof TypeVariable) {
+    TypeVariable<?> methodTypeVariable=(TypeVariable<?>)methodActualTypeArgument;
+    final GenericDeclaration methodGenericClassDeclaration=methodTypeVariable.getGenericDeclaration();
+    final Type genericSuperclass=processMethodContext.getCls().getGenericSuperclass();
+    if (genericSuperclass instanceof ParameterizedType) {
+      final ParameterizedType parameterizedTypeOfSuperclass=(ParameterizedType)genericSuperclass;
+      if (parameterizedTypeOfSuperclass.getRawType() == methodGenericClassDeclaration) {
+        final Type[] genericSuperClassActualTypeArguments=parameterizedTypeOfSuperclass.getActualTypeArguments();
+        if (methodActualTypeArguments.length == 1) {
+          final Type actualType=genericSuperClassActualTypeArguments[0];
+          if (actualType instanceof Class) {
+            Class<?> actualCls=(Class<?>)actualType;
+            FacetUtil.addFacet(new TypeOfFacetInferredFromGenerics(actualCls,holder,getSpecificationLoader()));
+            return;
+          }
+        }
+      }
+    }
+    return;
+  }
 }

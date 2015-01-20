@@ -1,2 +1,45 @@
 {
+  final Method actionMethod=processMethodContext.getMethod();
+  try {
+    final Class<?> returnType=actionMethod.getReturnType();
+    final ObjectSpecification returnSpec=getSpecificationLoader().loadSpecification(returnType);
+    if (returnSpec == null) {
+      return;
+    }
+    final Class<?> cls=processMethodContext.getCls();
+    final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
+    final FacetHolder holder=processMethodContext.getFacetHolder();
+    final Action action=Annotations.getAnnotation(actionMethod,Action.class);
+    final ActionInteraction actionInteraction=Annotations.getAnnotation(actionMethod,ActionInteraction.class);
+    final Class<? extends ActionDomainEvent<?>> actionInteractionEventType;
+    final ActionInteractionFacetAbstract actionInteractionFacet;
+    if (action != null && action.domainEvent() != null) {
+      actionInteractionEventType=action.domainEvent();
+      actionInteractionFacet=new ActionInteractionFacetForActionAnnotation(actionInteractionEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+ else     if (actionInteraction != null) {
+      actionInteractionEventType=actionInteraction.value();
+      actionInteractionFacet=new ActionInteractionFacetAnnotation(actionInteractionEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+ else {
+      actionInteractionEventType=ActionDomainEvent.Default.class;
+      actionInteractionFacet=new ActionInteractionFacetDefault(actionInteractionEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+    FacetUtil.addFacet(actionInteractionFacet);
+    final PostsActionInvokedEvent postsActionInvokedEvent=Annotations.getAnnotation(actionMethod,PostsActionInvokedEvent.class);
+    final ActionInvocationFacetForInteractionAbstract actionInvocationFacet;
+    if (actionInteraction != null) {
+      actionInvocationFacet=new ActionInvocationFacetForActionInteractionAnnotation(actionInteractionEventType,actionMethod,typeSpec,returnSpec,actionInteractionFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+ else     if (postsActionInvokedEvent != null) {
+      actionInvocationFacet=new ActionInvocationFacetForPostsActionInvokedEventAnnotation(postsActionInvokedEvent.value(),actionMethod,typeSpec,returnSpec,actionInteractionFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+ else {
+      actionInvocationFacet=new ActionInvocationFacetForActionInteractionDefault(ActionDomainEvent.Default.class,actionMethod,typeSpec,returnSpec,actionInteractionFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+    FacetUtil.addFacet(actionInvocationFacet);
+  }
+  finally {
+    processMethodContext.removeMethod(actionMethod);
+  }
 }
