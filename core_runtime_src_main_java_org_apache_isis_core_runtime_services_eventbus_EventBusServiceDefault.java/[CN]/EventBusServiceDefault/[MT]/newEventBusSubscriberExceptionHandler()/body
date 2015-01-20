@@ -2,14 +2,14 @@
   return new SubscriberExceptionHandler(){
     @Override public void handleException(    Throwable exception,    SubscriberExceptionContext context){
       Object event=context.getEvent();
-      if (!(event instanceof AbstractInteractionEvent)) {
+      if (!(event instanceof AbstractDomainEvent)) {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Ignoring exception '%s' (%s), not a subclass of AbstractInteractionEvent",exception.getMessage(),exception.getClass().getName());
+          LOG.debug("Ignoring exception '%s' (%s), not a subclass of AbstractDomainEvent",exception.getMessage(),exception.getClass().getName());
         }
         return;
       }
-      final AbstractInteractionEvent<?> interactionEvent=(AbstractInteractionEvent<?>)event;
-      final AbstractDomainEvent.Phase phase=interactionEvent.getPhase();
+      final AbstractDomainEvent<?> interactionEvent=(AbstractDomainEvent<?>)event;
+      final AbstractDomainEvent.Phase phase=interactionEvent.getEventPhase();
 switch (phase) {
 case HIDE:
         LOG.warn("Exception thrown during HIDE phase, to be safe will veto (hide) the interaction event, msg='{}', class='{}'",exception.getMessage(),exception.getClass().getName());
