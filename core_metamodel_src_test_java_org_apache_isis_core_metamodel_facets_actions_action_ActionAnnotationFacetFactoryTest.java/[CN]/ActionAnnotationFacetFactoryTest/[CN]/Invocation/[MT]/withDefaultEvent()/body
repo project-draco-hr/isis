@@ -1,0 +1,18 @@
+{
+class Customer {
+    public void someAction(){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  allowingLoadSpecificationRequestsFor(cls,actionMethod.getReturnType());
+  expectRemoveMethod(actionMethod);
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processInvocation(processMethodContext);
+  final Facet domainEventFacet=facetedMethod.getFacet(ActionDomainEventFacet.class);
+  Assert.assertNotNull(domainEventFacet);
+  Assert.assertTrue(domainEventFacet instanceof ActionDomainEventFacetDefault);
+  final Facet invocationFacet=facetedMethod.getFacet(ActionInvocationFacet.class);
+  Assert.assertNotNull(invocationFacet);
+  Assert.assertTrue(invocationFacet instanceof ActionInvocationFacetForDomainEventFromDefault);
+}

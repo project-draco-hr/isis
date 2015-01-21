@@ -9,8 +9,9 @@
     final Class<?> cls=processMethodContext.getCls();
     final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
     final FacetHolder holder=processMethodContext.getFacetHolder();
-    final Action action=Annotations.getAnnotation(actionMethod,Action.class);
+    final PostsActionInvokedEvent postsActionInvokedEvent=Annotations.getAnnotation(actionMethod,PostsActionInvokedEvent.class);
     final ActionInteraction actionInteraction=Annotations.getAnnotation(actionMethod,ActionInteraction.class);
+    final Action action=Annotations.getAnnotation(actionMethod,Action.class);
     final Class<? extends ActionDomainEvent<?>> actionDomainEventType;
     final ActionDomainEventFacetAbstract actionDomainEventFacet;
     if (actionInteraction != null) {
@@ -26,7 +27,6 @@
       actionDomainEventFacet=new ActionDomainEventFacetDefault(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
     }
     FacetUtil.addFacet(actionDomainEventFacet);
-    final PostsActionInvokedEvent postsActionInvokedEvent=Annotations.getAnnotation(actionMethod,PostsActionInvokedEvent.class);
     final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;
     if (postsActionInvokedEvent != null) {
       final Class<? extends ActionInvokedEvent<?>> actionInvokedEventType=postsActionInvokedEvent.value();

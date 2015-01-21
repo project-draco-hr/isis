@@ -1,25 +1,25 @@
 {
   recordEvent(ev);
-switch (ev.getPhase()) {
+switch (ev.getEventPhase()) {
 case HIDE:
     if (getSubscriberBehaviour() == Behaviour.DependenciesCollectionHide && ev.getIdentifier().getMemberName().equals("dependencies")) {
-      ev.hide();
+      ev.veto("");
     }
   if (getSubscriberBehaviour() == Behaviour.SimilarToCollectionHide && ev.getIdentifier().getMemberName().equals("similarTo")) {
-    ev.hide();
+    ev.veto("");
   }
 break;
 case DISABLE:
 if (getSubscriberBehaviour() == Behaviour.DependenciesCollectionDisable && ev.getIdentifier().getMemberName().equals("dependencies")) {
-ev.disable("ToDoItemSubscriptions says: dependencies collection disabled!");
+ev.veto("ToDoItemSubscriptions says: dependencies collection disabled!");
 }
 break;
 case VALIDATE:
 if (getSubscriberBehaviour() == Behaviour.DependenciesCollectionInvalidateAdd && ev.getIdentifier().getMemberName().equals("dependencies") && ev.getOf() == CollectionDomainEvent.Of.ADD_TO) {
-ev.invalidate("ToDoItemSubscriptions says: can't add this object to dependencies collection!");
+ev.veto("ToDoItemSubscriptions says: can't add this object to dependencies collection!");
 }
 if (getSubscriberBehaviour() == Behaviour.DependenciesCollectionInvalidateRemove && ev.getIdentifier().getMemberName().equals("dependencies") && ev.getOf() == CollectionDomainEvent.Of.REMOVE_FROM) {
-ev.invalidate("ToDoItemSubscriptions says: can't remove this object from dependencies collection!");
+ev.veto("ToDoItemSubscriptions says: can't remove this object from dependencies collection!");
 }
 break;
 case EXECUTING:
@@ -31,7 +31,7 @@ LOG.info("Received CollectionInteractionEvent, " + ev.getSource().toString() + "
  else {
 LOG.info("Received CollectionInteractionEvent, " + ev.getSource().toString() + ", removed from "+ ev.getIdentifier().getMemberName()+ " : "+ ev.getValue());
 }
-onExecutedVetoIfRequired();
+onExecutedThrowExceptionIfSet(ev);
 break;
 }
 }
