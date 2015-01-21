@@ -1,0 +1,33 @@
+{
+  final CommandReification command=action != null ? action.command() : CommandReification.AS_CONFIGURED;
+  final CommandPersistence commandPersistence=action != null ? action.commandPersistence() : CommandPersistence.PERSISTED;
+  final CommandExecuteIn commandExecuteIn=action != null ? action.commandExecuteIn() : CommandExecuteIn.FOREGROUND;
+  final Persistence persistence=CommandPersistence.from(commandPersistence);
+  final ExecuteIn executeIn=CommandExecuteIn.from(commandExecuteIn);
+switch (command) {
+case AS_CONFIGURED:
+    final ActionSemanticsFacet actionSemanticsFacet=holder.getFacet(ActionSemanticsFacet.class);
+  if (actionSemanticsFacet == null) {
+    throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
+  }
+if (holder.containsDoOpFacet(CommandFacet.class)) {
+  return null;
+}
+final ActionConfiguration setting=ActionConfiguration.parse(configuration);
+switch (setting) {
+case NONE:
+return null;
+case IGNORE_SAFE:
+if (actionSemanticsFacet.value() == ActionSemantics.Of.SAFE) {
+return null;
+}
+default :
+return action != null ? new CommandFacetForActionAnnotation(persistence,executeIn,Enablement.ENABLED,holder) : CommandFacetFromConfiguration.create(holder);
+}
+case DISABLED:
+return null;
+case ENABLED:
+return new CommandFacetForActionAnnotation(persistence,executeIn,Enablement.ENABLED,holder);
+}
+return null;
+}

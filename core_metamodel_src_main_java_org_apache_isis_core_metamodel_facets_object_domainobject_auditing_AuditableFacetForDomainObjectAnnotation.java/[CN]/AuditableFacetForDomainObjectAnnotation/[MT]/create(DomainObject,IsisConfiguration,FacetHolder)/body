@@ -1,0 +1,18 @@
+{
+  final Auditing auditing=domainObject != null ? domainObject.auditing() : Auditing.AS_CONFIGURED;
+switch (auditing) {
+case AS_CONFIGURED:
+    final AuditObjectsConfiguration setting=AuditObjectsConfiguration.parse(configuration);
+switch (setting) {
+case NONE:
+    return null;
+default :
+  return domainObject != null ? new AuditableFacetForDomainObjectAnnotationAsConfigured(holder) : new AuditableFacetFromConfiguration(holder);
+}
+case DISABLED:
+return null;
+case ENABLED:
+return new AuditableFacetForDomainObjectAnnotation(Enablement.ENABLED,holder);
+}
+return null;
+}

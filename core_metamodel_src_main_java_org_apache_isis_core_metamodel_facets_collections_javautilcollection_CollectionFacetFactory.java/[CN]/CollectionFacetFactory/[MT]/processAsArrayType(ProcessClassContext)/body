@@ -1,5 +1,8 @@
 {
-  final FacetHolder facetHolder=processClassContaxt.getFacetHolder();
-  facetHolder.addFacet(new JavaArrayFacet(facetHolder,getAdapterManager()));
-  facetHolder.addFacet(new TypeOfFacetInferredFromArray(processClassContaxt.getCls().getComponentType(),facetHolder,getSpecificationLoader()));
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final CollectionFacet collectionFacet=new JavaArrayFacet(facetHolder,getAdapterManager());
+  facetHolder.addFacet(collectionFacet);
+  final TypeOfFacet typeOfFacet=new TypeOfFacetInferredFromArray(cls.getComponentType(),facetHolder,getSpecificationLoader());
+  facetHolder.addFacet(typeOfFacet);
 }

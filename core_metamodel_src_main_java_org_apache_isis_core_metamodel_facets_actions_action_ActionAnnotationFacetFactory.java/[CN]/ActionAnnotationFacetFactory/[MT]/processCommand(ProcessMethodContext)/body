@@ -7,28 +7,11 @@
   if (HasTransactionId.class.isAssignableFrom(processMethodContext.getCls())) {
     return;
   }
-  final ActionSemanticsFacet actionSemanticsFacet=facetHolder.getFacet(ActionSemanticsFacet.class);
-  if (actionSemanticsFacet == null) {
-    throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
-  }
-  if (facetHolder.containsDoOpFacet(CommandFacet.class)) {
-    return;
-  }
   CommandFacet commandFacet;
   final Command annotation=Annotations.getAnnotation(method,Command.class);
-  commandFacet=CommandFacetAnnotation.create(annotation,processMethodContext.getFacetHolder());
+  commandFacet=CommandFacetForCommandAnnotation.create(annotation,processMethodContext.getFacetHolder());
   if (commandFacet == null) {
     commandFacet=CommandFacetForActionAnnotation.create(action,configuration,holder);
-  }
-  if (commandFacet == null) {
-    final ActionConfiguration setting=ActionConfiguration.parse(configuration);
-    if (setting == ActionConfiguration.NONE) {
-      return;
-    }
-    if (actionSemanticsFacet.value() == ActionSemantics.Of.SAFE && setting == ActionConfiguration.IGNORE_SAFE) {
-      return;
-    }
-    commandFacet=CommandFacetFromConfiguration.create(facetHolder);
   }
   FacetUtil.addFacet(commandFacet);
 }

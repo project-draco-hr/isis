@@ -1,7 +1,8 @@
 {
-  allowingConfigurationToReturn("isis.objects.editing","all");
+  allowingConfigurationToReturn("isis.objects.editing","true");
   facetFactory.process(new ProcessClassContext(CustomerWithDomainObjectAndEditingSetToDisabled.class,null,mockMethodRemover,facetHolder));
-  final Facet facet=facetHolder.getFacet(AuditableFacet.class);
-  Assert.assertNull(facet);
+  final Facet facet=facetHolder.getFacet(ImmutableFacet.class);
+  Assert.assertNotNull(facet);
+  Assert.assertTrue(facet instanceof ImmutableFacetForDomainObjectAnnotation);
   expectNoMethodsRemoved();
 }

@@ -1,0 +1,22 @@
+{
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  final Method method=processMethodContext.getMethod();
+  final Type type=method.getGenericReturnType();
+  if (!(type instanceof ParameterizedType)) {
+    return null;
+  }
+  final ParameterizedType parameterizedType=(ParameterizedType)type;
+  final Type[] actualTypeArguments=parameterizedType.getActualTypeArguments();
+  if (actualTypeArguments.length == 0) {
+    return null;
+  }
+  final Object actualTypeArgument=actualTypeArguments[0];
+  if (actualTypeArgument instanceof Class) {
+    final Class<?> actualType=(Class<?>)actualTypeArgument;
+    return new TypeOfFacetInferredFromGenerics(actualType,facetHolder,getSpecificationLoader());
+  }
+  if (actualTypeArgument instanceof TypeVariable) {
+    return null;
+  }
+  return null;
+}
