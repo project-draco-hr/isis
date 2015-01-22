@@ -1,0 +1,22 @@
+{
+class Customer {
+    @Property(hidden=Where.REFERENCES_PARENT) public String getName(){
+      return null;
+    }
+    public void setName(    final String name){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  propertyMethod=findMethod(Customer.class,"getName");
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processHidden(processMethodContext);
+  final HiddenFacet hiddenFacet=facetedMethod.getFacet(HiddenFacet.class);
+  Assert.assertNotNull(hiddenFacet);
+  Assert.assertTrue(hiddenFacet instanceof HiddenFacetForPropertyAnnotation);
+  HiddenFacetForPropertyAnnotation hiddenFacetImpl=(HiddenFacetForPropertyAnnotation)hiddenFacet;
+  assertThat(hiddenFacetImpl.where(),is(Where.REFERENCES_PARENT));
+  assertThat(hiddenFacetImpl.when(),is(When.ALWAYS));
+  final Facet hiddenFacetForProp=facetedMethod.getFacet(HiddenFacetForPropertyAnnotation.class);
+  Assert.assertNotNull(hiddenFacetForProp);
+  Assert.assertTrue(hiddenFacet == hiddenFacetForProp);
+}

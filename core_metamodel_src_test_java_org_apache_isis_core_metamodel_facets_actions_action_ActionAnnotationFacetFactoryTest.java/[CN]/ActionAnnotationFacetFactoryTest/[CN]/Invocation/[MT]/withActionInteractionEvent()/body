@@ -17,7 +17,11 @@ class SomeActionInvoked extends ActionInteractionEvent<Customer> {
   final Facet domainEventFacet=facetedMethod.getFacet(ActionDomainEventFacet.class);
   Assert.assertNotNull(domainEventFacet);
   Assert.assertTrue(domainEventFacet instanceof ActionDomainEventFacetForActionInteractionAnnotation);
+  final ActionDomainEventFacetForActionInteractionAnnotation domainEventFacetImpl=(ActionDomainEventFacetForActionInteractionAnnotation)domainEventFacet;
+  assertThat(domainEventFacetImpl.getEventType(),classEqualTo(Customer.SomeActionInvoked.class));
   final Facet invocationFacet=facetedMethod.getFacet(ActionInvocationFacet.class);
   Assert.assertNotNull(invocationFacet);
   Assert.assertTrue(invocationFacet instanceof ActionInvocationFacetForDomainEventFromActionInteractionAnnotation);
+  final ActionInvocationFacetForDomainEventFromActionInteractionAnnotation invocationFacetImpl=(ActionInvocationFacetForDomainEventFromActionInteractionAnnotation)invocationFacet;
+  assertThat(invocationFacetImpl.getEventType(),classEqualTo(Customer.SomeActionInvoked.class));
 }

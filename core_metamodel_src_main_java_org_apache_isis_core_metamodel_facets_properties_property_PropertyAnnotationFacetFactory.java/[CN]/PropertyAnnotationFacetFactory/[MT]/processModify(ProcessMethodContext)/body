@@ -1,10 +1,11 @@
 {
   final Method method=processMethodContext.getMethod();
-  FacetedMethod holder=processMethodContext.getFacetHolder();
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
   final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
   if (getterFacet == null) {
     return;
   }
+  final PostsPropertyChangedEvent postsPropertyChangedEvent=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);
   final Property property=Annotations.getAnnotation(method,Property.class);
   final PropertyInteraction propertyInteraction=Annotations.getAnnotation(method,PropertyInteraction.class);
   final Class<? extends PropertyDomainEvent<?,?>> propertyDomainEventType;
@@ -22,12 +23,12 @@
     propertyDomainEventFacet=new PropertyDomainEventFacetDefault(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
   }
   FacetUtil.addFacet(propertyDomainEventFacet);
-  final PostsPropertyChangedEvent postsPropertyChangedEvent=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);
   final PropertySetterFacet setterFacet=holder.getFacet(PropertySetterFacet.class);
   if (setterFacet != null) {
     final PropertySetterFacetForDomainEventAbstract replacementFacet;
     if (postsPropertyChangedEvent != null) {
-      replacementFacet=new PropertySetterFacetForPostsPropertyChangedEventAnnotation(postsPropertyChangedEvent.value(),getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
+      final Class<? extends PropertyChangedEvent<?,?>> propertySetEventType=postsPropertyChangedEvent.value();
+      replacementFacet=new PropertySetterFacetForPostsPropertyChangedEventAnnotation(propertySetEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
     }
  else     if (propertyInteraction != null) {
       replacementFacet=new PropertySetterFacetForDomainEventFromPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
@@ -36,7 +37,7 @@
       replacementFacet=new PropertySetterFacetForDomainEventFromPropertyAnnotation(propertyDomainEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
     }
  else {
-      replacementFacet=new PropertySetterFacetForDomainEventFromDefault(PropertyDomainEvent.Default.class,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
+      replacementFacet=new PropertySetterFacetForDomainEventFromDefault(propertyDomainEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
     }
     FacetUtil.addFacet(replacementFacet);
   }
@@ -44,7 +45,8 @@
   if (clearFacet != null) {
     final PropertyClearFacetForDomainEventAbstract replacementFacet;
     if (postsPropertyChangedEvent != null) {
-      replacementFacet=new PropertyClearFacetForPostsPropertyChangedEventAnnotation(postsPropertyChangedEvent.value(),getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
+      final Class<? extends PropertyChangedEvent<?,?>> propertyClearEventType=postsPropertyChangedEvent.value();
+      replacementFacet=new PropertyClearFacetForPostsPropertyChangedEventAnnotation(propertyClearEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
     }
  else     if (propertyInteraction != null) {
       replacementFacet=new PropertyClearFacetForDomainEventFromPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
@@ -53,7 +55,7 @@
       replacementFacet=new PropertyClearFacetForDomainEventFromPropertyAnnotation(propertyDomainEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
     }
  else {
-      replacementFacet=new PropertyClearFacetForDomainEventFromDefault(PropertyDomainEvent.Default.class,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
+      replacementFacet=new PropertyClearFacetForDomainEventFromDefault(propertyDomainEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
     }
     FacetUtil.addFacet(replacementFacet);
   }

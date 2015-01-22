@@ -1,0 +1,35 @@
+{
+class Customer {
+class NamedChanged extends PropertyChangedEvent<Customer,String> {
+      public NamedChanged(      final Customer source,      final String oldValue,      final String newValue){
+        super(source,oldValue,newValue);
+      }
+    }
+    @PostsPropertyChangedEvent(Customer.NamedChanged.class) public String getName(){
+      return null;
+    }
+    public void setName(    final String name){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  propertyMethod=findMethod(Customer.class,"getName");
+  addGetterFacet(facetedMethod);
+  addSetterFacet(facetedMethod);
+  addClearFacet(facetedMethod);
+  allowingLoadSpecificationRequestsFor(cls,propertyMethod.getReturnType());
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processModify(processMethodContext);
+  final Facet domainEventFacet=facetedMethod.getFacet(PropertyDomainEventFacet.class);
+  Assert.assertNotNull(domainEventFacet);
+  Assert.assertTrue(domainEventFacet instanceof PropertyDomainEventFacetDefault);
+  final Facet setterFacet=facetedMethod.getFacet(PropertySetterFacet.class);
+  Assert.assertNotNull(setterFacet);
+  Assert.assertTrue(setterFacet instanceof PropertySetterFacetForPostsPropertyChangedEventAnnotation);
+  PropertySetterFacetForPostsPropertyChangedEventAnnotation setterFacetImpl=(PropertySetterFacetForPostsPropertyChangedEventAnnotation)setterFacet;
+  assertThat(setterFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
+  final Facet clearFacet=facetedMethod.getFacet(PropertyClearFacet.class);
+  Assert.assertNotNull(clearFacet);
+  Assert.assertTrue(clearFacet instanceof PropertyClearFacetForPostsPropertyChangedEventAnnotation);
+  PropertyClearFacetForPostsPropertyChangedEventAnnotation clearFacetImpl=(PropertyClearFacetForPostsPropertyChangedEventAnnotation)clearFacet;
+  assertThat(clearFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
+}

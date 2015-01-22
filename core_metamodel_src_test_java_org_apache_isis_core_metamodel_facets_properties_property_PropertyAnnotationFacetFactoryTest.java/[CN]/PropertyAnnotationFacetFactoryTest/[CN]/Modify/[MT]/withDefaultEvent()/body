@@ -1,0 +1,32 @@
+{
+class Customer {
+    public String getName(){
+      return null;
+    }
+    public void setName(    final String name){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  propertyMethod=findMethod(Customer.class,"getName");
+  addGetterFacet(facetedMethod);
+  addSetterFacet(facetedMethod);
+  addClearFacet(facetedMethod);
+  allowingLoadSpecificationRequestsFor(cls,propertyMethod.getReturnType());
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processModify(processMethodContext);
+  final Facet domainEventFacet=facetedMethod.getFacet(PropertyDomainEventFacet.class);
+  Assert.assertNotNull(domainEventFacet);
+  Assert.assertTrue(domainEventFacet instanceof PropertyDomainEventFacetDefault);
+  PropertyDomainEventFacetDefault domainEventFacetImpl=(PropertyDomainEventFacetDefault)domainEventFacet;
+  assertThat(domainEventFacetImpl.value(),classEqualTo(PropertyDomainEvent.Default.class));
+  final Facet setterFacet=facetedMethod.getFacet(PropertySetterFacet.class);
+  Assert.assertNotNull(setterFacet);
+  Assert.assertTrue(setterFacet instanceof PropertySetterFacetForDomainEventFromDefault);
+  PropertySetterFacetForDomainEventFromDefault setterFacetImpl=(PropertySetterFacetForDomainEventFromDefault)setterFacet;
+  assertThat(setterFacetImpl.value(),classEqualTo(PropertyDomainEvent.Default.class));
+  final Facet clearFacet=facetedMethod.getFacet(PropertyClearFacet.class);
+  Assert.assertNotNull(clearFacet);
+  Assert.assertTrue(clearFacet instanceof PropertyClearFacetForDomainEventFromDefault);
+  PropertyClearFacetForDomainEventFromDefault clearFacetImpl=(PropertyClearFacetForDomainEventFromDefault)clearFacet;
+  assertThat(clearFacetImpl.value(),classEqualTo(PropertyDomainEvent.Default.class));
+}

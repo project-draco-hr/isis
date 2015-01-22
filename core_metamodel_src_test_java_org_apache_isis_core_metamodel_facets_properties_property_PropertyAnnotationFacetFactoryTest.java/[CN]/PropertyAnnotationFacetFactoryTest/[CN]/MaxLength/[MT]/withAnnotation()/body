@@ -1,0 +1,17 @@
+{
+class Customer {
+    @Property(maxLength=30) public String getName(){
+      return null;
+    }
+    public void setName(    final String name){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  propertyMethod=findMethod(Customer.class,"getName");
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processMaxLength(processMethodContext);
+  final MaxLengthFacet maxLengthFacet=facetedMethod.getFacet(MaxLengthFacet.class);
+  Assert.assertNotNull(maxLengthFacet);
+  Assert.assertTrue(maxLengthFacet instanceof MaxLengthFacetForPropertyAnnotation);
+  assertThat(maxLengthFacet.value(),is(30));
+}
