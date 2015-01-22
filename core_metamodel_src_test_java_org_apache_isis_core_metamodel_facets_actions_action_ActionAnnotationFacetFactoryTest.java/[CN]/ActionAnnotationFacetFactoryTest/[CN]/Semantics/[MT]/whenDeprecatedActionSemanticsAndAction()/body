@@ -1,0 +1,13 @@
+{
+class Customer {
+    @ActionSemantics(Of.SAFE) @Action(semantics=SemanticsOf.IDEMPOTENT) public void someAction(){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processSemantics(processMethodContext);
+  final ActionSemanticsFacet facet=facetedMethod.getFacet(ActionSemanticsFacet.class);
+  Assert.assertNotNull(facet);
+  assertThat(facet.value(),is(Of.SAFE));
+}

@@ -1,0 +1,9 @@
+{
+  facetFactory.process(new ProcessClassContext(CustomerWithDomainObjectAndObjectTypeSet.class,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(ObjectSpecIdFacet.class);
+  Assert.assertNotNull(facet);
+  Assert.assertTrue(facet instanceof ObjectSpecIdFacetForDomainObjectAnnotation);
+  final ObjectSpecIdFacetForDomainObjectAnnotation facetForDomainObjectAnnotation=(ObjectSpecIdFacetForDomainObjectAnnotation)facet;
+  assertThat(facetForDomainObjectAnnotation.value(),is(ObjectSpecId.of("CUS")));
+  expectNoMethodsRemoved();
+}

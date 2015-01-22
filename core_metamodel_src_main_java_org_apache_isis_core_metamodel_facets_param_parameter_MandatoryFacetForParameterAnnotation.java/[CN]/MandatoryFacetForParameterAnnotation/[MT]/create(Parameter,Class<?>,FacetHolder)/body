@@ -1,0 +1,18 @@
+{
+  if (parameter == null) {
+    return null;
+  }
+  if (parameterType.isPrimitive()) {
+    return new MandatoryFacetForParameterAnnotation.Primitive(holder);
+  }
+  final Optionality optionality=parameter.optional();
+switch (optionality) {
+case DEFAULT:
+    return null;
+case FALSE:
+  return new MandatoryFacetForParameterAnnotation.Required(holder);
+case TRUE:
+return new MandatoryFacetForParameterAnnotation.Optional(holder);
+}
+return null;
+}

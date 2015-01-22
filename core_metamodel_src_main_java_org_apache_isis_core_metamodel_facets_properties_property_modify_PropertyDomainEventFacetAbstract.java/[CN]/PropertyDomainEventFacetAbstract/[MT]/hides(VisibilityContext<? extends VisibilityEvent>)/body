@@ -1,0 +1,11 @@
+{
+  if (!domainEventHelper.hasEventBusService()) {
+    return null;
+  }
+  currentInteraction.set(null);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(eventType(),null,AbstractDomainEvent.Phase.HIDE,getIdentified(),ic.getTarget(),null,null);
+  if (event != null && event.isHidden()) {
+    return "Hidden by subscriber";
+  }
+  return null;
+}

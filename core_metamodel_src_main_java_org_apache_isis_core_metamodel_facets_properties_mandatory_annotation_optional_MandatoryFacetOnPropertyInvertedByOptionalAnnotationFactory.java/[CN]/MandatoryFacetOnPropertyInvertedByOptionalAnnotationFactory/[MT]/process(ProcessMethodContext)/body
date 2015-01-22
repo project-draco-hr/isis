@@ -1,11 +1,9 @@
 {
-  final Class<?> returnType=processMethodContext.getMethod().getReturnType();
-  if (returnType.isPrimitive()) {
+  final Method method=processMethodContext.getMethod();
+  final Optional annotation=Annotations.getAnnotation(method,Optional.class);
+  if (annotation == null) {
     return;
   }
-  if (!Annotations.isAnnotationPresent(processMethodContext.getMethod(),Optional.class)) {
-    return;
-  }
-  final Optional annotation=Annotations.getAnnotation(processMethodContext.getMethod(),Optional.class);
-  FacetUtil.addFacet(create(annotation,processMethodContext.getFacetHolder()));
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  FacetUtil.addFacet(MandatoryFacetOnPropertyInvertedByOptionalAnnotation.create(annotation,method,facetHolder));
 }

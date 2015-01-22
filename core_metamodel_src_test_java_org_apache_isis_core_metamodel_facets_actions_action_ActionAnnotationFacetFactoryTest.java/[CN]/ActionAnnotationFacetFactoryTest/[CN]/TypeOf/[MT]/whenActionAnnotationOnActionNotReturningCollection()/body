@@ -1,0 +1,15 @@
+{
+class Order {
+  }
+class Customer {
+    @Action(typeOf=Order.class) public Customer someAction(){
+      return null;
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processTypeOf(processMethodContext);
+  final TypeOfFacet facet=facetedMethod.getFacet(TypeOfFacet.class);
+  Assert.assertNull(facet);
+}

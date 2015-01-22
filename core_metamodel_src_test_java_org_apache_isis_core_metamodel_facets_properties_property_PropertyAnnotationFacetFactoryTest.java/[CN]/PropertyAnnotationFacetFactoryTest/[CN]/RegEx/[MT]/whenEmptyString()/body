@@ -1,0 +1,15 @@
+{
+class Customer {
+    @Property(regexPattern="") public String getName(){
+      return null;
+    }
+    public void setName(    final String name){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  propertyMethod=findMethod(Customer.class,"getName");
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processRegEx(processMethodContext);
+  final RegExFacet regExFacet=facetedMethod.getFacet(RegExFacet.class);
+  Assert.assertNull(regExFacet);
+}

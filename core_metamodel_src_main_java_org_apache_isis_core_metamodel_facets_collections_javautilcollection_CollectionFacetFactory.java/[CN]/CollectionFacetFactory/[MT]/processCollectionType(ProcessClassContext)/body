@@ -1,0 +1,12 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  TypeOfFacet typeOfFacet=facetHolder.getFacet(TypeOfFacet.class);
+  if (typeOfFacet == null) {
+    final Class<?> collectionElementType=collectionElementType(cls);
+    typeOfFacet=collectionElementType != Object.class ? new TypeOfFacetInferredFromGenerics(collectionElementType,facetHolder,getSpecificationLoader()) : new TypeOfFacetDefaultToObject(facetHolder,getSpecificationLoader());
+    facetHolder.addFacet(typeOfFacet);
+  }
+  final CollectionFacet collectionFacet=new JavaCollectionFacet(facetHolder,getAdapterManager());
+  facetHolder.addFacet(collectionFacet);
+}

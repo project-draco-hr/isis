@@ -1,0 +1,16 @@
+{
+  try {
+    final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+    final Command command=commandContext != null ? commandContext.getCommand() : null;
+    final ActionDomainEvent<?> existingEvent=ActionDomainEventFacetAbstract.currentInteraction.get();
+    final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(eventType,existingEvent,command,AbstractDomainEvent.Phase.EXECUTING,owningAction,targetAdapter,arguments);
+    final InvocationResult invocationResult=internalInvoke(command,owningAction,targetAdapter,arguments);
+    if (invocationResult.getWhetherInvoked()) {
+      domainEventHelper.postEventForAction(eventType,verify(event),command,AbstractDomainEvent.Phase.EXECUTED,owningAction,targetAdapter,arguments);
+    }
+    return invocationResult.getAdapter();
+  }
+  finally {
+    ActionDomainEventFacetAbstract.currentInteraction.set(null);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  final Class<?> cls=Customer.class;
+  facetFactory.process(new FacetFactory.ProcessClassContext(cls,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(PagedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PagedFacetForDomainObjectLayoutAnnotation);
+  final PagedFacetForDomainObjectLayoutAnnotation facetImpl=(PagedFacetForDomainObjectLayoutAnnotation)facet;
+  Assert.assertThat(facetImpl.value(),is(20));
+  expectNoMethodsRemoved();
+}

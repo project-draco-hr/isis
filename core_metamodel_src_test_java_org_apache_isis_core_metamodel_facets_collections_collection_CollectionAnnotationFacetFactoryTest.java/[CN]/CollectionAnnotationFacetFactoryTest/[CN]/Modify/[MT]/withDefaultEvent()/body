@@ -1,0 +1,34 @@
+{
+class Order {
+  }
+class Customer {
+    public List<Order> getOrders(){
+      return null;
+    }
+    public void setOrders(    final List<Order> orders){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  collectionMethod=findMethod(Customer.class,"getOrders");
+  addGetterFacet(facetedMethod);
+  addAddToFacet(facetedMethod);
+  addRemoveFromFacet(facetedMethod);
+  allowingLoadSpecificationRequestsFor(cls,collectionMethod.getReturnType());
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,collectionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processModify(processMethodContext);
+  final Facet domainEventFacet=facetedMethod.getFacet(CollectionDomainEventFacet.class);
+  Assert.assertNotNull(domainEventFacet);
+  Assert.assertTrue(domainEventFacet instanceof CollectionDomainEventFacetDefault);
+  final CollectionDomainEventFacetDefault domainEventFacetImpl=(CollectionDomainEventFacetDefault)domainEventFacet;
+  assertThat(domainEventFacetImpl.value(),classEqualTo(CollectionDomainEvent.Default.class));
+  final Facet addToFacet=facetedMethod.getFacet(CollectionAddToFacet.class);
+  Assert.assertNotNull(addToFacet);
+  Assert.assertTrue(addToFacet instanceof CollectionAddToFacetForDomainEventFromDefault);
+  final CollectionAddToFacetForDomainEventFromDefault addToFacetImpl=(CollectionAddToFacetForDomainEventFromDefault)addToFacet;
+  assertThat(addToFacetImpl.value(),classEqualTo(CollectionDomainEvent.Default.class));
+  final Facet removeFromFacet=facetedMethod.getFacet(CollectionRemoveFromFacet.class);
+  Assert.assertNotNull(removeFromFacet);
+  Assert.assertTrue(removeFromFacet instanceof CollectionRemoveFromFacetForDomainEventFromDefault);
+  final CollectionRemoveFromFacetForDomainEventFromDefault removeFromFacetImpl=(CollectionRemoveFromFacetForDomainEventFromDefault)removeFromFacet;
+  assertThat(removeFromFacetImpl.value(),classEqualTo(CollectionDomainEvent.Default.class));
+}

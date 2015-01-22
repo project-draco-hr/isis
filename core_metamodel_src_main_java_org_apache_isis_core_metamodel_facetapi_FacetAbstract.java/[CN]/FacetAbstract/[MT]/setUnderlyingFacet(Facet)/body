@@ -1,6 +1,15 @@
 {
   if (underlyingFacet != null) {
-    Ensure.ensureThatArg(underlyingFacet.facetType(),IsisMatchers.classEqualTo(facetType));
+    if (underlyingFacet instanceof MultiTypedFacet) {
+      final MultiTypedFacet multiTypedFacet=(MultiTypedFacet)underlyingFacet;
+      final boolean matches=compatible(multiTypedFacet);
+      if (!matches) {
+        throw new IllegalArgumentException("illegal argument, expected underlying facet (a multi-valued facet) to have equivalent to the facet type (or facet types) of this facet");
+      }
+    }
+ else {
+      Ensure.ensureThatArg(underlyingFacet.facetType(),IsisMatchers.classEqualTo(facetType));
+    }
   }
   this.underlyingFacet=underlyingFacet;
 }

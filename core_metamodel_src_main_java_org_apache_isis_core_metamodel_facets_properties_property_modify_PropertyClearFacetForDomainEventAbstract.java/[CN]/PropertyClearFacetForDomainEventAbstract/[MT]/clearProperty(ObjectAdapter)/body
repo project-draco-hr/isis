@@ -1,0 +1,24 @@
+{
+  if (clearFacet == null) {
+    return;
+  }
+  if (!domainEventHelper.hasEventBusService()) {
+    clearFacet.clearProperty(targetAdapter);
+    return;
+  }
+  try {
+    final PropertyDomainEvent<?,?> existingEvent=propertyDomainEventFacet.currentInteraction.get();
+    final Object oldValue=getterFacet.getProperty(targetAdapter);
+    domainEventHelper.postEventForProperty(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,null);
+    clearFacet.clearProperty(targetAdapter);
+    final Object actualNewValue=getterFacet.getProperty(targetAdapter);
+    if (Objects.equal(oldValue,actualNewValue)) {
+      return;
+    }
+    final PropertyDomainEvent<?,?> event=propertyDomainEventFacet.currentInteraction.get();
+    domainEventHelper.postEventForProperty(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
+  }
+  finally {
+    propertyDomainEventFacet.currentInteraction.set(null);
+  }
+}

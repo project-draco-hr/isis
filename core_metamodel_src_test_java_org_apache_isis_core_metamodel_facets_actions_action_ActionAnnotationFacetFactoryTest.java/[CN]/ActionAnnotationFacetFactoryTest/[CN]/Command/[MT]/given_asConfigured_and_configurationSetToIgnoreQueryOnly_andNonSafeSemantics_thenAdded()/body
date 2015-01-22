@@ -1,0 +1,17 @@
+{
+class Customer {
+    @Action(command=CommandReification.AS_CONFIGURED,commandPersistence=CommandPersistence.IF_HINTED,commandExecuteIn=CommandExecuteIn.BACKGROUND) public void someAction(){
+    }
+  }
+  allowingCommandConfigurationToReturn("ignoreQueryOnly");
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetedMethod.addFacet(new ActionSemanticsFacetAbstract(Of.IDEMPOTENT,facetedMethod){
+  }
+);
+  facetFactory.processCommand(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CommandFacet.class);
+  assertNotNull(facet);
+  final CommandFacetForActionAnnotationAsConfigured facetImpl=(CommandFacetForActionAnnotationAsConfigured)facet;
+  assertThat(facetImpl.persistence(),is(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED));
+  assertThat(facetImpl.executeIn(),is(org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND));
+}

@@ -1,0 +1,21 @@
+{
+class Customer {
+    @Property(mustSatisfy={NotTooHot.class,NotTooCold.class}) public String getName(){
+      return null;
+    }
+    public void setName(    final String name){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  propertyMethod=findMethod(Customer.class,"getName");
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processMustSatisfy(processMethodContext);
+  final MustSatisfySpecificationFacet mustSatisfySpecificationFacet=facetedMethod.getFacet(MustSatisfySpecificationFacet.class);
+  Assert.assertNotNull(mustSatisfySpecificationFacet);
+  Assert.assertTrue(mustSatisfySpecificationFacet instanceof MustSatisfySpecificationFacetForPropertyAnnotation);
+  final MustSatisfySpecificationFacetForPropertyAnnotation mustSatisfySpecificationFacetImpl=(MustSatisfySpecificationFacetForPropertyAnnotation)mustSatisfySpecificationFacet;
+  final List<Specification> specifications=mustSatisfySpecificationFacetImpl.getSpecifications();
+  assertThat(specifications.size(),is(2));
+  assertTrue(specifications.get(0) instanceof NotTooHot);
+  assertTrue(specifications.get(1) instanceof NotTooCold);
+}
