@@ -2,7 +2,7 @@
   if (setterFacet == null) {
     return;
   }
-  if (!interactionHelper.hasEventBusService()) {
+  if (!domainEventHelper.hasEventBusService()) {
     setterFacet.setProperty(targetAdapter,newValueAdapter);
     return;
   }
@@ -10,14 +10,14 @@
     final PropertyDomainEvent<?,?> existingEvent=propertyDomainEventFacet.currentInteraction.get();
     final Object oldValue=getterFacet.getProperty(targetAdapter);
     final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
-    interactionHelper.postEventForProperty(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,newValue);
+    domainEventHelper.postEventForProperty(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,newValue);
     setterFacet.setProperty(targetAdapter,newValueAdapter);
     final Object actualNewValue=getterFacet.getProperty(targetAdapter);
     if (Objects.equal(oldValue,actualNewValue)) {
       return;
     }
     final PropertyDomainEvent<?,?> event=propertyDomainEventFacet.currentInteraction.get();
-    interactionHelper.postEventForProperty(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
+    domainEventHelper.postEventForProperty(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
   }
   finally {
     propertyDomainEventFacet.currentInteraction.set(null);

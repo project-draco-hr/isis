@@ -1,0 +1,13 @@
+{
+  allowingPublishingConfigurationToReturn("ignoreQueryOnly");
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetedMethod.addFacet(new ActionSemanticsFacetAbstract(Of.IDEMPOTENT,facetedMethod){
+  }
+);
+  facetFactory.processPublishing(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PublishedActionFacet.class);
+  assertNotNull(facet);
+  final PublishedActionFacetFromConfiguration facetImpl=(PublishedActionFacetFromConfiguration)facet;
+  final PublishedAction.PayloadFactory payloadFactory=facetImpl.value();
+  assertThat(payloadFactory,is(nullValue()));
+}

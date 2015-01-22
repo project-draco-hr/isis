@@ -6,23 +6,20 @@
   final ExecuteIn executeIn=CommandExecuteIn.from(commandExecuteIn);
 switch (command) {
 case AS_CONFIGURED:
-    final ActionSemanticsFacet actionSemanticsFacet=holder.getFacet(ActionSemanticsFacet.class);
-  if (actionSemanticsFacet == null) {
-    throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
-  }
-if (holder.containsDoOpFacet(CommandFacet.class)) {
-  return null;
-}
-final ActionConfiguration setting=ActionConfiguration.parse(configuration);
+    final CommandActionsConfiguration setting=CommandActionsConfiguration.parse(configuration);
 switch (setting) {
 case NONE:
-return null;
+    return null;
 case IGNORE_SAFE:
+  final ActionSemanticsFacet actionSemanticsFacet=holder.getFacet(ActionSemanticsFacet.class);
+if (actionSemanticsFacet == null) {
+  throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
+}
 if (actionSemanticsFacet.value() == ActionSemantics.Of.SAFE) {
 return null;
 }
 default :
-return action != null ? new CommandFacetForActionAnnotation(persistence,executeIn,Enablement.ENABLED,holder) : CommandFacetFromConfiguration.create(holder);
+return action != null ? new CommandFacetForActionAnnotationAsConfigured(persistence,executeIn,Enablement.ENABLED,holder) : CommandFacetFromConfiguration.create(holder);
 }
 case DISABLED:
 return null;

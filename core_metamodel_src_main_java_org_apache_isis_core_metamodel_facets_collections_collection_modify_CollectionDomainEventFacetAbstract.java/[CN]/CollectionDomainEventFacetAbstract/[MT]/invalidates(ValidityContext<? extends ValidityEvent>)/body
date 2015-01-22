@@ -1,11 +1,11 @@
 {
-  if (!interactionHelper.hasEventBusService()) {
+  if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
   currentInteraction.set(null);
   final ProposedHolder catc=(ProposedHolder)ic;
   final Object proposed=catc.getProposed().getObject();
-  final CollectionDomainEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),null,AbstractDomainEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ADD_TO,proposed);
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(eventType(),null,AbstractDomainEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ADD_TO,proposed);
   if (event != null && event.isInvalid()) {
     return event.getInvalidityReason();
   }

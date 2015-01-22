@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Action(command=CommandReification.ENABLED) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  allowingCommandConfigurationToReturn("none");
+  facetFactory.processCommand(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CommandFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CommandFacetForActionAnnotation);
+}

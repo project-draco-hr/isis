@@ -5,8 +5,7 @@ class Customer {
   }
   final Method actionMethod=findMethod(Customer.class,"someAction");
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
-  final Facet facet=facetedMethod.getFacet(HiddenFacet.class);
-  final HiddenFacetAbstract hiddenFacetAbstract=(HiddenFacetAbstract)facet;
-  assertEquals(Where.PARENTED_TABLES,hiddenFacetAbstract.where());
-  assertEquals(When.UNTIL_PERSISTED,hiddenFacetAbstract.when());
+  final HiddenFacetOnMemberAnnotation facet=facetedMethod.getFacet(HiddenFacetOnMemberAnnotation.class);
+  assertEquals(Where.PARENTED_TABLES,facet.where());
+  assertEquals(When.UNTIL_PERSISTED,facet.when());
 }

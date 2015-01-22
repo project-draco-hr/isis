@@ -1,0 +1,14 @@
+{
+class Customer {
+    @Action(command=CommandReification.AS_CONFIGURED) public void someAction(){
+    }
+  }
+  allowingCommandConfigurationToReturn("ignoreQueryOnly");
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetedMethod.addFacet(new ActionSemanticsFacetAbstract(Of.SAFE,facetedMethod){
+  }
+);
+  facetFactory.processCommand(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CommandFacet.class);
+  assertNull(facet);
+}

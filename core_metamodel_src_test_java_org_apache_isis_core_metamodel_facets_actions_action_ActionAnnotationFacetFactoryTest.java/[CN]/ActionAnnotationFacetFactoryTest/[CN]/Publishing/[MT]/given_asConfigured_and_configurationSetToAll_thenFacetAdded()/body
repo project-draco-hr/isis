@@ -1,0 +1,18 @@
+{
+class Customer {
+    @Action(publishing=org.apache.isis.applib.annotation.Publishing.AS_CONFIGURED,publishingPayloadFactory=CustomerSomeActionPublishingPayloadFactory.class) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  allowingPublishingConfigurationToReturn("all");
+  facetFactory.processPublishing(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PublishedActionFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PublishedActionFacetForActionAnnotation);
+  final PublishedActionFacetForActionAnnotation facetImpl=(PublishedActionFacetForActionAnnotation)facet;
+  final PublishedAction.PayloadFactory payloadFactory=facetImpl.value();
+  assertThat(payloadFactory,instanceOf(PublishedActionFacetAbstract.LegacyAdapter.class));
+  final PublishedActionFacetAbstract.LegacyAdapter legacyAdapter=(PublishedActionFacetAbstract.LegacyAdapter)payloadFactory;
+  assertThat(legacyAdapter.getPayloadFactory(),instanceOf(CustomerSomeActionPublishingPayloadFactory.class));
+  expectNoMethodsRemoved();
+}

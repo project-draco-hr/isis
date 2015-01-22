@@ -2,7 +2,7 @@
   if (this.collectionRemoveFromFacet == null) {
     return;
   }
-  if (!interactionHelper.hasEventBusService()) {
+  if (!domainEventHelper.hasEventBusService()) {
     collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter);
     return;
   }
@@ -13,9 +13,9 @@
       return;
     }
     final CollectionDomainEvent<?,?> existingEvent=collectionDomainEventFacet.currentInteraction.get();
-    final CollectionDomainEvent<?,?> event=interactionHelper.postEventForCollection(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,CollectionDomainEvent.Of.REMOVE_FROM,referencedObject);
+    final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,CollectionDomainEvent.Of.REMOVE_FROM,referencedObject);
     collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter);
-    interactionHelper.postEventForCollection(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,CollectionDomainEvent.Of.REMOVE_FROM,referencedObject);
+    domainEventHelper.postEventForCollection(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,CollectionDomainEvent.Of.REMOVE_FROM,referencedObject);
   }
   finally {
     collectionDomainEventFacet.currentInteraction.set(null);

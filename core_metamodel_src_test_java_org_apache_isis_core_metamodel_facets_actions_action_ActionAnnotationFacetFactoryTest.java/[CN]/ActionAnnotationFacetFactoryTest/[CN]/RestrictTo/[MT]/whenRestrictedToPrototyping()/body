@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Action(restrictTo=org.apache.isis.applib.annotation.RestrictTo.PROTOTYPING) public void someAction(){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processRestrictTo(processMethodContext);
+  final PrototypeFacet facet=facetedMethod.getFacet(PrototypeFacet.class);
+  Assert.assertNotNull(facet);
+}

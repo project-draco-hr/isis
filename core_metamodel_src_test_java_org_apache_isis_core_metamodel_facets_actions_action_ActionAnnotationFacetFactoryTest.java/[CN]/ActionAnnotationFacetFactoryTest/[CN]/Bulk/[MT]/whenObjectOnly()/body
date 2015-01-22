@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Action(invokeOn=InvokeOn.OBJECT_ONLY) public void someAction(){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processInvokeOn(processMethodContext);
+  final BulkFacet facet=facetedMethod.getFacet(BulkFacet.class);
+  assertNull(facet);
+}

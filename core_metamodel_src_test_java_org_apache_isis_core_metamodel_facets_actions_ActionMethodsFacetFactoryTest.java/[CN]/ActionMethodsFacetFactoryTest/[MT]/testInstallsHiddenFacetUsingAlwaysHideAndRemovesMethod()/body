@@ -5,10 +5,8 @@
   final Method alwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideSomeAction",new Class[]{});
   programmableReflector.setLoadSpecificationStringReturn(voidSpec);
   facetFactory.process(new ProcessMethodContext(CustomerStatic.class,null,null,actionMethod,methodRemover,facetedMethod));
-  final Facet facet=facetedMethod.getFacet(HiddenFacet.class);
+  final HiddenFacetOnStaticMethod facet=facetedMethod.getFacet(HiddenFacetOnStaticMethod.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof HiddenFacetAbstract);
-  final HiddenFacetAbstract hiddenFacetAbstract=(HiddenFacetAbstract)facet;
-  assertEquals(When.ALWAYS,hiddenFacetAbstract.when());
+  assertEquals(When.ALWAYS,facet.when());
   assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(alwaysHideMethod));
 }

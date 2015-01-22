@@ -2,7 +2,7 @@
   if (this.collectionAddToFacet == null) {
     return;
   }
-  if (!interactionHelper.hasEventBusService()) {
+  if (!domainEventHelper.hasEventBusService()) {
     collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
     return;
   }
@@ -16,9 +16,9 @@
       }
     }
     final CollectionDomainEvent<?,?> existingEvent=collectionDomainEventFacet.currentInteraction.get();
-    final CollectionDomainEvent<?,?> event=interactionHelper.postEventForCollection(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
+    final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
     collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
-    interactionHelper.postEventForCollection(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
+    domainEventHelper.postEventForCollection(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
   }
   finally {
     collectionDomainEventFacet.currentInteraction.set(null);

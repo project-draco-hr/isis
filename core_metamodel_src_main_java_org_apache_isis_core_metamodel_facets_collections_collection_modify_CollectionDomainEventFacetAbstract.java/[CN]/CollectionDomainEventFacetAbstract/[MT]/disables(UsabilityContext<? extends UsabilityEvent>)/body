@@ -1,9 +1,9 @@
 {
-  if (!interactionHelper.hasEventBusService()) {
+  if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
   currentInteraction.set(null);
-  final CollectionDomainEvent<?,?> event=interactionHelper.postEventForCollection(eventType(),null,AbstractDomainEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ACCESS,null);
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(eventType(),null,AbstractDomainEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ACCESS,null);
   if (event != null && event.isDisabled()) {
     return event.getDisabledReason();
   }

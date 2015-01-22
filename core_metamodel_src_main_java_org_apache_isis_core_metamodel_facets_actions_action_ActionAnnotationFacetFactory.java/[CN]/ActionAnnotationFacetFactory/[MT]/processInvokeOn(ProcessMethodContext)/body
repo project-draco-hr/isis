@@ -2,11 +2,11 @@
   final Method method=processMethodContext.getMethod();
   final Action action=Annotations.getAnnotation(method,Action.class);
   final FacetHolder holder=processMethodContext.getFacetHolder();
-  BulkFacet bulkFacet;
+  BulkFacet facet;
   final Bulk annotation=Annotations.getAnnotation(method,Bulk.class);
-  bulkFacet=BulkFacetAnnotation.create(annotation,holder);
-  if (bulkFacet == null) {
-    bulkFacet=BulkFacetForActionAnnotation.create(action,holder);
+  facet=BulkFacetForBulkAnnotation.create(annotation,holder);
+  if (facet == null) {
+    facet=BulkFacetForActionAnnotation.create(action,holder);
   }
-  FacetUtil.addFacet(bulkFacet);
+  FacetUtil.addFacet(facet);
 }
