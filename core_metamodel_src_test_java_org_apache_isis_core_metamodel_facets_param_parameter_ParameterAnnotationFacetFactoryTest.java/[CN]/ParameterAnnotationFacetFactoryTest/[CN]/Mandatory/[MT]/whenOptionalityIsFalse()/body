@@ -1,0 +1,12 @@
+{
+class Customer {
+    public void someAction(    @Parameter(optional=Optionality.FALSE) final String name){
+    }
+  }
+  actionMethod=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  final FacetFactory.ProcessParameterContext processParameterContext=new FacetFactory.ProcessParameterContext(actionMethod,0,facetedMethodParameter);
+  facetFactory.processParams(processParameterContext);
+  final MandatoryFacet mandatoryFacet=facetedMethodParameter.getFacet(MandatoryFacet.class);
+  Assert.assertNotNull(mandatoryFacet);
+  Assert.assertTrue(mandatoryFacet instanceof MandatoryFacetForParameterAnnotation.Required);
+}
