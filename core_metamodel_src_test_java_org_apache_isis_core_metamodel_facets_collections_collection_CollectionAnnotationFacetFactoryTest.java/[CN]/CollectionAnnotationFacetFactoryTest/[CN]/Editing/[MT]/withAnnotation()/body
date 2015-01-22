@@ -1,0 +1,22 @@
+{
+class Order {
+  }
+class Customer {
+    @Collection(editing=org.apache.isis.applib.annotation.Editing.DISABLED,editingDisabledReason="you cannot edit the orders collection") public List<Order> getOrders(){
+      return null;
+    }
+    public void setOrders(    final List<Order> orders){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  collectionMethod=findMethod(Customer.class,"getOrders");
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,collectionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processEditing(processMethodContext);
+  final DisabledFacet disabledFacet=facetedMethod.getFacet(DisabledFacet.class);
+  Assert.assertNotNull(disabledFacet);
+  Assert.assertTrue(disabledFacet instanceof DisabledFacetForCollectionAnnotation);
+  final DisabledFacetForCollectionAnnotation disabledFacetImpl=(DisabledFacetForCollectionAnnotation)disabledFacet;
+  assertThat(disabledFacet.where(),is(Where.EVERYWHERE));
+  assertThat(disabledFacet.when(),is(When.ALWAYS));
+  assertThat(disabledFacetImpl.getReason(),is("you cannot edit the orders collection"));
+}

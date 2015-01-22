@@ -22,14 +22,16 @@ class NamedChanged extends PropertyChangedEvent<Customer,String> {
   final Facet domainEventFacet=facetedMethod.getFacet(PropertyDomainEventFacet.class);
   Assert.assertNotNull(domainEventFacet);
   Assert.assertTrue(domainEventFacet instanceof PropertyDomainEventFacetDefault);
+  final PropertyDomainEventFacetDefault domainEventFacetDefault=(PropertyDomainEventFacetDefault)domainEventFacet;
+  assertThat(domainEventFacetDefault.getEventType(),classEqualTo(PropertyDomainEvent.Default.class));
   final Facet setterFacet=facetedMethod.getFacet(PropertySetterFacet.class);
   Assert.assertNotNull(setterFacet);
   Assert.assertTrue(setterFacet instanceof PropertySetterFacetForPostsPropertyChangedEventAnnotation);
-  PropertySetterFacetForPostsPropertyChangedEventAnnotation setterFacetImpl=(PropertySetterFacetForPostsPropertyChangedEventAnnotation)setterFacet;
+  final PropertySetterFacetForPostsPropertyChangedEventAnnotation setterFacetImpl=(PropertySetterFacetForPostsPropertyChangedEventAnnotation)setterFacet;
   assertThat(setterFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
   final Facet clearFacet=facetedMethod.getFacet(PropertyClearFacet.class);
   Assert.assertNotNull(clearFacet);
   Assert.assertTrue(clearFacet instanceof PropertyClearFacetForPostsPropertyChangedEventAnnotation);
-  PropertyClearFacetForPostsPropertyChangedEventAnnotation clearFacetImpl=(PropertyClearFacetForPostsPropertyChangedEventAnnotation)clearFacet;
+  final PropertyClearFacetForPostsPropertyChangedEventAnnotation clearFacetImpl=(PropertyClearFacetForPostsPropertyChangedEventAnnotation)clearFacet;
   assertThat(clearFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
 }
