@@ -14,7 +14,7 @@
     @Override public void onSubmit(){
       super.onSubmit();
       String email=emailField.getModelObject();
-      String confirmationUrl=createUrl(email);
+      String confirmationUrl=emailVerificationUrlService.createVerificationUrl(PageType.SIGN_UP_VERIFY,email);
       emailNotificationService.init();
       emailService.init();
       final EmailRegistrationEvent emailRegistrationEvent=new EmailRegistrationEvent(email,confirmationUrl,applicationName);

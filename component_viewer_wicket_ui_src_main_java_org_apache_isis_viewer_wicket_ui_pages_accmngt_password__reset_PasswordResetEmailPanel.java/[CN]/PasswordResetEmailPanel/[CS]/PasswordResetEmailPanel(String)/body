@@ -13,7 +13,7 @@
     @Override public void onSubmit(){
       super.onSubmit();
       String email=emailField.getModelObject();
-      String confirmationUrl=createUrl(email);
+      String confirmationUrl=emailVerificationUrlService.createVerificationUrl(PageType.PASSWORD_RESET,email);
       emailNotificationService.init();
       emailService.init();
       final PasswordResetEvent passwordResetEvent=new PasswordResetEvent(email,confirmationUrl,applicationName);
