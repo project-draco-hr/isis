@@ -1,13 +1,9 @@
 {
   try {
-    return new java.sql.Timestamp(newSimpleDateFormatUsingDateTimePattern().parse(valueStr).getTime());
+    Date parsed=newSimpleDateFormatUsingDateTimePattern().parse(valueStr);
+    return new java.sql.Timestamp(parsed.getTime());
   }
  catch (  ParseException ex) {
-    try {
-      return new java.sql.Timestamp(newSimpleDateFormatUsingDateTimePattern().parse(valueStr).getTime());
-    }
- catch (    ParseException ex2) {
-      throw new ConversionException("Value cannot be converted as a date/time",ex);
-    }
+    throw new ConversionException("Value cannot be converted as a date/time",ex);
   }
 }
