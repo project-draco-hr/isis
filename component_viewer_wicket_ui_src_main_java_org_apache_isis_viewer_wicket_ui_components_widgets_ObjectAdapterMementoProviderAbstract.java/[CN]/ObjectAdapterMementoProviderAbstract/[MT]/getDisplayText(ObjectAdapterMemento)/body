@@ -4,7 +4,8 @@
     ObjectAdapter objectAdapter=choice.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
     IConverter<Object> converter=IsisConverterLocator.findConverter(objectAdapter,wicketViewerSettings);
     if (converter != null) {
-      displayText=converter.convertToString(objectAdapter.getObject(),Locale.ENGLISH);
+      Locale locale=Session.exists() ? Session.get().getLocale() : Locale.ENGLISH;
+      displayText=converter.convertToString(objectAdapter.getObject(),locale);
     }
  else {
       displayText=objectAdapter.titleString(null);
