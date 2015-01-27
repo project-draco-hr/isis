@@ -28,6 +28,14 @@
  else   if (java.sql.Timestamp.class == correspondingClass) {
     converter=new DateConverterForJavaSqlTimestamp(wicketViewerSettings,adjustBy);
   }
+ else   if (java.math.BigDecimal.class == correspondingClass) {
+    final BigDecimalValueFacet facet=objectSpecification.getFacet(BigDecimalValueFacet.class);
+    Integer scale=null;
+    if (facet != null) {
+      scale=facet.getScale();
+    }
+    converter=new BigDecimalConverterWithScale(scale);
+  }
  else   if (Application.exists()) {
     IConverterLocator converterLocator=Application.get().getConverterLocator();
     converter=converterLocator.getConverter(correspondingClass);
