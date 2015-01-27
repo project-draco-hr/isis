@@ -1,0 +1,36 @@
+{
+  ObjectSpecification objectSpecification=objectAdapter.getSpecification();
+  RenderedAdjustedFacet renderedAdjustedFacet=objectSpecification.getFacet(RenderedAdjustedFacet.class);
+  int adjustBy=renderedAdjustedFacet != null ? renderedAdjustedFacet.value() : 0;
+  Class<?> correspondingClass=objectSpecification.getCorrespondingClass();
+  IConverter converter=null;
+  if (java.util.Date.class == correspondingClass) {
+    converter=new DateConverterForJavaUtilDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (java.sql.Date.class == correspondingClass) {
+    converter=new DateConverterForJavaSqlDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.apache.isis.applib.value.Date.class == correspondingClass) {
+    converter=new DateConverterForApplibDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.apache.isis.applib.value.DateTime.class == correspondingClass) {
+    converter=new DateConverterForApplibDateTime(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.joda.time.LocalDate.class == correspondingClass) {
+    converter=new DateConverterForJodaLocalDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.joda.time.LocalDateTime.class == correspondingClass) {
+    converter=new DateConverterForJodaLocalDateTime(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.joda.time.DateTime.class == correspondingClass) {
+    converter=new DateConverterForJodaDateTime(wicketViewerSettings,adjustBy);
+  }
+ else   if (java.sql.Timestamp.class == correspondingClass) {
+    converter=new DateConverterForJavaSqlTimestamp(wicketViewerSettings,adjustBy);
+  }
+ else   if (Application.exists()) {
+    IConverterLocator converterLocator=Application.get().getConverterLocator();
+    converter=converterLocator.getConverter(correspondingClass);
+  }
+  return converter;
+}
