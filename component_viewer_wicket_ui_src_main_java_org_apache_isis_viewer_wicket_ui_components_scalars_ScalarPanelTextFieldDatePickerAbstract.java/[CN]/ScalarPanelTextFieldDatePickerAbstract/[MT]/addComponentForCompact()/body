@@ -1,6 +1,11 @@
 {
   Fragment compactFragment=getCompactFragment(CompactType.SPAN);
-  final Label label=new Label(ID_SCALAR_IF_COMPACT,newTextFieldValueModel());
+  final Label label=new Label(ID_SCALAR_IF_COMPACT,newTextFieldValueModel()){
+    @Override public <C>IConverter<C> getConverter(    Class<C> type){
+      return (IConverter<C>)converter;
+    }
+  }
+;
   label.setEnabled(false);
   final int lengthAdjust=getLengthAdjustHint() != null ? getLengthAdjustHint() : 1;
   final String dateTimePattern=converter.getDateTimePattern(getLocale());

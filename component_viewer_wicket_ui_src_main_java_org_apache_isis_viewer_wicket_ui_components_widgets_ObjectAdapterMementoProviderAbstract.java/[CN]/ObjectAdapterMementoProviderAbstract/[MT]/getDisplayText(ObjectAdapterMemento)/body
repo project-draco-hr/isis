@@ -1,3 +1,15 @@
 {
-  return choice != null ? choice.getObjectAdapter(ConcurrencyChecking.NO_CHECK).titleString(null) : NULL_DISPLAY_TEXT;
+  String displayText=NULL_DISPLAY_TEXT;
+  if (choice != null) {
+    ObjectAdapter objectAdapter=choice.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+    IConverter<Object> converter=IsisConverterLocator.findConverter(objectAdapter,wicketViewerSettings);
+    if (converter != null) {
+      Locale locale=Session.exists() ? Session.get().getLocale() : Locale.ENGLISH;
+      displayText=converter.convertToString(objectAdapter.getObject(),locale);
+    }
+ else {
+      displayText=objectAdapter.titleString(null);
+    }
+  }
+  return displayText;
 }
