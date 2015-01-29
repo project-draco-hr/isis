@@ -1,0 +1,26 @@
+{
+@DomainService(nature=NatureOfService.VIEW) class CustomerService {
+    @ActionLayout(contributed=Contributed.AS_ACTION) public String name(){
+      return "Joe";
+    }
+  }
+  context.checking(new Expectations(){
+{
+      allowing(mockSpecificationLoaderSpi).loadSpecification(CustomerService.class);
+      will(returnValue(mockObjSpec));
+      allowing(mockObjSpec).getFacet(DomainServiceFacet.class);
+      will(returnValue(new DomainServiceFacetAbstract(mockObjSpec,null,NatureOfService.VIEW){
+      }
+));
+    }
+  }
+);
+  expectNoMethodsRemoved();
+  facetedMethod=FacetedMethod.createForAction(CustomerService.class,"name");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(CustomerService.class,null,null,facetedMethod.getMethod(),mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotContributedFacet.class);
+  assertThat(facet,CoreMatchers.is(not(nullValue())));
+  assertThat(facet instanceof NotContributedFacetForActionLayoutAnnotation,CoreMatchers.is(true));
+  final NotContributedFacetForActionLayoutAnnotation facetImpl=(NotContributedFacetForActionLayoutAnnotation)facet;
+  assertThat(facetImpl.value(),CoreMatchers.equalTo(NotContributed.As.ASSOCIATION));
+}

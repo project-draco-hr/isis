@@ -1,13 +1,21 @@
 {
-  final ActionLayoutFacetFactory facetFactory=new ActionLayoutFacetFactory();
 class Customer {
     @SuppressWarnings("unused") public String foo(){
       return null;
     }
   }
   final Method method=findMethod(Customer.class,"foo");
-  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  context.checking(new Expectations(){
+{
+      allowing(mockSpecificationLoaderSpi).loadSpecification(Customer.class);
+      will(returnValue(mockObjSpec));
+      allowing(mockObjSpec).getFacet(DomainServiceFacet.class);
+      will(returnValue(null));
+    }
+  }
+);
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,mockMethodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(ActionPositionFacet.class);
-  assertNotNull(facet);
-  assertTrue(facet instanceof ActionPositionFacetFallback);
+  Assert.assertNotNull(facet);
+  Assert.assertTrue(facet instanceof ActionPositionFacetFallback);
 }
