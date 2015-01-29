@@ -1,0 +1,23 @@
+{
+@DomainService(nature=NatureOfService.VIEW) class Customer {
+    public String name(){
+      return "Joe";
+    }
+  }
+  context.checking(new Expectations(){
+{
+      allowing(mockSpecificationLoaderSpi).loadSpecification(Customer.class);
+      will(returnValue(mockObjSpec));
+      allowing(mockObjSpec).getFacet(DomainServiceFacet.class);
+      will(returnValue(new DomainServiceFacetAbstract(mockObjSpec,null,NatureOfService.VIEW){
+      }
+));
+    }
+  }
+);
+  expectNoMethodsRemoved();
+  facetedMethod=FacetedMethod.createForAction(Customer.class,"name");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(Customer.class,null,null,facetedMethod.getMethod(),mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(NotInServiceMenuFacet.class);
+  assertThat(facet,is(nullValue()));
+}
