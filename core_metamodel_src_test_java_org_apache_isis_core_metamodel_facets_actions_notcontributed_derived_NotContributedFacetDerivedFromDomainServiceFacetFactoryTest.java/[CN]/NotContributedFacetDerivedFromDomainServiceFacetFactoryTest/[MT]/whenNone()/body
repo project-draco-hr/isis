@@ -1,12 +1,12 @@
 {
-class Customer {
+class CustomerService {
     public String name(){
       return "Joe";
     }
   }
   context.checking(new Expectations(){
 {
-      allowing(mockSpecificationLoaderSpi).loadSpecification(Customer.class);
+      allowing(mockSpecificationLoaderSpi).loadSpecification(CustomerService.class);
       will(returnValue(mockObjSpec));
       allowing(mockObjSpec).getFacet(DomainServiceFacet.class);
       will(returnValue(null));
@@ -14,8 +14,8 @@ class Customer {
   }
 );
   expectNoMethodsRemoved();
-  facetedMethod=FacetedMethod.createForAction(Customer.class,"name");
-  facetFactory.process(new FacetFactory.ProcessMethodContext(Customer.class,null,null,facetedMethod.getMethod(),mockMethodRemover,facetedMethod));
+  facetedMethod=FacetedMethod.createForAction(CustomerService.class,"name");
+  facetFactory.process(new FacetFactory.ProcessMethodContext(CustomerService.class,null,null,facetedMethod.getMethod(),mockMethodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(NotContributedFacet.class);
   assertThat(facet,is(nullValue()));
 }
