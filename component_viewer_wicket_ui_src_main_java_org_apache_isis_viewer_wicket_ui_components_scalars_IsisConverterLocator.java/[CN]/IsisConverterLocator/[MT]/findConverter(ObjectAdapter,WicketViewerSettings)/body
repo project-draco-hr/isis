@@ -1,8 +1,11 @@
 {
-  ObjectSpecification objectSpecification=objectAdapter.getSpecification();
-  RenderedAdjustedFacet renderedAdjustedFacet=objectSpecification.getFacet(RenderedAdjustedFacet.class);
-  int adjustBy=renderedAdjustedFacet != null ? renderedAdjustedFacet.value() : 0;
-  Class<?> correspondingClass=objectSpecification.getCorrespondingClass();
+  final ObjectSpecification objectSpecification=objectAdapter.getSpecification();
+  if (!objectSpecification.isValue()) {
+    return null;
+  }
+  final RenderedAdjustedFacet renderedAdjustedFacet=objectSpecification.getFacet(RenderedAdjustedFacet.class);
+  final int adjustBy=renderedAdjustedFacet != null ? renderedAdjustedFacet.value() : 0;
+  final Class<?> correspondingClass=objectSpecification.getCorrespondingClass();
   IConverter converter=null;
   if (java.util.Date.class == correspondingClass) {
     converter=new DateConverterForJavaUtilDate(wicketViewerSettings,adjustBy);
@@ -40,7 +43,7 @@
     converter=new BigDecimalConverterWithScale(scale).forViewMode();
   }
  else   if (Application.exists()) {
-    IConverterLocator converterLocator=Application.get().getConverterLocator();
+    final IConverterLocator converterLocator=Application.get().getConverterLocator();
     converter=converterLocator.getConverter(correspondingClass);
   }
   return converter;
