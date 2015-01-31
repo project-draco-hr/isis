@@ -6,6 +6,9 @@
       throw new IllegalStateException("Could not locate any @PersistenceCapable entities in package " + packagePrefix);
     }
     for (    Class<?> entityType : entityTypes) {
+      if (ignore(entityType)) {
+        continue;
+      }
       getSpecificationLoader().loadSpecification(entityType);
     }
   }
