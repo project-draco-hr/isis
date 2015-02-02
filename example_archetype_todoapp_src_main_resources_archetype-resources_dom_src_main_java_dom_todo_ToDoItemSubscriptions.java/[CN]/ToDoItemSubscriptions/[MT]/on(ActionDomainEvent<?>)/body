@@ -1,6 +1,6 @@
 {
   recordEvent(ev);
-switch (ev.getPhase()) {
+switch (ev.getEventPhase()) {
 case HIDE:
     if (getSubscriberBehaviour() == Behaviour.UpdateCostActionHide) {
       if (ev.getIdentifier().getMemberName().equals("updateCost")) {
@@ -24,7 +24,7 @@ case EXECUTING:
 break;
 case EXECUTED:
 LOG.info("Received ActionInteractionEvent, " + ev.getSource().toString() + ", invoked "+ ev.getIdentifier().getMemberName());
-onExecutedVetoIfRequired();
+onExecutedThrowExceptionIfSet(ev);
 break;
 }
 }

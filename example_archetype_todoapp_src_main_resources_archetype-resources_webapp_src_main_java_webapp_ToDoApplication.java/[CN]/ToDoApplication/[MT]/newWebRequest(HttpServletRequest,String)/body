@@ -3,13 +3,12 @@
     return super.newWebRequest(servletRequest,filterPath);
   }
   try {
-    String uname=servletRequest.getParameter("user");
+    final String uname=servletRequest.getParameter("user");
     if (uname != null) {
       servletRequest.getSession().invalidate();
     }
   }
- catch (  Exception e) {
+ catch (  Exception ignored) {
   }
-  WebRequest request=super.newWebRequest(servletRequest,filterPath);
-  return request;
+  return super.newWebRequest(servletRequest,filterPath);
 }
