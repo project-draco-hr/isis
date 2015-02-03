@@ -1,0 +1,18 @@
+{
+  return new UserProfileService(){
+    @Override public String userProfileName(){
+      if (getPage() instanceof ErrorPage) {
+        return getAuthenticationSession().getUserName();
+      }
+      try {
+        final UserProfileService userProfileService=lookupService(UserProfileService.class);
+        final String userProfileName=userProfileService != null ? userProfileService.userProfileName() : null;
+        return userProfileName != null ? userProfileName : getAuthenticationSession().getUserName();
+      }
+ catch (      final Exception e) {
+        return getAuthenticationSession().getUserName();
+      }
+    }
+  }
+;
+}

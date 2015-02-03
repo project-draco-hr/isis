@@ -7,7 +7,9 @@
     String isisConfigDir=getServletContext().getInitParameter("isis.config.dir");
     configureLogging(isisConfigDir);
     getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
-    getRequestCycleListeners().add(newWebRequestCycleForIsis());
+    RequestCycleListenerCollection requestCycleListeners=getRequestCycleListeners();
+    requestCycleListeners.add(newWebRequestCycleForIsis());
+    requestCycleListeners.add(new PageRequestHandlerTracker());
     getResourceSettings().setParentFolderPlaceholder("$up$");
     determineDeploymentTypeIfRequired();
     final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();

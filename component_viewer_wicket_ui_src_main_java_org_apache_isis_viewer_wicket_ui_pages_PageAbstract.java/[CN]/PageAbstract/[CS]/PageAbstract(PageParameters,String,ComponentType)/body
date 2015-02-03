@@ -1,4 +1,5 @@
 {
+  super(pageParameters);
   try {
     getSession().bind();
     setTitle(title);
@@ -7,15 +8,12 @@
     if (applicationName != null) {
       themeDiv.add(new CssClassAppender(CssClassAppender.asCssStyle(applicationName)));
     }
+    MarkupContainer header=createPageHeader("header");
+    themeDiv.add(header);
+    MarkupContainer footer=createPageFooter("footer");
+    themeDiv.add(footer);
     addActionPromptModalWindow(themeDiv);
-    addServiceActionMenuBars(themeDiv);
     this.childComponentIds=Collections.unmodifiableList(Arrays.asList(childComponentIds));
-    this.pageParameters=pageParameters;
-    addApplicationName(themeDiv);
-    addUserName(themeDiv);
-    addAboutLink(themeDiv);
-    addBreadcrumbs();
-    addThemePicker();
     add(new HeaderResponseContainer("footerJS","footerJS"));
   }
  catch (  final RuntimeException ex) {

@@ -1,3 +1,12 @@
 {
-  getComponentFactoryRegistry().addOrReplaceComponent(themeDiv,ID_BOOKMARKED_PAGES,ComponentType.BOOKMARKED_PAGES,getBookmarkedPagesModel());
+  Component bookmarks=getComponentFactoryRegistry().createComponent(ComponentType.BOOKMARKED_PAGES,ID_BOOKMARKED_PAGES,getBookmarkedPagesModel());
+  themeDiv.add(bookmarks);
+  bookmarks.add(new Behavior(){
+    @Override public void onConfigure(    Component component){
+      super.onConfigure(component);
+      PageParameters parameters=getPageParameters();
+      component.setVisible(parameters.get(PageParametersUtils.ISIS_NO_HEADER_PARAMETER_NAME).isNull());
+    }
+  }
+);
 }
