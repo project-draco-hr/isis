@@ -109,7 +109,14 @@ catch (  final InvocationTargetException e) {
       if (!runtimeContext.getTransactionState().canCommit()) {
         final Throwable targetExceptionCause=targetException.getCause();
         Throwable nonRecoverableCause=targetExceptionCause != null ? targetExceptionCause : targetException;
-        throw new NonRecoverableException(nonRecoverableCause);
+        String message=nonRecoverableCause.getMessage();
+        if (!Strings.isNullOrEmpty(message)) {
+          message=message.substring(0,Math.min(message.length(),300));
+          if (message.length() == 300) {
+            message+=" ...";
+          }
+        }
+        throw new NonRecoverableException(message,nonRecoverableCause);
       }
     }
     ThrowableExtensions.throwWithinIsisException(e,"Exception executing " + method);
