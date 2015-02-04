@@ -14,7 +14,11 @@
     final Action action=Annotations.getAnnotation(actionMethod,Action.class);
     final Class<? extends ActionDomainEvent<?>> actionDomainEventType;
     final ActionDomainEventFacetAbstract actionDomainEventFacet;
-    if (actionInteraction != null) {
+    if (postsActionInvokedEvent != null) {
+      actionDomainEventType=postsActionInvokedEvent.value();
+      actionDomainEventFacet=new ActionDomainEventFacetForPostsActionInvokedEventAnnotation(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+ else     if (actionInteraction != null) {
       actionDomainEventType=actionInteraction.value();
       actionDomainEventFacet=new ActionDomainEventFacetForActionInteractionAnnotation(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
     }

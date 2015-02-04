@@ -1,16 +1,21 @@
 {
   final Method method=processMethodContext.getMethod();
+  final Class<?> declaringClass=method.getDeclaringClass();
   final FacetedMethod holder=processMethodContext.getFacetHolder();
   final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
   if (getterFacet == null) {
     return;
   }
   final PostsPropertyChangedEvent postsPropertyChangedEvent=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);
-  final Property property=Annotations.getAnnotation(method,Property.class);
   final PropertyInteraction propertyInteraction=Annotations.getAnnotation(method,PropertyInteraction.class);
+  final Property property=Annotations.getAnnotation(method,Property.class);
   final Class<? extends PropertyDomainEvent<?,?>> propertyDomainEventType;
   final PropertyDomainEventFacetAbstract propertyDomainEventFacet;
-  if (propertyInteraction != null) {
+  if (postsPropertyChangedEvent != null) {
+    propertyDomainEventType=postsPropertyChangedEvent.value();
+    propertyDomainEventFacet=new PropertyDomainEventFacetForPostsPropertyChangedEventAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+  }
+ else   if (propertyInteraction != null) {
     propertyDomainEventType=propertyInteraction.value();
     propertyDomainEventFacet=new PropertyDomainEventFacetForPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
   }

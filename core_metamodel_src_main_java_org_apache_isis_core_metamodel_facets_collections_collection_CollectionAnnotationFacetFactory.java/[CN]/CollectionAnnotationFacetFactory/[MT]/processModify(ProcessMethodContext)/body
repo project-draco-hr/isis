@@ -5,11 +5,21 @@
   if (getterFacet == null) {
     return;
   }
-  final Collection collection=Annotations.getAnnotation(method,Collection.class);
+  final PostsCollectionAddedToEvent postsCollectionAddedToEvent=Annotations.getAnnotation(method,PostsCollectionAddedToEvent.class);
+  final PostsCollectionRemovedFromEvent postsCollectionRemovedFromEvent=Annotations.getAnnotation(method,PostsCollectionRemovedFromEvent.class);
   final CollectionInteraction collectionInteraction=Annotations.getAnnotation(method,CollectionInteraction.class);
+  final Collection collection=Annotations.getAnnotation(method,Collection.class);
   final Class<? extends CollectionDomainEvent<?,?>> collectionDomainEventType;
   final CollectionDomainEventFacetAbstract collectionDomainEventFacet;
-  if (collectionInteraction != null) {
+  if (postsCollectionAddedToEvent != null) {
+    collectionDomainEventType=postsCollectionAddedToEvent.value();
+    collectionDomainEventFacet=new CollectionDomainEventFacetForPostsCollectionAddedToEventAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+  }
+ else   if (postsCollectionRemovedFromEvent != null) {
+    collectionDomainEventType=postsCollectionRemovedFromEvent.value();
+    collectionDomainEventFacet=new CollectionDomainEventFacetForPostsCollectionRemovedFromEventAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+  }
+ else   if (collectionInteraction != null) {
     collectionDomainEventType=collectionInteraction.value();
     collectionDomainEventFacet=new CollectionDomainEventFacetForCollectionInteractionAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
   }
@@ -22,8 +32,6 @@
     collectionDomainEventFacet=new CollectionDomainEventFacetDefault(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
   }
   FacetUtil.addFacet(collectionDomainEventFacet);
-  final PostsCollectionAddedToEvent postsCollectionAddedToEvent=Annotations.getAnnotation(method,PostsCollectionAddedToEvent.class);
-  final PostsCollectionRemovedFromEvent postsCollectionRemovedFromEvent=Annotations.getAnnotation(method,PostsCollectionRemovedFromEvent.class);
   final CollectionAddToFacet collectionAddToFacet=holder.getFacet(CollectionAddToFacet.class);
   if (collectionAddToFacet != null) {
     final CollectionAddToFacetForDomainEventFromAbstract replacementFacet;
