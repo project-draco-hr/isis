@@ -1,0 +1,16 @@
+{
+  List<ObjectAdapterMemento> matches=Lists.newArrayList();
+  if (Strings.isEmpty(term)) {
+    matches.addAll(choicesMementos);
+  }
+ else {
+    for (    ObjectAdapterMemento candidate : choicesMementos) {
+      ObjectAdapter objectAdapter=candidate.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+      String title=objectAdapter.titleString(objectAdapter);
+      if (title.toLowerCase().contains(term.toLowerCase())) {
+        matches.add(candidate);
+      }
+    }
+  }
+  return matches;
+}
