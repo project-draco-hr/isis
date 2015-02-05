@@ -1,10 +1,10 @@
 {
   RenderFacet renderFacet=createFromMetadataPropertiesIfPossible(processMethodContext);
   if (renderFacet == null) {
-    renderFacet=createFromRenderAnnotationIfPossible(processMethodContext);
+    renderFacet=renderValidator.invalidIfPresent(createFromRenderAnnotationIfPossible(processMethodContext));
   }
   if (renderFacet == null) {
-    renderFacet=createFromResolveAnnotationIfPossible(processMethodContext);
+    renderFacet=resolveValidator.invalidIfPresent(createFromResolveAnnotationIfPossible(processMethodContext));
   }
   FacetUtil.addFacet(renderFacet);
 }

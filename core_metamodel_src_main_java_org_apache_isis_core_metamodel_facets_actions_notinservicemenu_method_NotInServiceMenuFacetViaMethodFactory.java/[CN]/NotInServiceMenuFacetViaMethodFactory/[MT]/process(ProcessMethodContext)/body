@@ -2,11 +2,12 @@
   final Method getMethod=processMethodContext.getMethod();
   final String capitalizedName=StringExtensions.asJavaBaseNameStripAccessorPrefixIfRequired(getMethod.getName());
   final Class<?> cls=processMethodContext.getCls();
-  final Method notInServiceMenuMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,"notInServiceMenu" + capitalizedName,boolean.class,new Class[]{});
+  final Method notInServiceMenuMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,NOT_IN_SERVICE_MENU_PREFIX + capitalizedName,boolean.class,new Class[]{});
   if (notInServiceMenuMethod == null) {
     return;
   }
   processMethodContext.removeMethod(notInServiceMenuMethod);
   final FacetHolder facetedMethod=processMethodContext.getFacetHolder();
-  FacetUtil.addFacet(new NotInServiceMenuFacetViaMethod(notInServiceMenuMethod,facetedMethod));
+  final NotInServiceMenuFacetViaMethod facet=new NotInServiceMenuFacetViaMethod(notInServiceMenuMethod,facetedMethod);
+  validator.addFacet(facet);
 }
