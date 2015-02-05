@@ -3,14 +3,14 @@
   final FacetHolder holder=processMethodContext.getFacetHolder();
   ActionSemanticsFacet facet;
   final QueryOnly queryOnly=Annotations.getAnnotation(processMethodContext.getMethod(),QueryOnly.class);
-  facet=ActionSemanticsFacetFromQueryOnlyAnnotation.create(queryOnly,holder);
+  facet=queryOnlyValidator.flagIfPresent(ActionSemanticsFacetFromQueryOnlyAnnotation.create(queryOnly,holder));
   if (facet == null) {
     final Idempotent idempotent=Annotations.getAnnotation(processMethodContext.getMethod(),Idempotent.class);
-    facet=ActionSemanticsFacetFromIdempotentAnnotation.create(idempotent,holder);
+    facet=idempotentValidator.flagIfPresent(ActionSemanticsFacetFromIdempotentAnnotation.create(idempotent,holder));
   }
   if (facet == null) {
     final ActionSemantics actionSemantics=Annotations.getAnnotation(method,ActionSemantics.class);
-    facet=ActionSemanticsFacetForActionSemanticsAnnotation.create(actionSemantics,holder);
+    facet=actionSemanticsValidator.flagIfPresent(ActionSemanticsFacetForActionSemanticsAnnotation.create(actionSemantics,holder));
   }
   if (facet == null) {
     final Action action=Annotations.getAnnotation(method,Action.class);

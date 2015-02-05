@@ -13,11 +13,11 @@
   final PropertyDomainEventFacetAbstract propertyDomainEventFacet;
   if (postsPropertyChangedEvent != null) {
     propertyDomainEventType=postsPropertyChangedEvent.value();
-    propertyDomainEventFacet=new PropertyDomainEventFacetForPostsPropertyChangedEventAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+    propertyDomainEventFacet=postsPropertyChangedEventValidator.flagIfPresent(new PropertyDomainEventFacetForPostsPropertyChangedEventAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder));
   }
  else   if (propertyInteraction != null) {
     propertyDomainEventType=propertyInteraction.value();
-    propertyDomainEventFacet=new PropertyDomainEventFacetForPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+    propertyDomainEventFacet=propertyInteractionValidator.flagIfPresent(new PropertyDomainEventFacetForPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder));
   }
  else   if (property != null && property.domainEvent() != null) {
     propertyDomainEventType=property.domainEvent();
