@@ -14,11 +14,7 @@
     final Action action=Annotations.getAnnotation(actionMethod,Action.class);
     final Class<? extends ActionDomainEvent<?>> actionDomainEventType;
     final ActionDomainEventFacetAbstract actionDomainEventFacet;
-    if (postsActionInvokedEvent != null) {
-      actionDomainEventType=postsActionInvokedEvent.value();
-      actionDomainEventFacet=new ActionDomainEventFacetForPostsActionInvokedEventAnnotation(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
-    }
- else     if (actionInteraction != null) {
+    if (actionInteraction != null) {
       actionDomainEventType=actionInteraction.value();
       actionDomainEventFacet=new ActionDomainEventFacetForActionInteractionAnnotation(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
     }
@@ -34,10 +30,10 @@
     final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;
     if (postsActionInvokedEvent != null) {
       final Class<? extends ActionInvokedEvent<?>> actionInvokedEventType=postsActionInvokedEvent.value();
-      actionInvocationFacet=new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()));
     }
  else     if (actionInteraction != null) {
-      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()));
     }
  else     if (action != null) {
       actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());

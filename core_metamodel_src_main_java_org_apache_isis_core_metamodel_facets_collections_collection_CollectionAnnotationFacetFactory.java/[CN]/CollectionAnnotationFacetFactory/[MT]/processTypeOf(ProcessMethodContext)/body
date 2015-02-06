@@ -7,9 +7,9 @@
   }
   TypeOfFacet facet;
   final TypeOf annotation=Annotations.getAnnotation(method,TypeOf.class);
-  facet=TypeOfFacetOnCollectionFromTypeOfAnnotation.create(annotation,facetHolder,getSpecificationLoader());
+  facet=typeOfValidator.flagIfPresent(TypeOfFacetOnCollectionFromTypeOfAnnotation.create(annotation,facetHolder,getSpecificationLoader()));
+  final Collection collection=Annotations.getAnnotation(method,Collection.class);
   if (facet == null) {
-    final Collection collection=Annotations.getAnnotation(method,Collection.class);
     facet=TypeOfFacetOnCollectionFromCollectionAnnotation.create(collection,facetHolder,getSpecificationLoader());
   }
   if (facet == null) {

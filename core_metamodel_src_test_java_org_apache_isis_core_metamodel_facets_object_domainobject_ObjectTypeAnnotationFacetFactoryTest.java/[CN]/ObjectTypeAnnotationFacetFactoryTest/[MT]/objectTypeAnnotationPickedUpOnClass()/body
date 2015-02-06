@@ -1,0 +1,10 @@
+{
+@ObjectType("CUS") class Customer {
+  }
+  expectNoMethodsRemoved();
+  facetFactory.processObjectType(new ProcessClassContext(Customer.class,null,mockMethodRemover,facetHolder));
+  final ObjectSpecIdFacet facet=facetHolder.getFacet(ObjectSpecIdFacet.class);
+  assertThat(facet,is(not(nullValue())));
+  assertThat(facet instanceof ObjectSpecIdFacetFromObjectTypeAnnotation,is(true));
+  assertThat(facet.value(),is(ObjectSpecId.of("CUS")));
+}

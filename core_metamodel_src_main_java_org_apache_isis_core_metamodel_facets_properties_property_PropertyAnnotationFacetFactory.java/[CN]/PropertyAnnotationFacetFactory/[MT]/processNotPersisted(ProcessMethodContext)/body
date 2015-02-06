@@ -1,7 +1,11 @@
 {
   final Method method=processMethodContext.getMethod();
-  final Property property=Annotations.getAnnotation(method,Property.class);
   final FacetHolder holder=processMethodContext.getFacetHolder();
-  final NotPersistedFacet facet=NotPersistedFacetForPropertyAnnotation.create(property,holder);
+  final NotPersisted annotation=Annotations.getAnnotation(method,NotPersisted.class);
+  NotPersistedFacet facet=notPersistedValidator.flagIfPresent(NotPersistedFacetForNotPersistedAnnotationOnProperty.create(annotation,holder));
+  final Property property=Annotations.getAnnotation(method,Property.class);
+  if (facet == null) {
+    facet=NotPersistedFacetForPropertyAnnotation.create(property,holder);
+  }
   FacetUtil.addFacet(facet);
 }

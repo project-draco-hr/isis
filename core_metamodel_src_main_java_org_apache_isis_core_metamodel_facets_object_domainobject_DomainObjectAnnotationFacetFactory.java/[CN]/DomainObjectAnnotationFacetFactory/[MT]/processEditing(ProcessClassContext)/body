@@ -3,7 +3,7 @@
   final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
   final Immutable annotation=Annotations.getAnnotation(processClassContext.getCls(),Immutable.class);
-  ImmutableFacet facet=ImmutableFacetForImmutableAnnotation.create(annotation,processClassContext.getFacetHolder());
+  ImmutableFacet facet=immutableValidator.flagIfPresent(ImmutableFacetForImmutableAnnotation.create(annotation,processClassContext.getFacetHolder()));
   if (facet == null) {
     facet=ImmutableFacetForDomainObjectAnnotation.create(domainObject,configuration,facetHolder);
   }

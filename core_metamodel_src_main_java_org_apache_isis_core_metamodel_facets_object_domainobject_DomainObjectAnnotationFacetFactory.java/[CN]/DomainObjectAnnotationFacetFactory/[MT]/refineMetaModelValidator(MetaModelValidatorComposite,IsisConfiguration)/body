@@ -1,0 +1,30 @@
+{
+  metaModelValidator.add(new MetaModelValidatorVisiting(new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    final ObjectSpecification thisSpec,    final ValidationFailures validationFailures){
+      final Map<ObjectSpecId,ObjectSpecification> specById=Maps.newHashMap();
+      final Collection<ObjectSpecification> allSpecifications=getSpecificationLoader().allSpecifications();
+      for (      final ObjectSpecification otherSpec : allSpecifications) {
+        if (thisSpec == otherSpec) {
+          continue;
+        }
+        final ObjectSpecId objectSpecId=otherSpec.getSpecId();
+        if (objectSpecId == null) {
+          continue;
+        }
+        final ObjectSpecification existingSpec=specById.put(objectSpecId,otherSpec);
+        if (existingSpec == null) {
+          continue;
+        }
+        validationFailures.add("Cannot have two entities with same object type (@DomainObject(objectType=...) or @ObjectType); " + "both %s and %s are annotated with value of ''%s''.",existingSpec.getFullIdentifier(),otherSpec.getFullIdentifier(),objectSpecId);
+      }
+      return true;
+    }
+  }
+));
+  metaModelValidator.add(publishedObjectValidator);
+  metaModelValidator.add(auditedValidator);
+  metaModelValidator.add(autoCompleteValidator);
+  metaModelValidator.add(boundedValidator);
+  metaModelValidator.add(immutableValidator);
+  metaModelValidator.add(objectTypeValidator);
+}

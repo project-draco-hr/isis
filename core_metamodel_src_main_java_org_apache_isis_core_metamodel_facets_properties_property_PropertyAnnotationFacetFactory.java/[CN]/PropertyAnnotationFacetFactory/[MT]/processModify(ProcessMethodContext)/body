@@ -1,6 +1,5 @@
 {
   final Method method=processMethodContext.getMethod();
-  final Class<?> declaringClass=method.getDeclaringClass();
   final FacetedMethod holder=processMethodContext.getFacetHolder();
   final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
   if (getterFacet == null) {
@@ -11,13 +10,9 @@
   final Property property=Annotations.getAnnotation(method,Property.class);
   final Class<? extends PropertyDomainEvent<?,?>> propertyDomainEventType;
   final PropertyDomainEventFacetAbstract propertyDomainEventFacet;
-  if (postsPropertyChangedEvent != null) {
-    propertyDomainEventType=postsPropertyChangedEvent.value();
-    propertyDomainEventFacet=new PropertyDomainEventFacetForPostsPropertyChangedEventAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
-  }
- else   if (propertyInteraction != null) {
+  if (propertyInteraction != null) {
     propertyDomainEventType=propertyInteraction.value();
-    propertyDomainEventFacet=new PropertyDomainEventFacetForPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+    propertyDomainEventFacet=propertyInteractionValidator.flagIfPresent(new PropertyDomainEventFacetForPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder));
   }
  else   if (property != null && property.domainEvent() != null) {
     propertyDomainEventType=property.domainEvent();

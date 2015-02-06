@@ -1,0 +1,10 @@
+{
+class Customer {
+    @Hidden(when=When.ONCE_PERSISTED) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.processHidden(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final HiddenFacetForHiddenAnnotationOnAction facet=facetedMethod.getFacet(HiddenFacetForHiddenAnnotationOnAction.class);
+  assertEquals(When.ONCE_PERSISTED,facet.when());
+}

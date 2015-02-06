@@ -11,17 +11,9 @@
   final Collection collection=Annotations.getAnnotation(method,Collection.class);
   final Class<? extends CollectionDomainEvent<?,?>> collectionDomainEventType;
   final CollectionDomainEventFacetAbstract collectionDomainEventFacet;
-  if (postsCollectionAddedToEvent != null) {
-    collectionDomainEventType=postsCollectionAddedToEvent.value();
-    collectionDomainEventFacet=new CollectionDomainEventFacetForPostsCollectionAddedToEventAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
-  }
- else   if (postsCollectionRemovedFromEvent != null) {
-    collectionDomainEventType=postsCollectionRemovedFromEvent.value();
-    collectionDomainEventFacet=new CollectionDomainEventFacetForPostsCollectionRemovedFromEventAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
-  }
- else   if (collectionInteraction != null) {
+  if (collectionInteraction != null) {
     collectionDomainEventType=collectionInteraction.value();
-    collectionDomainEventFacet=new CollectionDomainEventFacetForCollectionInteractionAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+    collectionDomainEventFacet=collectionInteractionValidator.flagIfPresent(new CollectionDomainEventFacetForCollectionInteractionAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder));
   }
  else   if (collection != null && collection.domainEvent() != null) {
     collectionDomainEventType=collection.domainEvent();
