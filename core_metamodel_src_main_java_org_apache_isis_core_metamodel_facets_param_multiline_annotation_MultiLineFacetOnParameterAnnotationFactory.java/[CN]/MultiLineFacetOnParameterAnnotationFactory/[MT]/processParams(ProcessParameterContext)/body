@@ -1,15 +1,17 @@
 {
   final Class<?>[] parameterTypes=processParameterContext.getMethod().getParameterTypes();
-  if (processParameterContext.getParamNum() >= parameterTypes.length) {
+  final FacetedMethodParameter holder=processParameterContext.getFacetHolder();
+  final int paramNum=processParameterContext.getParamNum();
+  if (paramNum >= parameterTypes.length) {
     return;
   }
-  if (!Annotations.isString(parameterTypes[processParameterContext.getParamNum()])) {
-    return;
-  }
-  final Annotation[] parameterAnnotations=Annotations.getParameterAnnotations(processParameterContext.getMethod())[processParameterContext.getParamNum()];
+  final Class<?> parameterType=parameterTypes[paramNum];
+  final Annotation[] parameterAnnotations=Annotations.getParameterAnnotations(processParameterContext.getMethod())[paramNum];
   for (  final Annotation parameterAnnotation : parameterAnnotations) {
     if (parameterAnnotation instanceof MultiLine) {
-      process(processParameterContext,(MultiLine)parameterAnnotation);
+      final MultiLine annotation=(MultiLine)parameterAnnotation;
+      final MultiLineFacet facet=validator.addFacetFlagIfPresent(MultiLineFacetOnParameterAnnotation.create(annotation,parameterType,holder));
+      inferPropParamLayoutFacet(facet);
       return;
     }
   }
