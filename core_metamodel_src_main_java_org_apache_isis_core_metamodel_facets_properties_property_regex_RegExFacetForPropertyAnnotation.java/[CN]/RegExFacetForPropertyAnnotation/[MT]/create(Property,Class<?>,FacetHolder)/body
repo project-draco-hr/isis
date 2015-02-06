@@ -1,0 +1,14 @@
+{
+  if (annotation == null) {
+    return null;
+  }
+  if (!Annotations.isString(returnType)) {
+    return null;
+  }
+  final String pattern=annotation.regexPattern();
+  if (Strings.isNullOrEmpty(pattern)) {
+    return null;
+  }
+  final int patternFlags=annotation.regexPatternFlags();
+  return new RegExFacetForPropertyAnnotation(pattern,patternFlags,holder);
+}

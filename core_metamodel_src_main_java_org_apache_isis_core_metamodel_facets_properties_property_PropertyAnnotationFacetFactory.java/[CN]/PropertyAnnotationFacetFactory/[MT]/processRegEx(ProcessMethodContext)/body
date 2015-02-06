@@ -1,11 +1,15 @@
 {
   final Method method=processMethodContext.getMethod();
-  final Property property=Annotations.getAnnotation(method,Property.class);
   final FacetHolder holder=processMethodContext.getFacetHolder();
   final Class<?> returnType=processMethodContext.getMethod().getReturnType();
-  if (!Annotations.isString(returnType)) {
-    return;
+  final RegEx annotation=Annotations.getAnnotation(processMethodContext.getMethod(),RegEx.class);
+  RegExFacet facet=regexValidator.flagIfPresent(RegExFacetFromRegExAnnotationOnProperty.create(annotation,returnType,holder));
+  if (facet != null) {
+    FacetUtil.addFacet(new TitleFacetFormattedByRegex(facet));
   }
-  final RegExFacet facet=RegExFacetForPropertyAnnotation.create(property,holder);
+  final Property property=Annotations.getAnnotation(method,Property.class);
+  if (facet == null) {
+    facet=RegExFacetForPropertyAnnotation.create(property,returnType,holder);
+  }
   FacetUtil.addFacet(facet);
 }

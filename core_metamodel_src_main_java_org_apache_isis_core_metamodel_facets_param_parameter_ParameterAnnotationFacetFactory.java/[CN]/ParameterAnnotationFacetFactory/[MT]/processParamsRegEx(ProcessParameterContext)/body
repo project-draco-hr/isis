@@ -1,0 +1,26 @@
+{
+  final Method method=processParameterContext.getMethod();
+  final int paramNum=processParameterContext.getParamNum();
+  final FacetedMethodParameter holder=processParameterContext.getFacetHolder();
+  final Class<?>[] parameterTypes=method.getParameterTypes();
+  final Annotation[] parameterAnnotations=Annotations.getParameterAnnotations(method)[paramNum];
+  for (  final Annotation parameterAnnotation : parameterAnnotations) {
+    final Class<?> parameterType=parameterTypes[paramNum];
+    if (parameterAnnotation instanceof RegEx) {
+      final RegEx annotation=(RegEx)parameterAnnotation;
+      final RegExFacet regExFacet=regexValidator.addFacetFlagIfPresent(RegExFacetFromRegExAnnotationOnParameter.create(annotation,parameterType,holder));
+      if (regExFacet != null) {
+        FacetUtil.addFacet(new TitleFacetFormattedByRegex(regExFacet));
+      }
+      return;
+    }
+  }
+  for (  final Annotation parameterAnnotation : parameterAnnotations) {
+    if (parameterAnnotation instanceof Parameter) {
+      final Parameter parameter=(Parameter)parameterAnnotation;
+      final Class<?> parameterType=parameterTypes[paramNum];
+      FacetUtil.addFacet(RegExFacetForParameterAnnotation.create(parameter,parameterType,holder));
+      return;
+    }
+  }
+}
