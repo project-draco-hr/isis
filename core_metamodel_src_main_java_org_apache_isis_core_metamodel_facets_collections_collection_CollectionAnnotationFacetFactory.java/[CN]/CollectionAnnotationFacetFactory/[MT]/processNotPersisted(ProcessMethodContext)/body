@@ -2,7 +2,9 @@
   final Method method=processMethodContext.getMethod();
   final FacetHolder holder=processMethodContext.getFacetHolder();
   final NotPersisted annotation=Annotations.getAnnotation(method,NotPersisted.class);
-  NotPersistedFacet facet=notPersistedValidator.addFacetFlagIfPresent(NotPersistedFacetForNotPersistedAnnotationOnCollection.create(annotation,holder));
+  final NotPersistedFacet facet1=NotPersistedFacetForNotPersistedAnnotationOnCollection.create(annotation,holder);
+  FacetUtil.addFacet(notPersistedValidator.flagIfPresent(facet1));
+  NotPersistedFacet facet=facet1;
   final Collection collection=Annotations.getAnnotation(method,Collection.class);
   if (facet == null) {
     facet=NotPersistedFacetForCollectionAnnotation.create(collection,holder);

@@ -1,0 +1,11 @@
+{
+class Customer {
+    @Hidden(where=Where.PARENTED_TABLES) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.processHidden(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final HiddenFacetOnMemberAnnotation facet=facetedMethod.getFacet(HiddenFacetOnMemberAnnotation.class);
+  assertEquals(Where.PARENTED_TABLES,facet.where());
+  assertEquals(When.ALWAYS,facet.when());
+}

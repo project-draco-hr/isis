@@ -8,7 +8,8 @@
   for (  final Annotation parameterAnnotation : parameterAnnotations) {
     if (parameterAnnotation instanceof MustSatisfy) {
       final MustSatisfy annotation=(MustSatisfy)parameterAnnotation;
-      mustSatisfyValidator.addFacetFlagIfPresent(MustSatisfySpecificationFacetForMustSatisfyAnnotationOnParameter.create(annotation,processParameterContext.getFacetHolder()));
+      final Facet facet=MustSatisfySpecificationFacetForMustSatisfyAnnotationOnParameter.create(annotation,processParameterContext.getFacetHolder());
+      FacetUtil.addFacet(mustSatisfyValidator.flagIfPresent(facet));
       return;
     }
   }

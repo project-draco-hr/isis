@@ -8,7 +8,9 @@
     final Class<?> parameterType=parameterTypes[paramNum];
     if (parameterAnnotation instanceof RegEx) {
       final RegEx annotation=(RegEx)parameterAnnotation;
-      final RegExFacet regExFacet=regexValidator.addFacetFlagIfPresent(RegExFacetFromRegExAnnotationOnParameter.create(annotation,parameterType,holder));
+      final RegExFacet facet=RegExFacetFromRegExAnnotationOnParameter.create(annotation,parameterType,holder);
+      FacetUtil.addFacet(regexValidator.flagIfPresent(facet));
+      final RegExFacet regExFacet=facet;
       if (regExFacet != null) {
         FacetUtil.addFacet(new TitleFacetFormattedByRegex(regExFacet));
       }

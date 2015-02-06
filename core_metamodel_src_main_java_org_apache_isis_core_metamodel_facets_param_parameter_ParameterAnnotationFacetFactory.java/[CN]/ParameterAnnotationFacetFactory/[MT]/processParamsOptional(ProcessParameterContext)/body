@@ -8,7 +8,8 @@
     final Class<?> parameterType=parameterTypes[paramNum];
     if (parameterAnnotation instanceof Optional) {
       final Optional annotation=(Optional)parameterAnnotation;
-      optionalValidator.addFacetFlagIfPresent(MandatoryFacetInvertedByOptionalAnnotationOnParameter.create(annotation,parameterType,holder));
+      final Facet facet=MandatoryFacetInvertedByOptionalAnnotationOnParameter.create(annotation,parameterType,holder);
+      FacetUtil.addFacet(optionalValidator.flagIfPresent(facet));
       return;
     }
   }

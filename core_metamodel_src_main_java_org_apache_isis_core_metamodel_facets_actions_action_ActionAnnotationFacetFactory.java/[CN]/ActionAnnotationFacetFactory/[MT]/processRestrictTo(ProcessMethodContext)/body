@@ -2,7 +2,9 @@
   final Method method=processMethodContext.getMethod();
   final FacetHolder holder=processMethodContext.getFacetHolder();
   final Prototype annotation=Annotations.getAnnotation(method,Prototype.class);
-  PrototypeFacet facet=prototypeValidator.addFacetFlagIfPresent(PrototypeFacetForPrototypeAnnotation.create(annotation,holder));
+  final PrototypeFacet facet1=PrototypeFacetForPrototypeAnnotation.create(annotation,holder);
+  FacetUtil.addFacet(prototypeValidator.flagIfPresent(facet1));
+  PrototypeFacet facet=facet1;
   final Action action=Annotations.getAnnotation(method,Action.class);
   if (facet == null) {
     facet=PrototypeFacetForActionAnnotation.create(action,holder);

@@ -3,5 +3,12 @@
   domainObjectClassWithAnnotation=DomainObjectWithMustSatisfyAnnotations.class;
   firstNameMethodWithout=domainObjectClassWithoutAnnotation.getMethod("getFirstName");
   firstNameMethodWith=domainObjectClassWithAnnotation.getMethod("getFirstName");
+  context.checking(new Expectations(){
+{
+      allowing(mockFacetHolder).getIdentifier();
+      will(returnValue(Identifier.actionIdentifier(Customer.class,"foo")));
+    }
+  }
+);
   facetFactory=new PropertyAnnotationFacetFactory();
 }
