@@ -1,11 +1,11 @@
 {
   final Method method=processMethodContext.getMethod();
   final FacetHolder holder=processMethodContext.getFacetHolder();
-  final Optional annotation=Annotations.getAnnotation(method,Optional.class);
-  MandatoryFacet facet=optionalValidator.flagIfPresent(MandatoryFacetInvertedByOptionalAnnotationOnProperty.create(annotation,method,holder));
-  Mandatory mandatoryAnnotation=Annotations.getAnnotation(method,Mandatory.class);
+  final Optional optionalAnnotation=Annotations.getAnnotation(method,Optional.class);
+  MandatoryFacet facet=optionalValidator.flagIfPresent(MandatoryFacetInvertedByOptionalAnnotationOnProperty.create(optionalAnnotation,method,holder),processMethodContext);
+  final Mandatory mandatoryAnnotation=Annotations.getAnnotation(method,Mandatory.class);
   if (facet == null) {
-    facet=mandatoryValidator.flagIfPresent(MandatoryFacetForMandatoryAnnotationOnProperty.create(mandatoryAnnotation,holder));
+    facet=mandatoryValidator.flagIfPresent(MandatoryFacetForMandatoryAnnotationOnProperty.create(mandatoryAnnotation,holder),processMethodContext);
   }
   final Property property=Annotations.getAnnotation(method,Property.class);
   if (facet == null) {

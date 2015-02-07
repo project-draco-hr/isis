@@ -30,10 +30,10 @@
     final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;
     if (postsActionInvokedEvent != null) {
       final Class<? extends ActionInvokedEvent<?>> actionInvokedEventType=postsActionInvokedEvent.value();
-      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()));
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()),processMethodContext);
     }
  else     if (actionInteraction != null) {
-      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()));
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()),processMethodContext);
     }
  else     if (action != null) {
       actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
