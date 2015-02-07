@@ -4,19 +4,16 @@
   }
   try {
     final PropertyDomainEvent<?,?> event;
-    if (existingEvent != null && phase.isValidatingOrLater()) {
-      event=existingEvent;
+    final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
+    final Identifier identifier=identified.getIdentifier();
+    event=newPropertyDomainEvent(eventType,identifier,source,oldValue,newValue);
+    event.setEventPhase(phase);
+    event.setPhase(AbstractInteractionEvent.Phase.from(phase));
+    if ((existingEvent != null) && phase.isValidatingOrLater()) {
       setEventOldValue(event,oldValue);
       setEventNewValue(event,newValue);
     }
- else {
-      final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
-      final Identifier identifier=identified.getIdentifier();
-      event=newPropertyDomainEvent(eventType,identifier,source,oldValue,newValue);
-    }
-    event.setEventPhase(phase);
-    event.setPhase(AbstractInteractionEvent.Phase.from(phase));
-    getEventBusService().post(event);
+    this.getEventBusService().post(event);
     return event;
   }
  catch (  Exception e) {
