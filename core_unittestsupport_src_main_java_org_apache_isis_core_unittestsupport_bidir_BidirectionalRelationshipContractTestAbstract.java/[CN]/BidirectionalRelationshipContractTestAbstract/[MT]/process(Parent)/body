@@ -3,7 +3,7 @@
   p.mappedBy=persistentAnnotation.mappedBy();
   final String getMethod=StringUtils.methodNamed("get",p.childField);
   final Set<Method> getMethods=ReflectionUtils.getAllMethods(p.entityType,withConcreteMethodNamed(getMethod));
-  assertThat(p.desc() + ": no unique getXxx() method:" + getMethods,getMethods.size(),is(1));
+  assertThat(p.desc() + ": no unique getXxx() method:" + getMethods,getMethods.size(),is(greaterThan(0)));
   p.getMethod=CollectUtils.firstIn(getMethods);
   final Child c=new Child();
   final Class<?> returnType=p.getMethod.getReturnType();
