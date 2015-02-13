@@ -1,0 +1,18 @@
+{
+  final IdentifiedHolder holder=(IdentifiedHolder)facetHolder;
+  final DescribedAsFacet facet=facetHolder.getFacet(DescribedAsFacet.class);
+  if (facet == null) {
+    return;
+  }
+  final String originalText=facet.value();
+  if (isNullOrEmptyWhenTrimmed(originalText)) {
+    return;
+  }
+  final TranslationService translationService=lookupTranslationService();
+  final LocaleProvider localeProvider=lookupLocaleProvider();
+  final Locale locale=localeProvider.getLocale();
+  final String translatedText=translationService.translate(context,originalText,locale);
+  if (!Objects.equals(originalText,translatedText)) {
+    FacetUtil.addFacet(new DescribedAsFacetWrapI18n(translatedText,holder));
+  }
+}

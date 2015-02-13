@@ -1,0 +1,25 @@
+{
+  final HashMap<String,Object> map=new HashMap<String,Object>();
+  boolean param=true;
+  String paramStr=null;
+  for (  final Object paramArg : paramArgs) {
+    if (param) {
+      if (paramArg instanceof String) {
+        paramStr=(String)paramArg;
+      }
+ else {
+        throw new IllegalArgumentException("Parameter must be a string");
+      }
+    }
+ else {
+      final Object arg=paramArg;
+      map.put(paramStr,arg);
+      paramStr=null;
+    }
+    param=!param;
+  }
+  if (paramStr != null) {
+    throw new IllegalArgumentException("Must have equal number of parameters and arguments");
+  }
+  return map;
+}
