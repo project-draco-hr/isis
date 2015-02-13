@@ -1,0 +1,14 @@
+{
+  Map<MsgIdAndContext,String> translationByKey=translationByKeyByLocale.get(targetLocale);
+  if (translationByKey == null) {
+    translationByKey=Maps.newTreeMap();
+    translationByKeyByLocale.put(targetLocale,translationByKey);
+  }
+  final MsgIdAndContext key=new MsgIdAndContext(msgId,context);
+  String translation=translationByKey.get(key);
+  if (translation == null) {
+    translation=translate(targetLocale,key);
+    translationByKey.put(key,translation);
+  }
+  return translation;
+}
