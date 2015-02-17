@@ -9,9 +9,7 @@
   }
   final TranslationService translationService=lookupTranslationService();
   final LocaleProvider localeProvider=lookupLocaleProvider();
-  final Locale locale=localeProvider.getLocale();
-  final String translatedText=translationService.translate(context,originalText,locale);
-  if (!Objects.equals(originalText,translatedText)) {
-    FacetUtil.addFacet(new NamedFacetWrapI18n(translatedText,facetHolder));
+  if (translationService != null && localeProvider != null) {
+    FacetUtil.addFacet(new NamedFacetTranslated(context,originalText,translationService,localeProvider,facetHolder));
   }
 }

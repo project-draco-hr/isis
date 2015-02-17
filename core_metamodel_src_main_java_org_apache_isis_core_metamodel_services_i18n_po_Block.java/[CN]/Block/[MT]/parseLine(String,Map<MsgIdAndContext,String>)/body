@@ -1,0 +1,30 @@
+{
+  if (state == State.CONTEXT) {
+    final Matcher matcher=contextPattern.matcher(line);
+    if (matcher.matches()) {
+      final String context=matcher.group("context");
+      contextList.add(context);
+    }
+ else {
+      state=State.MSGID;
+    }
+  }
+  if (state == State.MSGID) {
+    final Matcher matcher=msgidPattern.matcher(line);
+    if (matcher.matches()) {
+      msgid=matcher.group("msgid");
+    }
+ else {
+      state=State.MSGSTR;
+    }
+  }
+  if (state == State.MSGSTR) {
+    final Matcher matcher=msgstrPattern.matcher(line);
+    if (matcher.matches()) {
+      msgstr=matcher.group("msgstr");
+    }
+    append(translationsByKey);
+    return new Block();
+  }
+  return this;
+}

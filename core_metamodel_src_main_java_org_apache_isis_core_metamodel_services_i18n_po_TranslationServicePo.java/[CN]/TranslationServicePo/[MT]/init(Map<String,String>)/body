@@ -1,8 +1,10 @@
 {
   final String deploymentType=config.get("isis.deploymentType");
   prototype=deploymentType == null || deploymentType.toLowerCase().contains("prototype") || deploymentType.toLowerCase().contains("test");
-  if (!prototype) {
-    po=new PoReader(this);
+  String translationMode=config.get("isis.services.translation.po.mode");
+  final boolean forceRead="read".equalsIgnoreCase(translationMode) || "reader".equalsIgnoreCase(translationMode);
+  if (prototype && !forceRead) {
+    po=new PoWriter(this);
   }
   po.init(config);
 }
