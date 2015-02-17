@@ -1,15 +1,3 @@
 {
-  final Map<ContextAndMsgId,String> translationsByKey=readAndCacheTranslationsIfRequired(targetLocale);
-  final ContextAndMsgId key=new ContextAndMsgId(context,msgId);
-  final String translation=translationsByKey.get(key);
-  if (translation != null) {
-    return translation;
-  }
-  final ContextAndMsgId keyNoContext=new ContextAndMsgId("",msgId);
-  final String translationNoContext=translationsByKey.get(keyNoContext);
-  if (translationNoContext != null) {
-    return translationNoContext;
-  }
-  LOG.warn("No translation found for: " + key);
-  return msgId;
+  return translate(context,msgId,ContextAndMsgId.Type.REGULAR,targetLocale);
 }
