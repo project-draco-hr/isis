@@ -2,7 +2,7 @@
   final String context="org.apache.isis.applib.services.bookmark.BookmarkHolderAssociationContributions#object()";
   final String msgId="Work of art";
   final String msgStr="Objet d'art";
-  poReader=new PoReader(null){
+  poReader=new PoReader(mockTranslationServicePo){
     @Override protected List<String> readPo(    final Locale locale){
       final List<String> lines=Lists.newArrayList();
       lines.add(String.format("#: %s",context));
@@ -12,6 +12,6 @@
     }
   }
 ;
-  final String translated=poReader.translate(context,msgId,Locale.FRENCH);
+  final String translated=poReader.translate(context,msgId);
   assertThat(translated,is(equalTo(msgStr)));
 }

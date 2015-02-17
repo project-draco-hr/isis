@@ -3,7 +3,7 @@
   final String context2="org.apache.isis.applib.fixturescripts.FixtureScripts#runFixtureScript(org.apache.isis.applib.fixturescripts.FixtureScript,java.lang.String)";
   final String msgId="Parameters";
   final String msgStr="Param??tres";
-  poReader=new PoReader(null){
+  poReader=new PoReader(mockTranslationServicePo){
     @Override protected List<String> readPo(    final Locale locale){
       final List<String> lines=Lists.newArrayList();
       lines.add(String.format("#: %s",context1));
@@ -14,8 +14,8 @@
     }
   }
 ;
-  final String translated=poReader.translate(context1,msgId,Locale.FRENCH);
+  final String translated=poReader.translate(context1,msgId);
   assertThat(translated,is(equalTo(msgStr)));
-  final String translated2=poReader.translate(context2,msgId,Locale.FRENCH);
+  final String translated2=poReader.translate(context2,msgId);
   assertThat(translated2,is(equalTo(msgStr)));
 }

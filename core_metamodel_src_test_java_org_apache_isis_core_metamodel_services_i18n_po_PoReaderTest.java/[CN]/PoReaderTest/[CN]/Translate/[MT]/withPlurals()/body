@@ -4,7 +4,7 @@
   final String msgid_plural="Works of art";
   final String msgstr$0="??uvre d'art";
   final String msgstr$1="Les ??uvres d'art";
-  poReader=new PoReader(null){
+  poReader=new PoReader(mockTranslationServicePo){
     @Override protected List<String> readPo(    final Locale locale){
       final List<String> lines=Lists.newArrayList();
       lines.add(String.format("#: %s",context));
@@ -16,8 +16,8 @@
     }
   }
 ;
-  final String translated1=poReader.translate(context,msgid,Locale.FRENCH);
+  final String translated1=poReader.translate(context,msgid);
   assertThat(translated1,is(equalTo(msgstr$0)));
-  final String translated2=poReader.translate(context,msgid_plural,Locale.FRENCH);
+  final String translated2=poReader.translate(context,msgid_plural);
   assertThat(translated2,is(equalTo(msgstr$1)));
 }
