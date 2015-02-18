@@ -1,4 +1,14 @@
 {
   super.setUp();
+  mockServicesInjector=context.mock(ServicesInjector.class);
+  mockTranslationService=context.mock(TranslationService.class);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(TranslationService.class);
+      will(returnValue(mockTranslationService));
+    }
+  }
+);
   facetFactory=new ValidateObjectFacetMethodFactory();
+  facetFactory.setServicesInjector(mockServicesInjector);
 }
