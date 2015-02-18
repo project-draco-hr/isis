@@ -4,11 +4,14 @@
   final String capitalizedName=StringExtensions.asCapitalizedName(actionMethod.getName());
   final Class<?>[] paramTypes=actionMethod.getParameterTypes();
   final MethodScope onClass=MethodScope.scopeFor(actionMethod);
-  final Method validateMethod=MethodFinderUtils.findMethod(cls,onClass,MethodPrefixConstants.VALIDATE_PREFIX + capitalizedName,String.class,paramTypes);
+  final Method validateMethod=MethodFinderUtils.findMethod(cls,onClass,MethodPrefixConstants.VALIDATE_PREFIX + capitalizedName,new Class<?>[]{String.class,TranslatableString.class},paramTypes);
   if (validateMethod == null) {
     return;
   }
   processMethodContext.removeMethod(validateMethod);
-  final FacetHolder facetedMethod=processMethodContext.getFacetHolder();
-  FacetUtil.addFacet(new ActionValidationFacetViaMethod(validateMethod,facetedMethod));
+  final IdentifiedHolder facetedMethod=processMethodContext.getFacetHolder();
+  final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
+  final String translationContext=facetedMethod.getIdentifier().toClassAndNameIdentityString();
+  final ActionValidationFacetViaMethod facet=new ActionValidationFacetViaMethod(validateMethod,translationService,translationContext,facetedMethod);
+  FacetUtil.addFacet(facet);
 }

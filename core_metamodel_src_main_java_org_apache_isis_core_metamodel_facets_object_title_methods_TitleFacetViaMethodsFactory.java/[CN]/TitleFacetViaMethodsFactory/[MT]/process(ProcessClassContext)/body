@@ -1,10 +1,13 @@
 {
   final Class<?> cls=processClassContext.getCls();
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
-  Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,TITLE,String.class,null);
+  Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,TITLE,new Class<?>[]{String.class,TranslatableString.class},null);
   if (method != null) {
     processClassContext.removeMethod(method);
-    FacetUtil.addFacet(new TitleFacetViaTitleMethod(method,facetHolder));
+    final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
+    final String translationContext=method.getDeclaringClass().getName() + "#" + method.getName()+ "()";
+    final TitleFacetViaTitleMethod facet=new TitleFacetViaTitleMethod(method,translationService,translationContext,facetHolder);
+    FacetUtil.addFacet(facet);
     return;
   }
   final TitleFacet existingTitleFacet=facetHolder.getFacet(TitleFacet.class);

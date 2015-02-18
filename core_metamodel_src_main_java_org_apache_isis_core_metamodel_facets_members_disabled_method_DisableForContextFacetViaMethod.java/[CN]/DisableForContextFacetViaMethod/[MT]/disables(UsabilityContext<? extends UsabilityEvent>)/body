@@ -3,5 +3,13 @@
   if (target == null) {
     return null;
   }
-  return (String)ObjectAdapter.InvokeUtils.invoke(method,target,ic.getContributeeAsMap());
+  final Object returnValue=ObjectAdapter.InvokeUtils.invoke(method,target,ic.getContributeeAsMap());
+  if (returnValue instanceof String) {
+    return (String)returnValue;
+  }
+  if (returnValue instanceof TranslatableString) {
+    final TranslatableString ts=(TranslatableString)returnValue;
+    return ts.translate(translationService,translationContext);
+  }
+  return null;
 }

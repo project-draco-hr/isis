@@ -1,0 +1,23 @@
+{
+  final Locale targetLocale;
+  try {
+    targetLocale=translationServicePo.getLocaleProvider().getLocale();
+  }
+ catch (  final RuntimeException ex) {
+    LOG.warn("Failed to obtain locale, returning the original msgId");
+    return msgId;
+  }
+  final Map<ContextAndMsgId,String> translationsByKey=readAndCacheTranslationsIfRequired(targetLocale);
+  final ContextAndMsgId key=new ContextAndMsgId(context,msgId,type);
+  final String translation=lookupTranslation(translationsByKey,key);
+  if (!Strings.isNullOrEmpty(translation)) {
+    return translation;
+  }
+  final ContextAndMsgId keyNoContext=new ContextAndMsgId("",msgId,type);
+  final String translationNoContext=lookupTranslation(translationsByKey,keyNoContext);
+  if (!Strings.isNullOrEmpty(translationNoContext)) {
+    return translationNoContext;
+  }
+  LOG.warn("No translation found for: " + key);
+  return msgId;
+}
