@@ -1,9 +1,11 @@
 {
   final Class<?> cls=processClassContext.getCls();
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
-  final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,VALIDATE_PREFIX,String.class,NO_PARAMETERS_TYPES);
+  final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,VALIDATE_PREFIX,new Class<?>[]{String.class,TranslatableString.class},NO_PARAMETERS_TYPES);
   if (method != null) {
-    FacetUtil.addFacet(new ValidateObjectFacetMethod(method,facetHolder));
+    final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
+    final String translationContext=((IdentifiedHolder)facetHolder).getIdentifier().toClassIdentityString();
+    FacetUtil.addFacet(new ValidateObjectFacetMethod(method,translationService,translationContext,facetHolder));
     processClassContext.removeMethod(method);
   }
 }

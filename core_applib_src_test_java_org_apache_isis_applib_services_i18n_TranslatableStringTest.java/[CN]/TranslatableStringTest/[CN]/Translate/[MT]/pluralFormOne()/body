@@ -1,0 +1,16 @@
+{
+  final String singularText="singular text to translate";
+  final String pluralText="plural text to translate";
+  final String someContext="someContext";
+  final Locale someLocale=Locale.CANADA;
+  final String translation="the translation";
+  final TranslatableString ts=TranslatableString.trn(singularText,pluralText,1);
+  context.checking(new Expectations(){
+{
+      oneOf(mockTranslationService).translate(someContext,singularText,pluralText,1);
+      will(returnValue(translation));
+    }
+  }
+);
+  assertThat(ts.translate(mockTranslationService,someContext),is(translation));
+}

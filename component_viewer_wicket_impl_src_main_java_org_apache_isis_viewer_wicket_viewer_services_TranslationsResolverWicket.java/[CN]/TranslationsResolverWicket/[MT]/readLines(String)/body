@@ -1,0 +1,17 @@
+{
+  final ServletContext servletContext=getServletContext();
+  final String configLocation=servletContext.getInitParameter(WebAppConstants.CONFIG_DIR_PARAM);
+  try {
+    if (configLocation != null) {
+      LOG.info("Reading translations relative to config override location: " + configLocation);
+      return Files.readLines(newFile(configLocation,file),Charsets.UTF_8);
+    }
+ else {
+      final URL url=servletContext.getResource("/WEB-INF/" + file);
+      return readLines(url);
+    }
+  }
+ catch (  final RuntimeException|IOException ignored) {
+    return null;
+  }
+}
