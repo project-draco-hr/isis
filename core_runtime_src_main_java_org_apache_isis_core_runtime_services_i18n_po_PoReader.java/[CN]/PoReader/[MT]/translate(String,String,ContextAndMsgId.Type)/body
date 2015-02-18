@@ -2,6 +2,9 @@
   final Locale targetLocale;
   try {
     targetLocale=translationServicePo.getLocaleProvider().getLocale();
+    if (targetLocale == null) {
+      return msgId;
+    }
   }
  catch (  final RuntimeException ex) {
     LOG.warn("Failed to obtain locale, returning the original msgId");
@@ -18,6 +21,8 @@
   if (!Strings.isNullOrEmpty(translationNoContext)) {
     return translationNoContext;
   }
-  LOG.warn("No translation found for: " + key);
+  if (translation == null && translationNoContext == null) {
+    LOG.warn("No translation found for: " + key);
+  }
   return msgId;
 }
