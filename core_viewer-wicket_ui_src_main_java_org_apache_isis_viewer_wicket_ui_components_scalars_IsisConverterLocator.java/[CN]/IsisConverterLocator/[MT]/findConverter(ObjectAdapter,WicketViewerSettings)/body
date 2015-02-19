@@ -3,9 +3,12 @@
   if (!objectSpecification.isValue()) {
     return null;
   }
+  final Class<?> correspondingClass=objectSpecification.getCorrespondingClass();
+  if (Enum.class.isAssignableFrom(correspondingClass)) {
+    return null;
+  }
   final RenderedAdjustedFacet renderedAdjustedFacet=objectSpecification.getFacet(RenderedAdjustedFacet.class);
   final int adjustBy=renderedAdjustedFacet != null ? renderedAdjustedFacet.value() : 0;
-  final Class<?> correspondingClass=objectSpecification.getCorrespondingClass();
   IConverter converter=null;
   if (java.util.Date.class == correspondingClass) {
     converter=new DateConverterForJavaUtilDate(wicketViewerSettings,adjustBy);
@@ -32,7 +35,7 @@
     converter=new DateConverterForJavaSqlTimestamp(wicketViewerSettings,adjustBy);
   }
  else   if (java.math.BigInteger.class == correspondingClass) {
-    converter=JavaMathBigIntegerPanelFactory.BigIntegerConverter.INSTANCE;
+    converter=BigIntegerConverter.INSTANCE;
   }
  else   if (java.math.BigDecimal.class == correspondingClass) {
     final BigDecimalValueFacet facet=objectSpecification.getFacet(BigDecimalValueFacet.class);

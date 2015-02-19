@@ -1,3 +1,20 @@
 {
+  if (titleMethod != null) {
+    final TranslationService translationService=getDependencyInjector().lookupService(TranslationService.class);
+    final String translationContext=titleMethod.getDeclaringClass().getName() + "#" + titleMethod.getName()+ "()";
+    try {
+      final Object returnValue=MethodExtensions.invoke(titleMethod,object);
+      if (returnValue instanceof String) {
+        return (String)returnValue;
+      }
+      if (returnValue instanceof TranslatableString) {
+        final TranslatableString ts=(TranslatableString)returnValue;
+        return ts.translate(translationService,translationContext);
+      }
+      return null;
+    }
+ catch (    final RuntimeException ex) {
+    }
+  }
   return object.toString();
 }
