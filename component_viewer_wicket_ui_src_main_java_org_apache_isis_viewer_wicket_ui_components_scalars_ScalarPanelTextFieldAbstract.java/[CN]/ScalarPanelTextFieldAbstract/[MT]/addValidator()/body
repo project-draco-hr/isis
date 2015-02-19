@@ -1,0 +1,17 @@
+{
+  final ScalarModel scalarModel=getModel();
+  textField.add(new IValidator<T>(){
+    private static final long serialVersionUID=1L;
+    @Override public void validate(    final IValidatable<T> validatable){
+      final T proposedValue=validatable.getValue();
+      final ObjectAdapter proposedAdapter=getAdapterManager().adapterFor(proposedValue);
+      final String reasonIfAny=scalarModel.validate(proposedAdapter);
+      if (reasonIfAny != null) {
+        final ValidationError error=new ValidationError();
+        error.setMessage(reasonIfAny);
+        validatable.error(error);
+      }
+    }
+  }
+);
+}
