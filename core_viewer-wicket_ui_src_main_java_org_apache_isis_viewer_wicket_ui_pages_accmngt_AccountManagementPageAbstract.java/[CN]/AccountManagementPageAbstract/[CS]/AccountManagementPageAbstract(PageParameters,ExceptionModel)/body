@@ -1,7 +1,11 @@
 {
   super(parameters);
+  Class<? extends Page> pageClass=pageClassRegistry.getPageClass(PageType.SIGN_IN);
+  BookmarkablePageLink<Void> signInLink=new BookmarkablePageLink<>("signInLink",pageClass);
+  signInLink.setAutoEnable(true);
+  add(signInLink);
   addPageTitle();
-  addApplicationName();
+  addApplicationName(signInLink);
   if (exceptionModel != null) {
     add(new ExceptionStackTracePanel(ID_EXCEPTION_STACK_TRACE,exceptionModel));
   }
