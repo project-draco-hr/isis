@@ -7,9 +7,6 @@
     String isisConfigDir=getServletContext().getInitParameter("isis.config.dir");
     configureLogging(isisConfigDir);
     getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
-    RequestCycleListenerCollection requestCycleListeners=getRequestCycleListeners();
-    requestCycleListeners.add(newWebRequestCycleForIsis());
-    requestCycleListeners.add(new PageRequestHandlerTracker());
     getResourceSettings().setParentFolderPlaceholder("$up$");
     determineDeploymentTypeIfRequired();
     final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
@@ -20,6 +17,9 @@
     this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
     getDebugSettings().setAjaxDebugModeEnabled(determineAjaxDebugModeEnabled(configuration));
     initWicketComponentInjection(injector);
+    RequestCycleListenerCollection requestCycleListeners=getRequestCycleListeners();
+    requestCycleListeners.add(newWebRequestCycleForIsis());
+    requestCycleListeners.add(new PageRequestHandlerTracker());
     buildCssBundle();
     filterJavascriptContributions();
     configureWicketSourcePlugin();
