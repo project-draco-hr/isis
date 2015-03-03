@@ -1,0 +1,10 @@
+{
+  final String persistableClassNames=Joiner.on(',').join(persistableClassNameSet);
+  datanucleusProps.put("datanucleus.autoStartClassNames",persistableClassNames);
+  persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+  final boolean createSchema=Boolean.parseBoolean(datanucleusProps.get("datanucleus.autoCreateSchema"));
+  if (createSchema) {
+    createSchema();
+  }
+  namedQueryByName=catalogNamedQueries(persistableClassNameSet);
+}

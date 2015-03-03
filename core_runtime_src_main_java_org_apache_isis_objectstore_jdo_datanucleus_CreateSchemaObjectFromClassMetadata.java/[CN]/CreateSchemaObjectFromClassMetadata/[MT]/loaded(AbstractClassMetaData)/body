@@ -1,0 +1,27 @@
+{
+  final String schemaName=cmd.getSchema();
+  if (Strings.isNullOrEmpty(schemaName)) {
+    return;
+  }
+  driverName=properties.get("javax.jdo.option.ConnectionDriverName");
+  url=properties.get("javax.jdo.option.ConnectionURL");
+  final String userName=properties.get("javax.jdo.option.ConnectionUserName");
+  final String password=properties.get("javax.jdo.option.ConnectionPassword");
+  Connection connection=null;
+  Statement statement=null;
+  try {
+    connection=DriverManager.getConnection(url,userName,password);
+    statement=connection.createStatement();
+    if (skip(cmd,statement)) {
+      return;
+    }
+    exec(cmd,statement);
+  }
+ catch (  SQLException e) {
+    LOG.warn("Unable to create schema",e);
+  }
+ finally {
+    closeSafely(statement);
+    closeSafely(connection);
+  }
+}
