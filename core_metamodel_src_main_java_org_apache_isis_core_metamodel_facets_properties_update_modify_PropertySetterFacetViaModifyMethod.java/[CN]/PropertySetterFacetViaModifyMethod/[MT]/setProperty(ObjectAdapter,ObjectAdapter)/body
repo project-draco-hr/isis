@@ -1,3 +1,16 @@
 {
-  ObjectAdapter.InvokeUtils.invoke(method,adapter,valueAdapter);
+  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+  final Command command;
+  if (commandContext != null) {
+    command=commandContext.getCommand();
+    command.setExecutor(Command.Executor.USER);
+    command.setTarget(CommandUtil.bookmarkFor(targetAdapter));
+    command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
+    command.setTargetAction("(edit)");
+    command.setMemberIdentifier("(edit)");
+    command.setExecuteIn(org.apache.isis.applib.annotation.Command.ExecuteIn.FOREGROUND);
+    command.setPersistence(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED);
+    command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
+  }
+  ObjectAdapter.InvokeUtils.invoke(method,targetAdapter,valueAdapter);
 }
