@@ -4,6 +4,21 @@
   }
   doPreApply();
   if (applyFormChangesElse())   return;
+  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+  final Command command;
+  if (commandContext != null) {
+    command=commandContext.getCommand();
+    if (command.getTarget() != null) {
+    }
+ else {
+      command.setExecutor(Command.Executor.USER);
+      final ObjectAdapter objectAdapter=getEntityModel().getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+      command.setTarget(CommandUtil.bookmarkFor(objectAdapter));
+      command.setTargetClass(CommandUtil.targetClassNameFor(objectAdapter));
+      command.setTargetAction("(edit)");
+      command.setMemberIdentifier("(edit)");
+    }
+  }
   final Object redirectIfAny=doPostApply();
   if (flushChangesElse(target))   return;
   getEntityModel().resetPropertyModels();
