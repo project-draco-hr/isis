@@ -28,17 +28,21 @@
         final Bookmark targetBookmark=CommandUtil.bookmarkFor(targetAdapter);
         command.setTarget(targetBookmark);
       }
-      command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
-      final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
-      if (backgroundService != null) {
-        final Object targetObject=unwrap(targetAdapter);
-        final Object[] args=CommandUtil.objectsFor(arguments);
-        ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
-        if (aim != null) {
-          command.setMemento(aim.asMementoString());
-        }
+      if ("(edit)".equals(command.getMemberIdentifier())) {
+      }
  else {
-          throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
+        command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
+        final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
+        if (backgroundService != null) {
+          final Object targetObject=unwrap(targetAdapter);
+          final Object[] args=CommandUtil.objectsFor(arguments);
+          final ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
+          if (aim != null) {
+            command.setMemento(aim.asMementoString());
+          }
+ else {
+            throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
+          }
         }
       }
       final CommandFacet commandFacet=getFacetHolder().getFacet(CommandFacet.class);
@@ -61,41 +65,39 @@
         throw new IsisException("Unable to schedule action '" + owningAction.getIdentifier().toClassAndNameIdentityString() + "' to run in background: "+ "CommandService does not support persistent commands ");
       }
     }
- else {
-      if (command != null) {
-        command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
-      }
-      Object result=method.invoke(targetPojo,executionParameters);
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(" action result " + result);
-      }
-      if (result == null) {
-        if (targetAdapter.getSpecification().isViewModelCloneable(targetAdapter)) {
-          final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)targetAdapter.getObject();
-          final Object clone=cloneable.clone();
-          final ObjectAdapter clonedAdapter=getAdapterManager().adapterFor(clone);
-          return InvocationResult.forActionThatReturned(clonedAdapter);
-        }
-        return InvocationResult.forActionThatReturned(null);
-      }
-      ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
-      if (resultAdapter.getSpecification().isViewModelCloneable(resultAdapter)) {
-        final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)result;
-        result=cloneable.clone();
-        resultAdapter=getAdapterManager().adapterFor(result);
-      }
-      final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
-      resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
-      if (command != null) {
-        if (!resultAdapter.getSpecification().containsDoOpFacet(ViewModelFacet.class)) {
-          final Bookmark bookmark=CommandUtil.bookmarkFor(resultAdapter);
-          command.setResult(bookmark);
-        }
-      }
-      final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
-      currentInvocation.set(publishedActionFacet != null ? new CurrentInvocation(targetAdapter,getIdentified(),arguments,resultAdapter,command) : null);
-      return InvocationResult.forActionThatReturned(resultAdapter);
+    if (command != null) {
+      command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
     }
+    Object result=method.invoke(targetPojo,executionParameters);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(" action result " + result);
+    }
+    if (result == null) {
+      if (targetAdapter.getSpecification().isViewModelCloneable(targetAdapter)) {
+        final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)targetAdapter.getObject();
+        final Object clone=cloneable.clone();
+        final ObjectAdapter clonedAdapter=getAdapterManager().adapterFor(clone);
+        return InvocationResult.forActionThatReturned(clonedAdapter);
+      }
+      return InvocationResult.forActionThatReturned(null);
+    }
+    ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
+    if (resultAdapter.getSpecification().isViewModelCloneable(resultAdapter)) {
+      final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)result;
+      result=cloneable.clone();
+      resultAdapter=getAdapterManager().adapterFor(result);
+    }
+    final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
+    resultAdapter.setElementSpecificationProvider(ElementSpecificationProviderFromTypeOfFacet.createFrom(typeOfFacet));
+    if (command != null) {
+      if (!resultAdapter.getSpecification().containsDoOpFacet(ViewModelFacet.class)) {
+        final Bookmark bookmark=CommandUtil.bookmarkFor(resultAdapter);
+        command.setResult(bookmark);
+      }
+    }
+    final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
+    currentInvocation.set(publishedActionFacet != null ? new CurrentInvocation(targetAdapter,getIdentified(),arguments,resultAdapter,command) : null);
+    return InvocationResult.forActionThatReturned(resultAdapter);
   }
  catch (  final IllegalArgumentException e) {
     throw e;
