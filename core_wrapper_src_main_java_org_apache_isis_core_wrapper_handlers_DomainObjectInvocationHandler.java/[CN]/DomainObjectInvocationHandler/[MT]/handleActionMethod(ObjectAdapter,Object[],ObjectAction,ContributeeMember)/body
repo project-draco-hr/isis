@@ -1,8 +1,20 @@
 {
+  final ObjectAdapter contributeeAdapter;
+  final Object[] contributeeArgs;
+  if (contributeeMember != null) {
+    final int contributeeParamPosition=contributeeMember.getContributeeParamPosition();
+    final Object contributee=args[contributeeParamPosition];
+    contributeeAdapter=adapterFor(contributee);
+    final List<Object> argCopy=Lists.newArrayList(args);
+    argCopy.remove(contributeeParamPosition);
+    contributeeArgs=argCopy.toArray();
+  }
+ else {
+    contributeeAdapter=null;
+    contributeeArgs=null;
+  }
   if (getExecutionMode().shouldEnforceRules()) {
     if (contributeeMember != null) {
-      final Object contributee=args[contributeeMember.getContributeeParamPosition()];
-      final ObjectAdapter contributeeAdapter=getAdapterManager().adapterFor(contributee);
       checkVisibility(contributeeAdapter,contributeeMember);
       checkUsability(contributeeAdapter,contributeeMember);
     }
@@ -11,19 +23,18 @@
       checkUsability(targetAdapter,objectAction);
     }
   }
-  final Object[] underlyingArgs=new Object[args.length];
-  int i=0;
-  for (  final Object arg : args) {
-    underlyingArgs[i++]=underlying(arg);
-  }
-  final ObjectAdapter[] argAdapters=new ObjectAdapter[underlyingArgs.length];
-  int j=0;
-  for (  final Object underlyingArg : underlyingArgs) {
-    argAdapters[j++]=underlyingArg != null ? getAdapterManager().adapterFor(underlyingArg) : null;
-  }
+  final ObjectAdapter[] argAdapters=asObjectAdaptersUnderlying(args);
   if (getExecutionMode().shouldEnforceRules()) {
-    final InteractionResult interactionResult=objectAction.isProposedArgumentSetValid(targetAdapter,argAdapters).getInteractionResult();
-    notifyListenersAndVetoIfRequired(interactionResult);
+    if (contributeeMember != null) {
+      if (contributeeMember instanceof ObjectActionContributee) {
+        final ObjectActionContributee objectActionContributee=(ObjectActionContributee)contributeeMember;
+        final ObjectAdapter[] contributeeArgAdapters=asObjectAdaptersUnderlying(contributeeArgs);
+        checkValidity(contributeeAdapter,objectActionContributee,contributeeArgAdapters);
+      }
+    }
+ else {
+      checkValidity(targetAdapter,objectAction,argAdapters);
+    }
   }
   if (getExecutionMode().shouldExecute()) {
     final ObjectAdapter actionReturnNO=objectAction.execute(targetAdapter,argAdapters);
