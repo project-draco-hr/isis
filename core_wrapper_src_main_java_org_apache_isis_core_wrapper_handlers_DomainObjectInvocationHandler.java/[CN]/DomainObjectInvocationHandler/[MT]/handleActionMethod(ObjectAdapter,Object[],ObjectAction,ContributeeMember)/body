@@ -1,0 +1,34 @@
+{
+  if (getExecutionMode().shouldEnforceRules()) {
+    if (contributeeMember != null) {
+      final Object contributee=args[contributeeMember.getContributeeParamPosition()];
+      final ObjectAdapter contributeeAdapter=getAdapterManager().adapterFor(contributee);
+      checkVisibility(contributeeAdapter,contributeeMember);
+      checkUsability(contributeeAdapter,contributeeMember);
+    }
+ else {
+      checkVisibility(targetAdapter,objectAction);
+      checkUsability(targetAdapter,objectAction);
+    }
+  }
+  final Object[] underlyingArgs=new Object[args.length];
+  int i=0;
+  for (  final Object arg : args) {
+    underlyingArgs[i++]=underlying(arg);
+  }
+  final ObjectAdapter[] argAdapters=new ObjectAdapter[underlyingArgs.length];
+  int j=0;
+  for (  final Object underlyingArg : underlyingArgs) {
+    argAdapters[j++]=underlyingArg != null ? getAdapterManager().adapterFor(underlyingArg) : null;
+  }
+  if (getExecutionMode().shouldEnforceRules()) {
+    final InteractionResult interactionResult=objectAction.isProposedArgumentSetValid(targetAdapter,argAdapters).getInteractionResult();
+    notifyListenersAndVetoIfRequired(interactionResult);
+  }
+  if (getExecutionMode().shouldExecute()) {
+    final ObjectAdapter actionReturnNO=objectAction.execute(targetAdapter,argAdapters);
+    return ObjectAdapter.Util.unwrap(actionReturnNO);
+  }
+  objectChangedIfRequired(targetAdapter);
+  return null;
+}
