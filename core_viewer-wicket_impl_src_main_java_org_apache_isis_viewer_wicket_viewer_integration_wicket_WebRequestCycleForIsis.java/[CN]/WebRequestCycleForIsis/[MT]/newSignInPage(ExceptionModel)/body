@@ -1,6 +1,12 @@
 {
-  Class<? extends Page> signInPageClass=pageClassRegistry.getPageClass(PageType.SIGN_IN);
-  PageParameters parameters=new PageParameters();
+  Class<? extends Page> signInPageClass=null;
+  if (pageClassRegistry != null) {
+    signInPageClass=pageClassRegistry.getPageClass(PageType.SIGN_IN);
+  }
+  if (signInPageClass == null) {
+    signInPageClass=WicketSignInPage.class;
+  }
+  final PageParameters parameters=new PageParameters();
   Page signInPage;
   try {
     Constructor<? extends Page> constructor=signInPageClass.getConstructor(PageParameters.class,ExceptionModel.class);
