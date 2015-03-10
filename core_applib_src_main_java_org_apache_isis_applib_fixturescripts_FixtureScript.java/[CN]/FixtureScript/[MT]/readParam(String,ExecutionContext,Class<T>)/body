@@ -3,15 +3,26 @@
   if (value != null) {
     return (T)value;
   }
-  final Method method;
+  Method method;
   try {
-    method=this.getClass().getMethod("get" + parameterName.substring(0,1).toUpperCase() + parameterName.substring(1));
+    method=this.getClass().getMethod("get" + uppercase(parameterName));
     value=(T)method.invoke(this);
   }
  catch (  NoSuchMethodException|InvocationTargetException|IllegalAccessException ignored) {
   }
   if (value != null) {
     return (T)value;
+  }
+  if (cls == Boolean.class || cls == boolean.class) {
+    try {
+      method=this.getClass().getMethod("is" + uppercase(parameterName));
+      value=(T)method.invoke(this);
+    }
+ catch (    NoSuchMethodException|InvocationTargetException|IllegalAccessException ignored) {
+    }
+    if (value != null) {
+      return (T)value;
+    }
   }
   return null;
 }
