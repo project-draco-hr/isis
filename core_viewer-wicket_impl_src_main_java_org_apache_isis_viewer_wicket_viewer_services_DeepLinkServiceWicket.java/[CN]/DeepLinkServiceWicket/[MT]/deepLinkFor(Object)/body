@@ -2,6 +2,7 @@
   final AdapterManagerDefault adapterManager=getAdapterManager();
   final ObjectAdapter objectAdapter=adapterManager.adapterFor(domainObject);
   final PageParameters pageParameters=EntityModel.createPageParameters(objectAdapter);
+  PageClassRegistry pageClassRegistry=guiceBeanProvider.lookup(PageClassRegistry.class);
   final Class<? extends Page> pageClass=pageClassRegistry.getPageClass(PageType.ENTITY);
   final RequestCycle requestCycle=RequestCycle.get();
   final CharSequence urlForPojo=requestCycle.urlFor(pageClass,pageParameters);
