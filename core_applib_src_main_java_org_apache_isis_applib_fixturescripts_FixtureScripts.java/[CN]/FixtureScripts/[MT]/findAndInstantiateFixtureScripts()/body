@@ -1,4 +1,5 @@
 {
+  final List<FixtureScript> fixtureScripts=Lists.newArrayList();
   final Set<Class<? extends FixtureScript>> classes=findSubTypesOfClasses();
   for (  final Class<? extends FixtureScript> fixtureScriptCls : classes) {
     final String packageName=fixtureScriptCls.getPackage().getName();
@@ -7,13 +8,14 @@
     }
     final FixtureScript fs=newFixtureScript(fixtureScriptCls);
     if (fs != null) {
-      fixtureScriptList.add(fs);
+      fixtureScripts.add(fs);
     }
   }
-  Collections.sort(fixtureScriptList,new Comparator<FixtureScript>(){
-    @Override public int compare(    FixtureScript o1,    FixtureScript o2){
+  Collections.sort(fixtureScripts,new Comparator<FixtureScript>(){
+    @Override public int compare(    final FixtureScript o1,    final FixtureScript o2){
       return ObjectContracts.compare(o1,o2,"friendlyName,qualifiedName");
     }
   }
 );
+  return fixtureScripts;
 }
