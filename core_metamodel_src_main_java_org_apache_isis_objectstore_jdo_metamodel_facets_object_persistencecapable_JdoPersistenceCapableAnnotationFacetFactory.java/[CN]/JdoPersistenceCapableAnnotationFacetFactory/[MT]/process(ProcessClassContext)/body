@@ -4,11 +4,12 @@
   if (annotation == null) {
     return;
   }
+  final String annotationSchemaAttribute=annotation.schema();
   String annotationTableAttribute=annotation.table();
   if (Strings.isNullOrEmpty(annotationTableAttribute)) {
     annotationTableAttribute=cls.getSimpleName();
   }
   final IdentityType annotationIdentityType=annotation.identityType();
-  FacetUtil.addFacet(new JdoPersistenceCapableFacetAnnotation(annotationTableAttribute,annotationIdentityType,processClassContext.getFacetHolder()));
+  FacetUtil.addFacet(new JdoPersistenceCapableFacetAnnotation(annotationSchemaAttribute,annotationTableAttribute,annotationIdentityType,processClassContext.getFacetHolder()));
   return;
 }
