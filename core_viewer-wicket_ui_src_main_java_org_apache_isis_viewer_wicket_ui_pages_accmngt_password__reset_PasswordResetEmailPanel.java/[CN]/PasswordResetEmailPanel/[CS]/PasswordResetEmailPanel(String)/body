@@ -1,0 +1,34 @@
+{
+  super(id);
+  StatelessForm<Void> form=new StatelessForm<>("signUpForm");
+  addOrReplace(form);
+  final RequiredTextField<String> emailField=new RequiredTextField<>("email",Model.of(""));
+  emailField.setLabel(new ResourceModel("emailLabel"));
+  emailField.add(EmailAddressValidator.getInstance());
+  emailField.add(EmailAvailableValidator.EXISTS);
+  FormGroup formGroup=new FormGroup("formGroup",emailField);
+  form.add(formGroup);
+  formGroup.add(emailField);
+  Button signUpButton=new Button("passwordResetSubmit"){
+    @Override public void onSubmit(){
+      super.onSubmit();
+      String email=emailField.getModelObject();
+      String confirmationUrl=emailVerificationUrlService.createVerificationUrl(PageType.PASSWORD_RESET,email);
+      emailNotificationService.init();
+      emailService.init();
+      final PasswordResetEvent passwordResetEvent=new PasswordResetEvent(email,confirmationUrl,applicationName);
+      boolean emailSent=emailNotificationService.send(passwordResetEvent);
+      if (emailSent) {
+        Map<String,String> map=new HashMap<>();
+        map.put("email",email);
+        IModel<Map<String,String>> model=Model.ofMap(map);
+        String emailSentMessage=getString("emailSentMessage",model);
+        CookieUtils cookieUtils=new CookieUtils();
+        cookieUtils.save(AccountManagementPageAbstract.FEEDBACK_COOKIE_NAME,emailSentMessage);
+        pageNavigationService.navigateTo(PageType.SIGN_IN);
+      }
+    }
+  }
+;
+  form.add(signUpButton);
+}

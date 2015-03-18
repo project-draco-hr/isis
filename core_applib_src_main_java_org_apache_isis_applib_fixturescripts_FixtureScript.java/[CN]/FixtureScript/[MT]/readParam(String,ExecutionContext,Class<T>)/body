@@ -1,0 +1,28 @@
+{
+  T value=ec.getParameterAsT(parameterName,cls);
+  if (value != null) {
+    return (T)value;
+  }
+  Method method;
+  try {
+    method=this.getClass().getMethod("get" + uppercase(parameterName));
+    value=(T)method.invoke(this);
+  }
+ catch (  NoSuchMethodException|InvocationTargetException|IllegalAccessException ignored) {
+  }
+  if (value != null) {
+    return (T)value;
+  }
+  if (cls == Boolean.class || cls == boolean.class) {
+    try {
+      method=this.getClass().getMethod("is" + uppercase(parameterName));
+      value=(T)method.invoke(this);
+    }
+ catch (    NoSuchMethodException|InvocationTargetException|IllegalAccessException ignored) {
+    }
+    if (value != null) {
+      return (T)value;
+    }
+  }
+  return null;
+}

@@ -1,0 +1,24 @@
+{
+class Order {
+  }
+class Customer {
+    @Collection(hidden=Where.REFERENCES_PARENT) public List<Order> getOrders(){
+      return null;
+    }
+    public void setOrders(    final List<Order> orders){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  collectionMethod=findMethod(Customer.class,"getOrders");
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,collectionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processHidden(processMethodContext);
+  final HiddenFacet hiddenFacet=facetedMethod.getFacet(HiddenFacet.class);
+  Assert.assertNotNull(hiddenFacet);
+  Assert.assertTrue(hiddenFacet instanceof HiddenFacetForCollectionAnnotation);
+  final HiddenFacetForCollectionAnnotation hiddenFacetImpl=(HiddenFacetForCollectionAnnotation)hiddenFacet;
+  assertThat(hiddenFacetImpl.where(),is(Where.REFERENCES_PARENT));
+  assertThat(hiddenFacetImpl.when(),is(When.ALWAYS));
+  final Facet hiddenFacetForColl=facetedMethod.getFacet(HiddenFacetForCollectionAnnotation.class);
+  Assert.assertNotNull(hiddenFacetForColl);
+  Assert.assertTrue(hiddenFacet == hiddenFacetForColl);
+}

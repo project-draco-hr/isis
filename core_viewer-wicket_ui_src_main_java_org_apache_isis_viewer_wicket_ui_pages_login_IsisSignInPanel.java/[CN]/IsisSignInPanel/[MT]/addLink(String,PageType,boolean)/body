@@ -1,0 +1,16 @@
+{
+  final BookmarkablePageLink<Void> link;
+  if (pageClassRegistry != null) {
+    final Class<? extends Page> signUpPageClass=pageClassRegistry.getPageClass(pageType);
+    link=new BookmarkablePageLink<>(id,signUpPageClass);
+    if (!visibilityAllowed) {
+      link.setVisibilityAllowed(false);
+    }
+  }
+ else {
+    link=new BookmarkablePageLink<>(id,null);
+    link.setVisibilityAllowed(false);
+  }
+  getSignInForm().addOrReplace(link);
+  return link;
+}

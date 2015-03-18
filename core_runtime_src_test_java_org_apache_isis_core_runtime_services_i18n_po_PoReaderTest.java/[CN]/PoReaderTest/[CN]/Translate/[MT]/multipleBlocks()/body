@@ -1,0 +1,28 @@
+{
+  final String context1="org.apache.isis.applib.services.bookmark.BookmarkHolderAssociationContributions#object()";
+  final String msgid1="Work of art";
+  final String msgstr1="Objet d'art";
+  final String context2="org.apache.isis.applib.services.bookmark.BookmarkHolderAssociationContributions#lookup()";
+  final String msgid2="Lookup";
+  final String msgstr2="Look up";
+  poReader=new PoReader(mockTranslationServicePo){
+    @Override protected List<String> readPo(    final Locale locale){
+      final List<String> lines=Lists.newArrayList();
+      lines.add(String.format("#: %s",context1));
+      lines.add(String.format("msgid \"%s\"",msgid1));
+      lines.add(String.format("msgstr \"%s\"",msgstr1));
+      lines.add(String.format(""));
+      lines.add(String.format("# "));
+      lines.add(String.format("#: %s",context2));
+      lines.add(String.format("msgid \"%s\"",msgid2));
+      lines.add(String.format("msgstr \"%s\"",msgstr2));
+      lines.add(String.format(""));
+      return lines;
+    }
+  }
+;
+  final String translated1=poReader.translate(context1,msgid1);
+  assertThat(translated1,is(equalTo(msgstr1)));
+  final String translated2=poReader.translate(context2,msgid2);
+  assertThat(translated2,is(equalTo(msgstr2)));
+}

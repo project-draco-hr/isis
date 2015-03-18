@@ -1,4 +1,7 @@
 {
+  if (jdoOid instanceof javax.jdo.identity.ByteIdentity) {
+    return "b" + SEPARATOR + jdoOid;
+  }
   if (jdoOid instanceof javax.jdo.identity.IntIdentity) {
     return "i" + SEPARATOR + jdoOid;
   }
@@ -9,27 +12,34 @@
     return "l" + SEPARATOR + jdoOid;
   }
   if (jdoOid instanceof javax.jdo.identity.ObjectIdentity) {
-    javax.jdo.identity.ObjectIdentity id=(ObjectIdentity)jdoOid;
-    Object keyAsObject=id.getKeyAsObject();
+    final javax.jdo.identity.ObjectIdentity id=(ObjectIdentity)jdoOid;
+    final Object keyAsObject=id.getKeyAsObject();
     if (keyAsObject instanceof UUID) {
-      UUID uuid=(UUID)keyAsObject;
+      final UUID uuid=(UUID)keyAsObject;
       return "u" + SEPARATOR + uuid.toString();
     }
   }
   if (jdoOid instanceof OID) {
-    OID dnOid=(OID)jdoOid;
-    Object keyValue=dnOid.getKeyValue();
-    if (keyValue instanceof String) {
-      return "S" + SEPARATOR + keyValue;
+    final OID dnOid=(OID)jdoOid;
+    final Object keyValue=dnOid.getKeyValue();
+    if (false) {
+      if (keyValue instanceof String) {
+        return "S" + SEPARATOR + keyValue;
+      }
+      if (keyValue instanceof Long) {
+        return "L" + SEPARATOR + keyValue;
+      }
+      if (keyValue instanceof BigInteger) {
+        return "B" + SEPARATOR + keyValue;
+      }
+      if (keyValue instanceof Integer) {
+        return "I" + SEPARATOR + keyValue;
+      }
     }
-    if (keyValue instanceof Long) {
-      return "L" + SEPARATOR + keyValue;
-    }
-    if (keyValue instanceof BigInteger) {
-      return "B" + SEPARATOR + keyValue;
-    }
-    if (keyValue instanceof Integer) {
-      return "I" + SEPARATOR + keyValue;
+ else {
+      if (keyValue instanceof String || keyValue instanceof Long || keyValue instanceof BigDecimal|| keyValue instanceof BigInteger|| keyValue instanceof Integer) {
+        return "" + keyValue;
+      }
     }
   }
   return jdoOid.getClass().getName().toString() + SEPARATOR + jdoOid.toString();

@@ -1,0 +1,15 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final ObjectType annotation=Annotations.getAnnotation(processClassContext.getCls(),ObjectType.class);
+  Facet facet=objectTypeValidator.flagIfPresent(ObjectSpecIdFacetFromObjectTypeAnnotation.create(annotation,processClassContext.getFacetHolder()));
+  if (facet == null) {
+    facet=ObjectSpecIdFacetForDomainObjectAnnotation.create(domainObject,facetHolder);
+  }
+  final JdoPersistenceCapableFacet jdoPersistenceCapableFacet=facetHolder.getFacet(JdoPersistenceCapableFacet.class);
+  if (jdoPersistenceCapableFacet != null) {
+    facet=ObjectSpecIdFacetForJdoPersistenceCapableAnnotation.create(jdoPersistenceCapableFacet,facetHolder);
+  }
+  FacetUtil.addFacet(facet);
+}

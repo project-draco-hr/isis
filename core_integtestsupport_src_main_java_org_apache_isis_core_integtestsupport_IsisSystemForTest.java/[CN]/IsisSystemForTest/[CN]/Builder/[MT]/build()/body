@@ -3,5 +3,32 @@
   if (level != null) {
     isisSystem.setLevel(level);
   }
+  Runtime.getRuntime().addShutdownHook(new Thread(){
+    @Override public synchronized void run(){
+      try {
+        if (isisSystem != null) {
+          isisSystem.tearDownSystem();
+        }
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+      try {
+        if (isisSystem != null) {
+          isisSystem.shutdown();
+        }
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+      try {
+        IsisContext.shutdown();
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+);
   return isisSystem;
 }

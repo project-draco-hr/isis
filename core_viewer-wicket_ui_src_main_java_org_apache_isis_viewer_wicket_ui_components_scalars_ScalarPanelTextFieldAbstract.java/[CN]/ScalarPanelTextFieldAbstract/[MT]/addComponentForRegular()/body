@@ -1,0 +1,29 @@
+{
+  textField=createTextFieldForRegular();
+  textField.setOutputMarkupId(true);
+  addStandardSemantics();
+  addSemantics();
+  final MarkupContainer labelIfRegular=createFormComponentLabel();
+  scalarTypeContainer.add(labelIfRegular);
+  final Label scalarName=new Label(ID_SCALAR_NAME,getRendering().getLabelCaption(textField));
+  NamedFacet namedFacet=getModel().getFacet(NamedFacet.class);
+  if (namedFacet != null) {
+    scalarName.setEscapeModelStrings(namedFacet.escaped());
+  }
+  final List<LinkAndLabel> entityActions=EntityActionUtil.getEntityActionLinksForAssociation(this.scalarModel,getDeploymentType());
+  addPositioningCssTo(labelIfRegular,entityActions);
+  if (getModel().isRequired()) {
+    final String label=scalarName.getDefaultModelObjectAsString();
+    if (!Strings.isNullOrEmpty(label)) {
+      scalarName.add(new CssClassAppender("mandatory"));
+    }
+  }
+  labelIfRegular.add(scalarName);
+  final String describedAs=getModel().getDescribedAs();
+  if (describedAs != null) {
+    labelIfRegular.add(new AttributeModifier("title",Model.of(describedAs)));
+  }
+  addFeedbackTo(labelIfRegular,textField);
+  addEntityActionLinksBelowAndRight(labelIfRegular,entityActions);
+  return labelIfRegular;
+}

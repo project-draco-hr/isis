@@ -1,13 +1,11 @@
 {
   final HiddenFacetStaticMethodFactory facetFactory=new HiddenFacetStaticMethodFactory();
-  facetFactory.setSpecificationLookup(reflector);
+  facetFactory.setSpecificationLookup(programmableReflector);
   final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOrders");
   final Method alwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideOrders");
   facetFactory.process(new ProcessMethodContext(CustomerStatic.class,null,null,collectionAccessorMethod,methodRemover,facetedMethod));
-  final Facet facet=facetedMethod.getFacet(HiddenFacet.class);
+  final HiddenFacetOnStaticMethod facet=facetedMethod.getFacet(HiddenFacetOnStaticMethod.class);
   assertNotNull(facet);
-  assertTrue(facet instanceof HiddenFacetAlwaysEverywhere);
-  final HiddenFacetAbstract hiddenFacetAlways=(HiddenFacetAlwaysEverywhere)facet;
-  assertEquals(When.ALWAYS,hiddenFacetAlways.when());
+  assertEquals(When.ALWAYS,facet.when());
   assertTrue(methodRemover.getRemovedMethodMethodCalls().contains(alwaysHideMethod));
 }

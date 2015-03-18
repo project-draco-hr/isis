@@ -1,0 +1,10 @@
+{
+  final Class<?> cls=CustomerViewModel.class;
+  facetFactory.process(new FacetFactory.ProcessClassContext(cls,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(PagedFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PagedFacetForViewModelLayoutAnnotation);
+  final PagedFacetForViewModelLayoutAnnotation facetImpl=(PagedFacetForViewModelLayoutAnnotation)facet;
+  Assert.assertThat(facetImpl.value(),is(20));
+  expectNoMethodsRemoved();
+}

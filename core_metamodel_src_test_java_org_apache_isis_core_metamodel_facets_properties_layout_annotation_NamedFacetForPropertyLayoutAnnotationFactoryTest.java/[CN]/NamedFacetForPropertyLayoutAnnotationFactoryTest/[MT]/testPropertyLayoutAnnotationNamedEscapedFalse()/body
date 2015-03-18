@@ -1,0 +1,15 @@
+{
+  final PropertyLayoutFacetFactory facetFactory=new PropertyLayoutFacetFactory();
+class Customer {
+    @SuppressWarnings("unused") @PropertyLayout(named="1st name",namedEscaped=false) public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.process(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  final NamedFacet facet=facetedMethod.getFacet(NamedFacet.class);
+  assertThat(facet,is(notNullValue()));
+  assertThat(facet,is(instanceOf(NamedFacetForPropertyLayoutAnnotation.class)));
+  assertThat(facet.value(),is(equalTo("1st name")));
+  assertThat(facet.escaped(),is(false));
+}

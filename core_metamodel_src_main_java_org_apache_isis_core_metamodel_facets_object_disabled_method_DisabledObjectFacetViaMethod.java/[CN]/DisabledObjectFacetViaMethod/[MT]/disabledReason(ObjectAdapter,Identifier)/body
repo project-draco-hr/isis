@@ -1,4 +1,12 @@
 {
   final Type type=identifier.getType();
-  return (String)ObjectAdapter.InvokeUtils.invoke(method,owningAdapter,type);
+  final Object returnValue=ObjectAdapter.InvokeUtils.invoke(method,owningAdapter,type);
+  if (returnValue instanceof String) {
+    return (String)returnValue;
+  }
+  if (returnValue instanceof TranslatableString) {
+    final TranslatableString ts=(TranslatableString)returnValue;
+    return ts.translate(translationService,translationContext);
+  }
+  return null;
 }

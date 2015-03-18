@@ -1,0 +1,26 @@
+{
+  if (domainObject == null) {
+    return null;
+  }
+  final Nature nature=domainObject.nature();
+  if (nature == null || nature == Nature.JDO_ENTITY) {
+    return null;
+  }
+switch (nature) {
+case NOT_SPECIFIED:
+case JDO_ENTITY:
+    return null;
+case VIEW_MODEL:
+  final ViewModelFacet existingFacet=holder.getFacet(ViewModelFacet.class);
+if (existingFacet != null) {
+  if (existingFacet.getArchitecturalLayer() == ArchitecturalLayer.APPLICATION) {
+    return null;
+  }
+}
+return new RecreatableObjectFacetForDomainObjectAnnotation(holder,ArchitecturalLayer.APPLICATION,specificationLoader,adapterManager,servicesInjector);
+case EXTERNAL_ENTITY:
+case INMEMORY_ENTITY:
+return new RecreatableObjectFacetForDomainObjectAnnotation(holder,ArchitecturalLayer.DOMAIN,specificationLoader,adapterManager,servicesInjector);
+}
+throw new IllegalArgumentException("nature of '" + nature + "' not recognized");
+}

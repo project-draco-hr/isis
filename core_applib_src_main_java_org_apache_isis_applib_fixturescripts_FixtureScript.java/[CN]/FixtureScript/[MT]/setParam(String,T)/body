@@ -1,0 +1,14 @@
+{
+  final String mutator="set" + uppercase(parameterName);
+  final Method[] methods=this.getClass().getMethods();
+  for (  Method method : methods) {
+    if (method.getName().equals(mutator) && method.getParameterTypes().length == 1) {
+      try {
+        method.invoke(this,value);
+      }
+ catch (      InvocationTargetException|IllegalAccessException ignored) {
+      }
+      break;
+    }
+  }
+}

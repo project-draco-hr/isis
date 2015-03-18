@@ -1,0 +1,26 @@
+{
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  final Method method=processMethodContext.getMethod();
+  final Class<?> methodReturnType=method.getReturnType();
+  if (!collectionTypeRegistry.isCollectionType(methodReturnType) && !collectionTypeRegistry.isArrayType(methodReturnType)) {
+    return;
+  }
+  TypeOfFacet facet;
+  final TypeOf annotation=Annotations.getAnnotation(method,TypeOf.class);
+  facet=typeOfValidator.flagIfPresent(TypeOfFacetOnCollectionFromTypeOfAnnotation.create(annotation,facetHolder,getSpecificationLoader()),processMethodContext);
+  final Collection collection=Annotations.getAnnotation(method,Collection.class);
+  if (facet == null) {
+    facet=TypeOfFacetOnCollectionFromCollectionAnnotation.create(collection,facetHolder,getSpecificationLoader());
+  }
+  if (facet == null) {
+    final Class<?> returnType=method.getReturnType();
+    if (returnType.isArray()) {
+      final Class<?> componentType=returnType.getComponentType();
+      facet=new TypeOfFacetInferredFromArray(componentType,facetHolder,getSpecificationLoader());
+    }
+  }
+  if (facet == null) {
+    facet=inferFromGenericReturnType(processMethodContext);
+  }
+  FacetUtil.addFacet(facet);
+}

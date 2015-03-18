@@ -1,0 +1,12 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final FacetHolder holder=processMethodContext.getFacetHolder();
+  final Disabled annotation=Annotations.getAnnotation(method,Disabled.class);
+  final DisabledFacet disabledFacet=DisabledFacetForDisabledAnnotationOnProperty.create(annotation,holder);
+  DisabledFacet facet=disabledValidator.flagIfPresent(disabledFacet,processMethodContext);
+  final Property property=Annotations.getAnnotation(method,Property.class);
+  if (facet == null) {
+    facet=DisabledFacetForPropertyAnnotation.create(property,holder);
+  }
+  FacetUtil.addFacet(facet);
+}

@@ -1,0 +1,14 @@
+{
+  try {
+    final ObjectAdapter resultAdapter=this.getObject();
+    return resultAdapter;
+  }
+ catch (  final RuntimeException ex) {
+    final RecoverableException appEx=getApplicationExceptionIfAny(ex);
+    if (appEx != null) {
+      IsisContext.getMessageBroker().setApplicationError(appEx.getMessage());
+      return null;
+    }
+    throw ex;
+  }
+}

@@ -1,0 +1,14 @@
+{
+class Customer {
+    @org.apache.isis.applib.annotation.Command(executeIn=org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND,persistence=org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.processCommand(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(CommandFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CommandFacetForCommandAnnotation);
+  final CommandFacetForCommandAnnotation facetImpl=(CommandFacetForCommandAnnotation)facet;
+  assertThat(facetImpl.persistence(),is(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED));
+  expectNoMethodsRemoved();
+}

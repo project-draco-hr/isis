@@ -1,0 +1,35 @@
+{
+  Fragment leafItem;
+  if (!menuItem.isSeparator()) {
+    leafItem=new Fragment("content","leafItem",TertiaryActionsPanel.this);
+    AbstractLink subMenuItemLink=menuItem.getLink();
+    Label menuItemLabel=new Label("menuLinkLabel",menuItem.getName());
+    subMenuItemLink.addOrReplace(menuItemLabel);
+    if (!menuItem.isEnabled()) {
+      listItem.add(new CssClassAppender("disabled"));
+      subMenuItemLink.setEnabled(false);
+      TooltipBehavior tooltipBehavior=new TooltipBehavior(Model.of(menuItem.getDisabledReason()));
+      listItem.add(tooltipBehavior);
+    }
+    if (menuItem.isPrototyping()) {
+      subMenuItemLink.add(new CssClassAppender("prototype"));
+    }
+    leafItem.add(subMenuItemLink);
+    String cssClassFa=menuItem.getCssClassFa();
+    if (Strings.isNullOrEmpty(cssClassFa)) {
+      subMenuItemLink.add(new CssClassAppender("menuLinkSpacer"));
+    }
+ else {
+      menuItemLabel.add(new CssClassFaBehavior(cssClassFa,menuItem.getCssClassFaPosition()));
+    }
+    String cssClass=menuItem.getCssClass();
+    if (!Strings.isNullOrEmpty(cssClass)) {
+      subMenuItemLink.add(new CssClassAppender(cssClass));
+    }
+  }
+ else {
+    leafItem=new Fragment("content","empty",TertiaryActionsPanel.this);
+    listItem.add(new CssClassAppender("divider"));
+  }
+  listItem.add(leafItem);
+}

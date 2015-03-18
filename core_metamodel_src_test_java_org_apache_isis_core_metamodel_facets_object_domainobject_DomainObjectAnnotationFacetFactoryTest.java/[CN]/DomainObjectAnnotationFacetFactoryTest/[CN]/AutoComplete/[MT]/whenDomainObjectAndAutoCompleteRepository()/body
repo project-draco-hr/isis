@@ -1,0 +1,10 @@
+{
+  facetFactory.process(new ProcessClassContext(CustomerWithDomainObjectAndAutoCompleteRepository.class,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(AutoCompleteFacet.class);
+  Assert.assertNotNull(facet);
+  Assert.assertTrue(facet instanceof AutoCompleteFacetForDomainObjectAnnotation);
+  final AutoCompleteFacetForDomainObjectAnnotation autoCompleteFacet=(AutoCompleteFacetForDomainObjectAnnotation)facet;
+  assertThat(CustomerRepository.class.isAssignableFrom(autoCompleteFacet.getRepositoryClass()),is(true));
+  assertThat(autoCompleteFacet.getActionName(),is("autoComplete"));
+  expectNoMethodsRemoved();
+}

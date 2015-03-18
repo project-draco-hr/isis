@@ -1,0 +1,15 @@
+{
+  return new OddEvenItem<T>(id,index,model){
+    @Override protected void onComponentTag(    ComponentTag tag){
+      super.onComponentTag(tag);
+      if (model instanceof EntityModel) {
+        EntityModel entityModel=(EntityModel)model;
+        final ObjectAdapter objectAdapter=entityModel.getObject();
+        final ObjectSpecification typeOfSpecification=entityModel.getTypeOfSpecification();
+        String cssClass=typeOfSpecification.getCssClass(objectAdapter);
+        CssClassAppender.appendCssClassTo(tag,cssClass);
+      }
+    }
+  }
+;
+}

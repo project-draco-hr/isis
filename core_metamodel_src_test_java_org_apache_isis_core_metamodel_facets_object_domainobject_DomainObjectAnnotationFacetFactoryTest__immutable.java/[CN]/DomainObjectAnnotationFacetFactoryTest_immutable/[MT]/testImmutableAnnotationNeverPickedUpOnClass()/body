@@ -1,0 +1,9 @@
+{
+@Immutable(When.NEVER) class Customer {
+  }
+  facetFactory.processEditing(new ProcessClassContext(Customer.class,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ImmutableFacet.class);
+  final ImmutableFacetForImmutableAnnotation immutableFacetAnnotation=(ImmutableFacetForImmutableAnnotation)facet;
+  assertEquals(When.NEVER,immutableFacetAnnotation.when());
+  assertNoMethodsRemoved();
+}

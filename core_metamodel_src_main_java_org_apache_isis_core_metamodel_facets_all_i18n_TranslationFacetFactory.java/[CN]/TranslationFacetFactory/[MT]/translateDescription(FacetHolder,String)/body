@@ -1,0 +1,13 @@
+{
+  final IdentifiedHolder holder=(IdentifiedHolder)facetHolder;
+  final DescribedAsFacet facet=facetHolder.getFacet(DescribedAsFacet.class);
+  if (facet == null) {
+    return;
+  }
+  final String originalText=facet.value();
+  if (isNullOrEmptyWhenTrimmed(originalText)) {
+    return;
+  }
+  final TranslationService translationService=lookupTranslationService();
+  FacetUtil.addFacet(new DescribedAsFacetTranslated(context,originalText,translationService,holder));
+}

@@ -1,0 +1,62 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final FacetedMethod holder=processMethodContext.getFacetHolder();
+  final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
+  if (getterFacet == null) {
+    return;
+  }
+  final PostsPropertyChangedEvent postsPropertyChangedEvent=Annotations.getAnnotation(method,PostsPropertyChangedEvent.class);
+  final PropertyInteraction propertyInteraction=Annotations.getAnnotation(method,PropertyInteraction.class);
+  final Property property=Annotations.getAnnotation(method,Property.class);
+  final Class<? extends PropertyDomainEvent<?,?>> propertyDomainEventType;
+  final PropertyDomainEventFacetAbstract propertyDomainEventFacet;
+  if (propertyInteraction != null) {
+    propertyDomainEventType=propertyInteraction.value();
+    propertyDomainEventFacet=propertyInteractionValidator.flagIfPresent(new PropertyDomainEventFacetForPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder),processMethodContext);
+  }
+ else   if (property != null && property.domainEvent() != null) {
+    propertyDomainEventType=property.domainEvent();
+    propertyDomainEventFacet=new PropertyDomainEventFacetForPropertyAnnotation(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+  }
+ else {
+    propertyDomainEventType=PropertyDomainEvent.Default.class;
+    propertyDomainEventFacet=new PropertyDomainEventFacetDefault(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
+  }
+  FacetUtil.addFacet(propertyDomainEventFacet);
+  final PropertySetterFacet setterFacet=holder.getFacet(PropertySetterFacet.class);
+  if (setterFacet != null) {
+    final PropertySetterFacetForDomainEventAbstract replacementFacet;
+    if (postsPropertyChangedEvent != null) {
+      final Class<? extends PropertyChangedEvent<?,?>> propertySetEventType=postsPropertyChangedEvent.value();
+      replacementFacet=new PropertySetterFacetForPostsPropertyChangedEventAnnotation(propertySetEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+ else     if (propertyInteraction != null) {
+      replacementFacet=new PropertySetterFacetForDomainEventFromPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+ else     if (property != null) {
+      replacementFacet=new PropertySetterFacetForDomainEventFromPropertyAnnotation(propertyDomainEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+ else {
+      replacementFacet=new PropertySetterFacetForDomainEventFromDefault(propertyDomainEventType,getterFacet,setterFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+    FacetUtil.addFacet(replacementFacet);
+  }
+  final PropertyClearFacet clearFacet=holder.getFacet(PropertyClearFacet.class);
+  if (clearFacet != null) {
+    final PropertyClearFacetForDomainEventAbstract replacementFacet;
+    if (postsPropertyChangedEvent != null) {
+      final Class<? extends PropertyChangedEvent<?,?>> propertyClearEventType=postsPropertyChangedEvent.value();
+      replacementFacet=new PropertyClearFacetForPostsPropertyChangedEventAnnotation(propertyClearEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+ else     if (propertyInteraction != null) {
+      replacementFacet=new PropertyClearFacetForDomainEventFromPropertyInteractionAnnotation(propertyDomainEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+ else     if (property != null) {
+      replacementFacet=new PropertyClearFacetForDomainEventFromPropertyAnnotation(propertyDomainEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+ else {
+      replacementFacet=new PropertyClearFacetForDomainEventFromDefault(propertyDomainEventType,getterFacet,clearFacet,propertyDomainEventFacet,holder,servicesInjector);
+    }
+    FacetUtil.addFacet(replacementFacet);
+  }
+}

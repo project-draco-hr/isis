@@ -1,0 +1,8 @@
+{
+  allowingConfigurationToReturn("isis.services.audit.objects","all");
+  facetFactory.processAuditing(new ProcessClassContext(Customer.class,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(AuditableFacet.class);
+  assertThat(facet,is(notNullValue()));
+  Assert.assertTrue(facet instanceof AuditableFacetFromConfiguration);
+  expectNoMethodsRemoved();
+}

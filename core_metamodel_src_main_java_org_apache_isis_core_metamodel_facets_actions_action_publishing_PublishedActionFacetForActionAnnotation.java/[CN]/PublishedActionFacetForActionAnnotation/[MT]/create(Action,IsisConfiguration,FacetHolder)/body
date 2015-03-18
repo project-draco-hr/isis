@@ -1,0 +1,27 @@
+{
+  final Publishing publishing=action != null ? action.publishing() : Publishing.AS_CONFIGURED;
+switch (publishing) {
+case AS_CONFIGURED:
+    final PublishActionsConfiguration setting=PublishActionsConfiguration.parse(configuration);
+switch (setting) {
+case NONE:
+    return null;
+case IGNORE_SAFE:
+  final ActionSemanticsFacet actionSemanticsFacet=holder.getFacet(ActionSemanticsFacet.class);
+if (actionSemanticsFacet == null) {
+  throw new IllegalStateException("Require ActionSemanticsFacet in order to process");
+}
+if (actionSemanticsFacet.value() == ActionSemantics.Of.SAFE) {
+return null;
+}
+default :
+final PublishingPayloadFactoryForAction publishingPayloadFactory=newPayloadFactory(action);
+return action != null ? new PublishedActionFacetForActionAnnotation(publishingPayloadFactory,holder) : new PublishedActionFacetFromConfiguration(publishingPayloadFactory,holder);
+}
+case DISABLED:
+return null;
+case ENABLED:
+return new PublishedActionFacetForActionAnnotation(newPayloadFactory(action),holder);
+}
+return null;
+}

@@ -1,0 +1,10 @@
+{
+  final Class<?> cls=CustomerViewModel.class;
+  facetFactory.process(new FacetFactory.ProcessClassContext(cls,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(PluralFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PluralFacetForViewModelLayoutAnnotation);
+  final PluralFacetForViewModelLayoutAnnotation facetImpl=(PluralFacetForViewModelLayoutAnnotation)facet;
+  Assert.assertThat(facetImpl.value(),is("Customers Plural Form"));
+  expectNoMethodsRemoved();
+}

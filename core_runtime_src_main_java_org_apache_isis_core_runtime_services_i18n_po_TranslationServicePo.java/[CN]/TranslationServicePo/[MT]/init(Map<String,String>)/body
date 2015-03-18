@@ -1,0 +1,14 @@
+{
+  if (getLocaleProvider() == null || getTranslationsResolver() == null) {
+    return;
+  }
+  final boolean prototypeOrTest=isPrototypeOrTest();
+  final String translationMode=config.get(KEY_PO_MODE);
+  final boolean forceRead=translationMode != null && ("read".equalsIgnoreCase(translationMode) || "reader".equalsIgnoreCase(translationMode));
+  if (prototypeOrTest && !forceRead) {
+    return;
+  }
+  final PoReader poReader=new PoReader(this);
+  poReader.init();
+  po=poReader;
+}

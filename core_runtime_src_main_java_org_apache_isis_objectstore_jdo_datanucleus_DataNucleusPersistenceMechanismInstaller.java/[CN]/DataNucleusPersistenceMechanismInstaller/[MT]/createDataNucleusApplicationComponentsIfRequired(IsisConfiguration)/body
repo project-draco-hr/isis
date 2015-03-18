@@ -1,10 +1,11 @@
 {
   if (applicationComponents == null || applicationComponents.isStale()) {
-    final IsisConfiguration dataNucleusConfig=configuration.createSubset(ISIS_CONFIG_PREFIX);
-    final Map<String,String> props=dataNucleusConfig.asMap();
-    addDataNucleusPropertiesIfRequired(props);
+    final IsisConfiguration jdoObjectstoreConfig=configuration.createSubset(JDO_OBJECTSTORE_CONFIG_PREFIX);
+    final IsisConfiguration dataNucleusConfig=configuration.createSubset(DATANUCLEUS_CONFIG_PREFIX);
+    final Map<String,String> datanucleusProps=dataNucleusConfig.asMap();
+    addDataNucleusPropertiesIfRequired(datanucleusProps);
     final Set<String> classesToBePersisted=catalogClassesToBePersisted(configuration,getSpecificationLoader().allSpecifications());
-    applicationComponents=new DataNucleusApplicationComponents(props,classesToBePersisted);
+    applicationComponents=new DataNucleusApplicationComponents(jdoObjectstoreConfig,datanucleusProps,classesToBePersisted);
   }
   return applicationComponents;
 }

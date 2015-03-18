@@ -1,0 +1,14 @@
+{
+class Customer {
+    public void someAction(    @Parameter(regexPattern="[123].*",regexPatternFlags=Pattern.CASE_INSENSITIVE | Pattern.MULTILINE) final String name){
+    }
+  }
+  actionMethod=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  final FacetFactory.ProcessParameterContext processParameterContext=new FacetFactory.ProcessParameterContext(Customer.class,actionMethod,0,null,facetedMethodParameter);
+  facetFactory.processParams(processParameterContext);
+  final RegExFacet regExFacet=facetedMethodParameter.getFacet(RegExFacet.class);
+  Assert.assertNotNull(regExFacet);
+  Assert.assertTrue(regExFacet instanceof RegExFacetForParameterAnnotation);
+  assertThat(regExFacet.caseSensitive(),is(false));
+  assertThat(regExFacet.validation(),is("[123].*"));
+}

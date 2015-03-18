@@ -1,0 +1,11 @@
+{
+  String uuid=UUID.randomUUID().toString();
+  uuid=uuid.replace("-","");
+  final AccountConfirmationMap accountConfirmationMap=getAccountConfirmationMap();
+  accountConfirmationMap.put(uuid,datum);
+  final PageParameters parameters=new PageParameters();
+  parameters.set(0,uuid);
+  final Class<? extends Page> pageClass=pageClassRegistry.getPageClass(pageType);
+  final String fullUrl=fullUrlFor(pageClass,parameters);
+  return fullUrl;
+}

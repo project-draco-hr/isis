@@ -1,0 +1,17 @@
+{
+  super(parameters);
+  Class<? extends Page> pageClass=pageClassRegistry.getPageClass(PageType.SIGN_IN);
+  BookmarkablePageLink<Void> signInLink=new BookmarkablePageLink<>("signInLink",pageClass);
+  signInLink.setAutoEnable(true);
+  add(signInLink);
+  addPageTitle();
+  addApplicationName(signInLink);
+  if (exceptionModel != null) {
+    add(new ExceptionStackTracePanel(ID_EXCEPTION_STACK_TRACE,exceptionModel));
+  }
+ else {
+    add(new WebMarkupContainer(ID_EXCEPTION_STACK_TRACE).setVisible(false));
+  }
+  add(new HeaderResponseContainer("footerJS","footerJS"));
+  BootstrapJavascriptBehavior.addTo(this);
+}

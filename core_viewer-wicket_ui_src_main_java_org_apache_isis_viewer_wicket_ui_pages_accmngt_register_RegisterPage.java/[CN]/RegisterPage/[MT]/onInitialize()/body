@@ -1,0 +1,25 @@
+{
+  super.onInitialize();
+  add(new NotificationPanel("feedback"));
+  final StringValue uuidValue=getPageParameters().get(0);
+  if (uuidValue.isEmpty()) {
+    pageNavigationService.navigateTo(PageType.SIGN_IN);
+  }
+ else {
+    String uuid=uuidValue.toString();
+    AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+    final String email=accountConfirmationMap.get(uuid);
+    if (Strings.isEmpty(email)) {
+      pageNavigationService.navigateTo(PageType.SIGN_IN);
+    }
+ else {
+      UserDetails userDetails=newUserDetails();
+      addOrReplace(new RegisterPanel("content",userDetails,uuidValue.toString()){
+        @Override protected MarkupContainer newExtraFieldsContainer(        String id){
+          return RegisterPage.this.newExtraFieldsContainer(id);
+        }
+      }
+);
+    }
+  }
+}

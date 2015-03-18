@@ -1,6 +1,6 @@
 {
   final ActionChoicesFacetViaMethodFactory facetFactory=new ActionChoicesFacetViaMethodFactory();
-  facetFactory.setSpecificationLookup(reflector);
+  facetFactory.setSpecificationLookup(programmableReflector);
 class Customer {
     @SuppressWarnings("unused") public void someAction(    final int x,    final Long y){
     }
@@ -10,7 +10,7 @@ class Customer {
   }
   final Method actionMethod=findMethod(Customer.class,"someAction",new Class[]{int.class,Long.class});
   final Method choicesMethod=findMethod(Customer.class,"choicesSomeAction",new Class[]{});
-  reflector.setLoadSpecificationStringReturn(voidSpec);
+  programmableReflector.setLoadSpecificationStringReturn(voidSpec);
   facetFactory.process(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
   final Facet facet=facetedMethod.getFacet(ActionChoicesFacet.class);
   assertNotNull(facet);

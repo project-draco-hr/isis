@@ -8,13 +8,13 @@
   if (isInjectMethod(method)) {
     return delegate(method,args);
   }
-  final ObjectAdapter targetAdapter=getAdapterManager().adapterFor(getDelegate());
+  final ObjectAdapter targetAdapter=adapterFor(getDelegate());
   if (isTitleMethod(method)) {
-    return handleTitleMethod(method,args,targetAdapter);
+    return handleTitleMethod(targetAdapter);
   }
   final ObjectSpecification targetNoSpec=targetAdapter.getSpecification();
   if (isSaveMethod(method)) {
-    return handleSaveMethod(getAuthenticationSession(),targetAdapter,targetNoSpec);
+    return handleSaveMethod(targetAdapter,targetNoSpec);
   }
   if (isWrappedMethod(method)) {
     return getDelegate();
@@ -23,6 +23,7 @@
     return executionMode;
   }
   final ObjectMember objectMember=locateAndCheckMember(method);
+  final ContributeeMember contributeeMember=determineIfContributed(args,objectMember);
   final String memberName=objectMember.getName();
   final Intent intent=ImperativeFacet.Util.getIntent(objectMember,method);
   if (intent == Intent.CHECK_IF_HIDDEN || intent == Intent.CHECK_IF_DISABLED) {
@@ -38,10 +39,10 @@
     }
     final OneToOneAssociation otoa=(OneToOneAssociation)objectMember;
     if (intent == Intent.ACCESSOR) {
-      return handleGetterMethodOnProperty(args,targetAdapter,otoa,methodName);
+      return handleGetterMethodOnProperty(targetAdapter,args,otoa);
     }
     if (intent == Intent.MODIFY_PROPERTY || intent == Intent.INITIALIZATION) {
-      return handleSetterMethodOnProperty(args,getAuthenticationSession(),targetAdapter,otoa,methodName);
+      return handleSetterMethodOnProperty(targetAdapter,args,otoa);
     }
   }
   if (objectMember.isOneToManyAssociation()) {
@@ -50,13 +51,13 @@
     }
     final OneToManyAssociation otma=(OneToManyAssociation)objectMember;
     if (intent == Intent.ACCESSOR) {
-      return handleGetterMethodOnCollection(method,args,targetAdapter,otma,memberName);
+      return handleGetterMethodOnCollection(targetAdapter,args,otma,method,memberName);
     }
     if (intent == Intent.MODIFY_COLLECTION_ADD) {
-      return handleCollectionAddToMethod(args,targetAdapter,otma,methodName);
+      return handleCollectionAddToMethod(targetAdapter,args,otma);
     }
     if (intent == Intent.MODIFY_COLLECTION_REMOVE) {
-      return handleCollectionRemoveFromMethod(args,targetAdapter,otma,methodName);
+      return handleCollectionRemoveFromMethod(targetAdapter,args,otma);
     }
   }
   if (objectMember instanceof ObjectAction) {
@@ -64,7 +65,7 @@
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
     }
     final ObjectAction noa=(ObjectAction)objectMember;
-    return handleActionMethod(args,getAuthenticationSession(),targetAdapter,noa,memberName);
+    return handleActionMethod(targetAdapter,args,noa,contributeeMember);
   }
   throw new UnsupportedOperationException(String.format("Unknown member type '%s'",objectMember));
 }

@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Optional public String getFirstName(){
+      return null;
+    }
+  }
+  final Method method=findMethod(Customer.class,"getFirstName");
+  facetFactory.processOptional(new ProcessMethodContext(Customer.class,null,null,method,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(MandatoryFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof MandatoryFacetInvertedByOptionalAnnotationOnProperty);
+}

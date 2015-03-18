@@ -1,0 +1,11 @@
+{
+  final Class<?> cls=processClassContext.getCls();
+  final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final Bounded annotation=Annotations.getAnnotation(processClassContext.getCls(),Bounded.class);
+  Facet facet=boundedValidator.flagIfPresent(ChoicesFacetFromBoundedAnnotation.create(annotation,querySubmitter,processClassContext.getFacetHolder()));
+  if (facet == null) {
+    facet=ChoicesFacetForDomainObjectAnnotation.create(domainObject,querySubmitter,facetHolder);
+  }
+  FacetUtil.addFacet(facet);
+}

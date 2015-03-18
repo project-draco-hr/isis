@@ -1,0 +1,49 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  try {
+    final Class<?> returnType=actionMethod.getReturnType();
+    final ObjectSpecification returnSpec=getSpecificationLoader().loadSpecification(returnType);
+    if (returnSpec == null) {
+      return;
+    }
+    final Class<?> cls=processMethodContext.getCls();
+    final ObjectSpecification typeSpec=getSpecificationLoader().loadSpecification(cls);
+    final FacetHolder holder=processMethodContext.getFacetHolder();
+    final PostsActionInvokedEvent postsActionInvokedEvent=Annotations.getAnnotation(actionMethod,PostsActionInvokedEvent.class);
+    final ActionInteraction actionInteraction=Annotations.getAnnotation(actionMethod,ActionInteraction.class);
+    final Action action=Annotations.getAnnotation(actionMethod,Action.class);
+    final Class<? extends ActionDomainEvent<?>> actionDomainEventType;
+    final ActionDomainEventFacetAbstract actionDomainEventFacet;
+    if (actionInteraction != null) {
+      actionDomainEventType=actionInteraction.value();
+      actionDomainEventFacet=new ActionDomainEventFacetForActionInteractionAnnotation(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+ else     if (action != null && action.domainEvent() != null) {
+      actionDomainEventType=action.domainEvent();
+      actionDomainEventFacet=new ActionDomainEventFacetForActionAnnotation(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+ else {
+      actionDomainEventType=ActionDomainEvent.Default.class;
+      actionDomainEventFacet=new ActionDomainEventFacetDefault(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+    }
+    FacetUtil.addFacet(actionDomainEventFacet);
+    final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;
+    if (postsActionInvokedEvent != null) {
+      final Class<? extends ActionInvokedEvent<?>> actionInvokedEventType=postsActionInvokedEvent.value();
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()),processMethodContext);
+    }
+ else     if (actionInteraction != null) {
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector()),processMethodContext);
+    }
+ else     if (action != null) {
+      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+ else {
+      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromDefault(actionDomainEventType,actionMethod,typeSpec,returnSpec,actionDomainEventFacet,holder,getRuntimeContext(),getAdapterManager(),getServicesInjector());
+    }
+    FacetUtil.addFacet(actionInvocationFacet);
+  }
+  finally {
+    processMethodContext.removeMethod(actionMethod);
+  }
+}

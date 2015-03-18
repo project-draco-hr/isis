@@ -1,0 +1,53 @@
+{
+  final ObjectSpecification objectSpecification=objectAdapter.getSpecification();
+  if (!objectSpecification.isValue()) {
+    return null;
+  }
+  final Class<?> correspondingClass=objectSpecification.getCorrespondingClass();
+  if (Enum.class.isAssignableFrom(correspondingClass)) {
+    return null;
+  }
+  final RenderedAdjustedFacet renderedAdjustedFacet=objectSpecification.getFacet(RenderedAdjustedFacet.class);
+  final int adjustBy=renderedAdjustedFacet != null ? renderedAdjustedFacet.value() : 0;
+  IConverter converter=null;
+  if (java.util.Date.class == correspondingClass) {
+    converter=new DateConverterForJavaUtilDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (java.sql.Date.class == correspondingClass) {
+    converter=new DateConverterForJavaSqlDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.apache.isis.applib.value.Date.class == correspondingClass) {
+    converter=new DateConverterForApplibDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.apache.isis.applib.value.DateTime.class == correspondingClass) {
+    converter=new DateConverterForApplibDateTime(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.joda.time.LocalDate.class == correspondingClass) {
+    converter=new DateConverterForJodaLocalDate(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.joda.time.LocalDateTime.class == correspondingClass) {
+    converter=new DateConverterForJodaLocalDateTime(wicketViewerSettings,adjustBy);
+  }
+ else   if (org.joda.time.DateTime.class == correspondingClass) {
+    converter=new DateConverterForJodaDateTime(wicketViewerSettings,adjustBy);
+  }
+ else   if (java.sql.Timestamp.class == correspondingClass) {
+    converter=new DateConverterForJavaSqlTimestamp(wicketViewerSettings,adjustBy);
+  }
+ else   if (java.math.BigInteger.class == correspondingClass) {
+    converter=BigIntegerConverter.INSTANCE;
+  }
+ else   if (java.math.BigDecimal.class == correspondingClass) {
+    final BigDecimalValueFacet facet=objectSpecification.getFacet(BigDecimalValueFacet.class);
+    Integer scale=null;
+    if (facet != null) {
+      scale=facet.getScale();
+    }
+    converter=new BigDecimalConverterWithScale(scale).forViewMode();
+  }
+ else   if (Application.exists()) {
+    final IConverterLocator converterLocator=Application.get().getConverterLocator();
+    converter=converterLocator.getConverter(correspondingClass);
+  }
+  return converter;
+}

@@ -1,0 +1,13 @@
+{
+  if (url == null) {
+    return null;
+  }
+  final CharSource charSource=Resources.asCharSource(url,Charsets.UTF_8);
+  final ImmutableList<String> strings=charSource.readLines();
+  return Collections.unmodifiableList(Lists.newArrayList(Iterables.filter(strings,new Predicate<String>(){
+    @Override public boolean apply(    final String input){
+      return input != null && nonEmpty.matcher(input).matches();
+    }
+  }
+)));
+}

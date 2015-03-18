@@ -1,0 +1,40 @@
+{
+  try {
+    final HtmlEmail email=new HtmlEmail();
+    email.setAuthenticator(new DefaultAuthenticator(senderEmailAddress,senderEmailPassword));
+    email.setHostName(getSenderEmailHostName());
+    email.setSmtpPort(senderEmailPort);
+    email.setStartTLSEnabled(getSenderEmailTlsEnabled());
+    final Properties properties=email.getMailSession().getProperties();
+    properties.put("mail.smtps.auth","true");
+    properties.put("mail.debug","true");
+    properties.put("mail.smtps.port","" + senderEmailPort);
+    properties.put("mail.smtps.socketFactory.port","" + senderEmailPort);
+    properties.put("mail.smtps.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+    properties.put("mail.smtps.socketFactory.fallback","false");
+    properties.put("mail.smtp.starttls.enable","" + getSenderEmailTlsEnabled());
+    email.setFrom(senderEmailAddress);
+    email.setSubject(subject);
+    email.setHtmlMsg(body);
+    if (attachments != null && attachments.length > 0) {
+      for (      DataSource attachment : attachments) {
+        email.attach(attachment,attachment.getName(),"");
+      }
+    }
+    if (notEmpty(toList)) {
+      email.addTo(toList.toArray(new String[toList.size()]));
+    }
+    if (notEmpty(ccList)) {
+      email.addCc(ccList.toArray(new String[ccList.size()]));
+    }
+    if (notEmpty(bccList)) {
+      email.addBcc(bccList.toArray(new String[bccList.size()]));
+    }
+    email.send();
+  }
+ catch (  EmailException ex) {
+    LOG.error("An error occurred while trying to send an email about user email verification",ex);
+    return false;
+  }
+  return true;
+}

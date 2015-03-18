@@ -1,0 +1,10 @@
+{
+  final IBootstrapSettings bootstrapSettings=Bootstrap.getSettings(getApplication());
+  final ITheme activeTheme=bootstrapSettings.getActiveThemeProvider().getActiveTheme();
+  final String name=activeTheme.name().toLowerCase(Locale.ENGLISH);
+  final String themeSpecificOverride="bootstrap-overrides-" + name + ".css";
+  final ResourceReference.Key themeSpecificOverrideKey=new ResourceReference.Key(PageAbstract.class.getName(),themeSpecificOverride,null,null,null);
+  if (PackageResource.exists(themeSpecificOverrideKey)) {
+    response.render(CssHeaderItem.forReference(new CssResourceReference(themeSpecificOverrideKey)));
+  }
+}

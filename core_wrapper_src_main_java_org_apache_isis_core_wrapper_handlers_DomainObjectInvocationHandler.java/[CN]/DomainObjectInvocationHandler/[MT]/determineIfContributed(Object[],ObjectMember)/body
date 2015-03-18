@@ -1,0 +1,34 @@
+{
+  if (!(objectMember instanceof ObjectAction)) {
+    return null;
+  }
+  final ObjectAction objectAction=(ObjectAction)objectMember;
+  for (int i=0; i < args.length; i++) {
+    final Object arg=args[i];
+    if (arg == null) {
+      continue;
+    }
+    final ObjectSpecificationDefault objectSpec=getJavaSpecification(arg.getClass());
+    if (args.length == 1) {
+      final List<ObjectAssociation> associations=objectSpec.getAssociations(Contributed.INCLUDED);
+      for (      final ObjectAssociation association : associations) {
+        if (association instanceof ContributeeMember) {
+          final ContributeeMember contributeeMember=(ContributeeMember)association;
+          if (contributeeMember.isContributedBy(objectAction)) {
+            return contributeeMember;
+          }
+        }
+      }
+    }
+    final List<ObjectAction> actions=objectSpec.getObjectActions(Contributed.INCLUDED);
+    for (    final ObjectAction action : actions) {
+      if (action instanceof ContributeeMember) {
+        final ContributeeMember contributeeMember=(ContributeeMember)action;
+        if (contributeeMember.isContributedBy(objectAction)) {
+          return contributeeMember;
+        }
+      }
+    }
+  }
+  return null;
+}

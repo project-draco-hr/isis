@@ -1,0 +1,36 @@
+{
+  super(id);
+  StatelessForm<Void> form=new StatelessForm<>("passwordResetForm");
+  addOrReplace(form);
+  final PasswordTextField passwordField=new PasswordTextField("password",Model.of(""));
+  passwordField.setLabel(new ResourceModel("passwordLabel"));
+  form.add(passwordField);
+  final PasswordTextField confirmPasswordField=new PasswordTextField("confirmPassword",Model.of(""));
+  confirmPasswordField.setLabel(new ResourceModel("confirmPasswordLabel"));
+  form.add(confirmPasswordField);
+  form.add(new EqualPasswordInputValidator(passwordField,confirmPasswordField));
+  Button signUpButton=new Button("passwordResetSubmit"){
+    @Override public void onSubmit(){
+      super.onSubmit();
+      final String password=confirmPasswordField.getModelObject();
+      final AccountConfirmationMap accountConfirmationMap=getApplication().getMetaData(AccountConfirmationMap.KEY);
+      Boolean passwordUpdated=IsisContext.doInSession(new Callable<Boolean>(){
+        @Override public Boolean call() throws Exception {
+          String email=accountConfirmationMap.get(uuid);
+          UserRegistrationService userRegistrationService=IsisContext.getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
+          return userRegistrationService.updatePasswordByEmail(email,password);
+        }
+      }
+);
+      if (passwordUpdated) {
+        accountConfirmationMap.remove(uuid);
+        success(createPasswordChangeSuccessfulMessage());
+      }
+ else {
+        error(getString("passwordChangeUnsuccessful"));
+      }
+    }
+  }
+;
+  form.add(signUpButton);
+}
