@@ -1,0 +1,26 @@
+{
+  toDoItemSubscriptions.reset();
+  toDoItem.add(otherToDoItem);
+  @SuppressWarnings("unchecked") final List<EventObject> receivedEvents=toDoItemSubscriptions.receivedEvents();
+  assertThat(receivedEvents.size(),is(7));
+  assertThat(receivedEvents.get(0) instanceof ActionDomainEvent,is(true));
+  assertThat(receivedEvents.get(1) instanceof CollectionDomainEvent,is(true));
+  assertThat(receivedEvents.get(2) instanceof CollectionDomainEvent,is(true));
+  assertThat(receivedEvents.get(3) instanceof ActionDomainEvent,is(true));
+  assertThat(receivedEvents.get(4) instanceof ActionDomainEvent,is(true));
+  assertThat(receivedEvents.get(5) instanceof ActionDomainEvent,is(true));
+  assertThat(receivedEvents.get(6) instanceof ActionDomainEvent,is(true));
+  final CollectionDomainEvent<ToDoItem,ToDoItem> ciEv=(CollectionDomainEvent<ToDoItem,ToDoItem>)toDoItemSubscriptions.mostRecentlyReceivedEvent(CollectionDomainEvent.class);
+  assertThat(ciEv,is(notNullValue()));
+  assertThat(ciEv.getSource(),is(equalTo(unwrap(toDoItem))));
+  assertThat(ciEv.getIdentifier().getMemberName(),is("dependencies"));
+  assertThat(ciEv.getOf(),is(CollectionDomainEvent.Of.ADD_TO));
+  assertThat(ciEv.getValue(),is(unwrap(otherToDoItem)));
+  final ActionDomainEvent<ToDoItem> aiEv=(ActionDomainEvent<ToDoItem>)toDoItemSubscriptions.mostRecentlyReceivedEvent(ActionDomainEvent.class);
+  assertThat(aiEv,is(notNullValue()));
+  assertThat(aiEv.getSource(),is(equalTo(unwrap(toDoItem))));
+  assertThat(aiEv.getIdentifier().getMemberName(),is("add"));
+  assertThat(aiEv.getArguments().size(),is(1));
+  assertThat(aiEv.getArguments().get(0),is(unwrap((Object)otherToDoItem)));
+  assertThat(aiEv.getCommand(),is(notNullValue()));
+}

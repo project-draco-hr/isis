@@ -3,7 +3,7 @@
     final ObjectSpecification serviceSpecification=getSpecificationLoader().loadSpecification(service.getClass());
     serviceSpecification.markAsService();
     final RootOid existingOid=getOidForService(serviceSpecification);
-    ObjectAdapter serviceAdapter=existingOid == null ? getAdapterManager().adapterFor(service) : getAdapterManager().mapRecreatedPojo(existingOid,service);
+    final ObjectAdapter serviceAdapter=existingOid == null ? getAdapterManager().adapterFor(service) : getAdapterManager().mapRecreatedPojo(existingOid,service);
     if (serviceAdapter.getOid().isTransient()) {
       adapterManager.remapAsPersistent(serviceAdapter,null);
     }

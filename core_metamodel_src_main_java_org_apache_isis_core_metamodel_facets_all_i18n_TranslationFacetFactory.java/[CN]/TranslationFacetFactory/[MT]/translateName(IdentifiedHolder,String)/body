@@ -1,0 +1,12 @@
+{
+  final NamedFacet facet=facetHolder.getFacet(NamedFacet.class);
+  if (facet == null) {
+    return;
+  }
+  final String originalText=facet.value();
+  if (isNullOrEmptyWhenTrimmed(originalText)) {
+    return;
+  }
+  final TranslationService translationService=lookupTranslationService();
+  FacetUtil.addFacet(new NamedFacetTranslated(context,originalText,translationService,facetHolder));
+}

@@ -1,0 +1,14 @@
+{
+  domainObjectClassWithoutAnnotation=DomainObjectWithoutMustSatisfyAnnotations.class;
+  domainObjectClassWithAnnotation=DomainObjectWithMustSatisfyAnnotations.class;
+  changeLastNameMethodWithout=domainObjectClassWithoutAnnotation.getMethod("changeLastName",String.class);
+  changeLastNameMethodWith=domainObjectClassWithAnnotation.getMethod("changeLastName",String.class);
+  context.checking(new Expectations(){
+{
+      allowing(mockFacetedMethodParameter).getIdentifier();
+      will(returnValue(Identifier.actionIdentifier(Customer.class,"foo")));
+    }
+  }
+);
+  facetFactory=new ParameterAnnotationFacetFactory();
+}

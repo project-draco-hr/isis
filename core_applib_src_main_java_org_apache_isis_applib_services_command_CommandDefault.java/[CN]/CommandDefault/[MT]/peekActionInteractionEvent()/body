@@ -1,3 +1,7 @@
 {
-  return actionInteractionEvents.isEmpty() ? null : actionInteractionEvents.getLast();
+  final ActionDomainEvent<?> actionDomainEvent=peekActionDomainEvent();
+  if (actionDomainEvent != null && !(actionDomainEvent instanceof ActionInteractionEvent)) {
+    throw new IllegalStateException("Most recently pushed event was not an instance of ActionInteractionEvent; use either ActionDomainEvent or the (deprecated) ActionInteractionEvent consistently");
+  }
+  return (ActionInteractionEvent<?>)actionDomainEvent;
 }

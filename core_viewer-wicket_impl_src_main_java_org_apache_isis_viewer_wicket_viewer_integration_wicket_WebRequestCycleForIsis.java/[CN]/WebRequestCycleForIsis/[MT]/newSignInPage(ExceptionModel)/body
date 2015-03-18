@@ -1,0 +1,25 @@
+{
+  Class<? extends Page> signInPageClass=null;
+  if (pageClassRegistry != null) {
+    signInPageClass=pageClassRegistry.getPageClass(PageType.SIGN_IN);
+  }
+  if (signInPageClass == null) {
+    signInPageClass=WicketSignInPage.class;
+  }
+  final PageParameters parameters=new PageParameters();
+  Page signInPage;
+  try {
+    Constructor<? extends Page> constructor=signInPageClass.getConstructor(PageParameters.class,ExceptionModel.class);
+    signInPage=constructor.newInstance(parameters,exceptionModel);
+  }
+ catch (  Exception _) {
+    try {
+      IPageFactory pageFactory=Application.get().getPageFactory();
+      signInPage=pageFactory.newPage(signInPageClass,parameters);
+    }
+ catch (    Exception x) {
+      throw new WicketRuntimeException("Cannot instantiate the configured sign in page",x);
+    }
+  }
+  return signInPage;
+}

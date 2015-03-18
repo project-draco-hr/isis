@@ -1,0 +1,29 @@
+{
+  super(pageParameters);
+  try {
+    getSession().bind();
+    setTitle(title);
+    themeDiv=new WebMarkupContainer(ID_THEME);
+    add(themeDiv);
+    if (applicationName != null) {
+      themeDiv.add(new CssClassAppender(CssClassAppender.asCssStyle(applicationName)));
+    }
+    MarkupContainer header=createPageHeader("header");
+    themeDiv.add(header);
+    MarkupContainer footer=createPageFooter("footer");
+    themeDiv.add(footer);
+    addActionPromptModalWindow(themeDiv);
+    this.childComponentIds=Collections.unmodifiableList(Arrays.asList(childComponentIds));
+    add(new HeaderResponseContainer("footerJS","footerJS"));
+  }
+ catch (  final RuntimeException ex) {
+    LOG.error("Failed to construct page, going back to sign in page",ex);
+    final List<ExceptionRecognizer> exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
+    final String recognizedMessageIfAny=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+    final ExceptionModel exceptionModel=ExceptionModel.create(recognizedMessageIfAny,ex);
+    getSession().invalidate();
+    getSession().clear();
+    EXCEPTION.set(exceptionModel);
+    throw new RestartResponseAtInterceptPageException(getSignInPage());
+  }
+}

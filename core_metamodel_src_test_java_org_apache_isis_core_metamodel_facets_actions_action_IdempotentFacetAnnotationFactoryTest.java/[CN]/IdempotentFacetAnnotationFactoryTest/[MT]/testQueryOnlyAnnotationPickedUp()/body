@@ -1,0 +1,12 @@
+{
+class Customer {
+    @Idempotent public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.processSemantics(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionSemanticsFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof ActionSemanticsFacetFromIdempotentAnnotation);
+  assertNoMethodsRemoved();
+}

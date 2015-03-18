@@ -1,0 +1,17 @@
+{
+class Order {
+  }
+class Customer {
+    @org.apache.isis.applib.annotation.TypeOf(Order.class) public Collection someAction(){
+      return null;
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processTypeOf(processMethodContext);
+  final TypeOfFacet facet=facetedMethod.getFacet(TypeOfFacet.class);
+  Assert.assertNotNull(facet);
+  Assert.assertTrue(facet instanceof TypeOfFacetOnActionForTypeOfAnnotation);
+  assertThat(facet.value(),classEqualTo(Order.class));
+}

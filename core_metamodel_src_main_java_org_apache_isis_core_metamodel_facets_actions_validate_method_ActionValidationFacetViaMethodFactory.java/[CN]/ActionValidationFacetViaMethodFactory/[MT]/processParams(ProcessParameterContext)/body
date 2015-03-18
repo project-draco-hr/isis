@@ -1,0 +1,19 @@
+{
+  final Class<?> cls=processParameterContext.getCls();
+  final Method actionMethod=processParameterContext.getMethod();
+  final int param=processParameterContext.getParamNum();
+  final IdentifiedHolder facetHolder=processParameterContext.getFacetHolder();
+  final String capitalizedName=StringExtensions.asCapitalizedName(actionMethod.getName());
+  final Class<?>[] paramTypes=actionMethod.getParameterTypes();
+  final MethodScope onClass=MethodScope.scopeFor(actionMethod);
+  final String validateName=MethodPrefixConstants.VALIDATE_PREFIX + param + capitalizedName;
+  final Method validateMethod=MethodFinderUtils.findMethod(cls,onClass,validateName,new Class<?>[]{String.class,TranslatableString.class},new Class<?>[]{paramTypes[param]});
+  if (validateMethod == null) {
+    return;
+  }
+  processParameterContext.removeMethod(validateMethod);
+  final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
+  final String translationContext=facetHolder.getIdentifier().toFullIdentityString();
+  final Facet facet=new ActionParameterValidationFacetViaMethod(validateMethod,translationService,translationContext,facetHolder);
+  FacetUtil.addFacet(facet);
+}

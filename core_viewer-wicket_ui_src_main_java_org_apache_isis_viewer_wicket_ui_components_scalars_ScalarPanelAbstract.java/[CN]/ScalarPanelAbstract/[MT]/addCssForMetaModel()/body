@@ -1,0 +1,13 @@
+{
+  final String cssForMetaModel=getModel().getLongName();
+  if (cssForMetaModel != null) {
+    add(new AttributeAppender("class",Model.of(cssForMetaModel)," "));
+  }
+  ScalarModel model=getModel();
+  final CssClassFacet facet=model.getFacet(CssClassFacet.class);
+  if (facet != null) {
+    final ObjectAdapter parentAdapter=model.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.NO_CHECK);
+    final String cssClass=facet.cssClass(parentAdapter);
+    CssClassAppender.appendCssClassTo(this,cssClass);
+  }
+}

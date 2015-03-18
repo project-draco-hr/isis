@@ -1,8 +1,8 @@
 {
   super.setUp();
-  reflector=new ProgrammableReflector();
-  facetHolder=new FacetHolderImpl();
+  programmableReflector=new ProgrammableReflector();
+  facetHolder=new IdentifiedHolderImpl(Identifier.propertyOrCollectionIdentifier(Customer.class,"firstName"));
   facetedMethod=FacetedMethod.createForProperty(Customer.class,"firstName");
-  facetedMethodParameter=new FacetedMethodParameter(String.class);
+  facetedMethodParameter=new FacetedMethodParameter(facetedMethod.getOwningType(),facetedMethod.getMethod(),String.class);
   methodRemover=new ProgrammableMethodRemover();
 }

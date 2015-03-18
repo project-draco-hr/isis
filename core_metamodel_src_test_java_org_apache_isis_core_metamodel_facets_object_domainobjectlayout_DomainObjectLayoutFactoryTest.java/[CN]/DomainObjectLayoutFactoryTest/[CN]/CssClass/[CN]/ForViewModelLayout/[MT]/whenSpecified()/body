@@ -1,0 +1,10 @@
+{
+  final Class<?> cls=CustomerViewModel.class;
+  facetFactory.process(new FacetFactory.ProcessClassContext(cls,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(CssClassFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CssClassFacetForViewModelLayoutAnnotation);
+  final CssClassFacetForViewModelLayoutAnnotation facetImpl=(CssClassFacetForViewModelLayoutAnnotation)facet;
+  Assert.assertThat(facetImpl.cssClass(mockAdapter),is("foobar"));
+  expectNoMethodsRemoved();
+}

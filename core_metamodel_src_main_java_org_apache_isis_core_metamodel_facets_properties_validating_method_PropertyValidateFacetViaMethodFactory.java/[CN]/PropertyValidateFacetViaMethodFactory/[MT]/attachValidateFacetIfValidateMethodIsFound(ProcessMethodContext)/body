@@ -4,11 +4,14 @@
   final Class<?> returnType=getMethod.getReturnType();
   final Class<?>[] paramTypes=new Class[]{returnType};
   final Class<?> cls=processMethodContext.getCls();
-  final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.VALIDATE_PREFIX + capitalizedName,String.class,paramTypes);
+  final Method method=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.VALIDATE_PREFIX + capitalizedName,new Class<?>[]{String.class,TranslatableString.class},paramTypes);
   if (method == null) {
     return;
   }
   processMethodContext.removeMethod(method);
-  final FacetHolder property=processMethodContext.getFacetHolder();
-  FacetUtil.addFacet(new PropertyValidateFacetViaMethod(method,property));
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
+  final String translationContext=facetHolder.getIdentifier().toClassAndNameIdentityString();
+  final PropertyValidateFacetViaMethod facet=new PropertyValidateFacetViaMethod(method,translationService,translationContext,facetHolder);
+  FacetUtil.addFacet(facet);
 }

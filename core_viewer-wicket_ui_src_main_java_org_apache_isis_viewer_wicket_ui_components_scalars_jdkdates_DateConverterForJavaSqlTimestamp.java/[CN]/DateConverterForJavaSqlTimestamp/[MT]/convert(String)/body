@@ -1,0 +1,14 @@
+{
+  try {
+    Date parsed=newSimpleDateFormatUsingDateTimePattern().parse(valueStr);
+    return new java.sql.Timestamp(parsed.getTime());
+  }
+ catch (  ParseException ex) {
+    try {
+      return new java.sql.Timestamp(newSimpleDateFormatUsingDatePattern().parse(valueStr).getTime());
+    }
+ catch (    ParseException ex2) {
+      throw new ConversionException("Value cannot be converted as a date/time",ex);
+    }
+  }
+}

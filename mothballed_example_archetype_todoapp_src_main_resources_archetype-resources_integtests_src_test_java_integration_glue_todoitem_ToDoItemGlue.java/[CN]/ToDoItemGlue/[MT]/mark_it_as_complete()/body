@@ -1,0 +1,17 @@
+{
+  final ToDoItem toDoItem=getVar(null,"toDoItem",ToDoItem.class);
+  if (supportsMocks()) {
+    final ActionInvocationContext actionInvocationContext=service(ActionInvocationContext.class);
+    final EventBusService eventBusService=service(EventBusService.class);
+    checking(new Expectations(){
+{
+        allowing(actionInvocationContext);
+        allowing(eventBusService);
+      }
+    }
+);
+    toDoItem.actionInvocationContext=actionInvocationContext;
+    toDoItem.eventBusService=eventBusService;
+  }
+  wrap(toDoItem).completed();
+}

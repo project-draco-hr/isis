@@ -1,0 +1,16 @@
+{
+class Customer {
+    @Action(hidden=Where.REFERENCES_PARENT) public void someAction(){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  actionMethod=findMethod(cls,"someAction");
+  final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processHidden(processMethodContext);
+  final HiddenFacet hiddenFacet=facetedMethod.getFacet(HiddenFacet.class);
+  Assert.assertNotNull(hiddenFacet);
+  assertThat(hiddenFacet.where(),is(Where.REFERENCES_PARENT));
+  final Facet hiddenFacetImpl=facetedMethod.getFacet(HiddenFacetForActionAnnotation.class);
+  Assert.assertNotNull(hiddenFacetImpl);
+  Assert.assertTrue(hiddenFacet == hiddenFacetImpl);
+}

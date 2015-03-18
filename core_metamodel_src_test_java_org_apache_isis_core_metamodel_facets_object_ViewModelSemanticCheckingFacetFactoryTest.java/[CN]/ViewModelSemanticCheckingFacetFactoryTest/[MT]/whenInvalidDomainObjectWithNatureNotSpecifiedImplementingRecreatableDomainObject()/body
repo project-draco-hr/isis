@@ -1,0 +1,12 @@
+{
+@org.apache.isis.applib.annotation.DomainObject(nature=Nature.NOT_SPECIFIED) class InvalidDomainObjectWithNatureNotSpecifiedImplementingRecreatableDomainObject implements RecreatableDomainObject {
+    @Override public String __isis_memento(){
+      return null;
+    }
+    @Override public void __isis_recreate(    final String memento){
+    }
+  }
+  final ValidationFailures validationFailures=processThenRefine(InvalidDomainObjectWithNatureNotSpecifiedImplementingRecreatableDomainObject.class);
+  assertThat(validationFailures.getNumberOfMessages(),is(1));
+  assertThat(validationFailures.getMessages().iterator().next(),containsString("should not be annotated with @DomainObject with nature of NOT_SPECIFIED and also implement RecreatableDomainObject (specify a nature of EXTERNAL_ENTITY, INMEMORY_ENTITY or VIEW_MODEL)"));
+}

@@ -6,7 +6,13 @@
   }
   PluralFacet pluralFacet=getFacet(PluralFacet.class);
   if (pluralFacet == null) {
-    pluralFacet=new PluralFacetInferred(StringExtensions.asPluralName(namedFacet.value()),this);
+    if (namedFacet instanceof NamedFacetTranslated) {
+      final NamedFacetTranslated facet=(NamedFacetTranslated)namedFacet;
+      pluralFacet=new PluralFacetTranslated(facet,this);
+    }
+ else {
+      pluralFacet=new PluralFacetInferred(StringExtensions.asPluralName(namedFacet.value()),this);
+    }
     addFacet(pluralFacet);
   }
 }

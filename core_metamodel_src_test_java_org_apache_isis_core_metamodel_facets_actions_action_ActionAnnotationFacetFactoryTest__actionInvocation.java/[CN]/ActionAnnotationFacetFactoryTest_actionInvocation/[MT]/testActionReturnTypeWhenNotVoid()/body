@@ -1,0 +1,13 @@
+{
+  programmableReflector.setLoadSpecificationStringReturn(stringSpec);
+class Customer {
+    @SuppressWarnings("unused") public String someAction(){
+      return null;
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.processInvocation(new ProcessMethodContext(Customer.class,null,null,actionMethod,methodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(ActionInvocationFacet.class);
+  final ActionInvocationFacetForDomainEventAbstract actionInvocationFacetViaMethod=(ActionInvocationFacetForDomainEventAbstract)facet;
+  assertEquals(stringSpec,actionInvocationFacetViaMethod.getReturnType());
+}

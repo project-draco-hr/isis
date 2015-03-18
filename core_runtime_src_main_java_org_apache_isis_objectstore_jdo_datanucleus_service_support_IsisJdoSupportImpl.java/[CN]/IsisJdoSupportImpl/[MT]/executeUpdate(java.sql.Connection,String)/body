@@ -1,13 +1,8 @@
 {
-  Statement statement=null;
-  try {
-    statement=connection.createStatement();
+  try (Statement statement=connection.createStatement()){
     return statement.executeUpdate(sql);
   }
- catch (  SQLException ex) {
+ catch (  final SQLException ex) {
     throw new ObjectPersistenceException("Failed to executeSql: " + sql,ex);
-  }
- finally {
-    closeSafely(statement);
   }
 }

@@ -1,0 +1,17 @@
+{
+  List<ExceptionRecognizer> exceptionRecognizers=Lists.newArrayList();
+  exceptionRecognizers.add(pageExpiredExceptionRecognizer);
+  if (inIsisSession()) {
+    exceptionRecognizers.addAll(getServicesInjector().lookupServices(ExceptionRecognizer.class));
+  }
+ else {
+    List<String> validationErrors=IsisWicketApplication.get().getValidationErrors();
+    if (!validationErrors.isEmpty()) {
+      return new MmvErrorPage(Model.ofList(validationErrors));
+    }
+    LOG.warn("Unable to obtain exceptionRecognizers (no session), will be treated as unrecognized exception");
+  }
+  String recognizedMessageIfAny=new ExceptionRecognizerComposite(exceptionRecognizers).recognize(ex);
+  ExceptionModel exceptionModel=ExceptionModel.create(recognizedMessageIfAny,ex);
+  return isSignedIn() ? new ErrorPage(exceptionModel) : newSignInPage(exceptionModel);
+}

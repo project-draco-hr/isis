@@ -1,0 +1,34 @@
+{
+  super(pageParameters,titleString,ComponentType.ENTITY);
+  this.model=entityModel;
+  final ObjectAdapter objectAdapter;
+  try {
+    objectAdapter=entityModel.getObject();
+  }
+ catch (  final RuntimeException ex) {
+    removeAnyBookmark(model);
+    removeAnyBreadcrumb(model);
+    throw new ObjectMember.AuthorizationException(ex);
+  }
+  if (!isVisible(objectAdapter)) {
+    throw new ObjectMember.AuthorizationException();
+  }
+  final AuthenticationSession session=getAuthenticationSession();
+  final ObjectSpecification specification=objectAdapter.getSpecification();
+  final List<ObjectAssociation> visibleAssociation=specification.getAssociations(Contributed.INCLUDED,ObjectAssociation.Filters.dynamicallyVisible(session,objectAdapter,Where.NOWHERE));
+  if (visibleAssociation.isEmpty()) {
+    throw new ObjectMember.AuthorizationException();
+  }
+  if (!getDeploymentType().isProduction()) {
+    getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
+  }
+  if (titleString == null) {
+    final String titleStr=objectAdapter.titleString(null);
+    setTitle(titleStr);
+  }
+  addChildComponents(themeDiv,model);
+  bookmarkPage(model);
+  addBreadcrumb(entityModel);
+  addBookmarkedPages();
+  send(this,Broadcast.BREADTH,new IsisUiHintEvent(entityModel,null));
+}

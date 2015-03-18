@@ -1,5 +1,9 @@
 {
-  final List<ActionInteractionEvent<?>> events=Collections.unmodifiableList(Lists.newArrayList(actionInteractionEvents));
-  actionInteractionEvents.clear();
-  return events;
+  final List<ActionDomainEvent<?>> actionDomainEvents=flushActionDomainEvents();
+  for (  ActionDomainEvent<?> actionDomainEvent : actionDomainEvents) {
+    if (!(actionDomainEvent instanceof ActionInteractionEvent)) {
+      throw new IllegalStateException("List of events includes at least one event that is not an instance of ActionInteractionEvent; use either ActionDomainEvent or the (deprecated) ActionInteractionEvent consistently");
+    }
+  }
+  return (List)actionDomainEvents;
 }

@@ -1,0 +1,12 @@
+{
+  final String schemaName=cmd.getSchema();
+  if (Strings.isNullOrEmpty(schemaName)) {
+    return true;
+  }
+  final String sql=buildSqlToCheck(cmd);
+  try (final ResultSet rs=statement.executeQuery(sql)){
+    rs.next();
+    final int cnt=rs.getInt(1);
+    return cnt > 0;
+  }
+ }

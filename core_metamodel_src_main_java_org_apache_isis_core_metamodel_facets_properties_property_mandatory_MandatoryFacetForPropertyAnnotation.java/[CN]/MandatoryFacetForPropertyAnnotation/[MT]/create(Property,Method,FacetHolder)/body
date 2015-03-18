@@ -1,0 +1,19 @@
+{
+  if (property == null) {
+    return null;
+  }
+  final Class<?> returnType=method.getReturnType();
+  if (returnType.isPrimitive()) {
+    return new MandatoryFacetForPropertyAnnotation.Primitive(holder);
+  }
+  final Optionality optionality=property.optionality();
+switch (optionality) {
+case DEFAULT:
+    return null;
+case MANDATORY:
+  return new MandatoryFacetForPropertyAnnotation.Required(holder);
+case OPTIONAL:
+return new MandatoryFacetForPropertyAnnotation.Optional(holder);
+}
+return null;
+}

@@ -1,0 +1,22 @@
+{
+  final String country=locale.getCountry().toUpperCase(Locale.ROOT);
+  final String language=locale.getLanguage().toLowerCase(Locale.ROOT);
+  final List<String> candidates=Lists.newArrayList();
+  if (!Strings.isNullOrEmpty(language)) {
+    if (!Strings.isNullOrEmpty(country)) {
+      candidates.add(basename + DASH + language+ UNDERSCORE+ country+ ".po");
+      candidates.add(basename + DASH + language+ DASH+ country+ ".po");
+      candidates.add(basename + UNDERSCORE + language+ UNDERSCORE+ country+ ".po");
+      candidates.add(basename + UNDERSCORE + language+ DASH+ country+ ".po");
+    }
+    candidates.add(basename + DASH + language+ ".po");
+    candidates.add(basename + UNDERSCORE + language+ ".po");
+  }
+  for (  final String candidate : candidates) {
+    final List<String> lines=readUrl(candidate);
+    if (lines != null) {
+      return lines;
+    }
+  }
+  return null;
+}

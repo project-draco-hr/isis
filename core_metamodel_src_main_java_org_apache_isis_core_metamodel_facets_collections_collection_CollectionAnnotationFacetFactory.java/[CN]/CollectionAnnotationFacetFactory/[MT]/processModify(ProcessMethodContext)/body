@@ -1,0 +1,61 @@
+{
+  final Method method=processMethodContext.getMethod();
+  final FacetHolder holder=processMethodContext.getFacetHolder();
+  final PropertyOrCollectionAccessorFacet getterFacet=holder.getFacet(PropertyOrCollectionAccessorFacet.class);
+  if (getterFacet == null) {
+    return;
+  }
+  final PostsCollectionAddedToEvent postsCollectionAddedToEvent=Annotations.getAnnotation(method,PostsCollectionAddedToEvent.class);
+  final PostsCollectionRemovedFromEvent postsCollectionRemovedFromEvent=Annotations.getAnnotation(method,PostsCollectionRemovedFromEvent.class);
+  final CollectionInteraction collectionInteraction=Annotations.getAnnotation(method,CollectionInteraction.class);
+  final Collection collection=Annotations.getAnnotation(method,Collection.class);
+  final Class<? extends CollectionDomainEvent<?,?>> collectionDomainEventType;
+  final CollectionDomainEventFacetAbstract collectionDomainEventFacet;
+  if (collectionInteraction != null) {
+    collectionDomainEventType=collectionInteraction.value();
+    collectionDomainEventFacet=collectionInteractionValidator.flagIfPresent(new CollectionDomainEventFacetForCollectionInteractionAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder),processMethodContext);
+  }
+ else   if (collection != null && collection.domainEvent() != null) {
+    collectionDomainEventType=collection.domainEvent();
+    collectionDomainEventFacet=new CollectionDomainEventFacetForCollectionAnnotation(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+  }
+ else {
+    collectionDomainEventType=CollectionDomainEvent.Default.class;
+    collectionDomainEventFacet=new CollectionDomainEventFacetDefault(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
+  }
+  FacetUtil.addFacet(collectionDomainEventFacet);
+  final CollectionAddToFacet collectionAddToFacet=holder.getFacet(CollectionAddToFacet.class);
+  if (collectionAddToFacet != null) {
+    final CollectionAddToFacetForDomainEventFromAbstract replacementFacet;
+    if (postsCollectionAddedToEvent != null) {
+      replacementFacet=new CollectionAddToFacetForPostsCollectionAddedToEventAnnotation(postsCollectionAddedToEvent.value(),getterFacet,collectionAddToFacet,collectionDomainEventFacet,holder,servicesInjector);
+    }
+ else     if (collectionInteraction != null) {
+      replacementFacet=new CollectionAddToFacetForDomainEventFromCollectionInteractionAnnotation(collectionDomainEventType,getterFacet,collectionAddToFacet,collectionDomainEventFacet,holder,servicesInjector);
+    }
+ else     if (collection != null) {
+      replacementFacet=new CollectionAddToFacetForDomainEventFromCollectionAnnotation(collectionDomainEventType,getterFacet,collectionAddToFacet,collectionDomainEventFacet,holder,servicesInjector);
+    }
+ else {
+      replacementFacet=new CollectionAddToFacetForDomainEventFromDefault(collectionDomainEventType,getterFacet,collectionAddToFacet,collectionDomainEventFacet,holder,servicesInjector);
+    }
+    FacetUtil.addFacet(replacementFacet);
+  }
+  final CollectionRemoveFromFacet collectionRemoveFromFacet=holder.getFacet(CollectionRemoveFromFacet.class);
+  if (collectionRemoveFromFacet != null) {
+    final CollectionRemoveFromFacetForDomainEventFromAbstract replacementFacet;
+    if (postsCollectionRemovedFromEvent != null) {
+      replacementFacet=new CollectionRemoveFromFacetForPostsCollectionRemovedFromEventAnnotation(postsCollectionRemovedFromEvent.value(),getterFacet,collectionRemoveFromFacet,collectionDomainEventFacet,servicesInjector,holder);
+    }
+ else     if (collectionInteraction != null) {
+      replacementFacet=new CollectionRemoveFromFacetForDomainEventFromCollectionInteractionAnnotation(collectionDomainEventType,getterFacet,collectionRemoveFromFacet,collectionDomainEventFacet,servicesInjector,holder);
+    }
+ else     if (collection != null) {
+      replacementFacet=new CollectionRemoveFromFacetForDomainEventFromCollectionAnnotation(collectionDomainEventType,getterFacet,collectionRemoveFromFacet,collectionDomainEventFacet,servicesInjector,holder);
+    }
+ else {
+      replacementFacet=new CollectionRemoveFromFacetForDomainEventFromDefault(collectionDomainEventType,getterFacet,collectionRemoveFromFacet,collectionDomainEventFacet,servicesInjector,holder);
+    }
+    FacetUtil.addFacet(replacementFacet);
+  }
+}

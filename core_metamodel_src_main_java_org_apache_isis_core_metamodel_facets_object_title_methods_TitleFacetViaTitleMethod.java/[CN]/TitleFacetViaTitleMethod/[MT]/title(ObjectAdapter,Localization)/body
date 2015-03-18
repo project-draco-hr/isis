@@ -1,6 +1,14 @@
 {
   try {
-    return (String)ObjectAdapter.InvokeUtils.invoke(method,owningAdapter);
+    final Object returnValue=ObjectAdapter.InvokeUtils.invoke(method,owningAdapter);
+    if (returnValue instanceof String) {
+      return (String)returnValue;
+    }
+    if (returnValue instanceof TranslatableString) {
+      final TranslatableString ts=(TranslatableString)returnValue;
+      return ts.translate(translationService,translationContext);
+    }
+    return null;
   }
  catch (  final RuntimeException ex) {
     LOG.warn("title failure",ex);

@@ -1,0 +1,15 @@
+{
+  final FacetHolder facetHolder=processContext.getFacetHolder();
+  final MaskFacet maskFacet=validator.flagIfPresent(createMaskFacet(annotation,facetHolder),processContext);
+  if (maskFacet == null) {
+    return false;
+  }
+  FacetUtil.addFacet(maskFacet);
+  final ObjectSpecification type=getSpecificationLoader().loadSpecification(cls);
+  final TitleFacet underlyingTitleFacet=type.getFacet(TitleFacet.class);
+  if (underlyingTitleFacet != null) {
+    final TitleFacet titleFacet=new TitleFacetBasedOnMask(maskFacet,underlyingTitleFacet);
+    FacetUtil.addFacet(titleFacet);
+  }
+  return true;
+}

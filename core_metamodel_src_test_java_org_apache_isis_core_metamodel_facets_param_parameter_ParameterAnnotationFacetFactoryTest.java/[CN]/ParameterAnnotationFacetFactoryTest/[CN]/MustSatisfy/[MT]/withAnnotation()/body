@@ -1,0 +1,17 @@
+{
+class Customer {
+    public void someAction(    @Parameter(mustSatisfy={NotTooHot.class,NotTooCold.class}) final String name){
+    }
+  }
+  actionMethod=findMethod(Customer.class,"someAction",new Class[]{String.class});
+  final FacetFactory.ProcessParameterContext processParameterContext=new FacetFactory.ProcessParameterContext(Customer.class,actionMethod,0,null,facetedMethodParameter);
+  facetFactory.processParams(processParameterContext);
+  final MustSatisfySpecificationFacet mustSatisfySpecificationFacet=facetedMethodParameter.getFacet(MustSatisfySpecificationFacet.class);
+  Assert.assertNotNull(mustSatisfySpecificationFacet);
+  Assert.assertTrue(mustSatisfySpecificationFacet instanceof MustSatisfySpecificationFacetForParameterAnnotation);
+  MustSatisfySpecificationFacetForParameterAnnotation mustSatisfySpecificationFacetImpl=(MustSatisfySpecificationFacetForParameterAnnotation)mustSatisfySpecificationFacet;
+  List<Specification> specifications=mustSatisfySpecificationFacetImpl.getSpecifications();
+  assertThat(specifications.size(),is(2));
+  assertTrue(specifications.get(0) instanceof NotTooHot);
+  assertTrue(specifications.get(1) instanceof NotTooCold);
+}

@@ -1,0 +1,14 @@
+{
+class Customer {
+    @org.apache.isis.applib.annotation.PublishedAction(CustomerSomeActionPayloadFactory.class) public void someAction(){
+    }
+  }
+  final Method actionMethod=findMethod(Customer.class,"someAction");
+  facetFactory.processPublishing(new ProcessMethodContext(Customer.class,null,null,actionMethod,mockMethodRemover,facetedMethod));
+  final Facet facet=facetedMethod.getFacet(PublishedActionFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof PublishedActionFacetForPublishedActionAnnotation);
+  final PublishedActionFacetForPublishedActionAnnotation facetImpl=(PublishedActionFacetForPublishedActionAnnotation)facet;
+  assertThat(facetImpl.value(),instanceOf(CustomerSomeActionPayloadFactory.class));
+  expectNoMethodsRemoved();
+}

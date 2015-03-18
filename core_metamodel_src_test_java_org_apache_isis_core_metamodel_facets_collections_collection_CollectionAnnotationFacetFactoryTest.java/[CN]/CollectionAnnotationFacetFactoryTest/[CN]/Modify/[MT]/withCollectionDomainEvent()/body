@@ -1,0 +1,42 @@
+{
+class Order {
+  }
+class Customer {
+class OrdersChanged extends CollectionDomainEvent<Customer,Order> {
+      public OrdersChanged(      final Customer source,      final Identifier identifier,      final Of of){
+        super(source,identifier,of);
+      }
+      public OrdersChanged(      final Customer source,      final Identifier identifier,      final Of of,      final Order value){
+        super(source,identifier,of,value);
+      }
+    }
+    @Collection(domainEvent=OrdersChanged.class) public List<Order> getOrders(){
+      return null;
+    }
+    public void setOrders(    final List<Order> orders){
+    }
+  }
+  final Class<?> cls=Customer.class;
+  collectionMethod=findMethod(Customer.class,"getOrders");
+  addGetterFacet(facetedMethod);
+  addAddToFacet(facetedMethod);
+  addRemoveFromFacet(facetedMethod);
+  allowingLoadSpecificationRequestsFor(cls,collectionMethod.getReturnType());
+  final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,collectionMethod,mockMethodRemover,facetedMethod);
+  facetFactory.processModify(processMethodContext);
+  final Facet domainEventFacet=facetedMethod.getFacet(CollectionDomainEventFacet.class);
+  Assert.assertNotNull(domainEventFacet);
+  Assert.assertTrue(domainEventFacet instanceof CollectionDomainEventFacetForCollectionAnnotation);
+  final CollectionDomainEventFacetForCollectionAnnotation domainEventFacetImpl=(CollectionDomainEventFacetForCollectionAnnotation)domainEventFacet;
+  assertThat(domainEventFacetImpl.value(),classEqualTo(Customer.OrdersChanged.class));
+  final Facet addToFacet=facetedMethod.getFacet(CollectionAddToFacet.class);
+  Assert.assertNotNull(addToFacet);
+  Assert.assertTrue(addToFacet instanceof CollectionAddToFacetForDomainEventFromCollectionAnnotation);
+  final CollectionAddToFacetForDomainEventFromCollectionAnnotation addToFacetImpl=(CollectionAddToFacetForDomainEventFromCollectionAnnotation)addToFacet;
+  assertThat(addToFacetImpl.value(),classEqualTo(Customer.OrdersChanged.class));
+  final Facet removeFromFacet=facetedMethod.getFacet(CollectionRemoveFromFacet.class);
+  Assert.assertNotNull(removeFromFacet);
+  Assert.assertTrue(removeFromFacet instanceof CollectionRemoveFromFacetForDomainEventFromCollectionAnnotation);
+  final CollectionRemoveFromFacetForDomainEventFromCollectionAnnotation removeFromFacetImpl=(CollectionRemoveFromFacetForDomainEventFromCollectionAnnotation)removeFromFacet;
+  assertThat(removeFromFacetImpl.value(),classEqualTo(Customer.OrdersChanged.class));
+}
