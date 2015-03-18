@@ -1,5 +1,8 @@
 {
-  enlist(adapter,ChangeKind.DELETE);
+  final boolean enlisted=enlist(adapter,ChangeKind.DELETE);
+  if (!enlisted) {
+    return;
+  }
   for (  ObjectAssociation property : adapter.getSpecification().getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.PROPERTIES)) {
     final AdapterAndProperty aap=AdapterAndProperty.of(adapter,property);
     if (property.isNotPersisted()) {
