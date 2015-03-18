@@ -1,0 +1,9 @@
+{
+  final String newNotes="Lorem ipsum yada yada";
+  toDoItem.setNotes(newNotes);
+  assertThat(unwrap(toDoItem).getNotes(),is(newNotes));
+  @SuppressWarnings("unchecked") final PropertyInteractionEvent.Default ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(PropertyInteractionEvent.Default.class);
+  assertThat(ev,is(notNullValue()));
+  assertThat(ev.getSource(),is((Object)unwrap(toDoItem)));
+  assertThat(ev.getNewValue(),is((Object)newNotes));
+}

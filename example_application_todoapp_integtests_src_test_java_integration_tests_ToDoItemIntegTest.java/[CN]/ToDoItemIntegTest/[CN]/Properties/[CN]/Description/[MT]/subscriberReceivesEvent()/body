@@ -1,0 +1,12 @@
+{
+  assertThat(toDoItemSubscriptions.getSubscriberBehaviour(),is(ToDoItemSubscriptions.Behaviour.AnyExecuteAccept));
+  assertThat(toDoItem.getDescription(),is("Buy bread"));
+  toDoItem.setDescription("Buy bread and butter");
+  @SuppressWarnings("unchecked") final PropertyInteractionEvent<ToDoItem,String> ev=toDoItemSubscriptions.mostRecentlyReceivedEvent(PropertyInteractionEvent.class);
+  assertThat(ev,is(not(nullValue())));
+  ToDoItem source=ev.getSource();
+  assertThat(source,is(equalTo(unwrap(toDoItem))));
+  assertThat(ev.getIdentifier().getMemberName(),is("description"));
+  assertThat(ev.getOldValue(),is("Buy bread"));
+  assertThat(ev.getNewValue(),is("Buy bread and butter"));
+}

@@ -1,0 +1,15 @@
+{
+  originalEventBusService=scenarioExecution().service(EventBusService.class);
+  context.checking(new Expectations(){
+{
+      ignoring(mockEventBusService).register(with(any(Object.class)));
+      ignoring(mockEventBusService).unregister(with(any(Object.class)));
+    }
+  }
+);
+  scenarioExecution().replaceService(originalEventBusService,mockEventBusService);
+  scenarioExecution().closeSession();
+  scenarioExecution().openSession();
+  final List<ToDoItem> all=toDoItems.notYetComplete();
+  toDoItem=wrap(all.get(0));
+}

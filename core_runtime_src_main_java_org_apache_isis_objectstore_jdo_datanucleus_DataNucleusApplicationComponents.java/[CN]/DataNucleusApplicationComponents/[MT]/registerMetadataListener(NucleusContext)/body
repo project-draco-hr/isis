@@ -1,0 +1,11 @@
+{
+  final MetaDataManager metaDataManager=nucleusContext.getMetaDataManager();
+  final MetaDataListener listener=createMetaDataListener();
+  if (listener instanceof PersistenceManagerFactoryAware) {
+    ((PersistenceManagerFactoryAware)listener).setPersistenceManagerFactory(persistenceManagerFactory);
+  }
+  if (listener instanceof DataNucleusPropertiesAware) {
+    ((DataNucleusPropertiesAware)listener).setDataNucleusProperties(props);
+  }
+  metaDataManager.registerListener(listener);
+}

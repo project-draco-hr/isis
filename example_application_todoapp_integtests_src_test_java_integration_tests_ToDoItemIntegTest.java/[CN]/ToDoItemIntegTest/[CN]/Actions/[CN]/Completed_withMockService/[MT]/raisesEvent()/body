@@ -1,0 +1,19 @@
+{
+  final Sequence busRulesThenExec=context.sequence("busRulesThenExec");
+  context.checking(new Expectations(){
+{
+      oneOf(mockEventBusService).post(with(completedEvent(AbstractInteractionEvent.Phase.HIDE)));
+      inSequence(busRulesThenExec);
+      oneOf(mockEventBusService).post(with(completedEvent(AbstractInteractionEvent.Phase.DISABLE)));
+      inSequence(busRulesThenExec);
+      oneOf(mockEventBusService).post(with(completedEvent(AbstractInteractionEvent.Phase.VALIDATE)));
+      inSequence(busRulesThenExec);
+      oneOf(mockEventBusService).post(with(completedEvent(AbstractInteractionEvent.Phase.EXECUTING)));
+      inSequence(busRulesThenExec);
+      oneOf(mockEventBusService).post(with(completedEvent(AbstractInteractionEvent.Phase.EXECUTED)));
+      inSequence(busRulesThenExec);
+    }
+  }
+);
+  toDoItem.completed();
+}

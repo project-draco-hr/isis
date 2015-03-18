@@ -1,0 +1,11 @@
+{
+  final JDOPersistenceManagerFactory jdopmf=(JDOPersistenceManagerFactory)persistenceManagerFactory;
+  final NucleusContext nucleusContext=jdopmf.getNucleusContext();
+  if (nucleusContext instanceof StoreNucleusContext) {
+    final StoreManager storeManager=((StoreNucleusContext)nucleusContext).getStoreManager();
+    if (storeManager instanceof SchemaAwareStoreManager) {
+      ((SchemaAwareStoreManager)storeManager).createSchemaForClasses(classesToBePersisted,asProperties(props));
+    }
+  }
+  registerMetadataListener(nucleusContext);
+}
