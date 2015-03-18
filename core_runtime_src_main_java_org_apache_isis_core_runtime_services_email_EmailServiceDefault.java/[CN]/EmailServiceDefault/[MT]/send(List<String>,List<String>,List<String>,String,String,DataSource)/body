@@ -1,10 +1,11 @@
 {
   try {
-    final HtmlEmail email=new HtmlEmail();
+    final ImageHtmlEmail email=new ImageHtmlEmail();
     email.setAuthenticator(new DefaultAuthenticator(senderEmailAddress,senderEmailPassword));
     email.setHostName(getSenderEmailHostName());
     email.setSmtpPort(senderEmailPort);
     email.setStartTLSEnabled(getSenderEmailTlsEnabled());
+    email.setDataSourceResolver(new DataSourceClassPathResolver("/",true));
     final Properties properties=email.getMailSession().getProperties();
     properties.put("mail.smtps.auth","true");
     properties.put("mail.debug","true");
