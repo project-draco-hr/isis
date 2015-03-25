@@ -6,14 +6,14 @@
     final CollectionDomainEvent<?,?> event;
     if (existingEvent != null && phase.isExecuted()) {
       event=existingEvent;
-      event.setEventPhase(phase);
-      event.setPhase(AbstractInteractionEvent.Phase.from(phase));
     }
  else {
       final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
       final Identifier identifier=identified.getIdentifier();
       event=newCollectionDomainEvent(eventType,phase,identifier,source,of,reference);
     }
+    event.setEventPhase(phase);
+    event.setPhase(AbstractInteractionEvent.Phase.from(phase));
     getEventBusService().post(event);
     return event;
   }

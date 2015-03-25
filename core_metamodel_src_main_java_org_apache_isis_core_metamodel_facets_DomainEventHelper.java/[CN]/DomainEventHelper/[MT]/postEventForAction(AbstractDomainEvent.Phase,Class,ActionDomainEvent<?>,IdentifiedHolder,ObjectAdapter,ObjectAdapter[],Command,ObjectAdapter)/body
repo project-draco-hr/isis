@@ -6,8 +6,6 @@
     final ActionDomainEvent<?> event;
     if (existingEvent != null && phase.isExecuted()) {
       event=existingEvent;
-      event.setEventPhase(phase);
-      event.setPhase(AbstractInteractionEvent.Phase.from(phase));
     }
  else {
       final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
@@ -19,6 +17,8 @@
         event.setActionSemantics(objectAction.getSemantics());
       }
     }
+    event.setEventPhase(phase);
+    event.setPhase(AbstractInteractionEvent.Phase.from(phase));
     if (phase.isExecuted()) {
       event.setReturnValue(ObjectAdapter.Util.unwrap(resultAdapter));
     }

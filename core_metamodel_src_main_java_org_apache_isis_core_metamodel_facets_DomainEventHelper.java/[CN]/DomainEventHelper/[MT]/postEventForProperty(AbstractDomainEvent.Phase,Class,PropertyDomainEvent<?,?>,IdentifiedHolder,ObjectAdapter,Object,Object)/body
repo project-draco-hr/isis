@@ -8,13 +8,13 @@
     final Identifier identifier=identified.getIdentifier();
     if (existingEvent != null && phase.isExecuted()) {
       event=existingEvent;
-      event.setEventPhase(phase);
-      event.setPhase(AbstractInteractionEvent.Phase.from(phase));
-      setEventNewValue(event,newValue);
     }
  else {
       event=newPropertyDomainEvent(eventType,identifier,source,oldValue,newValue);
     }
+    event.setEventPhase(phase);
+    event.setPhase(AbstractInteractionEvent.Phase.from(phase));
+    setEventNewValue(event,newValue);
     this.getEventBusService().post(event);
     return event;
   }
