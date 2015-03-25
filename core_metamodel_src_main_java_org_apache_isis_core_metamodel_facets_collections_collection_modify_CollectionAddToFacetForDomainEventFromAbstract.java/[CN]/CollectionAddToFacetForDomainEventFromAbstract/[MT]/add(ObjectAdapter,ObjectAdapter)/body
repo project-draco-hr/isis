@@ -6,21 +6,15 @@
     collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
     return;
   }
-  try {
-    final Object referencedObject=ObjectAdapter.Util.unwrap(referencedObjectAdapter);
-    final Object collection=getterFacet.getProperty(targetAdapter);
-    if (collection instanceof Set) {
-      Set<?> set=(Set<?>)collection;
-      if (set.contains(referencedObject)) {
-        return;
-      }
+  final Object referencedObject=ObjectAdapter.Util.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter);
+  if (collection instanceof Set) {
+    Set<?> set=(Set<?>)collection;
+    if (set.contains(referencedObject)) {
+      return;
     }
-    final CollectionDomainEvent<?,?> existingEvent=collectionDomainEventFacet.currentInteraction.get();
-    final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
-    collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
-    domainEventHelper.postEventForCollection(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
   }
-  finally {
-    collectionDomainEventFacet.currentInteraction.set(null);
-  }
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
+  collectionAddToFacet.add(targetAdapter,referencedObjectAdapter);
+  domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.EXECUTED,value(),verify(event),getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
 }

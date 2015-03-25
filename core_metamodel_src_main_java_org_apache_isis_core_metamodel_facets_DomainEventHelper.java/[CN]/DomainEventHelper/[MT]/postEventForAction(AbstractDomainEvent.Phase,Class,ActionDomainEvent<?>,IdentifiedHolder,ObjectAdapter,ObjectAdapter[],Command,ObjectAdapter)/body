@@ -1,0 +1,47 @@
+{
+  if (!hasEventBusService()) {
+    return null;
+  }
+  try {
+    final ActionDomainEvent<?> event;
+    if (existingEvent != null && phase.isExecuted()) {
+      event=existingEvent;
+      event.setEventPhase(phase);
+      event.setPhase(AbstractInteractionEvent.Phase.from(phase));
+    }
+ else {
+      final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
+      final Object[] arguments=ObjectAdapter.Util.unwrap(argumentAdapters);
+      final Identifier identifier=identified.getIdentifier();
+      event=newActionDomainEvent(eventType,identifier,source,arguments);
+      if (identified instanceof ObjectAction) {
+        final ObjectAction objectAction=(ObjectAction)identified;
+        event.setActionSemantics(objectAction.getSemantics());
+      }
+    }
+    if (phase.isExecuted()) {
+      event.setReturnValue(ObjectAdapter.Util.unwrap(resultAdapter));
+    }
+    if (command != null) {
+      event.setCommand(command);
+    }
+    if (command != null) {
+      if (phase.isExecuting()) {
+        if (command instanceof Command3) {
+          final Command3 command3=(Command3)command;
+          command3.pushActionDomainEvent(event);
+        }
+ else         if (command instanceof Command2 && event instanceof ActionInteractionEvent) {
+          final Command2 command2=(Command3)command;
+          final ActionInteractionEvent<?> aie=(ActionInteractionEvent<?>)event;
+          command2.pushActionInteractionEvent(aie);
+        }
+      }
+    }
+    getEventBusService().post(event);
+    return event;
+  }
+ catch (  Exception e) {
+    throw new FatalException(e);
+  }
+}

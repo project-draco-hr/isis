@@ -2,9 +2,8 @@
   if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
-  currentInteraction.set(null);
   final ObjectAdapter[] argumentAdapters=argumentAdaptersFrom(ic);
-  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(eventType(),null,null,AbstractDomainEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),argumentAdapters,null);
+  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.DISABLE,eventType(),null,getIdentified(),ic.getTarget(),argumentAdapters,null,null);
   if (event != null && event.isDisabled()) {
     return event.getDisabledReason();
   }
