@@ -6,13 +6,15 @@
     final PropertyDomainEvent<?,?> event;
     final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
     final Identifier identifier=identified.getIdentifier();
-    event=newPropertyDomainEvent(eventType,identifier,source,oldValue,newValue);
+    if (existingEvent != null && phase.isExecuted()) {
+      event=existingEvent;
+    }
+ else {
+      event=newPropertyDomainEvent(eventType,identifier,source,oldValue,newValue);
+    }
     event.setEventPhase(phase);
     event.setPhase(AbstractInteractionEvent.Phase.from(phase));
-    if (phase.isValidatingOrLater()) {
-      setEventOldValue(event,oldValue);
-      setEventNewValue(event,newValue);
-    }
+    setEventNewValue(event,newValue);
     this.getEventBusService().post(event);
     return event;
   }

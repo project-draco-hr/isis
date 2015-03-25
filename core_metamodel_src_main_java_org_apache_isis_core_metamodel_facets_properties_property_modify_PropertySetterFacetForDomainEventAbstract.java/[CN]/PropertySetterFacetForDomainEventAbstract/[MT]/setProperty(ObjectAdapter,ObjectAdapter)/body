@@ -6,20 +6,13 @@
     setterFacet.setProperty(targetAdapter,newValueAdapter);
     return;
   }
-  try {
-    final PropertyDomainEvent<?,?> existingEvent=PropertyDomainEventFacetAbstract.currentInteraction.get();
-    final Object oldValue=getterFacet.getProperty(targetAdapter);
-    final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
-    domainEventHelper.postEventForProperty(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,newValue);
-    setterFacet.setProperty(targetAdapter,newValueAdapter);
-    final Object actualNewValue=getterFacet.getProperty(targetAdapter);
-    if (Objects.equal(oldValue,actualNewValue)) {
-      return;
-    }
-    final PropertyDomainEvent<?,?> event=PropertyDomainEventFacetAbstract.currentInteraction.get();
-    domainEventHelper.postEventForProperty(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
+  final Object oldValue=getterFacet.getProperty(targetAdapter);
+  final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,newValue);
+  setterFacet.setProperty(targetAdapter,newValueAdapter);
+  final Object actualNewValue=getterFacet.getProperty(targetAdapter);
+  if (Objects.equal(oldValue,actualNewValue)) {
+    return;
   }
-  finally {
-    PropertyDomainEventFacetAbstract.currentInteraction.set(null);
-  }
+  domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTED,eventType(),verify(event),getIdentified(),targetAdapter,oldValue,actualNewValue);
 }

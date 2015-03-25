@@ -2,13 +2,12 @@
   if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
-  currentInteraction.set(null);
   final ProposedHolder catc=(ProposedHolder)ic;
   final Object proposed=catc.getProposed().getObject();
-  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(eventType(),null,AbstractDomainEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ADD_TO,proposed);
+  final CollectionDomainEvent.Of of=ic instanceof CollectionAddToContext ? CollectionDomainEvent.Of.ADD_TO : CollectionDomainEvent.Of.REMOVE_FROM;
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.VALIDATE,eventType(),null,getIdentified(),ic.getTarget(),of,proposed);
   if (event != null && event.isInvalid()) {
     return event.getInvalidityReason();
   }
-  currentInteraction.set(event);
   return null;
 }

@@ -2,12 +2,10 @@
   if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
-  currentInteraction.set(null);
   final ActionInvocationContext aic=(ActionInvocationContext)ic;
-  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(eventType(),null,null,AbstractDomainEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),aic.getArgs(),null);
+  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.VALIDATE,eventType(),null,getIdentified(),ic.getTarget(),aic.getArgs(),null,null);
   if (event != null && event.isInvalid()) {
     return event.getInvalidityReason();
   }
-  currentInteraction.set(event);
   return null;
 }
