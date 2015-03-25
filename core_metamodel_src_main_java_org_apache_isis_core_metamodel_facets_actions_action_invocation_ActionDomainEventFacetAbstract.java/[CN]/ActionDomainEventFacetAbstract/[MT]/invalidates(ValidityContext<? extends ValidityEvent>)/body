@@ -5,6 +5,10 @@
   final ActionInvocationContext aic=(ActionInvocationContext)ic;
   final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.VALIDATE,eventType(),null,getIdentified(),ic.getTarget(),aic.getArgs(),null,null);
   if (event != null && event.isInvalid()) {
+    final TranslatableString reasonTranslatable=event.getInvalidityReasonTranslatable();
+    if (reasonTranslatable != null) {
+      return reasonTranslatable.translate(translationService,translationContext);
+    }
     return event.getInvalidityReason();
   }
   return null;

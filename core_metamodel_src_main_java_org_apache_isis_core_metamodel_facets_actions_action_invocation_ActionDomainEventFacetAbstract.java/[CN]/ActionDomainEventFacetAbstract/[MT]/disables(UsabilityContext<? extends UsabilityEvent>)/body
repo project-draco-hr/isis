@@ -5,6 +5,10 @@
   final ObjectAdapter[] argumentAdapters=argumentAdaptersFrom(ic);
   final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.DISABLE,eventType(),null,getIdentified(),ic.getTarget(),argumentAdapters,null,null);
   if (event != null && event.isDisabled()) {
+    final TranslatableString reasonTranslatable=event.getDisabledReasonTranslatable();
+    if (reasonTranslatable != null) {
+      return reasonTranslatable.translate(translationService,translationContext);
+    }
     return event.getDisabledReason();
   }
   return null;

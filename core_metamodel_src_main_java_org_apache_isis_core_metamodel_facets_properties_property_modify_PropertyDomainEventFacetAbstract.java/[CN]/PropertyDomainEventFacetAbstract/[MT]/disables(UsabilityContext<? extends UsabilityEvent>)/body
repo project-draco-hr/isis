@@ -4,6 +4,10 @@
   }
   final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.DISABLE,eventType(),null,getIdentified(),ic.getTarget(),null,null);
   if (event != null && event.isDisabled()) {
+    final TranslatableString reasonTranslatable=event.getDisabledReasonTranslatable();
+    if (reasonTranslatable != null) {
+      return reasonTranslatable.translate(translationService,translationContext);
+    }
     return event.getDisabledReason();
   }
   return null;
