@@ -1,4 +1,9 @@
 {
   final MemberOrder annotation=Annotations.getAnnotation(processMethodContext.getMethod(),MemberOrder.class);
-  return annotation != null ? new MemberOrderFacetAnnotation(annotation.name(),annotation.sequence(),processMethodContext.getFacetHolder()) : null;
+  if (annotation != null) {
+    return new MemberOrderFacetAnnotation(annotation.name(),annotation.sequence(),servicesInjector.lookupService(TranslationService.class),processMethodContext.getFacetHolder());
+  }
+ else {
+    return null;
+  }
 }
