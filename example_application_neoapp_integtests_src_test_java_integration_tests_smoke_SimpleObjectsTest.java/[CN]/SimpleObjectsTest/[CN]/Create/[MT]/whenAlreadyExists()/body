@@ -1,0 +1,10 @@
+{
+  fixtureScript=new SimpleObjectsTearDownFixture();
+  fixtureScripts.runFixtureScript(fixtureScript,null);
+  nextTransaction();
+  wrap(simpleObjects).create("Faz");
+  nextTransaction();
+  expectedException.expectCause(causalChainContains(SQLIntegrityConstraintViolationException.class));
+  wrap(simpleObjects).create("Faz");
+  nextTransaction();
+}
