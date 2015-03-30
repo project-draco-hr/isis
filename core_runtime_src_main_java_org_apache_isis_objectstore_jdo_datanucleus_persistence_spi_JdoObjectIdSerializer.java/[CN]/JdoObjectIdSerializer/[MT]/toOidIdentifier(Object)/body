@@ -20,19 +20,26 @@
     }
   }
   if (jdoOid instanceof DatastoreId) {
-    DatastoreId dnOid=(DatastoreId)jdoOid;
-    Object keyValue=dnOid.getKeyAsObject();
-    if (keyValue instanceof String) {
-      return "S" + SEPARATOR + keyValue;
+    final DatastoreId dnOid=(DatastoreId)jdoOid;
+    final Object keyValue=dnOid.getKeyAsObject();
+    if (false) {
+      if (keyValue instanceof String) {
+        return "S" + SEPARATOR + keyValue;
+      }
+      if (keyValue instanceof Long) {
+        return "L" + SEPARATOR + keyValue;
+      }
+      if (keyValue instanceof BigInteger) {
+        return "B" + SEPARATOR + keyValue;
+      }
+      if (keyValue instanceof Integer) {
+        return "I" + SEPARATOR + keyValue;
+      }
     }
-    if (keyValue instanceof Long) {
-      return "L" + SEPARATOR + keyValue;
-    }
-    if (keyValue instanceof BigInteger) {
-      return "B" + SEPARATOR + keyValue;
-    }
-    if (keyValue instanceof Integer) {
-      return "I" + SEPARATOR + keyValue;
+ else {
+      if (keyValue instanceof String || keyValue instanceof Long || keyValue instanceof BigDecimal|| keyValue instanceof BigInteger|| keyValue instanceof Integer) {
+        return "" + keyValue;
+      }
     }
   }
   return jdoOid.getClass().getName().toString() + SEPARATOR + jdoOid.toString();
