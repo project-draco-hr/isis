@@ -17,6 +17,12 @@
     __isis_executionMode=WrapperObject.class.getMethod("__isis_executionMode",new Class[]{});
     saveMethod=WrapperObject.class.getMethod("save",new Class[]{});
     wrappedMethod=WrapperObject.class.getMethod("wrapped",new Class[]{});
+    dnPersistableMethods.addAll(Lists.newArrayList(Iterables.transform(Arrays.asList(Persistable.class.getDeclaredMethods()),new Function<Method,String>(){
+      @Override public String apply(      final Method input){
+        return input.getName();
+      }
+    }
+)));
   }
  catch (  final NoSuchMethodException nsme) {
     throw new IllegalStateException("Could not locate reserved declared methods in the WrappingObject and WrappedObject interfaces",nsme);
