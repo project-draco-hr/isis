@@ -1,0 +1,10 @@
+{
+  final Class<?> cls=CustomerViewModel.class;
+  facetFactory.process(new FacetFactory.ProcessClassContext(cls,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(CssClassFaFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CssClassFaFacetForViewModelLayoutAnnotation);
+  final CssClassFaFacetForViewModelLayoutAnnotation facetImpl=(CssClassFaFacetForViewModelLayoutAnnotation)facet;
+  Assert.assertTrue(facetImpl.value().contains("star"));
+  expectNoMethodsRemoved();
+}
