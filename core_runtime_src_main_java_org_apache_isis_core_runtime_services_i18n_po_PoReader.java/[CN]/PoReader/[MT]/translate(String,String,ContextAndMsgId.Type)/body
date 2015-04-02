@@ -1,7 +1,7 @@
 {
   final Locale targetLocale;
   try {
-    targetLocale=translationServicePo.getLocaleProvider().getLocale();
+    targetLocale=localeProvider.getLocale();
     if (targetLocale == null) {
       return msgId;
     }
@@ -21,7 +21,8 @@
   if (!Strings.isNullOrEmpty(translationNoContext)) {
     return translationNoContext;
   }
-  if (translation == null && translationNoContext == null) {
+  final Boolean usesFallback=usesFallbackByLocale.get(targetLocale);
+  if (!usesFallback) {
     LOG.warn("No translation found for: " + key);
   }
   return msgId;

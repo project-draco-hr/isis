@@ -11,7 +11,22 @@
     return;
   }
   try {
-    final Set<Entry<AdapterAndProperty,PreAndPostValues>> changedObjectProperties=getChangedObjectProperties();
+    final Map<AdapterAndProperty,PreAndPostValues> processedObjectProperties=Maps.newLinkedHashMap();
+    while (!changedObjectProperties.isEmpty()) {
+      final Set<AdapterAndProperty> keys=Sets.newLinkedHashSet(changedObjectProperties.keySet());
+      for (      final AdapterAndProperty aap : keys) {
+        final PreAndPostValues papv=changedObjectProperties.remove(aap);
+        final ObjectAdapter adapter=aap.getAdapter();
+        if (adapter.isDestroyed()) {
+          papv.setPost(Placeholder.DELETED);
+        }
+ else {
+          papv.setPost(aap.getPropertyValue());
+        }
+        processedObjectProperties.put(aap,papv);
+      }
+    }
+    final Set<Entry<AdapterAndProperty,PreAndPostValues>> changedObjectProperties=Collections.unmodifiableSet(Sets.filter(processedObjectProperties.entrySet(),PreAndPostValues.Predicates.CHANGED));
     ensureCommandsPersistedIfDirtyXactnAndAnySafeSemanticsHonoured(changedObjectProperties);
     preCommitServices(changedObjectProperties);
   }

@@ -1,10 +1,11 @@
 {
   final FacetHolder holder=processMethodContext.getFacetHolder();
+  final Method method=processMethodContext.getMethod();
   Properties properties=processMethodContext.metadataProperties("propertyLayout");
   if (properties == null) {
     properties=processMethodContext.metadataProperties("layout");
   }
-  final PropertyLayout propertyLayout=Annotations.getAnnotation(processMethodContext.getMethod(),PropertyLayout.class);
+  final PropertyLayout propertyLayout=Annotations.getAnnotation(method,PropertyLayout.class);
   CssClassFacet cssClassFacet=CssClassFacetOnPropertyFromLayoutProperties.create(properties,holder);
   if (cssClassFacet == null) {
     cssClassFacet=CssClassFacetForPropertyLayoutAnnotation.create(propertyLayout,holder);

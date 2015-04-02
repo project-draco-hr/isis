@@ -1,0 +1,11 @@
+{
+  if (persistenceCapableFacet.isNoop()) {
+    return null;
+  }
+  final String schema=persistenceCapableFacet.getSchema();
+  if (Strings.isNullOrEmpty(schema)) {
+    return null;
+  }
+  final String objectType=schema.toLowerCase(Locale.ROOT) + "." + persistenceCapableFacet.getTable();
+  return new ObjectSpecIdFacetForJdoPersistenceCapableAnnotation(objectType,holder);
+}

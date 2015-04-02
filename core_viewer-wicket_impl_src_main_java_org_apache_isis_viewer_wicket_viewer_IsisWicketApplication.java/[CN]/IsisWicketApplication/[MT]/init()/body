@@ -16,6 +16,7 @@
     final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
     final IsisInjectModule isisModule=newIsisModule(deploymentType,isisConfigurationBuilder);
     final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
+    initWicketComponentInjection(injector);
     injector.injectMembers(this);
     if (requestCycleListenerForIsis instanceof WebRequestCycleForIsis) {
       WebRequestCycleForIsis webRequestCycleForIsis=(WebRequestCycleForIsis)requestCycleListenerForIsis;
@@ -24,7 +25,6 @@
     final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
     this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
     getDebugSettings().setAjaxDebugModeEnabled(determineAjaxDebugModeEnabled(configuration));
-    initWicketComponentInjection(injector);
     buildCssBundle();
     filterJavascriptContributions();
     configureWicketSourcePlugin();

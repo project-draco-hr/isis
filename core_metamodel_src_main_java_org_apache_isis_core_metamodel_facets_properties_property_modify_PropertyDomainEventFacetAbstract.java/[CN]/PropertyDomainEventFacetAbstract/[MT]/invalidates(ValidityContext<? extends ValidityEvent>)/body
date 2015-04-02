@@ -2,13 +2,15 @@
   if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
-  currentInteraction.set(null);
   final Object oldValue=getterFacet.getProperty(ic.getTarget());
   final Object proposedValue=proposedFrom(ic);
-  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(eventType(),null,AbstractDomainEvent.Phase.VALIDATE,getIdentified(),ic.getTarget(),oldValue,proposedValue);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.VALIDATE,eventType(),null,getIdentified(),ic.getTarget(),oldValue,proposedValue);
   if (event != null && event.isInvalid()) {
+    final TranslatableString reasonTranslatable=event.getInvalidityReasonTranslatable();
+    if (reasonTranslatable != null) {
+      return reasonTranslatable.translate(translationService,translationContext);
+    }
     return event.getInvalidityReason();
   }
-  currentInteraction.set(event);
   return null;
 }

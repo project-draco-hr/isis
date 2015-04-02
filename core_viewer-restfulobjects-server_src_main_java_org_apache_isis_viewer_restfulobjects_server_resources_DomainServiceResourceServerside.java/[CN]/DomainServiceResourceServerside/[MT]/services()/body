@@ -1,6 +1,6 @@
 {
   init(RepresentationType.LIST,Where.STANDALONE_TABLES);
-  final List<ObjectAdapter> serviceAdapters=getResourceContext().getServiceAdapters();
+  final List<ObjectAdapter> serviceAdapters=Lists.newArrayList(Iterables.filter(getResourceContext().getServiceAdapters(),NATURE_OF_MENU));
   final DomainServicesListReprRenderer renderer=new DomainServicesListReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.usingLinkToBuilder(new DomainServiceLinkTo()).includesSelf().with(serviceAdapters);
   return Responses.ofOk(renderer,Caching.ONE_DAY).build();

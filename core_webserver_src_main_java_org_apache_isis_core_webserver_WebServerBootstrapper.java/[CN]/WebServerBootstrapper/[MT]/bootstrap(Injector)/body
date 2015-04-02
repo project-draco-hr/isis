@@ -7,13 +7,16 @@
   jettyServer=new Server(port);
   Connector[] connectors=jettyServer.getConnectors();
   Connector connector=connectors[0];
-  connector.setHeaderBufferSize(8192);
+  connector.setRequestHeaderSize(8192);
+  connector.setResponseHeaderSize(8192);
   final WebAppContext context=new WebAppContext(SRC_MAIN_WEBAPP,webappContextPath);
   copyConfigurationPrimersIntoServletContext(context);
   jettyServer.setHandler(context);
-  LOG.info("starting Jetty on port " + port + " to serve webapp");
+  LOG.info("Starting Jetty on port '{}' to serve the web application",port);
+  long start=System.currentTimeMillis();
   try {
     jettyServer.start();
+    LOG.info("Started the application in {}ms",System.currentTimeMillis() - start);
     if (startupMode.isForeground()) {
       System.in.read();
       System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");

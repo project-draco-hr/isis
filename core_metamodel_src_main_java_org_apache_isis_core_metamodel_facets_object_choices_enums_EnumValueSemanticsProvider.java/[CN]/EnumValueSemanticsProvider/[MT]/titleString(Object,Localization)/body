@@ -1,6 +1,6 @@
 {
+  final TranslationService translationService=getDependencyInjector().lookupService(TranslationService.class);
   if (titleMethod != null) {
-    final TranslationService translationService=getDependencyInjector().lookupService(TranslationService.class);
     final String translationContext=titleMethod.getDeclaringClass().getName() + "#" + titleMethod.getName()+ "()";
     try {
       final Object returnValue=MethodExtensions.invoke(titleMethod,object);
@@ -16,5 +16,8 @@
  catch (    final RuntimeException ex) {
     }
   }
-  return object.toString();
+  Enum<?> objectAsEnum=(Enum<?>)object;
+  final String translationContext=object.getClass().getName() + "#" + objectAsEnum.name();
+  final String friendlyNameOfEnum=Enums.getFriendlyNameOf(objectAsEnum.name());
+  return translationService.translate(translationContext,friendlyNameOfEnum);
 }

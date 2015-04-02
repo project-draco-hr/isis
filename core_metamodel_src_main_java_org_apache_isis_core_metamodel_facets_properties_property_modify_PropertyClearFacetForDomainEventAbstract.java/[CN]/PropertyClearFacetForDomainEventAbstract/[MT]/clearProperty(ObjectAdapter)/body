@@ -6,19 +6,12 @@
     clearFacet.clearProperty(targetAdapter);
     return;
   }
-  try {
-    final PropertyDomainEvent<?,?> existingEvent=PropertyDomainEventFacetAbstract.currentInteraction.get();
-    final Object oldValue=getterFacet.getProperty(targetAdapter);
-    domainEventHelper.postEventForProperty(value(),existingEvent,AbstractDomainEvent.Phase.EXECUTING,getIdentified(),targetAdapter,oldValue,null);
-    clearFacet.clearProperty(targetAdapter);
-    final Object actualNewValue=getterFacet.getProperty(targetAdapter);
-    if (Objects.equal(oldValue,actualNewValue)) {
-      return;
-    }
-    final PropertyDomainEvent<?,?> event=PropertyDomainEventFacetAbstract.currentInteraction.get();
-    domainEventHelper.postEventForProperty(value(),verify(event),AbstractDomainEvent.Phase.EXECUTED,getIdentified(),targetAdapter,oldValue,actualNewValue);
+  final Object oldValue=getterFacet.getProperty(targetAdapter);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,null);
+  clearFacet.clearProperty(targetAdapter);
+  final Object actualNewValue=getterFacet.getProperty(targetAdapter);
+  if (Objects.equal(oldValue,actualNewValue)) {
+    return;
   }
-  finally {
-    PropertyDomainEventFacetAbstract.currentInteraction.set(null);
-  }
+  domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTED,eventType(),verify(event),getIdentified(),targetAdapter,oldValue,actualNewValue);
 }

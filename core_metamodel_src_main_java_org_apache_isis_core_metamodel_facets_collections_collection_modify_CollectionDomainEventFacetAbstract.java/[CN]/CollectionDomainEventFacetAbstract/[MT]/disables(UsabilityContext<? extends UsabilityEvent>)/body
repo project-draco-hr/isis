@@ -2,9 +2,12 @@
   if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
-  currentInteraction.set(null);
-  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(eventType(),null,AbstractDomainEvent.Phase.DISABLE,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ACCESS,null);
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.DISABLE,eventType(),null,getIdentified(),ic.getTarget(),CollectionDomainEvent.Of.ACCESS,null);
   if (event != null && event.isDisabled()) {
+    final TranslatableString reasonTranslatable=event.getDisabledReasonTranslatable();
+    if (reasonTranslatable != null) {
+      return reasonTranslatable.translate(translationService,translationContext);
+    }
     return event.getDisabledReason();
   }
   return null;

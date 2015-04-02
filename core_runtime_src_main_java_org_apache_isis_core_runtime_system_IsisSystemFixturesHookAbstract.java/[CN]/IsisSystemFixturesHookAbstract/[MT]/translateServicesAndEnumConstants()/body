@@ -1,0 +1,22 @@
+{
+  IsisContext.openSession(new InitialisationSession());
+  try {
+    final List<Object> services=sessionFactory.getServices();
+    final DomainObjectContainer container=lookupService(DomainObjectContainer.class);
+    for (    Object service : services) {
+      final String unused=container.titleOf(service);
+    }
+    for (    final ObjectSpecification objSpec : allSpecifications()) {
+      final Class<?> correspondingClass=objSpec.getCorrespondingClass();
+      if (correspondingClass.isEnum()) {
+        final Object[] enumConstants=correspondingClass.getEnumConstants();
+        for (        Object enumConstant : enumConstants) {
+          final String unused=container.titleOf(enumConstant);
+        }
+      }
+    }
+  }
+  finally {
+    IsisContext.closeSession();
+  }
+}

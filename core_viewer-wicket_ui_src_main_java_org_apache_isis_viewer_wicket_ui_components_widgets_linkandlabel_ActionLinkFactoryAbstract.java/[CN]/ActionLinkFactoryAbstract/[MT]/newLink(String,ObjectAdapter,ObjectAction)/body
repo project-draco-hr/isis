@@ -17,30 +17,6 @@
         actionPrompt.setPanel(actionPanel,target);
         actionPanel.setActionPrompt(actionPrompt);
         actionPrompt.showPrompt(target);
-        focusOnFirstParameter(target,actionPanel);
-      }
-    }
-    private void focusOnFirstParameter(    AjaxRequestTarget target,    ActionPanel actionPanel){
-      actionPanel.visitChildren(new IVisitor<Component,Component>(){
-        @Override public void component(        Component object,        IVisit<Component> visit){
-          if (object instanceof ScalarPanelAbstract) {
-            ScalarPanelAbstract spa=(ScalarPanelAbstract)object;
-            spa.forceBuildGui();
-            visit.dontGoDeeper();
-          }
-        }
-      }
-);
-      final Component actionPanelFirstParam=actionPanel.visitChildren(new IVisitor<Component,Component>(){
-        @Override public void component(        Component object,        IVisit<Component> visit){
-          if (object instanceof FormComponent && !"scalarIfCompact".equals(object.getId()) && object.getOutputMarkupId()) {
-            visit.stop(object);
-          }
-        }
-      }
-);
-      if (actionPanelFirstParam != null) {
-        target.focusComponent(actionPanelFirstParam);
       }
     }
     @Override protected void updateAjaxAttributes(    AjaxRequestAttributes attributes){
