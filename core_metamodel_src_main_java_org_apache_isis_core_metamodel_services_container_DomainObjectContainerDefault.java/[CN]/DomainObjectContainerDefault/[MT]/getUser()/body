@@ -1,7 +1,8 @@
 {
   final AuthenticationSession session=getAuthenticationSessionProvider().getAuthenticationSession();
-  final String username=overrideUser.get() != null ? overrideUser.get() : session.getUserName();
-  final List<String> roles=overrideRoles.get() != null ? overrideRoles.get() : session.getRoles();
+  final UserAndRoleOverrides userAndRoleOverrides=overrides.get().peek();
+  final String username=userAndRoleOverrides != null ? userAndRoleOverrides.user : session.getUserName();
+  final List<String> roles=userAndRoleOverrides != null ? userAndRoleOverrides.roles != null ? userAndRoleOverrides.roles : session.getRoles() : session.getRoles();
   final List<RoleMemento> roleMementos=asRoleMementos(roles);
   final UserMemento user=new UserMemento(username,roleMementos);
   return user;
