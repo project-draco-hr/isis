@@ -3,7 +3,9 @@
 synchronized (sessionsByThread) {
     applySessionClosePolicy();
     final IsisSession session=getSessionFactoryInstance().openSession(authenticationSession);
-    LOG.debug("  opening session " + session + " (count "+ sessionsByThread.size()+ ") for "+ authenticationSession.getUserName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("  opening session " + session + " (count "+ sessionsByThread.size()+ ") for "+ authenticationSession.getUserName());
+    }
     saveSession(thread,session);
     session.open();
     return session;

@@ -14,5 +14,11 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug(cls.getName() + " # " + queryName+ " ( "+ filter+ " )");
   }
-  return (List<?>)jdoQuery.execute();
+  try {
+    final List<?> results=(List<?>)jdoQuery.execute();
+    return Lists.newArrayList(results);
+  }
+  finally {
+    jdoQuery.closeAll();
+  }
 }
