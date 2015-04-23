@@ -1,5 +1,6 @@
 {
-  flush();
-  final List<ObjectAdapter> allMatching=getQuerySubmitter().allMatchingQuery(query);
-  return ObjectAdapter.Util.unwrapT(allMatching);
+  if (autoFlush) {
+    flush();
+  }
+  return submitQuery(query);
 }
