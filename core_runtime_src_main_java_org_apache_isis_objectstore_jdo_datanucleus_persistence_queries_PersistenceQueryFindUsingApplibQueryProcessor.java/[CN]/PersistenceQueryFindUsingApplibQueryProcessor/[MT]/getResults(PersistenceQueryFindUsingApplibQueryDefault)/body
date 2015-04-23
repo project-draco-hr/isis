@@ -15,10 +15,8 @@
   }
   try {
     final List<?> results=(List<?>)jdoQuery.executeWithMap(argumentsByParameterName);
-    if (cardinality == QueryCardinality.MULTIPLE) {
-      return Lists.newArrayList(results);
-    }
-    return results.isEmpty() ? Collections.emptyList() : Lists.newArrayList(results.subList(0,1));
+    final List<?> resultsToReturn=cardinality == QueryCardinality.MULTIPLE ? results : results.isEmpty() ? Collections.emptyList() : results.subList(0,1);
+    return Lists.newArrayList(resultsToReturn);
   }
   finally {
     jdoQuery.closeAll();
