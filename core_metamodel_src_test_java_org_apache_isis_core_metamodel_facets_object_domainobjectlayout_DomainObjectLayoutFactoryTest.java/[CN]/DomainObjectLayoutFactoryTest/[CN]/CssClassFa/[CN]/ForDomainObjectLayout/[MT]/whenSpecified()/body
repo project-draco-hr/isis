@@ -1,0 +1,11 @@
+{
+  final Class<?> cls=Customer.class;
+  facetFactory.process(new FacetFactory.ProcessClassContext(cls,null,mockMethodRemover,facetHolder));
+  final Facet facet=facetHolder.getFacet(CssClassFaFacet.class);
+  assertNotNull(facet);
+  assertTrue(facet instanceof CssClassFaFacetForDomainObjectLayoutAnnotation);
+  final CssClassFaFacetForDomainObjectLayoutAnnotation facetImpl=(CssClassFaFacetForDomainObjectLayoutAnnotation)facet;
+  assertThat(facetImpl.value(),equalTo("fa fa-fw fa-foo"));
+  assertThat(facetImpl.getPosition(),is(CssClassFaPosition.RIGHT));
+  expectNoMethodsRemoved();
+}
