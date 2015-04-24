@@ -5,14 +5,15 @@
     return Util.createInstance(clazz,handler,WrapperObject.class);
   }
  else {
-    final Class<T> enhancedClass=createEnhancedClass(clazz,handler,WrapperObject.class);
-    ProxyObject proxyObject=(ProxyObject)Util.createInstance(enhancedClass);
-    proxyObject.setHandler(new MethodHandler(){
+    final ProxyFactory proxyFactory=proxyFactoryFor(clazz);
+    final Class<T> enhancedClass=proxyFactory.createClass();
+    final Proxy proxy=(Proxy)Util.createInstance(enhancedClass);
+    proxy.setHandler(new MethodHandler(){
       @Override public Object invoke(      Object self,      Method thisMethod,      Method proceed,      Object[] args) throws Throwable {
         return handler.invoke(self,thisMethod,args);
       }
     }
 );
-    return (T)proxyObject;
+    return (T)proxy;
   }
 }

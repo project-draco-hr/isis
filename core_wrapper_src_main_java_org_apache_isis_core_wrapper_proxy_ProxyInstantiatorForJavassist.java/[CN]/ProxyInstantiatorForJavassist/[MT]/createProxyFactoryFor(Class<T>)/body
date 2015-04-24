@@ -1,12 +1,14 @@
 {
   final ProxyFactory proxyFactory=new ProxyFactory();
   proxyFactory.setSuperclass(toProxyClass);
-  proxyFactory.setInterfaces(ArrayExtensions.combine(toProxyClass.getInterfaces(),new Class<?>[]{org.apache.isis.core.metamodel.specloader.classsubstitutor.JavassistEnhanced.class},auxiliaryTypes));
+  final Class[] types=ArrayExtensions.combine(toProxyClass.getInterfaces(),new Class<?>[]{JavassistEnhanced.class,WrappingObject.class});
+  proxyFactory.setInterfaces(types);
   proxyFactory.setFilter(new MethodFilter(){
     @Override public boolean isHandled(    final Method m){
       return !m.getName().equals("finalize") || m.isBridge();
     }
   }
 );
-  return proxyFactory.createClass();
+  proxyFactory.setUseCache(true);
+  return proxyFactory;
 }
