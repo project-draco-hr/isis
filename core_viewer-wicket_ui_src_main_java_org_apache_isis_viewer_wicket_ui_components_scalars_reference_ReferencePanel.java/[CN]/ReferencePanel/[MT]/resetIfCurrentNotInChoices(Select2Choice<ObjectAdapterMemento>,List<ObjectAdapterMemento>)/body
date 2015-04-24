@@ -6,7 +6,14 @@
     return;
   }
   if (!curr.containedIn(choiceMementos)) {
-    select2Field.getModel().setObject(null);
-    getModel().setObject(null);
+    if (!choiceMementos.isEmpty() && autoSelect()) {
+      final ObjectAdapterMemento newAdapterMemento=choiceMementos.get(0);
+      select2Field.getModel().setObject(newAdapterMemento);
+      getModel().setObject(newAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK));
+    }
+ else {
+      select2Field.getModel().setObject(null);
+      getModel().setObject(null);
+    }
   }
 }
