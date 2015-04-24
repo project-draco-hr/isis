@@ -1,0 +1,10 @@
+{
+  final Iterable<Clause> clauses=clausesFor(propertyNamesIter);
+  ComparisonChain chain=ComparisonChain.start();
+  for (  final Clause clause : clauses) {
+    final Comparable<T> propertyValueOfP=(Comparable<T>)clause.getValueOf(p);
+    final Comparable<T> propertyValueOfQ=(Comparable<T>)clause.getValueOf(q);
+    chain=chain.compare(propertyValueOfP,propertyValueOfQ,clause.getDirection().getOrdering());
+  }
+  return chain.result();
+}
