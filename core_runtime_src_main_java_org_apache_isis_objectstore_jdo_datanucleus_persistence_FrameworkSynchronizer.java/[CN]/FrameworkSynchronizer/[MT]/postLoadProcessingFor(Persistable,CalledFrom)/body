@@ -39,12 +39,16 @@
         }
       }
       if (!adapter.isResolved()) {
-        PersistorUtil.startResolving(adapter);
-        PersistorUtil.toEndState(adapter);
+        if (!adapter.isDestroyed()) {
+          PersistorUtil.startResolving(adapter);
+          PersistorUtil.toEndState(adapter);
+        }
       }
       adapter.setVersion(datastoreVersion);
       if (pojo.dnIsDeleted()) {
-        adapter.changeState(ResolveState.DESTROYED);
+        if (!adapter.isDestroyed()) {
+          adapter.changeState(ResolveState.DESTROYED);
+        }
       }
       ensureFrameworksInAgreement(pojo);
     }
