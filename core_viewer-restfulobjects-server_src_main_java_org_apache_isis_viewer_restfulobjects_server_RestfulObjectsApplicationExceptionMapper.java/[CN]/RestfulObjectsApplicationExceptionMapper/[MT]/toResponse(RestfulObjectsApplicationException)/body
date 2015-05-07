@@ -1,29 +1,61 @@
 {
   final ResponseBuilder builder=Response.status(ex.getHttpStatusCode().getJaxrsStatusType());
-  final JsonRepresentation bodyRepr=ex.getBody();
-  final Throwable cause=ex.getCause();
-  if (bodyRepr != null) {
-    final String body=bodyRepr.toString();
-    builder.entity(body);
-    builder.type(MediaType.APPLICATION_JSON);
-  }
- else   if (cause == null) {
-    builder.type(MediaType.APPLICATION_JSON);
-  }
- else {
-    String body;
-    try {
-      body=JsonMapper.instance().write(RestfulObjectsApplicationExceptionPojo.create(cause));
-    }
- catch (    final Exception e) {
-      body="{ \"exception\": \"" + ExceptionUtils.getFullStackTrace(cause) + "\" }";
-    }
-    builder.entity(body);
-    builder.type(RestfulMediaType.APPLICATION_JSON_ERROR);
-  }
   final String message=ex.getMessage();
   if (message != null) {
     builder.header(RestfulResponse.Header.WARNING.getName(),RestfulResponse.Header.WARNING.render(message));
+  }
+  boolean xml=false;
+  final List<MediaType> acceptableMediaTypes=httpHeaders.getAcceptableMediaTypes();
+  for (  MediaType acceptableMediaType : acceptableMediaTypes) {
+    xml=xml || acceptableMediaType.getSubtype().equals("xml");
+  }
+  final JsonRepresentation bodyRepr=ex.getBody();
+  final Throwable cause=ex.getCause();
+  if (bodyRepr != null) {
+    if (!xml) {
+      final String body=bodyRepr.toString();
+      builder.entity(body);
+      builder.type(MediaType.APPLICATION_JSON);
+    }
+ else {
+      builder.type(MediaType.APPLICATION_XML);
+    }
+  }
+ else   if (cause == null) {
+    if (!xml) {
+      builder.type(MediaType.APPLICATION_JSON);
+    }
+ else {
+      builder.type(MediaType.APPLICATION_XML);
+    }
+  }
+ else {
+    if (!xml) {
+      String body;
+      try {
+        body=JsonMapper.instance().write(RestfulObjectsApplicationExceptionPojo.create(cause));
+      }
+ catch (      final Exception e) {
+        body="{ \"exception\": \"" + ExceptionUtils.getFullStackTrace(cause) + "\" }";
+      }
+      builder.entity(body);
+      builder.type(RestfulMediaType.APPLICATION_JSON_ERROR);
+    }
+ else {
+      final RestfulObjectsApplicationExceptionPojo exceptionPojo=RestfulObjectsApplicationExceptionPojo.create(cause);
+      final StringBuilder buf=new StringBuilder();
+      buf.append("<exception>\n");
+      buf.append("  <httpStatusCode>").append(exceptionPojo.getHttpStatusCode()).append("</httpStatusCode>/n");
+      buf.append("  <message>").append(exceptionPojo.getMessage()).append("</message>/n");
+      buf.append("  <stackTrace>/n");
+      for (      String line : exceptionPojo.getStackTrace()) {
+        buf.append("    <stackTraceElement>").append(line).append("    </stackTraceElement>/n");
+      }
+      buf.append("  </stackTrace>/n");
+      buf.append("</exception>");
+      builder.entity(buf.toString());
+      builder.type(RestfulMediaType.APPLICATION_XML_ERROR);
+    }
   }
   return builder.build();
 }
