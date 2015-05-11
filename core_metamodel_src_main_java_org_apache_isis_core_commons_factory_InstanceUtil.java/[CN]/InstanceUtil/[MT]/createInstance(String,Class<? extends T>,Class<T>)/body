@@ -4,17 +4,17 @@
   try {
     cls=Thread.currentThread().getContextClassLoader().loadClass(className);
     if (cls == null) {
-      throw new InstanceCreationClassException("Failed to load class '" + className + "'");
+      throw new InstanceCreationClassException(String.format("Failed to load class '%s'",className));
     }
     return createInstance(cls,defaultType,requiredType);
   }
  catch (  final ClassNotFoundException e) {
     if (className.indexOf('.') == -1) {
-      throw new UnavailableClassException("The component '" + className + "' cannot be found");
+      throw new UnavailableClassException(String.format("The component '%s' cannot be found",className));
     }
-    throw new UnavailableClassException("The class '" + className + "' cannot be found");
+    throw new UnavailableClassException(String.format("The class '%s' cannot be found",className));
   }
 catch (  final NoClassDefFoundError e) {
-    throw new InstanceCreationClassException("Class '" + className + "' found , but is missing a dependent class: "+ e.getMessage(),e);
+    throw new InstanceCreationClassException(String.format("Class '%s' found , but is missing a dependent class: %s",className,e.getMessage()),e);
   }
 }

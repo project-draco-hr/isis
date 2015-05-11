@@ -4,9 +4,9 @@
     return Thread.currentThread().getContextClassLoader().loadClass(className);
   }
  catch (  final ClassNotFoundException e) {
-    throw new UnavailableClassException("The default type '" + className + "' cannot be found");
+    throw new UnavailableClassException(String.format("The type '%s' cannot be found",className));
   }
 catch (  final NoClassDefFoundError e) {
-    throw new InstanceCreationClassException("Default type '" + className + "' found, but is missing a dependent class: "+ e.getMessage(),e);
+    throw new InstanceCreationClassException(String.format("Type '%s' found, but is missing a dependent class: %s",className,e.getMessage()),e);
   }
 }

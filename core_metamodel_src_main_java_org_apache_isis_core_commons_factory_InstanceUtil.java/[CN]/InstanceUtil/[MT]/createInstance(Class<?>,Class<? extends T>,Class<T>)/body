@@ -6,16 +6,16 @@
       return tClass.newInstance();
     }
  else {
-      throw new InstanceCreationClassException("Class '" + cls.getName() + "' is not of type '"+ requiredType+ "'");
+      throw new InstanceCreationClassException(String.format("Class '%s' is not of type '%s'",cls.getName(),requiredType));
     }
   }
  catch (  final NoClassDefFoundError e) {
-    throw new InstanceCreationClassException("Class '" + cls + "'found , but is missing a dependent class: "+ e.getMessage(),e);
+    throw new InstanceCreationClassException(String.format("Class '%s'found , but is missing a dependent class: %s",cls,e.getMessage()),e);
   }
 catch (  final InstantiationException e) {
-    throw new InstanceCreationException("Could not instantiate an object of class '" + cls.getName() + "'; "+ e.getMessage());
+    throw new InstanceCreationException(String.format("Could not instantiate an object of class '%s'; %s",cls.getName(),e.getMessage()));
   }
 catch (  final IllegalAccessException e) {
-    throw new InstanceCreationException("Could not access the class '" + cls.getName() + "'; "+ e.getMessage());
+    throw new InstanceCreationException(String.format("Could not access the class '%s'; %s",cls.getName(),e.getMessage()));
   }
 }

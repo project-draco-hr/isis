@@ -4,14 +4,14 @@
     try {
       defaultType=ObjectExtensions.asT(Thread.currentThread().getContextClassLoader().loadClass(defaultTypeName));
       if (defaultType == null) {
-        throw new InstanceCreationClassException("Failed to load default type '" + defaultTypeName + "'");
+        throw new InstanceCreationClassException(String.format("Failed to load default type '%s'",defaultTypeName));
       }
     }
  catch (    final ClassNotFoundException e) {
-      throw new UnavailableClassException("The default type '" + defaultTypeName + "' cannot be found");
+      throw new UnavailableClassException(String.format("The default type '%s' cannot be found",defaultTypeName));
     }
 catch (    final NoClassDefFoundError e) {
-      throw new InstanceCreationClassException("Default type '" + defaultTypeName + "' found, but is missing a dependent class: "+ e.getMessage(),e);
+      throw new InstanceCreationClassException(String.format("Default type '%s' found, but is missing a dependent class: %s",defaultTypeName,e.getMessage()),e);
     }
   }
   return createInstance(className,defaultType,requiredType);

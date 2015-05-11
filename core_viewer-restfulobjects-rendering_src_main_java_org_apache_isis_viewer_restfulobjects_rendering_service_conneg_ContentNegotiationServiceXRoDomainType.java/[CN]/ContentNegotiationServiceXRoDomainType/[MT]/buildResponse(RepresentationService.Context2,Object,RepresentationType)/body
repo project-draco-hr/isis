@@ -1,0 +1,18 @@
+{
+  final List<MediaType> acceptableMediaTypes=renderContext2.getAcceptableMediaTypes();
+  MediaType mediaType=representationType.matchesXmlProfileWithParameter(acceptableMediaTypes,X_RO_DOMAIN_TYPE);
+  if (mediaType == null) {
+    mediaType=representationType.matchesJsonProfileWithParameter(acceptableMediaTypes,X_RO_DOMAIN_TYPE);
+  }
+  if (mediaType == null) {
+    return null;
+  }
+  final String xRoDomainType=mediaType.getParameters().get(X_RO_DOMAIN_TYPE);
+  final Class<?> domainType=loadClass(xRoDomainType);
+  final Object mappedDomainObject=map(domainObject,acceptableMediaTypes,representationType);
+  ensureDomainObjectAssignable(xRoDomainType,domainType,mappedDomainObject);
+  if ("xml".equals(mediaType.getSubtype())) {
+    ensureJaxbAnnotated(mappedDomainObject.getClass());
+  }
+  return Response.ok(mappedDomainObject,mediaType);
+}
