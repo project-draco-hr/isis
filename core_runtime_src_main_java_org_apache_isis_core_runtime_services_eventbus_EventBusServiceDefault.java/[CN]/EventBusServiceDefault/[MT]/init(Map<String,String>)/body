@@ -1,11 +1,14 @@
 {
+  final String allowLateRegistrationStr=properties.get("isis.services.eventbus.allowLateRegistration");
+  this.allowLateRegistration=!Strings.isNullOrEmpty(allowLateRegistrationStr) && Boolean.parseBoolean(allowLateRegistrationStr);
   final String implementation=properties.get("isis.services.eventbus.implementation");
   if (Strings.isNullOrEmpty(implementation) || "guava".equalsIgnoreCase(implementation)) {
     this.implementation="guava";
-    return;
   }
-  if ("axon".equalsIgnoreCase(implementation)) {
+ else   if ("axon".equalsIgnoreCase(implementation)) {
     this.implementation="axon";
   }
-  this.implementation=implementation;
+ else {
+    this.implementation=implementation;
+  }
 }
