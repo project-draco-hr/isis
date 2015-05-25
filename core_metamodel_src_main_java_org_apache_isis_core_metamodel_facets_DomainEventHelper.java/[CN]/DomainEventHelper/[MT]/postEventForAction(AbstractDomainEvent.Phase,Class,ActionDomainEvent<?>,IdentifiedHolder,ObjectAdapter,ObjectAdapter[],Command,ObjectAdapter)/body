@@ -15,6 +15,9 @@
       if (identified instanceof ObjectAction) {
         final ObjectAction objectAction=(ObjectAction)identified;
         event.setActionSemantics(objectAction.getSemantics());
+        final List<ObjectActionParameter> parameters=objectAction.getParameters();
+        event.setParameterNames(immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_NAME)));
+        event.setParameterTypes(immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_TYPE)));
       }
     }
     event.setEventPhase(phase);

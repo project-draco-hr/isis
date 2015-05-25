@@ -22,7 +22,19 @@
     final String targetAction=command.getTargetAction();
     final Bookmark target=command.getTarget();
     final String memberIdentifier=command.getMemberIdentifier();
-    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,targetClass,targetAction,target,memberIdentifier);
+    final List<String> parameterNames;
+    final List<Class<?>> parameterTypes;
+    if (action instanceof ObjectAction) {
+      ObjectAction objectAction=(ObjectAction)action;
+      final List<ObjectActionParameter> parameters=objectAction.getParameters();
+      parameterNames=immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_NAME));
+      parameterTypes=immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_TYPE));
+    }
+ else {
+      parameterNames=null;
+      parameterTypes=null;
+    }
+    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,targetClass,targetAction,target,memberIdentifier,parameterNames,parameterTypes);
     publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
   }
   finally {
