@@ -13,6 +13,10 @@
  else {
     Assert.assertTrue("oid must be a TypedOid representing an object because spec is not a collection and cannot be a value",oid instanceof TypedOid);
     TypedOid typedOid=(TypedOid)oid;
+    adapter=getAdapterManager().getAdapterFor(typedOid);
+    if (adapter != null) {
+      getAdapterManager().removeAdapter(adapter);
+    }
     adapter=getAdapterManager().adapterFor(typedOid);
     updateObject(adapter,data);
   }
