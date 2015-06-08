@@ -24,17 +24,20 @@
     final String memberIdentifier=command.getMemberIdentifier();
     final List<String> parameterNames;
     final List<Class<?>> parameterTypes;
-    if (action instanceof ObjectAction) {
-      ObjectAction objectAction=(ObjectAction)action;
-      final List<ObjectActionParameter> parameters=objectAction.getParameters();
-      parameterNames=immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_NAME));
-      parameterTypes=immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_TYPE));
+    final Class<?> returnType;
+    if (action instanceof FacetedMethod) {
+      final FacetedMethod facetedMethod=(FacetedMethod)action;
+      returnType=facetedMethod.getType();
+      final List<FacetedMethodParameter> parameters=facetedMethod.getParameters();
+      parameterNames=immutableList(Iterables.transform(parameters,FacetedMethodParameter.Functions.GET_NAME));
+      parameterTypes=immutableList(Iterables.transform(parameters,FacetedMethodParameter.Functions.GET_TYPE));
     }
  else {
       parameterNames=null;
       parameterTypes=null;
+      returnType=null;
     }
-    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,targetClass,targetAction,target,memberIdentifier,parameterNames,parameterTypes);
+    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,targetClass,targetAction,target,memberIdentifier,parameterNames,parameterTypes,returnType);
     publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
   }
   finally {
