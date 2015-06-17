@@ -1,0 +1,9 @@
+{
+  final Set<String> permissions=Sets.newLinkedHashSet();
+  final NamingEnumeration<SearchResult> searchResultEnum=systemLdapCtx.search(searchUserBase,"objectClass=" + userObjectClass,SUBTREE_SCOPE);
+  while (searchResultEnum.hasMore()) {
+    final SearchResult group=searchResultEnum.next();
+    addPermIfFound(group,permissions,userExtractedAttribute,permissionByUserAttribute);
+  }
+  return permissions;
+}
