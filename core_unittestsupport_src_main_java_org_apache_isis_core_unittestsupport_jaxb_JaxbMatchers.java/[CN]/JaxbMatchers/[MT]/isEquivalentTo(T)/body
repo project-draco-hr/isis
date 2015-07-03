@@ -1,0 +1,14 @@
+{
+  return new TypeSafeMatcher<T>(){
+    @Override protected boolean matchesSafely(    final T item){
+      final String expectedXml=JaxbUtil.toXml(expected);
+      final String itemXml=JaxbUtil.toXml(item);
+      return Objects.equal(expectedXml,itemXml);
+    }
+    @Override public void describeTo(    final org.hamcrest.Description description){
+      final String expectedXml=JaxbUtil.toXml(expected);
+      description.appendText("is equivalent to ").appendValue(expectedXml);
+    }
+  }
+;
+}
