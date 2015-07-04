@@ -1,7 +1,17 @@
 {
-  if (ENDPOINT.get() == null) {
-    final T implementor=endpointImplementorFactory.get();
-    Endpoint.publish(endpointAddress,implementor);
-    ENDPOINT.set(implementor);
+  for (  Class<?> type : soapEndpointByType.keySet()) {
+    final SoapEndpoint soapEndpoint=soapEndpointByType.get(type);
+    final Class<?> endpointClass=soapEndpoint.spec.endpointClass;
+    final SoapEndpoint cachedSoapEndpoint=cachedSoapEndpointByType.get(endpointClass);
+    if (cachedSoapEndpoint == null) {
+      cachedSoapEndpointByType.put(endpointClass,soapEndpoint);
+    }
+  }
+  for (  Class<?> type : cachedSoapEndpointByType.keySet()) {
+    final SoapEndpoint cachedSoapEndpoint=cachedSoapEndpointByType.get(type);
+    if (cachedSoapEndpoint.implementor == null) {
+      cachedSoapEndpoint.implementor=cachedSoapEndpoint.spec.endpointImplementorFactory.get();
+      Endpoint.publish(cachedSoapEndpoint.spec.endpointAddress,cachedSoapEndpoint.implementor);
+    }
   }
 }
