@@ -1,0 +1,12 @@
+{
+  if (implementor == null) {
+    this.implementor=getSpec().getEndpointImplementorFactory().get();
+    String endpointAddress=getSpec().getEndpointAddress();
+    if (endpointAddress == null) {
+      endpointAddress=String.format("http://localhost:%d/%s",port++,getSpec().getEndpointClass().getName().replace(".","/"));
+      getSpec().setEndpointAddress(endpointAddress);
+    }
+    Endpoint.publish(endpointAddress,getImplementor());
+  }
+  return port;
+}

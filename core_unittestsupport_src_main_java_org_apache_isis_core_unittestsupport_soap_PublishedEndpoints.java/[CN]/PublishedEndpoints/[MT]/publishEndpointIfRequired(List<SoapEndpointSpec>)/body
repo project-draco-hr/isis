@@ -1,0 +1,11 @@
+{
+  for (  SoapEndpointSpec soapEndpointSpec : soapEndpointSpecs) {
+    final Class<?> endpointClass=soapEndpointSpec.getEndpointClass();
+    SoapEndpoint soapEndpoint=this.soapEndpointByType.get(endpointClass);
+    if (soapEndpoint == null) {
+      soapEndpoint=new SoapEndpoint(soapEndpointSpec);
+      soapEndpointByType.put(endpointClass,soapEndpoint);
+      port=soapEndpoint.publish(port);
+    }
+  }
+}
