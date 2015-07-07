@@ -1,0 +1,11 @@
+{
+  final JDOPersistenceManagerFactory probePmf=(JDOPersistenceManagerFactory)JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+  try {
+    final PersistenceNucleusContext nucleusContext=probePmf.getNucleusContext();
+    final StoreManager storeManager=nucleusContext.getStoreManager();
+    return storeManager instanceof SchemaAwareStoreManager;
+  }
+  finally {
+    probePmf.close();
+  }
+}

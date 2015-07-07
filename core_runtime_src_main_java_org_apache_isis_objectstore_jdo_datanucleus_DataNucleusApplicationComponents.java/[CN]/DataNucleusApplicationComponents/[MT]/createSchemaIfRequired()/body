@@ -1,0 +1,23 @@
+{
+  if (isSchemaAwareStoreManager(datanucleusProps)) {
+    persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+    JDOPersistenceManagerFactory jdopmf=(JDOPersistenceManagerFactory)persistenceManagerFactory;
+    final PersistenceNucleusContext nucleusContext=jdopmf.getNucleusContext();
+    final SchemaAwareStoreManager storeManager=(SchemaAwareStoreManager)nucleusContext.getStoreManager();
+    final MetaDataManager metaDataManager=nucleusContext.getMetaDataManager();
+    final boolean createSchema=isSet(this.datanucleusProps,PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_SCHEMA) || isSet(this.datanucleusProps,PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL);
+    if (!createSchema) {
+      return;
+    }
+    final SchemaAwareStoreManager schemaAwareStoreManager=(SchemaAwareStoreManager)storeManager;
+    registerMetadataListener(metaDataManager);
+    schemaAwareStoreManager.createSchemaForClasses(persistableClassNameSet,asProperties(datanucleusProps));
+  }
+ else {
+    final String persistableClassNames=Joiner.on(',').join(persistableClassNameSet);
+    datanucleusProps.put(PropertyNames.PROPERTY_AUTOSTART_MECHANISM,"Classes");
+    datanucleusProps.put(PropertyNames.PROPERTY_AUTOSTART_MODE,"Checked");
+    datanucleusProps.put(PropertyNames.PROPERTY_AUTOSTART_CLASSNAMES,persistableClassNames);
+    persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+  }
+}
