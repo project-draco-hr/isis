@@ -1,4 +1,35 @@
 {
-  final SessionState sessionState=SessionState.lookup(request);
-  sessionState.handle(this,request,response,chain);
+  final HttpServletRequest httpServletRequest=(HttpServletRequest)request;
+  final HttpServletResponse httpServletResponse=(HttpServletResponse)response;
+  try {
+    final String queryString=httpServletRequest.getQueryString();
+    if (queryString != null && queryString.contains(QUERY_STRING_FORCE_LOGOUT)) {
+      authSessionStrategy.invalidate(httpServletRequest,httpServletResponse);
+      return;
+    }
+    if (requestIsIgnoreExtension(this,httpServletRequest) || ResourceCachingFilter.isCachedResource(httpServletRequest)) {
+      chain.doFilter(request,response);
+      return;
+    }
+    final AuthenticationSession authSession=authSessionStrategy.lookupValid(httpServletRequest,httpServletResponse);
+    if (authSession != null) {
+      authSessionStrategy.bind(httpServletRequest,httpServletResponse,authSession);
+      openSession(authSession);
+      chain.doFilter(request,response);
+      return;
+    }
+    try {
+      whenNotAuthenticated.handle(this,httpServletRequest,httpServletResponse,chain);
+    }
+ catch (    final RuntimeException|IOException|ServletException ex) {
+      if (redirectToOnException != null) {
+        redirect(httpServletRequest,httpServletResponse,redirectToOnException);
+        return;
+      }
+      throw ex;
+    }
+  }
+  finally {
+    closeSession();
+  }
 }

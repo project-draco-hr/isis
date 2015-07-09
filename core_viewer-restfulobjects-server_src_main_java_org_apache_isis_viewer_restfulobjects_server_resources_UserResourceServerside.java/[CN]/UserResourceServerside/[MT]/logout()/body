@@ -1,0 +1,13 @@
+{
+  init(RepresentationType.HOME_PAGE,Where.NOWHERE);
+  final HomePageReprRenderer renderer=new HomePageReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
+  renderer.includesSelf();
+  getAuthenticationManager().closeSession(getResourceContext().getAuthenticationSession());
+  try {
+    final URI location=new URI("?" + IsisSessionFilter.QUERY_STRING_FORCE_LOGOUT);
+    return Response.temporaryRedirect(location).build();
+  }
+ catch (  URISyntaxException e) {
+    throw new RuntimeException(e);
+  }
+}

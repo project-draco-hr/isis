@@ -1,0 +1,16 @@
+{
+  final String digest=getBasicAuthDigest(httpServletRequest);
+  if (digest == null) {
+    return null;
+  }
+  final String userAndPassword=unencoded(digest);
+  final Matcher matcher=USER_AND_PASSWORD_REGEX.matcher(userAndPassword);
+  if (!matcher.matches()) {
+    return null;
+  }
+  final String user=matcher.group(1);
+  final String password=matcher.group(2);
+  final AuthenticationRequestPassword request=new AuthenticationRequestPassword(user,password);
+  final AuthenticationSession authSession=getAuthenticationManager().authenticate(request);
+  return authSession;
+}

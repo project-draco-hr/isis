@@ -2,18 +2,21 @@
   if (getState() == State.CLOSED) {
     return;
   }
-  if (LOG.isDebugEnabled()) {
-    LOG.debug("closing " + this);
-  }
   try {
-    objectStore.close();
+    try {
+      objectStore.close();
+    }
+ catch (    final Throwable ex) {
+      LOG.error("objectStore#close() failed while closing the session; continuing to avoid memory leakage");
+    }
+    try {
+      adapterManager.close();
+    }
+ catch (    final Throwable ex) {
+      LOG.error("adapterManager#close() failed while closing the session; continuing to avoid memory leakage");
+    }
   }
- catch (  final RuntimeException ex) {
+  finally {
+    setState(State.CLOSED);
   }
-  try {
-    adapterManager.close();
-  }
- catch (  final RuntimeException ex) {
-  }
-  setState(State.CLOSED);
 }

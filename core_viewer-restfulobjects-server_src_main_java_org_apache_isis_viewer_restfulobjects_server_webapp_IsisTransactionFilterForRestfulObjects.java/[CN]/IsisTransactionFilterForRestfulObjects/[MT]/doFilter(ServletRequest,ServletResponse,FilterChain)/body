@@ -4,6 +4,9 @@
     chain.doFilter(request,response);
   }
   finally {
-    getTransactionManager().endTransaction();
+    final boolean inTransaction=inTransaction();
+    if (inTransaction) {
+      getTransactionManager().endTransaction();
+    }
   }
 }
