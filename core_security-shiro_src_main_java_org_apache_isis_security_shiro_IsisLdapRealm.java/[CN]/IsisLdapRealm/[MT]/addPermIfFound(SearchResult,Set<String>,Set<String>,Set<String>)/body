@@ -1,0 +1,24 @@
+{
+  final NamingEnumeration<? extends Attribute> attributeEnum=group.getAttributes().getAll();
+  Map<String,Set<String>> keyValues=Maps.newHashMap();
+  while (attributeEnum.hasMore()) {
+    final Attribute attr=attributeEnum.next();
+    if (extractedAttributeP.contains(attr.getID())) {
+      final NamingEnumeration<?> e=attr.getAll();
+      keyValues.put(attr.getID(),new HashSet<String>());
+      while (e.hasMore()) {
+        String attrValue=e.next().toString();
+        keyValues.get(attr.getID()).add(attrValue);
+      }
+    }
+  }
+  for (  String permTempl : permissionByAttributeP) {
+    for (    String key : keyValues.keySet()) {
+      if (permTempl.contains("{" + key + "}")) {
+        for (        String value : keyValues.get(key)) {
+          permissions.add(permTempl.replaceAll("\\{" + key + "\\}",value));
+        }
+      }
+    }
+  }
+}
