@@ -1,0 +1,12 @@
+{
+  final Set<String> permissions=Sets.newLinkedHashSet();
+  Set<String> groups=groupFor(username,ldapContext);
+  final NamingEnumeration<SearchResult> searchResultEnum=ldapContext.search(searchBase,"objectClass=" + groupObjectClass,SUBTREE_SCOPE);
+  while (searchResultEnum.hasMore()) {
+    final SearchResult group=searchResultEnum.next();
+    if (memberOf(group,groups)) {
+      addPermIfFound(group,permissions,groupExtractedAttribute,permissionByGroupAttribute);
+    }
+  }
+  return permissions;
+}
