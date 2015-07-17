@@ -6,6 +6,9 @@
   final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,persistenceSessionFactory);
   final SpecificationLoaderSpi reflector=obtainSpecificationLoaderSpi(deploymentType,metaModelRefiners);
   final List<Object> services=obtainServices();
+  if (!contains(services,FixtureScripts.class)) {
+    services.add(new FixtureScriptsDefault());
+  }
   final RuntimeContextFromSession runtimeContext=obtainRuntimeContextFromSession();
   runtimeContext.injectInto(reflector);
   return newIsisSessionFactory(deploymentType,persistenceSessionFactory,configuration,authenticationManager,authorizationManager,oidMarshaller,reflector,services);

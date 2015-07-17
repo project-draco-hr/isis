@@ -1,9 +1,9 @@
 {
   final List<FixtureScript> fixtureScripts=Lists.newArrayList();
-  final Set<Class<? extends FixtureScript>> classes=findSubTypesOfClasses();
-  for (  final Class<? extends FixtureScript> fixtureScriptCls : classes) {
+  final Set<Class<? extends FixtureScript>> fixtureScriptSubtypes=findFixtureScriptSubTypesInPackage();
+  for (  final Class<? extends FixtureScript> fixtureScriptCls : fixtureScriptSubtypes) {
     final String packageName=fixtureScriptCls.getPackage().getName();
-    if (!packageName.startsWith(packagePrefix)) {
+    if (!packageName.startsWith(getPackagePrefix())) {
       continue;
     }
     final FixtureScript fs=newFixtureScript(fixtureScriptCls);
