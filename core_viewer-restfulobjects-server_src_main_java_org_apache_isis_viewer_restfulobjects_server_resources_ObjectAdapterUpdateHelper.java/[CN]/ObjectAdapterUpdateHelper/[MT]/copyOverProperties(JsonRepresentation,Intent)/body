@@ -6,37 +6,41 @@
     final OneToOneAssociation property=(OneToOneAssociation)association;
     final ObjectSpecification propertySpec=property.getSpecification();
     final String id=property.getId();
-    final JsonRepresentation propertyRepr=propertiesList.getRepresentation(id);
+    final JsonRepresentation propertyRepr=propertiesMap.getRepresentation(id);
     final Consent visibility=property.isVisible(resourceContext.getAuthenticationSession(),objectAdapter,resourceContext.getWhere());
     final Consent usability=property.isUsable(resourceContext.getAuthenticationSession(),objectAdapter,resourceContext.getWhere());
     final boolean invisible=visibility.isVetoed();
     final boolean disabled=usability.isVetoed();
     final boolean valueProvided=propertyRepr != null;
     if (!valueProvided) {
-      if (invisible || disabled) {
-        continue;
+      if (intent.shouldValidate()) {
+        if (invisible || disabled) {
+          continue;
+        }
       }
       if (!property.isMandatory()) {
         continue;
       }
-      final String invalidReason=propertiesList.getString("x-ro-invalidReason");
+      final String invalidReason=propertiesMap.getString("x-ro-invalidReason");
       if (invalidReason != null) {
-        propertiesList.mapPut("x-ro-invalidReason",invalidReason + "; " + property.getName());
+        propertiesMap.mapPut("x-ro-invalidReason",invalidReason + "; " + property.getName());
       }
  else {
-        propertiesList.mapPut("x-ro-invalidReason","Mandatory field(s) missing: " + property.getName());
+        propertiesMap.mapPut("x-ro-invalidReason","Mandatory field(s) missing: " + property.getName());
       }
       allOk=false;
       continue;
     }
  else {
-      if (invisible) {
-        continue;
-      }
-      if (disabled) {
-        propertyRepr.mapPut("invalidReason",usability.getReason());
-        allOk=false;
-        continue;
+      if (intent.shouldValidate()) {
+        if (invisible) {
+          continue;
+        }
+        if (disabled) {
+          propertyRepr.mapPut("invalidReason",usability.getReason());
+          allOk=false;
+          continue;
+        }
       }
       final ObjectAdapter valueAdapter;
       try {

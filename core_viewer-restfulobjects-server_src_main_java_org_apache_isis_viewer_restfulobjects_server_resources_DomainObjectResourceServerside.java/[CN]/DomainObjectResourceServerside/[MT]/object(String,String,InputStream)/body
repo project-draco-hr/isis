@@ -7,7 +7,7 @@
   }
   final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,instanceId);
   final ObjectAdapterUpdateHelper updateHelper=new ObjectAdapterUpdateHelper(getResourceContext(),objectAdapter);
-  if (!updateHelper.copyOverProperties(argRepr)) {
+  if (!updateHelper.copyOverProperties(argRepr,ObjectAdapterUpdateHelper.Intent.UPDATE_EXISTING)) {
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,argRepr,"Illegal property value");
   }
   final Consent validity=objectAdapter.getSpecification().isValid(objectAdapter);
