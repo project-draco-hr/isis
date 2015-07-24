@@ -1,0 +1,15 @@
+{
+  final List<CssMenuItem> itemsWithSeparators=Lists.newArrayList();
+  for (  CssMenuItem menuItem : subMenuItems) {
+    if (menuItem.requiresSeparator()) {
+      if (!itemsWithSeparators.isEmpty()) {
+        final CssMenuItem separatorItem=CssMenuItem.newMenuItem(menuItem.getName() + "-separator").prototyping(menuItem.isPrototyping()).build();
+        separatorItem.setSeparator(true);
+        itemsWithSeparators.add(separatorItem);
+      }
+      menuItem.setRequiresSeparator(false);
+    }
+    itemsWithSeparators.add(menuItem);
+  }
+  return itemsWithSeparators;
+}

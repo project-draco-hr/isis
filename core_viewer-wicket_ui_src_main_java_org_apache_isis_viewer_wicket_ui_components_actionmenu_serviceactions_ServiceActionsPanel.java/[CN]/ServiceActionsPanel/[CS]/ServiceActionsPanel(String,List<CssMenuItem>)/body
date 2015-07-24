@@ -7,7 +7,7 @@
       MarkupContainer topMenu=new WebMarkupContainer("topMenu");
       topMenu.add(new CssClassAppender("top-menu-" + CssClassAppender.asCssStyle(menuItem.getName())));
       listItem.add(topMenu);
-      List<CssMenuItem> subMenuItems=withSeparators(menuItem);
+      List<CssMenuItem> subMenuItems=ServiceActionUtil.withSeparators(menuItem);
       ListView<CssMenuItem> subMenuItemsView=new ListView<CssMenuItem>("subMenuItems",subMenuItems){
         @Override protected void populateItem(        ListItem<CssMenuItem> listItem){
           CssMenuItem subMenuItem=listItem.getModelObject();
@@ -15,7 +15,8 @@
             addFolderItem(subMenuItem,listItem);
           }
  else {
-            addLeafItem(subMenuItem,listItem);
+            final MarkupContainer parent=ServiceActionsPanel.this;
+            ServiceActionUtil.addLeafItem(subMenuItem,listItem,parent);
           }
         }
       }
