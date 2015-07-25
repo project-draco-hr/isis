@@ -1,6 +1,13 @@
 {
   if (entity == null) {
-    entity=JsonMapper.instance().read(response,returnType);
+    final JsonNode jsonNode=JsonMapper.instance().read(response,JsonNode.class);
+    try {
+      final Constructor<T> constructor=returnType.getConstructor(JsonNode.class);
+      entity=constructor.newInstance(jsonNode);
+    }
+ catch (    NoSuchMethodException|InvocationTargetException|IllegalAccessException|InstantiationException e) {
+      throw new RuntimeException(e);
+    }
   }
   return entity;
 }
