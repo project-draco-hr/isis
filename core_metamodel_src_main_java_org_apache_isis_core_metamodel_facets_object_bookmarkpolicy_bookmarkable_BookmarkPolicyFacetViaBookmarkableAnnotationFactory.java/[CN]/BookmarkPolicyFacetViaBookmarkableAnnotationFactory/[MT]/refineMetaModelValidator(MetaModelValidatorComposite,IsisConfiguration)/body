@@ -9,7 +9,7 @@
           continue;
         }
         final ActionSemanticsFacet semanticsFacet=objectAction.getFacet(ActionSemanticsFacet.class);
-        if (semanticsFacet == null || semanticsFacet.isNoop() || semanticsFacet.value() != Of.SAFE) {
+        if (semanticsFacet == null || semanticsFacet.isNoop() || !semanticsFacet.value().isSafeInNature()) {
           validationFailures.add("%s: action is bookmarkable but action semantics are not explicitly indicated as being safe.  " + "Either add @Action(semantics=SemanticsOf.SAFE), or remove @ActionLayout(bookmarking=...).",objectAction.getIdentifier().toClassAndNameIdentityString());
         }
       }

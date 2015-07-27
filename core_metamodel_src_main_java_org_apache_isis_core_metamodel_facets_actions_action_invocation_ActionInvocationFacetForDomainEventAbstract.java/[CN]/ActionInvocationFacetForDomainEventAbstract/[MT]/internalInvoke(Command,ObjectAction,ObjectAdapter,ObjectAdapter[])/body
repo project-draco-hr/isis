@@ -68,7 +68,21 @@
     if (command != null) {
       command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
     }
-    Object result=method.invoke(targetPojo,executionParameters);
+    final ActionSemanticsFacet semanticsFacet=getFacetHolder().getFacet(ActionSemanticsFacet.class);
+    final boolean cacheable=semanticsFacet != null && semanticsFacet.value().isSafeAndRequestCacheable();
+    Object result;
+    if (cacheable) {
+      final QueryResultsCache queryResultsCache=getServicesInjector().lookupService(QueryResultsCache.class);
+      result=queryResultsCache.execute(new Callable<Object>(){
+        @Override public Object call() throws Exception {
+          return method.invoke(targetPojo,executionParameters);
+        }
+      }
+,targetPojo.getClass(),method.getName(),executionParameters);
+    }
+ else {
+      result=method.invoke(targetPojo,executionParameters);
+    }
     if (LOG.isDebugEnabled()) {
       LOG.debug(" action result " + result);
     }
