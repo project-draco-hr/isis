@@ -1,14 +1,19 @@
 {
   if (isSchemaAwareStoreManager(datanucleusProps)) {
+    final boolean createSchema=isSet(this.datanucleusProps,PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL);
+    datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL,"false");
+    datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_SCHEMA,"false");
+    datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_TABLES,"true");
+    datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_COLUMNS,"true");
+    datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_CONSTRAINTS,"true");
     persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+    if (!createSchema) {
+      return;
+    }
     JDOPersistenceManagerFactory jdopmf=(JDOPersistenceManagerFactory)persistenceManagerFactory;
     final PersistenceNucleusContext nucleusContext=jdopmf.getNucleusContext();
     final SchemaAwareStoreManager storeManager=(SchemaAwareStoreManager)nucleusContext.getStoreManager();
     final MetaDataManager metaDataManager=nucleusContext.getMetaDataManager();
-    final boolean createSchema=isSet(this.datanucleusProps,PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL);
-    if (!createSchema) {
-      return;
-    }
     final SchemaAwareStoreManager schemaAwareStoreManager=(SchemaAwareStoreManager)storeManager;
     registerMetadataListener(metaDataManager);
     schemaAwareStoreManager.createSchemaForClasses(persistableClassNameSet,asProperties(datanucleusProps));
