@@ -1,4 +1,11 @@
 {
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(TranslationService.class);
+      will(returnValue(mockTranslationService));
+    }
+  }
+);
   domainObjectClassWithoutAnnotation=DomainObjectWithoutMustSatisfyAnnotations.class;
   domainObjectClassWithAnnotation=DomainObjectWithMustSatisfyAnnotations.class;
   changeLastNameMethodWithout=domainObjectClassWithoutAnnotation.getMethod("changeLastName",String.class);
@@ -11,4 +18,5 @@
   }
 );
   facetFactory=new ParameterAnnotationFacetFactory();
+  facetFactory.setServicesInjector(mockServicesInjector);
 }

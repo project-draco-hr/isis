@@ -8,7 +8,7 @@
   for (  final Annotation parameterAnnotation : parameterAnnotations) {
     if (parameterAnnotation instanceof MustSatisfy) {
       final MustSatisfy annotation=(MustSatisfy)parameterAnnotation;
-      final Facet facet=MustSatisfySpecificationFacetForMustSatisfyAnnotationOnParameter.create(annotation,processParameterContext.getFacetHolder());
+      final Facet facet=MustSatisfySpecificationFacetForMustSatisfyAnnotationOnParameter.create(annotation,processParameterContext.getFacetHolder(),servicesInjector);
       FacetUtil.addFacet(mustSatisfyValidator.flagIfPresent(facet,processParameterContext));
       return;
     }
@@ -16,7 +16,7 @@
   for (  final Annotation parameterAnnotation : parameterAnnotations) {
     if (parameterAnnotation instanceof Parameter) {
       final Parameter parameter=(Parameter)parameterAnnotation;
-      FacetUtil.addFacet(MustSatisfySpecificationFacetForParameterAnnotation.create(parameter,holder));
+      FacetUtil.addFacet(MustSatisfySpecificationFacetForParameterAnnotation.create(parameter,holder,servicesInjector));
       return;
     }
   }

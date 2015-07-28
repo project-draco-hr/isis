@@ -1,14 +1,22 @@
 {
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(TranslationService.class);
+      will(returnValue(mockTranslationService));
+    }
+  }
+);
   domainObjectClassWithoutAnnotation=DomainObjectWithoutMustSatisfyAnnotations.class;
   domainObjectClassWithAnnotation=DomainObjectWithMustSatisfyAnnotations.class;
   firstNameMethodWithout=domainObjectClassWithoutAnnotation.getMethod("getFirstName");
   firstNameMethodWith=domainObjectClassWithAnnotation.getMethod("getFirstName");
   context.checking(new Expectations(){
 {
-      allowing(mockFacetHolder).getIdentifier();
+      allowing(mockFacetedMethod).getIdentifier();
       will(returnValue(Identifier.actionIdentifier(Customer.class,"foo")));
     }
   }
 );
   facetFactory=new PropertyAnnotationFacetFactory();
+  facetFactory.setServicesInjector(mockServicesInjector);
 }

@@ -8,9 +8,5 @@
     return null;
   }
   final Object proposedObject=proposedAdapter.getObject();
-  final ReasonBuffer buf=new ReasonBuffer();
-  for (  final Specification specification : specifications) {
-    buf.append(specification.satisfies(proposedObject));
-  }
-  return buf.getReason();
+  return specificationEvaluator.evaluation().evaluate(specifications,proposedObject).getReason();
 }

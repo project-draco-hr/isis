@@ -1,13 +1,19 @@
 {
-  mockHolder=mockery.mock(IdentifiedHolder.class);
+  identifiedHolder=new AbstractFacetFactoryTest.IdentifiedHolderImpl(Identifier.propertyOrCollectionIdentifier(Customer.class,"lastName"));
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(TranslationService.class);
+      will(returnValue(mockTranslationService));
+    }
+  }
+);
   specificationAlwaysSatisfied=new SpecificationAlwaysSatisfied();
   specificationNeverSatisfied=new SpecificationNeverSatisfied();
-  facetForSpecificationAlwaysSatisfied=new MustSatisfySpecificationFromMustSatisfyAnnotationOnTypeFacet(Utils.listOf(specificationAlwaysSatisfied),mockHolder);
-  facetForSpecificationNeverSatisfied=new MustSatisfySpecificationFromMustSatisfyAnnotationOnTypeFacet(Utils.listOf(specificationNeverSatisfied),mockHolder);
-  mockContext=mockery.mock(PropertyModifyContext.class);
-  mockProposedObjectAdapter=mockery.mock(ObjectAdapter.class,"proposed");
-  mockProposedObject=mockery.mock(Object.class,"proposedObject");
-  mockery.checking(new Expectations(){
+  facetForSpecificationAlwaysSatisfied=new MustSatisfySpecificationFromMustSatisfyAnnotationOnTypeFacet(Utils.listOf(specificationAlwaysSatisfied),identifiedHolder,mockServicesInjector);
+  facetForSpecificationNeverSatisfied=new MustSatisfySpecificationFromMustSatisfyAnnotationOnTypeFacet(Utils.listOf(specificationNeverSatisfied),identifiedHolder,mockServicesInjector);
+  mockProposedObjectAdapter=context.mock(ObjectAdapter.class,"proposed");
+  mockProposedObject=context.mock(Object.class,"proposedObject");
+  context.checking(new Expectations(){
 {
       one(mockContext).getProposed();
       will(returnValue(mockProposedObjectAdapter));

@@ -1,0 +1,14 @@
+{
+  if (property == null) {
+    return null;
+  }
+  final Class<?>[] values=property.mustSatisfy();
+  final List<Specification> specifications=Lists.newArrayList();
+  for (  final Class<?> value : values) {
+    final Specification specification=newSpecificationElseNull(value);
+    if (specification != null) {
+      specifications.add(specification);
+    }
+  }
+  return specifications.size() > 0 ? new MustSatisfySpecificationFacetForPropertyAnnotation(specifications,holder,servicesInjector) : null;
+}
