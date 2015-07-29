@@ -1,10 +1,7 @@
 {
-  final LayoutMetadata metadata;
-  try {
-    metadata=readMetadata(domainClass);
-  }
- catch (  final Exception e) {
-    throw new ReaderException("Failed to locate/parse " + domainClass.getName() + ".layout.json file ("+ e.getMessage()+ ")",e);
+  final LayoutMetadata metadata=readMetadata(domainClass);
+  if (metadata == null) {
+    return null;
   }
   if (metadata.getColumns() == null || metadata.getColumns().size() != 4) {
     throw new ReaderException("JSON metadata must have precisely 4 columns (prop/prop/prop/coll)");

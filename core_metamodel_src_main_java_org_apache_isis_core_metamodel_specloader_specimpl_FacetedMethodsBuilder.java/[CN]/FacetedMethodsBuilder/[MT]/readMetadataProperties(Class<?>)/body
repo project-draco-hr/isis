@@ -1,19 +1,39 @@
 {
   for (  final LayoutMetadataReader reader : layoutMetadataReaders) {
     try {
+      if (isPrimitiveOrJdkOrJodaOrGuava(domainClass)) {
+        continue;
+      }
+      final LayoutMetadataReader2.Support support=supportByReader.get(reader);
+      if (support != null) {
+        if (!support.interfaces() && domainClass.isInterface()) {
+          continue;
+        }
+        if (!support.anonymous() && domainClass.isAnonymousClass()) {
+          continue;
+        }
+        if (!support.synthetic() && domainClass.isSynthetic()) {
+          continue;
+        }
+        if (!support.array() && domainClass.isArray()) {
+          continue;
+        }
+        if (!support.enums() && domainClass.isEnum()) {
+          continue;
+        }
+        if (!support.applibValueTypes() && domainClass.getName().startsWith("org.apache.isis.applib.value")) {
+          continue;
+        }
+        if (!support.services() && getSpecificationLoader().isServiceClass(domainClass)) {
+          continue;
+        }
+      }
       Properties properties=reader.asProperties(domainClass);
       if (properties != null) {
         return properties;
       }
     }
- catch (    final ReaderException ex) {
-      final String message=reader.toString() + ": unable to load layout metadata for " + domainClass.getName()+ " ("+ ex.getMessage()+ ")";
-      if (ex.getCause() instanceof JsonSyntaxException) {
-        LOG.warn(message);
-      }
- else {
-        LOG.debug(message);
-      }
+ catch (    final ReaderException ignore) {
     }
   }
   return null;

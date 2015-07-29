@@ -9,4 +9,12 @@
   this.facetProcessor=facetedMethodsBuilderContext.facetProcessor;
   this.specificationLoader=facetedMethodsBuilderContext.specificationLoader;
   this.layoutMetadataReaders=facetedMethodsBuilderContext.layoutMetadataReaders;
+  this.supportByReader=Maps.newHashMap();
+  for (  LayoutMetadataReader reader : layoutMetadataReaders) {
+    if (reader instanceof LayoutMetadataReader2) {
+      final LayoutMetadataReader2 reader2=(LayoutMetadataReader2)reader;
+      final LayoutMetadataReader2.Support support=reader2.support();
+      supportByReader.put(reader,support);
+    }
+  }
 }

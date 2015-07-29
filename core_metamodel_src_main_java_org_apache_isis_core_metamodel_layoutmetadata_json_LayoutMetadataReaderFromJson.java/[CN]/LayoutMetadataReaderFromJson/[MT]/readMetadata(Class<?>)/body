@@ -1,4 +1,23 @@
 {
-  final String content=ClassExtensions.resourceContent(domainClass,".layout.json");
-  return readMetadata(content);
+  final String content;
+  if (blacklisted.contains(domainClass)) {
+    return null;
+  }
+  try {
+    content=ClassExtensions.resourceContent(domainClass,".layout.json");
+  }
+ catch (  IOException|IllegalArgumentException ex) {
+    blacklisted.add(domainClass);
+    final String message="Failed to locate " + domainClass.getName() + ".layout.json file ("+ ex.getMessage()+ ")";
+    LOG.debug(message);
+    return null;
+  }
+  try {
+    return readMetadata(content);
+  }
+ catch (  Exception ex) {
+    final String message="Failed to parse " + domainClass.getName() + ".layout.json file ("+ ex.getMessage()+ ")";
+    LOG.warn(message);
+    return null;
+  }
 }
