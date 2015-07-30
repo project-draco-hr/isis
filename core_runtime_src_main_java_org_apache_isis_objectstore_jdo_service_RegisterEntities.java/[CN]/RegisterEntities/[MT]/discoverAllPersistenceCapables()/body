@@ -1,0 +1,10 @@
+{
+  final List<String> packagePrefixList=Lists.newArrayList(Iterables.transform(Splitter.on(",").split(packagePrefixes),trim()));
+  for (  final String packagePrefix : packagePrefixList) {
+    final Iterable<String> entityTypes=ScanUtils.scanForNamesOfClassesWithAnnotation(packagePrefixList,PersistenceCapable.class);
+    if (notEmpty(entityTypes)) {
+      throw new IllegalStateException("Could not locate any @PersistenceCapable entities in package " + packagePrefix);
+    }
+    this.entityTypes=Sets.newLinkedHashSet(entityTypes);
+  }
+}
