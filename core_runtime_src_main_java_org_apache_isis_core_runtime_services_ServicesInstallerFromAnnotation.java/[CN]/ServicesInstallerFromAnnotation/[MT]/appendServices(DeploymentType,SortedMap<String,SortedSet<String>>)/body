@@ -1,27 +1,10 @@
 {
   initIfRequired();
   final List<String> packagePrefixList=asList(packagePrefixes);
-  final List<Class<?>> domainServiceClassesR=Lists.newArrayList(findClassesUsingReflections(packagePrefixList));
-  final List<Class<?>> domainServiceClassesFCS=Lists.newArrayList(findClassesUsingFastClasspathScanner(packagePrefixList));
-  final List<Class<?>> domainServiceClasses=Lists.newArrayList(domainServiceClassesFCS);
-  final List<String> sortedR_orig=sortedClassNames(domainServiceClassesR);
-  final List<String> sortedR=sortedClassNames(domainServiceClassesR);
-  final List<String> sortedFCS_orig=sortedClassNames(domainServiceClassesFCS);
-  final List<String> sortedFCS=sortedClassNames(domainServiceClassesFCS);
-  sortedR.removeAll(sortedFCS_orig);
-  sortedFCS.removeAll(sortedR_orig);
-  System.out.println("in R, not in FCS:");
-  for (  String s : sortedR) {
-    System.out.println("  " + s);
-  }
-  System.out.println("in FCS, not in R:");
-  for (  String s : sortedFCS) {
-    System.out.println("  " + s);
-  }
+  final Iterable<Class<?>> domainServiceClasses=findClassesUsingFastClasspathScanner(packagePrefixList);
   for (  final Class<?> cls : domainServiceClasses) {
     final String order=orderOf(cls);
     final String fullyQualifiedClassName=cls.getName();
-    final String name=nameOf(cls);
     ServicesInstallerUtils.appendInPosition(positionedServices,order,fullyQualifiedClassName);
   }
 }

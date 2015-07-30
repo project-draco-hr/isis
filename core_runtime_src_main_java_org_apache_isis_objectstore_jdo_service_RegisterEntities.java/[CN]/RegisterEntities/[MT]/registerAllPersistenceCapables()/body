@@ -1,7 +1,7 @@
 {
-  for (  final String packagePrefix : Iterables.transform(Splitter.on(",").split(packagePrefixes),trim())) {
-    Reflections reflections=new Reflections(packagePrefix);
-    Set<Class<?>> entityTypes=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
+  final List<String> packagePrefixList=Lists.newArrayList(Iterables.transform(Splitter.on(",").split(packagePrefixes),trim()));
+  for (  final String packagePrefix : packagePrefixList) {
+    final Set<Class<?>> entityTypes=ScanUtils.scanForAnnotation(packagePrefixList,PersistenceCapable.class);
     if (noEntitiesIn(entityTypes)) {
       throw new IllegalStateException("Could not locate any @PersistenceCapable entities in package " + packagePrefix);
     }
