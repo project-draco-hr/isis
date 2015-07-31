@@ -1,0 +1,17 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("initialising " + this);
+  }
+  if (runtimeContext == null) {
+    runtimeContext=new RuntimeContextNoRuntime();
+  }
+  injectInto(runtimeContext);
+  injectInto(specificationTraverser);
+  injectInto(metaModelValidator);
+  runtimeContext.injectInto(facetProcessor);
+  facetDecoratorSet.init();
+  programmingModel.init();
+  facetProcessor.init();
+  metaModelValidator.init();
+  loadSpecificationsForServices();
+}

@@ -1,0 +1,11 @@
+{
+  Set<String> entityTypes=Sets.newLinkedHashSet();
+  for (  final String packagePrefix : domPackages) {
+    final Iterable<String> entityTypes1=ScanUtils.scanForNamesOfClassesWithAnnotation(domPackages,PersistenceCapable.class);
+    if (Iterables.isEmpty(entityTypes1)) {
+      throw new IllegalStateException("Could not locate any @PersistenceCapable entities in package " + packagePrefix);
+    }
+    Iterables.addAll(entityTypes,entityTypes1);
+  }
+  return entityTypes;
+}

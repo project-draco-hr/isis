@@ -1,5 +1,4 @@
 {
-  ensureThatState(serviceList,is(notNullValue()));
   if (!deploymentType.isProduction() && !Clock.isInitialized()) {
     FixtureClock.initialize();
   }
@@ -7,9 +6,8 @@
   ensureThatState(runtimeContext,is(not(nullValue())));
   runtimeContext.injectInto(servicesInjector);
   getSpecificationLoader().injectInto(runtimeContext);
-  for (  Object service : serviceList) {
+  for (  Object service : servicesInjector.getRegisteredServices()) {
     runtimeContext.injectInto(service);
   }
-  servicesInjector.setServices(serviceList);
   servicesInjector.init();
 }

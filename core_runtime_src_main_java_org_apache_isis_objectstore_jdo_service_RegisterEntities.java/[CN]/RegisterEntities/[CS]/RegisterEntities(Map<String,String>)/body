@@ -1,7 +1,8 @@
 {
-  packagePrefixes=configuration.get(PACKAGE_PREFIX_KEY);
+  String packagePrefixes=configuration.get(PACKAGE_PREFIX_KEY);
   if (Strings.isNullOrEmpty(packagePrefixes)) {
     throw new IllegalStateException("Could not locate '" + PACKAGE_PREFIX_KEY + "' key in property files - aborting");
   }
-  discoverAllPersistenceCapables();
+  domPackages=parseDomPackages(packagePrefixes);
+  this.entityTypes=scanForEntityTypesIn(this.domPackages);
 }
