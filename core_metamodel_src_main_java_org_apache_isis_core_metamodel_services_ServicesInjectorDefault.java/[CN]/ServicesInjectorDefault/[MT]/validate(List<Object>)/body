@@ -1,0 +1,21 @@
+{
+  for (  Object service : serviceList) {
+    final Method[] methods=service.getClass().getMethods();
+    for (    Method method : methods) {
+      validatePostConstructMethods(service,method);
+      validatePreDestroyMethods(service,method);
+    }
+  }
+  ListMultimap<String,Object> servicesById=ArrayListMultimap.create();
+  for (  Object service : serviceList) {
+    String id=ServiceUtil.id(service);
+    servicesById.put(id,service);
+  }
+  for (  Map.Entry<String,Collection<Object>> servicesForId : servicesById.asMap().entrySet()) {
+    String serviceId=servicesForId.getKey();
+    Collection<Object> services=servicesForId.getValue();
+    if (services.size() > 1) {
+      throw new IllegalStateException(String.format("Service ids must be unique; serviceId '%s' is declared by domain services %s",serviceId,classNamesFor(services)));
+    }
+  }
+}

@@ -3,14 +3,14 @@
   if (Strings.isNullOrEmpty(schemaName)) {
     return;
   }
-  driverName=properties.get("javax.jdo.option.ConnectionDriverName");
-  url=properties.get("javax.jdo.option.ConnectionURL");
-  final String userName=properties.get("javax.jdo.option.ConnectionUserName");
-  final String password=properties.get("javax.jdo.option.ConnectionPassword");
+  JDOConnection dataStoreConnection=null;
   Connection connection=null;
   Statement statement=null;
+  final PersistenceManager persistenceManager=persistenceManagerFactory.getPersistenceManager();
+  dataStoreConnection=persistenceManager.getDataStoreConnection();
   try {
-    connection=DriverManager.getConnection(url,userName,password);
+    final Object connectionObj=dataStoreConnection.getNativeConnection();
+    connection=(java.sql.Connection)connectionObj;
     statement=connection.createStatement();
     if (skip(cmd,statement)) {
       return;
@@ -22,6 +22,6 @@
   }
  finally {
     closeSafely(statement);
-    closeSafely(connection);
+    dataStoreConnection.close();
   }
 }

@@ -5,11 +5,10 @@
   final OidMarshaller oidMarshaller=obtainOidMarshaller();
   final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,persistenceSessionFactory);
   final SpecificationLoaderSpi reflector=obtainSpecificationLoaderSpi(deploymentType,metaModelRefiners);
-  final List<Object> services=obtainServices();
-  if (!contains(services,FixtureScripts.class)) {
-    services.add(0,new FixtureScriptsDefault());
-  }
+  ServicesInjectorSpi servicesInjector=persistenceSessionFactory.getServicesInjector();
+  servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
+  servicesInjector.validateServices();
   final RuntimeContextFromSession runtimeContext=obtainRuntimeContextFromSession();
   runtimeContext.injectInto(reflector);
-  return newIsisSessionFactory(deploymentType,persistenceSessionFactory,configuration,authenticationManager,authorizationManager,oidMarshaller,reflector,services);
+  return new IsisSessionFactoryDefault(deploymentType,configuration,reflector,authenticationManager,authorizationManager,persistenceSessionFactory,oidMarshaller);
 }

@@ -1,0 +1,11 @@
+{
+  Set<String> entityTypes=Sets.newLinkedHashSet();
+  for (  final String packagePrefix : domPackages) {
+    final Iterable<String> entityTypes1=ScanUtils.scanForNamesOfClassesWithAnnotation(domPackages,PersistenceCapable.class);
+    if (Iterables.isEmpty(entityTypes1)) {
+      throw new IllegalArgumentException(String.format("Bad configuration.\n\nCould not locate any @PersistenceCapable entities in package '%s'\n" + "Check value of '%s' key in isis.properties etc.\n",packagePrefix,PACKAGE_PREFIX_KEY));
+    }
+    Iterables.addAll(entityTypes,entityTypes1);
+  }
+  return entityTypes;
+}
