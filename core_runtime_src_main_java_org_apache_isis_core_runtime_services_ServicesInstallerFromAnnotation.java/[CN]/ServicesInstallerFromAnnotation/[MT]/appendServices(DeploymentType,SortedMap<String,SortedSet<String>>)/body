@@ -1,10 +1,14 @@
 {
   initIfRequired();
   final List<String> packagePrefixList=asList(packagePrefixes);
-  final Iterable<Class<?>> domainServiceClasses=findClassesUsingFastClasspathScanner(packagePrefixList);
+  Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
+  final Reflections reflections=new Reflections(packagePrefixList);
+  final Set<Class<?>> typesAnnotatedWith=reflections.getTypesAnnotatedWith(DomainService.class);
+  final List<Class<?>> domainServiceClasses=Lists.newArrayList(Iterables.filter(typesAnnotatedWith,instantiatable()));
   for (  final Class<?> cls : domainServiceClasses) {
     final String order=orderOf(cls);
     final String fullyQualifiedClassName=cls.getName();
+    final String name=nameOf(cls);
     ServicesInstallerUtils.appendInPosition(positionedServices,order,fullyQualifiedClassName);
   }
 }
