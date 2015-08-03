@@ -1,0 +1,23 @@
+{
+  PersistenceManagerFactory persistenceManagerFactory;
+  if (isSchemaAwareStoreManager(datanucleusProps)) {
+    final boolean createSchema=isSet(datanucleusProps,PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL);
+    if (createSchema) {
+      datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL,"false");
+      datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_SCHEMA,"false");
+      datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_TABLES,"true");
+      datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_COLUMNS,"true");
+      datanucleusProps.put(PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_CONSTRAINTS,"true");
+      persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+      createSchema(persistenceManagerFactory,persistableClassNameSet,datanucleusProps);
+    }
+ else {
+      persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(datanucleusProps);
+    }
+  }
+ else {
+    configureAutoStart(persistableClassNameSet,datanucleusProps);
+    persistenceManagerFactory=JDOHelper.getPersistenceManagerFactory(this.datanucleusProps);
+  }
+  return persistenceManagerFactory;
+}
