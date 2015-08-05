@@ -6,7 +6,8 @@
   if (firstTime) {
     IsisLoggingConfigurer isisLoggingConfigurer=new IsisLoggingConfigurer(getLevel());
     isisLoggingConfigurer.configureLogging(".",new String[]{});
-    isisSystem=createIsisSystem(services);
+    IsisComponentProvider componentProvider=new IsisComponentProviderDefault(DeploymentType.UNIT_TESTING,services,getConfigurationElseDefault(),this.programmingModel,this.metaModelValidator);
+    isisSystem=new IsisSystem(componentProvider);
     FixtureClock.initialize();
     isisSystem.init();
     IsisContext.closeSession();
