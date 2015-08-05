@@ -1,0 +1,16 @@
+{
+  fixtureInstaller=isisComponentProvider.obtainFixturesInstaller();
+  if (isNoop(fixtureInstaller)) {
+    return;
+  }
+  IsisContext.openSession(new InitialisationSession());
+  fixtureInstaller.installFixtures();
+  try {
+    if (!getDeploymentType().isProduction()) {
+      logonFixture=fixtureInstaller.getLogonFixture();
+    }
+  }
+  finally {
+    IsisContext.closeSession();
+  }
+}

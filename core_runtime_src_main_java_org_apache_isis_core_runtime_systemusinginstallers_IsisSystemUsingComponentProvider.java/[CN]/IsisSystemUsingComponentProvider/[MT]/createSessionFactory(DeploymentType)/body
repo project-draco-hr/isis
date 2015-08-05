@@ -1,0 +1,16 @@
+{
+  final List<Object> services=isisComponentProvider.obtainServices();
+  final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,services);
+  final IsisConfiguration configuration=getConfiguration();
+  final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager(deploymentType);
+  final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager(deploymentType);
+  final OidMarshaller oidMarshaller=createOidMarshaller();
+  final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,persistenceSessionFactory);
+  final SpecificationLoaderSpi reflector=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,metaModelRefiners);
+  ServicesInjectorSpi servicesInjector=persistenceSessionFactory.getServicesInjector();
+  servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
+  servicesInjector.validateServices();
+  final RuntimeContextFromSession runtimeContext=createRuntimeContextFromSession();
+  runtimeContext.injectInto(reflector);
+  return new IsisSessionFactoryDefault(deploymentType,configuration,reflector,authenticationManager,authorizationManager,persistenceSessionFactory,oidMarshaller);
+}
