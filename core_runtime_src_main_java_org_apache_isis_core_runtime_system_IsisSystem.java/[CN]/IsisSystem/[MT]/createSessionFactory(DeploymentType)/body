@@ -1,15 +1,15 @@
 {
+  final IsisConfiguration configuration=isisComponentProvider.getConfiguration();
   final List<Object> services=isisComponentProvider.obtainServices();
   ServicesInjectorSpi servicesInjectorSpi=new ServicesInjectorDefault(services);
   servicesInjectorSpi.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
   servicesInjectorSpi.validateServices();
-  final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjectorSpi);
-  final IsisConfiguration configuration=getConfiguration();
+  final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(configuration);
+  final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjectorSpi,runtimeContext);
   final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager(deploymentType);
   final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager(deploymentType);
   final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,persistenceSessionFactory);
   final SpecificationLoaderSpi reflector=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,metaModelRefiners);
-  final RuntimeContextFromSession runtimeContext=createRuntimeContextFromSession();
   runtimeContext.injectInto(reflector);
   return new IsisSessionFactory(deploymentType,configuration,reflector,authenticationManager,authorizationManager,persistenceSessionFactory);
 }
