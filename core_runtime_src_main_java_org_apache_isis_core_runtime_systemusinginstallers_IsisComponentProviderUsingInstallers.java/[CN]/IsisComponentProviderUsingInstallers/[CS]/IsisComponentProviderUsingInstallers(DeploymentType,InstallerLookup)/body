@@ -3,17 +3,17 @@
   ensureThatArg(deploymentType,is(not(nullValue())));
   ensureThatArg(installerLookup,is(not(nullValue())));
   this.installerLookup=installerLookup;
-  if (globSpec != null) {
-    specifyServicesAndRegisteredEntitiesUsing(globSpec);
+  if (appManifest != null) {
+    specifyServicesAndRegisteredEntitiesUsing(appManifest);
     putConfigurationProperty(SystemConstants.SERVICES_INSTALLER_KEY,ServicesInstallerFromAnnotation.NAME);
-    final String authenticationMechanism=globSpec.getAuthenticationMechanism();
+    final String authenticationMechanism=appManifest.getAuthenticationMechanism();
     putConfigurationProperty(SystemConstants.AUTHENTICATION_INSTALLER_KEY,authenticationMechanism);
-    final String authorizationMechanism=globSpec.getAuthorizationMechanism();
+    final String authorizationMechanism=appManifest.getAuthorizationMechanism();
     putConfigurationProperty(SystemConstants.AUTHORIZATION_INSTALLER_KEY,authorizationMechanism);
-    List<Class<? extends FixtureScript>> fixtureClasses=globSpec.getFixtures();
+    List<Class<? extends FixtureScript>> fixtureClasses=appManifest.getFixtures();
     final String fixtureClassNamesCsv=fixtureClassNamesFrom(fixtureClasses);
     putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
-    overrideConfigurationUsing(globSpec);
+    overrideConfigurationUsing(appManifest);
   }
   AuthenticationManagerInstaller authenticationInstaller=this.installerLookup.authenticationManagerInstaller(configProperty(SystemConstants.AUTHENTICATION_INSTALLER_KEY));
   AuthorizationManagerInstaller authorizationInstaller=this.installerLookup.authorizationManagerInstaller(configProperty(SystemConstants.AUTHORIZATION_INSTALLER_KEY));
