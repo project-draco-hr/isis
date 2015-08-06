@@ -1,7 +1,5 @@
 {
-  final ProgrammingModel programmingModel=obtainReflectorProgrammingModel();
-  final Set<FacetDecorator> facetDecorators=obtainReflectorFacetDecoratorSet();
-  final MetaModelValidator mmv=obtainReflectorMetaModelValidator();
-  final List<LayoutMetadataReader> layoutMetadataReaders=obtainLayoutMetadataReaders();
-  return JavaReflectorHelper.createObjectReflector(programmingModel,metaModelRefiners,facetDecorators,layoutMetadataReaders,mmv,getConfiguration());
+  final Set<FacetDecorator> facetDecorators=Sets.newHashSet((FacetDecorator)new StandardTransactionFacetDecorator(getConfiguration()));
+  final List<LayoutMetadataReader> layoutMetadataReaders=Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson());
+  return JavaReflectorHelper.createObjectReflector(programmingModel,metaModelRefiners,facetDecorators,layoutMetadataReaders,metaModelValidator,getConfiguration());
 }
