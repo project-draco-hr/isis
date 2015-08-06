@@ -4,5 +4,6 @@
     throw new IllegalArgumentException(String.format("Could not locate '%s' key in property files - aborting",PACKAGE_PREFIX_KEY));
   }
   domPackages=parseDomPackages(packagePrefixes);
-  this.entityTypes=scanForEntityTypesIn(this.domPackages);
+  this.globSpecSpecified=configuration.get("isis.globSpec") != null;
+  this.entityTypes=scanForEntityTypesIn(this.domPackages,this.globSpecSpecified);
 }

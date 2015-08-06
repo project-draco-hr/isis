@@ -10,7 +10,9 @@
     putConfigurationProperty(SystemConstants.AUTHENTICATION_INSTALLER_KEY,authenticationMechanism);
     final String authorizationMechanism=globSpec.getAuthorizationMechanism();
     putConfigurationProperty(SystemConstants.AUTHORIZATION_INSTALLER_KEY,authorizationMechanism);
-    specifyFixtureScriptsUsing(globSpec);
+    List<Class<? extends FixtureScript>> fixtureClasses=globSpec.getFixtures();
+    final String fixtureClassNamesCsv=fixtureClassNamesFrom(fixtureClasses);
+    putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
     overrideConfigurationUsing(globSpec);
   }
   AuthenticationManagerInstaller authenticationInstaller=this.installerLookup.authenticationManagerInstaller(configProperty(SystemConstants.AUTHENTICATION_INSTALLER_KEY));

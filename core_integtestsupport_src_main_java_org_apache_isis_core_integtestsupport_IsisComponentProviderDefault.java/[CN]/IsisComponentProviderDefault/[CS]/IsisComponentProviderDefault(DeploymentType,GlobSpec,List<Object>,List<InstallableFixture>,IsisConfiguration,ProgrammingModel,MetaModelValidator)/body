@@ -1,15 +1,20 @@
 {
   super(deploymentType,globSpecIfAny);
   this.configuration=elseDefault(configurationOverride);
+  final String fixtureClassNamesCsv;
   if (globSpec != null) {
     specifyServicesAndRegisteredEntitiesUsing(globSpec);
-    specifyFixtureScriptsUsing(globSpec);
+    putConfigurationProperty("isis.globSpec",globSpecIfAny.getClass().getName());
+    List<Class<? extends FixtureScript>> fixtureClasses=globSpec.getFixtures();
+    fixtureClassNamesCsv=fixtureClassNamesFrom(fixtureClasses);
     overrideConfigurationUsing(globSpec);
     this.services=createServices(configuration);
   }
  else {
+    fixtureClassNamesCsv=fixtureClassNamesFrom(fixturesOverride);
     this.services=elseDefault(servicesOverride,configuration);
   }
+  putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
   this.fixturesInstaller=createFixturesInstaller(configuration);
   this.authenticationManager=createAuthenticationManager(configuration);
   this.authorizationManager=createAuthorizationManager(configuration);
