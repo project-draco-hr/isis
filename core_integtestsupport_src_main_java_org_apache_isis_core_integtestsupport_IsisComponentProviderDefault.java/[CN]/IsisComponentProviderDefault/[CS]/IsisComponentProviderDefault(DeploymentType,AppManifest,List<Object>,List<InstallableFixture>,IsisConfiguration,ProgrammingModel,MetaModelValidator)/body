@@ -4,14 +4,14 @@
   final String fixtureClassNamesCsv;
   if (appManifest != null) {
     specifyServicesAndRegisteredEntitiesUsing(appManifest);
-    putConfigurationProperty("isis.globSpec",appManifestIfAny.getClass().getName());
+    putConfigurationProperty(SystemConstants.APP_MANIFEST_KEY,appManifestIfAny.getClass().getName());
     List<Class<? extends FixtureScript>> fixtureClasses=appManifest.getFixtures();
-    fixtureClassNamesCsv=fixtureClassNamesFrom(fixtureClasses);
+    fixtureClassNamesCsv=classNamesFrom(fixtureClasses);
     overrideConfigurationUsing(appManifest);
     this.services=createServices(configuration);
   }
  else {
-    fixtureClassNamesCsv=fixtureClassNamesFrom(fixturesOverride);
+    fixtureClassNamesCsv=classNamesFrom(fixturesOverride);
     this.services=elseDefault(servicesOverride,configuration);
   }
   putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);

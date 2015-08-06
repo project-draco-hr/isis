@@ -1,17 +1,17 @@
 {
-  super(deploymentType,globSpecIfAny(installerLookup));
+  super(deploymentType,appManifestIfAny(installerLookup));
   ensureThatArg(deploymentType,is(not(nullValue())));
   ensureThatArg(installerLookup,is(not(nullValue())));
   this.installerLookup=installerLookup;
   if (appManifest != null) {
     specifyServicesAndRegisteredEntitiesUsing(appManifest);
-    putConfigurationProperty(SystemConstants.SERVICES_INSTALLER_KEY,ServicesInstallerFromAnnotation.NAME);
+    putConfigurationProperty(SystemConstants.SERVICES_INSTALLER_KEY,ServicesInstallerFromConfigurationAndAnnotation.NAME);
     final String authenticationMechanism=appManifest.getAuthenticationMechanism();
     putConfigurationProperty(SystemConstants.AUTHENTICATION_INSTALLER_KEY,authenticationMechanism);
     final String authorizationMechanism=appManifest.getAuthorizationMechanism();
     putConfigurationProperty(SystemConstants.AUTHORIZATION_INSTALLER_KEY,authorizationMechanism);
     List<Class<? extends FixtureScript>> fixtureClasses=appManifest.getFixtures();
-    final String fixtureClassNamesCsv=fixtureClassNamesFrom(fixtureClasses);
+    final String fixtureClassNamesCsv=classNamesFrom(fixtureClasses);
     putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
     overrideConfigurationUsing(appManifest);
   }
