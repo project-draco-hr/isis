@@ -6,14 +6,14 @@
   if (firstTime) {
     IsisLoggingConfigurer isisLoggingConfigurer=new IsisLoggingConfigurer(getLevel());
     isisLoggingConfigurer.configureLogging(".",new String[]{});
-    IsisComponentProvider componentProvider=new IsisComponentProviderDefault(DeploymentType.UNIT_TESTING,services,getConfigurationElseDefault(),this.programmingModel,this.metaModelValidator);
+    componentProvider=new IsisComponentProviderDefault(DeploymentType.UNIT_TESTING,appManifestForComponentProvider,servicesForComponentProvider,fixturesForComponentProvider,configurationForComponentProvider,programmingModelForComponentProvider,metaModelValidatorForComponentProvider);
     isisSystem=new IsisSystem(componentProvider);
     FixtureClock.initialize();
     isisSystem.init();
     IsisContext.closeSession();
   }
   final AuthenticationManager authenticationManager=isisSystem.getSessionFactory().getAuthenticationManager();
-  authenticationSession=authenticationManager.authenticate(authenticationRequest);
+  authenticationSession=authenticationManager.authenticate(authenticationRequestIfAny);
   setContainer(getContainer());
   openSession();
   wireAndInstallFixtures();

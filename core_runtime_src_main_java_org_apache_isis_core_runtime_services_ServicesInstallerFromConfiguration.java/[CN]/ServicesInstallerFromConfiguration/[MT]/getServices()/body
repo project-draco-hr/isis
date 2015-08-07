@@ -1,0 +1,10 @@
+{
+  LOG.info("installing " + this.getClass().getName());
+  serviceInstantiator.setConfiguration(getConfiguration());
+  if (serviceList == null) {
+    final SortedMap<String,SortedSet<String>> positionedServices=Maps.newTreeMap(new DeweyOrderComparator());
+    appendServices(positionedServices);
+    serviceList=ServicesInstallerUtils.instantiateServicesFrom(positionedServices,serviceInstantiator);
+  }
+  return serviceList;
+}
