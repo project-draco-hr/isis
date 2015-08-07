@@ -1,9 +1,10 @@
 {
-  super(deploymentType,appManifestIfAny(installerLookup));
+  super(deploymentType,appManifestIfAny(appManifestIfAny,installerLookup));
   ensureThatArg(deploymentType,is(not(nullValue())));
   ensureThatArg(installerLookup,is(not(nullValue())));
   this.installerLookup=installerLookup;
   if (appManifest != null) {
+    putAppManifestKey();
     specifyServicesAndRegisteredEntitiesUsing(appManifest);
     putConfigurationProperty(SystemConstants.SERVICES_INSTALLER_KEY,ServicesInstallerFromConfigurationAndAnnotation.NAME);
     final String authenticationMechanism=appManifest.getAuthenticationMechanism();
