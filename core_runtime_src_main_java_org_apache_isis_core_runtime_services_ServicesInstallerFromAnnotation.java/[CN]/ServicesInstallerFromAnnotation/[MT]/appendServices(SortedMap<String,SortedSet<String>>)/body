@@ -1,10 +1,13 @@
 {
   initIfRequired();
   final List<String> packagePrefixList=asList(packagePrefixes);
-  Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
-  final Reflections reflections=new Reflections(packagePrefixList);
-  final Set<Class<?>> typesAnnotatedWith=reflections.getTypesAnnotatedWith(DomainService.class);
-  final List<Class<?>> domainServiceClasses=Lists.newArrayList(Iterables.filter(typesAnnotatedWith,instantiatable()));
+  Set<Class<?>> domainServiceTypes=AppManifest.Registry.instance().getDomainServiceTypes();
+  if (domainServiceTypes == null) {
+    Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
+    final Reflections reflections=new Reflections(packagePrefixList);
+    domainServiceTypes=reflections.getTypesAnnotatedWith(DomainService.class);
+  }
+  final List<Class<?>> domainServiceClasses=Lists.newArrayList(Iterables.filter(domainServiceTypes,instantiatable()));
   for (  final Class<?> cls : domainServiceClasses) {
     final String order=orderOf(cls);
     final String fullyQualifiedClassName=cls.getName();

@@ -1,24 +1,22 @@
 {
   final Set<String> entityTypes=Sets.newLinkedHashSet();
-  for (  final String packageName : domPackages) {
-    Reflections reflections=new Reflections(packageName);
-    final Set<Class<?>> entityTypesInPackage=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
-    if (!entitiesIn(entityTypesInPackage)) {
-      if (appManifestSpecified) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Could not locate any @PersistenceCapable entities in module '%s'; ignoring\n",packageName);
-        }
-      }
- else {
+  Set<Class<?>> persistenceCapableTypes=AppManifest.Registry.instance().getPersistenceCapableTypes();
+  if (persistenceCapableTypes == null) {
+    persistenceCapableTypes=Sets.newLinkedHashSet();
+    for (    final String packageName : domPackages) {
+      Reflections reflections=new Reflections(packageName);
+      final Set<Class<?>> entityTypesInPackage=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
+      if (!entitiesIn(entityTypesInPackage)) {
         throw new IllegalArgumentException(String.format("Bad configuration.\n\nCould not locate any @PersistenceCapable entities in package '%s'\n" + "Check value of '%s' key in WEB-INF/*.properties\n",packageName,PACKAGE_PREFIX_KEY));
       }
+      persistenceCapableTypes.addAll(entityTypesInPackage);
     }
-    for (    Class<?> entityType : entityTypesInPackage) {
-      if (ignore(entityType)) {
-        continue;
-      }
-      entityTypes.add(entityType.getCanonicalName());
+  }
+  for (  Class<?> persistenceCapableType : persistenceCapableTypes) {
+    if (ignore(persistenceCapableType)) {
+      continue;
     }
+    entityTypes.add(persistenceCapableType.getCanonicalName());
   }
   return entityTypes;
 }
