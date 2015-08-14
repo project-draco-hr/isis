@@ -4,8 +4,8 @@
     @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
       final ObjectSpecification typeOfSpecification=getScalarModel().getTypeOfSpecification();
       final AutoCompleteFacet autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
-      final List<ObjectAdapter> results=autoCompleteFacet.execute(term);
-      return Lists.transform(results,ObjectAdapterMemento.Functions.fromAdapter());
+      final List<ObjectAdapter> autoCompleteAdapters=autoCompleteFacet.execute(term,getAuthenticationSession(),getDeploymentCategory());
+      return Lists.newArrayList(Lists.transform(autoCompleteAdapters,ObjectAdapterMemento.Functions.fromAdapter()));
     }
   }
 ;

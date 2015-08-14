@@ -1,5 +1,8 @@
 {
-  final ObjectAdapter[] choiceAdapters=param.getChoices(objectAdapter,null);
+  final AuthenticationSession authenticationSession=rendererContext.getAuthenticationSession();
+  final DeploymentType deploymentType=determineDeploymentTypeFrom(rendererContext);
+  final DeploymentCategory deploymentCategory=deploymentType.getDeploymentCategory();
+  final ObjectAdapter[] choiceAdapters=param.getChoices(objectAdapter,null,authenticationSession,deploymentCategory);
   if (choiceAdapters == null || choiceAdapters.length == 0) {
     return null;
   }

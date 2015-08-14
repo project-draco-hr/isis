@@ -1,0 +1,13 @@
+{
+  final List<ObjectAdapter> adapters=Lists.newArrayList();
+  final ActionParameterChoicesFacet facet=getFacet(ActionParameterChoicesFacet.class);
+  if (facet != null) {
+    final Object[] choices=facet.getChoices(target,args,authenticationSession,deploymentCategory);
+    checkChoicesOrAutoCompleteType(getSpecificationLookup(),choices,getSpecification());
+    for (    final Object choice : choices) {
+      ObjectAdapter adapter=choice != null ? getAdapterMap().adapterFor(choice) : null;
+      adapters.add(adapter);
+    }
+  }
+  return adapters.toArray(new ObjectAdapter[0]);
+}

@@ -4,7 +4,8 @@
     @Override protected List<ObjectAdapterMemento> obtainMementos(    String term){
       final List<ObjectAdapter> autoCompleteChoices=Lists.newArrayList();
       if (getScalarModel().hasAutoComplete()) {
-        autoCompleteChoices.addAll(getScalarModel().getAutoComplete(term));
+        final List<ObjectAdapter> autoCompleteAdapters=getScalarModel().getAutoComplete(term,getAuthenticationSession(),getDeploymentCategory());
+        autoCompleteChoices.addAll(autoCompleteAdapters);
       }
       return Lists.newArrayList(Lists.transform(autoCompleteChoices,ObjectAdapterMemento.Functions.fromAdapter()));
     }
