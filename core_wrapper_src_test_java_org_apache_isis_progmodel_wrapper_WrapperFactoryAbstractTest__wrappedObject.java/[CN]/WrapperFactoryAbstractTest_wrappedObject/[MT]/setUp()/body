@@ -1,5 +1,5 @@
 {
-  objectMemberContext=new ObjectMemberContext(DeploymentCategory.PRODUCTION,mockAuthenticationSessionProvider,mockSpecificationLookup,mockAdapterManager,mockQuerySubmitter,mockServicesProvider);
+  objectMemberContext=new ObjectMemberContext(DeploymentCategory.PRODUCTION,mockAuthenticationSessionProvider,mockSpecificationLoader,mockAdapterManager,mockQuerySubmitter,mockServicesProvider);
   employeeRepository=new EmployeeRepositoryImpl();
   employeeDO=new Employee();
   employeeDO.setName("Smith");
@@ -8,10 +8,10 @@
   wrapperFactory.setAdapterManager(mockAdapterManager);
   wrapperFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
   wrapperFactory.setObjectPersistor(mockObjectPersistor);
-  wrapperFactory.setSpecificationLookup(mockSpecificationLookup);
+  wrapperFactory.setSpecificationLoader(mockSpecificationLoader);
   context.checking(new Expectations(){
 {
-      allowing(mockSpecificationLookup).loadSpecification(String.class);
+      allowing(mockSpecificationLoader).loadSpecification(String.class);
       will(returnValue(mockStringSpec));
       allowing(mockStringSpec).getShortIdentifier();
       will(returnValue(String.class.getName()));
@@ -34,7 +34,7 @@
       will(returnValue(mockEmployeeAdapter));
       allowing(mockEmployeeAdapter).getSpecification();
       will(returnValue(mockEmployeeSpec));
-      allowing(mockSpecificationLookup).loadSpecification(Employee.class);
+      allowing(mockSpecificationLoader).loadSpecification(Employee.class);
       will(returnValue(mockEmployeeSpec));
       allowing(mockEmployeeSpec).getMember(methodOf(Employee.class,"getEmployeeRepository"));
       will(returnValue(null));

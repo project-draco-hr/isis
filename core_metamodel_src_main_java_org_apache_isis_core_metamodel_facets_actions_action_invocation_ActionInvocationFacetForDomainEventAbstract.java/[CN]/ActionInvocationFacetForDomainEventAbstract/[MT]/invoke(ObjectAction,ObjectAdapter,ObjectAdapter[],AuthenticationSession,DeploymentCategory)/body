@@ -1,0 +1,27 @@
+{
+  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+  final Command command=commandContext != null ? commandContext.getCommand() : null;
+  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,targetAdapter,arguments,command,null);
+  final InvocationResult invocationResult=internalInvoke(command,owningAction,targetAdapter,arguments);
+  final ObjectAdapter invocationResultAdapter=invocationResult.getAdapter();
+  if (invocationResult.getWhetherInvoked()) {
+    domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,targetAdapter,arguments,command,invocationResultAdapter);
+  }
+  if (invocationResultAdapter != null) {
+    Object result=invocationResultAdapter.getObject();
+    final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
+    if (result instanceof Collection) {
+      final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter);
+      final Iterable<ObjectAdapter> adapterList=facet.iterable(resultAdapter);
+      final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(adapterList,authenticationSession,deploymentCategory);
+      final List<Object> visibleObjects=Lists.newArrayList(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()));
+      final ObjectAdapter visibleObjectsAsAdapter=getAdapterManager().adapterFor(visibleObjects);
+      return visibleObjectsAsAdapter;
+    }
+ else {
+      boolean visible=ObjectAdapter.Util.isVisible(resultAdapter,authenticationSession,deploymentCategory);
+      return visible ? resultAdapter : null;
+    }
+  }
+  return invocationResultAdapter;
+}

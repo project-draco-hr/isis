@@ -1,0 +1,12 @@
+{
+  final Object referencedObject=ObjectAdapter.InvokeUtils.invoke(method,owningAdapter);
+  if (referencedObject == null) {
+    return null;
+  }
+  final ObjectAdapter referencedAdapter=getAdapterManager().adapterFor(referencedObject);
+  final FacetedMethod facetedMethod=(FacetedMethod)getFacetHolder();
+  final Class<?> type=facetedMethod.getType();
+  final ObjectSpecification objectSpec=getSpecification(type);
+  final boolean visible=ObjectAdapter.Util.isVisible(referencedAdapter,authenticationSession,deploymentCategory);
+  return visible ? referencedObject : null;
+}

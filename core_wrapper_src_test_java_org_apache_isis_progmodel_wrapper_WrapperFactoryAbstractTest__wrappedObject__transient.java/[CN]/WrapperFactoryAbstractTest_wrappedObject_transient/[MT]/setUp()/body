@@ -7,7 +7,7 @@
   wrapperFactory.setAdapterManager(mockAdapterManager);
   wrapperFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
   wrapperFactory.setObjectPersistor(mockObjectPersistor);
-  wrapperFactory.setSpecificationLookup(mockSpecificationLookup);
+  wrapperFactory.setSpecificationLoader(mockSpecificationLoader);
   context.checking(new Expectations(){
 {
       allowing(mockAdapterManager).getAdapterFor(employeeDO);
@@ -22,7 +22,7 @@
       will(returnValue(passwordValue));
       allowing(mockPasswordMember).getIdentifier();
       will(returnValue(mockPasswordIdentifier));
-      allowing(mockSpecificationLookup).loadSpecification(Employee.class);
+      allowing(mockSpecificationLoader).loadSpecification(Employee.class);
       will(returnValue(mockEmployeeSpec));
       allowing(mockEmployeeSpec).getMember(with(setPasswordMethod));
       will(returnValue(mockPasswordMember));

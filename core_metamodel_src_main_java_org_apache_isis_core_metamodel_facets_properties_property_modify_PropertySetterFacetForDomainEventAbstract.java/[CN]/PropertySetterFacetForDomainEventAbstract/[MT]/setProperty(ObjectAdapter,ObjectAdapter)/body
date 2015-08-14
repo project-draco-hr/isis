@@ -6,11 +6,11 @@
     setterFacet.setProperty(targetAdapter,newValueAdapter);
     return;
   }
-  final Object oldValue=getterFacet.getProperty(targetAdapter);
+  final Object oldValue=getterFacet.getProperty(targetAdapter,null,null);
   final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
   final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,newValue);
   setterFacet.setProperty(targetAdapter,newValueAdapter);
-  final Object actualNewValue=getterFacet.getProperty(targetAdapter);
+  final Object actualNewValue=getterFacet.getProperty(targetAdapter,null,null);
   if (Objects.equal(oldValue,actualNewValue)) {
     return;
   }
