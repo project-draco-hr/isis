@@ -8,13 +8,16 @@
     domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,targetAdapter,arguments,command,invocationResultAdapter);
   }
   if (invocationResultAdapter != null) {
-    Object result=invocationResultAdapter.getObject();
+    final Object result=invocationResultAdapter.getObject();
     final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
-    if (result instanceof Collection) {
+    if (result instanceof Collection || result.getClass().isArray()) {
       final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter);
       final Iterable<ObjectAdapter> adapterList=facet.iterable(resultAdapter);
       final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(adapterList,authenticationSession,deploymentCategory);
-      final List<Object> visibleObjects=Lists.newArrayList(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()));
+      final Object visibleObjects=CollectionUtils.copyOf(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()),method.getReturnType());
+      if (visibleObjects == null) {
+        return invocationResultAdapter;
+      }
       final ObjectAdapter visibleObjectsAsAdapter=getAdapterManager().adapterFor(visibleObjects);
       return visibleObjectsAsAdapter;
     }
@@ -23,5 +26,5 @@
       return visible ? resultAdapter : null;
     }
   }
-  return invocationResultAdapter;
+  return null;
 }

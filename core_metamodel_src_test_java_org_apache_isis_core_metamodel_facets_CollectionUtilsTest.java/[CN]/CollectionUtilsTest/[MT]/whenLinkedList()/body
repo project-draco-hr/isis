@@ -1,0 +1,10 @@
+{
+  List<Class<?>> collectionTypes=Lists.<Class<?>>newArrayList(LinkedList.class,ArrayList.class,CopyOnWriteArrayList.class,AbstractList.class,LinkedHashSet.class,HashSet.class,TreeSet.class,CopyOnWriteArraySet.class,AbstractSet.class,List.class,SortedSet.class,Set.class,Collection.class);
+  for (  Class<?> collectionType : collectionTypes) {
+    Object o=CollectionUtils.copyOf(iterable,collectionType);
+    assertThat(o,is(not(nullValue())));
+    assertThat(collectionType.isAssignableFrom(o.getClass()),is(true));
+    Collection copy=(Collection)o;
+    assertThat(copy.size(),is(3));
+  }
+}

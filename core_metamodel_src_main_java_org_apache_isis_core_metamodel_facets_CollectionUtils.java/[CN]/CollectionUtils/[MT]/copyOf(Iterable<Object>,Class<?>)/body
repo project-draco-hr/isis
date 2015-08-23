@@ -1,0 +1,55 @@
+{
+  if (iterable == null) {
+    throw new IllegalArgumentException("Iterable must be provided");
+  }
+  if (requiredType == null) {
+    throw new IllegalArgumentException("RequiredType must be provided");
+  }
+  if (CopyOnWriteArrayList.class == requiredType) {
+    return Lists.newCopyOnWriteArrayList(iterable);
+  }
+  if (LinkedList.class == requiredType) {
+    return Lists.newLinkedList(iterable);
+  }
+  if (ArrayList.class == requiredType) {
+    return Lists.newArrayList(iterable);
+  }
+  if (AbstractList.class == requiredType) {
+    return Lists.newArrayList(iterable);
+  }
+  if (CopyOnWriteArraySet.class == requiredType) {
+    return Sets.newCopyOnWriteArraySet(iterable);
+  }
+  if (LinkedHashSet.class == requiredType) {
+    return Sets.newLinkedHashSet(iterable);
+  }
+  if (HashSet.class == requiredType) {
+    return Sets.newHashSet(iterable);
+  }
+  if (TreeSet.class == requiredType) {
+    Iterable rawIterable=iterable;
+    return Sets.newTreeSet(rawIterable);
+  }
+  if (AbstractSet.class == requiredType) {
+    return Sets.newLinkedHashSet(iterable);
+  }
+  if (List.class == requiredType) {
+    return Lists.newArrayList(iterable);
+  }
+  if (SortedSet.class == requiredType) {
+    Iterable rawIterable=iterable;
+    return Sets.newTreeSet(rawIterable);
+  }
+  if (Set.class == requiredType) {
+    return Sets.newLinkedHashSet(iterable);
+  }
+  if (Collection.class == requiredType) {
+    return Lists.newArrayList(iterable);
+  }
+  if (requiredType.isArray()) {
+    Class<?> componentType=requiredType.getComponentType();
+    Iterable rawIterable=iterable;
+    return Iterables.toArray(rawIterable,componentType);
+  }
+  return null;
+}
