@@ -7,24 +7,27 @@
   if (invocationResult.getWhetherInvoked()) {
     domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,targetAdapter,arguments,command,invocationResultAdapter);
   }
-  if (invocationResultAdapter != null) {
+  if (invocationResultAdapter == null) {
+    return null;
+  }
+  boolean filterForVisibility=getConfiguration().getBoolean("isis.reflector.facet.actionInvocation.filterVisibility",true);
+  if (filterForVisibility) {
     final Object result=invocationResultAdapter.getObject();
-    final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
     if (result instanceof Collection || result.getClass().isArray()) {
-      final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter);
-      final Iterable<ObjectAdapter> adapterList=facet.iterable(resultAdapter);
+      final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(invocationResultAdapter);
+      final Iterable<ObjectAdapter> adapterList=facet.iterable(invocationResultAdapter);
       final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(adapterList,authenticationSession,deploymentCategory);
       final Object visibleObjects=CollectionUtils.copyOf(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()),method.getReturnType());
-      if (visibleObjects == null) {
-        return invocationResultAdapter;
+      if (visibleObjects != null) {
+        return getAdapterManager().adapterFor(visibleObjects);
       }
-      final ObjectAdapter visibleObjectsAsAdapter=getAdapterManager().adapterFor(visibleObjects);
-      return visibleObjectsAsAdapter;
     }
  else {
-      boolean visible=ObjectAdapter.Util.isVisible(resultAdapter,authenticationSession,deploymentCategory);
-      return visible ? resultAdapter : null;
+      boolean visible=ObjectAdapter.Util.isVisible(invocationResultAdapter,authenticationSession,deploymentCategory);
+      if (!visible) {
+        return null;
+      }
     }
   }
-  return null;
+  return invocationResultAdapter;
 }

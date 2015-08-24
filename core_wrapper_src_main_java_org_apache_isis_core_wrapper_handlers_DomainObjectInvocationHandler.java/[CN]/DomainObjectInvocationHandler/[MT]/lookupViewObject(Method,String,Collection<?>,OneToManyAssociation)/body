@@ -1,13 +1,3 @@
 {
-  Collection<?> collectionViewObject=collectionViewObjectsByMethod.get(method);
-  if (collectionViewObject == null) {
-    if (collectionToLookup instanceof WrapperObject) {
-      collectionViewObject=collectionToLookup;
-    }
- else {
-      collectionViewObject=proxy.proxy(collectionToLookup,memberName,this,otma);
-    }
-    collectionViewObjectsByMethod.put(method,collectionViewObject);
-  }
-  return collectionViewObject;
+  return collectionToLookup instanceof WrapperObject ? collectionToLookup : proxy.proxy(collectionToLookup,memberName,this,otma);
 }

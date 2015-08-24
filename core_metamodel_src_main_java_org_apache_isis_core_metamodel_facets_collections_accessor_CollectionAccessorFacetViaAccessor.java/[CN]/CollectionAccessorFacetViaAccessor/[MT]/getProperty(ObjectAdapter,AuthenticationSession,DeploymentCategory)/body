@@ -1,10 +1,13 @@
 {
   final Object collectionOrArray=ObjectAdapter.InvokeUtils.invoke(method,owningAdapter);
   final ObjectAdapter collectionAdapter=getAdapterManager().adapterFor(collectionOrArray);
-  final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(collectionAdapter,authenticationSession,deploymentCategory);
-  final Object visibleObjects=CollectionUtils.copyOf(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()),method.getReturnType());
-  if (visibleObjects == null) {
-    return collectionOrArray;
+  boolean filterForVisibility=getConfiguration().getBoolean("isis.reflector.facet.collectionAccessor.filterVisibility",true);
+  if (filterForVisibility) {
+    final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(collectionAdapter,authenticationSession,deploymentCategory);
+    final Object visibleObjects=CollectionUtils.copyOf(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()),method.getReturnType());
+    if (visibleObjects != null) {
+      return visibleObjects;
+    }
   }
-  return visibleObjects;
+  return collectionOrArray;
 }
