@@ -3,20 +3,6 @@
     return;
   }
   final ObjectAdapter onObject=command.onAdapter();
-  if (command instanceof SaveObjectCommand) {
-    if (alreadyHasCreate(onObject) || alreadyHasSave(onObject)) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("ignored command as object already created/saved" + command);
-      }
-      return;
-    }
-    if (alreadyHasDestroy(onObject)) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("ignored command " + command + " as object no longer exists");
-      }
-      return;
-    }
-  }
   if (command instanceof DestroyObjectCommand) {
     if (alreadyHasCreate(onObject)) {
       removeCreate(onObject);
@@ -24,12 +10,6 @@
         LOG.debug("ignored both create and destroy command " + command);
       }
       return;
-    }
-    if (alreadyHasSave(onObject)) {
-      removeSave(onObject);
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("removed prior save command " + command);
-      }
     }
     if (alreadyHasDestroy(onObject)) {
       if (LOG.isDebugEnabled()) {
