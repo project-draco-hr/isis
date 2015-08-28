@@ -3,5 +3,11 @@
   final ObjectAdapter[] arguments=getArgumentsAsArray();
   final ObjectAction action=getActionMemento().getAction();
   final AuthenticationSession session=getAuthenticationSession();
-  return action.executeWithRuleChecking(targetAdapter,arguments,session,WHERE_FOR_ACTION_INVOCATION);
+  final ObjectAdapter resultAdapter=InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
+    @Override public ObjectAdapter call() throws Exception {
+      return action.executeWithRuleChecking(targetAdapter,arguments,session,WHERE_FOR_ACTION_INVOCATION);
+    }
+  }
+);
+  return resultAdapter;
 }

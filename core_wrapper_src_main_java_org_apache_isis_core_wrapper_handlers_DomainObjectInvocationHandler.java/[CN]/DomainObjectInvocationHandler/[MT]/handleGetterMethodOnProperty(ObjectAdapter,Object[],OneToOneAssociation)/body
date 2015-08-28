@@ -6,7 +6,12 @@
     checkVisibility(targetAdapter,otoa);
   }
   resolveIfRequired(targetAdapter);
-  final ObjectAdapter currentReferencedAdapter=otoa.get(targetAdapter);
+  final ObjectAdapter currentReferencedAdapter=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
+    @Override public ObjectAdapter call() throws Exception {
+      return otoa.get(targetAdapter);
+    }
+  }
+) : otoa.get(targetAdapter);
   final Object currentReferencedObj=ObjectAdapter.Util.unwrap(currentReferencedAdapter);
   final PropertyAccessEvent ev=new PropertyAccessEvent(getDelegate(),otoa.getIdentifier(),currentReferencedObj);
   notifyListeners(ev);

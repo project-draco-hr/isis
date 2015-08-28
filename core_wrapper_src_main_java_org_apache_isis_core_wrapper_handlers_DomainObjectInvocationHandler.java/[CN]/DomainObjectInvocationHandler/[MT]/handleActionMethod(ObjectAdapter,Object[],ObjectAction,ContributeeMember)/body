@@ -37,7 +37,13 @@
     }
   }
   if (getExecutionMode().shouldExecute()) {
-    final ObjectAdapter actionReturnNO=objectAction.execute(targetAdapter,argAdapters);
+    final ObjectAdapter actionReturnNO=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
+      @Override public ObjectAdapter call() throws Exception {
+        return objectAction.execute(targetAdapter,argAdapters);
+      }
+    }
+) : objectAction.execute(targetAdapter,argAdapters);
+    ;
     return ObjectAdapter.Util.unwrap(actionReturnNO);
   }
   objectChangedIfRequired(targetAdapter);

@@ -2,7 +2,13 @@
   adapterMemento.resetVersion();
   for (  final PropertyMemento pm : propertyScalarModels.keySet()) {
     final ScalarModel scalarModel=propertyScalarModels.get(pm);
-    final ObjectAdapter associatedAdapter=pm.getProperty().get(getObject());
+    final ObjectAdapter adapter=getObject();
+    final ObjectAdapter associatedAdapter=InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
+      @Override public ObjectAdapter call() throws Exception {
+        return pm.getProperty().get(adapter);
+      }
+    }
+);
     scalarModel.setObject(associatedAdapter);
   }
 }

@@ -1,5 +1,6 @@
 {
-  final OneToOneAssociation property=scalarModel.propertyMemento.getProperty();
-  final ObjectAdapter associatedAdapter=property.get(scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK));
-  scalarModel.setObject(associatedAdapter);
+  final ObjectActionParameter actionParameter=scalarModel.parameterMemento.getActionParameter();
+  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final ObjectAdapter defaultAdapter=actionParameter.getDefault(parentAdapter);
+  scalarModel.setObject(defaultAdapter);
 }

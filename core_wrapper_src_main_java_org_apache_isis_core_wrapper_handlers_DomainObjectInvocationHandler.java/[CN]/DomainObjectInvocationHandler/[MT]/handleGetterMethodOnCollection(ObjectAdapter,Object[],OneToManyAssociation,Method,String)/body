@@ -6,16 +6,21 @@
     checkVisibility(targetAdapter,otma);
   }
   resolveIfRequired(targetAdapter);
-  final ObjectAdapter currentReferencedAdapter=otma.get(targetAdapter);
+  final ObjectAdapter currentReferencedAdapter=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
+    @Override public ObjectAdapter call() throws Exception {
+      return otma.get(targetAdapter);
+    }
+  }
+) : otma.get(targetAdapter);
   final Object currentReferencedObj=ObjectAdapter.Util.unwrap(currentReferencedAdapter);
   final CollectionAccessEvent ev=new CollectionAccessEvent(getDelegate(),otma.getIdentifier());
   if (currentReferencedObj instanceof Collection) {
-    final Collection<?> collectionViewObject=lookupViewObject(method,memberName,(Collection<?>)currentReferencedObj,otma);
+    final Collection<?> collectionViewObject=lookupWrappingObject(method,memberName,(Collection<?>)currentReferencedObj,otma);
     notifyListeners(ev);
     return collectionViewObject;
   }
  else   if (currentReferencedObj instanceof Map) {
-    final Map<?,?> mapViewObject=lookupViewObject(method,memberName,(Map<?,?>)currentReferencedObj,otma);
+    final Map<?,?> mapViewObject=lookupWrappingObject(memberName,(Map<?,?>)currentReferencedObj,otma);
     notifyListeners(ev);
     return mapViewObject;
   }
