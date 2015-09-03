@@ -1,12 +1,7 @@
 {
-  final PropertyMemento propertyMemento=scalarModel.getPropertyMemento();
-  final OneToOneAssociation property=propertyMemento.getProperty();
+  final ActionParameterMemento parameterMemento=scalarModel.getParameterMemento();
+  final ObjectActionParameter actionParameter=parameterMemento.getActionParameter();
   final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-  final ObjectAdapter[] choices=InteractionUtils.withFiltering(new Callable<ObjectAdapter[]>(){
-    @Override public ObjectAdapter[] call() throws Exception {
-      return property.getAutoComplete(parentAdapter,searchArg,authenticationSession,deploymentCategory,InteractionInitiatedBy.USER);
-    }
-  }
-);
+  final ObjectAdapter[] choices=actionParameter.getAutoComplete(parentAdapter,searchArg,InteractionInitiatedBy.USER);
   return choicesAsList(choices);
 }

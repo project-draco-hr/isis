@@ -7,12 +7,7 @@
   }
   resolveIfRequired(targetAdapter);
   final InteractionInitiatedBy interactionInitiatedBy=getInteractionInitiatedBy();
-  final ObjectAdapter currentReferencedAdapter=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
-    @Override public ObjectAdapter call() throws Exception {
-      return collection.get(targetAdapter,interactionInitiatedBy);
-    }
-  }
-) : collection.get(targetAdapter,interactionInitiatedBy);
+  final ObjectAdapter currentReferencedAdapter=collection.get(targetAdapter,interactionInitiatedBy);
   final Object currentReferencedObj=ObjectAdapter.Util.unwrap(currentReferencedAdapter);
   final CollectionAccessEvent ev=new CollectionAccessEvent(getDelegate(),collection.getIdentifier());
   if (currentReferencedObj instanceof Collection) {

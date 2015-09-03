@@ -1,12 +1,7 @@
 {
   final PropertyMemento propertyMemento=scalarModel.getPropertyMemento();
   final OneToOneAssociation property=propertyMemento.getProperty();
-  final ObjectAdapter[] choices=InteractionUtils.withFiltering(new Callable<ObjectAdapter[]>(){
-    @Override public ObjectAdapter[] call() throws Exception {
-      ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
-      return property.getChoices(parentAdapter,InteractionInitiatedBy.USER);
-    }
-  }
-);
+  ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final ObjectAdapter[] choices=property.getChoices(parentAdapter,InteractionInitiatedBy.USER);
   return choicesAsList(choices);
 }

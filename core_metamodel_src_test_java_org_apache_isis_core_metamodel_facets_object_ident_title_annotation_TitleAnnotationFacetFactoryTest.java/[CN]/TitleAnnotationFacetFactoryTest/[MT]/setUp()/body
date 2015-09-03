@@ -3,10 +3,26 @@
   facetFactory=context.getClassUnderTest();
   facetFactory.setAdapterManager(mockAdapterManager);
   facetFactory.setSpecificationLoader(mockSpecificationLoaderSpi);
+  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setDeploymentCategoryProvider(mockDeploymentCategoryProvider);
   context.checking(new Expectations(){
 {
       allowing(mockLocalizationProvider).getLocalization();
       will(returnValue(new LocalizationDefault()));
+    }
+  }
+);
+  context.checking(new Expectations(){
+{
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+    }
+  }
+);
+  context.checking(new Expectations(){
+{
+      allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
+      will(returnValue(mockAuthenticationSession));
     }
   }
 );

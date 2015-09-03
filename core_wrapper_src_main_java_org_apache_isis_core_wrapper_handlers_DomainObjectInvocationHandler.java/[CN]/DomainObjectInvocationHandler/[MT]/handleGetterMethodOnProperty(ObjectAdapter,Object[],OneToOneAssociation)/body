@@ -7,12 +7,7 @@
   }
   resolveIfRequired(targetAdapter);
   final InteractionInitiatedBy interactionInitiatedBy=getInteractionInitiatedBy();
-  final ObjectAdapter currentReferencedAdapter=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
-    @Override public ObjectAdapter call() throws Exception {
-      return property.get(targetAdapter,interactionInitiatedBy);
-    }
-  }
-) : property.get(targetAdapter,interactionInitiatedBy);
+  final ObjectAdapter currentReferencedAdapter=property.get(targetAdapter,interactionInitiatedBy);
   final Object currentReferencedObj=ObjectAdapter.Util.unwrap(currentReferencedAdapter);
   final PropertyAccessEvent ev=new PropertyAccessEvent(getDelegate(),property.getIdentifier(),currentReferencedObj);
   notifyListeners(ev);
