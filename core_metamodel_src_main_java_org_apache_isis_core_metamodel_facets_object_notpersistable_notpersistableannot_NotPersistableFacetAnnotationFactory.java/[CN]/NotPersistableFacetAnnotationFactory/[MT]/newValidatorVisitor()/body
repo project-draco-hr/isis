@@ -1,0 +1,15 @@
+{
+  return new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    final ObjectSpecification objectSpec,    final ValidationFailures validationFailures){
+      if (objectSpec.containsDoOpFacet(NotPersistableFacet.class)) {
+        final NotPersistableFacet notPersistableFacet=objectSpec.getFacet(NotPersistableFacet.class);
+        if (notPersistableFacet instanceof NotPersistableFacetAnnotation) {
+          final Class<?> type=NotPersistable.class;
+          validationFailures.add(String.format("%s is annotated with %s; this annotation is no longer supported",objectSpec.getFullIdentifier(),type.getSimpleName()));
+        }
+      }
+      return true;
+    }
+  }
+;
+}

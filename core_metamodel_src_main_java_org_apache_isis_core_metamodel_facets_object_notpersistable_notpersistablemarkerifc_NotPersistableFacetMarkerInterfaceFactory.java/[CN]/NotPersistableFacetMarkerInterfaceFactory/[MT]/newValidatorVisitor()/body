@@ -1,0 +1,16 @@
+{
+  return new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    final ObjectSpecification objectSpec,    final ValidationFailures validationFailures){
+      if (objectSpec.containsDoOpFacet(NotPersistableFacet.class)) {
+        final NotPersistableFacet notPersistableFacet=objectSpec.getFacet(NotPersistableFacet.class);
+        if (notPersistableFacet instanceof NotPersistableFacetMarkerInterface) {
+          final NotPersistable.By by=((NotPersistableFacetMarkerInterface)notPersistableFacet).value();
+          final Class<?> type=by == NotPersistable.By.USER ? ProgramPersistable.class : NonPersistable.class;
+          validationFailures.add(String.format("%s implements %s; this interface is no longer supported",objectSpec.getFullIdentifier(),type.getSimpleName()));
+        }
+      }
+      return true;
+    }
+  }
+;
+}
