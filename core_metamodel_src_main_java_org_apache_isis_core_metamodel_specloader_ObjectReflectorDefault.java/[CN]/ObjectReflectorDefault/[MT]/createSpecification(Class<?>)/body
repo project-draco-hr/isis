@@ -1,18 +1,16 @@
 {
-  final AuthenticationSessionProvider authenticationSessionProvider=getRuntimeContext().getAuthenticationSessionProvider();
   final SpecificationLoader specificationLookup=getRuntimeContext().getSpecificationLoader();
-  final ServicesProvider servicesProvider=getRuntimeContext().getServicesProvider();
+  final ServicesInjector servicesInjector=getRuntimeContext().getServicesInjector();
   final ObjectInstantiator objectInstantiator=getRuntimeContext().getObjectInstantiator();
-  final ObjectSpecificationDependencies specContext=new ObjectSpecificationDependencies(getDeploymentCategory(),servicesProvider,objectInstantiator,specificationLookup,facetProcessor);
-  final AdapterManager adapterMap=getRuntimeContext().getAdapterManager();
-  final ObjectMemberDependencies objectMemberDependencies=new ObjectMemberDependencies(specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),servicesProvider);
+  final AdapterManager adapterManager=getRuntimeContext().getAdapterManager();
+  final ObjectSpecificationDependencies specContext=new ObjectSpecificationDependencies(getDeploymentCategory(),servicesInjector,objectInstantiator,specificationLookup,facetProcessor,adapterManager);
+  final ObjectMemberDependencies objectMemberDependencies=new ObjectMemberDependencies(specificationLookup,adapterManager,getRuntimeContext().getQuerySubmitter(),servicesInjector);
   if (FreeStandingList.class.isAssignableFrom(cls)) {
     return new ObjectSpecificationOnStandaloneList(specContext,objectMemberDependencies);
   }
  else {
     final SpecificationLoaderSpi specificationLoader=this;
-    final ServicesInjector dependencyInjector=getRuntimeContext().getServicesInjector();
-    final CreateObjectContext createObjectContext=new CreateObjectContext(adapterMap,dependencyInjector);
+    final CreateObjectContext createObjectContext=new CreateObjectContext(adapterManager,servicesInjector);
     final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(specificationLoader,facetProcessor,layoutMetadataReaders);
     return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,specContext,objectMemberDependencies,createObjectContext);
   }
