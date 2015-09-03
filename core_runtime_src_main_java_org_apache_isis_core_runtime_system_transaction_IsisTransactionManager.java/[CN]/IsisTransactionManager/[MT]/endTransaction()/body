@@ -32,15 +32,6 @@
         LOG.debug("endTransaction: committing");
       }
       try {
-        persistenceSession.objectChangedAllDirty();
-      }
- catch (      RuntimeException ex) {
-        abortCause=ex;
-        transactionLevel=1;
-      }
-    }
-    if (abortCause == null) {
-      try {
         getTransaction().preCommit();
       }
  catch (      RuntimeException ex) {
