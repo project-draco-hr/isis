@@ -1,0 +1,12 @@
+{
+  if (collectionOrArray == null) {
+    return null;
+  }
+  final ObjectAdapter collectionAdapter=getAdapterManager().adapterFor(collectionOrArray);
+  final AuthenticationSession authenticationSession=getAuthenticationSession();
+  final DeploymentCategory deploymentCategory=getDeploymentCategory();
+  final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(collectionAdapter,authenticationSession,deploymentCategory,interactionInitiatedBy);
+  final List<Object> filteredObjects=Lists.newArrayList(Iterables.transform(visibleAdapters,ObjectAdapter.Functions.getObject()));
+  final ObjectSpecification parameterSpec=getSpecification(parameterType);
+  return CollectionUtils.getCollectionAsObjectArray(filteredObjects,parameterSpec,getAdapterManager());
+}

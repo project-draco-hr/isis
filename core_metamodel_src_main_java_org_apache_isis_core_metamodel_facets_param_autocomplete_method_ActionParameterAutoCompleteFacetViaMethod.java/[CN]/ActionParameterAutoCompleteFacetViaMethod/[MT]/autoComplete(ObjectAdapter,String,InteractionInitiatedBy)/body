@@ -1,0 +1,15 @@
+{
+  final Object collectionOrArray=ObjectAdapter.InvokeUtils.invoke(method,owningAdapter,searchArg);
+  if (collectionOrArray == null) {
+    return new Object[0];
+  }
+  final ObjectAdapter collectionAdapter=getAdapterManager().adapterFor(collectionOrArray);
+  final FacetedMethodParameter facetedMethodParameter=(FacetedMethodParameter)getFacetHolder();
+  final Class<?> parameterType=facetedMethodParameter.getType();
+  final AuthenticationSession authenticationSession=getAuthenticationSession();
+  final DeploymentCategory deploymentCategory=getDeploymentCategory();
+  final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(collectionAdapter,authenticationSession,deploymentCategory,interactionInitiatedBy);
+  final List<Object> visibleObjects=Lists.newArrayList(Iterables.transform(visibleAdapters,ObjectAdapter.Functions.getObject()));
+  final ObjectSpecification parameterSpec=getSpecification(parameterType);
+  return CollectionUtils.getCollectionAsObjectArray(visibleObjects,parameterSpec,getAdapterManager());
+}

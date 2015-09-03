@@ -1,0 +1,17 @@
+{
+  cacheRepositoryAndRepositoryActionIfRequired();
+  if (repositoryAction == null || repository == null) {
+    return Collections.emptyList();
+  }
+  final ObjectAdapter repositoryAdapter=adapterManager.getAdapterFor(repository);
+  final ObjectAdapter searchAdapter=adapterManager.adapterFor(search);
+  final ObjectAdapter resultAdapter=repositoryAction.execute(repositoryAdapter,new ObjectAdapter[]{searchAdapter},interactionInitiatedBy);
+  if (CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter) == null) {
+    return Collections.emptyList();
+  }
+  final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter);
+  final Iterable<ObjectAdapter> adapterList=facet.iterable(resultAdapter);
+  final AuthenticationSession authenticationSession=getAuthenticationSession();
+  final DeploymentCategory deploymentCategory=getDeploymentCategory();
+  return ObjectAdapter.Util.visibleAdapters(adapterList,authenticationSession,deploymentCategory,interactionInitiatedBy);
+}

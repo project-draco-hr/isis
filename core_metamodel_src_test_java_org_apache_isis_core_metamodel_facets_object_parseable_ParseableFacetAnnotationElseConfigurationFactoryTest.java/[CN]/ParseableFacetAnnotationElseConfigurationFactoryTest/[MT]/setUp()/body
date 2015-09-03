@@ -1,7 +1,21 @@
 {
   super.setUp();
+  mockDeploymentCategoryProvider=context.mock(DeploymentCategoryProvider.class);
+  mockAuthenticationSessionProvider=context.mock(AuthenticationSessionProvider.class);
+  final AuthenticationSession mockAuthenticationSession=context.mock(AuthenticationSession.class);
+  context.checking(new Expectations(){
+{
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
+      will(returnValue(mockAuthenticationSession));
+    }
+  }
+);
   facetFactory=new ParseableFacetAnnotationElseConfigurationFactory();
   isisConfigurationDefault=new IsisConfigurationDefault();
   facetFactory.setConfiguration(isisConfigurationDefault);
   facetFactory.setRuntimeContext(new RuntimeContextNoRuntime(DeploymentCategory.PRODUCTION));
+  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setDeploymentCategoryProvider(mockDeploymentCategoryProvider);
 }
