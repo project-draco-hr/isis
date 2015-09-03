@@ -1,0 +1,20 @@
+{
+  if (this.collectionAddToFacet == null) {
+    return;
+  }
+  if (!domainEventHelper.hasEventBusService()) {
+    collectionAddToFacet.add(targetAdapter,referencedObjectAdapter,interactionInitiatedBy);
+    return;
+  }
+  final Object referencedObject=ObjectAdapter.Util.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter,null,null,interactionInitiatedBy);
+  if (collection instanceof Set) {
+    Set<?> set=(Set<?>)collection;
+    if (set.contains(referencedObject)) {
+      return;
+    }
+  }
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
+  collectionAddToFacet.add(targetAdapter,referencedObjectAdapter,interactionInitiatedBy);
+  domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.EXECUTED,value(),verify(event),getIdentified(),targetAdapter,CollectionDomainEvent.Of.ADD_TO,referencedObject);
+}

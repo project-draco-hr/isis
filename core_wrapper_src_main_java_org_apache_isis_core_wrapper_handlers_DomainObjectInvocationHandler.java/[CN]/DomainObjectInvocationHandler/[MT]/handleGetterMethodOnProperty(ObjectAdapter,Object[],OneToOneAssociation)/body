@@ -3,17 +3,18 @@
     throw new IllegalArgumentException("Invoking a 'get' should have no arguments");
   }
   if (getExecutionMode().shouldEnforceRules()) {
-    checkVisibility(targetAdapter,otoa);
+    checkVisibility(targetAdapter,property);
   }
   resolveIfRequired(targetAdapter);
+  final InteractionInitiatedBy interactionInitiatedBy=getInteractionInitiatedBy();
   final ObjectAdapter currentReferencedAdapter=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
     @Override public ObjectAdapter call() throws Exception {
-      return otoa.get(targetAdapter);
+      return property.get(targetAdapter,interactionInitiatedBy);
     }
   }
-) : otoa.get(targetAdapter);
+) : property.get(targetAdapter,interactionInitiatedBy);
   final Object currentReferencedObj=ObjectAdapter.Util.unwrap(currentReferencedAdapter);
-  final PropertyAccessEvent ev=new PropertyAccessEvent(getDelegate(),otoa.getIdentifier(),currentReferencedObj);
+  final PropertyAccessEvent ev=new PropertyAccessEvent(getDelegate(),property.getIdentifier(),currentReferencedObj);
   notifyListeners(ev);
   return currentReferencedObj;
 }

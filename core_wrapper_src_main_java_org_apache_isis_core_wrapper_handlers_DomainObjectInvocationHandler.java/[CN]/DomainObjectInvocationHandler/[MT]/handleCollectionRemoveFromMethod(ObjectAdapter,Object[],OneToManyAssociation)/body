@@ -3,8 +3,8 @@
     throw new IllegalArgumentException("Invoking a removeFrom should only have a single argument");
   }
   if (getExecutionMode().shouldEnforceRules()) {
-    checkVisibility(targetAdapter,otma);
-    checkUsability(targetAdapter,otma);
+    checkVisibility(targetAdapter,collection);
+    checkUsability(targetAdapter,collection);
   }
   resolveIfRequired(targetAdapter);
   final Object argumentObj=underlying(args[0]);
@@ -13,11 +13,11 @@
   }
   final ObjectAdapter argumentAdapter=adapterFor(argumentObj);
   if (getExecutionMode().shouldEnforceRules()) {
-    final InteractionResult interactionResult=otma.isValidToRemove(targetAdapter,argumentAdapter).getInteractionResult();
+    final InteractionResult interactionResult=collection.isValidToRemove(targetAdapter,argumentAdapter,getInteractionInitiatedBy()).getInteractionResult();
     notifyListenersAndVetoIfRequired(interactionResult);
   }
   if (getExecutionMode().shouldExecute()) {
-    otma.removeElement(targetAdapter,argumentAdapter);
+    collection.removeElement(targetAdapter,argumentAdapter,getInteractionInitiatedBy());
   }
   objectChangedIfRequired(targetAdapter);
   return null;

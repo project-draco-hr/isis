@@ -3,24 +3,25 @@
     throw new IllegalArgumentException("Invoking a 'get' should have no arguments");
   }
   if (getExecutionMode().shouldEnforceRules()) {
-    checkVisibility(targetAdapter,otma);
+    checkVisibility(targetAdapter,collection);
   }
   resolveIfRequired(targetAdapter);
+  final InteractionInitiatedBy interactionInitiatedBy=getInteractionInitiatedBy();
   final ObjectAdapter currentReferencedAdapter=executionMode.shouldEnforceRules() ? InteractionUtils.withFiltering(new Callable<ObjectAdapter>(){
     @Override public ObjectAdapter call() throws Exception {
-      return otma.get(targetAdapter);
+      return collection.get(targetAdapter,interactionInitiatedBy);
     }
   }
-) : otma.get(targetAdapter);
+) : collection.get(targetAdapter,interactionInitiatedBy);
   final Object currentReferencedObj=ObjectAdapter.Util.unwrap(currentReferencedAdapter);
-  final CollectionAccessEvent ev=new CollectionAccessEvent(getDelegate(),otma.getIdentifier());
+  final CollectionAccessEvent ev=new CollectionAccessEvent(getDelegate(),collection.getIdentifier());
   if (currentReferencedObj instanceof Collection) {
-    final Collection<?> collectionViewObject=lookupWrappingObject(method,memberName,(Collection<?>)currentReferencedObj,otma);
+    final Collection<?> collectionViewObject=lookupWrappingObject(method,memberName,(Collection<?>)currentReferencedObj,collection);
     notifyListeners(ev);
     return collectionViewObject;
   }
  else   if (currentReferencedObj instanceof Map) {
-    final Map<?,?> mapViewObject=lookupWrappingObject(memberName,(Map<?,?>)currentReferencedObj,otma);
+    final Map<?,?> mapViewObject=lookupWrappingObject(memberName,(Map<?,?>)currentReferencedObj,collection);
     notifyListeners(ev);
     return mapViewObject;
   }

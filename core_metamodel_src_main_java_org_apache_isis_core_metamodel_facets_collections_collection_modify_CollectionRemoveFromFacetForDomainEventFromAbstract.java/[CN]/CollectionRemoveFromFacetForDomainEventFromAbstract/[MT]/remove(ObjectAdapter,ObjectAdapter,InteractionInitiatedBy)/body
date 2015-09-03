@@ -1,0 +1,17 @@
+{
+  if (this.collectionRemoveFromFacet == null) {
+    return;
+  }
+  if (!domainEventHelper.hasEventBusService()) {
+    collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter,interactionInitiatedBy);
+    return;
+  }
+  final Object referencedObject=ObjectAdapter.Util.unwrap(referencedObjectAdapter);
+  final Object collection=getterFacet.getProperty(targetAdapter,null,null,interactionInitiatedBy);
+  if (!((Collection<?>)collection).contains(referencedObject)) {
+    return;
+  }
+  final CollectionDomainEvent<?,?> event=domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,CollectionDomainEvent.Of.REMOVE_FROM,referencedObject);
+  collectionRemoveFromFacet.remove(targetAdapter,referencedObjectAdapter,interactionInitiatedBy);
+  domainEventHelper.postEventForCollection(AbstractDomainEvent.Phase.EXECUTED,value(),verify(event),getIdentified(),targetAdapter,CollectionDomainEvent.Of.REMOVE_FROM,referencedObject);
+}

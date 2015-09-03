@@ -11,7 +11,7 @@
       argAdapters.add(argAdapter);
       final ObjectActionParameter parameter=parameters.get(i);
       final Object argPojo=argAdapter != null ? argAdapter.getObject() : null;
-      final String reasonNotValid=parameter.isValid(objectAdapter,argPojo,null);
+      final String reasonNotValid=parameter.isValid(objectAdapter,argPojo,InteractionInitiatedBy.USER,null);
       if (reasonNotValid != null) {
         argRepr.mapPut("invalidReason",reasonNotValid);
         valid=false;
@@ -23,7 +23,7 @@
     }
   }
   final ObjectAdapter[] argArray=argAdapters.toArray(new ObjectAdapter[0]);
-  final Consent consent=action.isProposedArgumentSetValid(objectAdapter,argArray);
+  final Consent consent=action.isProposedArgumentSetValid(objectAdapter,argArray,InteractionInitiatedBy.USER);
   if (consent.isVetoed()) {
     arguments.mapPut("x-ro-invalidReason",consent.getReason());
     valid=false;

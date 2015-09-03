@@ -18,7 +18,7 @@
   if (!updateHelper.copyOverProperties(membersMap,ObjectAdapterUpdateHelper.Intent.PERSISTING_NEW)) {
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,"Illegal property value");
   }
-  final Consent validity=objectAdapter.getSpecification().isValid(objectAdapter);
+  final Consent validity=objectAdapter.getSpecification().isValid(objectAdapter,InteractionInitiatedBy.USER);
   if (validity.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,validity.getReason());
   }

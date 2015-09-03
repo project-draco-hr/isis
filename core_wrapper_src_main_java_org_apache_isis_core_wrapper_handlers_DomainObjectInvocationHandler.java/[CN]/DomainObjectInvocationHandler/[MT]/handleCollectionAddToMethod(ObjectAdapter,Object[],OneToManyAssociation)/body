@@ -13,11 +13,11 @@
   }
   final ObjectAdapter argumentNO=adapterFor(argumentObj);
   if (getExecutionMode().shouldEnforceRules()) {
-    final InteractionResult interactionResult=otma.isValidToAdd(targetAdapter,argumentNO).getInteractionResult();
+    final InteractionResult interactionResult=otma.isValidToAdd(targetAdapter,argumentNO,getInteractionInitiatedBy()).getInteractionResult();
     notifyListenersAndVetoIfRequired(interactionResult);
   }
   if (getExecutionMode().shouldExecute()) {
-    otma.addElement(targetAdapter,argumentNO);
+    otma.addElement(targetAdapter,argumentNO,getInteractionInitiatedBy());
   }
   objectChangedIfRequired(targetAdapter);
   return null;

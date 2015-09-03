@@ -1,5 +1,5 @@
 {
-  final ObjectAdapter collection=otma.get(objectAdapter);
+  final ObjectAdapter collection=otma.get(objectAdapter,InteractionInitiatedBy.FRAMEWORK);
   final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
   final List<ObjectAdapter> original=Lists.newArrayList();
   for (  final ObjectAdapter adapter : facet.iterable(collection)) {
@@ -12,16 +12,16 @@
       if (LOG.isDebugEnabled()) {
         LOG.debug("  association " + otma + " changed, added "+ elementAdapter.getOid());
       }
-      otma.addElement(objectAdapter,elementAdapter);
+      otma.addElement(objectAdapter,elementAdapter,InteractionInitiatedBy.FRAMEWORK);
     }
  else {
-      otma.removeElement(objectAdapter,elementAdapter);
+      otma.removeElement(objectAdapter,elementAdapter,InteractionInitiatedBy.FRAMEWORK);
     }
   }
   for (  final ObjectAdapter element : original) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("  association " + otma + " changed, removed "+ element.getOid());
     }
-    otma.removeElement(objectAdapter,element);
+    otma.removeElement(objectAdapter,element,InteractionInitiatedBy.FRAMEWORK);
   }
 }

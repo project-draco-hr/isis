@@ -1,0 +1,13 @@
+{
+  final Object objectOrCollection=ObjectAdapter.InvokeUtils.invoke(method,owningAdapter);
+  if (!(objectOrCollection instanceof Object[])) {
+    throw new DomainModelException(String.format("Expected an array of collections (Object[]) containing choices for all parameters, " + "but got %s instead. Perhaps the parameter number is missing?",objectOrCollection));
+  }
+  final Object[] options=(Object[])objectOrCollection;
+  final Object[][] results=new Object[options.length][];
+  for (int i=0; i < results.length; i++) {
+    final Class<?> parameterType=method.getParameterTypes()[i];
+    results[i]=handleResults(options[i],parameterType,authenticationSession,deploymentCategory,interactionInitiatedBy);
+  }
+  return results;
+}

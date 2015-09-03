@@ -1,14 +1,14 @@
 {
   final Where where=rendererContext.getWhere();
   final String memberId=objectMember.getId();
-  final AuthenticationSession authenticationSession=rendererContext.getAuthenticationSession();
-  if (objectMember.isVisible(authenticationSession,objectAdapter,where).isVetoed()) {
+  final Consent visibilityConsent=objectMember.isVisible(objectAdapter,InteractionInitiatedBy.USER,where);
+  if (visibilityConsent.isVetoed()) {
     throwNotFoundException(memberId,memberType);
   }
   if (intent.isMutate()) {
-    final Consent usable=objectMember.isUsable(authenticationSession,objectAdapter,where);
-    if (usable.isVetoed()) {
-      throw RestfulObjectsApplicationException.createWithMessage(RestfulResponse.HttpStatusCode.FORBIDDEN,usable.getReason());
+    final Consent usabilityConsent=objectMember.isUsable(objectAdapter,InteractionInitiatedBy.USER,where);
+    if (usabilityConsent.isVetoed()) {
+      throw RestfulObjectsApplicationException.createWithMessage(RestfulResponse.HttpStatusCode.FORBIDDEN,usabilityConsent.getReason());
     }
   }
   return objectMember;

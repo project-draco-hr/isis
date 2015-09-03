@@ -54,7 +54,7 @@
       LOG.debug("includeField(Pl, Vec, Str): field is 1->1");
     }
     final OneToOneAssociation oneToOneAssociation=((OneToOneAssociation)field);
-    final ObjectAdapter referencedObject=oneToOneAssociation.get(fieldPlace.getObject());
+    final ObjectAdapter referencedObject=oneToOneAssociation.get(fieldPlace.getObject(),InteractionInitiatedBy.FRAMEWORK);
     if (referencedObject == null) {
       return true;
     }
@@ -69,7 +69,7 @@
       LOG.debug("includeField(Pl, Vec, Str): field is 1->M");
     }
     final OneToManyAssociation oneToManyAssociation=(OneToManyAssociation)field;
-    final ObjectAdapter collection=oneToManyAssociation.get(fieldPlace.getObject());
+    final ObjectAdapter collection=oneToManyAssociation.get(fieldPlace.getObject(),InteractionInitiatedBy.FRAMEWORK);
     final CollectionFacet facet=collection.getSpecification().getFacet(CollectionFacet.class);
     if (LOG.isDebugEnabled()) {
       LOG.debug("includeField(Pl, Vec, Str): 1->M: " + log("collection.size","" + facet.size(collection)));

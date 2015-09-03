@@ -1,0 +1,11 @@
+{
+  final PropertyChoicesFacet propertyChoicesFacet=getFacet(PropertyChoicesFacet.class);
+  if (propertyChoicesFacet == null) {
+    return null;
+  }
+  final AuthenticationSession authenticationSession=getAuthenticationSession();
+  final DeploymentCategory deploymentCategory=getDeploymentCategory();
+  final Object[] pojoOptions=propertyChoicesFacet.getChoices(ownerAdapter,getSpecificationLoader(),authenticationSession,deploymentCategory,interactionInitiatedBy);
+  List<ObjectAdapter> adapters=Lists.transform(Lists.newArrayList(pojoOptions),ObjectAdapter.Functions.adapterForUsing(getAdapterManager()));
+  return adapters.toArray(new ObjectAdapter[]{});
+}

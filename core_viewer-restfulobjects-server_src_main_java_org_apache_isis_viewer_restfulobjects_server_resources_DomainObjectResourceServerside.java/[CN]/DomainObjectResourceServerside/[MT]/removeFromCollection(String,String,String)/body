@@ -6,10 +6,10 @@
   final OneToManyAssociation collection=accessHelper.getCollectionThatIsVisibleForIntent(collectionId,ObjectAdapterAccessHelper.Intent.MUTATE);
   final ObjectSpecification collectionSpec=collection.getSpecification();
   final ObjectAdapter argAdapter=new JsonParserHelper(getResourceContext(),collectionSpec).parseAsMapWithSingleValue(getResourceContext().getUrlUnencodedQueryString());
-  final Consent consent=collection.isValidToRemove(objectAdapter,argAdapter);
+  final Consent consent=collection.isValidToRemove(objectAdapter,argAdapter,InteractionInitiatedBy.USER);
   if (consent.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
-  collection.removeElement(objectAdapter,argAdapter);
+  collection.removeElement(objectAdapter,argAdapter,InteractionInitiatedBy.USER);
   return helper.collectionDetails(collectionId,MemberReprMode.WRITE);
 }

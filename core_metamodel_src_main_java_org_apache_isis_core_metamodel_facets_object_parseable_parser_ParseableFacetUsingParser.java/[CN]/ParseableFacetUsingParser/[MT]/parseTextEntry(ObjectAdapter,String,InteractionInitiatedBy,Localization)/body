@@ -1,0 +1,29 @@
+{
+  if (entry == null) {
+    throw new IllegalArgumentException("An entry must be provided");
+  }
+  if (getFacetHolder().containsFacet(ValueFacet.class)) {
+    final ObjectAdapter entryAdapter=getAdapterManager().adapterFor(entry);
+    final AuthenticationSession session=getAuthenticationSessionProvider().getAuthenticationSession();
+    final Identifier identifier=getIdentified().getIdentifier();
+    final ParseValueContext parseValueContext=new ParseValueContext(deploymentCategory,session,interactionInitiatedBy,contextAdapter,identifier,entryAdapter);
+    validate(parseValueContext);
+  }
+  final Object context=ObjectAdapter.Util.unwrap(contextAdapter);
+  getDependencyInjector().injectServicesInto(parser);
+  try {
+    final Object parsed=parser.parseTextEntry(context,entry,localization);
+    if (parsed == null) {
+      return null;
+    }
+    final ObjectAdapter adapter=getAdapterManager().adapterFor(parsed);
+    final ObjectSpecification specification=adapter.getSpecification();
+    final AuthenticationSession session=getAuthenticationSessionProvider().getAuthenticationSession();
+    final ObjectValidityContext validateContext=specification.createValidityInteractionContext(deploymentCategory,session,interactionInitiatedBy,adapter);
+    validate(validateContext);
+    return adapter;
+  }
+ catch (  final NumberFormatException|IllegalFormatException|ParsingException e) {
+    throw new TextEntryParseException(e.getMessage(),e);
+  }
+}

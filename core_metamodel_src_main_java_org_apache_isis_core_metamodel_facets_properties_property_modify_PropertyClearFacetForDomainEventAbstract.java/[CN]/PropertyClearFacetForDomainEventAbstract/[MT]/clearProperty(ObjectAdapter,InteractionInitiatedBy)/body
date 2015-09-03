@@ -1,0 +1,17 @@
+{
+  if (clearFacet == null) {
+    return;
+  }
+  if (!domainEventHelper.hasEventBusService()) {
+    clearFacet.clearProperty(targetAdapter,interactionInitiatedBy);
+    return;
+  }
+  final Object oldValue=getterFacet.getProperty(targetAdapter,null,null,interactionInitiatedBy);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,null);
+  clearFacet.clearProperty(targetAdapter,interactionInitiatedBy);
+  final Object actualNewValue=getterFacet.getProperty(targetAdapter,null,null,interactionInitiatedBy);
+  if (Objects.equal(oldValue,actualNewValue)) {
+    return;
+  }
+  domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTED,eventType(),verify(event),getIdentified(),targetAdapter,oldValue,actualNewValue);
+}

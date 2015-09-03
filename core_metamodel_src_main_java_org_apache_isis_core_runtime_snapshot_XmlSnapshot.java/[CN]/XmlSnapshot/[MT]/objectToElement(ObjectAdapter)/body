@@ -48,7 +48,7 @@
       final Element xmlValueElement=xmlFieldElement;
       ObjectAdapter value;
       try {
-        value=valueAssociation.get(adapter);
+        value=valueAssociation.get(adapter,InteractionInitiatedBy.FRAMEWORK);
         final ObjectSpecification valueNos=value.getSpecification();
         isisMetaModel.setAttributesForValue(xmlValueElement,valueNos.getShortIdentifier());
         String valueStr;
@@ -85,7 +85,7 @@
       final Element xmlReferenceElement=xmlFieldElement;
       ObjectAdapter referencedObjectAdapter;
       try {
-        referencedObjectAdapter=oneToOneAssociation.get(adapter);
+        referencedObjectAdapter=oneToOneAssociation.get(adapter,InteractionInitiatedBy.FRAMEWORK);
         isisMetaModel.setAttributesForReference(xmlReferenceElement,schema.getPrefix(),fullyQualifiedClassName);
         if (referencedObjectAdapter != null) {
           isisMetaModel.appendIsisTitle(xmlReferenceElement,referencedObjectAdapter.titleString());
@@ -107,7 +107,7 @@
       final Element xmlCollectionElement=xmlFieldElement;
       ObjectAdapter collection;
       try {
-        collection=oneToManyAssociation.get(adapter);
+        collection=oneToManyAssociation.get(adapter,InteractionInitiatedBy.FRAMEWORK);
         final ObjectSpecification referencedTypeNos=oneToManyAssociation.getSpecification();
         final String fullyQualifiedClassName=referencedTypeNos.getFullIdentifier();
         isisMetaModel.setIsisCollection(xmlCollectionElement,schema.getPrefix(),fullyQualifiedClassName,collection);

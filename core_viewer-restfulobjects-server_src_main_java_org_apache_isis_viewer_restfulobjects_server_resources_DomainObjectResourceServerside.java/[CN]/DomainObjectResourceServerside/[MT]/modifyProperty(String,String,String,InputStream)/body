@@ -7,10 +7,10 @@
   final ObjectSpecification propertySpec=property.getSpecification();
   final String bodyAsString=Util.asStringUtf8(body);
   final ObjectAdapter argAdapter=new JsonParserHelper(getResourceContext(),propertySpec).parseAsMapWithSingleValue(bodyAsString);
-  final Consent consent=property.isAssociationValid(objectAdapter,argAdapter);
+  final Consent consent=property.isAssociationValid(objectAdapter,argAdapter,InteractionInitiatedBy.USER);
   if (consent.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
-  property.set(objectAdapter,argAdapter);
+  property.set(objectAdapter,argAdapter,InteractionInitiatedBy.USER);
   return helper.propertyDetails(propertyId,MemberReprMode.WRITE);
 }

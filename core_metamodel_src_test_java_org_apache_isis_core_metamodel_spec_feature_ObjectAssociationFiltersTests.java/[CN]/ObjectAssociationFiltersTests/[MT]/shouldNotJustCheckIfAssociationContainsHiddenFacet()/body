@@ -2,10 +2,10 @@
   context.checking(new Expectations(){
 {
       never(mockAssociation).containsFacet(HiddenFacet.class);
-      allowing(mockAssociation).isVisible(with(any(AuthenticationSession.class)),with(any(ObjectAdapter.class)),with(equalTo(Where.ANYWHERE)));
+      allowing(mockAssociation).isVisible(with(any(ObjectAdapter.class)),InteractionInitiatedBy.USER,with(equalTo(Where.ANYWHERE)));
     }
   }
 );
-  final Filter<ObjectAssociation> filter=ObjectAssociation.Filters.dynamicallyVisible(mockSession,mockTarget,Where.ANYWHERE);
+  final Filter<ObjectAssociation> filter=ObjectAssociation.Filters.dynamicallyVisible(mockTarget,InteractionInitiatedBy.USER,Where.ANYWHERE);
   filter.accept(mockAssociation);
 }

@@ -10,10 +10,10 @@
   final ObjectSpecification collectionSpec=collection.getSpecification();
   final String bodyAsString=Util.asStringUtf8(body);
   final ObjectAdapter argAdapter=new JsonParserHelper(getResourceContext(),collectionSpec).parseAsMapWithSingleValue(bodyAsString);
-  final Consent consent=collection.isValidToAdd(objectAdapter,argAdapter);
+  final Consent consent=collection.isValidToAdd(objectAdapter,argAdapter,InteractionInitiatedBy.USER);
   if (consent.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
-  collection.addElement(objectAdapter,argAdapter);
+  collection.addElement(objectAdapter,argAdapter,InteractionInitiatedBy.USER);
   return helper.collectionDetails(collectionId,MemberReprMode.WRITE);
 }

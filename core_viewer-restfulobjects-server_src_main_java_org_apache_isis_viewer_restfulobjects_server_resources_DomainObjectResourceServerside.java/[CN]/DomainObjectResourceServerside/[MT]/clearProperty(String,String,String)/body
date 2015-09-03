@@ -4,10 +4,10 @@
   final DomainResourceHelper helper=getDomainResourceHelper(objectAdapter);
   final ObjectAdapterAccessHelper accessHelper=new ObjectAdapterAccessHelper(getResourceContext(),objectAdapter);
   final OneToOneAssociation property=accessHelper.getPropertyThatIsVisibleForIntent(propertyId,ObjectAdapterAccessHelper.Intent.MUTATE);
-  final Consent consent=property.isAssociationValid(objectAdapter,null);
+  final Consent consent=property.isAssociationValid(objectAdapter,null,InteractionInitiatedBy.USER);
   if (consent.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithMessage(HttpStatusCode.UNAUTHORIZED,consent.getReason());
   }
-  property.set(objectAdapter,null);
+  property.set(objectAdapter,null,InteractionInitiatedBy.USER);
   return helper.propertyDetails(propertyId,MemberReprMode.WRITE);
 }

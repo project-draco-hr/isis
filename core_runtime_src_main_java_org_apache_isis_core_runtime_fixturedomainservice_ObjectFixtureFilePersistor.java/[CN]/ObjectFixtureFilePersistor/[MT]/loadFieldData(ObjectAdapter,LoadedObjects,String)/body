@@ -8,8 +8,9 @@
   try {
     final ObjectAssociation association=object.getSpecification().getAssociation(name);
     if (data.trim().length() == 0) {
-      if (!association.isEmpty(object) && association instanceof OneToOneAssociation) {
-        ((OneToOneAssociation)association).set(object,null);
+      if (association instanceof OneToOneAssociation && !association.isEmpty(object,InteractionInitiatedBy.FRAMEWORK)) {
+        final OneToOneAssociation property=(OneToOneAssociation)association;
+        property.set(object,null,InteractionInitiatedBy.FRAMEWORK);
       }
     }
  else {
@@ -19,14 +20,14 @@
         for (int i=0; i < ids.length; i++) {
           elements[i]=loaded.get(ids[i]);
         }
-        final ObjectAdapter collection=association.get(object);
+        final ObjectAdapter collection=association.get(object,InteractionInitiatedBy.FRAMEWORK);
         final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(collection);
         facet.init(collection,elements);
       }
  else       if (association.getSpecification().isParseable()) {
         data=data.replaceAll("\\n","\n");
         final ParseableFacet facet=association.getSpecification().getFacet(ParseableFacet.class);
-        final ObjectAdapter value=facet.parseTextEntry(null,data,null);
+        final ObjectAdapter value=facet.parseTextEntry(null,data,InteractionInitiatedBy.FRAMEWORK,null);
         ((OneToOneAssociation)association).initAssociation(object,value);
       }
  else       if (association.isOneToOneAssociation()) {

@@ -4,10 +4,10 @@
     final List<ObjectAssociation> fields=adapter.getSpecification().getAssociations(Contributed.EXCLUDED);
     for (int i=0; i < fields.size(); i++) {
       final ObjectAssociation field=fields.get(i);
-      final ObjectAdapter obj=field.get(adapter);
+      final ObjectAdapter obj=field.get(adapter,InteractionInitiatedBy.FRAMEWORK);
       final String name=field.getId();
       graphIndent(level,s);
-      if (field.isVisible(authenticationSession,adapter,where).isVetoed()) {
+      if (field.isVisible(adapter,InteractionInitiatedBy.FRAMEWORK,where).isVetoed()) {
         s.append(name + ": (not visible)");
         s.append("\n");
       }

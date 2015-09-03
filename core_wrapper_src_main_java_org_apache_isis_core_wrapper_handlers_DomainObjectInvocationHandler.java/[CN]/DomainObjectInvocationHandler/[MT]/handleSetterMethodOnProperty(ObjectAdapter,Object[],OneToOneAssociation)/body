@@ -4,17 +4,17 @@
   }
   final Object argumentObj=underlying(args[0]);
   if (getExecutionMode().shouldEnforceRules()) {
-    checkVisibility(targetAdapter,otoa);
-    checkUsability(targetAdapter,otoa);
+    checkVisibility(targetAdapter,property);
+    checkUsability(targetAdapter,property);
   }
   final ObjectAdapter argumentAdapter=argumentObj != null ? adapterFor(argumentObj) : null;
   resolveIfRequired(targetAdapter);
   if (getExecutionMode().shouldEnforceRules()) {
-    final InteractionResult interactionResult=otoa.isAssociationValid(targetAdapter,argumentAdapter).getInteractionResult();
+    final InteractionResult interactionResult=property.isAssociationValid(targetAdapter,argumentAdapter,getInteractionInitiatedBy()).getInteractionResult();
     notifyListenersAndVetoIfRequired(interactionResult);
   }
   if (getExecutionMode().shouldExecute()) {
-    otoa.set(targetAdapter,argumentAdapter);
+    property.set(targetAdapter,argumentAdapter,getInteractionInitiatedBy());
   }
   objectChangedIfRequired(targetAdapter);
   return null;

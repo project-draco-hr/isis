@@ -4,11 +4,11 @@
   final Consent validityConsent=new Allow(new InteractionResult(new PropertyModifyEvent(employeeDO,mockPasswordIdentifier,passwordValue)));
   context.checking(new Expectations(){
 {
-      allowing(mockPasswordMember).isVisible(session,mockEmployeeAdapter,Where.ANYWHERE);
+      allowing(mockPasswordMember).isVisible(mockEmployeeAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE);
       will(returnValue(visibilityConsent));
-      allowing(mockPasswordMember).isUsable(session,mockEmployeeAdapter,Where.ANYWHERE);
+      allowing(mockPasswordMember).isUsable(mockEmployeeAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE);
       will(returnValue(usabilityConsent));
-      allowing(mockPasswordMember).isAssociationValid(mockEmployeeAdapter,mockPasswordAdapter);
+      allowing(mockPasswordMember).isAssociationValid(mockEmployeeAdapter,mockPasswordAdapter,InteractionInitiatedBy.USER);
       will(returnValue(validityConsent));
     }
   }
@@ -18,7 +18,7 @@
 {
       allowing(mockPasswordMember).getFacets(with(any(Filter.class)));
       will(returnValue(facets));
-      oneOf(mockPasswordMember).set(mockEmployeeAdapter,mockPasswordAdapter);
+      oneOf(mockPasswordMember).set(mockEmployeeAdapter,mockPasswordAdapter,InteractionInitiatedBy.USER);
     }
   }
 );
@@ -28,7 +28,7 @@
 {
       allowing(mockPasswordMember).getFacets(with(any(Filter.class)));
       will(returnValue(facets));
-      oneOf(mockPasswordMember).get(mockEmployeeAdapter);
+      oneOf(mockPasswordMember).get(mockEmployeeAdapter,InteractionInitiatedBy.USER);
       will(returnValue(mockPasswordAdapter));
     }
   }

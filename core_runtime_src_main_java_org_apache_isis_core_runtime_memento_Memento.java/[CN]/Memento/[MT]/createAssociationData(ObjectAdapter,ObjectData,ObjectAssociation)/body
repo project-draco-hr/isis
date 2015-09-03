@@ -1,16 +1,16 @@
 {
   Object assocData;
   if (objectAssoc.isOneToManyAssociation()) {
-    final ObjectAdapter collAdapter=objectAssoc.get(adapter);
+    final ObjectAdapter collAdapter=objectAssoc.get(adapter,InteractionInitiatedBy.FRAMEWORK);
     assocData=createCollectionData(collAdapter);
   }
  else   if (objectAssoc.getSpecification().isEncodeable()) {
     final EncodableFacet facet=objectAssoc.getSpecification().getFacet(EncodableFacet.class);
-    final ObjectAdapter value=objectAssoc.get(adapter);
+    final ObjectAdapter value=objectAssoc.get(adapter,InteractionInitiatedBy.FRAMEWORK);
     assocData=facet.toEncodedString(value);
   }
  else   if (objectAssoc.isOneToOneAssociation()) {
-    final ObjectAdapter referencedAdapter=((OneToOneAssociation)objectAssoc).get(adapter);
+    final ObjectAdapter referencedAdapter=objectAssoc.get(adapter,InteractionInitiatedBy.FRAMEWORK);
     assocData=createReferenceData(referencedAdapter);
   }
  else {
