@@ -1,5 +1,5 @@
 {
-  objectMemberContext=new ObjectMemberContext(DeploymentCategory.PRODUCTION,mockAuthenticationSessionProvider,mockSpecificationLoader,mockAdapterManager,mockQuerySubmitter,mockServicesProvider);
+  objectMemberDependencies=new ObjectMemberDependencies(mockSpecificationLoader,mockAdapterManager,mockQuerySubmitter,mockServicesProvider);
   employeeRepository=new EmployeeRepositoryImpl();
   employeeDO=new Employee();
   employeeDO.setName("Smith");
@@ -25,7 +25,7 @@
   final Method employeeDisableNameMethod=methodOf(Employee.class,"disableName");
   final Method employeeValidateNameMethod=methodOf(Employee.class,"validateName",String.class);
   final Method employeeClearNameMethod=methodOf(Employee.class,"clearName");
-  employeeNameMember=new OneToOneAssociationImpl(facetedMethodForProperty(employeeSetNameMethod,employeeGetNameMethod,employeeModifyNameMethod,employeeClearNameMethod,employeeHideNameMethod,employeeDisableNameMethod,employeeValidateNameMethod),objectMemberContext);
+  employeeNameMember=new OneToOneAssociationImpl(facetedMethodForProperty(employeeSetNameMethod,employeeGetNameMethod,employeeModifyNameMethod,employeeClearNameMethod,employeeHideNameMethod,employeeDisableNameMethod,employeeValidateNameMethod),objectMemberDependencies);
   context.checking(new Expectations(){
 {
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();

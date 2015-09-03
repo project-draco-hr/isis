@@ -3,17 +3,17 @@
   final SpecificationLoader specificationLookup=getRuntimeContext().getSpecificationLoader();
   final ServicesProvider servicesProvider=getRuntimeContext().getServicesProvider();
   final ObjectInstantiator objectInstantiator=getRuntimeContext().getObjectInstantiator();
-  final SpecificationContext specContext=new SpecificationContext(getDeploymentCategory(),authenticationSessionProvider,servicesProvider,objectInstantiator,specificationLookup,facetProcessor);
+  final ObjectSpecificationDependencies specContext=new ObjectSpecificationDependencies(getDeploymentCategory(),servicesProvider,objectInstantiator,specificationLookup,facetProcessor);
   final AdapterManager adapterMap=getRuntimeContext().getAdapterManager();
-  final ObjectMemberContext objectMemberContext=new ObjectMemberContext(getDeploymentCategory(),authenticationSessionProvider,specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),servicesProvider);
+  final ObjectMemberDependencies objectMemberDependencies=new ObjectMemberDependencies(specificationLookup,adapterMap,getRuntimeContext().getQuerySubmitter(),servicesProvider);
   if (FreeStandingList.class.isAssignableFrom(cls)) {
-    return new ObjectSpecificationOnStandaloneList(specContext,objectMemberContext);
+    return new ObjectSpecificationOnStandaloneList(specContext,objectMemberDependencies);
   }
  else {
     final SpecificationLoaderSpi specificationLoader=this;
     final ServicesInjector dependencyInjector=getRuntimeContext().getServicesInjector();
     final CreateObjectContext createObjectContext=new CreateObjectContext(adapterMap,dependencyInjector);
     final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(specificationLoader,facetProcessor,layoutMetadataReaders);
-    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,specContext,objectMemberContext,createObjectContext);
+    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,specContext,objectMemberDependencies,createObjectContext);
   }
 }
