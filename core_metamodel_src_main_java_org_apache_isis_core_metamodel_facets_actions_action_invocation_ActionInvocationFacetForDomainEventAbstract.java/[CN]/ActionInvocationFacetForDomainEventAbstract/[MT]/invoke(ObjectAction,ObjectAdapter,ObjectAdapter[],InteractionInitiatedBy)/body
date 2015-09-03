@@ -18,14 +18,14 @@
     if (result instanceof Collection || result.getClass().isArray()) {
       final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(invocationResultAdapter);
       final Iterable<ObjectAdapter> adapterList=facet.iterable(invocationResultAdapter);
-      final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(adapterList,session,deploymentCategory,interactionInitiatedBy);
+      final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(adapterList,interactionInitiatedBy);
       final Object visibleObjects=CollectionUtils.copyOf(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()),method.getReturnType());
       if (visibleObjects != null) {
         return getAdapterManager().adapterFor(visibleObjects);
       }
     }
  else {
-      boolean visible=ObjectAdapter.Util.isVisible(invocationResultAdapter,session,deploymentCategory,interactionInitiatedBy);
+      boolean visible=ObjectAdapter.Util.isVisible(invocationResultAdapter,interactionInitiatedBy);
       if (!visible) {
         return null;
       }

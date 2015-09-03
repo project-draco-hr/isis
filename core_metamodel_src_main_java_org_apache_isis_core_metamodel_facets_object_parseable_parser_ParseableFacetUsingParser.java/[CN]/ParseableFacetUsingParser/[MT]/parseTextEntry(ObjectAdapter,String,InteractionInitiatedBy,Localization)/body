@@ -4,9 +4,8 @@
   }
   if (getFacetHolder().containsFacet(ValueFacet.class)) {
     final ObjectAdapter entryAdapter=getAdapterManager().adapterFor(entry);
-    final AuthenticationSession session=getAuthenticationSessionProvider().getAuthenticationSession();
     final Identifier identifier=getIdentified().getIdentifier();
-    final ParseValueContext parseValueContext=new ParseValueContext(deploymentCategory,session,interactionInitiatedBy,contextAdapter,identifier,entryAdapter);
+    final ParseValueContext parseValueContext=new ParseValueContext(contextAdapter,identifier,entryAdapter,interactionInitiatedBy);
     validate(parseValueContext);
   }
   final Object context=ObjectAdapter.Util.unwrap(contextAdapter);
@@ -18,8 +17,7 @@
     }
     final ObjectAdapter adapter=getAdapterManager().adapterFor(parsed);
     final ObjectSpecification specification=adapter.getSpecification();
-    final AuthenticationSession session=getAuthenticationSessionProvider().getAuthenticationSession();
-    final ObjectValidityContext validateContext=specification.createValidityInteractionContext(deploymentCategory,session,interactionInitiatedBy,adapter);
+    final ObjectValidityContext validateContext=specification.createValidityInteractionContext(adapter,interactionInitiatedBy);
     validate(validateContext);
     return adapter;
   }
