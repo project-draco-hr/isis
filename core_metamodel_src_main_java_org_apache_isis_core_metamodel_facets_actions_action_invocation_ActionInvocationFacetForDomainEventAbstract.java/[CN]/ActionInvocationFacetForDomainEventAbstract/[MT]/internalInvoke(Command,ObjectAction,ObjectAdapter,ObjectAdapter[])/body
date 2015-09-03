@@ -122,7 +122,7 @@ catch (  final InvocationTargetException e) {
       throw new ReflectiveActionException("IllegalStateException thrown while executing " + method + " "+ targetException.getMessage(),targetException);
     }
     if (targetException instanceof RecoverableException) {
-      if (!runtimeContext.getTransactionState().canCommit()) {
+      if (!getTransactionState().canCommit()) {
         final Throwable targetExceptionCause=targetException.getCause();
         Throwable nonRecoverableCause=targetExceptionCause != null ? targetExceptionCause : targetException;
         String message=nonRecoverableCause.getMessage();
