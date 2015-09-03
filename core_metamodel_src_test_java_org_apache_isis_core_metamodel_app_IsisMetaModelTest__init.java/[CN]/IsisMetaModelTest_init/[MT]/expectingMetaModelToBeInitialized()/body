@@ -18,8 +18,13 @@
       will(returnValue(mockServicesProvider));
       allowing(mockRuntimeContext).getObjectInstantiator();
       will(returnValue(mockObjectInstantiator));
-      allowing(mockRuntimeContext).getDeploymentCategory();
-      will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockRuntimeContext).getDeploymentCategoryProvider();
+      will(returnValue(new DeploymentCategoryProviderAbstract(){
+        @Override public DeploymentCategory getDeploymentCategory(){
+          return DeploymentCategory.PRODUCTION;
+        }
+      }
+));
       oneOf(mockProgrammingModelFacets).init();
       inSequence(initSequence);
       oneOf(mockProgrammingModelFacets).getList();
