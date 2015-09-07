@@ -1,13 +1,13 @@
 {
-  if (!isParented()) {
+  if (!isParentedCollection()) {
     return this;
   }
-  ParentedOid parentedOid=(ParentedOid)oid;
-  final Oid parentOid=parentedOid.getParentOid();
-  ObjectAdapter parentAdapter=objectAdapterLookup.getAdapterFor(parentOid);
-  if (parentAdapter == null) {
-    final Oid parentOidNowPersisted=getPersistenceSession().remappedFrom(parentOid);
-    parentAdapter=objectAdapterLookup.getAdapterFor(parentOidNowPersisted);
+  ParentedCollectionOid collectionOid=(ParentedCollectionOid)oid;
+  final Oid rootOid=collectionOid.getRootOid();
+  ObjectAdapter rootadapter=adapterManager.getAdapterFor(rootOid);
+  if (rootadapter == null) {
+    final Oid parentOidNowPersisted=getPersistenceSession().remappedFrom(rootOid);
+    rootadapter=adapterManager.getAdapterFor(parentOidNowPersisted);
   }
-  return parentAdapter;
+  return rootadapter;
 }

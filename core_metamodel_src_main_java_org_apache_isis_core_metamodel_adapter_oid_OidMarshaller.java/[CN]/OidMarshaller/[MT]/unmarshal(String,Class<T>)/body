@@ -14,7 +14,6 @@
  else {
     state=State.PERSISTENT;
   }
-  final String rootOidStr=getGroup(matcher,2);
   final String rootObjectType=getGroup(matcher,4);
   final String rootIdentifier=getGroup(matcher,5);
   final String aggregateOidPart=getGroup(matcher,6);
@@ -41,8 +40,8 @@
   final Version version=Version.create(versionSequence,versionUser,versionUtcTimestamp);
   if (collectionName == null) {
     if (aggregateOidParts.isEmpty()) {
-      ensureCorrectType(oidStr,requestedType,RootOidDefault.class);
-      return (T)new RootOidDefault(ObjectSpecId.of(rootObjectType),rootIdentifier,state,version);
+      ensureCorrectType(oidStr,requestedType,RootOid.class);
+      return (T)new RootOid(ObjectSpecId.of(rootObjectType),rootIdentifier,state,version);
     }
  else {
       throw new RuntimeException("Aggregated Oids are no longer supported");
@@ -51,8 +50,8 @@
  else {
     final String oidStrWithoutCollectionName=getGroup(matcher,1);
     final String parentOidStr=oidStrWithoutCollectionName + marshal(version);
-    TypedOid parentOid=this.unmarshal(parentOidStr,TypedOid.class);
-    ensureCorrectType(oidStr,requestedType,CollectionOid.class);
-    return (T)new CollectionOid(parentOid,collectionName);
+    RootOid parentOid=this.unmarshal(parentOidStr,RootOid.class);
+    ensureCorrectType(oidStr,requestedType,ParentedCollectionOid.class);
+    return (T)new ParentedCollectionOid(parentOid,collectionName);
   }
 }

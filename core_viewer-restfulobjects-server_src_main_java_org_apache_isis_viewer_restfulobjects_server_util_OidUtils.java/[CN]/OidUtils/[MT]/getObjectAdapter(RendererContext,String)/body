@@ -1,5 +1,5 @@
 {
-  RootOidDefault rootOid=RootOidDefault.deString(oidStrUnencoded,getOidMarshaller());
+  RootOid rootOid=RootOid.deString(oidStrUnencoded,getOidMarshaller());
   final ObjectSpecId specId=rootOid.getObjectSpecId();
   final ObjectSpecification spec=IsisContext.getSpecificationLoader().lookupBySpecId(specId);
   if (spec == null) {
@@ -8,7 +8,7 @@
   final PersistenceSession persistenceSession=rendererContext.getPersistenceSession();
   if (spec.containsFacet(ViewModelFacet.class)) {
     if (!rootOid.isViewModel()) {
-      rootOid=new RootOidDefault(rootOid.getObjectSpecId(),rootOid.getIdentifier(),Oid.State.VIEWMODEL);
+      rootOid=new RootOid(rootOid.getObjectSpecId(),rootOid.getIdentifier(),Oid.State.VIEWMODEL);
     }
     try {
       return persistenceSession.getAdapterManager().adapterFor(rootOid);
