@@ -1,0 +1,12 @@
+{
+  metaModelValidator.add(new MetaModelValidatorVisiting(new MetaModelValidatorVisiting.Visitor(){
+    @Override public boolean visit(    final ObjectSpecification objectSpec,    final ValidationFailures validationFailures){
+      final ParentedFacet parentedFacet=objectSpec.getFacet(ParentedFacet.class);
+      if (parentedFacet != null && parentedFacet instanceof ParentedFacetSinceAggregatedAnnotation) {
+        validationFailures.add("%s has @Aggregated annotation, which is no longer supported.",objectSpec.getIdentifier().getClassName());
+      }
+      return true;
+    }
+  }
+));
+}

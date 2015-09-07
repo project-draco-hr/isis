@@ -10,16 +10,5 @@
     }
     return;
   }
-  final Oid oid=adapter.getOid();
-  if (oid instanceof AggregatedOid) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("; aggregated - resolving parent");
-    }
-    final AggregatedOid aggregatedOid=(AggregatedOid)oid;
-    final TypedOid parentOid=aggregatedOid.getParentOid();
-    final ObjectAdapter parentAdapter=loadInstanceAndAdapt(parentOid);
-    resolveImmediately(parentAdapter);
-    return;
-  }
   refreshRoot(adapter);
 }

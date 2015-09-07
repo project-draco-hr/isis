@@ -4,14 +4,6 @@
   if (existingOrValueAdapter != null) {
     return existingOrValueAdapter;
   }
-  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
-  final ObjectAdapter newAdapter;
-  if (isAggregated(objSpec)) {
-    final AggregatedOid aggregatedOid=getOidGenerator().createAggregateOid(pojo,parentAdapter);
-    newAdapter=createAggregatedAdapter(pojo,aggregatedOid);
-  }
- else {
-    newAdapter=createTransientOrViewModelRootAdapter(pojo);
-  }
+  final ObjectAdapter newAdapter=createTransientOrViewModelRootAdapter(pojo);
   return mapAndInjectServices(newAdapter);
 }
