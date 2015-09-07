@@ -8,8 +8,6 @@
       LOG.debug("make persistent " + adapter);
     }
     toPersistObjectSet.remapAsPersistent(adapter);
-    final ResolveState stateWhilePersisting=ResolveState.UPDATING;
-    adapter.changeState(stateWhilePersisting);
     for (int i=0; i < associations.size(); i++) {
       final ObjectAssociation objectAssoc=associations.get(i);
       if (objectAssoc.isNotPersisted()) {
@@ -31,6 +29,5 @@
       }
     }
     toPersistObjectSet.addCreateObjectCommand(adapter);
-    adapter.changeState(stateWhilePersisting.getEndState());
   }
 }

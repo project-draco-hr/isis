@@ -1,13 +1,6 @@
 {
 synchronized (getAuthenticationSession()) {
-    if (!adapter.canTransitionToResolving()) {
-      return;
-    }
-    Assert.assertFalse("only resolve object that is not yet resolved",adapter,adapter.isResolved());
     Assert.assertTrue("only resolve object that is persistent",adapter,adapter.representsPersistent());
     resolveImmediatelyFromPersistenceLayer(adapter);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("resolved: " + adapter.getSpecification().getShortIdentifier() + " "+ adapter.getResolveState().code()+ " "+ adapter.getOid());
-    }
   }
 }

@@ -1,3 +1,21 @@
 {
-  return aggregateResolveState().isTransient();
+  if (getSpecification().isService()) {
+    return false;
+  }
+  if (getSpecification().isViewModel()) {
+    return false;
+  }
+  if (pojo instanceof Persistable) {
+    final Persistable pojo=(Persistable)this.pojo;
+    final boolean isNew=pojo.dnIsNew();
+    final boolean isPersistent=pojo.dnIsPersistent();
+    final boolean isDirty=pojo.dnIsDirty();
+    final boolean isDeleted=pojo.dnIsDeleted();
+    final boolean isDetached=pojo.dnIsDetached();
+    final boolean isTransactional=pojo.dnIsTransactional();
+    if (!isPersistent && !isDeleted) {
+      return true;
+    }
+  }
+  return false;
 }

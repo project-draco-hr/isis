@@ -38,18 +38,7 @@
           CallbackFacet.Util.callCallback(adapter,LoadedCallbackFacet.class);
         }
       }
-      if (!adapter.isResolved()) {
-        if (!adapter.isDestroyed()) {
-          PersistorUtil.startResolving(adapter);
-          PersistorUtil.toEndState(adapter);
-        }
-      }
       adapter.setVersion(datastoreVersion);
-      if (pojo.dnIsDeleted()) {
-        if (!adapter.isDestroyed()) {
-          adapter.changeState(ResolveState.DESTROYED);
-        }
-      }
       ensureFrameworksInAgreement(pojo);
     }
   }
