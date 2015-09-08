@@ -1,0 +1,20 @@
+{
+  ensureThatArg(persistenceSessionFactory,is(not(nullValue())),"persistence session factory required");
+  this.configuration=configuration;
+  this.specificationLoader=specificationLoader;
+  this.authenticationSession=authenticationSession;
+  this.persistenceSessionFactory=persistenceSessionFactory;
+  this.objectStore=objectStore;
+  this.servicesInjector=persistenceSessionFactory.getServicesInjector();
+  this.objectFactory=new ObjectFactory(this,servicesInjector);
+  this.objectAdapterFactory=new PojoAdapterFactory();
+  this.oidGenerator=new OidGenerator(this,specificationLoader);
+  this.adapterManager=new AdapterManagerDefault();
+  this.persistAlgorithm=new PersistAlgorithm();
+  this.persistenceQueryFactory=new PersistenceQueryFactory(getSpecificationLoader(),adapterManager);
+  this.transactionManager=new IsisTransactionManager(this,objectStore,servicesInjector);
+  setState(State.NOT_INITIALIZED);
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("creating " + this);
+  }
+}

@@ -1,0 +1,9 @@
+{
+  final ObjectSpecification spec=objectSpecFor(pojo);
+  if (spec.isService()) {
+    return newRootId(spec,"1",type);
+  }
+  final ViewModelFacet recreatableObjectFacet=spec.getFacet(ViewModelFacet.class);
+  final String identifier=recreatableObjectFacet != null ? recreatableObjectFacet.memento(pojo) : newIdentifierFor(pojo,type);
+  return newRootId(spec,identifier,type);
+}
