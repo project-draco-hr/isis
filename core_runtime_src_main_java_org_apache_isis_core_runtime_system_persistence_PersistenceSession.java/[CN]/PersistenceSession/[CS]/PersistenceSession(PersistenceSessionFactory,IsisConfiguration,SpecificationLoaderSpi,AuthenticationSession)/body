@@ -4,7 +4,8 @@
   this.specificationLoader=specificationLoader;
   this.authenticationSession=authenticationSession;
   this.persistenceSessionFactory=persistenceSessionFactory;
-  this.objectStore=objectStore;
+  final DataNucleusApplicationComponents applicationComponents=persistenceSessionFactory.getApplicationComponents();
+  this.objectStore=new DataNucleusObjectStore(this,specificationLoader,configuration,applicationComponents);
   this.servicesInjector=persistenceSessionFactory.getServicesInjector();
   this.objectFactory=new ObjectFactory(this,servicesInjector);
   this.objectAdapterFactory=new PojoAdapterFactory();
