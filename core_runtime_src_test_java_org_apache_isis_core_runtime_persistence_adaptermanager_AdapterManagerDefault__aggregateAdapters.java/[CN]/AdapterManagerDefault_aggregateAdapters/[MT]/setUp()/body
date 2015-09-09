@@ -5,15 +5,9 @@
   context.ignoring(mockConfiguration);
   isisMetaModel=new IsisMetaModel(mockRuntimeContext,new ProgrammingModelFacetsJava5(),Lists.newArrayList(new CustomerRepository()));
   isisMetaModel.init();
-  adapterFactory=new PojoAdapterFactory(){
+  adapterFactory=new PojoAdapterFactory(adapterManager,mockSpecificationLoader,mockAuthenticationSession){
     @Override protected Localization getLocalization(){
       return mockLocalization;
-    }
-    @Override protected SpecificationLoaderSpi getSpecificationLoader(){
-      return isisMetaModel.getSpecificationLoader();
-    }
-    @Override protected AuthenticationSession getAuthenticationSession(){
-      return mockAuthenticationSession;
     }
   }
 ;
@@ -21,7 +15,7 @@
     @Override protected SpecificationLoaderSpi getSpecificationLoader(){
       return isisMetaModel.getSpecificationLoader();
     }
-    @Override protected ObjectAdapterFactory getObjectAdapterFactory(){
+    @Override protected PojoAdapterFactory getObjectAdapterFactory(){
       return adapterFactory;
     }
     @Override public OidGenerator getOidGenerator(){

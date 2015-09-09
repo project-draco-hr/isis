@@ -8,10 +8,10 @@
   this.objectStore=new DataNucleusObjectStore(this,specificationLoader,configuration,applicationComponents);
   this.servicesInjector=persistenceSessionFactory.getServicesInjector();
   this.objectFactory=new ObjectFactory(this,servicesInjector);
-  this.objectAdapterFactory=new PojoAdapterFactory();
   this.oidGenerator=new OidGenerator(this,specificationLoader);
   this.adapterManager=new AdapterManagerDefault();
   this.persistAlgorithm=new PersistAlgorithm();
+  this.objectAdapterFactory=new PojoAdapterFactory(adapterManager,specificationLoader,authenticationSession);
   this.persistenceQueryFactory=new PersistenceQueryFactory(getSpecificationLoader(),adapterManager);
   this.transactionManager=new IsisTransactionManager(this,objectStore,servicesInjector);
   setState(State.NOT_INITIALIZED);
