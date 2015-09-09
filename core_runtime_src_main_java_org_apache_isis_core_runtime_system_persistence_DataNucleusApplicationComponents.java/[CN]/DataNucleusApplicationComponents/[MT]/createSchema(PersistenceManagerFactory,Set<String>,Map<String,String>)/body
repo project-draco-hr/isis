@@ -1,0 +1,8 @@
+{
+  JDOPersistenceManagerFactory jdopmf=(JDOPersistenceManagerFactory)persistenceManagerFactory;
+  final PersistenceNucleusContext nucleusContext=jdopmf.getNucleusContext();
+  final SchemaAwareStoreManager schemaAwareStoreManager=(SchemaAwareStoreManager)nucleusContext.getStoreManager();
+  final MetaDataManager metaDataManager=nucleusContext.getMetaDataManager();
+  registerMetadataListener(metaDataManager,datanucleusProps);
+  schemaAwareStoreManager.createSchemaForClasses(persistableClassNameSet,asProperties(datanucleusProps));
+}
