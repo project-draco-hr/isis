@@ -3,25 +3,20 @@
   if (correspondingClass.isArray()) {
     return Array.newInstance(correspondingClass.getComponentType(),0);
   }
-  try {
-    final Class<?> cls=correspondingClass;
-    if (Modifier.isAbstract(cls.getModifiers())) {
-      throw new ObjectInstantiationException("Cannot create an instance of an abstract class: " + cls);
-    }
-    final Object newInstance;
-    if (Modifier.isAbstract(cls.getModifiers())) {
-      throw new ObjectInstantiationException("Cannot create an instance of an abstract class: " + cls);
-    }
-    try {
-      newInstance=cls.newInstance();
-    }
- catch (    final IllegalAccessException|InstantiationException e) {
-      throw new ObjectInstantiationException(e);
-    }
-    servicesInjector.injectServicesInto(newInstance);
-    return newInstance;
+  final Class<?> cls=correspondingClass;
+  if (Modifier.isAbstract(cls.getModifiers())) {
+    throw new IsisException("Cannot create an instance of an abstract class: " + cls);
   }
- catch (  final ObjectInstantiationException e) {
+  final Object newInstance;
+  if (Modifier.isAbstract(cls.getModifiers())) {
+    throw new IsisException("Cannot create an instance of an abstract class: " + cls);
+  }
+  try {
+    newInstance=cls.newInstance();
+  }
+ catch (  final IllegalAccessException|InstantiationException e) {
     throw new IsisException("Failed to create instance of type " + objectSpec.getFullIdentifier(),e);
   }
+  servicesInjector.injectServicesInto(newInstance);
+  return newInstance;
 }
