@@ -4,9 +4,6 @@
 {
       oneOf(mockObjectStore).startTransaction();
       inSequence(tran);
-      oneOf(mockObjectStore).createDestroyObjectCommand(persistentAdapter);
-      inSequence(tran);
-      will(returnValue(destroyObjectCommand));
       oneOf(mockObjectStore).execute(with(IsisMatchers.listContaining((PersistenceCommand)destroyObjectCommand)));
       inSequence(tran);
       oneOf(mockObjectStore).execute(with(equalTo(Collections.<PersistenceCommand>emptyList())));
