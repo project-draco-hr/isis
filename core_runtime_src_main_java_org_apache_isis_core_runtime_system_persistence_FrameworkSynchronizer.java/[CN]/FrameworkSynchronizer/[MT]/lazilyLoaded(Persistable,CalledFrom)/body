@@ -1,11 +1,11 @@
 {
   return withLogging(pojo,new Callable<ObjectAdapter>(){
     @Override public ObjectAdapter call(){
-      if (getPersistenceSession().getJdoObjectId(pojo) == null) {
+      if (persistenceSession.getJdoObjectId(pojo) == null) {
         return null;
       }
-      final RootOid oid=getPersistenceSession().getOidGenerator().createPersistentOrViewModelOid(pojo);
-      final ObjectAdapter adapter=getPersistenceSession().getAdapterManager().mapRecreatedPojo(oid,pojo);
+      final RootOid oid=persistenceSession.createPersistentOrViewModelOid(pojo);
+      final ObjectAdapter adapter=persistenceSession.mapRecreatedPojo(oid,pojo);
       return adapter;
     }
   }

@@ -5,12 +5,12 @@
       servicesInjector.injectServicesInto(pojo);
       final Version datastoreVersion=getVersionIfAny(pc);
       final RootOid originalOid;
-      ObjectAdapter adapter=getAdapterManager().getAdapterFor(pojo);
+      ObjectAdapter adapter=persistenceSession.getAdapterFor(pojo);
       if (adapter != null) {
         ensureRootObject(pojo);
         originalOid=(RootOid)adapter.getOid();
         final Version originalVersion=adapter.getVersion();
-        getPersistenceSession().getAdapterManager().remapRecreatedPojo(adapter,pojo);
+        persistenceSession.remapRecreatedPojo(adapter,pojo);
         final RootOid thisOid=originalOid;
         final Version thisVersion=originalVersion;
         final Version otherVersion=datastoreVersion;
@@ -27,13 +27,13 @@
         }
       }
  else {
-        originalOid=getPersistenceSession().createPersistentOrViewModelOid(pojo);
-        adapter=getAdapterManager().getAdapterFor(originalOid);
+        originalOid=persistenceSession.createPersistentOrViewModelOid(pojo);
+        adapter=persistenceSession.getAdapterFor(originalOid);
         if (adapter != null) {
-          getPersistenceSession().getAdapterManager().remapRecreatedPojo(adapter,pojo);
+          persistenceSession.remapRecreatedPojo(adapter,pojo);
         }
  else {
-          adapter=getPersistenceSession().getAdapterManager().mapRecreatedPojo(originalOid,pojo);
+          adapter=persistenceSession.mapRecreatedPojo(originalOid,pojo);
           CallbackFacet.Util.callCallback(adapter,LoadedCallbackFacet.class);
         }
       }
