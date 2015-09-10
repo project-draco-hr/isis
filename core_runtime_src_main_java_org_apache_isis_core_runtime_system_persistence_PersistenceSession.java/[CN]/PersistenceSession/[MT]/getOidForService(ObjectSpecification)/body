@@ -1,3 +1,9 @@
 {
-  return getOidForServiceFromPersistenceLayer(serviceSpec);
+  final ObjectSpecId objectSpecId=serviceSpec.getSpecId();
+  RootOid oid=servicesByObjectType.get(objectSpecId);
+  if (oid == null) {
+    oid=objectStoreGetOidForService(serviceSpec);
+    servicesByObjectType.put(objectSpecId,oid);
+  }
+  return oid;
 }
