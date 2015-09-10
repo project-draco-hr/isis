@@ -3,10 +3,9 @@
   try {
     final Class<?> cls=clsOf(rootOid);
     final Object jdoObjectId=JdoObjectIdSerializer.toJdoObjectId(rootOid);
-    final PersistenceManager pm=objectStore.getPersistenceManager();
-    FetchPlan fetchPlan=pm.getFetchPlan();
+    FetchPlan fetchPlan=persistenceManager.getFetchPlan();
     fetchPlan.addGroup(FetchGroup.DEFAULT);
-    result=pm.getObjectById(cls,jdoObjectId);
+    result=persistenceManager.getObjectById(cls,jdoObjectId);
   }
  catch (  final RuntimeException e) {
     final List<ExceptionRecognizer> exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
