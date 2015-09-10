@@ -9,5 +9,11 @@
   if (specification.isService()) {
     throw new NotPersistableException("Cannot persist services: " + adapter);
   }
-  makePersistentInPersistenceLayer(adapter);
+  getTransactionManager().executeWithinTransaction(new TransactionalClosure(){
+    @Override public void execute(){
+      persistAlgorithm.makePersistent(adapter,PersistenceSession.this);
+      PersistenceSession.this.persistentByTransient.clear();
+    }
+  }
+);
 }
