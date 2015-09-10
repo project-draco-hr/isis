@@ -1,11 +1,8 @@
 {
   if (LOG.isDebugEnabled()) {
-    LOG.debug("getInstances matching " + persistenceQuery);
+    LOG.debug("findInstances using (core runtime) PersistenceQuery: " + persistenceQuery);
   }
-  final PersistenceQueryProcessor<? extends PersistenceQuery> processor=PersistenceSession.this.persistenceQueryProcessorByClass.get(persistenceQuery.getClass());
-  if (processor == null) {
-    throw new UnsupportedFindException(MessageFormat.format("Unsupported criteria type: {0}",persistenceQuery.getClass().getName()));
-  }
+  final PersistenceQueryProcessor<? extends PersistenceQuery> processor=lookupProcessorFor(persistenceQuery);
   final List<ObjectAdapter> instances=getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturn<List<ObjectAdapter>>(){
     @Override public List<ObjectAdapter> execute(){
       return processPersistenceQuery(processor,persistenceQuery);

@@ -1,3 +1,7 @@
 {
-  return persistenceQueryFactory.createPersistenceQueryFor(query,cardinality);
+  final PersistenceQuery persistenceQuery=persistenceQueryFactory.createPersistenceQueryFor(query,cardinality);
+  if (persistenceQuery == null) {
+    throw new IllegalArgumentException("Unknown Query type: " + query.getDescription());
+  }
+  return persistenceQuery;
 }

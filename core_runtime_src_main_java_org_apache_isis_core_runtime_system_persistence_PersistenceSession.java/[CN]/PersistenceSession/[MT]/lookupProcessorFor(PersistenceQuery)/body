@@ -1,0 +1,8 @@
+{
+  final Class<? extends PersistenceQuery> persistenceQueryClass=persistenceQuery.getClass();
+  final PersistenceQueryProcessor<? extends PersistenceQuery> processor=persistenceQueryProcessorByClass.get(persistenceQueryClass);
+  if (processor == null) {
+    throw new UnsupportedFindException(MessageFormat.format("Unsupported PersistenceQuery class: {0}",persistenceQueryClass.getName()));
+  }
+  return processor;
+}
