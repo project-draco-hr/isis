@@ -1,0 +1,23 @@
+{
+  getTransactionManager().executeWithinTransaction(new TransactionalClosureAbstract(){
+    @Override public void preExecute(){
+    }
+    @Override public void execute(){
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("resolveImmediately; oid=" + adapter.getOid().enString(oidMarshaller));
+      }
+      if (!adapter.representsPersistent()) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("; not persistent - ignoring");
+        }
+        return;
+      }
+      refreshRoot(adapter);
+    }
+    @Override public void onSuccess(){
+    }
+    @Override public void onFailure(){
+    }
+  }
+);
+}
