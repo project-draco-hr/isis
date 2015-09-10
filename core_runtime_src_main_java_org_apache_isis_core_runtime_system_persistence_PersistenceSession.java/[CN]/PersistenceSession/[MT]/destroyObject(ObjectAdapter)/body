@@ -6,5 +6,11 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("destroyObject " + adapter);
   }
-  destroyObjectInPersistenceLayer(adapter);
+  getTransactionManager().executeWithinTransaction(new TransactionalClosure(){
+    @Override public void execute(){
+      final DestroyObjectCommand command=createDestroyObjectCommand(adapter);
+      getTransactionManager().addCommand(command);
+    }
+  }
+);
 }
