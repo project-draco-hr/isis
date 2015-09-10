@@ -1,3 +1,7 @@
 {
-  beginJdoTransaction();
+  final javax.jdo.Transaction transaction=persistenceManager.currentTransaction();
+  if (transaction.isActive()) {
+    throw new IllegalStateException("Transaction already active");
+  }
+  transaction.begin();
 }
