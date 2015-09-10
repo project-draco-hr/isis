@@ -1,7 +1,4 @@
 {
-  if (servicesInjector == null) {
-    throw new IllegalStateException("ServicesInjector is not available (no open session)");
-  }
   if (Modifier.isAbstract(cls.getModifiers())) {
     throw new ObjectInstantiationException("Cannot create an instance of an abstract class: " + cls);
   }
@@ -15,6 +12,6 @@
  catch (  final IllegalAccessException|InstantiationException e) {
     throw new ObjectInstantiationException(e);
   }
-  servicesInjector.injectServicesInto(newInstance);
+  getDependencyInjector().injectServicesInto(newInstance);
   return newInstance;
 }
