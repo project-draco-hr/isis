@@ -3,20 +3,33 @@
     return;
   }
   try {
+    ensureOpened();
+    ensureThatState(persistenceManager,is(notNullValue()));
     try {
-      objectStoreClose();
+      final IsisTransaction currentTransaction=getTransactionManager().getTransaction();
+      if (currentTransaction != null && !currentTransaction.getState().isComplete()) {
+        if (currentTransaction.getState().canCommit()) {
+          getTransactionManager().endTransaction();
+        }
+ else         if (currentTransaction.getState().canAbort()) {
+          getTransactionManager().abortTransaction();
+        }
+      }
     }
- catch (    final Throwable ex) {
-      LOG.error("objectStore#close() failed while closing the session; continuing to avoid memory leakage");
-    }
-    try {
-      adapterManager.close();
-    }
- catch (    final Throwable ex) {
-      LOG.error("adapterManager#close() failed while closing the session; continuing to avoid memory leakage");
+  finally {
+      persistenceManager.close();
     }
   }
-  finally {
+ catch (  final Throwable ex) {
+    LOG.error("objectStore#close() failed while closing the session; continuing to avoid memory leakage");
+  }
+  try {
+    adapterManager.close();
+  }
+ catch (  final Throwable ex) {
+    LOG.error("adapterManager#close() failed while closing the session; continuing to avoid memory leakage");
+  }
+ finally {
     setState(State.CLOSED);
   }
 }
