@@ -1,9 +1,10 @@
 {
-  if (getCorrespondingClass().isArray()) {
-    return Array.newInstance(getCorrespondingClass().getComponentType(),0);
+  final Class<?> correspondingClass=objectSpec.getCorrespondingClass();
+  if (correspondingClass.isArray()) {
+    return Array.newInstance(correspondingClass.getComponentType(),0);
   }
   try {
-    final Class<?> cls=getCorrespondingClass();
+    final Class<?> cls=correspondingClass;
     if (Modifier.isAbstract(cls.getModifiers())) {
       throw new ObjectInstantiationException("Cannot create an instance of an abstract class: " + cls);
     }
@@ -17,10 +18,10 @@
  catch (    final IllegalAccessException|InstantiationException e) {
       throw new ObjectInstantiationException(e);
     }
-    getDependencyInjector().injectServicesInto(newInstance);
+    servicesInjector.injectServicesInto(newInstance);
     return newInstance;
   }
  catch (  final ObjectInstantiationException e) {
-    throw new IsisException("Failed to create instance of type " + getFullIdentifier(),e);
+    throw new IsisException("Failed to create instance of type " + objectSpec.getFullIdentifier(),e);
   }
 }
