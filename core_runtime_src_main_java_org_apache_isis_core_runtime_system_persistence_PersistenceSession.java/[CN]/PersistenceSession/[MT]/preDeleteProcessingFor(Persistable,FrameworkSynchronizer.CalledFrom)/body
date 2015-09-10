@@ -1,3 +1,11 @@
 {
-  frameworkSynchronizer.preDeleteProcessingFor(pojo,calledFrom);
+  withLogging(pojo,new Runnable(){
+    @Override public void run(){
+      ObjectAdapter adapter=adapterFor(pojo);
+      final IsisTransaction transaction=getCurrentTransaction();
+      transaction.enlistDeleting(adapter);
+      CallbackFacet.Util.callCallback(adapter,RemovingCallbackFacet.class);
+    }
+  }
+,calledFrom);
 }
