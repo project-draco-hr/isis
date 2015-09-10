@@ -11,9 +11,8 @@
   this.objectFactory=new ObjectFactory(this,servicesInjector);
   this.oidGenerator=new OidGenerator(this,specificationLoader);
   final PojoRecreator pojoRecreator=new PojoRecreator(this,specificationLoader);
-  this.adapterManager=new AdapterManagerDefault(pojoRecreator);
+  this.adapterManager=new AdapterManagerDefault(this,specificationLoader,pojoRecreator,oidMarshaller,oidGenerator,authenticationSession,servicesInjector,configuration);
   this.persistAlgorithm=new PersistAlgorithm();
-  this.objectAdapterFactory=new PojoAdapterFactory(adapterManager,specificationLoader,authenticationSession);
   this.persistenceQueryFactory=new PersistenceQueryFactory(getSpecificationLoader(),adapterManager);
   this.transactionManager=new IsisTransactionManager(this,servicesInjector);
   setState(State.NOT_INITIALIZED);
