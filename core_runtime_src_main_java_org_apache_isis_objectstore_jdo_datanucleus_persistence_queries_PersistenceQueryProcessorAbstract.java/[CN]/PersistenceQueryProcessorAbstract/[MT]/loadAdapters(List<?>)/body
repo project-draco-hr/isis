@@ -3,11 +3,11 @@
   for (  final Object pojo : pojos) {
     ObjectAdapter adapter;
     if (pojo instanceof Persistable) {
-      getPersistenceSession().postLoadProcessingFor((Persistable)pojo,CalledFrom.OS_QUERY);
-      adapter=getAdapterManager().getAdapterFor(pojo);
+      persistenceSession.postLoadProcessingFor((Persistable)pojo,CalledFrom.OS_QUERY);
+      adapter=persistenceSession.getAdapterFor(pojo);
     }
  else {
-      adapter=getAdapterManager().adapterFor(pojo);
+      adapter=persistenceSession.adapterFor(pojo);
     }
     Assert.assertNotNull(adapter);
     adapters.add(adapter);
