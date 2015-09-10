@@ -1,3 +1,21 @@
 {
-  frameworkSynchronizer.preDirtyProcessingFor(pojo,calledFrom);
+  withLogging(pojo,new Runnable(){
+    @Override public void run(){
+      ObjectAdapter adapter=getAdapterFor(pojo);
+      if (adapter == null) {
+        adapter=frameworkSynchronizer.lazilyLoaded(pojo,FrameworkSynchronizer.CalledFrom.EVENT_PREDIRTY);
+        if (adapter == null) {
+          throw new RuntimeException("DN could not find objectId for pojo (unexpected) and so could not map into Isis; pojo=[" + pojo + "]");
+        }
+      }
+      if (adapter.isTransient()) {
+        return;
+      }
+      CallbackFacet.Util.callCallback(adapter,UpdatingCallbackFacet.class);
+      final IsisTransaction transaction=getCurrentTransaction();
+      transaction.enlistUpdating(adapter);
+      ensureRootObject(pojo);
+    }
+  }
+,calledFrom);
 }
