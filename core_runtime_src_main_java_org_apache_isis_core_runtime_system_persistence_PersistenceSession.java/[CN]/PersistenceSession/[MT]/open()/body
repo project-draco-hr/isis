@@ -7,6 +7,8 @@
   servicesInjector.injectInto(adapterManager);
   adapterManager.open();
   persistenceManager=applicationComponents.createPersistenceManager();
+  final IsisLifecycleListener isisLifecycleListener=new IsisLifecycleListener(frameworkSynchronizer);
+  persistenceManager.addInstanceLifecycleListener(isisLifecycleListener,(Class[])null);
   persistenceQueryProcessorByClass.put(PersistenceQueryFindAllInstances.class,new PersistenceQueryFindAllInstancesProcessor(persistenceManager,frameworkSynchronizer));
   persistenceQueryProcessorByClass.put(PersistenceQueryFindUsingApplibQueryDefault.class,new PersistenceQueryFindUsingApplibQueryProcessor(persistenceManager,frameworkSynchronizer));
   initServices();
