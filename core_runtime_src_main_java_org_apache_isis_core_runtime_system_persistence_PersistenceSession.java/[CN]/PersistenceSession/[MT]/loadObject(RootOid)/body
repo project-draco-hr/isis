@@ -4,5 +4,14 @@
   if (adapter != null) {
     return adapter;
   }
-  return loadMappedObjectFromObjectStore(oid);
+  return getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturn<ObjectAdapter>(){
+    @Override public ObjectAdapter execute(){
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("getObject; oid=" + oid);
+      }
+      final Object pojo=loadPojo(oid);
+      return getAdapterManager().mapRecreatedPojo(oid,pojo);
+    }
+  }
+);
 }
