@@ -3,16 +3,15 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("opening " + this);
   }
-  ensureThatState(transactionManager,is(not(nullValue())),"TransactionManager missing");
   servicesInjector.injectInto(objectFactory);
   servicesInjector.injectInto(adapterManager);
   adapterManager.open();
-  ensureThatState(objectStore,is(notNullValue()),"object store required");
-  ensureThatState(getTransactionManager(),is(notNullValue()),"transaction manager required");
-  ensureThatState(persistAlgorithm,is(notNullValue()),"persist algorithm required");
   getAdapterManager().injectInto(objectStore);
   getSpecificationLoader().injectInto(objectStore);
   objectStore.open();
+  persistenceManager=objectStore.getPersistenceManager();
+  persistenceQueryProcessorByClass.put(PersistenceQueryFindAllInstances.class,new PersistenceQueryFindAllInstancesProcessor(persistenceManager,frameworkSynchronizer));
+  persistenceQueryProcessorByClass.put(PersistenceQueryFindUsingApplibQueryDefault.class,new PersistenceQueryFindUsingApplibQueryProcessor(persistenceManager,frameworkSynchronizer));
   initServices();
   setState(State.OPEN);
 }
