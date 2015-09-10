@@ -3,9 +3,8 @@
   final Map<String,Object> argumentsByParameterName=unwrap(persistenceQuery.getArgumentsAdaptersByParameterName());
   final QueryCardinality cardinality=persistenceQuery.getCardinality();
   final ObjectSpecification objectSpec=persistenceQuery.getSpecification();
-  final PersistenceManager persistenceManager=persistenceSession.getPersistenceManager();
   final Class<?> cls=objectSpec.getCorrespondingClass();
-  final Query jdoQuery=persistenceManager.newNamedQuery(cls,queryName);
+  final Query jdoQuery=persistenceSession.newJdoNamedQuery(cls,queryName);
   jdoQuery.addExtension("datanucleus.multivaluedFetch","none");
   if (persistenceQuery.hasRange()) {
     jdoQuery.setRange(persistenceQuery.getStart(),persistenceQuery.getEnd());
