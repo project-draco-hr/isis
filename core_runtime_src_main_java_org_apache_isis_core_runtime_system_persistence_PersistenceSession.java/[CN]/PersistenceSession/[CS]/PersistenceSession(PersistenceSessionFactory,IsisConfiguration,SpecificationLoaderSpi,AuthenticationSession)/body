@@ -9,7 +9,8 @@
   this.objectStore=new ObjectStore(this,specificationLoader,configuration,applicationComponents);
   this.objectFactory=new ObjectFactory(this,servicesInjector);
   this.oidGenerator=new OidGenerator(this,specificationLoader);
-  this.adapterManager=new AdapterManagerDefault();
+  final PojoRecreator pojoRecreator=new PojoRecreator(this,specificationLoader);
+  this.adapterManager=new AdapterManagerDefault(pojoRecreator);
   this.persistAlgorithm=new PersistAlgorithm();
   this.objectAdapterFactory=new PojoAdapterFactory(adapterManager,specificationLoader,authenticationSession);
   this.persistenceQueryFactory=new PersistenceQueryFactory(getSpecificationLoader(),adapterManager);
