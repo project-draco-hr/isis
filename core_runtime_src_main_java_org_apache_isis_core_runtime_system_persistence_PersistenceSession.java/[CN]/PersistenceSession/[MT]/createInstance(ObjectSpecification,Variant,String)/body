@@ -1,10 +1,12 @@
 {
   if (LOG.isDebugEnabled()) {
-    LOG.debug("creating view model instance of " + objectSpec);
+    LOG.debug("creating " + variant + " instance of "+ objectSpec);
   }
   final Object pojo=instantiateAndInjectServices(objectSpec);
-  final ViewModelFacet facet=objectSpec.getFacet(ViewModelFacet.class);
-  facet.initialize(pojo,memento);
+  if (variant == Variant.VIEW_MODEL) {
+    final ViewModelFacet facet=objectSpec.getFacet(ViewModelFacet.class);
+    facet.initialize(pojo,memento);
+  }
   final ObjectAdapter adapter=adapterManager.adapterFor(pojo);
   return initializePropertiesAndDoCallback(adapter);
 }
