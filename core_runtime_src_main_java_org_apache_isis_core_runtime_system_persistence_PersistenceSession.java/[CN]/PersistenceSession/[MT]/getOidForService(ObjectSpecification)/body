@@ -2,7 +2,8 @@
   final ObjectSpecId objectSpecId=serviceSpec.getSpecId();
   RootOid oid=servicesByObjectType.get(objectSpecId);
   if (oid == null) {
-    oid=objectStoreGetOidForService(serviceSpec);
+    ensureOpened();
+    oid=this.registeredServices.get(serviceSpec.getSpecId());
     servicesByObjectType.put(objectSpecId,oid);
   }
   return oid;
