@@ -5,10 +5,10 @@
   this.authenticationSession=authenticationSession;
   this.persistenceSessionFactory=persistenceSessionFactory;
   this.servicesInjector=persistenceSessionFactory.getServicesInjector();
-  final DataNucleusApplicationComponents applicationComponents=persistenceSessionFactory.getApplicationComponents();
+  this.applicationComponents=persistenceSessionFactory.getApplicationComponents();
+  this.frameworkSynchronizer=applicationComponents.getFrameworkSynchronizer();
   oidMarshaller=new OidMarshaller();
   this.objectStore=new ObjectStore(this,specificationLoader,configuration,applicationComponents);
-  frameworkSynchronizer=applicationComponents.getFrameworkSynchronizer();
   this.objectFactory=new ObjectFactory(this,servicesInjector);
   this.oidGenerator=new OidGenerator(this,specificationLoader);
   final PojoRecreator pojoRecreator=new PojoRecreator(this,specificationLoader);
