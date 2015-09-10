@@ -7,7 +7,7 @@
     LOG.debug("maps to (core runtime) PersistenceQuery: " + persistenceQuery);
   }
   final PersistenceQueryProcessor<? extends PersistenceQuery> processor=lookupProcessorFor(persistenceQuery);
-  final List<ObjectAdapter> instances=getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturn<List<ObjectAdapter>>(){
+  final List<ObjectAdapter> instances=transactionManager.executeWithinTransaction(new TransactionalClosureWithReturn<List<ObjectAdapter>>(){
     @Override public List<ObjectAdapter> execute(){
       return processPersistenceQuery(processor,persistenceQuery);
     }

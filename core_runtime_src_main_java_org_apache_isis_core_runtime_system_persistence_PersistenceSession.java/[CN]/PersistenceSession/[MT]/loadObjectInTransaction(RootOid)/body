@@ -1,16 +1,16 @@
 {
   ensureThatArg(oid,is(notNullValue()));
-  final ObjectAdapter adapter=getAdapterManager().getAdapterFor(oid);
+  final ObjectAdapter adapter=adapterManager.getAdapterFor(oid);
   if (adapter != null) {
     return adapter;
   }
-  return getTransactionManager().executeWithinTransaction(new TransactionalClosureWithReturn<ObjectAdapter>(){
+  return transactionManager.executeWithinTransaction(new TransactionalClosureWithReturn<ObjectAdapter>(){
     @Override public ObjectAdapter execute(){
       if (LOG.isDebugEnabled()) {
         LOG.debug("getObject; oid=" + oid);
       }
       final Object pojo=loadPojo(oid);
-      return getAdapterManager().mapRecreatedPojo(oid,pojo);
+      return adapterManager.mapRecreatedPojo(oid,pojo);
     }
   }
 );
