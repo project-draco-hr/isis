@@ -4,15 +4,12 @@
     startTransaction();
   }
   try {
-    closure.preExecute();
     closure.execute();
-    closure.onSuccess();
     if (!initiallyInTransaction) {
       endTransaction();
     }
   }
  catch (  final RuntimeException ex) {
-    closure.onFailure();
     if (!initiallyInTransaction) {
       try {
         abortTransaction();
