@@ -3,6 +3,15 @@
   testMember.addFacet(new HiddenFacetAbstractImpl(When.UNTIL_PERSISTED,Where.ANYWHERE,testMember){
   }
 );
+  context.checking(new Expectations(){
+{
+      allowing(mockPersistable).dnIsPersistent();
+      will(returnValue(false));
+      allowing(mockPersistable).dnIsDeleted();
+      will(returnValue(false));
+    }
+  }
+);
   final Consent visible=testMember.isVisible(transientAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE);
   assertFalse(visible.isAllowed());
 }

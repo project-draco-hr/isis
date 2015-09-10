@@ -7,7 +7,22 @@
     }
   }
 );
-  persistentAdapter=PojoAdapterBuilder.create().build();
-  transientAdapter=PojoAdapterBuilder.create().with(Persistence.TRANSIENT).build();
+  persistentAdapter=PojoAdapterBuilder.create().with(mockSpecificationLoader).withOid("CUS|1").withPojo(mockPersistable).build();
+  transientAdapter=PojoAdapterBuilder.create().with(mockSpecificationLoader).with(Persistence.TRANSIENT).withPojo(mockPersistable).build();
   testMember=new ObjectMemberAbstractImpl("id");
+  context.checking(new Expectations(){
+{
+      allowing(mockSpecificationLoader).lookupBySpecId(ObjectSpecId.of("CUS"));
+      will(returnValue(mockSpecForCustomer));
+      allowing(mockSpecificationLoader).loadSpecification(with(any(Class.class)));
+      will(returnValue(mockSpecForCustomer));
+      allowing(mockSpecForCustomer).isService();
+      will(returnValue(false));
+      allowing(mockSpecForCustomer).isViewModel();
+      will(returnValue(false));
+      allowing(mockSpecForCustomer).getShortIdentifier();
+      will(returnValue("Customer"));
+    }
+  }
+);
 }

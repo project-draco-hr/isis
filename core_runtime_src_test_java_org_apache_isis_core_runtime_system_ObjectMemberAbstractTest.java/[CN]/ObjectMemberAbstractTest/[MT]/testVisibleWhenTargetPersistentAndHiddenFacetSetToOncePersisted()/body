@@ -3,5 +3,14 @@
   testMember.addFacet(new HiddenFacetAbstractImpl(When.ONCE_PERSISTED,Where.ANYWHERE,testMember){
   }
 );
+  context.checking(new Expectations(){
+{
+      allowing(mockPersistable).dnIsPersistent();
+      will(returnValue(true));
+      allowing(mockPersistable).dnIsDeleted();
+      will(returnValue(false));
+    }
+  }
+);
   assertFalse(testMember.isVisible(persistentAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE).isAllowed());
 }

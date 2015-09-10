@@ -5,4 +5,21 @@
   facetedMethod=FacetedMethod.createForProperty(Customer.class,"firstName");
   facetedMethodParameter=new FacetedMethodParameter(facetedMethod.getOwningType(),facetedMethod.getMethod(),String.class);
   methodRemover=new ProgrammableMethodRemover();
+  mockDeploymentCategoryProvider=context.mock(DeploymentCategoryProvider.class);
+  mockServicesInjector=context.mock(ServicesInjector.class);
+  mockTranslationService=context.mock(TranslationService.class);
+  context.checking(new Expectations(){
+{
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+    }
+  }
+);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(TranslationService.class);
+      will(returnValue(mockTranslationService));
+    }
+  }
+);
 }

@@ -1,5 +1,15 @@
 {
   IsisContextStatic.createRelaxedInstance(sessionFactory);
+  context.checking(new Expectations(){
+{
+      one(mockPersistenceSessionFactory).createPersistenceSession(mockSpecificationLoader,authSession);
+      will(returnValue(mockPersistenceSession));
+    }
+  }
+);
   IsisContext.openSession(authSession);
   Assert.assertEquals(mockSpecificationLoader,IsisContext.getSpecificationLoader());
+  Assert.assertEquals(authSession,IsisContext.getAuthenticationSession());
+  final PersistenceSession persistenceSession=IsisContext.getPersistenceSession();
+  Assert.assertNotNull(persistenceSession);
 }
