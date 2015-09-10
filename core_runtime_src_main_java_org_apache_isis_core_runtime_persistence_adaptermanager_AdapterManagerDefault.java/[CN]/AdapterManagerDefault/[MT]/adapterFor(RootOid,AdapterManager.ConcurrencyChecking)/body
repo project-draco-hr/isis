@@ -15,15 +15,15 @@ catch (    RuntimeException ex) {
   Oid adapterOid=adapter.getOid();
   if (adapterOid instanceof RootOid) {
     final RootOid recreatedOid=(RootOid)adapterOid;
-    final RootOid originalOid=(RootOid)rootOid;
+    final RootOid originalOid=rootOid;
     try {
       if (concurrencyChecking.isChecking()) {
         final Version otherVersion=originalOid.getVersion();
         final Version thisVersion=recreatedOid.getVersion();
         if (thisVersion != null && otherVersion != null && thisVersion.different(otherVersion)) {
-          if (isConcurrencyCheckingGloballyEnabled() && AdapterManager.ConcurrencyChecking.isCurrentlyEnabled()) {
+          if (concurrencyCheckingGloballyEnabled && AdapterManager.ConcurrencyChecking.isCurrentlyEnabled()) {
             LOG.info("concurrency conflict detected on " + recreatedOid + " ("+ otherVersion+ ")");
-            final String currentUser=getAuthenticationSession().getUserName();
+            final String currentUser=authenticationSession.getUserName();
             throw new ConcurrencyException(currentUser,recreatedOid,thisVersion,otherVersion);
           }
  else {

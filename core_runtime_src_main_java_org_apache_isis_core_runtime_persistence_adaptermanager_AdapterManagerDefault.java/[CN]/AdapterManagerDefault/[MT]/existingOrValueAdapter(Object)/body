@@ -3,11 +3,11 @@
   if (adapter != null) {
     return adapter;
   }
-  final ObjectAdapter lazilyLoadedAdapter=getPersistenceSession().lazilyLoaded(pojo);
+  final ObjectAdapter lazilyLoadedAdapter=persistenceSession.lazilyLoaded(pojo);
   if (lazilyLoadedAdapter != null) {
     return lazilyLoadedAdapter;
   }
-  final ObjectSpecification objSpec=getSpecificationLoader().loadSpecification(pojo.getClass());
+  final ObjectSpecification objSpec=specificationLoader.loadSpecification(pojo.getClass());
   if (objSpec.containsFacet(ValueFacet.class)) {
     ObjectAdapter valueAdapter=createStandaloneAdapter(pojo);
     return valueAdapter;
