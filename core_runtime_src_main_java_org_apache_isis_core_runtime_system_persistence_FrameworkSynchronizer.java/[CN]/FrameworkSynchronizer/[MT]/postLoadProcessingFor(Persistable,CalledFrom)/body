@@ -17,9 +17,9 @@
         if (thisVersion != null && otherVersion != null && thisVersion.different(otherVersion)) {
           if (ConcurrencyChecking.isCurrentlyEnabled()) {
             LOG.info("concurrency conflict detected on " + thisOid + " ("+ otherVersion+ ")");
-            final String currentUser=getAuthenticationSession().getUserName();
+            final String currentUser=authenticationSession.getUserName();
             final ConcurrencyException abortCause=new ConcurrencyException(currentUser,thisOid,thisVersion,otherVersion);
-            getCurrentTransaction().setAbortCause(abortCause);
+            persistenceSession.getCurrentTransaction().setAbortCause(abortCause);
           }
  else {
             LOG.warn("concurrency conflict detected but suppressed, on " + thisOid + " ("+ otherVersion+ ")");
