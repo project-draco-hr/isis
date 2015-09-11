@@ -1,21 +1,16 @@
 {
-  new Runnable(){
-    @Override public void run(){
-      ObjectAdapter adapter=getAdapterFor(pojo);
-      if (adapter == null) {
-        adapter=lazilyLoaded(pojo);
-        if (adapter == null) {
-          throw new RuntimeException("DN could not find objectId for pojo (unexpected) and so could not map into Isis; pojo=[" + pojo + "]");
-        }
-      }
-      if (adapter.isTransient()) {
-        return;
-      }
-      CallbackFacet.Util.callCallback(adapter,UpdatingCallbackFacet.class);
-      final IsisTransaction transaction=getCurrentTransaction();
-      transaction.enlistUpdating(adapter);
-      ensureRootObject(pojo);
+  ObjectAdapter adapter=getAdapterFor(pojo);
+  if (adapter == null) {
+    adapter=lazilyLoaded(pojo);
+    if (adapter == null) {
+      throw new RuntimeException("DN could not find objectId for pojo (unexpected) and so could not map into Isis; pojo=[" + pojo + "]");
     }
   }
-.run();
+  if (adapter.isTransient()) {
+    return;
+  }
+  CallbackFacet.Util.callCallback(adapter,UpdatingCallbackFacet.class);
+  final IsisTransaction transaction=getCurrentTransaction();
+  transaction.enlistUpdating(adapter);
+  ensureRootObject(pojo);
 }
