@@ -1,16 +1,21 @@
 {
-  final ObjectAdapter adapter=getAdapterFor(pojo);
+  ObjectAdapter adapter=getAdapterFor(pojo);
   if (adapter != null) {
     return adapter;
   }
-  final ObjectAdapter lazilyLoadedAdapter=pojo instanceof Persistable ? persistenceSession.mapPersistent((Persistable)pojo) : null;
-  if (lazilyLoadedAdapter != null) {
-    return lazilyLoadedAdapter;
+  if (pojo instanceof Persistable) {
+    adapter=persistenceSession.mapPersistent((Persistable)pojo);
+  }
+ else {
+    adapter=null;
+  }
+  if (adapter != null) {
+    return adapter;
   }
   final ObjectSpecification objSpec=specificationLoader.loadSpecification(pojo.getClass());
   if (objSpec.containsFacet(ValueFacet.class)) {
-    ObjectAdapter valueAdapter=createStandaloneAdapter(pojo);
-    return valueAdapter;
+    adapter=createStandaloneAdapter(pojo);
+    return adapter;
   }
   return null;
 }
