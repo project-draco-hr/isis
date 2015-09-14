@@ -86,15 +86,6 @@
   }
 ;
   this.domainObjectServices=new DomainObjectServicesAbstract(){
-    @Override public void informUser(    final String message){
-      getMessageBroker().addMessage(message);
-    }
-    @Override public void warnUser(    final String message){
-      getMessageBroker().addWarning(message);
-    }
-    @Override public void raiseError(    final String message){
-      throw new RecoverableException(message);
-    }
     @Override public String getProperty(    final String name){
       return RuntimeContextFromSession.this.getProperty(name);
     }
@@ -104,6 +95,15 @@
   }
 ;
   this.messageBrokerService=new MessageBrokerServiceAbstract(){
+    @Override public void informUser(    final String message){
+      getMessageBroker().addMessage(message);
+    }
+    @Override public void warnUser(    final String message){
+      getMessageBroker().addWarning(message);
+    }
+    @Override public void raiseError(    final String message){
+      throw new RecoverableException(message);
+    }
   }
 ;
   this.localizationProvider=new LocalizationProviderAbstract(){
