@@ -1,32 +1,5 @@
 {
   RootOid rootOid=RootOid.deString(oidStrUnencoded,getOidMarshaller());
-  final ObjectSpecId specId=rootOid.getObjectSpecId();
-  final ObjectSpecification spec=IsisContext.getSpecificationLoader().lookupBySpecId(specId);
-  if (spec == null) {
-    return null;
-  }
   final PersistenceSession persistenceSession=rendererContext.getPersistenceSession();
-  if (spec.containsFacet(ViewModelFacet.class)) {
-    if (!rootOid.isViewModel()) {
-      rootOid=new RootOid(rootOid.getObjectSpecId(),rootOid.getIdentifier(),Oid.State.VIEWMODEL);
-    }
-    try {
-      return persistenceSession.adapterFor(rootOid);
-    }
- catch (    final ObjectNotFoundException ex) {
-      return null;
-    }
-catch (    final PojoRecreationException ex) {
-      return null;
-    }
-  }
- else {
-    try {
-      ObjectAdapter objectAdapter=persistenceSession.loadObjectInTransaction(rootOid);
-      return objectAdapter.isTransient() ? null : objectAdapter;
-    }
- catch (    final ObjectNotFoundException ex) {
-      return null;
-    }
-  }
+  return persistenceSession.adapterForAny(rootOid);
 }
