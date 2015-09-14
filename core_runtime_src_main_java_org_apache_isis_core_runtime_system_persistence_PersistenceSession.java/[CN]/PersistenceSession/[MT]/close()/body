@@ -24,10 +24,15 @@
   }
   try {
     getOidAdapterMap().close();
+  }
+ catch (  final Throwable ex) {
+    LOG.error("close: oidAdapterMap#close() failed; continuing to avoid memory leakage");
+  }
+  try {
     getPojoAdapterMap().close();
   }
  catch (  final Throwable ex) {
-    LOG.error("close: adapterManager#close() failed; continuing to avoid memory leakage");
+    LOG.error("close: pojoAdapterMap#close() failed; continuing to avoid memory leakage");
   }
   setState(State.CLOSED);
 }

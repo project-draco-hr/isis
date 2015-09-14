@@ -5,7 +5,7 @@
         if (object == null) {
           return null;
         }
-        final ObjectAdapter adapter=getAdapterManager().adapterFor(object);
+        final ObjectAdapter adapter=IsisContext.getPersistenceSession().adapterFor(object);
         Oid oid=adapter.getOid();
         return oid != null ? oid.enString(getOidMarshaller()) : encodedValueOf(adapter);
       }
@@ -14,7 +14,7 @@
         return facet != null ? facet.toEncodedString(adapter) : adapter.toString();
       }
       @Override public String classNameOf(      Object object){
-        final ObjectAdapter adapter=getAdapterManager().adapterFor(object);
+        final ObjectAdapter adapter=getPersistenceSession().adapterFor(object);
         final String className=adapter.getSpecification().getFullIdentifier();
         return className;
       }

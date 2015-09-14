@@ -7,17 +7,17 @@
   final Oid oid=getOid();
   if (spec.isParentedOrFreeCollection()) {
     final Object recreatedPojo=getPersistenceSession().instantiateAndInjectServices(spec);
-    adapter=getPersistenceSession().getAdapterManager().mapRecreatedPojo(oid,recreatedPojo);
+    adapter=getPersistenceSession().mapRecreatedPojo(oid,recreatedPojo);
     populateCollection(adapter,(CollectionData)data);
   }
  else {
     Assert.assertTrue("oid must be a RootOid representing an object because spec is not a collection and cannot be a value",oid instanceof RootOid);
     RootOid typedOid=(RootOid)oid;
-    adapter=getAdapterManager().getAdapterFor(typedOid);
+    adapter=getPersistenceSession().getAdapterFor(typedOid);
     if (adapter != null) {
-      getAdapterManager().removeAdapter(adapter);
+      getPersistenceSession().removeAdapter(adapter);
     }
-    adapter=getAdapterManager().adapterFor(typedOid);
+    adapter=getPersistenceSession().adapterFor(typedOid);
     updateObject(adapter,data);
   }
   if (LOG.isDebugEnabled()) {
