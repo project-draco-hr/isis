@@ -1,10 +1,9 @@
 {
-  final ObjectActionParameter parameter=scalarModel.getParameterMemento().getActionParameter();
+  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
+  final OneToOneAssociation property=scalarModel.getPropertyMemento().getProperty();
   try {
-    final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
-    Localization localization=IsisContext.getLocalization();
-    final String invalidReasonIfAny=parameter.isValid(parentAdapter,proposedAdapter.getObject(),InteractionInitiatedBy.USER,localization);
-    return invalidReasonIfAny;
+    final Consent valid=property.isAssociationValid(parentAdapter,proposedAdapter,InteractionInitiatedBy.USER);
+    return valid.isAllowed() ? null : valid.getReason();
   }
  catch (  final Exception ex) {
     return ex.getLocalizedMessage();
