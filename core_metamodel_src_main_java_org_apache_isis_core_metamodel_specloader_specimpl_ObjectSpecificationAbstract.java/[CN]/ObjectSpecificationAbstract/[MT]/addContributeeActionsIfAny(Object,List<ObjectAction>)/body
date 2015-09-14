@@ -1,0 +1,29 @@
+{
+  final Class<?> serviceType=servicePojo.getClass();
+  final ObjectSpecification specification=getSpecificationLoader().loadSpecification(serviceType);
+  if (specification == this) {
+    return;
+  }
+  final List<ObjectAction> contributeeActions=Lists.newArrayList();
+  final List<ObjectAction> serviceActions=specification.getObjectActions(ActionType.ALL,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  for (  final ObjectAction serviceAction : serviceActions) {
+    if (isAlwaysHidden(serviceAction)) {
+      continue;
+    }
+    final NotContributedFacet notContributed=serviceAction.getFacet(NotContributedFacet.class);
+    if (notContributed != null && notContributed.toActions()) {
+      continue;
+    }
+    if (!(serviceAction instanceof ObjectActionImpl)) {
+      continue;
+    }
+    final ObjectActionImpl contributedAction=(ObjectActionImpl)serviceAction;
+    final int contributeeParam=contributeeParameterMatchOf(contributedAction);
+    if (contributeeParam != -1) {
+      ObjectActionContributee contributeeAction=new ObjectActionContributee(servicePojo,contributedAction,contributeeParam,this,objectMemberDependencies);
+      facetProcessor.processMemberOrder(metadataProperties,contributeeAction);
+      contributeeActions.add(contributeeAction);
+    }
+  }
+  contributeeActionsToAppendTo.addAll(contributeeActions);
+}
