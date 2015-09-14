@@ -1,3 +1,11 @@
 {
-  return adapterManager.adapterFor(pojo);
+  if (pojo == null) {
+    return null;
+  }
+  final ObjectAdapter existingOrValueAdapter=existingOrValueAdapter(pojo);
+  if (existingOrValueAdapter != null) {
+    return existingOrValueAdapter;
+  }
+  final ObjectAdapter newAdapter=createTransientOrViewModelRootAdapter(pojo);
+  return mapAndInjectServices(newAdapter);
 }

@@ -1,3 +1,10 @@
 {
-  return adapterManager.adapterFor(pojo,parentAdapter,collection);
+  Ensure.ensureThatArg(parentAdapter,is(not(nullValue())));
+  Ensure.ensureThatArg(collection,is(not(nullValue())));
+  final ObjectAdapter existingOrValueAdapter=existingOrValueAdapter(pojo);
+  if (existingOrValueAdapter != null) {
+    return existingOrValueAdapter;
+  }
+  final ObjectAdapter newAdapter=createCollectionAdapter(pojo,parentAdapter,collection);
+  return mapAndInjectServices(newAdapter);
 }
