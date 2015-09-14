@@ -1,15 +1,13 @@
 {
-  final SpecificationLoader specificationLookup=getRuntimeContext().getSpecificationLoader();
   final ServicesInjector servicesInjector=getRuntimeContext().getServicesInjector();
-  final AdapterManager adapterManager=getRuntimeContext().getAdapterManager();
-  final ObjectSpecificationDependencies specContext=new ObjectSpecificationDependencies(getDeploymentCategory(),servicesInjector,specificationLookup,facetProcessor);
-  final ObjectMemberDependencies objectMemberDependencies=new ObjectMemberDependencies(specificationLookup,adapterManager,servicesInjector,getRuntimeContext().getPersistenceSessionService());
+  final PersistenceSessionService persistenceSessionService=getRuntimeContext().getPersistenceSessionService();
+  final ObjectSpecificationDependencies specContext=new ObjectSpecificationDependencies(getDeploymentCategory(),servicesInjector,this,facetProcessor);
+  final ObjectMemberDependencies objectMemberDependencies=new ObjectMemberDependencies(this,servicesInjector,persistenceSessionService);
   if (FreeStandingList.class.isAssignableFrom(cls)) {
     return new ObjectSpecificationOnStandaloneList(specContext,objectMemberDependencies);
   }
  else {
-    final SpecificationLoaderSpi specificationLoader=this;
-    final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(specificationLoader,facetProcessor,layoutMetadataReaders);
+    final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(this,facetProcessor,layoutMetadataReaders);
     return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,specContext,objectMemberDependencies);
   }
 }
