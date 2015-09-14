@@ -47,9 +47,6 @@
     @Override public void remove(    final ObjectAdapter adapter){
       getPersistenceSession().destroyObjectInTransaction(adapter);
     }
-  }
-;
-  this.domainObjectServices=new DomainObjectServicesAbstract(){
     @Override public ObjectAdapter createTransientInstance(    final ObjectSpecification spec){
       return getPersistenceSession().createTransientInstance(spec);
     }
@@ -77,6 +74,9 @@
     @Override public void commit(){
       getTransactionManager().endTransaction();
     }
+  }
+;
+  this.domainObjectServices=new DomainObjectServicesAbstract(){
     @Override public void informUser(    final String message){
       getMessageBroker().addMessage(message);
     }
