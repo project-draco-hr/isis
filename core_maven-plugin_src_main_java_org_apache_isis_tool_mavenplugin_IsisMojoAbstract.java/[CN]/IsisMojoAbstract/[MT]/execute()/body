@@ -1,35 +1,17 @@
 {
   final Plugin plugin=MavenProjects.lookupPlugin(mavenProject,CURRENT_PLUGIN_KEY);
-  if (this.appManifest != null) {
-    final AppManifest manifest=InstanceUtil.createInstance(this.appManifest,AppManifest.class);
-    final IsisComponentProviderDefault2 componentProvider=new IsisComponentProviderDefault2(DeploymentType.UNIT_TESTING,manifest,null,null,null,null,null);
-    final IsisSystem isisSystem=new IsisSystem(componentProvider);
-    try {
-      isisSystem.init();
-    }
- catch (    RuntimeException ex) {
-      ;
-    }
+  final AppManifest manifest=InstanceUtil.createInstance(this.appManifest,AppManifest.class);
+  final IsisComponentProviderDefault2 componentProvider=new IsisComponentProviderDefault2(DeploymentType.UNIT_TESTING,manifest,null,null,null,null,null);
+  final IsisSystem isisSystem=new IsisSystem(componentProvider);
+  try {
+    isisSystem.init();
+  }
+ catch (  RuntimeException ex) {
+    ;
+  }
  finally {
-      isisSystem.shutdown();
-    }
-    final ObjectReflectorDefault specificationLoader=(ObjectReflectorDefault)isisSystem.getSessionFactory().getSpecificationLoader();
-    metaModelProcessor.process(specificationLoader,context);
+    isisSystem.shutdown();
   }
- else {
-    final IsisConfiguration isisConfiguration=getIsisConfiguration();
-    final List<Object> serviceList=plugin != null ? serviceListFor(plugin,isisConfiguration) : null;
-    if (serviceList == null || serviceList.size() == 0) {
-      return;
-    }
-    getLog().info("Found " + serviceList.size() + " services");
-    IsisMetaModel isisMetaModel=null;
-    try {
-      isisMetaModel=bootstrapIsis(serviceList);
-      metaModelProcessor.process((ObjectReflectorDefault)isisMetaModel.getSpecificationLoader(),context);
-    }
-  finally {
-      IsisMetaModels.disposeSafely(isisMetaModel);
-    }
-  }
+  final ObjectReflectorDefault specificationLoader=(ObjectReflectorDefault)isisSystem.getSessionFactory().getSpecificationLoader();
+  metaModelProcessor.process(specificationLoader,context);
 }
