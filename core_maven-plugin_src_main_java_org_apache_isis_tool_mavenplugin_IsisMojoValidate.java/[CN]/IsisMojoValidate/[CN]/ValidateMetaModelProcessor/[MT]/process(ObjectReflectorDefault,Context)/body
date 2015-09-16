@@ -1,0 +1,10 @@
+{
+  final ValidationFailures validationFailures=specificationLoader.validate();
+  final Collection<ObjectSpecification> objectSpecifications=specificationLoader.allSpecifications();
+  for (  ObjectSpecification objectSpecification : objectSpecifications) {
+    context.getLog().debug("loaded: " + objectSpecification.getFullIdentifier());
+  }
+  if (validationFailures.occurred()) {
+    context.throwFailureException(validationFailures.getNumberOfMessages() + " problems found.",validationFailures.getMessages());
+  }
+}

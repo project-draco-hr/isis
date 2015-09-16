@@ -3,7 +3,7 @@
   context.ignoring(mockRuntimeContext);
   context.ignoring(mockConfiguration);
   context.ignoring(mockAuditingService3);
-  isisMetaModel=new IsisMetaModel(mockRuntimeContext,new ProgrammingModelFacetsJava5(),new CustomerRepository());
+  isisMetaModel=new IsisMetaModel(new ProgrammingModelFacetsJava5(),new CustomerRepository());
   isisMetaModel.init();
   context.checking(new Expectations(){
 {
@@ -16,17 +16,16 @@
     }
   }
 );
-  final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(DeploymentCategory.PRODUCTION,mockConfiguration,servicesInjector);
+  final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(DeploymentCategory.PRODUCTION,mockConfiguration,servicesInjector,mockSpecificationLoader);
   final DomainObjectContainerDefault container=new DomainObjectContainerDefault();
   runtimeContext.injectInto(container);
   servicesInjector=new ServicesInjectorDefault(Collections.<Object>singletonList(container),new InjectorMethodEvaluatorDefault());
-  persistenceSession=new PersistenceSession(mockPersistenceSessionFactory,mockConfiguration,mockSpecificationLoader,mockAuthenticationSession){
+  persistenceSession=new PersistenceSession(mockConfiguration,mockServicesInjector,mockSpecificationLoader,mockAuthenticationSession,mockPersistenceManager,mockPersistenceSessionFactory){
     @Override protected SpecificationLoaderSpi getSpecificationLoader(){
       return isisMetaModel.getSpecificationLoader();
     }
   }
 ;
-  adapterManager=new AdapterManagerDefault(persistenceSession);
   context.checking(new Expectations(){
 {
       allowing(mockAuthenticationSession).getUserName();

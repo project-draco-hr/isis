@@ -1,9 +1,11 @@
 {
-  final ServicesInjectorSpi servicesInjector=persistenceSessionFactory.getServicesInjector();
-  specificationLoaderSpi.setServiceInjector(servicesInjector);
+  if (!deploymentType.isProduction() && !Clock.isInitialized()) {
+    FixtureClock.initialize();
+  }
   specificationLoaderSpi.init();
   specificationLoaderSpi.injectInto(persistenceSessionFactory);
   authenticationManager.init();
   authorizationManager.init();
+  servicesInjector.init();
   persistenceSessionFactory.init();
 }

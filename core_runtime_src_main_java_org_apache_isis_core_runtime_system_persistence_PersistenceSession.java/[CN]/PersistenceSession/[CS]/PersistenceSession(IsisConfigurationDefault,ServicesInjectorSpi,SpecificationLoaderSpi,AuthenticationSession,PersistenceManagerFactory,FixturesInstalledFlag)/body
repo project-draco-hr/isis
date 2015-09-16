@@ -1,0 +1,16 @@
+{
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("creating " + this);
+  }
+  this.configuration=configuration;
+  this.specificationLoader=specificationLoader;
+  this.authenticationSession=authenticationSession;
+  this.fixturesInstalledFlag=fixturesInstalledFlag;
+  this.servicesInjector=servicesInjector;
+  this.jdoPersistenceManagerFactory=jdoPersistenceManagerFactory;
+  this.persistenceQueryFactory=new PersistenceQueryFactory(this,this.specificationLoader);
+  this.transactionManager=new IsisTransactionManager(this,this.servicesInjector);
+  setState(State.NOT_INITIALIZED);
+  final boolean concurrencyCheckingGloballyDisabled=configuration.getBoolean("isis.persistor.disableConcurrencyChecking",false);
+  this.concurrencyCheckingGloballyEnabled=!concurrencyCheckingGloballyDisabled;
+}

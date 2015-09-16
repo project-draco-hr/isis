@@ -1,0 +1,24 @@
+{
+  super(deploymentType,appManifestIfAny);
+  this.configuration=elseDefault(configurationOverride);
+  final String fixtureClassNamesCsv;
+  if (appManifest != null) {
+    putAppManifestKey(appManifest);
+    registerPackageNames(appManifest);
+    specifyServicesAndRegisteredEntitiesUsing(appManifest);
+    List<Class<? extends FixtureScript>> fixtureClasses=appManifest.getFixtures();
+    fixtureClassNamesCsv=classNamesFrom(fixtureClasses);
+    overrideConfigurationUsing(appManifest);
+    this.services=createServices(configuration);
+  }
+ else {
+    fixtureClassNamesCsv=classNamesFrom(fixturesOverride);
+    this.services=elseDefault(servicesOverride,configuration);
+  }
+  putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
+  this.fixturesInstaller=createFixturesInstaller(configuration);
+  this.authenticationManager=createAuthenticationManager(configuration);
+  this.authorizationManager=createAuthorizationManager(configuration);
+  this.programmingModel=elseDefault(programmingModelOverride,configuration);
+  this.metaModelValidator=elseDefault(metaModelValidatorOverride);
+}

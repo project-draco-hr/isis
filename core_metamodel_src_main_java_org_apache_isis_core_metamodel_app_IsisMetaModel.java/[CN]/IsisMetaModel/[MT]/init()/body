@@ -1,17 +1,11 @@
 {
   ensureNotInitialized();
-  final List<LayoutMetadataReader> layoutMetadataReaders=Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson());
-  reflector=new ObjectReflectorDefault(configuration,programmingModel,facetDecorators,metaModelValidator,layoutMetadataReaders);
-  final ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault(services);
-  reflector.setServiceInjector(servicesInjector);
-  runtimeContext.injectInto(reflector);
-  reflector.injectInto(runtimeContext);
-  reflector.initialize();
-  validationFailures=reflector.validate();
-  runtimeContext.init();
-  for (  final Object service : services) {
-    final ObjectSpecification serviceSpec=reflector.loadSpecification(service.getClass());
+  runtimeContext.injectInto(specificationLoader);
+  specificationLoader.initialize();
+  for (  final Object service : servicesInjector.getRegisteredServices()) {
+    final ObjectSpecification serviceSpec=specificationLoader.loadSpecification(service.getClass());
     serviceSpec.markAsService();
   }
+  validationFailures=specificationLoader.validate();
   state=State.INITIALIZED;
 }

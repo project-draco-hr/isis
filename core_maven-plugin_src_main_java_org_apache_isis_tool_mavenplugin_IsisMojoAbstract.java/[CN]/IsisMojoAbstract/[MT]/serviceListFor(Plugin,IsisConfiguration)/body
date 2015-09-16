@@ -1,0 +1,14 @@
+{
+  final ServicesInstaller servicesInstaller;
+  if (isisConfiguration == null) {
+    servicesInstaller=new ServicesInstallerFromAnnotation();
+  }
+ else {
+    final ServicesInstallerFromConfigurationAndAnnotation servicesInstallerFromConfigurationAndAnnotation=new ServicesInstallerFromConfigurationAndAnnotation();
+    servicesInstallerFromConfigurationAndAnnotation.setConfiguration(isisConfiguration);
+    servicesInstaller=servicesInstallerFromConfigurationAndAnnotation;
+  }
+  servicesInstaller.setIgnoreFailures(true);
+  servicesInstaller.init();
+  return servicesInstaller.getServices();
+}
