@@ -1,12 +1,13 @@
 {
+  this.runtimeContext=runtimeContext;
   if (LOG.isDebugEnabled()) {
     LOG.debug("initialising " + this);
   }
-  if (runtimeContext == null) {
-    runtimeContext=new RuntimeContextNoRuntime(servicesInjector,this);
+  if (this.runtimeContext == null) {
+    this.runtimeContext=new RuntimeContextNoRuntime(servicesInjector,this);
   }
   injectInto(metaModelValidator);
-  runtimeContext.injectInto(facetProcessor);
+  this.runtimeContext.injectInto(facetProcessor);
   facetDecoratorSet.init();
   programmingModel.init();
   facetProcessor.init();

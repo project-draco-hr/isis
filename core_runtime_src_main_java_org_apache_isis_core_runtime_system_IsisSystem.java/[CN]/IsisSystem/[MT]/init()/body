@@ -10,6 +10,9 @@
   LOG.info("resource stream source: " + getConfiguration().getResourceStreamSource());
   localeInitializer.initLocale(getConfiguration());
   timeZoneInitializer.initTimeZone(getConfiguration());
+  if (!deploymentType.isProduction() && !Clock.isInitialized()) {
+    FixtureClock.initialize();
+  }
   try {
     final IsisConfigurationDefault configuration=isisComponentProvider.getConfiguration();
     final List<Object> services=isisComponentProvider.provideServices();
@@ -19,18 +22,20 @@
     final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager(deploymentType);
     final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager(deploymentType);
     final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
-    final SpecificationLoaderSpi specificationLoader1=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,servicesInjector,metaModelRefiners);
-    final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector,specificationLoader1);
-    final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader1);
-    runtimeContext.injectInto(specificationLoader1);
+    final SpecificationLoaderSpi specificationLoader=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,servicesInjector,metaModelRefiners);
+    final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector,specificationLoader);
+    final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader);
+    runtimeContext.injectInto(specificationLoader);
     for (    Object service : servicesInjector.getRegisteredServices()) {
       runtimeContext.injectInto(service);
     }
-    sessionFactory=new IsisSessionFactory(deploymentType,configuration,servicesInjector,specificationLoader1,authenticationManager,authorizationManager,persistenceSessionFactory);
-    IsisContext.setConfiguration(getConfiguration());
-    initContext(sessionFactory);
-    sessionFactory.init();
-    final SpecificationLoaderSpi specificationLoader=sessionFactory.getSpecificationLoader();
+    sessionFactory=new IsisSessionFactory(deploymentType,configuration,servicesInjector,specificationLoader,authenticationManager,authorizationManager,persistenceSessionFactory);
+    IsisContext.setConfiguration(configuration);
+    deploymentType.initContext(sessionFactory);
+    specificationLoader.init(runtimeContext);
+    authenticationManager.init();
+    authorizationManager.init();
+    persistenceSessionFactory.init();
     specificationLoader.validateAndAssert();
     this.serviceInitializer=initializeServices();
     installFixturesIfRequired();
