@@ -7,10 +7,9 @@
     }
   }
 );
-  final ObjectReflectorDefault reflector=new ObjectReflectorDefault(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new HashSet<FacetDecorator>(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()));
+  final ObjectReflectorDefault reflector=new ObjectReflectorDefault(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new HashSet<FacetDecorator>(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),mockServicesInjector);
   runtimeContext=new RuntimeContextNoRuntime(new ServicesInjectorDefault(Collections.emptyList()),reflector);
   reflector.setRuntimeContext(runtimeContext);
-  reflector.setServiceInjector(new ServicesInjectorDefault(Collections.<Object>singletonList(new DomainObjectContainerDefault())));
   reflector.init();
   specification=loadSpecification(reflector);
 }

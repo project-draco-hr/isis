@@ -7,8 +7,7 @@
   final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager(deploymentType);
   final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager(deploymentType);
   final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
-  final SpecificationLoaderSpi specificationLoader=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,metaModelRefiners);
-  specificationLoader.setServiceInjector(servicesInjector);
+  final SpecificationLoaderSpi specificationLoader=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,servicesInjector,metaModelRefiners);
   final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector,specificationLoader);
   final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader);
   runtimeContext.injectInto(specificationLoader);
