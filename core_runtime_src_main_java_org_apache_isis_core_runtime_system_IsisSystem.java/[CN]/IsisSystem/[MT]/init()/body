@@ -11,7 +11,22 @@
   localeInitializer.initLocale(getConfiguration());
   timeZoneInitializer.initTimeZone(getConfiguration());
   try {
-    sessionFactory=createSessionFactory(deploymentType);
+    final IsisConfigurationDefault configuration=isisComponentProvider.getConfiguration();
+    final List<Object> services=isisComponentProvider.provideServices();
+    ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault(services);
+    servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
+    servicesInjector.validateServices();
+    final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager(deploymentType);
+    final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager(deploymentType);
+    final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
+    final SpecificationLoaderSpi specificationLoader1=isisComponentProvider.provideSpecificationLoaderSpi(deploymentType,servicesInjector,metaModelRefiners);
+    final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector,specificationLoader1);
+    final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader1);
+    runtimeContext.injectInto(specificationLoader1);
+    for (    Object service : servicesInjector.getRegisteredServices()) {
+      runtimeContext.injectInto(service);
+    }
+    sessionFactory=new IsisSessionFactory(deploymentType,configuration,servicesInjector,specificationLoader1,authenticationManager,authorizationManager,persistenceSessionFactory);
     IsisContext.setConfiguration(getConfiguration());
     initContext(sessionFactory);
     sessionFactory.init();
