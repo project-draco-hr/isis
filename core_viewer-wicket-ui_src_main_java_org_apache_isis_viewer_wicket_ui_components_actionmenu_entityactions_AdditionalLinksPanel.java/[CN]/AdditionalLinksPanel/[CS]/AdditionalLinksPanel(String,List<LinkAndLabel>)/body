@@ -22,6 +22,16 @@
         link.add(new CssClassAppender("prototype"));
       }
       link.add(new CssClassAppender(linkAndLabel.getActionIdentifier()));
+      SemanticsOf semantics=linkAndLabel.getSemantics();
+      if (semantics.isAreYouSure()) {
+        ConfirmationConfig confirmationConfig=new ConfirmationConfig();
+        confirmationConfig.withTitle("Are you sure?");
+        confirmationConfig.withBtnOkLabel("Confirm");
+        confirmationConfig.withBtnCancelLabel("Cancel");
+        confirmationConfig.withBtnOkClass("btn btn-danger");
+        confirmationConfig.withBtnCancelClass("btn btn-default");
+        link.add(new ConfirmationBehavior(confirmationConfig));
+      }
       final String cssClass=linkAndLabel.getCssClass();
       CssClassAppender.appendCssClassTo(link,cssClass);
       viewTitleLabel.add(new CssClassAppender(StringExtensions.asLowerDashed(linkAndLabel.getLabel())));

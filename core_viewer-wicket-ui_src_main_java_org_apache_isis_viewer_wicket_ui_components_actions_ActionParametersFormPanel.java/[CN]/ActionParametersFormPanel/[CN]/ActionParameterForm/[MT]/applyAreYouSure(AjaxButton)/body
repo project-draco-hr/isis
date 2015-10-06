@@ -1,8 +1,8 @@
 {
   ActionModel actionModel=getActionModel();
   final ObjectAction action=actionModel.getActionMemento().getAction();
-  ActionSemantics.Of semantics=action.getSemantics();
-  if (semantics == ActionSemantics.Of.IDEMPOTENT_ARE_YOU_SURE || semantics == ActionSemantics.Of.NON_IDEMPOTENT_ARE_YOU_SURE) {
+  SemanticsOf semanticsOf=SemanticsOf.from(action.getSemantics());
+  if (semanticsOf.isAreYouSure()) {
     ConfirmationConfig confirmationConfig=new ConfirmationConfig();
     confirmationConfig.withTitle("Are you sure?");
     confirmationConfig.withBtnOkLabel("Confirm");
