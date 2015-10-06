@@ -1,9 +1,25 @@
 {
+  final Class<?> type=field.getType();
+  if (type == null) {
+    return;
+  }
+  if (Collection.class.isAssignableFrom(type) || List.class.isAssignableFrom(type)) {
+    final Type genericType=field.getGenericType();
+    if (genericType instanceof ParameterizedType) {
+      final ParameterizedType listParameterizedType=(ParameterizedType)genericType;
+      final Class<?> listType=(Class<?>)listParameterizedType.getActualTypeArguments()[0];
+      final List<Object> listOfServices=Collections.unmodifiableList(Lists.newArrayList(Iterables.filter(services,new Predicate<Object>(){
+        @Override public boolean apply(        final Object input){
+          return input != null && listType.isAssignableFrom(input.getClass());
+        }
+      }
+)));
+      invokeInjectorField(field,object,listOfServices);
+    }
+  }
   for (  final Object service : services) {
     final Class<?> serviceClass=service.getClass();
-    final boolean canInject=isInjectorFieldFor(field,serviceClass);
-    if (canInject) {
-      field.setAccessible(true);
+    if (type.isAssignableFrom(serviceClass)) {
       invokeInjectorField(field,object,service);
       return;
     }
