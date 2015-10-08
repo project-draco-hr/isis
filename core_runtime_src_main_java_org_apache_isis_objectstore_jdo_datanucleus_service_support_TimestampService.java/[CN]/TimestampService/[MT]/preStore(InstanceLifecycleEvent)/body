@@ -1,0 +1,12 @@
+{
+  final Object pi=event.getPersistentInstance();
+  if (pi instanceof org.datanucleus.enhancement.Persistable) {
+    boolean isPersistent=((org.datanucleus.enhancement.Persistable)pi).dnIsPersistent();
+    if (pi instanceof HoldsUpdatedBy) {
+      ((HoldsUpdatedBy)pi).setUpdatedBy(container.getUser().getName());
+    }
+    if (pi instanceof HoldsUpdatedAt) {
+      ((HoldsUpdatedAt)pi).setUpdatedAt(clockService.nowAsJavaSqlTimestamp());
+    }
+  }
+}

@@ -1,7 +1,12 @@
 {
   Object jdoVersion=pojo.dnGetVersion();
   if (jdoVersion instanceof Long) {
-    return SerialNumberVersion.create((Long)jdoVersion,authenticationSession.getUserName(),null);
+    final Long longVersion=(Long)jdoVersion;
+    return Version.create(longVersion,authenticationSession.getUserName(),(Date)null);
+  }
+  if (jdoVersion instanceof java.sql.Timestamp) {
+    final Timestamp timestampVersion=(Timestamp)jdoVersion;
+    return Version.create(timestampVersion.getTime(),authenticationSession.getUserName(),(Date)null);
   }
   return null;
 }
