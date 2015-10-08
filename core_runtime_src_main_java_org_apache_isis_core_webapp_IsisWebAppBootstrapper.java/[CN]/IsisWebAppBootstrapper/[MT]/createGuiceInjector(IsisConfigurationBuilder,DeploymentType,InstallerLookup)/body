@@ -1,4 +1,9 @@
 {
   final IsisInjectModule isisModule=new IsisInjectModule(deploymentType,isisConfigurationBuilder,installerLookup);
-  return Guice.createInjector(isisModule);
+  return Guice.createInjector(isisModule,new AbstractModule(){
+    @Override protected void configure(){
+      bind(AppManifest.class).toInstance(IsisSystemThatUsesInstallersFactory.NOOP);
+    }
+  }
+);
 }
