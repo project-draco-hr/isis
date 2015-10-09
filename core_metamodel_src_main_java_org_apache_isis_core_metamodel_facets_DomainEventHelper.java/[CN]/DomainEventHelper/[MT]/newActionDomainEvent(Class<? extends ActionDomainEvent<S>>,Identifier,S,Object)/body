@@ -2,6 +2,17 @@
   final Constructor<?>[] constructors=type.getConstructors();
   for (  final Constructor<?> constructor : constructors) {
     final Class<?>[] parameterTypes=constructor.getParameterTypes();
+    if (parameterTypes.length == 0) {
+      final Object event=constructor.newInstance();
+      final ActionDomainEvent<S> ade=(ActionDomainEvent<S>)event;
+      ade.setSource(source);
+      ade.setIdentifier(identifier);
+      ade.setArguments(asList(arguments));
+      return ade;
+    }
+  }
+  for (  final Constructor<?> constructor : constructors) {
+    final Class<?>[] parameterTypes=constructor.getParameterTypes();
     if (parameterTypes.length != 3) {
       continue;
     }

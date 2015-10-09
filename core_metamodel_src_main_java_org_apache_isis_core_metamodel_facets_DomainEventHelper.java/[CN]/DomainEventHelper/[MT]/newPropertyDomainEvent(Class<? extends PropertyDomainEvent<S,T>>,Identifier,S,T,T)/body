@@ -2,6 +2,18 @@
   final Constructor<?>[] constructors=type.getConstructors();
   for (  final Constructor<?> constructor : constructors) {
     final Class<?>[] parameterTypes=constructor.getParameterTypes();
+    if (parameterTypes.length == 0) {
+      final Object event=constructor.newInstance();
+      final PropertyDomainEvent<S,T> pde=(PropertyDomainEvent<S,T>)event;
+      pde.setSource(source);
+      pde.setIdentifier(identifier);
+      pde.setOldValue(oldValue);
+      pde.setNewValue(newValue);
+      return pde;
+    }
+  }
+  for (  final Constructor<?> constructor : constructors) {
+    final Class<?>[] parameterTypes=constructor.getParameterTypes();
     if (parameterTypes.length != 4) {
       continue;
     }
