@@ -2,31 +2,42 @@
   if (method == null) {
     return null;
   }
+  final Class<?> methodDeclaringClass=method.getDeclaringClass();
+  final String methodName=method.getName();
   final T annotation=method.getAnnotation(annotationClass);
   if (annotation != null) {
     return annotation;
   }
-  final Class<?> methodDeclaringClass=method.getDeclaringClass();
+  if (shouldSearchForField(annotationClass)) {
+    List<String> fieldNameCandidates=fieldNameCandidatesFor(methodName);
+    for (    String fieldNameCandidate : fieldNameCandidates) {
+      try {
+        final Field field=methodDeclaringClass.getDeclaredField(fieldNameCandidate);
+        final T fieldAnnotation=field.getAnnotation(annotationClass);
+        if (fieldAnnotation != null) {
+          return fieldAnnotation;
+        }
+      }
+ catch (      NoSuchFieldException e) {
+      }
+    }
+  }
   final Class<?> superclass=methodDeclaringClass.getSuperclass();
   if (superclass != null) {
     try {
-      final Method parentClassMethod=superclass.getMethod(method.getName(),method.getParameterTypes());
+      final Method parentClassMethod=superclass.getMethod(methodName,method.getParameterTypes());
       return getAnnotation(parentClassMethod,annotationClass);
     }
- catch (    final SecurityException e) {
-    }
-catch (    final NoSuchMethodException e) {
+ catch (    final SecurityException|NoSuchMethodException e) {
     }
   }
   final Class<?>[] interfaces=methodDeclaringClass.getInterfaces();
   for (  final Class<?> iface : interfaces) {
     try {
-      final Method ifaceMethod=iface.getMethod(method.getName(),method.getParameterTypes());
+      final Method ifaceMethod=iface.getMethod(methodName,method.getParameterTypes());
       return getAnnotation(ifaceMethod,annotationClass);
     }
- catch (    final SecurityException e) {
-    }
-catch (    final NoSuchMethodException e) {
+ catch (    final SecurityException|NoSuchMethodException e) {
     }
   }
   return null;
