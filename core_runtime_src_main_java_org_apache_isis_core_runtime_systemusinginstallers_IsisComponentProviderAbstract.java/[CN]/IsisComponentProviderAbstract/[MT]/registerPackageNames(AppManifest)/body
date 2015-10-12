@@ -1,15 +1,3 @@
 {
-  final Iterable<String> packageNameList=modulePackageNamesFrom(appManifest);
-  final AppManifest.Registry registry=AppManifest.Registry.instance();
-  final List<String> packages=Lists.newArrayList();
-  packages.addAll(AppManifest.Registry.FRAMEWORK_PROVIDED_SERVICES);
-  Iterables.addAll(packages,packageNameList);
-  Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
-  final Reflections reflections=new Reflections(packages);
-  final Set<Class<?>> domainServiceTypes=reflections.getTypesAnnotatedWith(DomainService.class);
-  final Set<Class<?>> persistenceCapableTypes=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
-  final Set<Class<? extends FixtureScript>> fixtureScriptTypes=reflections.getSubTypesOf(FixtureScript.class);
-  registry.setDomainServiceTypes(domainServiceTypes);
-  registry.setPersistenceCapableTypes(persistenceCapableTypes);
-  registry.setFixtureScriptTypes(fixtureScriptTypes);
+  findAndRegisterTypes(appManifest);
 }

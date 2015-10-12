@@ -1,0 +1,29 @@
+{
+  final Iterable<String> packageNameList=modulePackageNamesFrom(appManifest);
+  final AppManifest.Registry registry=AppManifest.Registry.instance();
+  final List<String> packages=Lists.newArrayList();
+  packages.addAll(AppManifest.Registry.FRAMEWORK_PROVIDED_SERVICES);
+  Iterables.addAll(packages,packageNameList);
+  Vfs.setDefaultURLTypes(ClassDiscoveryServiceUsingReflections.getUrlTypes());
+  final Reflections reflections=new Reflections(packages);
+  final Set<Class<?>> domainServiceTypes=reflections.getTypesAnnotatedWith(DomainService.class);
+  final Set<Class<?>> persistenceCapableTypes=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
+  final Set<Class<? extends FixtureScript>> fixtureScriptTypes=reflections.getSubTypesOf(FixtureScript.class);
+  final Set<Class<?>> mixinTypes=Sets.newHashSet();
+  mixinTypes.addAll(reflections.getTypesAnnotatedWith(Mixin.class));
+  final Set<Class<?>> domainObjectTypes=reflections.getTypesAnnotatedWith(DomainObject.class);
+  mixinTypes.addAll(Lists.newArrayList(Iterables.filter(domainObjectTypes,new Predicate<Class<?>>(){
+    @Override public boolean apply(    @Nullable final Class<?> input){
+      if (input == null) {
+        return false;
+      }
+      final DomainObject annotation=input.getAnnotation(DomainObject.class);
+      return annotation.nature() == Nature.MIXIN;
+    }
+  }
+)));
+  registry.setDomainServiceTypes(domainServiceTypes);
+  registry.setPersistenceCapableTypes(persistenceCapableTypes);
+  registry.setFixtureScriptTypes(fixtureScriptTypes);
+  registry.setMixinTypes(mixinTypes);
+}

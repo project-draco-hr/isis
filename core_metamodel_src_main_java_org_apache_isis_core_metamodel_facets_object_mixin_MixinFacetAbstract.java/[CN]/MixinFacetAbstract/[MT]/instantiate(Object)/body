@@ -1,0 +1,26 @@
+{
+  if (domainPojo == null) {
+    return null;
+  }
+  if (!constructorType.isAssignableFrom(domainPojo.getClass())) {
+    return null;
+  }
+  try {
+    final Constructor<?> constructor=mixinType.getConstructor(constructorType);
+    final Object mixinPojo=constructor.newInstance(domainPojo);
+    servicesInjector.injectServicesInto(mixinPojo);
+    return mixinPojo;
+  }
+ catch (  NoSuchMethodException e) {
+    return null;
+  }
+catch (  InvocationTargetException e) {
+    return null;
+  }
+catch (  InstantiationException e) {
+    return null;
+  }
+catch (  IllegalAccessException e) {
+    return null;
+  }
+}

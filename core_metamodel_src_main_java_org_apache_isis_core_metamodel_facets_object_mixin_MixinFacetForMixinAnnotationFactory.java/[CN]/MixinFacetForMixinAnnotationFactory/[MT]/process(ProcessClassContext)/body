@@ -1,0 +1,10 @@
+{
+  final Class<?> candidateMixinType=processClassContext.getCls();
+  final Mixin mixinAnnotation=candidateMixinType.getAnnotation(Mixin.class);
+  if (mixinAnnotation == null) {
+    return;
+  }
+  final FacetHolder facetHolder=processClassContext.getFacetHolder();
+  final MixinFacet mixinFacet=MixinFacetForMixinAnnotation.create(candidateMixinType,facetHolder,servicesInjector);
+  facetHolder.addFacet(mixinFacet);
+}

@@ -1,0 +1,12 @@
+{
+  final Constructor<?>[] constructors=candidateMixinType.getConstructors();
+  for (  Constructor<?> constructor : constructors) {
+    final Class<?>[] constructorTypes=constructor.getParameterTypes();
+    if (constructorTypes.length != 1) {
+      continue;
+    }
+    final Class<?> constructorType=constructorTypes[0];
+    return new MixinFacetForMixinAnnotation(candidateMixinType,constructorType,facetHolder,servicesInjector);
+  }
+  return null;
+}
