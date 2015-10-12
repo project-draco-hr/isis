@@ -1,3 +1,22 @@
 {
-  return mixinAction.getParameters();
+  if (this.parameters == null) {
+    final List<ObjectActionParameter> mixinActionParameters=mixinAction.getParameters();
+    final List<ObjectActionParameterMixedIn> mixedInParameters=Lists.newArrayList();
+    for (int paramNum=0; paramNum < mixinActionParameters.size(); paramNum++) {
+      final ObjectActionParameterAbstract mixinParameter=(ObjectActionParameterAbstract)mixinActionParameters.get(paramNum);
+      final ObjectActionParameterMixedIn mixedInParameter;
+      if (mixinParameter instanceof ObjectActionParameterParseable) {
+        mixedInParameter=new ObjectActionParameterParseableMixedIn(mixinParameter,this);
+      }
+ else       if (mixinParameter instanceof OneToOneActionParameterImpl) {
+        mixedInParameter=new OneToOneActionParameterMixedIn(mixinParameter,this);
+      }
+ else {
+        throw new RuntimeException("Unknown implementation of ObjectActionParameter; " + mixinParameter.getClass().getName());
+      }
+      mixedInParameters.add(mixedInParameter);
+    }
+    this.parameters=mixedInParameters;
+  }
+  return ObjectExtensions.asListT(parameters,ObjectActionParameter.class);
 }
