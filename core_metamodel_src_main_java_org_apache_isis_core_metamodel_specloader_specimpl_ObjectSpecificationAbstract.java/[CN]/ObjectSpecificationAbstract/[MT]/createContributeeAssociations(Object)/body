@@ -2,7 +2,7 @@
   final Class<?> serviceClass=servicePojo.getClass();
   final ObjectSpecification specification=specificationLoader.loadSpecification(serviceClass);
   final List<ObjectAction> serviceActions=specification.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.<ObjectAction>any());
-  final List<ObjectActionImpl> contributedActions=Lists.newArrayList();
+  final List<ObjectActionDefault> contributedActions=Lists.newArrayList();
   for (  final ObjectAction serviceAction : serviceActions) {
     if (isAlwaysHidden(serviceAction)) {
       continue;
@@ -17,13 +17,13 @@
     if (serviceAction.getParameterCount() != 1 || contributeeParameterMatchOf(serviceAction) == -1) {
       continue;
     }
-    if (!(serviceAction instanceof ObjectActionImpl)) {
+    if (!(serviceAction instanceof ObjectActionDefault)) {
       continue;
     }
     if (!serviceAction.getSemantics().isSafeInNature()) {
       continue;
     }
-    contributedActions.add((ObjectActionImpl)serviceAction);
+    contributedActions.add((ObjectActionDefault)serviceAction);
   }
   return Lists.newArrayList(Iterables.transform(contributedActions,createContributeeAssociationFunctor(servicePojo,this)));
 }

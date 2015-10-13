@@ -1,0 +1,17 @@
+{
+  super(mixinAction.getFacetedMethod(),objectMemberDependencies);
+  this.mixinType=mixinType;
+  this.mixinAction=mixinAction;
+  this.mixedInType=mixedInType;
+  FacetUtil.copyFacets(mixinAction.getFacetedMethod(),facetHolder);
+  final String name=getName();
+  String memberName=null;
+  if (Objects.equal(name,"_")) {
+    memberName=determineNameFrom(mixinAction);
+    FacetUtil.addFacet(new NamedFacetInferred(memberName,facetHolder));
+  }
+  final Identifier mixinIdentifier=mixinAction.getFacetedMethod().getIdentifier();
+  memberName=memberName != null ? memberName : mixinIdentifier.getMemberName();
+  List<String> memberParameterNames=mixinIdentifier.getMemberParameterNames();
+  identifier=Identifier.actionIdentifier(getOnType().getCorrespondingClass().getName(),memberName,memberParameterNames);
+}
