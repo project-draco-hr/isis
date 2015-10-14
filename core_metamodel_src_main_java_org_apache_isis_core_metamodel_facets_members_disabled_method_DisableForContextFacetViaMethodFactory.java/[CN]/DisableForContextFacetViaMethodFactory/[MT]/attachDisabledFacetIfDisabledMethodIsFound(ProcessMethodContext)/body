@@ -4,6 +4,9 @@
   final Class<?> cls=processMethodContext.getCls();
   Method disableMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.DISABLE_PREFIX + capitalizedName,new Class<?>[]{String.class,TranslatableString.class},method.getParameterTypes());
   if (disableMethod == null) {
+    disableMethod=MethodFinderUtils.findMethod(cls,MethodScope.OBJECT,MethodPrefixConstants.DISABLE_PREFIX + capitalizedName,new Class<?>[]{String.class,TranslatableString.class},new Class<?>[0]);
+  }
+  if (disableMethod == null) {
     return;
   }
   processMethodContext.removeMethod(disableMethod);
