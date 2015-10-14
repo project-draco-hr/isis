@@ -2,9 +2,17 @@
   return new Function<ObjectActionDefault,ObjectAssociation>(){
     @Override public ObjectAssociation apply(    ObjectActionDefault input){
       final ObjectSpecification returnType=input.getReturnType();
-      final ObjectAssociationAbstract association=returnType.isNotCollection() ? new OneToOneAssociationContributee(servicePojo,input,contributeeType,objectMemberDependencies) : new OneToManyAssociationContributee(servicePojo,input,contributeeType,objectMemberDependencies);
+      final ObjectAssociationAbstract association=createObjectAssociation(input,returnType);
       facetProcessor.processMemberOrder(metadataProperties,association);
       return association;
+    }
+    ObjectAssociationAbstract createObjectAssociation(    final ObjectActionDefault input,    final ObjectSpecification returnType){
+      if (returnType.isNotCollection()) {
+        return new OneToOneAssociationContributee(servicePojo,input,contributeeType,objectMemberDependencies);
+      }
+ else {
+        return new OneToManyAssociationContributee(servicePojo,input,contributeeType,objectMemberDependencies);
+      }
     }
   }
 ;

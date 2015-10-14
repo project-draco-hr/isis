@@ -1,0 +1,14 @@
+{
+  if (isService() || isValue()) {
+    return Collections.emptyList();
+  }
+  final Set<Class<?>> mixinTypes=AppManifest.Registry.instance().getMixinTypes();
+  if (mixinTypes == null) {
+    return Collections.emptyList();
+  }
+  final List<ObjectAction> mixedInActions=Lists.newArrayList();
+  for (  final Class<?> mixinType : mixinTypes) {
+    addMixedInActionsIfAny(mixinType,mixedInActions);
+  }
+  return mixedInActions;
+}

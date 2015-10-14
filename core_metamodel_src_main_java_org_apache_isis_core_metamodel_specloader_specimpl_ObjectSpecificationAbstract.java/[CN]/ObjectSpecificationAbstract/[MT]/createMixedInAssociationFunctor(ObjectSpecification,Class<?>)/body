@@ -1,0 +1,19 @@
+{
+  return new Function<ObjectActionDefault,ObjectAssociation>(){
+    @Override public ObjectAssociation apply(    final ObjectActionDefault mixinAction){
+      final ObjectAssociationAbstract association=createObjectAssociation(mixinAction);
+      facetProcessor.processMemberOrder(metadataProperties,association);
+      return association;
+    }
+    ObjectAssociationAbstract createObjectAssociation(    final ObjectActionDefault mixinAction){
+      final ObjectSpecification returnType=mixinAction.getReturnType();
+      if (returnType.isNotCollection()) {
+        return new OneToOneAssociationMixedIn(mixinAction,mixedInType,mixinType,objectMemberDependencies);
+      }
+ else {
+        return new OneToManyAssociationMixedIn(mixinAction,mixedInType,mixinType,objectMemberDependencies);
+      }
+    }
+  }
+;
+}

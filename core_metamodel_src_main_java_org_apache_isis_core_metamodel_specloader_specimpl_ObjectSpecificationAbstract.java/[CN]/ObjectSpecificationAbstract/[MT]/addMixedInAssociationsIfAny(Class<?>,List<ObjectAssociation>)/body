@@ -1,0 +1,31 @@
+{
+  final ObjectSpecification specification=getSpecificationLoader().loadSpecification(mixinType);
+  if (specification == this) {
+    return;
+  }
+  final MixinFacet mixinFacet=specification.getFacet(MixinFacet.class);
+  if (mixinFacet == null) {
+    return;
+  }
+  if (!mixinFacet.isMixinFor(getCorrespondingClass())) {
+    return;
+  }
+  final List<ObjectActionDefault> mixinActions=getObjectActions(specification);
+  final List<ObjectAssociation> mixedInAssociations=Lists.newArrayList(Iterables.transform(Iterables.filter(mixinActions,new Predicate<ObjectActionDefault>(){
+    @Override public boolean apply(    final ObjectActionDefault input){
+      final NotContributedFacet notContributedFacet=input.getFacet(NotContributedFacet.class);
+      if (notContributedFacet == null || !notContributedFacet.toActions()) {
+        return false;
+      }
+      if (input.getParameterCount() != 0) {
+        return false;
+      }
+      if (!input.getSemantics().isSafeInNature()) {
+        return false;
+      }
+      return true;
+    }
+  }
+),createMixedInAssociationFunctor(this,mixinType)));
+  toAppendTo.addAll(mixedInAssociations);
+}

@@ -1,4 +1,11 @@
 {
+  final DomainObject domainObject=candidateMixinType.getAnnotation(DomainObject.class);
+  if (domainObject == null) {
+    return null;
+  }
+  if (domainObject.nature() != Nature.MIXIN) {
+    return null;
+  }
   final Constructor<?>[] constructors=candidateMixinType.getConstructors();
   for (  Constructor<?> constructor : constructors) {
     final Class<?>[] constructorTypes=constructor.getParameterTypes();
