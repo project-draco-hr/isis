@@ -7,7 +7,7 @@
     }
   }
  catch (  final RuntimeException ex) {
-    LOG.warn("Failed to obtain locale, returning the original msgId");
+    logWarningIfNotPreviously("Failed to obtain locale, returning the original msgId");
     return msgId;
   }
   final Map<ContextAndMsgId,String> translationsByKey=readAndCacheTranslationsIfRequired(targetLocale);
@@ -23,7 +23,7 @@
   }
   final Boolean usesFallback=usesFallbackByLocale.get(targetLocale);
   if (usesFallback == null || !usesFallback) {
-    LOG.warn("No translation found for: " + key);
+    logWarningIfNotPreviously("No translation found for: " + key);
   }
   return msgId;
 }
