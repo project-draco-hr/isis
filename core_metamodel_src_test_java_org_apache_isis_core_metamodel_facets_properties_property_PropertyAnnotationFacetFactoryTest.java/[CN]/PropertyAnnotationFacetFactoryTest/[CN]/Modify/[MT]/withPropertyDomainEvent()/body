@@ -1,11 +1,11 @@
 {
 class Customer {
-class NamedChanged extends PropertyDomainEvent<Customer,String> {
-      public NamedChanged(      final Customer source,      final Identifier identifier,      final String oldValue,      final String newValue){
+class NamedChangedDomainEvent extends PropertyDomainEvent<Customer,String> {
+      public NamedChangedDomainEvent(      final Customer source,      final Identifier identifier,      final String oldValue,      final String newValue){
         super(source,identifier,oldValue,newValue);
       }
     }
-    @Property(domainEvent=Customer.NamedChanged.class) public String getName(){
+    @Property(domainEvent=NamedChangedDomainEvent.class) public String getName(){
       return null;
     }
     public void setName(    final String name){
@@ -23,15 +23,15 @@ class NamedChanged extends PropertyDomainEvent<Customer,String> {
   Assert.assertNotNull(domainEventFacet);
   Assert.assertTrue(domainEventFacet instanceof PropertyDomainEventFacetForPropertyAnnotation);
   final PropertyDomainEventFacetForPropertyAnnotation domainEventFacetImpl=(PropertyDomainEventFacetForPropertyAnnotation)domainEventFacet;
-  assertThat(domainEventFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
+  assertThat(domainEventFacetImpl.value(),classEqualTo(Customer.NamedChangedDomainEvent.class));
   final Facet setterFacet=facetedMethod.getFacet(PropertySetterFacet.class);
   Assert.assertNotNull(setterFacet);
   Assert.assertTrue(setterFacet instanceof PropertySetterFacetForDomainEventFromPropertyAnnotation);
   final PropertySetterFacetForDomainEventFromPropertyAnnotation setterFacetImpl=(PropertySetterFacetForDomainEventFromPropertyAnnotation)setterFacet;
-  assertThat(setterFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
+  assertThat(setterFacetImpl.value(),classEqualTo(Customer.NamedChangedDomainEvent.class));
   final Facet clearFacet=facetedMethod.getFacet(PropertyClearFacet.class);
   Assert.assertNotNull(clearFacet);
   Assert.assertTrue(clearFacet instanceof PropertyClearFacetForDomainEventFromPropertyAnnotation);
   final PropertyClearFacetForDomainEventFromPropertyAnnotation clearFacetImpl=(PropertyClearFacetForDomainEventFromPropertyAnnotation)clearFacet;
-  assertThat(clearFacetImpl.value(),classEqualTo(Customer.NamedChanged.class));
+  assertThat(clearFacetImpl.value(),classEqualTo(Customer.NamedChangedDomainEvent.class));
 }

@@ -1,11 +1,11 @@
 {
 class Customer {
-class SomeActionInvoked extends ActionInvokedEvent<Customer> {
-      public SomeActionInvoked(      final Customer source,      final Identifier identifier,      final Object... arguments){
+class SomeActionInvokedDomainEvent extends ActionInvokedEvent<Customer> {
+      public SomeActionInvokedDomainEvent(      final Customer source,      final Identifier identifier,      final Object... arguments){
         super(source,identifier,arguments);
       }
     }
-    @PostsActionInvokedEvent(Customer.SomeActionInvoked.class) public void someAction(){
+    @PostsActionInvokedEvent(SomeActionInvokedDomainEvent.class) public void someAction(){
     }
   }
   final Class<?> cls=Customer.class;
@@ -23,5 +23,5 @@ class SomeActionInvoked extends ActionInvokedEvent<Customer> {
   Assert.assertNotNull(invocationFacet);
   Assert.assertTrue(invocationFacet instanceof ActionInvocationFacetForPostsActionInvokedEventAnnotation);
   final ActionInvocationFacetForPostsActionInvokedEventAnnotation invocationFacetImpl=(ActionInvocationFacetForPostsActionInvokedEventAnnotation)invocationFacet;
-  assertThat(invocationFacetImpl.getEventType(),classEqualTo(Customer.SomeActionInvoked.class));
+  assertThat(invocationFacetImpl.getEventType(),classEqualTo(Customer.SomeActionInvokedDomainEvent.class));
 }
