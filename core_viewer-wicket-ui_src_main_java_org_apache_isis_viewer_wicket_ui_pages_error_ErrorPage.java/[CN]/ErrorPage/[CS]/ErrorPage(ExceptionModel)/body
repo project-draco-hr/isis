@@ -1,5 +1,23 @@
 {
   super(PageParametersUtils.newPageParameters(),null);
   addBookmarkedPages(themeDiv);
+  final ErrorReportingService errorReportingService=getServicesInjector().lookupService(ErrorReportingService.class);
+  if (errorReportingService != null) {
+    final String mainMessage=exceptionModel.getMainMessage();
+    final boolean recognized=exceptionModel.isRecognized();
+    final boolean authorizationException=exceptionModel.isAuthorizationException();
+    final List<StackTraceDetail> stackTrace=exceptionModel.getStackTrace();
+    final List<String> stackDetails=Lists.transform(stackTrace,new Function<StackTraceDetail,String>(){
+      @Nullable @Override public String apply(      final StackTraceDetail stackTraceDetail){
+        return stackTraceDetail.getLine();
+      }
+    }
+);
+    final ErrorDetails errorDetails=new ErrorDetails(mainMessage,recognized,authorizationException,stackDetails);
+    final Ticket ticket=errorReportingService.reportError(errorDetails);
+    if (ticket != null) {
+      exceptionModel.setTicket(ticket);
+    }
+  }
   themeDiv.add(new ExceptionStackTracePanel(ID_EXCEPTION_STACK_TRACE,exceptionModel));
 }

@@ -1,10 +1,21 @@
 {
   super(id,exceptionModel);
-  final String mainMessage=exceptionModel.getMainMessage();
+  final Ticket ticket=exceptionModel.getTicket();
+  final String mainMessage=ticket != null && ticket.getUserMessage() != null ? ticket.getUserMessage() : exceptionModel.getMainMessage();
   final Label label=new Label(ID_MAIN_MESSAGE,mainMessage);
   add(label);
-  final boolean suppressDetail=exceptionModel.isAuthorizationException() || exceptionModel.isRecognized();
-  if (suppressDetail) {
+  final String ticketDetail=ticket != null ? ticket.getDetails() : null;
+  if (ticketDetail == null) {
+    Components.permanentlyHide(this,ID_USER_DETAIL);
+  }
+ else {
+    final WebMarkupContainer panel=new WebMarkupContainer(ID_USER_DETAIL);
+    final MultiLineLabel details=new MultiLineLabel(ID_DETAILS,Model.of(ticketDetail));
+    panel.add(details);
+    add(panel);
+  }
+  final boolean suppressExceptionDetail=exceptionModel.isAuthorizationException() || exceptionModel.isRecognized();
+  if (suppressExceptionDetail) {
     Components.permanentlyHide(this,ID_EXCEPTION_DETAIL);
   }
  else {
