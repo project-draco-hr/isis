@@ -1,7 +1,18 @@
 {
-  final boolean alreadyExecuted=fixtureScriptClasses.values().contains(fixtureScript.getClass());
-  if (!alreadyExecuted) {
-    fixtureScriptClasses.put(fixtureScript.getQualifiedName(),fixtureScript.getClass());
+  final boolean previouslyExecuted=this.previouslyExecuted.contains(fixtureScript);
+  if (!previouslyExecuted) {
+    this.previouslyExecuted.add(fixtureScript);
   }
-  return !alreadyExecuted || fixtureScripts.getMultipleExecutionStrategy().isExecute();
+  final FixtureScripts.MultipleExecutionStrategy executionStrategy=fixtureScripts.getMultipleExecutionStrategy();
+switch (executionStrategy) {
+case IGNORE:
+case EXECUTE_ONCE_BY_CLASS:
+    return shouldExecuteForExecuteOnceByClassStrategy(fixtureScript);
+case EXECUTE_ONCE_BY_VALUE:
+  return !previouslyExecuted;
+case EXECUTE:
+return true;
+default :
+throw new IllegalArgumentException("Execution strategy: '" + executionStrategy + "' not recognized");
+}
 }
