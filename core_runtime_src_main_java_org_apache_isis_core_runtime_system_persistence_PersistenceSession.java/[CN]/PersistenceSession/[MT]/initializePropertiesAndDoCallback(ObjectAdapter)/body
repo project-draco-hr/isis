@@ -6,6 +6,13 @@
   final Object pojo=adapter.getObject();
   servicesInjector.injectServicesInto(pojo);
   CallbackFacet.Util.callCallback(adapter,CreatedCallbackFacet.class);
-  postEvent(new ObjectCreatedEvent.Default(),pojo);
+  if (Command.class.isAssignableFrom(pojo.getClass())) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Skipping postEvent for creation of Command pojo");
+    }
+  }
+ else {
+    postEvent(new ObjectCreatedEvent.Default(),pojo);
+  }
   return adapter;
 }
