@@ -1,9 +1,12 @@
 {
-  String packagePrefixes=configuration.get(PACKAGE_PREFIX_KEY);
-  if (Strings.isNullOrEmpty(packagePrefixes)) {
-    throw new IllegalArgumentException(String.format("Could not locate '%s' key in property files - aborting",PACKAGE_PREFIX_KEY));
+  Set<Class<?>> persistenceCapableTypes=AppManifest.Registry.instance().getPersistenceCapableTypes();
+  if (persistenceCapableTypes == null) {
+    persistenceCapableTypes=searchForPersistenceCapables(configuration);
   }
-  domPackages=parseDomPackages(packagePrefixes);
-  this.appManifestSpecified=configuration.get(SystemConstants.APP_MANIFEST_KEY) != null;
-  this.entityTypes=scanForEntityTypesIn(this.domPackages,this.appManifestSpecified);
+  for (  Class<?> persistenceCapableType : persistenceCapableTypes) {
+    if (ignore(persistenceCapableType)) {
+      continue;
+    }
+    this.entityTypes.add(persistenceCapableType.getCanonicalName());
+  }
 }

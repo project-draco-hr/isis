@@ -1,0 +1,14 @@
+{
+  final String packagePrefixes=lookupPackagePrefixes(configuration);
+  final Set<Class<?>> persistenceCapableTypes=Sets.newLinkedHashSet();
+  final List<String> domPackages=parseDomPackages(packagePrefixes);
+  for (  final String packageName : domPackages) {
+    Reflections reflections=new Reflections(packageName);
+    final Set<Class<?>> entityTypesInPackage=reflections.getTypesAnnotatedWith(PersistenceCapable.class);
+    if (!entitiesIn(entityTypesInPackage)) {
+      throw new IllegalArgumentException(String.format("Bad configuration.\n\nCould not locate any @PersistenceCapable entities in package '%s'\n" + "Check value of '%s' key in WEB-INF/*.properties\n",packageName,PACKAGE_PREFIX_KEY));
+    }
+    persistenceCapableTypes.addAll(entityTypesInPackage);
+  }
+  return persistenceCapableTypes;
+}
