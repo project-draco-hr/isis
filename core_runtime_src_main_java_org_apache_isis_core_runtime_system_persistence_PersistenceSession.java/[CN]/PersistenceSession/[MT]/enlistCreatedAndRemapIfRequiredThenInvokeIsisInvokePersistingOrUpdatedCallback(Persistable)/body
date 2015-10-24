@@ -6,13 +6,13 @@
     final RootOid persistentOid=createPersistentOrViewModelOid(pojo);
     remapAsPersistent(adapter,persistentOid);
     CallbackFacet.Util.callCallback(adapter,PersistedCallbackFacet.class);
-    postEvent(new ObjectPersistedEvent<>(pojo));
+    postEvent(new ObjectPersistedEvent.Default(),pojo);
     final IsisTransaction transaction=getCurrentTransaction();
     transaction.enlistCreated(adapter);
   }
  else {
     CallbackFacet.Util.callCallback(adapter,UpdatedCallbackFacet.class);
-    postEvent(new ObjectUpdatedEvent<>(pojo));
+    postEvent(new ObjectUpdatedEvent.Default(),pojo);
   }
   Version versionIfAny=getVersionIfAny(pojo);
   adapter.setVersion(versionIfAny);
