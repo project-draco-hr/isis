@@ -3,7 +3,9 @@
   for (  ObjectAssociation field : fields) {
     field.toDefault(adapter);
   }
-  servicesInjector.injectServicesInto(adapter.getObject());
+  final Object pojo=adapter.getObject();
+  servicesInjector.injectServicesInto(pojo);
   CallbackFacet.Util.callCallback(adapter,CreatedCallbackFacet.class);
+  postEvent(new ObjectCreatedEvent<>(pojo));
   return adapter;
 }

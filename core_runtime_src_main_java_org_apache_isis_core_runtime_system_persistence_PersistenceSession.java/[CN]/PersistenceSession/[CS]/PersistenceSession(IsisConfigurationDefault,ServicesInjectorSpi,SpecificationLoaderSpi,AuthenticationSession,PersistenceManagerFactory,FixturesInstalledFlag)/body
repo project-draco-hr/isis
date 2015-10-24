@@ -8,8 +8,10 @@
   this.fixturesInstalledFlag=fixturesInstalledFlag;
   this.servicesInjector=servicesInjector;
   this.jdoPersistenceManagerFactory=jdoPersistenceManagerFactory;
-  this.persistenceQueryFactory=new PersistenceQueryFactory(this,this.specificationLoader);
-  this.transactionManager=new IsisTransactionManager(this,this.servicesInjector);
+  final AdapterManager adapterManager=this;
+  this.persistenceQueryFactory=new PersistenceQueryFactory(adapterManager,specificationLoader);
+  final IsisTransactionManager.PersistenceSessionTransactionManagement psTranManagement=this;
+  this.transactionManager=new IsisTransactionManager(psTranManagement,servicesInjector);
   setState(State.NOT_INITIALIZED);
   final boolean concurrencyCheckingGloballyDisabled=configuration.getBoolean("isis.persistor.disableConcurrencyChecking",false);
   this.concurrencyCheckingGloballyEnabled=!concurrencyCheckingGloballyDisabled;
