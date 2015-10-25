@@ -1,0 +1,13 @@
+{
+  final Method[] methods=clz.getMethods();
+  Nullable<Method> nullableMethod=Nullable.none();
+  for (  final Method method : methods) {
+    final Annotation annotation=method.getAnnotation(annotationClass);
+    if (annotation != null) {
+      nullableMethod=Nullable.some(method);
+      break;
+    }
+  }
+  postConstructMethods.put(clz,nullableMethod);
+  return nullableMethod;
+}

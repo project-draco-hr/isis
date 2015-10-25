@@ -1,0 +1,9 @@
+{
+  final Map<Class,Nullable<Method>> cache=Maps.newHashMap();
+  final Method method=MethodFinderUtils.findAnnotatedMethod(new NoPostConstruct(),PostConstruct.class,cache);
+  assertThat(method,is(nullValue()));
+  final Nullable<Method> actual=cache.get(NoPostConstruct.class);
+  assertThat(actual,is(not(nullValue())));
+  assertThat(actual.isPresent(),is(false));
+  assertThat(actual.value(),is(nullValue()));
+}
