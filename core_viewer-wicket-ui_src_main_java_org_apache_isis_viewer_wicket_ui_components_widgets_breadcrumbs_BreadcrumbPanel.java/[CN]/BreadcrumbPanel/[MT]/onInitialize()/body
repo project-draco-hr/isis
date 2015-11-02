@@ -3,12 +3,12 @@
   final BreadcrumbModelProvider session=(BreadcrumbModelProvider)getSession();
   final BreadcrumbModel breadcrumbModel=session.getBreadcrumbModel();
   final IModel<EntityModel> entityModel=new Model<EntityModel>();
-  TextChoiceProvider<EntityModel> choiceProvider=new TextChoiceProvider<EntityModel>(){
+  ChoiceProvider<EntityModel> choiceProvider=new ChoiceProvider<EntityModel>(){
     private static final long serialVersionUID=1L;
-    @Override protected String getDisplayText(    EntityModel choice){
+    @Override public String getDisplayValue(    EntityModel choice){
       return breadcrumbModel.titleFor(choice);
     }
-    @Override protected Object getId(    EntityModel choice){
+    @Override public String getIdValue(    EntityModel choice){
       try {
         final PageParameters pageParameters=choice.getPageParameters();
         final String oidStr=PageParameterNames.OBJECT_OID.getStringFrom(pageParameters);
