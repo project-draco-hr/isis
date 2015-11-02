@@ -5,6 +5,7 @@
   }
   final CommandService commandService=getServiceOrNull(CommandService.class);
   final Command command=commandService != null ? commandService.create() : new CommandDefault();
+  servicesInjector.injectServicesInto(command);
   commandContext.setCommand(command);
   if (command.getTimestamp() == null) {
     command.setTimestamp(Clock.getTimeAsJavaSqlTimestamp());
