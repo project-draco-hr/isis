@@ -10,7 +10,9 @@
     }
     @Override protected Object getId(    EntityModel choice){
       try {
-        return PageParameterNames.OBJECT_OID.getStringFrom(choice.getPageParameters());
+        final PageParameters pageParameters=choice.getPageParameters();
+        final String oidStr=PageParameterNames.OBJECT_OID.getStringFrom(pageParameters);
+        return oidStr;
       }
  catch (      Exception ex) {
         breadcrumbModel.remove(choice);
@@ -18,7 +20,8 @@
       }
     }
     @Override public void query(    String term,    int page,    Response<EntityModel> response){
-      response.addAll(breadcrumbModel.getList());
+      final List<EntityModel> list=breadcrumbModel.getList();
+      response.addAll(list);
     }
     @Override public Collection<EntityModel> toChoices(    Collection<String> ids){
       return breadcrumbModel.getList();
