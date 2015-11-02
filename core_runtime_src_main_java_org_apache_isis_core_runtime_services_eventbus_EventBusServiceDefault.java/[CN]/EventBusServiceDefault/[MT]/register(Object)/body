@@ -5,8 +5,8 @@
     if (Annotations.getAnnotation(domainService.getClass(),RequestScoped.class) != null) {
       throw new IllegalArgumentException("Request-scoped services must register their proxy, not themselves");
     }
-    if (!allowLateRegistration && this.eventBusImplementation != null) {
-      throw new IllegalStateException("Event bus has already been created; too late to register any further (singleton) subscribers");
+    if (!allowLateRegistration && hasPosted()) {
+      throw new IllegalStateException("Events have already been posted; too late to register any further (singleton) subscribers");
     }
   }
   super.register(domainService);

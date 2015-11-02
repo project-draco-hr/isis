@@ -1,0 +1,8 @@
+{
+  eventBusService.init(ImmutableMap.of(EventBusServiceDefault.KEY_ALLOW_LATE_REGISTRATION,"false",EventBusServiceDefault.KEY_EVENT_BUS_IMPLEMENTATION,"guava"));
+  assertThat(eventBusService.isAllowLateRegistration(),is(false));
+  assertThat(eventBusService.getImplementation(),is("guava"));
+  eventBusService.post(new Object());
+  expectedException.expect(IllegalStateException.class);
+  eventBusService.register(new Subscriber());
+}
