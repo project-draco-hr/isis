@@ -9,15 +9,7 @@
       return breadcrumbModel.titleFor(choice);
     }
     @Override protected Object getId(    EntityModel choice){
-      try {
-        final PageParameters pageParameters=choice.getPageParameters();
-        final String oidStr=PageParameterNames.OBJECT_OID.getStringFrom(pageParameters);
-        return oidStr;
-      }
- catch (      Exception ex) {
-        breadcrumbModel.remove(choice);
-        return null;
-      }
+      return breadcrumbModel.getId(choice);
     }
     @Override public void query(    String term,    int page,    Response<EntityModel> response){
       final List<EntityModel> breadCrumbList=Lists.newArrayList(breadcrumbModel.getList());
