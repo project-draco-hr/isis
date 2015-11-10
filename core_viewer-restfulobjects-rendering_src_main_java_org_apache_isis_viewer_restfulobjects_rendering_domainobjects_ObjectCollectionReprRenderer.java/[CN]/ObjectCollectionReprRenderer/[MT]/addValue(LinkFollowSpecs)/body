@@ -3,13 +3,14 @@
   if (valueAdapter == null) {
     return;
   }
-  boolean eagerlyRender=rendererContext.honorUiHints() && renderEagerly(valueAdapter);
+  final LinkFollowSpecs followHref=linkFollower.follow("href");
+  boolean eagerlyRender=rendererContext.honorUiHints() && renderEagerly(valueAdapter) || !followHref.isTerminated();
   final CollectionFacet facet=CollectionFacetUtils.getCollectionFacetFromSpec(valueAdapter);
   final List<JsonRepresentation> list=Lists.newArrayList();
   for (  final ObjectAdapter elementAdapter : facet.iterable(valueAdapter)) {
     final LinkBuilder valueLinkBuilder=DomainObjectReprRenderer.newLinkToBuilder(rendererContext,Rel.VALUE,elementAdapter);
     if (eagerlyRender) {
-      final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),getLinkFollowSpecs(),JsonRepresentation.newMap());
+      final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(getRendererContext(),followHref,JsonRepresentation.newMap());
       renderer.with(elementAdapter);
       if (mode.isEventSerialization()) {
         renderer.asEventSerialization();

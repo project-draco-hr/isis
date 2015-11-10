@@ -22,7 +22,7 @@
     return JsonValueEncoder.appendValueAndFormat(spec,valueAdapter,representation,format,rendererContext.suppressMemberExtensions());
   }
   final RenderFacet renderFacet=objectMember.getFacet(RenderFacet.class);
-  boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY && rendererContext.canEagerlyRender(valueAdapter);
+  boolean eagerlyRender=renderFacet != null && renderFacet.value() == Type.EAGERLY && rendererContext.canEagerlyRender(valueAdapter) || !linkFollower.isTerminated();
   if (valueAdapter == null) {
     final NullNode value=NullNode.getInstance();
     representation.mapPut("value",value);
@@ -33,7 +33,7 @@
     final String title=titleFacet.title(valueAdapter,rendererContext.getLocalization());
     final LinkBuilder valueLinkBuilder=DomainObjectReprRenderer.newLinkToBuilder(rendererContext,Rel.VALUE,valueAdapter).withTitle(title);
     if (eagerlyRender) {
-      final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(rendererContext,getLinkFollowSpecs(),JsonRepresentation.newMap());
+      final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(rendererContext,linkFollower,JsonRepresentation.newMap());
       renderer.with(valueAdapter);
       if (mode.isEventSerialization()) {
         renderer.asEventSerialization();
