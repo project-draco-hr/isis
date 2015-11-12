@@ -2,18 +2,5 @@
   ActionModel actionModel=getActionModel();
   final ObjectAction action=actionModel.getActionMemento().getAction();
   SemanticsOf semanticsOf=SemanticsOf.from(action.getSemantics());
-  if (semanticsOf.isAreYouSure()) {
-    ConfirmationConfig confirmationConfig=new ConfirmationConfig();
-    final TranslationService translationService=getPersistenceSession().getServicesInjector().lookupService(TranslationService.class);
-    final String context=IsisSystem.class.getName();
-    final String areYouSure=translationService.translate(context,IsisSystem.MSG_ARE_YOU_SURE);
-    final String confirm=translationService.translate(context,IsisSystem.MSG_CONFIRM);
-    final String cancel=translationService.translate(context,IsisSystem.MSG_CANCEL);
-    confirmationConfig.withTitle(areYouSure);
-    confirmationConfig.withBtnOkLabel(confirm);
-    confirmationConfig.withBtnCancelLabel(cancel);
-    confirmationConfig.withBtnOkClass("btn btn-danger");
-    confirmationConfig.withBtnCancelClass("btn btn-default");
-    button.add(new ConfirmationBehavior(confirmationConfig));
-  }
+  addConfirmationDialogIfAreYouSureSemantics(button,semanticsOf);
 }

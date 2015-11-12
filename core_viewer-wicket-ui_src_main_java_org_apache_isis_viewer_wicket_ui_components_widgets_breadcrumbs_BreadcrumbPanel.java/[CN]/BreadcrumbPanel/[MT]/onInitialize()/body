@@ -2,26 +2,27 @@
   super.onInitialize();
   final BreadcrumbModelProvider session=(BreadcrumbModelProvider)getSession();
   final BreadcrumbModel breadcrumbModel=session.getBreadcrumbModel();
-  final IModel<EntityModel> entityModel=new Model<EntityModel>();
+  final IModel<EntityModel> entityModel=new Model<>();
   ChoiceProvider<EntityModel> choiceProvider=new ChoiceProvider<EntityModel>(){
     private static final long serialVersionUID=1L;
     @Override public String getDisplayValue(    EntityModel choice){
       return breadcrumbModel.titleFor(choice);
     }
     @Override public String getIdValue(    EntityModel choice){
-      try {
-        final PageParameters pageParameters=choice.getPageParameters();
-        final String oidStr=PageParameterNames.OBJECT_OID.getStringFrom(pageParameters);
-        return oidStr;
-      }
- catch (      Exception ex) {
-        breadcrumbModel.remove(choice);
-        return null;
-      }
+      RootOid rootOid=breadcrumbModel.getId(choice);
+      String id=IsisContext.getOidMarshaller().marshal(rootOid);
+      return id;
     }
     @Override public void query(    String term,    int page,    Response<EntityModel> response){
-      final List<EntityModel> list=breadcrumbModel.getList();
-      response.addAll(list);
+      final List<EntityModel> breadCrumbList=Lists.newArrayList(breadcrumbModel.getList());
+      final List<EntityModel> checkedList=Lists.newArrayList(Iterables.filter(breadCrumbList,new Predicate<EntityModel>(){
+        @Override public boolean apply(        final EntityModel input){
+          final Object id=getIdValue(input);
+          return id != null;
+        }
+      }
+));
+      response.addAll(checkedList);
     }
     @Override public Collection<EntityModel> toChoices(    Collection<String> ids){
       return breadcrumbModel.getList();
