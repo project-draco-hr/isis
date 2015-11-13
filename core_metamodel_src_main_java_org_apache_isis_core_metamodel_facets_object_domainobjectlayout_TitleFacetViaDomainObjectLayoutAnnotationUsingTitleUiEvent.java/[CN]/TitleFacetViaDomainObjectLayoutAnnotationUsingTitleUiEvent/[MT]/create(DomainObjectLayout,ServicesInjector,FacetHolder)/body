@@ -1,0 +1,11 @@
+{
+  if (domainObjectLayout == null) {
+    return null;
+  }
+  final Class<? extends TitleUiEvent<?>> titleUiEventClass=domainObjectLayout.titleUiEvent();
+  final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
+  final ObjectSpecification facetHolderAsSpec=(ObjectSpecification)facetHolder;
+  final String translationContext=facetHolderAsSpec.getCorrespondingClass().getCanonicalName();
+  final EventBusService eventBusService=servicesInjector.lookupService(EventBusService.class);
+  return new TitleFacetViaDomainObjectLayoutAnnotationUsingTitleUiEvent(titleUiEventClass,translationService,translationContext,eventBusService,facetHolder);
+}
