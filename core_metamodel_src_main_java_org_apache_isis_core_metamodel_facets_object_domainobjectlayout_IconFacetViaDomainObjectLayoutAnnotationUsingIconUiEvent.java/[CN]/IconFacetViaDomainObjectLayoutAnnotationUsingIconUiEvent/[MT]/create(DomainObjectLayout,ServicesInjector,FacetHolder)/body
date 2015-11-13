@@ -3,9 +3,9 @@
     return null;
   }
   final Class<? extends IconUiEvent<?>> iconUiEventClass=domainObjectLayout.iconUiEvent();
-  final TranslationService translationService=servicesInjector.lookupService(TranslationService.class);
-  final ObjectSpecification facetHolderAsSpec=(ObjectSpecification)facetHolder;
-  final String translationContext=facetHolderAsSpec.getCorrespondingClass().getCanonicalName();
+  if (IconUiEvent.Noop.class.isAssignableFrom(iconUiEventClass)) {
+    return null;
+  }
   final EventBusService eventBusService=servicesInjector.lookupService(EventBusService.class);
-  return new IconFacetViaDomainObjectLayoutAnnotationUsingIconUiEvent(iconUiEventClass,translationService,translationContext,eventBusService,facetHolder);
+  return new IconFacetViaDomainObjectLayoutAnnotationUsingIconUiEvent(iconUiEventClass,eventBusService,facetHolder);
 }

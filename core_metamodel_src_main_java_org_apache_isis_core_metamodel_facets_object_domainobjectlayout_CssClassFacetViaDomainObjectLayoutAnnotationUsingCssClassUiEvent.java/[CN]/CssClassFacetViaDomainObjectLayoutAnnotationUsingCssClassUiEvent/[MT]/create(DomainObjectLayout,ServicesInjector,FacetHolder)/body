@@ -1,0 +1,11 @@
+{
+  if (domainObjectLayout == null) {
+    return null;
+  }
+  final Class<? extends CssClassUiEvent<?>> cssClassUiEventClass=domainObjectLayout.cssClassUiEvent();
+  if (CssClassUiEvent.Noop.class.isAssignableFrom(cssClassUiEventClass)) {
+    return null;
+  }
+  final EventBusService eventBusService=servicesInjector.lookupService(EventBusService.class);
+  return new CssClassFacetViaDomainObjectLayoutAnnotationUsingCssClassUiEvent(cssClassUiEventClass,eventBusService,facetHolder);
+}
