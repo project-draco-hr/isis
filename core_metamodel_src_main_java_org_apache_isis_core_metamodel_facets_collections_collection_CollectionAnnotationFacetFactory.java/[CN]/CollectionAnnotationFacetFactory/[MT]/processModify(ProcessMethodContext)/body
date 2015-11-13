@@ -23,7 +23,9 @@
     collectionDomainEventType=CollectionDomainEvent.Default.class;
     collectionDomainEventFacet=new CollectionDomainEventFacetDefault(collectionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
   }
-  FacetUtil.addFacet(collectionDomainEventFacet);
+  if (!CollectionDomainEvent.Noop.class.isAssignableFrom(collectionDomainEventFacet.getEventType())) {
+    FacetUtil.addFacet(collectionDomainEventFacet);
+  }
   final CollectionAddToFacet collectionAddToFacet=holder.getFacet(CollectionAddToFacet.class);
   if (collectionAddToFacet != null) {
     final CollectionAddToFacetForDomainEventFromAbstract replacementFacet;
