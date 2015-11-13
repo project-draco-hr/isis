@@ -1,0 +1,9 @@
+{
+  if (getRecreationMechanism() == RecreationMechanism.INITIALIZES) {
+    throw new IllegalStateException("This view model instantiates rather than initializes");
+  }
+  final Object viewModelPojo=doInstantiate(viewModelClass,mementoStr);
+  servicesInjector.injectInto(viewModelPojo);
+  invokePostConstructMethod(viewModelPojo);
+  return viewModelPojo;
+}

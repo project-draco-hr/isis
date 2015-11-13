@@ -1,13 +1,12 @@
 {
   final ObjectSpecification spec=specificationLoader.lookupBySpecId(rootOid.getObjectSpecId());
-  final Object pojo=instantiateAndInjectServices(spec);
+  final Object pojo;
   if (rootOid.isViewModel()) {
-    final ViewModelFacet facet=spec.getFacet(ViewModelFacet.class);
-    if (facet == null) {
-      throw new IllegalArgumentException("spec does not have RecreatableObjectFacet; " + rootOid.toString() + "; spec is "+ spec.getFullIdentifier());
-    }
     final String memento=rootOid.getIdentifier();
-    initialize(facet,pojo,memento);
+    pojo=recreateViewModel(spec,memento);
+  }
+ else {
+    pojo=instantiateAndInjectServices(spec);
   }
   return pojo;
 }

@@ -1,0 +1,17 @@
+{
+  try {
+    final Class<?> domainClass=domainObject.getClass();
+    final JAXBContext context=JAXBContext.newInstance(domainClass);
+    final PersistentEntityAdapter adapter=new PersistentEntityAdapter();
+    container.injectServicesInto(adapter);
+    final Marshaller marshaller=context.createMarshaller();
+    marshaller.setAdapter(PersistentEntityAdapter.class,adapter);
+    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+    final StringWriter sw=new StringWriter();
+    marshaller.marshal(domainObject,sw);
+    return sw.toString();
+  }
+ catch (  final JAXBException ex) {
+    throw new ApplicationException(ex);
+  }
+}

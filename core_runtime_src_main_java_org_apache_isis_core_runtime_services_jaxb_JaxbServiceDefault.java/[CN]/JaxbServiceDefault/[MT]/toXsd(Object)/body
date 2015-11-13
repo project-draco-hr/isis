@@ -1,0 +1,12 @@
+{
+  try {
+    final Class<?> domainClass=domainObject.getClass();
+    final JAXBContext context=JAXBContext.newInstance(domainClass);
+    final CatalogingSchemaOutputResolver outputResolver=new CatalogingSchemaOutputResolver();
+    context.generateSchema(outputResolver);
+    return outputResolver.asMap();
+  }
+ catch (  final JAXBException|IOException ex) {
+    throw new ApplicationException(ex);
+  }
+}
