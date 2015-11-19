@@ -22,7 +22,7 @@
     propertyDomainEventType=PropertyDomainEvent.Default.class;
     propertyDomainEventFacet=new PropertyDomainEventFacetDefault(propertyDomainEventType,getterFacet,servicesInjector,getSpecificationLoader(),holder);
   }
-  if (!PropertyDomainEvent.Noop.class.isAssignableFrom(propertyDomainEventFacet.getEventType())) {
+  if (EventUtil.eventTypeIsPostable(propertyDomainEventFacet.getEventType(),PropertyDomainEvent.Noop.class,PropertyDomainEvent.Default.class,"isis.services.eventbus.propertyDomainEvent.postForDefault",this.configuration)) {
     FacetUtil.addFacet(propertyDomainEventFacet);
   }
   final PropertySetterFacet setterFacet=holder.getFacet(PropertySetterFacet.class);

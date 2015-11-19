@@ -26,7 +26,7 @@
       actionDomainEventType=ActionDomainEvent.Default.class;
       actionDomainEventFacet=new ActionDomainEventFacetDefault(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
     }
-    if (!ActionDomainEvent.Noop.class.isAssignableFrom(actionDomainEventFacet.getEventType())) {
+    if (EventUtil.eventTypeIsPostable(actionDomainEventFacet.getEventType(),ActionDomainEvent.Noop.class,ActionDomainEvent.Default.class,"isis.services.eventbus.actionDomainEvent.postForDefault",this.configuration)) {
       FacetUtil.addFacet(actionDomainEventFacet);
     }
     final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;

@@ -26,6 +26,9 @@
   if (!CollectionDomainEvent.Noop.class.isAssignableFrom(collectionDomainEventFacet.getEventType())) {
     FacetUtil.addFacet(collectionDomainEventFacet);
   }
+  if (EventUtil.eventTypeIsPostable(collectionDomainEventFacet.getEventType(),CollectionDomainEvent.Noop.class,CollectionDomainEvent.Default.class,"isis.services.eventbus.collectionDomainEvent.postForDefault",this.configuration)) {
+    FacetUtil.addFacet(collectionDomainEventFacet);
+  }
   final CollectionAddToFacet collectionAddToFacet=holder.getFacet(CollectionAddToFacet.class);
   if (collectionAddToFacet != null) {
     final CollectionAddToFacetForDomainEventFromAbstract replacementFacet;
