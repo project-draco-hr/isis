@@ -1,0 +1,33 @@
+{
+  final Object instance=InstanceUtil.createInstance(dtoClassName);
+  final Map<String,String> schemaByNamespace=jaxbService.toXsd(instance,JaxbService.IsisSchemas.INCLUDE);
+  final File schemaDir=separate ? new File(outputDir,dtoClassName) : outputDir;
+  unnamed=0;
+  for (  Map.Entry<String,String> entry : schemaByNamespace.entrySet()) {
+    final String namespaceUri=entry.getKey();
+    final String schemaText=entry.getValue();
+    final String xsdName=xsdDirNameFor(namespaceUri);
+    final File schemaFile=new File(schemaDir,xsdName);
+    try {
+      Files.createParentDirs(schemaFile);
+    }
+ catch (    IOException e) {
+      throw new MojoFailureException(String.format("Failed to create dir: '%s'",schemaFile.getParent()));
+    }
+    try {
+      Files.write(schemaText,schemaFile,Charsets.UTF_8);
+    }
+ catch (    IOException e) {
+      throw new MojoFailureException("Failed to write out " + schemaFile);
+    }
+    if (!xsdName.endsWith(".xsd")) {
+      final File schemaFileWithXsdSuffix=new File(schemaDir,xsdName + ".xsd");
+      try {
+        Files.copy(schemaFile,schemaFileWithXsdSuffix);
+      }
+ catch (      IOException e) {
+        throw new MojoFailureException("Failed to copy to " + schemaFileWithXsdSuffix);
+      }
+    }
+  }
+}
