@@ -1,0 +1,15 @@
+{
+  if (cls == null) {
+    return;
+  }
+  final Method[] methods=cls.getMethods();
+  for (  final Method method : methods) {
+    removeAnnotatedMethods(methodRemover,method,Subscribe.class);
+    try {
+      final Class annotationClass=ClassUtil.forName("org.axonframework.eventhandling.annotation.EventHandler");
+      removeAnnotatedMethods(methodRemover,method,annotationClass);
+    }
+ catch (    Exception ignore) {
+    }
+  }
+}
