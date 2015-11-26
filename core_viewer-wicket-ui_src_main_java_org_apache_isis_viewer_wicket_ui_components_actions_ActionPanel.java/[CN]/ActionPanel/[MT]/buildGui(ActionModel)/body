@@ -1,15 +1,8 @@
 {
   if (actionModel.hasParameters()) {
-    buildGuiForParameters();
+    buildGuiForParameters(getActionModel());
   }
  else {
-    boolean succeeded=executeActionAndProcessResults(null,null);
-    if (succeeded) {
-    }
- else {
-      final ObjectAdapter targetAdapter=actionModel.getTargetAdapter();
-      ActionResultResponse resultResponse=ActionResultResponseType.OBJECT.interpretResult(this.getActionModel(),targetAdapter,null);
-      resultResponse.getHandlingStrategy().handleResults(this,resultResponse);
-    }
+    buildGuiForNoParameters(actionModel);
   }
 }

@@ -1,15 +1,8 @@
 {
-  WebMarkupContainer header=new WebMarkupContainer(ID_HEADER){
-    @Override protected void onConfigure(){
-      super.onConfigure();
-      setVisible(showHeader);
-    }
-  }
-;
-  addOrReplace(header);
+  WebMarkupContainer header=addHeader();
   ObjectAdapter targetAdapter=null;
   try {
-    targetAdapter=getActionModel().getTargetAdapter();
+    targetAdapter=actionModel.getTargetAdapter();
     getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.PARAMETERS,getActionModel());
     getComponentFactoryRegistry().addOrReplaceComponent(header,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
     final String actionName=getActionModel().getActionMemento().getAction().getName();
