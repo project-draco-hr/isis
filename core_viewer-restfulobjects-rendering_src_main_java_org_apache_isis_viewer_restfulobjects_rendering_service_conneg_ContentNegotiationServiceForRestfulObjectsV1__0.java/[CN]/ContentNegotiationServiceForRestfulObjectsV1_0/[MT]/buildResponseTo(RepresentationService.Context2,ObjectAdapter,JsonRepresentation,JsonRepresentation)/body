@@ -1,7 +1,7 @@
 {
-  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(renderContext2,null,JsonRepresentation.newMap());
+  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(renderContext2,null,representation);
   renderer.with(objectAdapter).includesSelf();
-  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE);
+  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE,rootRepresentation);
   if (renderContext2 instanceof RepresentationService.Context6) {
     final RepresentationService.Context6 context6=(RepresentationService.Context6)renderContext2;
     final RepresentationService.Intent intent=context6.getIntent();
@@ -13,5 +13,5 @@
   if (version != null && version.getTime() != null) {
     responseBuilder.tag(ETAG_FORMAT.format(version.getTime()));
   }
-  return responseBuilder(responseBuilder);
+  return responseBuilder;
 }

@@ -4,13 +4,13 @@
   }
   final String producedProfile=representationType.getMediaTypeProfile();
   if (producedProfile != null) {
-    for (    MediaType mediaType : httpHeaders.getAcceptableMediaTypes()) {
+    for (    MediaType mediaType : acceptableMediaTypes) {
       String acceptedProfileValue=mediaType.getParameters().get("profile");
       if (acceptedProfileValue == null) {
         continue;
       }
       if (!producedProfile.equals(acceptedProfileValue)) {
-        throw RestfulObjectsApplicationException.create(HttpStatusCode.NOT_ACCEPTABLE);
+        throw RestfulObjectsApplicationException.create(RestfulResponse.HttpStatusCode.NOT_ACCEPTABLE);
       }
     }
   }

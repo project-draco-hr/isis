@@ -1,23 +1,38 @@
 {
-  final RepresentationType representationType=RepresentationType.DOMAIN_OBJECT;
   final List<MediaType> acceptableMediaTypes=renderContext2.getAcceptableMediaTypes();
-  boolean canAccept=canAccept(representationType,acceptableMediaTypes,ACCEPT_OBJECT);
+  boolean canAccept=canAccept(acceptableMediaTypes,ACCEPT_OBJECT);
   if (!canAccept) {
     return null;
   }
-  JsonRepresentation representation=JsonRepresentation.newMap();
+  final InteractionInitiatedBy interactionInitiatedBy=determineInteractionInitiatedByFrom(renderContext2);
+  final Where where=renderContext2.getWhere();
+  final JsonRepresentation rootRepresentation=JsonRepresentation.newMap();
   List<OneToOneAssociation> properties=objectAdapter.getSpecification().getProperties(Contributed.INCLUDED);
-  for (  OneToOneAssociation property : properties) {
-    Consent visibility=property.isVisible(objectAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE);
-    if (visibility.isAllowed()) {
+  for (  final OneToOneAssociation property : properties) {
+    final Consent visibility=property.isVisible(objectAdapter,interactionInitiatedBy,where);
+    if (!visibility.isAllowed()) {
+      continue;
     }
+    final JsonRepresentation propertyRepresentation=JsonRepresentation.newMap();
+    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(renderContext2,null,property.getId(),propertyRepresentation);
+    renderer.with(new ObjectAndProperty(objectAdapter,property));
+    final JsonRepresentation propertyValueRepresentation=renderer.render();
+    rootRepresentation.mapPut(property.getId(),propertyValueRepresentation.getRepresentation("value"));
   }
-  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(renderContext2,null,representation);
-  renderer.with(objectAdapter).includesSelf();
-  final Response.ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE);
-  final Version version=objectAdapter.getVersion();
-  if (version != null && version.getTime() != null) {
-    responseBuilder.tag(ETAG_FORMAT.format(version.getTime()));
+  List<OneToManyAssociation> collections=objectAdapter.getSpecification().getCollections(Contributed.INCLUDED);
+  for (  final OneToManyAssociation collection : collections) {
+    final Consent visibility=collection.isVisible(objectAdapter,interactionInitiatedBy,where);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    final JsonRepresentation propertyRepresentation=JsonRepresentation.newMap();
+    final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(renderContext2,null,collection.getId(),propertyRepresentation);
+    renderer.with(new ObjectAndCollection(objectAdapter,collection));
+    final JsonRepresentation collectionValueRepresentation=renderer.render();
+    rootRepresentation.mapPut(collection.getId(),collectionValueRepresentation);
   }
-  return null;
+  final JsonRepresentation $$roRepresentation=JsonRepresentation.newMap();
+  rootRepresentation.mapPut("$$ro",$$roRepresentation);
+  final Response.ResponseBuilder responseBuilder=restfulObjectsV1_0.buildResponseTo(renderContext2,objectAdapter,$$roRepresentation,rootRepresentation);
+  return responseBuilder(responseBuilder);
 }
