@@ -1,5 +1,5 @@
 {
-  init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS);
+  init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS,RepresentationService.Intent.JUST_CREATED);
   final String objectStr=Util.asStringUtf8(object);
   final JsonRepresentation objectRepr=Util.readAsMap(objectStr);
   if (!objectRepr.isMap()) {
@@ -23,5 +23,5 @@
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,objectRepr,validity.getReason());
   }
   getResourceContext().getPersistenceSession().makePersistentInTransaction(objectAdapter);
-  return getDomainResourceHelper(objectAdapter).objectRepresentation(RepresentationService.Intent.JUST_CREATED);
+  return newDomainResourceHelper(objectAdapter).objectRepresentation(RepresentationService.Intent.JUST_CREATED);
 }

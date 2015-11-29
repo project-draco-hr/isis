@@ -1,19 +1,11 @@
 {
-  ResponseBuilder responseBuilder=null;
-  if (rendererContext instanceof Context2) {
-    final Context2 renderContext2=(Context2)rendererContext;
-    final List<ContentNegotiationService> contentNegotiationServices=lookupService(renderContext2,ContentNegotiationService.class);
-    for (    final ContentNegotiationService contentNegotiationService : contentNegotiationServices) {
-      responseBuilder=contentNegotiationService.buildResponse(renderContext2,objectAndProperty);
-      if (responseBuilder != null) {
-        break;
-      }
+  final Context2 renderContext2=asContext2(rendererContext);
+  final ResponseBuilder responseBuilder=buildResponse(new Function<ContentNegotiationService,ResponseBuilder>(){
+    @Override public ResponseBuilder apply(    final ContentNegotiationService connegService){
+      return connegService.buildResponse(renderContext2,objectAndProperty);
     }
   }
-  if (responseBuilder == null) {
-    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(rendererContext);
-    renderer.with(objectAndProperty).usingLinkTo(rendererContext.getAdapterLinkTo()).withMemberMode(memberReprMode);
-    responseBuilder=Responses.ofOk(renderer,Caching.NONE);
-  }
+);
+  assertContentNegotiationServiceHandled(responseBuilder);
   return buildResponse(responseBuilder);
 }

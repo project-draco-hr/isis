@@ -1,0 +1,7 @@
+{
+  final ActionResultReprRenderer renderer=new ActionResultReprRenderer(renderContext2,objectAndActionInvocation.getSelfLink());
+  renderer.with(objectAndActionInvocation).using(renderContext2.getAdapterLinkTo());
+  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE);
+  Responses.addLastModifiedAndETagIfAvailable(responseBuilder,objectAndActionInvocation.getObjectAdapter().getVersion());
+  return responseBuilder(responseBuilder);
+}
