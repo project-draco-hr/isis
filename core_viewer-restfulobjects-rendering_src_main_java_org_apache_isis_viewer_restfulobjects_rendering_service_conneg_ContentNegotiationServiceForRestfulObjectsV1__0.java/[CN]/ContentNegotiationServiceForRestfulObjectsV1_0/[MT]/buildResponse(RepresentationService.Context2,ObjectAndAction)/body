@@ -1,0 +1,8 @@
+{
+  final List<MediaType> list=rendererContext.getAcceptableMediaTypes();
+  ensureCompatibleAcceptHeader(RepresentationType.OBJECT_ACTION,list);
+  final ObjectActionReprRenderer renderer=new ObjectActionReprRenderer(rendererContext);
+  renderer.with(objectAndAction).usingLinkTo(rendererContext.getAdapterLinkTo()).asStandalone();
+  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE);
+  return responseBuilder(responseBuilder);
+}

@@ -1,0 +1,23 @@
+{
+  final ObjectSpecification returnType=this.action.getReturnType();
+switch (resultType) {
+case VOID:
+    return null;
+case LIST:
+  final CollectionFacet collectionFacet=returnType.getFacet(CollectionFacet.class);
+final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
+final ListReprRenderer listReprRenderer=new ListReprRenderer(rendererContext,null,representation).withElementRel(Rel.ELEMENT);
+listReprRenderer.with(collectionAdapters).withReturnType(action.getReturnType()).withElementType(returnedAdapter.getElementSpecification());
+return listReprRenderer;
+case SCALAR_VALUE:
+final ScalarValueReprRenderer scalarValueReprRenderer=new ScalarValueReprRenderer(rendererContext,null,representation);
+scalarValueReprRenderer.with(returnedAdapter).withReturnType(action.getReturnType());
+return scalarValueReprRenderer;
+case DOMAIN_OBJECT:
+final DomainObjectReprRenderer objectReprRenderer=new DomainObjectReprRenderer(rendererContext,null,representation);
+objectReprRenderer.with(returnedAdapter).includesSelf();
+return objectReprRenderer;
+default :
+throw new IllegalStateException("All possible states of ResultType enumerated; resultType = " + resultType);
+}
+}

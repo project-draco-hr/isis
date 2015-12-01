@@ -1,0 +1,23 @@
+{
+  if (!canAccept(rendererContext)) {
+    return null;
+  }
+  boolean suppressRO=suppress(rendererContext);
+  final JsonRepresentation rootRepresentation=JsonRepresentation.newArray();
+  ObjectAdapter objectAdapter=objectAndCollection.getObjectAdapter();
+  OneToManyAssociation collection=objectAndCollection.getMember();
+  appendCollectionTo(rendererContext,objectAdapter,collection,rootRepresentation);
+  final JsonRepresentation $$roRepresentation;
+  if (!suppressRO) {
+    final JsonRepresentation $$roContainerRepresentation=JsonRepresentation.newMap();
+    rootRepresentation.arrayAdd($$roContainerRepresentation);
+    $$roRepresentation=JsonRepresentation.newMap();
+    $$roContainerRepresentation.mapPut("$$ro",$$roRepresentation);
+  }
+ else {
+    $$roRepresentation=null;
+  }
+  final Response.ResponseBuilder responseBuilder=restfulObjectsV1_0.buildResponseTo(rendererContext,objectAndCollection,$$roRepresentation,rootRepresentation);
+  responseBuilder.type(CONTENT_TYPE_OAI_V1_OBJECT_COLLECTION);
+  return responseBuilder(responseBuilder);
+}

@@ -1,0 +1,21 @@
+{
+  final InteractionInitiatedBy interactionInitiatedBy=determineInteractionInitiatedByFrom(rendererContext);
+  final Where where=rendererContext.getWhere();
+  List<OneToOneAssociation> properties=objectAdapter.getSpecification().getProperties(Contributed.INCLUDED);
+  for (  final OneToOneAssociation property : properties) {
+    final Consent visibility=property.isVisible(objectAdapter,interactionInitiatedBy,where);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    final JsonRepresentation propertyRepresentation=JsonRepresentation.newMap();
+    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(rendererContext,null,property.getId(),propertyRepresentation).asStandalone();
+    renderer.with(new ObjectAndProperty(objectAdapter,property));
+    final JsonRepresentation propertyValueRepresentation=renderer.render();
+    final String upHref=propertyValueRepresentation.getString("links[rel=up].href");
+    rootRepresentation.mapPut("$$href",upHref);
+    final String upTitle=propertyValueRepresentation.getString("links[rel=up].title");
+    rootRepresentation.mapPut("$$title",upTitle);
+    final JsonRepresentation value=propertyValueRepresentation.getRepresentation("value");
+    rootRepresentation.mapPut(property.getId(),value);
+  }
+}
