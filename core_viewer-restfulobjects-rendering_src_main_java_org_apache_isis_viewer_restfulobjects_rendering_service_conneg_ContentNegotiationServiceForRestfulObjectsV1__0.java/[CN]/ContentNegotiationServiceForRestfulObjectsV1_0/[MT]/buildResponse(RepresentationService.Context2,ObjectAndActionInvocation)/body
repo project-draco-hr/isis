@@ -1,9 +1,6 @@
 {
-  final List<MediaType> list=renderContext2.getAcceptableMediaTypes();
+  final List<MediaType> list=rendererContext.getAcceptableMediaTypes();
   ensureCompatibleAcceptHeader(RepresentationType.ACTION_RESULT,list);
-  final ActionResultReprRenderer renderer=new ActionResultReprRenderer(renderContext2,objectAndActionInvocation.getSelfLink());
-  renderer.with(objectAndActionInvocation).using(renderContext2.getAdapterLinkTo());
-  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE);
-  Responses.addLastModifiedAndETagIfAvailable(responseBuilder,objectAndActionInvocation.getObjectAdapter().getVersion());
+  final ResponseBuilder responseBuilder=buildResponseTo(rendererContext,objectAndActionInvocation,JsonRepresentation.newMap(),null);
   return responseBuilder(responseBuilder);
 }

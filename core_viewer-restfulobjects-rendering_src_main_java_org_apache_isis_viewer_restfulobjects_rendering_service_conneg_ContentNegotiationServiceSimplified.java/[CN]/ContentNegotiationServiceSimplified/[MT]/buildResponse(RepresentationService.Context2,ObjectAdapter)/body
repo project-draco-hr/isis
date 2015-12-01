@@ -1,38 +1,20 @@
 {
-  final List<MediaType> acceptableMediaTypes=renderContext2.getAcceptableMediaTypes();
-  boolean canAccept=canAccept(acceptableMediaTypes,ACCEPT_OBJECT);
+  boolean canAccept=canAccept(rendererContext);
   if (!canAccept) {
     return null;
   }
-  final InteractionInitiatedBy interactionInitiatedBy=determineInteractionInitiatedByFrom(renderContext2);
-  final Where where=renderContext2.getWhere();
+  boolean suppressRO=suppress(rendererContext);
   final JsonRepresentation rootRepresentation=JsonRepresentation.newMap();
-  List<OneToOneAssociation> properties=objectAdapter.getSpecification().getProperties(Contributed.INCLUDED);
-  for (  final OneToOneAssociation property : properties) {
-    final Consent visibility=property.isVisible(objectAdapter,interactionInitiatedBy,where);
-    if (!visibility.isAllowed()) {
-      continue;
-    }
-    final JsonRepresentation propertyRepresentation=JsonRepresentation.newMap();
-    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(renderContext2,null,property.getId(),propertyRepresentation);
-    renderer.with(new ObjectAndProperty(objectAdapter,property));
-    final JsonRepresentation propertyValueRepresentation=renderer.render();
-    rootRepresentation.mapPut(property.getId(),propertyValueRepresentation.getRepresentation("value"));
+  appendObjectTo(rendererContext,objectAdapter,rootRepresentation);
+  final JsonRepresentation $$roRepresentation;
+  if (!suppressRO) {
+    $$roRepresentation=JsonRepresentation.newMap();
+    rootRepresentation.mapPut("$$ro",$$roRepresentation);
   }
-  List<OneToManyAssociation> collections=objectAdapter.getSpecification().getCollections(Contributed.INCLUDED);
-  for (  final OneToManyAssociation collection : collections) {
-    final Consent visibility=collection.isVisible(objectAdapter,interactionInitiatedBy,where);
-    if (!visibility.isAllowed()) {
-      continue;
-    }
-    final JsonRepresentation propertyRepresentation=JsonRepresentation.newMap();
-    final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(renderContext2,null,collection.getId(),propertyRepresentation);
-    renderer.with(new ObjectAndCollection(objectAdapter,collection));
-    final JsonRepresentation collectionValueRepresentation=renderer.render();
-    rootRepresentation.mapPut(collection.getId(),collectionValueRepresentation);
+ else {
+    $$roRepresentation=null;
   }
-  final JsonRepresentation $$roRepresentation=JsonRepresentation.newMap();
-  rootRepresentation.mapPut("$$ro",$$roRepresentation);
-  final Response.ResponseBuilder responseBuilder=restfulObjectsV1_0.buildResponseTo(renderContext2,objectAdapter,$$roRepresentation,rootRepresentation);
+  final Response.ResponseBuilder responseBuilder=restfulObjectsV1_0.buildResponseTo(rendererContext,objectAdapter,$$roRepresentation,rootRepresentation);
+  responseBuilder.type(CONTENT_TYPE_OAI_V1_OBJECT);
   return responseBuilder(responseBuilder);
 }

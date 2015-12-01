@@ -1,6 +1,6 @@
 {
   final JsonRepresentation representation=renderer.render();
-  final JsonRepresentation entityRepresentation=rootRepresentation != null ? rootRepresentation : representation;
+  final JsonRepresentation entityRepresentation=rootRepresentationIfAny != null ? rootRepresentationIfAny : representation;
   final MediaType mediaType=renderer.getMediaType();
   final Response.ResponseBuilder response=of(RestfulResponse.HttpStatusCode.OK).type(mediaType).cacheControl(caching.getCacheControl()).entity(JsonWriterUtil.jsonFor(entityRepresentation));
   return addLastModifiedAndETagIfAvailable(response,version);
