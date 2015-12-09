@@ -1,0 +1,50 @@
+{
+  final Swagger swagger=new Swagger();
+  swagger.basePath("/restful");
+  swagger.info(new Info().version("1.0.0").title("Restful Objects")).path("/",new Path().get(new Operation().description(roSpec("5.1")).consumes("application/json").consumes("application/json;profile=\"urn:org.restfulobjects:repr-types/home-page\"").produces("application/json;profile=\"urn:org.restfulobjects:repr-types/home-page\"").response(200,newResponse(Caching.NON_EXPIRING).description("OK").schema(new RefProperty("#/definitions/home-page"))))).path("/user",new Path().get(new Operation().description(roSpec("6.1")).consumes("application/json").consumes("application/json;profile=\"urn:org.restfulobjects:repr-types/user\"").produces("application/json;profile=\"urn:org.restfulobjects:repr-types/user\"").response(200,newResponse(Caching.USER_INFO).description("OK").schema(new RefProperty("#/definitions/user"))))).path("/services",new Path().get(new Operation().description(roSpec("7.1")).consumes("application/json").consumes("application/json;profile=\"urn:org.restfulobjects:repr-types/services\"").produces("application/json;profile=\"urn:org.restfulobjects:repr-types/services\"").response(200,newResponse(Caching.USER_INFO).description("OK").schema(new RefProperty("#/definitions/services"))))).path("/version",new Path().get(new Operation().description(roSpec("8.1")).consumes("application/json").consumes("application/json;profile=\"urn:org.restfulobjects:repr-types/version\"").produces("application/json;profile=\"urn:org.restfulobjects:repr-types/version\"").response(200,newResponse(Caching.NON_EXPIRING).description("OK").schema(new RefProperty("#/definitions/version")))));
+  swagger.addDefinition("home-page",newModel(roSpec("5.2")));
+  swagger.addDefinition("user",newModel(roSpec("6.2")).property("userName",stringProperty()).property("roles",arrayOfStrings()).property("links",arrayOfLinksGetOnly()).required("userName").required("roles"));
+  swagger.addDefinition("services",newModel(roSpec("7.2")).property("value",arrayOfLinksGetOnly()).required("userName").required("roles"));
+  swagger.addDefinition("version",newModel(roSpec("8.2")).property("specVersion",stringProperty()).property("implVersion",stringProperty()).property("optionalCapabilities",new ObjectProperty().property("blobsClobs",stringProperty()).property("deleteObjects",stringProperty()).property("domainModel",stringProperty()).property("validateOnly",stringProperty()).property("protoPersistentObjects",stringProperty())).required("userName").required("roles"));
+  swagger.addDefinition("link",new ModelImpl().type("object").property("rel",stringProperty()).property("href",stringProperty()).property("title",stringProperty()).property("method",stringPropertyEnum("GET","POST","PUT","DELETE")).property("type",stringProperty()).property("arguments",new ObjectProperty()).required("rel").required("href").required("method"));
+  swagger.addDefinition("link-get-only",new ModelImpl().type("object").property("rel",stringProperty()).property("href",stringProperty()).property("title",stringProperty()).property("method",stringPropertyEnum("GET")).property("type",stringProperty()).required("rel").required("href").required("method"));
+  final Collection<ObjectSpecification> allSpecs=specificationLoader.allSpecifications();
+  for (  ObjectSpecification serviceSpec : allSpecs) {
+    final DomainServiceFacet domainServiceFacet=serviceSpec.getFacet(DomainServiceFacet.class);
+    if (domainServiceFacet == null) {
+      continue;
+    }
+    if (!isVisible(visibility,domainServiceFacet)) {
+      continue;
+    }
+    List<ObjectAction> serviceActions=serviceSpec.getObjectActions(actionTypesFor(visibility),Contributed.EXCLUDED,Filters.<ObjectAction>any());
+    if (serviceActions.isEmpty()) {
+      continue;
+    }
+    String serviceId=serviceIdFor(serviceSpec);
+    final String serviceDefinitionId="service-" + serviceId;
+    final Path servicePath=new Path();
+    swagger.path("/services/" + serviceId,servicePath);
+    servicePath.get(new Operation().description(roSpec("15.1")).response(200,newResponse(Caching.TRANSACTIONAL).description("OK").schema(new RefProperty("#/definitions/" + serviceDefinitionId))));
+    final ObjectProperty serviceMembers=new ObjectProperty();
+    ModelImpl serviceRepr=newModel(roSpec("15.1.2") + ": representation of " + serviceId).property("title",stringProperty()).property("serviceId",stringProperty()._default(serviceId)).property("members",serviceMembers);
+    swagger.addDefinition(serviceDefinitionId,serviceRepr);
+    for (    final ObjectAction serviceAction : serviceActions) {
+      String serviceActionId=serviceAction.getId();
+      serviceMembers.property(serviceActionId,new ObjectProperty().property("id",stringPropertyEnum(serviceActionId)).property("memberType",stringPropertyEnum("action")).property("links",new ObjectProperty().property("rel",stringPropertyEnum("urn:org.restfulobjects:rels/details;action=\"" + serviceActionId + "\"")).property("href",stringPropertyEnum("actions/" + serviceActionId))).property("method",stringPropertyEnum("GET")).property("type",stringPropertyEnum("application/json;profile=\"urn:org.restfulobjects:repr-types/object-action\"")));
+    }
+  }
+switch (format) {
+case JSON:
+    return Json.pretty(swagger);
+case YAML:
+  try {
+    return Yaml.pretty().writeValueAsString(swagger);
+  }
+ catch (  JsonProcessingException e) {
+    throw new RuntimeException(e);
+  }
+default :
+throw new IllegalArgumentException("Unrecognized format: " + format);
+}
+}
