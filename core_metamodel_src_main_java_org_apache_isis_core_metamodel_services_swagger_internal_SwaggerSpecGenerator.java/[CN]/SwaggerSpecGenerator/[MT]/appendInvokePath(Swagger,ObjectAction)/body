@@ -1,0 +1,35 @@
+{
+  final ObjectSpecification serviceSpec=serviceAction.getOnType();
+  final String serviceId=serviceIdFor(serviceSpec);
+  final String serviceActionId=serviceAction.getId();
+  final List<ObjectActionParameter> parameters=serviceAction.getParameters();
+  final Path serviceActionInvokePath=new Path();
+  swagger.path(String.format("/services/%s/actions/%s/invoke",serviceId,serviceActionId),serviceActionInvokePath);
+  final Operation invokeOperation=new Operation().tag(serviceId).description(roSpec("19.1") + ": (invoke) resource of " + serviceId+ "#"+ serviceActionId).produces("application/json").produces("application/json;profile=urn:org.restfulobjects:repr-types/action-result").produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true");
+  final ActionSemantics.Of semantics=serviceAction.getSemantics();
+  if (semantics.isSafeInNature()) {
+    serviceActionInvokePath.get(invokeOperation);
+    for (    final ObjectActionParameter parameter : parameters) {
+      invokeOperation.parameter(new QueryParameter().name(parameter.getId()).description(roSpec("2.9.1") + (!Strings.isNullOrEmpty(parameter.getDescription()) ? (": " + parameter.getDescription()) : "")).required(false).type("string"));
+    }
+    if (!parameters.isEmpty()) {
+      invokeOperation.parameter(new QueryParameter().name("x-isis-querystring").description(roSpec("2.10") + ": all (formal) arguments as base64 encoded string").required(false).type("string"));
+    }
+  }
+ else {
+    if (semantics.isIdempotentInNature()) {
+      serviceActionInvokePath.put(invokeOperation);
+    }
+ else {
+      serviceActionInvokePath.post(invokeOperation);
+    }
+    final ModelImpl bodyParam=new ModelImpl().type("object");
+    for (    final ObjectActionParameter parameter : parameters) {
+      final Property valueProperty;
+      valueProperty=stringProperty();
+      bodyParam.property(parameter.getId(),new ObjectProperty().property("value",valueProperty));
+    }
+    invokeOperation.consumes("application/json").parameter(new BodyParameter().name("body").schema(bodyParam));
+  }
+  invokeOperation.response(200,new Response().description(roSpecForResponseOf(serviceAction) + ": (invoke) representation of " + serviceId+ "#"+ serviceActionId).schema(new ObjectProperty()));
+}
