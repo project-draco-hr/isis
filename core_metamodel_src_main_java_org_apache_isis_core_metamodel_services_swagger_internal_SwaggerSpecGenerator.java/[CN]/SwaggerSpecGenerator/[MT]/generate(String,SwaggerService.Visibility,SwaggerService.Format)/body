@@ -1,0 +1,22 @@
+{
+  final Swagger swagger=new Swagger();
+  swagger.basePath(basePath);
+  swagger.info(new Info().title(visibility.name() + " API"));
+  appendRestfulObjectsSupportingPathsAndDefinitions(swagger);
+  appendLinkModelDefinition(swagger);
+  appendServicePathsAndDefinitions(swagger,visibility);
+  appendObjectPathsAndDefinitions(swagger,visibility);
+switch (format) {
+case JSON:
+    return Json.pretty(swagger);
+case YAML:
+  try {
+    return Yaml.pretty().writeValueAsString(swagger);
+  }
+ catch (  JsonProcessingException e) {
+    throw new RuntimeException(e);
+  }
+default :
+throw new IllegalArgumentException("Unrecognized format: " + format);
+}
+}

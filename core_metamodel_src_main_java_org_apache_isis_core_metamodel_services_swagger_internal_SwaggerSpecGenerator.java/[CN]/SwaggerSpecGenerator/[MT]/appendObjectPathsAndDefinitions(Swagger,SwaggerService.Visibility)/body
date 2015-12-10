@@ -1,0 +1,36 @@
+{
+  final Collection<ObjectSpecification> allSpecs=specificationLoader.allSpecifications();
+  for (  final ObjectSpecification objectSpec : allSpecs) {
+    final DomainServiceFacet domainServiceFacet=objectSpec.getFacet(DomainServiceFacet.class);
+    if (domainServiceFacet != null) {
+      continue;
+    }
+    final MixinFacet mixinFacet=objectSpec.getFacet(MixinFacet.class);
+    if (mixinFacet != null) {
+      continue;
+    }
+    if (visibility.isPublic() && !Util.isVisibleForPublic(objectSpec)) {
+      continue;
+    }
+    if (objectSpec.isAbstract()) {
+      continue;
+    }
+    if (objectSpec.isValue()) {
+      continue;
+    }
+    final List<OneToOneAssociation> objectProperties=Util.propertiesOf(objectSpec,visibility);
+    final List<OneToManyAssociation> objectCollections=Util.collectionsOf(objectSpec,visibility);
+    final List<ObjectAction> objectActions=Util.actionsOf(objectSpec,visibility);
+    if (objectProperties.isEmpty() && objectCollections.isEmpty()) {
+      continue;
+    }
+    final ModelImpl isisModel=appendObjectPathAndModelDefinitions(swagger,objectSpec);
+    appendObjectModel(isisModel,objectProperties,objectCollections);
+    for (    final OneToManyAssociation objectCollection : objectCollections) {
+      appendCollectionTo(swagger,objectCollection);
+    }
+    for (    final ObjectAction objectAction : objectActions) {
+      appendObjectActionInvokePath(swagger,objectAction);
+    }
+  }
+}
