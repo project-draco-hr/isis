@@ -5,24 +5,51 @@
   appendBoilerplate(swagger);
   appendLinkDefinitions(swagger);
   final Collection<ObjectSpecification> allSpecs=specificationLoader.allSpecifications();
-  for (  ObjectSpecification serviceSpec : allSpecs) {
+  for (  final ObjectSpecification serviceSpec : allSpecs) {
     final DomainServiceFacet domainServiceFacet=serviceSpec.getFacet(DomainServiceFacet.class);
     if (domainServiceFacet == null) {
       continue;
     }
-    if (!isVisible(visibility,domainServiceFacet)) {
+    if (visibility.isPublic() && domainServiceFacet.getNatureOfService() != NatureOfService.VIEW_REST_ONLY) {
       continue;
     }
-    List<ActionType> actionTypes=actionTypesFor(visibility);
-    List<ObjectAction> serviceActions=serviceSpec.getObjectActions(actionTypes,Contributed.EXCLUDED,Filters.<ObjectAction>any());
+    if (domainServiceFacet.getNatureOfService() != NatureOfService.VIEW_MENU_ONLY && domainServiceFacet.getNatureOfService() != NatureOfService.VIEW) {
+      continue;
+    }
+    final List<ActionType> actionTypes=actionTypesFor(visibility);
+    final List<ObjectAction> serviceActions=serviceSpec.getObjectActions(actionTypes,Contributed.EXCLUDED,Filters.<ObjectAction>any());
     if (serviceActions.isEmpty()) {
       continue;
     }
-    final String serviceId=serviceIdFor(serviceSpec);
-    final ObjectProperty serviceMembers=appendServicePath(swagger,serviceId);
+    final ObjectProperty serviceMembers=appendServicePath(swagger,serviceSpec);
     for (    final ObjectAction serviceAction : serviceActions) {
+      if (visibility.isPublic() && !isVisibleForPublic(serviceAction)) {
+        continue;
+      }
       appendActionTo(serviceMembers,serviceAction);
-      appendInvokePath(swagger,serviceAction);
+      appendServiceActionInvokePath(swagger,serviceAction);
+    }
+  }
+  for (  final ObjectSpecification objectSpec : allSpecs) {
+    final DomainServiceFacet domainServiceFacet=objectSpec.getFacet(DomainServiceFacet.class);
+    if (domainServiceFacet != null) {
+      continue;
+    }
+    if (objectSpec.isAbstract()) {
+      continue;
+    }
+    final List<ActionType> actionTypes=actionTypesFor(visibility);
+    final List<ObjectAction> objectActions=objectSpec.getObjectActions(actionTypes,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    if (objectActions.isEmpty()) {
+      continue;
+    }
+    final ObjectProperty objectMembers=appendObjectPath(swagger,objectSpec);
+    for (    final ObjectAction objectAction : objectActions) {
+      if (visibility.isPublic() && !isVisibleForPublic(objectAction)) {
+        continue;
+      }
+      appendActionTo(objectMembers,objectAction);
+      appendObjectActionInvokePath(swagger,objectAction);
     }
   }
 switch (format) {
