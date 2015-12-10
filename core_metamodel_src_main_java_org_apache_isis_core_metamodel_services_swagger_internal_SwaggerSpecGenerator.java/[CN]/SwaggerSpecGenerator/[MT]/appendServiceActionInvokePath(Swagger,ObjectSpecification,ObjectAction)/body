@@ -1,12 +1,11 @@
 {
-  final ObjectSpecification objectSpec=objectAction.getOnType();
-  final String objectType=objectTypeFor(objectSpec);
-  final String actionId=objectAction.getId();
-  final List<ObjectActionParameter> parameters=objectAction.getParameters();
+  final String serviceId=serviceIdFor(serviceSpec);
+  final String actionId=serviceAction.getId();
+  final List<ObjectActionParameter> parameters=serviceAction.getParameters();
   final Path path=new Path();
-  swagger.path(String.format("/objects/%s/{objectId}/actions/%s/invoke",objectType,actionId),path);
-  final Operation invokeOperation=new Operation().tag(objectType).description(Util.roSpec("19.1") + ": (invoke) resource of " + objectType+ "#"+ actionId).parameter(new PathParameter().name("objectId").type("string")).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/action-result");
-  final ActionSemantics.Of semantics=objectAction.getSemantics();
+  swagger.path(String.format("/services/%s/actions/%s/invoke",serviceId,actionId),path);
+  final Operation invokeOperation=new Operation().tag(serviceId).description(Util.roSpec("19.1") + ": (invoke) resource of " + serviceId+ "#"+ actionId).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/action-result");
+  final ActionSemantics.Of semantics=serviceAction.getSemantics();
   if (semantics.isSafeInNature()) {
     path.get(invokeOperation);
     for (    final ObjectActionParameter parameter : parameters) {
@@ -31,5 +30,5 @@
     }
     invokeOperation.consumes("application/json").parameter(new BodyParameter().name("body").schema(bodyParam));
   }
-  invokeOperation.response(200,new Response().description(roSpecForResponseOf(objectAction) + ": (invoke) representation of " + objectType+ "#"+ actionId).schema(new ObjectProperty()));
+  invokeOperation.response(200,new Response().description(serviceId + "#" + actionId+ " , if Accept: application/json;profile=urn:org.apache.isis/v1").schema(actionReturnTypeFor(serviceAction)));
 }

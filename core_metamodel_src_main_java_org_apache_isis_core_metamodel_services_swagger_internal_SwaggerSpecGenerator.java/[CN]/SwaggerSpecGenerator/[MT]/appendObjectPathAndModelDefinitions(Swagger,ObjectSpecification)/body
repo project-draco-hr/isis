@@ -2,18 +2,18 @@
   final String objectType=objectTypeFor(objectSpec);
   final Path path=new Path();
   swagger.path(String.format("/objects/%s/{objectId}",objectType),path);
-  final String isisModelDefinition=objectType + "Model";
-  final String restfulObjectsModelDefinition=objectType + "RestfulObjectsModel";
   final String tag=objectType.startsWith("org.apache.isis") ? "> apache isis internals" : objectType;
   final Operation operation=new Operation();
   path.get(operation);
   operation.tag(tag).description(Util.roSpec("14.1")).parameter(new PathParameter().name("objectId").type("string")).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/object");
+  final String restfulObjectsModelDefinition=objectType + "RestfulObjectsModel";
   if (false) {
     operation.response(200,newResponse(Caching.TRANSACTIONAL).description("if Accept: application/json;profile=urn:org.restfulobjects:repr-types/object").schema(new RefProperty("#/definitions/" + restfulObjectsModelDefinition)));
     final ModelImpl roSpecModel=newModel(Util.roSpec("14.4") + ": representation of " + objectType).property("title",stringProperty()).property("domainType",stringProperty()._default(objectType)).property("instanceId",stringProperty()).property("members",new ObjectProperty());
     swagger.addDefinition(restfulObjectsModelDefinition,roSpecModel);
   }
-  operation.response(200,newResponse(Caching.TRANSACTIONAL).description("if Accept: application/json;profile=urn:org.apache.isis/v1").schema(new RefProperty("#/definitions/" + isisModelDefinition)));
+  final String isisModelDefinition=objectType + "Model";
+  operation.response(200,newResponse(Caching.TRANSACTIONAL).description(objectType + " , if Accept: application/json;profile=urn:org.apache.isis/v1").schema(new RefProperty("#/definitions/" + isisModelDefinition)));
   final ModelImpl isisModel=new ModelImpl();
   swagger.addDefinition(isisModelDefinition,isisModel);
   return isisModel;
