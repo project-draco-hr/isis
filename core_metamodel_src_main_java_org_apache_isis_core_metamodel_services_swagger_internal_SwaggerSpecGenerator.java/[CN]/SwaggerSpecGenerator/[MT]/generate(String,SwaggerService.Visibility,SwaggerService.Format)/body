@@ -1,11 +1,6 @@
 {
-  final Swagger swagger=new Swagger();
-  swagger.basePath(basePath);
-  swagger.info(new Info().title(visibility.name() + " API"));
-  appendRestfulObjectsSupportingPathsAndDefinitions(swagger);
-  appendLinkModelDefinition(swagger);
-  appendServicePathsAndDefinitions(swagger,visibility);
-  appendObjectPathsAndDefinitions(swagger,visibility);
+  final Generation generation=newGeneration(basePath,visibility);
+  final Swagger swagger=generation.generate();
 switch (format) {
 case JSON:
     return Json.pretty(swagger);

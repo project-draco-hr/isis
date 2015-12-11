@@ -1,0 +1,12 @@
+{
+  final String objectType=objectTypeFor(objectSpecification);
+  final String className=objectSpecification.getFullIdentifier();
+  model.type("object").description(String.format("%s (%s)",objectType,className));
+  for (  OneToOneAssociation objectProperty : objectProperties) {
+    model.property(objectProperty.getId(),propertyFor(objectProperty.getSpecification()));
+  }
+  for (  OneToManyAssociation objectCollection : objectCollections) {
+    final ObjectSpecification elementSpec=objectCollection.getSpecification();
+    model.property(objectCollection.getId(),arrayPropertyOf(elementSpec));
+  }
+}

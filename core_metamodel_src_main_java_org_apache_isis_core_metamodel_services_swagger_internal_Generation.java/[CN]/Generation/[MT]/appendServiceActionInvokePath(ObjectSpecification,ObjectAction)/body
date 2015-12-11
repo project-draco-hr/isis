@@ -1,0 +1,35 @@
+{
+  final String serviceId=serviceIdFor(serviceSpec);
+  final String actionId=serviceAction.getId();
+  final List<ObjectActionParameter> parameters=serviceAction.getParameters();
+  final Path path=new Path();
+  swagger.path(String.format("/services/%s/actions/%s/invoke",serviceId,actionId),path);
+  final String tag=tagFor(serviceId,"> services");
+  final Operation invokeOperation=new Operation().tag(tag).description(Util.roSpec("19.1") + ": (invoke) resource of " + serviceId+ "#"+ actionId).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/action-result");
+  final ActionSemantics.Of semantics=serviceAction.getSemantics();
+  if (semantics.isSafeInNature()) {
+    path.get(invokeOperation);
+    for (    final ObjectActionParameter parameter : parameters) {
+      invokeOperation.parameter(new QueryParameter().name(parameter.getId()).description(Util.roSpec("2.9.1") + (!Strings.isNullOrEmpty(parameter.getDescription()) ? (": " + parameter.getDescription()) : "")).required(false).type("string"));
+    }
+    if (!parameters.isEmpty()) {
+      invokeOperation.parameter(new QueryParameter().name("x-isis-querystring").description(Util.roSpec("2.10") + ": all (formal) arguments as base64 encoded string").required(false).type("string"));
+    }
+  }
+ else {
+    if (semantics.isIdempotentInNature()) {
+      path.put(invokeOperation);
+    }
+ else {
+      path.post(invokeOperation);
+    }
+    final ModelImpl bodyParam=new ModelImpl().type("object");
+    for (    final ObjectActionParameter parameter : parameters) {
+      final Property valueProperty;
+      valueProperty=stringProperty();
+      bodyParam.property(parameter.getId(),new ObjectProperty().property("value",valueProperty));
+    }
+    invokeOperation.consumes("application/json").parameter(new BodyParameter().name("body").schema(bodyParam));
+  }
+  invokeOperation.response(200,new Response().description(serviceId + "#" + actionId+ " , if Accept: application/json;profile=urn:org.apache.isis/v1").schema(actionReturnTypeFor(serviceAction)));
+}

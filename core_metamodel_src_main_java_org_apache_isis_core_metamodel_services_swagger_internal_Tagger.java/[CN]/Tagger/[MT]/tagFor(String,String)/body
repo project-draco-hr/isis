@@ -1,0 +1,26 @@
+{
+  if (str.startsWith("org.apache.isis")) {
+    return "> apache isis internals";
+  }
+  Matcher matcher;
+  matcher=tagPatternIsisAddons.matcher(str);
+  if (matcher.matches()) {
+    return "isisaddons " + matcher.group(1);
+  }
+  matcher=tagPatternForJaxbDto.matcher(str);
+  if (matcher.matches()) {
+    return matcher.group(1);
+  }
+  matcher=tagPatternForFqcn.matcher(str);
+  if (matcher.matches()) {
+    return matcher.group(1);
+  }
+  matcher=tagPatternForSchemaTable.matcher(str);
+  if (matcher.matches()) {
+    if (str.startsWith("isis")) {
+      return "isisaddons " + str.substring(4,str.indexOf("."));
+    }
+    return matcher.group(1);
+  }
+  return fallback != null ? fallback : str;
+}
