@@ -1,0 +1,20 @@
+{
+  if (specification == null) {
+    return true;
+  }
+  if (specification.isViewModel()) {
+    return true;
+  }
+  if (specification.isValue()) {
+    return true;
+  }
+  if (specification.isParentedOrFreeCollection()) {
+    TypeOfFacet typeOfFacet=specification.getFacet(TypeOfFacet.class);
+    if (typeOfFacet != null) {
+      ObjectSpecification elementSpec=typeOfFacet.valueSpec();
+      return isVisibleForPublic(elementSpec);
+    }
+  }
+  final Class<?> correspondingClass=specification.getCorrespondingClass();
+  return Collection.class.isAssignableFrom(correspondingClass) || correspondingClass.isArray() || correspondingClass == void.class || correspondingClass == Void.class;
+}

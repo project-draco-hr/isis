@@ -1,0 +1,10 @@
+{
+  final String serviceId=serviceIdFor(objectSpec);
+  final Path path=new Path();
+  swagger.path(String.format("/services/%s",serviceId),path);
+  final String serviceModelDefinition=serviceId + "Model";
+  final String tag=tagFor(serviceId);
+  path.get(new Operation().tag(tag).description(Util.roSpec("15.1")).produces("application/json").produces("application/json;profile=urn:org.restfulobjects:repr-types/object").response(200,newResponse(Caching.TRANSACTIONAL).description("OK").schema(new RefProperty("#/definitions/" + serviceModelDefinition))));
+  final ModelImpl model=newModel(Util.roSpec("15.1.2") + ": representation of " + serviceId).property("title",stringProperty()).property("serviceId",stringProperty()._default(serviceId)).property("members",new ObjectProperty());
+  swagger.addDefinition(serviceModelDefinition,model);
+}

@@ -1,0 +1,11 @@
+{
+  final ObjectSpecification specification=objectAction.getReturnType();
+  TypeOfFacet typeOfFacet=objectAction.getFacet(TypeOfFacet.class);
+  if (typeOfFacet != null) {
+    ObjectSpecification elementSpec=typeOfFacet.valueSpec();
+    if (elementSpec != null) {
+      return new ArrayProperty().items(modelFor(elementSpec));
+    }
+  }
+  return modelFor(specification);
+}

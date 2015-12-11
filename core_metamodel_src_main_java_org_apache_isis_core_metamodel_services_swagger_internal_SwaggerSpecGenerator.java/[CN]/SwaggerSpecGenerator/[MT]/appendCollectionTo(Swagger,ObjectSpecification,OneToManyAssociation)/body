@@ -1,0 +1,10 @@
+{
+  final String objectType=objectTypeFor(objectSpec);
+  final String collectionId=collection.getId();
+  final Path path=new Path();
+  swagger.path(String.format("/objects/%s/{objectId}/collections/%s",objectType,collectionId),path);
+  final String tag=tagFor(objectType);
+  final Operation collectionOperation=new Operation().tag(tag).description(Util.roSpec("17.1") + ": resource of " + objectType+ "#"+ collectionId).parameter(new PathParameter().name("objectId").type("string")).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/object-collection");
+  path.get(collectionOperation);
+  collectionOperation.response(200,new Response().description(objectType + "#" + collectionId+ " , if Accept: application/json;profile=urn:org.apache.isis/v1").schema(modelFor(collection)));
+}
