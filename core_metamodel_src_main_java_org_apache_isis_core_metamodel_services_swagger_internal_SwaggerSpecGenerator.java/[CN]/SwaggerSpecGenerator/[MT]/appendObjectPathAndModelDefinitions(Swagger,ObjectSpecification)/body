@@ -2,7 +2,7 @@
   final String objectType=objectTypeFor(objectSpec);
   final Path path=new Path();
   swagger.path(String.format("/objects/%s/{objectId}",objectType),path);
-  final String tag=objectType.startsWith("org.apache.isis") ? "> apache isis internals" : objectType;
+  final String tag=tagFor(objectType);
   final Operation operation=new Operation();
   path.get(operation);
   operation.tag(tag).description(Util.roSpec("14.1")).parameter(new PathParameter().name("objectId").type("string")).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/object");

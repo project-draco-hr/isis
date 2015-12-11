@@ -1,5 +1,5 @@
 {
-  final Collection<ObjectSpecification> allSpecs=specificationLoader.allSpecifications();
+  final Collection<ObjectSpecification> allSpecs=Lists.newArrayList(specificationLoader.allSpecifications());
   for (  final ObjectSpecification objectSpec : allSpecs) {
     final DomainServiceFacet domainServiceFacet=objectSpec.getFacet(DomainServiceFacet.class);
     if (domainServiceFacet != null) {
@@ -16,6 +16,9 @@
       continue;
     }
     if (objectSpec.isValue()) {
+      continue;
+    }
+    if (objectSpec.getCorrespondingClass() == FixtureResult.class) {
       continue;
     }
     final List<OneToOneAssociation> objectProperties=Util.propertiesOf(objectSpec,visibility);

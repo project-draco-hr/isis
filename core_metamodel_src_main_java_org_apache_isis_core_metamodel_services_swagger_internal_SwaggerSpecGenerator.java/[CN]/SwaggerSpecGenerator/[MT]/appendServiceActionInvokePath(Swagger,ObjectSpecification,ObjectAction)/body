@@ -4,7 +4,8 @@
   final List<ObjectActionParameter> parameters=serviceAction.getParameters();
   final Path path=new Path();
   swagger.path(String.format("/services/%s/actions/%s/invoke",serviceId,actionId),path);
-  final Operation invokeOperation=new Operation().tag(serviceId).description(Util.roSpec("19.1") + ": (invoke) resource of " + serviceId+ "#"+ actionId).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/action-result");
+  final String tag=tagFor(serviceId);
+  final Operation invokeOperation=new Operation().tag(tag).description(Util.roSpec("19.1") + ": (invoke) resource of " + serviceId+ "#"+ actionId).produces("application/json;profile=urn:org.apache.isis/v1").produces("application/json;profile=urn:org.apache.isis/v1;suppress=true").produces("application/json;profile=urn:org.restfulobjects:repr-types/action-result");
   final ActionSemantics.Of semantics=serviceAction.getSemantics();
   if (semantics.isSafeInNature()) {
     path.get(invokeOperation);
