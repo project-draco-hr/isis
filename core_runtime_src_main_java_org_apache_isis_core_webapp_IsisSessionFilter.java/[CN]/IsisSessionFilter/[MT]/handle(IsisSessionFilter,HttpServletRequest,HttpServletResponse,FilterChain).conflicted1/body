@@ -1,4 +1,7 @@
 {
-  httpResponse.setHeader("WWW-Authenticate","Basic realm=\"Apache Isis\"");
-  httpResponse.sendError(401);
+  if (filter.restrictedPaths.contains(httpRequest.getServletPath())) {
+    chain.doFilter(httpRequest,httpResponse);
+    return;
+  }
+  redirect(httpRequest,httpResponse,filter.restrictedPaths.get(0));
 }

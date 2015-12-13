@@ -1,4 +1,8 @@
 {
+  if (!IsisContext.inSession()) {
+    chain.doFilter(request,response);
+    return;
+  }
   getTransactionManager().startTransaction();
   try {
     chain.doFilter(request,response);
