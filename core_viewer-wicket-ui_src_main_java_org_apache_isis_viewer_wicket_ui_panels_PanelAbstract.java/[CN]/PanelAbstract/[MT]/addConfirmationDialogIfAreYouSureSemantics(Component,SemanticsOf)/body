@@ -1,0 +1,13 @@
+{
+  if (!semanticsOf.isAreYouSure()) {
+    return;
+  }
+  final TranslationService translationService=getPersistenceSession().getServicesInjector().lookupService(TranslationService.class);
+  ConfirmationConfig confirmationConfig=new ConfirmationConfig();
+  final String context=IsisSystem.class.getName();
+  final String areYouSure=translationService.translate(context,IsisSystem.MSG_ARE_YOU_SURE);
+  final String confirm=translationService.translate(context,IsisSystem.MSG_CONFIRM);
+  final String cancel=translationService.translate(context,IsisSystem.MSG_CANCEL);
+  confirmationConfig.withTitle(areYouSure).withBtnOkLabel(confirm).withBtnCancelLabel(cancel).withPlacement(TooltipConfig.Placement.right).withBtnOkClass("btn btn-danger").withBtnCancelClass("btn btn-default");
+  component.add(new ConfirmationBehavior(confirmationConfig));
+}

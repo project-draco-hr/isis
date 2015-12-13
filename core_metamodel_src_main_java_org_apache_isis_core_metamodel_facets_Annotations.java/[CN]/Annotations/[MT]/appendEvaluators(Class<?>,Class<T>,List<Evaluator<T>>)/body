@@ -1,0 +1,24 @@
+{
+  for (  Method method : cls.getDeclaredMethods()) {
+    if (MethodScope.OBJECT.matchesScopeOf(method) && method.getParameterCount() == 0) {
+      final Annotation annotation=method.getAnnotation(annotationClass);
+      if (annotation != null) {
+        evaluators.add(new MethodEvaluator(method,annotation));
+      }
+    }
+  }
+  for (  final Field field : cls.getDeclaredFields()) {
+    final Annotation annotation=field.getAnnotation(annotationClass);
+    if (annotation != null) {
+      evaluators.add(new FieldEvaluator(field,annotation));
+    }
+  }
+  final Class<?> superclass=cls.getSuperclass();
+  if (superclass != null) {
+    appendEvaluators(superclass,annotationClass,evaluators);
+  }
+  final Class<?>[] interfaces=cls.getInterfaces();
+  for (  final Class<?> iface : interfaces) {
+    appendEvaluators(iface,annotationClass,evaluators);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  try {
+    final JAXBContext context=JAXBContext.newInstance(domainClass);
+    final PersistentEntityAdapter adapter=new PersistentEntityAdapter();
+    container.injectServicesInto(adapter);
+    final Unmarshaller unmarshaller=context.createUnmarshaller();
+    unmarshaller.setAdapter(PersistentEntityAdapter.class,adapter);
+    final Object unmarshal=unmarshaller.unmarshal(new StringReader(xml));
+    return (T)unmarshal;
+  }
+ catch (  final JAXBException ex) {
+    throw new NonRecoverableException("Error unmarshalling domain object from XML; domain object class is '" + domainClass.getName() + "'",ex);
+  }
+}

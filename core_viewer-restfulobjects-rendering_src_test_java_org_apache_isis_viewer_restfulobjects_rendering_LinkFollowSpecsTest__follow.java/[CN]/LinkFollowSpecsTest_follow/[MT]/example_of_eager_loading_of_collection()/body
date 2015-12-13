@@ -1,0 +1,9 @@
+{
+  final List<List<String>> links=asListOfLists("members[children].value");
+  final LinkFollowSpecs linkFollower=LinkFollowSpecs.create(links);
+  LinkFollowSpecs followMembers=linkFollower.follow("members[children]");
+  assertThat(followMembers.isFollowing(),is(true));
+  assertThat(followMembers.isTerminated(),is(false));
+  assertThat(followMembers.follow("value").isFollowing(),is(true));
+  assertThat(followMembers.follow("value").isTerminated(),is(false));
+}

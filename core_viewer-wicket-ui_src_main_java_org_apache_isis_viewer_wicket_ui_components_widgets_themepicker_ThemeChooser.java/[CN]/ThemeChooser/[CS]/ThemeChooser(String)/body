@@ -1,6 +1,11 @@
 {
   super(id);
-  initializeActiveThemeFromCookie();
+  final ActiveThemeProvider activeThemeProvider=getActiveThemeProvider();
+  if (activeThemeProvider.getClass() == SessionThemeProvider.class) {
+    initializeActiveThemeFromCookie();
+  }
+ else {
+  }
   ListView<String> themesView=new ListView<String>("themes",getThemeNames()){
     @Override protected void populateItem(    ListItem<String> item){
       final String themeName=item.getModelObject();

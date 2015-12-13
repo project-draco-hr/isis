@@ -1,0 +1,43 @@
+{
+  if (!canAccept(rendererContext)) {
+    return null;
+  }
+  boolean suppressRO=suppress(rendererContext);
+  JsonRepresentation rootRepresentation=null;
+  final JsonRepresentation $$roRepresentation;
+  if (!suppressRO) {
+    $$roRepresentation=JsonRepresentation.newMap();
+  }
+ else {
+    $$roRepresentation=null;
+  }
+  final ObjectAdapter returnedAdapter=objectAndActionInvocation.getReturnedAdapter();
+  final ObjectSpecification returnType=objectAndActionInvocation.getAction().getReturnType();
+  if (returnedAdapter == null) {
+    return null;
+  }
+  final ActionResultRepresentation.ResultType resultType=objectAndActionInvocation.determineResultType();
+switch (resultType) {
+case DOMAIN_OBJECT:
+    rootRepresentation=JsonRepresentation.newMap();
+  appendObjectTo(rendererContext,returnedAdapter,rootRepresentation);
+break;
+case LIST:
+rootRepresentation=JsonRepresentation.newArray();
+final CollectionFacet collectionFacet=returnType.getFacet(CollectionFacet.class);
+final Collection<ObjectAdapter> collectionAdapters=collectionFacet.collection(returnedAdapter);
+appendIterableTo(rendererContext,collectionAdapters,rootRepresentation);
+if (!suppressRO) {
+JsonRepresentation $$roContainerRepresentation=JsonRepresentation.newMap();
+rootRepresentation.arrayAdd($$roContainerRepresentation);
+$$roContainerRepresentation.mapPut("$$ro",$$roRepresentation);
+}
+break;
+case SCALAR_VALUE:
+case VOID:
+return null;
+}
+final Response.ResponseBuilder responseBuilder=restfulObjectsV1_0.buildResponseTo(rendererContext,objectAndActionInvocation,$$roRepresentation,rootRepresentation);
+responseBuilder.type(resultType == ActionResultRepresentation.ResultType.DOMAIN_OBJECT ? CONTENT_TYPE_OAI_V1_OBJECT : CONTENT_TYPE_OAI_V1_LIST);
+return responseBuilder(responseBuilder);
+}

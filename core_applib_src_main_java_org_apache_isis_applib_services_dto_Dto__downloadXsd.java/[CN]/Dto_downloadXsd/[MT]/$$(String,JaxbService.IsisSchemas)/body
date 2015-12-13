@@ -1,0 +1,29 @@
+{
+  final Map<String,String> map=jaxbService.toXsd(dto,isisSchemas);
+  if (map.isEmpty()) {
+    container.warnUser("No schemas were generated for " + dto.getClass().getName() + "; programming error?");
+    return null;
+  }
+  if (map.size() == 1) {
+    final Map.Entry<String,String> entry=map.entrySet().iterator().next();
+    return new Clob(Util.withSuffix(fileName,"xsd"),"text/xml",entry.getValue());
+  }
+  try {
+    final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+    final ZipOutputStream zos=new ZipOutputStream(baos);
+    final OutputStreamWriter writer=new OutputStreamWriter(zos);
+    for (    Map.Entry<String,String> entry : map.entrySet()) {
+      final String namespaceUri=entry.getKey();
+      final String schemaText=entry.getValue();
+      zos.putNextEntry(new ZipEntry(zipEntryNameFor(namespaceUri)));
+      writer.write(schemaText);
+      writer.flush();
+      zos.closeEntry();
+    }
+    writer.close();
+    return new Blob(Util.withSuffix(fileName,"zip"),mimeTypeApplicationZip,baos.toByteArray());
+  }
+ catch (  final IOException ex) {
+    throw new FatalException("Unable to create zip",ex);
+  }
+}

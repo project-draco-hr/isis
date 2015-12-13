@@ -1,8 +1,8 @@
 {
   final String urlUnencodedQueryString=UrlEncodingUtils.urlDecodeNullSafe(xIsisUrlEncodedQueryString != null ? xIsisUrlEncodedQueryString : httpServletRequest.getQueryString());
-  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLES,urlUnencodedQueryString);
+  init(RepresentationType.ACTION_RESULT,Where.STANDALONE_TABLES,RepresentationService.Intent.NOT_APPLICABLE,urlUnencodedQueryString);
   final JsonRepresentation arguments=getResourceContext().getQueryStringAsJsonRepr();
   final ObjectAdapter objectAdapter=getObjectAdapterElseThrowNotFound(domainType,instanceId);
-  final DomainResourceHelper helper=getDomainResourceHelper(objectAdapter);
+  final DomainResourceHelper helper=newDomainResourceHelper(objectAdapter);
   return helper.invokeActionQueryOnly(actionId,arguments);
 }

@@ -6,6 +6,7 @@
   final TitleFacetViaTitleAnnotation titleFacetViaTitleAnnotation=(TitleFacetViaTitleAnnotation)facet;
   final List<Method> titleMethods=Arrays.asList(Customer.class.getMethod("someTitle"));
   for (int i=0; i < titleMethods.size(); i++) {
-    Assert.assertEquals(titleMethods.get(i),titleFacetViaTitleAnnotation.getComponents().get(i).getMethod());
+    final Annotations.MethodEvaluator<Title> titleEvaluator=(Annotations.MethodEvaluator<Title>)titleFacetViaTitleAnnotation.getComponents().get(i).getTitleEvaluator();
+    Assert.assertEquals(titleMethods.get(i),titleEvaluator.getMethod());
   }
 }

@@ -1,5 +1,8 @@
 {
   final Object adapterPojo=adapter.getObject();
-  final ObjectAdapter adapterAccordingToPojoAdapterMap=pojoAdapterMap.getAdapter(adapterPojo);
-  ensureThatArg(adapter,is(adapterAccordingToPojoAdapterMap),"mismatch in PojoAdapterMap: provided adapter's OID: " + adapter.getOid() + "; \n"+ " but map's adapter's OID was : "+ adapterAccordingToPojoAdapterMap.getOid());
+  final ObjectAdapter adapterAccordingToMap=pojoAdapterMap.getAdapter(adapterPojo);
+  if (adapterPojo == null) {
+    return;
+  }
+  ensureMapConsistent(adapter,adapterAccordingToMap,"PojoAdapterMap");
 }

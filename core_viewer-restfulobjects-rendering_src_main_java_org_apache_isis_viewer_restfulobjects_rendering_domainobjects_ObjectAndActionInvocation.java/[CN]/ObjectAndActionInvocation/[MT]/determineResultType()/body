@@ -1,0 +1,15 @@
+{
+  final ObjectSpecification returnType=this.action.getReturnType();
+  if (returnType.getCorrespondingClass() == void.class) {
+    return ActionResultRepresentation.ResultType.VOID;
+  }
+  final CollectionFacet collectionFacet=returnType.getFacet(CollectionFacet.class);
+  if (collectionFacet != null) {
+    return ActionResultRepresentation.ResultType.LIST;
+  }
+  final EncodableFacet encodableFacet=returnType.getFacet(EncodableFacet.class);
+  if (encodableFacet != null) {
+    return ActionResultRepresentation.ResultType.SCALAR_VALUE;
+  }
+  return ActionResultRepresentation.ResultType.DOMAIN_OBJECT;
+}

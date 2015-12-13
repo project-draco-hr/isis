@@ -9,19 +9,18 @@
       return breadcrumbModel.titleFor(choice);
     }
     @Override protected Object getId(    EntityModel choice){
-      try {
-        final PageParameters pageParameters=choice.getPageParameters();
-        final String oidStr=PageParameterNames.OBJECT_OID.getStringFrom(pageParameters);
-        return oidStr;
-      }
- catch (      Exception ex) {
-        breadcrumbModel.remove(choice);
-        return null;
-      }
+      return breadcrumbModel.getId(choice);
     }
     @Override public void query(    String term,    int page,    Response<EntityModel> response){
-      final List<EntityModel> list=breadcrumbModel.getList();
-      response.addAll(list);
+      final List<EntityModel> breadCrumbList=Lists.newArrayList(breadcrumbModel.getList());
+      final List<EntityModel> checkedList=Lists.newArrayList(Iterables.filter(breadCrumbList,new Predicate<EntityModel>(){
+        @Override public boolean apply(        final EntityModel input){
+          final Object id=getId(input);
+          return id != null;
+        }
+      }
+));
+      response.addAll(checkedList);
     }
     @Override public Collection<EntityModel> toChoices(    Collection<String> ids){
       return breadcrumbModel.getList();

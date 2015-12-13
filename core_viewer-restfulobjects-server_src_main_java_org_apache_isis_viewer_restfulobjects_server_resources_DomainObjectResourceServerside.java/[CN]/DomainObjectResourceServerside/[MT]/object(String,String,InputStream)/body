@@ -1,5 +1,5 @@
 {
-  init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS);
+  init(RepresentationType.DOMAIN_OBJECT,Where.OBJECT_FORMS,RepresentationService.Intent.ALREADY_PERSISTENT);
   final String objectStr=Util.asStringUtf8(object);
   final JsonRepresentation argRepr=Util.readAsMap(objectStr);
   if (!argRepr.isMap()) {
@@ -14,5 +14,5 @@
   if (validity.isVetoed()) {
     throw RestfulObjectsApplicationException.createWithBody(HttpStatusCode.BAD_REQUEST,argRepr,validity.getReason());
   }
-  return getDomainResourceHelper(objectAdapter).objectRepresentation();
+  return newDomainResourceHelper(objectAdapter).objectRepresentation();
 }
