@@ -1,0 +1,11 @@
+{
+  if (domainObjectLayout == null) {
+    return null;
+  }
+  final Class<? extends IconUiEvent<?>> iconUiEventClass=domainObjectLayout.iconUiEvent();
+  if (!EventUtil.eventTypeIsPostable(iconUiEventClass,IconUiEvent.Noop.class,IconUiEvent.Default.class,"isis.reflector.facet.domainObjectLayoutAnnotation.iconUiEvent.postForDefault",configuration)) {
+    return null;
+  }
+  final EventBusService eventBusService=servicesInjector.lookupService(EventBusService.class);
+  return new IconFacetViaDomainObjectLayoutAnnotationUsingIconUiEvent(iconUiEventClass,eventBusService,facetHolder);
+}

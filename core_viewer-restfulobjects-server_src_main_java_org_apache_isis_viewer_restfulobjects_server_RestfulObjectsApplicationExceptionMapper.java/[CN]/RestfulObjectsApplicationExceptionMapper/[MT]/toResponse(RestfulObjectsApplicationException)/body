@@ -4,10 +4,16 @@
   if (message != null) {
     builder.header(RestfulResponse.Header.WARNING.getName(),RestfulResponse.Header.WARNING.render(message));
   }
-  boolean xml=false;
+  boolean html=false;
   final List<MediaType> acceptableMediaTypes=httpHeaders.getAcceptableMediaTypes();
   for (  MediaType acceptableMediaType : acceptableMediaTypes) {
-    xml=xml || acceptableMediaType.getSubtype().equals("xml");
+    html=html || (acceptableMediaType.getType().equals("text") && acceptableMediaType.getSubtype().equals("html"));
+  }
+  boolean xml=false;
+  if (!html) {
+    for (    MediaType acceptableMediaType : acceptableMediaTypes) {
+      xml=xml || acceptableMediaType.getSubtype().equals("xml");
+    }
   }
   final JsonRepresentation bodyRepr=ex.getBody();
   final Throwable cause=ex.getCause();

@@ -1,0 +1,15 @@
+{
+  appendPropertiesTo(rendererContext,objectAdapter,rootRepresentation);
+  final List<OneToManyAssociation> collections=objectAdapter.getSpecification().getCollections(Contributed.INCLUDED);
+  final Where where=rendererContext.getWhere();
+  for (  final OneToManyAssociation collection : collections) {
+    final JsonRepresentation collectionRepresentation=JsonRepresentation.newArray();
+    rootRepresentation.mapPut(collection.getId(),collectionRepresentation);
+    final InteractionInitiatedBy interactionInitiatedBy=determineInteractionInitiatedByFrom(rendererContext);
+    final Consent visibility=collection.isVisible(objectAdapter,interactionInitiatedBy,where);
+    if (!visibility.isAllowed()) {
+      continue;
+    }
+    appendCollectionTo(rendererContext,objectAdapter,collection,collectionRepresentation);
+  }
+}

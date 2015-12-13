@@ -13,16 +13,6 @@
   if (!isVisible(objectAdapter)) {
     throw new ObjectMember.AuthorizationException();
   }
-  final AuthenticationSession session=getAuthenticationSession();
-  final ObjectSpecification specification=objectAdapter.getSpecification();
-  final List<ObjectAssociation> visibleAssociation=specification.getAssociations(Contributed.INCLUDED,ObjectAssociation.Filters.dynamicallyVisible(objectAdapter,InteractionInitiatedBy.USER,Where.NOWHERE));
-  if (visibleAssociation.isEmpty()) {
-    final List<ObjectAssociation> anyAssociations=specification.getAssociations(Contributed.INCLUDED);
-    if (anyAssociations.isEmpty()) {
-      throw new NonRecoverableException(String.format("No properties are defined for this entity type (%s); this is probably a programming error",specification.getFullIdentifier()));
-    }
-    throw new ObjectMember.AuthorizationException();
-  }
   if (!getDeploymentType().isProduction()) {
     getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
   }

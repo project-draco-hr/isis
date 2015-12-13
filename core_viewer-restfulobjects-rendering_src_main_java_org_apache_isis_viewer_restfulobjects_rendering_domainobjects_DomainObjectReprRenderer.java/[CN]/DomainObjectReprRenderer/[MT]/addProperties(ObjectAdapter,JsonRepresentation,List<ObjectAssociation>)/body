@@ -11,7 +11,8 @@
     }
     final OneToOneAssociation property=(OneToOneAssociation)assoc;
     final LinkFollowSpecs linkFollowerForProp=getLinkFollowSpecs().follow("members[" + property.getId() + "]");
-    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(getRendererContext(),linkFollowerForProp,property.getId(),JsonRepresentation.newMap());
+    final JsonRepresentation propertyRepresentation=JsonRepresentation.newMap();
+    final ObjectPropertyReprRenderer renderer=new ObjectPropertyReprRenderer(getRendererContext(),linkFollowerForProp,property.getId(),propertyRepresentation);
     renderer.with(new ObjectAndProperty(objectAdapter,property)).usingLinkTo(linkToBuilder);
     if (mode.isArgs()) {
       renderer.asArguments();

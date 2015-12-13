@@ -1,0 +1,17 @@
+{
+  final DomainObjectReprRenderer renderer=new DomainObjectReprRenderer(rendererContext,null,representationIfAnyRequired);
+  renderer.with(objectAdapter).includesSelf();
+  final ResponseBuilder responseBuilder=Responses.ofOk(renderer,Caching.NONE,rootRepresentation);
+  if (rendererContext instanceof RepresentationService.Context6) {
+    final RepresentationService.Context6 context6=(RepresentationService.Context6)rendererContext;
+    final RepresentationService.Intent intent=context6.getIntent();
+    if (intent == RepresentationService.Intent.JUST_CREATED) {
+      responseBuilder.status(Response.Status.CREATED);
+    }
+  }
+  final Version version=objectAdapter.getVersion();
+  if (version != null && version.getTime() != null) {
+    responseBuilder.tag(ETAG_FORMAT.format(version.getTime()));
+  }
+  return responseBuilder;
+}

@@ -1,0 +1,16 @@
+{
+  final List<MediaType> acceptableMediaTypes=httpHeaders.getAcceptableMediaTypes();
+  for (  MediaType acceptableMediaType : acceptableMediaTypes) {
+    if (acceptableMediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+      return SwaggerService.Format.JSON;
+    }
+  }
+  final MediaType applYaml=new MediaType("application","yaml");
+  final MediaType textYaml=new MediaType("text","yaml");
+  for (  MediaType acceptableMediaType : acceptableMediaTypes) {
+    if (acceptableMediaType.isCompatible(applYaml) || acceptableMediaType.isCompatible(textYaml)) {
+      return SwaggerService.Format.YAML;
+    }
+  }
+  return SwaggerService.Format.JSON;
+}

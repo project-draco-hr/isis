@@ -11,7 +11,8 @@
     }
     final OneToManyAssociation collection=(OneToManyAssociation)assoc;
     final LinkFollowSpecs linkFollowerForColl=getLinkFollowSpecs().follow("members[" + collection.getId() + "]");
-    final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(getRendererContext(),linkFollowerForColl,collection.getId(),JsonRepresentation.newMap());
+    final JsonRepresentation collectionRepresentation=JsonRepresentation.newMap();
+    final ObjectCollectionReprRenderer renderer=new ObjectCollectionReprRenderer(getRendererContext(),linkFollowerForColl,collection.getId(),collectionRepresentation);
     renderer.with(new ObjectAndCollection(objectAdapter,collection)).usingLinkTo(linkToBuilder);
     if (mode.isEventSerialization()) {
       renderer.asEventSerialization();
