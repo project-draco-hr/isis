@@ -1,0 +1,15 @@
+{
+  final String swaggerSpec=swaggerService.generateSwaggerSpec(visibility,format);
+  try {
+    Files.createParentDirs(swaggerSpecFile);
+  }
+ catch (  IOException e) {
+    throw new MojoFailureException(String.format("Failed to create dir: '%s'",swaggerSpecFile.getParent()));
+  }
+  try {
+    Files.write(swaggerSpec,swaggerSpecFile,Charsets.UTF_8);
+  }
+ catch (  IOException e) {
+    throw new MojoFailureException("Failed to write out " + swaggerSpecFile);
+  }
+}
