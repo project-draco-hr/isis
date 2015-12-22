@@ -1,0 +1,15 @@
+{
+  List<javax.ws.rs.core.MediaType> acceptableMediaTypes=requestContext.getAcceptableMediaTypes();
+  final List<MediaType> mediaTypes=Lists.newArrayList(Lists.transform(acceptableMediaTypes,new Function<javax.ws.rs.core.MediaType,MediaType>(){
+    @Nullable @Override public MediaType apply(    @Nullable final javax.ws.rs.core.MediaType input){
+      if (input == null) {
+        return null;
+      }
+      final MediaType mediaType=MediaType.create(input.getType(),input.getSubtype());
+      final SetMultimap<String,String> parameters=Multimaps.forMap(input.getParameters());
+      return mediaType.withParameters(parameters);
+    }
+  }
+));
+  setMediaTypes(mediaTypes);
+}
