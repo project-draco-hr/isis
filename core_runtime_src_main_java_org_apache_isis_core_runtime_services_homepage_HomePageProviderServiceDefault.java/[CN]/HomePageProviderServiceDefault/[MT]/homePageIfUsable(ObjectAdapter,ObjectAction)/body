@@ -1,0 +1,15 @@
+{
+  if (!objectAction.containsDoOpFacet(HomePageFacet.class)) {
+    return null;
+  }
+  final Consent visibility=objectAction.isVisible(serviceAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE);
+  if (visibility.isVetoed()) {
+    return null;
+  }
+  final Consent usability=objectAction.isUsable(serviceAdapter,InteractionInitiatedBy.USER,Where.ANYWHERE);
+  if (usability.isVetoed()) {
+    return null;
+  }
+  final ObjectAdapter objectAdapter=objectAction.executeWithRuleChecking(serviceAdapter,new ObjectAdapter[]{},InteractionInitiatedBy.USER,WHERE_FOR_ACTION_INVOCATION);
+  return objectAdapter != null ? objectAdapter.getObject() : null;
+}
