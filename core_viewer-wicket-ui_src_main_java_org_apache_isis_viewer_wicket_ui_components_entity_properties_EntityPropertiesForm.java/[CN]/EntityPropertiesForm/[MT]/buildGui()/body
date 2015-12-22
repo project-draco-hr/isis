@@ -1,12 +1,14 @@
 {
   final EntityModel entityModel=(EntityModel)getModel();
-  final ColumnSpans columnSpans=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class).getColumnSpans();
+  MemberGroupLayoutFacet memberGroupLayoutFacet=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class);
+  final ColumnSpans columnSpans=memberGroupLayoutFacet.getColumnSpans();
   renderedFirstField=false;
   MarkupContainer leftColumn=new WebMarkupContainer(ID_LEFT_COLUMN);
   add(leftColumn);
   boolean addedProperties;
   if (columnSpans.getLeft() > 0) {
-    addedProperties=addPropertiesInColumn(leftColumn,MemberGroupLayoutHint.LEFT,columnSpans);
+    List<String> groupLayoutNames=memberGroupLayoutFacet.getLeft();
+    addedProperties=addPropertiesInColumn(leftColumn,MemberGroupLayoutHint.LEFT,columnSpans,groupLayoutNames);
     addButtons(leftColumn);
     addFeedbackGui(leftColumn);
   }
@@ -18,17 +20,19 @@
     Components.permanentlyHide(this,ID_EDIT_BUTTON,ID_OK_BUTTON,ID_CANCEL_BUTTON,ID_FEEDBACK);
   }
   if (columnSpans.getMiddle() > 0) {
+    List<String> groupLayoutNames=memberGroupLayoutFacet.getMiddle();
     MarkupContainer middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
     add(middleColumn);
-    addPropertiesInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,columnSpans);
+    addPropertiesInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,columnSpans,groupLayoutNames);
   }
  else {
     Components.permanentlyHide(this,ID_MIDDLE_COLUMN);
   }
   if (columnSpans.getRight() > 0) {
+    List<String> groupLayoutNames=memberGroupLayoutFacet.getRight();
     MarkupContainer rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
     add(rightColumn);
-    addPropertiesInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,columnSpans);
+    addPropertiesInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,columnSpans,groupLayoutNames);
   }
  else {
     Components.permanentlyHide(this,ID_RIGHT_COLUMN);
