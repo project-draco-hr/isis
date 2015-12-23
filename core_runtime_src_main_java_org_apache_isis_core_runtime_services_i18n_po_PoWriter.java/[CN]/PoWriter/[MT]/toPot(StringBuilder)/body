@@ -1,20 +1,20 @@
 {
-  final StringBuilder buf=new StringBuilder();
+  header(buf);
   for (  final String msgId : blocksByMsgId.keySet()) {
     final Block block=blocksByMsgId.get(msgId);
     for (    final String context : block.contexts) {
       buf.append("#: ").append(context).append("\n");
     }
-    buf.append("msgid \"").append(msgId).append("\"\n");
-    if (block.msgIdPlural == null) {
+    buf.append("msgid \"").append(escape(msgId)).append("\"\n");
+    String msgIdPlural=block.msgIdPlural;
+    if (msgIdPlural == null) {
       buf.append("msgstr \"\"\n");
     }
  else {
-      buf.append("msgid_plural \"").append(block.msgIdPlural).append("\"\n");
+      buf.append("msgid_plural \"").append(escape(msgIdPlural)).append("\"\n");
       buf.append("msgstr[0] \"\"\n");
       buf.append("msgstr[1] \"\"\n");
     }
     buf.append("\n\n");
   }
-  return buf.toString();
 }
