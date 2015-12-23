@@ -1,4 +1,9 @@
 {
   final Object domainObject=objectOf(objectAdapter);
-  return buildResponse(renderContext2,domainObject,RepresentationType.DOMAIN_OBJECT);
+  final RepresentationType representationType=RepresentationType.DOMAIN_OBJECT;
+  final MediaType mediaType=mediaTypeFrom(renderContext2,representationType);
+  if (mediaType == null) {
+    return null;
+  }
+  return buildResponse(renderContext2,domainObject,representationType);
 }
