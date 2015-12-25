@@ -6,5 +6,17 @@
   if (factory != null) {
     return factory.newProperty();
   }
+  if (cls.isEnum()) {
+    final StringProperty property=new StringProperty();
+    final Object[] enumConstants=cls.getEnumConstants();
+    final List<String> enumNames=Lists.newArrayList(Iterables.transform(Arrays.asList(enumConstants),new Function<Object,String>(){
+      @Nullable @Override public String apply(      @Nullable final Object input){
+        return ((Enum<?>)input).name();
+      }
+    }
+));
+    property.setEnum(enumNames);
+    return property;
+  }
   return null;
 }

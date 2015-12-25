@@ -1,0 +1,14 @@
+{
+  final List<ObjectAdapter> serviceAdapters=getPersistenceSession().getServices();
+  for (  final ObjectAdapter serviceAdapter : serviceAdapters) {
+    final ObjectSpecification serviceSpec=serviceAdapter.getSpecification();
+    final List<ObjectAction> objectActions=serviceSpec.getObjectActions(Contributed.EXCLUDED);
+    for (    final ObjectAction objectAction : objectActions) {
+      final Object homePage=homePageIfUsable(serviceAdapter,objectAction);
+      if (homePage != null) {
+        return homePage;
+      }
+    }
+  }
+  return null;
+}

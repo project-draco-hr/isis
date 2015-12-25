@@ -11,6 +11,10 @@
       chain.doFilter(request,response);
       return;
     }
+    if (requestIsPassThru(httpServletRequest)) {
+      chain.doFilter(request,response);
+      return;
+    }
     final AuthenticationSession authSession=authSessionStrategy.lookupValid(httpServletRequest,httpServletResponse);
     if (authSession != null) {
       authSessionStrategy.bind(httpServletRequest,httpServletResponse,authSession);
