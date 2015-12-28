@@ -1,8 +1,6 @@
 {
   final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
   final Command command=commandContext != null ? commandContext.getCommand() : null;
-  final AuthenticationSession session=getAuthenticationSession();
-  final DeploymentCategory deploymentCategory=getDeploymentCategory();
   final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,targetAdapter,arguments,command,null);
   final InvocationResult invocationResult=internalInvoke(command,owningAction,targetAdapter,arguments);
   final ObjectAdapter invocationResultAdapter=invocationResult.getAdapter();
