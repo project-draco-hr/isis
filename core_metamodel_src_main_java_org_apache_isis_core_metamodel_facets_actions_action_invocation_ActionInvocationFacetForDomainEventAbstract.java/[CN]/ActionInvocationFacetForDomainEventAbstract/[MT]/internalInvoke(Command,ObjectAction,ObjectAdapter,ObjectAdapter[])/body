@@ -73,12 +73,13 @@
     Object result;
     if (cacheable) {
       final QueryResultsCache queryResultsCache=getServicesInjector().lookupService(QueryResultsCache.class);
+      final Object[] targetPojoPlusExecutionParameters=ArrayExtensions.appendT(executionParameters,targetPojo);
       result=queryResultsCache.execute(new Callable<Object>(){
         @Override public Object call() throws Exception {
           return method.invoke(targetPojo,executionParameters);
         }
       }
-,targetPojo.getClass(),method.getName(),targetPojo,executionParameters);
+,targetPojo.getClass(),method.getName(),targetPojoPlusExecutionParameters);
     }
  else {
       result=method.invoke(targetPojo,executionParameters);
