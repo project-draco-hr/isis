@@ -1,0 +1,22 @@
+{
+  final DomainObject domainObject=new DomainObject();
+  TabGroup tabGroup=domainObject.getTabGroups().get(0);
+  Tab tab=tabGroup.getTabs().get(0);
+  Column left=tab.getLeft();
+  PropertyGroup leftPropGroup=new PropertyGroup();
+  left.getPropertyGroups().add(leftPropGroup);
+  leftPropGroup.setName("General");
+  Property nameProperty=leftPropGroup.getProperties().get(0);
+  nameProperty.setIdentifier("name");
+  Action updateNameAction=new Action();
+  updateNameAction.setIdentifier("updateName");
+  nameProperty.getActions().add(updateNameAction);
+  Action deleteAction=new Action();
+  deleteAction.setIdentifier("delete");
+  domainObject.getActions().add(deleteAction);
+  String xml=jaxbService.toXml(domainObject,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,"http://isis.apache.org/schema/applib/layout http://isis.apache.org/schema/applib/layout/layout-1.0.xsd"));
+  System.out.println(xml);
+  jaxbService.fromXml(DomainObject.class,xml);
+  System.out.println("==========");
+  dumpXsd(domainObject);
+}
