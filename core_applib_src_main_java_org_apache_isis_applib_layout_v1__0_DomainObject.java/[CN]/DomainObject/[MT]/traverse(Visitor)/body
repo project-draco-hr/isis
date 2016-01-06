@@ -1,0 +1,15 @@
+{
+  visitor.visit(this);
+  traverseActions(this,visitor);
+  final List<TabGroup> tabGroups=getTabGroups();
+  for (  final TabGroup tabGroup : tabGroups) {
+    visitor.visit(tabGroup);
+    final List<Tab> tabs=tabGroup.getTabs();
+    for (    final Tab tab : tabs) {
+      visitor.visit(tab);
+      traverseColumn(tab.getLeft(),visitor);
+      traverseColumn(tab.getMiddle(),visitor);
+      traverseColumn(tab.getRight(),visitor);
+    }
+  }
+}

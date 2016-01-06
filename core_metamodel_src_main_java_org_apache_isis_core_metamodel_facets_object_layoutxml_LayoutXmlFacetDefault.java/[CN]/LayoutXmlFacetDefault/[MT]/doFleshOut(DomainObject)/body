@@ -1,5 +1,27 @@
 {
   ObjectSpecification objectSpec=(ObjectSpecification)getFacetHolder();
-  List<OneToOneAssociation> properties=getProperties(objectSpec);
-  List<TabGroup> tabses=metadata.getTabGroups();
+  final List<OneToOneAssociation> oneToOneAssociations=getOneToOneAssociations(objectSpec);
+  final Map<String,OneToOneAssociation> oneToOneAssociationById=ObjectMember.Util.mapById(oneToOneAssociations);
+  final List<OneToManyAssociation> oneToManyAssociations=getOneToManyAssociations(objectSpec);
+  final Map<String,OneToManyAssociation> oneToManyAssociationById=ObjectMember.Util.mapById(oneToManyAssociations);
+  final List<ObjectAction> objectActions=objectSpec.getObjectActions(Contributed.INCLUDED);
+  final Map<String,ObjectAction> objectActionById=ObjectMember.Util.mapById(objectActions);
+  metadata.traverse(new DomainObject.VisitorAdapter(){
+    @Override public void visit(    final Property property){
+      oneToOneAssociationById.remove(property.getId());
+    }
+    @Override public void visit(    final Collection collection){
+      oneToManyAssociationById.remove(collection.getId());
+    }
+    @Override public void visit(    final Action action){
+      objectActionById.remove(action.getId());
+    }
+  }
+);
+  if (!oneToOneAssociationById.isEmpty()) {
+  }
+  if (!oneToManyAssociationById.isEmpty()) {
+  }
+  if (!objectActionById.isEmpty()) {
+  }
 }

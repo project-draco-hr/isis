@@ -1,0 +1,10 @@
+{
+  final Iterable<PropertyGroup> propertyGroups=Iterables.transform(Iterables.filter(column.getContent(),is(PropertyGroup.class)),cast(PropertyGroup.class));
+  for (  final PropertyGroup propertyGroup : propertyGroups) {
+    final List<Property> properties=propertyGroup.getProperties();
+    for (    final Property property : properties) {
+      visitor.visit(property);
+      traverseActions(property,visitor);
+    }
+  }
+}
