@@ -6,8 +6,21 @@
     final String cssClass=facet.cssClass(objectAdapter);
     CssClassAppender.appendCssClassTo(this,cssClass);
   }
-  LayoutXmlFacet layoutXmlFacet=model.getTypeOfSpecification().getFacet(LayoutXmlFacet.class);
-  DomainObject currentlyUnused=layoutXmlFacet.getLayoutMetadata();
+  final LayoutXmlFacet layoutXmlFacet=model.getTypeOfSpecification().getFacet(LayoutXmlFacet.class);
+  final DomainObject domainObject=layoutXmlFacet.getLayoutMetadata();
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
-  getComponentFactoryRegistry().addOrReplaceComponent(this,ID_ENTITY_PROPERTIES_AND_COLLECTIONS,ComponentType.ENTITY_PROPERTIES,model);
+  List<TabGroup> tabGroups=domainObject.getTabGroups();
+  TabGroup tabGroup=tabGroups.get(0);
+  List<ITab> tabs=Lists.newArrayList();
+  List<Tab> tabList=tabGroup.getTabs();
+  for (  Tab tab : tabList) {
+    tabs.add(new AbstractTab(Model.of(tab.getName())){
+      private static final long serialVersionUID=1L;
+      @Override public Panel getPanel(      String panelId){
+        return new EntityTabPanel(panelId,getModel());
+      }
+    }
+);
+  }
+  addOrReplace(new AjaxBootstrapTabbedPanel("tabs",tabs));
 }
