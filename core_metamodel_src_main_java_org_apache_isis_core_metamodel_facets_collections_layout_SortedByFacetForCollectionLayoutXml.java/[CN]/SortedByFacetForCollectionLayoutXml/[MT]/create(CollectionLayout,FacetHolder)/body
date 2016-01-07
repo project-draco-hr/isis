@@ -1,0 +1,14 @@
+{
+  if (collectionLayout == null) {
+    return null;
+  }
+  final String sortedBy=collectionLayout.getSortedBy();
+  if (sortedBy == null) {
+    return null;
+  }
+  final Class sortedByClass=ClassUtil.forName(sortedBy);
+  if (sortedByClass == Comparator.class) {
+    return null;
+  }
+  return sortedByClass != null ? new SortedByFacetForCollectionLayoutXml(sortedByClass,holder) : null;
+}

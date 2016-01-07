@@ -1,0 +1,68 @@
+{
+  final List<String> propertyIds=Lists.newArrayList();
+  final List<String> collectionIds=Lists.newArrayList();
+  final List<String> actionIds=Lists.newArrayList();
+  final AtomicReference<PropertyGroup> generalPropertyGroupRef=new AtomicReference<>();
+  final AtomicReference<Column> firstColumnRef=new AtomicReference<>();
+  final AtomicReference<TabGroup> lastTabGroupRef=new AtomicReference<>();
+  metadata.visit(new DomainObject.VisitorAdapter(){
+    @Override public void visit(    final Property property){
+      propertyIds.add(property.getId());
+    }
+    @Override public void visit(    final Collection collection){
+      collectionIds.add(collection.getId());
+    }
+    @Override public void visit(    final Action action,    final ActionHolder holder){
+      actionIds.add(action.getId());
+    }
+    @Override public void visit(    final Column column){
+      firstColumnRef.compareAndSet(null,column);
+    }
+    @Override public void visit(    final PropertyGroup propertyGroup){
+      if (propertyGroup.getName().equals("General")) {
+        generalPropertyGroupRef.compareAndSet(null,propertyGroup);
+      }
+    }
+    @Override public void visit(    final TabGroup tabGroup){
+      lastTabGroupRef.set(tabGroup);
+    }
+  }
+);
+  final List<String> missingPropertyIds=Lists.newArrayList(oneToOneAssociationById.keySet());
+  missingPropertyIds.removeAll(propertyIds);
+  if (!missingPropertyIds.isEmpty()) {
+    boolean wasSet=generalPropertyGroupRef.compareAndSet(null,new PropertyGroup("General"));
+    final PropertyGroup generalPropertyGroup=generalPropertyGroupRef.get();
+    if (wasSet) {
+      firstColumnRef.get().getContent().add(generalPropertyGroup);
+    }
+    Iterables.removeAll(propertyIds,oneToOneAssociationById.keySet());
+    for (    final String propertyId : missingPropertyIds) {
+      generalPropertyGroup.getProperties().add(new Property(propertyId));
+    }
+  }
+  final List<String> missingCollectionIds=Lists.newArrayList(oneToManyAssociationById.keySet());
+  missingCollectionIds.removeAll(collectionIds);
+  if (!missingCollectionIds.isEmpty()) {
+    while (metadata.getTabGroups().size() < 2) {
+      final TabGroup tabGroup=new TabGroup();
+      metadata.getTabGroups().add(tabGroup);
+      lastTabGroupRef.set(tabGroup);
+    }
+    final TabGroup lastTabGroup=lastTabGroupRef.get();
+    for (    final String collectionId : missingCollectionIds) {
+      final Tab tab=new Tab();
+      lastTabGroup.getTabs().add(tab);
+      Column left=new Column(12);
+      tab.setLeft(left);
+      left.getContent().add(new Collection(collectionId));
+    }
+  }
+  final List<String> missingActionIds=Lists.newArrayList(objectActionById.keySet());
+  missingActionIds.removeAll(actionIds);
+  if (!missingActionIds.isEmpty()) {
+    for (    String actionId : missingActionIds) {
+      metadata.getActions().add(new Action(actionId));
+    }
+  }
+}
