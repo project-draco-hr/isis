@@ -3,18 +3,12 @@
   final EntityModel entityModel=(EntityModel)getModel();
   final ObjectAdapter adapter=entityModel.getObject();
   final ObjectSpecification objSpec=adapter.getSpecification();
-  final List<ObjectAssociation> associations=visibleProperties(adapter,objSpec,Where.OBJECT_FORMS);
+  final Column columnMetaDataIfAny=tabMetaDataIfAny != null ? hint.from(tabMetaDataIfAny) : null;
+  final List<ObjectAssociation> properties=visibleAssociations(adapter,ObjectAssociation.Filters.PROPERTIES);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   markupContainer.add(memberGroupRv);
-  final Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociation.Util.groupByMemberOrderName(associations);
-  final List<String> groupNames;
-  if (tabIfAny != null) {
-    final Column column=hint.from(tabIfAny);
-    groupNames=Lists.newArrayList(Iterables.transform(column.getPropertyGroups(),propertyGroupName()));
-  }
- else {
-    groupNames=ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
-  }
+  final Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociation.Util.groupByMemberOrderName(properties);
+  final List<String> groupNames=tabMetaDataIfAny != null ? Lists.newArrayList(Iterables.transform(columnMetaDataIfAny.getPropertyGroups(),propertyGroupName())) : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   for (  final String groupName : groupNames) {
     final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
     if (associationsInGroup == null) {
@@ -38,5 +32,8 @@
     AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL_DROPDOWN,actionsPanelDropDown,AdditionalLinksPanel.Style.DROPDOWN);
   }
   addClassForSpan(markupContainer,span);
+  if (columnMetaDataIfAny != null) {
+    final List<ObjectAssociation> collections=visibleAssociations(adapter,ObjectAssociation.Filters.COLLECTIONS);
+  }
   return !groupNames.isEmpty();
 }

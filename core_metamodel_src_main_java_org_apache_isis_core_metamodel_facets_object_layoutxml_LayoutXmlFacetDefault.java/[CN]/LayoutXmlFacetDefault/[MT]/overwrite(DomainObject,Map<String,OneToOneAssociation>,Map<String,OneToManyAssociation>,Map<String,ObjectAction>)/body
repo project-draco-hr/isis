@@ -77,9 +77,14 @@
       FacetUtil.addFacet(NamedFacetForCollectionXml.create(collection,oneToManyAssociation));
       FacetUtil.addFacet(PagedFacetForCollectionXml.create(collection,oneToManyAssociation));
       FacetUtil.addFacet(SortedByFacetForCollectionXml.create(collection,oneToManyAssociation));
+      final String groupName=collection.getId();
+      final String sequence=nextInSequenceFor(groupName);
+      FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
       final Column column=collection.getOwner();
       final Tab tab=column.getOwner();
-      tab.setName(collection.getId());
+      if (tab.getContents().size() == 1) {
+        tab.setName(collection.getId());
+      }
     }
     private String nextInSequenceFor(    final String propertyGroupName){
 synchronized (propertySequenceByGroup) {

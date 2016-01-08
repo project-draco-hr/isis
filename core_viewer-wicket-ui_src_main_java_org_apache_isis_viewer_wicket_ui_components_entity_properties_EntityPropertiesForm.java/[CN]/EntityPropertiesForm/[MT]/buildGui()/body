@@ -1,9 +1,9 @@
 {
   final EntityModel entityModel=(EntityModel)getModel();
-  final Tab tabIfAny=entityModel.getTab();
+  final Tab tabMetaDataIfAny=entityModel.getTabMetadata();
   final ColumnSpans columnSpans;
-  if (tabIfAny != null) {
-    columnSpans=ColumnSpans.asSpans(tabIfAny.getLeft().getSpan(),tabIfAny.getMiddle().getSpan(),tabIfAny.getRight().getSpan());
+  if (tabMetaDataIfAny != null) {
+    columnSpans=ColumnSpans.asSpans(tabMetaDataIfAny.getLeft().getSpan(),tabMetaDataIfAny.getMiddle().getSpan(),tabMetaDataIfAny.getRight().getSpan());
   }
  else {
     final MemberGroupLayoutFacet memberGroupLayoutFacet=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class);
@@ -14,7 +14,7 @@
   add(leftColumn);
   boolean addedProperties;
   if (columnSpans.getLeft() > 0) {
-    addedProperties=addPropertiesInColumn(leftColumn,MemberGroupLayoutHint.LEFT,tabIfAny,columnSpans);
+    addedProperties=addMembersInColumn(leftColumn,MemberGroupLayoutHint.LEFT,tabMetaDataIfAny,columnSpans);
     addButtons(leftColumn);
     addFeedbackGui(leftColumn);
   }
@@ -28,7 +28,7 @@
   if (columnSpans.getMiddle() > 0) {
     MarkupContainer middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
     add(middleColumn);
-    addPropertiesInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,tabIfAny,columnSpans);
+    addMembersInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,tabMetaDataIfAny,columnSpans);
   }
  else {
     Components.permanentlyHide(this,ID_MIDDLE_COLUMN);
@@ -36,12 +36,12 @@
   if (columnSpans.getRight() > 0) {
     MarkupContainer rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
     add(rightColumn);
-    addPropertiesInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,tabIfAny,columnSpans);
+    addMembersInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,tabMetaDataIfAny,columnSpans);
   }
  else {
     Components.permanentlyHide(this,ID_RIGHT_COLUMN);
   }
-  if (columnSpans.getCollections() > 0) {
+  if (tabMetaDataIfAny == null && columnSpans.getCollections() > 0) {
     final String idCollectionsToShow;
     final String idCollectionsToHide;
     int collectionSpan;
