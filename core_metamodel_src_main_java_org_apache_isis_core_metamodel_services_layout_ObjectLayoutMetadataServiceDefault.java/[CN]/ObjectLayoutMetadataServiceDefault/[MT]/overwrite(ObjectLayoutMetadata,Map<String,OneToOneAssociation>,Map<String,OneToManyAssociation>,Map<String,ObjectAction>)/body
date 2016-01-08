@@ -1,6 +1,7 @@
 {
   metadata.visit(new ObjectLayoutMetadata.VisitorAdapter(){
     private final Map<String,int[]> propertySequenceByGroup=Maps.newHashMap();
+    private int collectionSequence=1;
     private int actionDomainObjectSequence=1;
     private int actionPropertyGroupSequence=1;
     private int actionPropertySequence=1;
@@ -71,7 +72,7 @@
       FacetUtil.addFacet(TypicalLengthFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
       final PropertyGroup propertyGroup=propertyLayoutMetadata.getOwner();
       final String groupName=propertyGroup.getName();
-      final String sequence=nextInSequenceFor(groupName);
+      final String sequence=nextInSequenceFor(groupName,propertySequenceByGroup);
       FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToOneAssociation));
     }
     @Override public void visit(    final CollectionLayoutMetadata collectionLayoutMetadata){
@@ -87,20 +88,21 @@
       FacetUtil.addFacet(PagedFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
       FacetUtil.addFacet(SortedByFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
       final String groupName=collectionLayoutMetadata.getId();
-      final String sequence=nextInSequenceFor(groupName);
+      final String sequence="" + collectionSequence++;
       FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
       final Column column=collectionLayoutMetadata.getOwner();
       final Tab tab=column.getOwner();
       if (tab.getContents().size() == 1) {
-        tab.setName(collectionLayoutMetadata.getNamed());
+        final String collectionName=oneToManyAssociation.getName();
+        tab.setName(collectionName);
       }
     }
-    private String nextInSequenceFor(    final String propertyGroupName){
-synchronized (propertySequenceByGroup) {
-        int[] holder=propertySequenceByGroup.get(propertyGroupName);
+    private String nextInSequenceFor(    final String key,    final Map<String,int[]> seqByKey){
+synchronized (seqByKey) {
+        int[] holder=seqByKey.get(key);
         if (holder == null) {
           holder=new int[]{0};
-          propertySequenceByGroup.put(propertyGroupName,holder);
+          seqByKey.put(key,holder);
         }
         holder[0]++;
         return "" + holder[0];

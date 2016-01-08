@@ -1,10 +1,9 @@
 {
   final int span=hint.from(columnSpans);
-  final EntityModel entityModel=(EntityModel)getModel();
   final ObjectAdapter adapter=entityModel.getObject();
   final ObjectSpecification objSpec=adapter.getSpecification();
   final Column columnMetaDataIfAny=tabMetaDataIfAny != null ? hint.from(tabMetaDataIfAny) : null;
-  final List<ObjectAssociation> properties=visibleAssociations(adapter,ObjectAssociation.Filters.PROPERTIES);
+  final List<ObjectAssociation> properties=visibleProperties(adapter);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   markupContainer.add(memberGroupRv);
   final Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociation.Util.groupByMemberOrderName(properties);
@@ -32,8 +31,5 @@
     AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL_DROPDOWN,actionsPanelDropDown,AdditionalLinksPanel.Style.DROPDOWN);
   }
   addClassForSpan(markupContainer,span);
-  if (columnMetaDataIfAny != null) {
-    final List<ObjectAssociation> collections=visibleAssociations(adapter,ObjectAssociation.Filters.COLLECTIONS);
-  }
   return !groupNames.isEmpty();
 }
