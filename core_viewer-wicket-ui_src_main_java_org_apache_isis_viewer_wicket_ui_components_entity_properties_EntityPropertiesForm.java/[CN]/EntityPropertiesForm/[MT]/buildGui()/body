@@ -3,7 +3,9 @@
   final Tab tabMetaDataIfAny=entityModel.getTabMetadata();
   final ColumnSpans columnSpans;
   if (tabMetaDataIfAny != null) {
-    columnSpans=ColumnSpans.asSpans(tabMetaDataIfAny.getLeft().getSpan(),tabMetaDataIfAny.getMiddle().getSpan(),tabMetaDataIfAny.getRight().getSpan());
+    final Column middle=tabMetaDataIfAny.getMiddle();
+    final Column right=tabMetaDataIfAny.getRight();
+    columnSpans=ColumnSpans.asSpans(tabMetaDataIfAny.getLeft().getSpan(),middle != null ? middle.getSpan() : 0,right != null ? right.getSpan() : 0);
   }
  else {
     final MemberGroupLayoutFacet memberGroupLayoutFacet=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class);
@@ -14,7 +16,7 @@
   add(leftColumn);
   boolean addedProperties;
   if (columnSpans.getLeft() > 0) {
-    addedProperties=addMembersInColumn(leftColumn,MemberGroupLayoutHint.LEFT,tabMetaDataIfAny,columnSpans);
+    addedProperties=addPropertiesInColumn(leftColumn,MemberGroupLayoutHint.LEFT,tabMetaDataIfAny,columnSpans);
     addButtons(leftColumn);
     addFeedbackGui(leftColumn);
   }
@@ -28,7 +30,7 @@
   if (columnSpans.getMiddle() > 0) {
     MarkupContainer middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
     add(middleColumn);
-    addMembersInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,tabMetaDataIfAny,columnSpans);
+    addPropertiesInColumn(middleColumn,MemberGroupLayoutHint.MIDDLE,tabMetaDataIfAny,columnSpans);
   }
  else {
     Components.permanentlyHide(this,ID_MIDDLE_COLUMN);
@@ -36,7 +38,7 @@
   if (columnSpans.getRight() > 0) {
     MarkupContainer rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
     add(rightColumn);
-    addMembersInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,tabMetaDataIfAny,columnSpans);
+    addPropertiesInColumn(rightColumn,MemberGroupLayoutHint.RIGHT,tabMetaDataIfAny,columnSpans);
   }
  else {
     Components.permanentlyHide(this,ID_RIGHT_COLUMN);

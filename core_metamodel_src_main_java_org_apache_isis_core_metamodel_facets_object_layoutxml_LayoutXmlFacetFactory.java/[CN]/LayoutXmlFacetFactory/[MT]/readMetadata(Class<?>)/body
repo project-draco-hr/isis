@@ -1,26 +1,4 @@
 {
-  if (blacklisted.contains(domainClass)) {
-    return null;
-  }
-  final String xml;
-  final String resourceName=domainClass.getSimpleName() + ".layout.xml";
-  try {
-    xml=ClassExtensions.resourceContentOf(domainClass,resourceName);
-  }
- catch (  IOException|IllegalArgumentException ex) {
-    blacklisted.add(domainClass);
-    final String message=String.format("Failed to locate file %s (relative to %s.class); ex: %s)",resourceName,domainClass.getName(),ex.getMessage());
-    LOG.debug(message);
-    return null;
-  }
-  try {
-    final JaxbService jaxbService=servicesInjector.lookupService(JaxbService.class);
-    final DomainObject metadata=jaxbService.fromXml(DomainObject.class,xml);
-    return metadata;
-  }
- catch (  Exception ex) {
-    final String message="Failed to parse " + resourceName + " file ("+ ex.getMessage()+ ")";
-    LOG.warn(message);
-    return null;
-  }
+  final ObjectLayoutMetadataService objectLayoutMetadataService=servicesInjector.lookupService(ObjectLayoutMetadataService.class);
+  return objectLayoutMetadataService.fromXml(domainClass);
 }

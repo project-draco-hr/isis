@@ -1,0 +1,32 @@
+{
+  final ObjectLayoutMetadata objectLayoutMetadata=new ObjectLayoutMetadata();
+  TabGroup tabGroup=objectLayoutMetadata.getTabGroups().get(0);
+  Tab tab=tabGroup.getTabs().get(0);
+  tab.setName("Common");
+  Column left=tab.getLeft();
+  PropertyGroup leftPropGroup=new PropertyGroup();
+  left.setPropertyGroups(Lists.<PropertyGroup>newArrayList());
+  left.getPropertyGroups().add(leftPropGroup);
+  leftPropGroup.setName("General");
+  CollectionLayoutMetadata similarToColl=new CollectionLayoutMetadata();
+  left.setCollections(Lists.<CollectionLayoutMetadata>newArrayList());
+  left.getCollections().add(similarToColl);
+  similarToColl.setId("similarTo");
+  PropertyLayoutMetadata namePropertyLayoutMetadata=leftPropGroup.getProperties().get(0);
+  namePropertyLayoutMetadata.setId("name");
+  ActionLayoutMetadata updateNameActionLayoutMetadata=new ActionLayoutMetadata();
+  updateNameActionLayoutMetadata.setId("updateName");
+  namePropertyLayoutMetadata.setActions(Lists.<ActionLayoutMetadata>newArrayList());
+  namePropertyLayoutMetadata.getActions().add(updateNameActionLayoutMetadata);
+  ActionLayoutMetadata deleteActionLayoutMetadata=new ActionLayoutMetadata();
+  deleteActionLayoutMetadata.setId("delete");
+  objectLayoutMetadata.setActions(Lists.<ActionLayoutMetadata>newArrayList());
+  objectLayoutMetadata.getActions().add(deleteActionLayoutMetadata);
+  String xml=jaxbService.toXml(objectLayoutMetadata,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,"http://isis.apache.org/schema/applib/layout http://isis.apache.org/schema/applib/layout/layout-1.0.xsd"));
+  System.out.println(xml);
+  ObjectLayoutMetadata objectLayoutMetadataRoundtripped=jaxbService.fromXml(ObjectLayoutMetadata.class,xml);
+  String xmlRoundtripped=jaxbService.toXml(objectLayoutMetadataRoundtripped,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,"http://isis.apache.org/schema/applib/layout http://isis.apache.org/schema/applib/layout/layout-1.0.xsd"));
+  assertThat(xml,is(equalTo(xmlRoundtripped)));
+  System.out.println("==========");
+  dumpXsd(objectLayoutMetadata);
+}

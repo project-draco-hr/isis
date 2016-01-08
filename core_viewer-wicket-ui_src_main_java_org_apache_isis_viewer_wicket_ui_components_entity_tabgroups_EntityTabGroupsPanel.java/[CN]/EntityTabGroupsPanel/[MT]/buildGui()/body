@@ -6,17 +6,17 @@
     final String cssClass=facet.cssClass(objectAdapter);
     CssClassAppender.appendCssClassTo(this,cssClass);
   }
-  final LayoutXmlFacet layoutXmlFacet=model.getTypeOfSpecification().getFacet(LayoutXmlFacet.class);
-  final DomainObject domainObject=layoutXmlFacet.getLayoutMetadata();
-  final String xml=getServicesInjector().lookupService(JaxbService.class).toXml(domainObject);
+  final ObjectLayoutMetadataFacet objectLayoutMetadataFacet=model.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
+  final ObjectLayoutMetadata objectLayoutMetadata=objectLayoutMetadataFacet.getMetadata();
+  final String xml=getServicesInjector().lookupService(JaxbService.class).toXml(objectLayoutMetadata);
   System.out.println(xml);
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
-  final List<TabGroup> tabGroups=domainObject.getTabGroups();
+  final List<TabGroup> tabGroups=FluentIterable.from(objectLayoutMetadata.getTabGroups()).filter(TabGroup.Predicates.notEmpty()).toList();
   final ListView<TabGroup> tabGroupsList=new ListView<TabGroup>(ID_TAB_GROUPS,tabGroups){
     @Override protected void populateItem(    final ListItem<TabGroup> item){
       final List<ITab> tabs=Lists.newArrayList();
       final TabGroup tabGroup=item.getModelObject();
-      final List<Tab> tabList=tabGroup.getTabs();
+      final List<Tab> tabList=FluentIterable.from(tabGroup.getTabs()).filter(Tab.Predicates.notEmpty()).toList();
       for (      final Tab tab : tabList) {
         tabs.add(new AbstractTab(Model.of(tab.getName())){
           private static final long serialVersionUID=1L;

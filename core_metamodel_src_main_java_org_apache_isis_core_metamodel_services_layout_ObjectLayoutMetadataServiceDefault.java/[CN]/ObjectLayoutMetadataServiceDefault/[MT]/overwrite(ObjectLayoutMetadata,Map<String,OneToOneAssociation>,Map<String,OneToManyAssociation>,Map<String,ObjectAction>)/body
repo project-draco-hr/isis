@@ -1,0 +1,111 @@
+{
+  metadata.visit(new ObjectLayoutMetadata.VisitorAdapter(){
+    private final Map<String,int[]> propertySequenceByGroup=Maps.newHashMap();
+    private int actionDomainObjectSequence=1;
+    private int actionPropertyGroupSequence=1;
+    private int actionPropertySequence=1;
+    private int actionCollectionSequence=1;
+    @Override public void visit(    final ActionLayoutMetadata actionLayoutMetadata){
+      final ActionHolder actionHolder=actionLayoutMetadata.getOwner();
+      final ObjectAction objectAction=objectActionById.get(actionLayoutMetadata.getId());
+      if (objectAction == null) {
+        return;
+      }
+      final String memberOrderName;
+      final int memberOrderSequence;
+      if (actionHolder instanceof PropertyGroup) {
+        final PropertyGroup propertyGroup=(PropertyGroup)actionHolder;
+        final List<PropertyLayoutMetadata> properties=propertyGroup.getProperties();
+        final PropertyLayoutMetadata propertyLayoutMetadata=properties.get(0);
+        memberOrderName=propertyLayoutMetadata.getId();
+        memberOrderSequence=actionPropertyGroupSequence++;
+      }
+ else       if (actionHolder instanceof PropertyLayoutMetadata) {
+        final PropertyLayoutMetadata propertyLayoutMetadata=(PropertyLayoutMetadata)actionHolder;
+        memberOrderName=propertyLayoutMetadata.getId();
+        memberOrderSequence=actionPropertySequence++;
+      }
+ else       if (actionHolder instanceof CollectionLayoutMetadata) {
+        final CollectionLayoutMetadata collectionLayoutMetadata=(CollectionLayoutMetadata)actionHolder;
+        memberOrderName=collectionLayoutMetadata.getId();
+        memberOrderSequence=actionCollectionSequence++;
+      }
+ else {
+        memberOrderName=null;
+        memberOrderSequence=actionDomainObjectSequence++;
+      }
+      FacetUtil.addFacet(new MemberOrderFacetXml(memberOrderName,"" + memberOrderSequence,translationService,objectAction));
+      if (actionHolder instanceof PropertyGroup) {
+        if (actionLayoutMetadata.getPosition() == null || actionLayoutMetadata.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.BELOW || actionLayoutMetadata.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.RIGHT) {
+          actionLayoutMetadata.setPosition(org.apache.isis.applib.annotation.ActionLayout.Position.PANEL);
+        }
+      }
+ else       if (actionHolder instanceof PropertyLayoutMetadata) {
+        if (actionLayoutMetadata.getPosition() == null || actionLayoutMetadata.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.PANEL_DROPDOWN || actionLayoutMetadata.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.PANEL) {
+          actionLayoutMetadata.setPosition(org.apache.isis.applib.annotation.ActionLayout.Position.BELOW);
+        }
+      }
+ else {
+        actionLayoutMetadata.setPosition(null);
+      }
+      FacetUtil.addFacet(ActionPositionFacetForActionXml.create(actionLayoutMetadata,objectAction));
+      FacetUtil.addFacet(BookmarkPolicyFacetForActionXml.create(actionLayoutMetadata,objectAction));
+      FacetUtil.addFacet(CssClassFacetForActionXml.create(actionLayoutMetadata,objectAction));
+      FacetUtil.addFacet(CssClassFaFacetForActionXml.create(actionLayoutMetadata,objectAction));
+      FacetUtil.addFacet(DescribedAsFacetForActionXml.create(actionLayoutMetadata,objectAction));
+      FacetUtil.addFacet(HiddenFacetForActionLayoutXml.create(actionLayoutMetadata,objectAction));
+      FacetUtil.addFacet(NamedFacetForActionXml.create(actionLayoutMetadata,objectAction));
+    }
+    @Override public void visit(    final PropertyLayoutMetadata propertyLayoutMetadata){
+      final OneToOneAssociation oneToOneAssociation=oneToOneAssociationById.get(propertyLayoutMetadata.getId());
+      if (oneToOneAssociation == null) {
+        return;
+      }
+      FacetUtil.addFacet(CssClassFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(DescribedAsFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(HiddenFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(LabelAtFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(MultiLineFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(NamedFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(RenderedAdjustedFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      FacetUtil.addFacet(TypicalLengthFacetForPropertyXml.create(propertyLayoutMetadata,oneToOneAssociation));
+      final PropertyGroup propertyGroup=propertyLayoutMetadata.getOwner();
+      final String groupName=propertyGroup.getName();
+      final String sequence=nextInSequenceFor(groupName);
+      FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToOneAssociation));
+    }
+    @Override public void visit(    final CollectionLayoutMetadata collectionLayoutMetadata){
+      final OneToManyAssociation oneToManyAssociation=oneToManyAssociationById.get(collectionLayoutMetadata.getId());
+      if (oneToManyAssociation == null) {
+        return;
+      }
+      FacetUtil.addFacet(CssClassFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      FacetUtil.addFacet(DefaultViewFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      FacetUtil.addFacet(DescribedAsFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      FacetUtil.addFacet(HiddenFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      FacetUtil.addFacet(NamedFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      FacetUtil.addFacet(PagedFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      FacetUtil.addFacet(SortedByFacetForCollectionXml.create(collectionLayoutMetadata,oneToManyAssociation));
+      final String groupName=collectionLayoutMetadata.getId();
+      final String sequence=nextInSequenceFor(groupName);
+      FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
+      final Column column=collectionLayoutMetadata.getOwner();
+      final Tab tab=column.getOwner();
+      if (tab.getContents().size() == 1) {
+        tab.setName(collectionLayoutMetadata.getNamed());
+      }
+    }
+    private String nextInSequenceFor(    final String propertyGroupName){
+synchronized (propertySequenceByGroup) {
+        int[] holder=propertySequenceByGroup.get(propertyGroupName);
+        if (holder == null) {
+          holder=new int[]{0};
+          propertySequenceByGroup.put(propertyGroupName,holder);
+        }
+        holder[0]++;
+        return "" + holder[0];
+      }
+    }
+  }
+);
+}
