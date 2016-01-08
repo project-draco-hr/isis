@@ -1,13 +1,15 @@
 {
-  List<ColumnContent> content=column.getContent();
-  final Iterable<PropertyGroup> propertyGroups=Iterables.transform(Iterables.filter(content,is(PropertyGroup.class)),cast(PropertyGroup.class));
-  for (  final PropertyGroup propertyGroup : propertyGroups) {
+  for (  final PropertyGroup propertyGroup : column.getPropertyGroups()) {
+    propertyGroup.setOwner(column);
     visitor.visit(propertyGroup);
     traverseActions(propertyGroup,visitor);
     final List<Property> properties=propertyGroup.getProperties();
     for (    final Property property : properties) {
+      property.setOwner(propertyGroup);
       visitor.visit(property);
-      visitor.visit(property.getLayout(),property);
+      final PropertyLayout layout=property.getLayout();
+      layout.setOwner(property);
+      visitor.visit(layout);
       traverseActions(property,visitor);
     }
   }

@@ -3,13 +3,15 @@
   traverseActions(this,visitor);
   final List<TabGroup> tabGroups=getTabGroups();
   for (  final TabGroup tabGroup : tabGroups) {
+    tabGroup.setOwner(this);
     visitor.visit(tabGroup);
     final List<Tab> tabs=tabGroup.getTabs();
     for (    final Tab tab : tabs) {
+      tab.setOwner(tabGroup);
       visitor.visit(tab);
-      traverseColumn(tab.getLeft(),visitor);
-      traverseColumn(tab.getMiddle(),visitor);
-      traverseColumn(tab.getRight(),visitor);
+      traverseColumn(tab.getLeft(),tab,visitor);
+      traverseColumn(tab.getMiddle(),tab,visitor);
+      traverseColumn(tab.getRight(),tab,visitor);
     }
   }
 }

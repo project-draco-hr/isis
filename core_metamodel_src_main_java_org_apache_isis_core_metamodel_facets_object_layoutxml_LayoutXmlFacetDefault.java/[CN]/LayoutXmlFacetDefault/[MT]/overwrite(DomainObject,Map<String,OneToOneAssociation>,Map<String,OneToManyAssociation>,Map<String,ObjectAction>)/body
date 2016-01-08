@@ -1,0 +1,104 @@
+{
+  metadata.visit(new DomainObject.VisitorAdapter(){
+    private final Map<String,int[]> propertySequenceByGroup=Maps.newHashMap();
+    private int actionDomainObjectSequence=1;
+    private int actionPropertyGroupSequence=1;
+    private int actionPropertySequence=1;
+    private int actionCollectionSequence=1;
+    @Override public void visit(    final Action action){
+      final ActionHolder actionHolder=action.getOwner();
+      final ObjectAction objectAction=objectActionById.get(action.getId());
+      final String memberOrderName;
+      final int memberOrderSequence;
+      if (actionHolder instanceof PropertyGroup) {
+        final PropertyGroup propertyGroup=(PropertyGroup)actionHolder;
+        final List<Property> properties=propertyGroup.getProperties();
+        final Property property=properties.get(0);
+        memberOrderName=property.getId();
+        memberOrderSequence=actionPropertyGroupSequence++;
+      }
+ else       if (actionHolder instanceof Property) {
+        final Property property=(Property)actionHolder;
+        memberOrderName=property.getId();
+        memberOrderSequence=actionPropertySequence++;
+      }
+ else       if (actionHolder instanceof Collection) {
+        final Collection collection=(Collection)actionHolder;
+        memberOrderName=collection.getId();
+        memberOrderSequence=actionCollectionSequence++;
+      }
+ else {
+        memberOrderName=null;
+        memberOrderSequence=actionDomainObjectSequence++;
+      }
+      FacetUtil.addFacet(new MemberOrderFacetXml(memberOrderName,"" + memberOrderSequence,translationService,objectAction));
+    }
+    @Override public void visit(    final ActionLayout actionLayout){
+      final Action action=actionLayout.getOwner();
+      final ActionHolder actionHolder=action.getOwner();
+      if (actionHolder instanceof PropertyGroup) {
+        if (actionLayout.getPosition() == null || actionLayout.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.BELOW || actionLayout.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.RIGHT) {
+          actionLayout.setPosition(org.apache.isis.applib.annotation.ActionLayout.Position.PANEL);
+        }
+      }
+ else       if (actionHolder instanceof Property) {
+        if (actionLayout.getPosition() == null || actionLayout.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.PANEL_DROPDOWN || actionLayout.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.PANEL) {
+          actionLayout.setPosition(org.apache.isis.applib.annotation.ActionLayout.Position.BELOW);
+        }
+      }
+ else {
+        actionLayout.setPosition(null);
+      }
+      final ObjectAction objectAction=objectActionById.get(action.getId());
+      FacetUtil.addFacet(ActionPositionFacetForActionLayoutXml.create(actionLayout,objectAction));
+      FacetUtil.addFacet(BookmarkPolicyFacetForActionLayoutXml.create(actionLayout,objectAction));
+      FacetUtil.addFacet(CssClassFacetForActionLayoutXml.create(actionLayout,objectAction));
+      FacetUtil.addFacet(CssClassFaFacetForActionLayoutXml.create(actionLayout,objectAction));
+      FacetUtil.addFacet(DescribedAsFacetForActionLayoutXml.create(actionLayout,objectAction));
+      FacetUtil.addFacet(HiddenFacetForActionLayoutXml.create(actionLayout,objectAction));
+      FacetUtil.addFacet(NamedFacetForActionLayoutXml.create(actionLayout,objectAction));
+    }
+    @Override public void visit(    final PropertyLayout propertyLayout){
+      final Property property=propertyLayout.getOwner();
+      final OneToOneAssociation oneToOneAssociation=oneToOneAssociationById.get(property.getId());
+      FacetUtil.addFacet(CssClassFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(DescribedAsFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(HiddenFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(LabelAtFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(MultiLineFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(NamedFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(RenderedAdjustedFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      FacetUtil.addFacet(TypicalLengthFacetForPropertyLayoutXml.create(propertyLayout,oneToOneAssociation));
+      final PropertyGroup propertyGroup=property.getOwner();
+      final String groupName=propertyGroup.getName();
+      final String sequence=nextInSequenceFor(groupName);
+      FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToOneAssociation));
+    }
+    @Override public void visit(    final CollectionLayout collectionLayout){
+      final Collection collection=collectionLayout.getOwner();
+      final OneToManyAssociation oneToManyAssociation=oneToManyAssociationById.get(collection.getId());
+      FacetUtil.addFacet(CssClassFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      FacetUtil.addFacet(DefaultViewFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      FacetUtil.addFacet(DescribedAsFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      FacetUtil.addFacet(HiddenFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      FacetUtil.addFacet(NamedFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      FacetUtil.addFacet(PagedFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      FacetUtil.addFacet(SortedByFacetForCollectionLayoutXml.create(collectionLayout,oneToManyAssociation));
+      final Column column=collection.getOwner();
+      final Tab tab=column.getOwner();
+      tab.setName(collection.getId());
+    }
+    private String nextInSequenceFor(    final String propertyGroupName){
+synchronized (propertySequenceByGroup) {
+        int[] holder=propertySequenceByGroup.get(propertyGroupName);
+        if (holder == null) {
+          holder=new int[]{0};
+          propertySequenceByGroup.put(propertyGroupName,holder);
+        }
+        holder[0]++;
+        return "" + holder[0];
+      }
+    }
+  }
+);
+}

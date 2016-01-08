@@ -1,7 +1,10 @@
 {
   final List<Action> actions=actionHolder.getActions();
   for (  final Action action : actions) {
-    visitor.visit(action,actionHolder);
-    visitor.visit(action.getLayout(),action);
+    action.setOwner(actionHolder);
+    visitor.visit(action);
+    final ActionLayout layout=action.getLayout();
+    layout.setOwner(action);
+    visitor.visit(layout);
   }
 }

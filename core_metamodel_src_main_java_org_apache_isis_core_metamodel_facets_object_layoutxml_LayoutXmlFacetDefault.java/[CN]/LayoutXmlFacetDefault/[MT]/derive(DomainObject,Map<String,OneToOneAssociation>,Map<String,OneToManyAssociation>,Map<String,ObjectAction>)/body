@@ -2,7 +2,7 @@
   final List<String> propertyIds=Lists.newArrayList();
   final List<String> collectionIds=Lists.newArrayList();
   final List<String> actionIds=Lists.newArrayList();
-  final AtomicReference<PropertyGroup> generalPropertyGroupRef=new AtomicReference<>();
+  final AtomicReference<PropertyGroup> defaultPropertyGroupRef=new AtomicReference<>();
   final AtomicReference<Column> firstColumnRef=new AtomicReference<>();
   final AtomicReference<TabGroup> lastTabGroupRef=new AtomicReference<>();
   metadata.visit(new DomainObject.VisitorAdapter(){
@@ -12,15 +12,18 @@
     @Override public void visit(    final Collection collection){
       collectionIds.add(collection.getId());
     }
-    @Override public void visit(    final Action action,    final ActionHolder holder){
+    @Override public void visit(    final Action action){
       actionIds.add(action.getId());
     }
+  }
+);
+  metadata.visit(new DomainObject.VisitorAdapter(){
     @Override public void visit(    final Column column){
       firstColumnRef.compareAndSet(null,column);
     }
     @Override public void visit(    final PropertyGroup propertyGroup){
-      if (propertyGroup.getName().equals("General")) {
-        generalPropertyGroupRef.compareAndSet(null,propertyGroup);
+      if (MemberGroupLayoutFacet.DEFAULT_GROUP.equals(propertyGroup.getName())) {
+        defaultPropertyGroupRef.compareAndSet(null,propertyGroup);
       }
     }
     @Override public void visit(    final TabGroup tabGroup){
@@ -31,14 +34,14 @@
   final List<String> missingPropertyIds=Lists.newArrayList(oneToOneAssociationById.keySet());
   missingPropertyIds.removeAll(propertyIds);
   if (!missingPropertyIds.isEmpty()) {
-    boolean wasSet=generalPropertyGroupRef.compareAndSet(null,new PropertyGroup("General"));
-    final PropertyGroup generalPropertyGroup=generalPropertyGroupRef.get();
+    boolean wasSet=defaultPropertyGroupRef.compareAndSet(null,new PropertyGroup(MemberGroupLayoutFacet.DEFAULT_GROUP));
+    final PropertyGroup defaultPropertyGroup=defaultPropertyGroupRef.get();
     if (wasSet) {
-      firstColumnRef.get().getContent().add(generalPropertyGroup);
+      firstColumnRef.get().getContent().add(defaultPropertyGroup);
     }
     Iterables.removeAll(propertyIds,oneToOneAssociationById.keySet());
     for (    final String propertyId : missingPropertyIds) {
-      generalPropertyGroup.getProperties().add(new Property(propertyId));
+      defaultPropertyGroup.getProperties().add(new Property(propertyId));
     }
   }
   final List<String> missingCollectionIds=Lists.newArrayList(oneToManyAssociationById.keySet());
