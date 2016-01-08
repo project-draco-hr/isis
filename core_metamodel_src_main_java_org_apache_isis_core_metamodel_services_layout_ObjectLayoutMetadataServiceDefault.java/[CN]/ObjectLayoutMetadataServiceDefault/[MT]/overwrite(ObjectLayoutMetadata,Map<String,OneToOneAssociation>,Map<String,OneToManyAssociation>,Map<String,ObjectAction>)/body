@@ -91,10 +91,13 @@
       final String sequence="" + collectionSequence++;
       FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
       final Column column=collectionLayoutMetadata.getOwner();
-      final Tab tab=column.getOwner();
-      if (tab.getContents().size() == 1) {
-        final String collectionName=oneToManyAssociation.getName();
-        tab.setName(collectionName);
+      final ColumnHolder holder=column.getOwner();
+      if (holder instanceof Tab) {
+        final Tab tab=(Tab)holder;
+        if (tab.getContents().size() == 1) {
+          final String collectionName=oneToManyAssociation.getName();
+          tab.setName(collectionName);
+        }
       }
     }
     private String nextInSequenceFor(    final String key,    final Map<String,int[]> seqByKey){

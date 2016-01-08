@@ -2,12 +2,11 @@
   final int span=hint.from(columnSpans);
   final ObjectAdapter adapter=entityModel.getObject();
   final ObjectSpecification objSpec=adapter.getSpecification();
-  final Column columnMetaDataIfAny=tabMetaDataIfAny != null ? hint.from(tabMetaDataIfAny) : null;
   final List<ObjectAssociation> properties=visibleProperties(adapter);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   markupContainer.add(memberGroupRv);
   final Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociation.Util.groupByMemberOrderName(properties);
-  final List<String> groupNames=tabMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
+  final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   for (  final String groupName : groupNames) {
     final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
     if (associationsInGroup == null) {
