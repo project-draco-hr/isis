@@ -8,6 +8,8 @@
   }
   final LayoutXmlFacet layoutXmlFacet=model.getTypeOfSpecification().getFacet(LayoutXmlFacet.class);
   final DomainObject domainObject=layoutXmlFacet.getLayoutMetadata();
+  final String xml=getServicesInjector().lookupService(JaxbService.class).toXml(domainObject);
+  System.out.println(xml);
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
   final List<TabGroup> tabGroups=domainObject.getTabGroups();
   final ListView<TabGroup> tabGroupsList=new ListView<TabGroup>(ID_TAB_GROUPS,tabGroups){
