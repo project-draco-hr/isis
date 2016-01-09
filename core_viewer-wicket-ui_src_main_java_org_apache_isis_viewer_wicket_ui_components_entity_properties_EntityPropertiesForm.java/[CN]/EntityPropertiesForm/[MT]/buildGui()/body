@@ -16,7 +16,14 @@
   add(leftColumn);
   boolean addedProperties;
   if (columnSpans.getLeft() > 0) {
-    addedProperties=addPropertiesAndCollections(leftColumn,MemberGroupLayoutHint.LEFT,entityModel,tabMetaDataIfAny,columnSpans);
+    final MemberGroupLayoutHint hint=MemberGroupLayoutHint.LEFT;
+    final Column columnMetaDataIfAny=tabMetaDataIfAny != null ? hint.from(tabMetaDataIfAny) : null;
+    addPropertiesAndCollections(leftColumn,hint,entityModel,columnSpans,columnMetaDataIfAny);
+    final ObjectAdapter adapter=entityModel.getObject();
+    final ObjectSpecification objSpec=adapter.getSpecification();
+    final Map<String,List<ObjectAssociation>> associationsByGroup=PropUtil.propertiesByMemberOrder(adapter);
+    final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
+    addedProperties=!groupNames.isEmpty();
     addButtons(leftColumn);
     addFeedbackGui(leftColumn);
   }
@@ -30,7 +37,8 @@
   if (columnSpans.getMiddle() > 0) {
     MarkupContainer middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
     add(middleColumn);
-    addPropertiesAndCollections(middleColumn,MemberGroupLayoutHint.MIDDLE,entityModel,tabMetaDataIfAny,columnSpans);
+    final Column columnMetaDataIfAny=tabMetaDataIfAny != null ? MemberGroupLayoutHint.MIDDLE.from(tabMetaDataIfAny) : null;
+    addPropertiesAndCollections(middleColumn,MemberGroupLayoutHint.MIDDLE,entityModel,columnSpans,columnMetaDataIfAny);
   }
  else {
     Components.permanentlyHide(this,ID_MIDDLE_COLUMN);
@@ -38,7 +46,8 @@
   if (columnSpans.getRight() > 0) {
     MarkupContainer rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
     add(rightColumn);
-    addPropertiesAndCollections(rightColumn,MemberGroupLayoutHint.RIGHT,entityModel,tabMetaDataIfAny,columnSpans);
+    final Column columnMetaDataIfAny=tabMetaDataIfAny != null ? MemberGroupLayoutHint.RIGHT.from(tabMetaDataIfAny) : null;
+    addPropertiesAndCollections(rightColumn,MemberGroupLayoutHint.RIGHT,entityModel,columnSpans,columnMetaDataIfAny);
   }
  else {
     Components.permanentlyHide(this,ID_RIGHT_COLUMN);

@@ -2,11 +2,10 @@
   final int span=hint.from(columnSpans);
   final ObjectAdapter adapter=entityModel.getObject();
   final ObjectSpecification objSpec=adapter.getSpecification();
-  final List<ObjectAssociation> properties=visibleProperties(adapter);
+  final Map<String,List<ObjectAssociation>> associationsByGroup=PropUtil.propertiesByMemberOrder(adapter);
+  final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   markupContainer.add(memberGroupRv);
-  final Map<String,List<ObjectAssociation>> associationsByGroup=ObjectAssociation.Util.groupByMemberOrderName(properties);
-  final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   for (  final String groupName : groupNames) {
     final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
     if (associationsInGroup == null) {
@@ -30,5 +29,4 @@
     AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL_DROPDOWN,actionsPanelDropDown,AdditionalLinksPanel.Style.DROPDOWN);
   }
   addClassForSpan(markupContainer,span);
-  return !groupNames.isEmpty();
 }
