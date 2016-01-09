@@ -1,0 +1,32 @@
+{
+  final Column columnMetaDataIfAny=entityModel.getColumnMetadata();
+  final Hint hint=entityModel.getColumnHint();
+  final ObjectAdapter adapter=entityModel.getObject();
+  final ObjectSpecification objSpec=adapter.getSpecification();
+  final Map<String,List<ObjectAssociation>> associationsByGroup=PropUtil.propertiesByMemberOrder(adapter);
+  final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
+  final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
+  markupContainer.add(memberGroupRv);
+  for (  final String groupName : groupNames) {
+    final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
+    if (associationsInGroup == null) {
+      continue;
+    }
+    final WebMarkupContainer memberGroupRvContainer=new WebMarkupContainer(memberGroupRv.newChildId());
+    memberGroupRv.add(memberGroupRvContainer);
+    memberGroupRvContainer.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
+    final List<LinkAndLabel> memberGroupActions=Lists.newArrayList();
+    final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
+    memberGroupRvContainer.add(propertyRv);
+    @SuppressWarnings("unused") Component component;
+    for (    final ObjectAssociation association : associationsInGroup) {
+      final WebMarkupContainer propertyRvContainer=new UiHintPathSignificantWebMarkupContainer(propertyRv.newChildId());
+      propertyRv.add(propertyRvContainer);
+      addPropertyToForm(entityModel,(OneToOneAssociation)association,propertyRvContainer,memberGroupActions);
+    }
+    final List<LinkAndLabel> actionsPanel=LinkAndLabel.positioned(memberGroupActions,ActionLayout.Position.PANEL);
+    final List<LinkAndLabel> actionsPanelDropDown=LinkAndLabel.positioned(memberGroupActions,ActionLayout.Position.PANEL_DROPDOWN);
+    AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL,actionsPanel,AdditionalLinksPanel.Style.INLINE_LIST);
+    AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL_DROPDOWN,actionsPanelDropDown,AdditionalLinksPanel.Style.DROPDOWN);
+  }
+}
