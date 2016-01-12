@@ -16,6 +16,11 @@
   final ObjectLayoutMetadataFacet facet=entityModel.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
   if (facet != null) {
     facet.reloadMetadata();
+    if (facet.getMetadata() == null) {
+      if (!getDeploymentType().isProduction()) {
+        getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
+      }
+    }
   }
   if (titleString == null) {
     final String titleStr=objectAdapter.titleString(null);
