@@ -13,8 +13,9 @@
   if (!ObjectAdapter.Util.isVisible(objectAdapter,InteractionInitiatedBy.USER)) {
     throw new ObjectMember.AuthorizationException();
   }
-  if (!getDeploymentType().isProduction()) {
-    getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
+  final ObjectLayoutMetadataFacet facet=entityModel.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
+  if (facet != null) {
+    facet.reloadMetadata();
   }
   if (titleString == null) {
     final String titleStr=objectAdapter.titleString(null);

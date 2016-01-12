@@ -2,9 +2,11 @@
   if (isEmpty()) {
     return;
   }
-  final Class<? extends Facet>[] facetTypes=holder.getFacetTypes();
+  final Set<Class<? extends Facet>> facetTypes=facetDecoratorByFacetType.keySet();
   for (  final Class<? extends Facet> facetType : facetTypes) {
     final Facet facet=holder.getFacet(facetType);
-    decorateFacet(facet,holder);
+    if (facet != null) {
+      decorateFacet(facet,holder);
+    }
   }
 }
