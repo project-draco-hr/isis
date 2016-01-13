@@ -2,7 +2,7 @@
   final EntityModel entityModel=(EntityModel)model;
   final ObjectSpecification specification=entityModel.getTypeOfSpecification();
   final ObjectLayoutMetadataFacet facet=specification.getFacet(ObjectLayoutMetadataFacet.class);
-  facet.reloadMetadata();
-  final boolean hasLayout=!facet.isNoop();
+  final ObjectLayoutMetadata layoutMetadata=facet.getMetadata();
+  final boolean hasLayout=layoutMetadata != null;
   return hasLayout ? new EntityTabGroupsPanel(id,entityModel) : new EntityCombinedPanel(id,entityModel);
 }

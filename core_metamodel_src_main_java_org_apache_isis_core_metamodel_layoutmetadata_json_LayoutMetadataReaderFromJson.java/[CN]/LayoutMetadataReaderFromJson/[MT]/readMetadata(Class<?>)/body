@@ -3,6 +3,15 @@
   if (blacklisted.contains(domainClass)) {
     return null;
   }
+  try {
+    final ObjectLayoutMetadataService objectLayoutMetadataService=getObjectLayoutMetadataService();
+    if (objectLayoutMetadataService.exists(domainClass)) {
+      blacklisted.add(domainClass);
+      return null;
+    }
+  }
+ catch (  IllegalArgumentException ex) {
+  }
   final String resourceName=domainClass.getSimpleName() + ".layout.json";
   try {
     content=ClassExtensions.resourceContentOf(domainClass,resourceName);

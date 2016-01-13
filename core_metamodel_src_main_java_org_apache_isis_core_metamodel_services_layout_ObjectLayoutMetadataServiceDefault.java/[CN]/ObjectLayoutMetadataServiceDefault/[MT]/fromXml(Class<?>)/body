@@ -1,6 +1,6 @@
 {
+  final String resourceName=resourceNameFor(domainClass);
   final String xml;
-  final String resourceName=domainClass.getSimpleName() + ".layout.xml";
   try {
     xml=resourceContentOf(domainClass,resourceName);
   }
@@ -9,11 +9,32 @@
     LOG.debug(message);
     return null;
   }
+  if (!deploymentCategory.isProduction()) {
+    final ObjectLayoutMetadata objectLayoutMetadata=metadataByXml.get(xml);
+    if (objectLayoutMetadata != null) {
+      return objectLayoutMetadata;
+    }
+    final String badXml=badXmlByClass.get(domainClass);
+    if (badXml != null) {
+      if (Objects.equals(xml,badXml)) {
+        return null;
+      }
+ else {
+        badXmlByClass.remove(domainClass);
+      }
+    }
+  }
   try {
     final ObjectLayoutMetadata metadata=jaxbService.fromXml(ObjectLayoutMetadata.class,xml);
+    if (!deploymentCategory.isProduction()) {
+      metadataByXml.put(xml,metadata);
+    }
     return metadata;
   }
  catch (  Exception ex) {
+    if (!deploymentCategory.isProduction()) {
+      badXmlByClass.put(domainClass,xml);
+    }
     final String message="Failed to parse " + resourceName + " file ("+ ex.getMessage()+ ")";
     LOG.warn(message);
     return null;

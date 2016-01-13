@@ -8,9 +8,6 @@
   }
   final ObjectLayoutMetadataFacet objectLayoutMetadataFacet=model.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
   final ObjectLayoutMetadata objectLayoutMetadata=objectLayoutMetadataFacet.getMetadata();
-  final JaxbService jaxbService=getServicesInjector().lookupService(JaxbService.class);
-  final String xml=jaxbService.toXml(objectLayoutMetadata,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,Object_downloadLayoutXml.TNS + " " + Object_downloadLayoutXml.SCHEMA_LOCATION));
-  System.out.println(xml);
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
   final List<TabGroup> tabGroups=FluentIterable.from(objectLayoutMetadata.getTabGroups()).filter(TabGroup.Predicates.notEmpty()).toList();
   final ListView<TabGroup> tabGroupsList=new ListView<TabGroup>(ID_TAB_GROUPS,tabGroups){

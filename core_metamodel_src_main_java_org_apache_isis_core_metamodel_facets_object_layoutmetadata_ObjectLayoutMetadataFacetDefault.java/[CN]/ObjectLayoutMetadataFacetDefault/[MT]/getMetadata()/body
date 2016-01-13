@@ -1,7 +1,12 @@
 {
-  if (blacklisted) {
-    return null;
+  if (deploymentCategory.isProduction() || blacklisted) {
+    return metadata;
   }
-  reloadMetadata();
+  final Class<?> domainClass=getSpecification().getCorrespondingClass();
+  final ObjectLayoutMetadata metadata=objectLayoutMetadataService.fromXml(domainClass);
+  if (deploymentCategory.isProduction() && metadata == null) {
+    blacklisted=true;
+  }
+  this.metadata=normalize(metadata);
   return this.metadata;
 }
