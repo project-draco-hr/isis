@@ -1,0 +1,22 @@
+{
+  final MemberGroupLayoutFacet facet=objSpec.getFacet(MemberGroupLayoutFacet.class);
+  final List<String> leftColumnGroupNames=Lists.newArrayList(groupNamesToOrder);
+  if (facet == null) {
+    return leftColumnGroupNames;
+  }
+  if (hint == ColumnMetadata.Hint.MIDDLE) {
+    return facet.getColumnSpans().getMiddle() > 0 ? facet.getMiddle() : Collections.<String>emptyList();
+  }
+  if (hint == ColumnMetadata.Hint.RIGHT) {
+    return facet.getColumnSpans().getRight() > 0 ? facet.getRight() : Collections.<String>emptyList();
+  }
+  final List<String> groupNamedInRequiredOrder=facet.getLeft();
+  final List<String> order=order(leftColumnGroupNames,groupNamedInRequiredOrder);
+  if (facet.getColumnSpans().getMiddle() > 0) {
+    order.removeAll(facet.getMiddle());
+  }
+  if (facet.getColumnSpans().getRight() > 0) {
+    order.removeAll(facet.getRight());
+  }
+  return order;
+}

@@ -1,10 +1,10 @@
 {
   final EntityModel entityModel=(EntityModel)getModel();
-  final Tab tabMetaDataIfAny=entityModel.getTabMetadata();
+  final TabMetadata tabMetaDataIfAny=entityModel.getTabMetadata();
   final ColumnSpans columnSpans;
   if (tabMetaDataIfAny != null) {
-    final Column middle=tabMetaDataIfAny.getMiddle();
-    final Column right=tabMetaDataIfAny.getRight();
+    final ColumnMetadata middle=tabMetaDataIfAny.getMiddle();
+    final ColumnMetadata right=tabMetaDataIfAny.getRight();
     columnSpans=ColumnSpans.asSpans(tabMetaDataIfAny.getLeft().getSpan(),middle != null ? middle.getSpan() : 0,right != null ? right.getSpan() : 0);
   }
  else {
@@ -49,7 +49,7 @@
     addClassForSpan(rightColumn,Hint.RIGHT.from(columnSpans));
   }
   final Hint leftHint=Hint.LEFT;
-  final Column leftColumnMetaDataIfAny=leftHint.from(tabMetaDataIfAny);
+  final ColumnMetadata leftColumnMetaDataIfAny=leftHint.from(tabMetaDataIfAny);
   final boolean hasProperties=leftColumnMetaDataIfAny == null && !PropUtil.propertyGroupNames(entityModel,leftHint,leftColumnMetaDataIfAny).isEmpty();
   if (hasProperties) {
     addButtons(leftColumn);

@@ -1,10 +1,10 @@
 {
-  final Column columnMetaDataIfAny=entityModel.getColumnMetadata();
-  final Column.Hint hint=entityModel.getColumnHint();
+  final ColumnMetadata columnMetaDataIfAny=entityModel.getColumnMetadata();
+  final ColumnMetadata.Hint hint=entityModel.getColumnHint();
   final ObjectAdapter adapter=entityModel.getObject();
   final ObjectSpecification objSpec=adapter.getSpecification();
   final Map<String,List<ObjectAssociation>> associationsByGroup=PropUtil.propertiesByMemberOrder(adapter);
-  final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroup.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
+  final List<String> groupNames=columnMetaDataIfAny != null ? FluentIterable.from(columnMetaDataIfAny.getPropertyGroups()).transform(PropertyGroupMetadata.Util.nameOf()).toList() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
   markupContainer.add(memberGroupRv);
   for (  final String groupName : groupNames) {

@@ -2,19 +2,19 @@
   final LinkedHashMap<String,PropertyLayoutMetadata> propertyIds=metadata.getAllPropertiesById();
   final LinkedHashMap<String,CollectionLayoutMetadata> collectionIds=metadata.getAllCollectionsById();
   final LinkedHashMap<String,ActionLayoutMetadata> actionIds=metadata.getAllActionsById();
-  final AtomicReference<PropertyGroup> defaultPropertyGroupRef=new AtomicReference<>();
-  final AtomicReference<Column> firstColumnRef=new AtomicReference<>();
-  final AtomicReference<TabGroup> lastTabGroupRef=new AtomicReference<>();
+  final AtomicReference<PropertyGroupMetadata> defaultPropertyGroupRef=new AtomicReference<>();
+  final AtomicReference<ColumnMetadata> firstColumnRef=new AtomicReference<>();
+  final AtomicReference<TabGroupMetadata> lastTabGroupRef=new AtomicReference<>();
   metadata.visit(new ObjectLayoutMetadata.VisitorAdapter(){
-    @Override public void visit(    final Column column){
-      firstColumnRef.compareAndSet(null,column);
+    @Override public void visit(    final ColumnMetadata columnMetadata){
+      firstColumnRef.compareAndSet(null,columnMetadata);
     }
-    @Override public void visit(    final PropertyGroup propertyGroup){
-      if (MemberGroupLayoutFacet.DEFAULT_GROUP.equals(propertyGroup.getName())) {
-        defaultPropertyGroupRef.compareAndSet(null,propertyGroup);
+    @Override public void visit(    final PropertyGroupMetadata propertyGroupMetadata){
+      if (MemberGroupLayoutFacet.DEFAULT_GROUP.equals(propertyGroupMetadata.getName())) {
+        defaultPropertyGroupRef.compareAndSet(null,propertyGroupMetadata);
       }
     }
-    @Override public void visit(    final TabGroup tabGroup){
+    @Override public void visit(    final TabGroupMetadata tabGroup){
       lastTabGroupRef.set(tabGroup);
     }
   }
@@ -26,13 +26,13 @@
     propertyIds.get(surplusPropertyId).setMetadataError("No such property");
   }
   if (!missingPropertyIds.isEmpty()) {
-    boolean wasSet=defaultPropertyGroupRef.compareAndSet(null,new PropertyGroup(MemberGroupLayoutFacet.DEFAULT_GROUP));
-    final PropertyGroup defaultPropertyGroup=defaultPropertyGroupRef.get();
+    boolean wasSet=defaultPropertyGroupRef.compareAndSet(null,new PropertyGroupMetadata(MemberGroupLayoutFacet.DEFAULT_GROUP));
+    final PropertyGroupMetadata defaultPropertyGroupMetadata=defaultPropertyGroupRef.get();
     if (wasSet) {
-      firstColumnRef.get().getPropertyGroups().add(defaultPropertyGroup);
+      firstColumnRef.get().getPropertyGroups().add(defaultPropertyGroupMetadata);
     }
     for (    final String propertyId : missingPropertyIds) {
-      defaultPropertyGroup.getProperties().add(new PropertyLayoutMetadata(propertyId));
+      defaultPropertyGroupMetadata.getProperties().add(new PropertyLayoutMetadata(propertyId));
     }
   }
   final Tuple<List<String>> collectionIdTuple=surplusAndMissing(collectionIds.keySet(),oneToManyAssociationById.keySet());
@@ -43,16 +43,16 @@
   }
   if (!missingCollectionIds.isEmpty()) {
     while (metadata.getTabGroups().size() < 2) {
-      final TabGroup tabGroup=new TabGroup();
+      final TabGroupMetadata tabGroup=new TabGroupMetadata();
       metadata.getTabGroups().add(tabGroup);
       lastTabGroupRef.set(tabGroup);
     }
-    final TabGroup lastTabGroup=lastTabGroupRef.get();
+    final TabGroupMetadata lastTabGroup=lastTabGroupRef.get();
     for (    final String collectionId : missingCollectionIds) {
-      final Tab tab=new Tab();
-      lastTabGroup.getTabs().add(tab);
-      Column left=new Column(12);
-      tab.setLeft(left);
+      final TabMetadata tabMetadata=new TabMetadata();
+      lastTabGroup.getTabs().add(tabMetadata);
+      ColumnMetadata left=new ColumnMetadata(12);
+      tabMetadata.setLeft(left);
       final CollectionLayoutMetadata layoutMetadata=new CollectionLayoutMetadata(collectionId);
       layoutMetadata.setDefaultView("table");
       left.getCollections().add(layoutMetadata);
@@ -79,17 +79,17 @@
     @Override public void visit(    final ObjectLayoutMetadata objectLayoutMetadata){
       objectLayoutMetadata.setPath("/layout");
     }
-    @Override public void visit(    final TabGroup tabGroup){
+    @Override public void visit(    final TabGroupMetadata tabGroup){
       tabGroup.setPath(pathFor(tabGroup,"tabGroup"));
     }
-    @Override public void visit(    final Tab tab){
-      tab.setPath(pathFor(tab,"tab"));
+    @Override public void visit(    final TabMetadata tabMetadata){
+      tabMetadata.setPath(pathFor(tabMetadata,"tab"));
     }
-    @Override public void visit(    final Column column){
-      column.setPath(pathFor(column,"column"));
+    @Override public void visit(    final ColumnMetadata columnMetadata){
+      columnMetadata.setPath(pathFor(columnMetadata,"column"));
     }
-    @Override public void visit(    final PropertyGroup propertyGroup){
-      propertyGroup.setPath(pathFor(propertyGroup,"propertyGroup"));
+    @Override public void visit(    final PropertyGroupMetadata propertyGroupMetadata){
+      propertyGroupMetadata.setPath(pathFor(propertyGroupMetadata,"propertyGroup"));
     }
     @Override public void visit(    final PropertyLayoutMetadata propertyLayoutMetadata){
       propertyLayoutMetadata.setPath(pathFor(propertyLayoutMetadata,"property"));

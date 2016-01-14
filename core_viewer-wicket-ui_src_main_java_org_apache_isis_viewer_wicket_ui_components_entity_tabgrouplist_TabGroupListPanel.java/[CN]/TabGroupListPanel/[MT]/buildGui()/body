@@ -1,28 +1,11 @@
 {
   final EntityModel model=getModel();
-  final List<TabGroup> tabGroups=model.getTabGroupListMetadata();
-  final ListView<TabGroup> tabGroupsList=new ListView<TabGroup>(ID_TAB_GROUPS,tabGroups){
-    @Override protected void populateItem(    final ListItem<TabGroup> item){
-      final TabGroup tabGroup=item.getModelObject();
+  final ListView<TabGroupMetadata> tabGroupsList=new ListView<TabGroupMetadata>(ID_TAB_GROUPS,this.tabGroups){
+    @Override protected void populateItem(    final ListItem<TabGroupMetadata> item){
+      final TabGroupMetadata tabGroup=item.getModelObject();
       final EntityModel entityModelWithHints=model.cloneWithTabGroupMetadata(tabGroup);
-      final AjaxBootstrapTabbedPanel ajaxBootstrapTabbedPanel=newTabbedPanel(entityModelWithHints);
-      item.add(ajaxBootstrapTabbedPanel);
-    }
-    private AjaxBootstrapTabbedPanel newTabbedPanel(    final EntityModel entityModel){
-      final TabGroup tabGroup=entityModel.getTabGroupMetadata();
-      final List<ITab> tabs=Lists.newArrayList();
-      final List<Tab> tabList=FluentIterable.from(tabGroup.getTabs()).filter(Tab.Predicates.notEmpty()).toList();
-      for (      final Tab tab : tabList) {
-        tabs.add(new AbstractTab(Model.of(tab.getName())){
-          private static final long serialVersionUID=1L;
-          @Override public Panel getPanel(          String panelId){
-            return new TabPanel(panelId,model,tab);
-          }
-        }
-);
-      }
-      final AjaxBootstrapTabbedPanel tabbedPanel=new MyAjaxBootstrapTabbedPanel(tabs,tabGroup,entityModel);
-      return tabbedPanel;
+      final TabGroupPanel tabGroupPanel=new TabGroupPanel(entityModelWithHints);
+      item.add(tabGroupPanel);
     }
   }
 ;

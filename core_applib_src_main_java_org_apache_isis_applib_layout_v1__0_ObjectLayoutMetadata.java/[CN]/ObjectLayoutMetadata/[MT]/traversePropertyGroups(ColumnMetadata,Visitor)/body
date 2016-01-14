@@ -1,0 +1,13 @@
+{
+  for (  final PropertyGroupMetadata propertyGroupMetadata : columnMetadata.getPropertyGroups()) {
+    propertyGroupMetadata.setOwner(columnMetadata);
+    visitor.visit(propertyGroupMetadata);
+    traverseActions(propertyGroupMetadata,visitor);
+    final List<PropertyLayoutMetadata> properties=propertyGroupMetadata.getProperties();
+    for (    final PropertyLayoutMetadata propertyLayoutMetadata : properties) {
+      propertyLayoutMetadata.setOwner(propertyGroupMetadata);
+      visitor.visit(propertyLayoutMetadata);
+      traverseActions(propertyLayoutMetadata,visitor);
+    }
+  }
+}

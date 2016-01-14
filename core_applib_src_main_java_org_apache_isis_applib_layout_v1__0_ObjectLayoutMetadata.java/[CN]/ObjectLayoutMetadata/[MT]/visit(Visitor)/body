@@ -2,17 +2,17 @@
   visitor.visit(this);
   traverseActions(this,visitor);
   traverseColumn(getLeft(),this,visitor);
-  final List<TabGroup> tabGroups=getTabGroups();
-  for (  final TabGroup tabGroup : tabGroups) {
+  final List<TabGroupMetadata> tabGroups=getTabGroups();
+  for (  final TabGroupMetadata tabGroup : tabGroups) {
     tabGroup.setOwner(this);
     visitor.visit(tabGroup);
-    final List<Tab> tabs=tabGroup.getTabs();
-    for (    final Tab tab : tabs) {
-      tab.setOwner(tabGroup);
-      visitor.visit(tab);
-      traverseColumn(tab.getLeft(),tab,visitor);
-      traverseColumn(tab.getMiddle(),tab,visitor);
-      traverseColumn(tab.getRight(),tab,visitor);
+    final List<TabMetadata> tabs=tabGroup.getTabs();
+    for (    final TabMetadata tabMetadata : tabs) {
+      tabMetadata.setOwner(tabGroup);
+      visitor.visit(tabMetadata);
+      traverseColumn(tabMetadata.getLeft(),tabMetadata,visitor);
+      traverseColumn(tabMetadata.getMiddle(),tabMetadata,visitor);
+      traverseColumn(tabMetadata.getRight(),tabMetadata,visitor);
     }
   }
   traverseColumn(getRight(),this,visitor);
