@@ -10,65 +10,9 @@
   final ObjectLayoutMetadata objectLayoutMetadata=objectLayoutMetadataFacet.getMetadata();
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
   final int leftSpan=addColumnIfRequired(ID_LEFT_COLUMN,objectLayoutMetadata.getLeft(),Column.Hint.LEFT);
-  final List<TabGroup> tabGroups=FluentIterable.from(objectLayoutMetadata.getTabGroups()).filter(TabGroup.Predicates.notEmpty()).toList();
-  final AtomicInteger tabGroupRef=new AtomicInteger(0);
-  final ListView<TabGroup> tabGroupsList=new ListView<TabGroup>(ID_TAB_GROUPS,tabGroups){
-    @Override protected void populateItem(    final ListItem<TabGroup> item){
-      final List<ITab> tabs=Lists.newArrayList();
-      final TabGroup tabGroup=item.getModelObject();
-      final List<Tab> tabList=FluentIterable.from(tabGroup.getTabs()).filter(Tab.Predicates.notEmpty()).toList();
-      for (      final Tab tab : tabList) {
-        tabs.add(new AbstractTab(Model.of(tab.getName())){
-          private static final long serialVersionUID=1L;
-          @Override public Panel getPanel(          String panelId){
-            return new EntityTabPanel(panelId,model,tab);
-          }
-        }
-);
-      }
-      final AjaxBootstrapTabbedPanel ajaxBootstrapTabbedPanel=newTabbedPanel(tabs,tabGroupRef.get());
-      item.add(ajaxBootstrapTabbedPanel);
-      tabGroupRef.incrementAndGet();
-    }
-    private AjaxBootstrapTabbedPanel newTabbedPanel(    final List<ITab> tabs,    final int tabGroupNumber){
-      final AjaxBootstrapTabbedPanel tabbedPanel=new AjaxBootstrapTabbedPanel(ID_TAB_GROUP,tabs){
-        @Override public TabbedPanel setSelectedTab(        final int index){
-          saveSelectedTabInSession(tabGroupNumber,index);
-          return super.setSelectedTab(index);
-        }
-      }
-;
-      setSelectedTabFromSessionIfAny(tabbedPanel,tabGroupNumber);
-      return tabbedPanel;
-    }
-    private void setSelectedTabFromSessionIfAny(    final AjaxBootstrapTabbedPanel ajaxBootstrapTabbedPanel,    final int tabGroupNumber){
-      final String key=buildKey(tabGroupNumber);
-      final String value=(String)getSession().getAttribute(key);
-      if (value != null) {
-        final int tabIndex=Integer.parseInt(value);
-        final int numTabs=ajaxBootstrapTabbedPanel.getTabs().size();
-        if (tabIndex < numTabs) {
-          ajaxBootstrapTabbedPanel.setSelectedTab(tabIndex);
-        }
-      }
-    }
-    private void saveSelectedTabInSession(    final int tabGroupNumber,    final int tabIndex){
-      final String key=buildKey(tabGroupNumber);
-      getSession().setAttribute(key,"" + tabIndex);
-    }
-    private String buildKey(    final int tabGroupNumber){
-      final ObjectAdapterMemento objectAdapterMemento=EntityTabGroupsPanel.this.getModel().getObjectAdapterMemento();
-      final RootOid oid=(RootOid)objectAdapterMemento.getObjectAdapter(AdapterManager.ConcurrencyChecking.NO_CHECK).getOid();
-      final String key=IsisContext.getOidMarshaller().marshalNoVersion(oid) + "." + tabGroupNumber+ ".selectedTab";
-      return key;
-    }
-  }
-;
-  final MarkupContainer tabGroupsContainer=new WebMarkupContainer(ID_MIDDLE_COLUMN);
-  add(tabGroupsContainer);
-  tabGroupsContainer.add(tabGroupsList);
+  final ListOfTabGroupsPanel middleTabs=addTabGroups(ID_MIDDLE_COLUMN,objectLayoutMetadata.getTabGroups());
   final int rightSpan=addColumnIfRequired(ID_RIGHT_COLUMN,objectLayoutMetadata.getRight(),Column.Hint.RIGHT);
   final int columnSpans=leftSpan + rightSpan;
   int tabGroupSpan=columnSpans < 12 ? 12 - (columnSpans) : 12;
-  CssClassAppender.appendCssClassTo(tabGroupsContainer,"col-xs-" + tabGroupSpan);
+  CssClassAppender.appendCssClassTo(middleTabs,"col-xs-" + tabGroupSpan);
 }
