@@ -9,8 +9,9 @@
   final ObjectLayoutMetadataFacet objectLayoutMetadataFacet=model.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
   final ObjectLayoutMetadata objectLayoutMetadata=objectLayoutMetadataFacet.getMetadata();
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
+  final int leftSpan=addColumnIfRequired(ID_LEFT_COLUMN,objectLayoutMetadata.getLeft(),Column.Hint.LEFT);
   final List<TabGroup> tabGroups=FluentIterable.from(objectLayoutMetadata.getTabGroups()).filter(TabGroup.Predicates.notEmpty()).toList();
-  final int[] tabGroupCount=new int[]{0};
+  final AtomicInteger tabGroupRef=new AtomicInteger(0);
   final ListView<TabGroup> tabGroupsList=new ListView<TabGroup>(ID_TAB_GROUPS,tabGroups){
     @Override protected void populateItem(    final ListItem<TabGroup> item){
       final List<ITab> tabs=Lists.newArrayList();
@@ -25,9 +26,9 @@
         }
 );
       }
-      final AjaxBootstrapTabbedPanel ajaxBootstrapTabbedPanel=newTabbedPanel(tabs,tabGroupCount[0]);
+      final AjaxBootstrapTabbedPanel ajaxBootstrapTabbedPanel=newTabbedPanel(tabs,tabGroupRef.get());
       item.add(ajaxBootstrapTabbedPanel);
-      tabGroupCount[0]++;
+      tabGroupRef.incrementAndGet();
     }
     private AjaxBootstrapTabbedPanel newTabbedPanel(    final List<ITab> tabs,    final int tabGroupNumber){
       final AjaxBootstrapTabbedPanel tabbedPanel=new AjaxBootstrapTabbedPanel(ID_TAB_GROUP,tabs){
@@ -45,7 +46,10 @@
       final String value=(String)getSession().getAttribute(key);
       if (value != null) {
         final int tabIndex=Integer.parseInt(value);
-        ajaxBootstrapTabbedPanel.setSelectedTab(tabIndex);
+        final int numTabs=ajaxBootstrapTabbedPanel.getTabs().size();
+        if (tabIndex < numTabs) {
+          ajaxBootstrapTabbedPanel.setSelectedTab(tabIndex);
+        }
       }
     }
     private void saveSelectedTabInSession(    final int tabGroupNumber,    final int tabIndex){
@@ -60,5 +64,11 @@
     }
   }
 ;
-  add(tabGroupsList);
+  final MarkupContainer tabGroupsContainer=new WebMarkupContainer("tabGroupsContainer");
+  add(tabGroupsContainer);
+  tabGroupsContainer.add(tabGroupsList);
+  final int rightSpan=addColumnIfRequired(ID_RIGHT_COLUMN,objectLayoutMetadata.getRight(),Column.Hint.RIGHT);
+  final int columnSpans=leftSpan + rightSpan;
+  int tabGroupSpan=columnSpans < 12 ? 12 - (columnSpans) : 12;
+  CssClassAppender.appendCssClassTo(tabGroupsContainer,"col-xs-" + tabGroupSpan);
 }
