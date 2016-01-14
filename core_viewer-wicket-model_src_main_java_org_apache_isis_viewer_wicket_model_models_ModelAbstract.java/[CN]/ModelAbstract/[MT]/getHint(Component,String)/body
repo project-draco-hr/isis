@@ -2,6 +2,13 @@
   if (component == null) {
     return null;
   }
-  String hintKey=hintKey(component,key);
+  String hintKey=hintPathFor(component) + "-" + key;
+  final ScopedSessionAttribute<String> scopedSessionAttribute=scopedSessionAttributeByName.get(hintKey);
+  if (scopedSessionAttribute != null) {
+    final String sessionHint=scopedSessionAttribute.get();
+    if (sessionHint != null) {
+      return sessionHint;
+    }
+  }
   return hints.get(hintKey);
 }
