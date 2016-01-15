@@ -2,20 +2,17 @@
   final ObjectAdapter adapter=entityModel.getObject();
   final ObjectSpecification objSpec=adapter.getSpecification();
   final Map<String,List<ObjectAssociation>> associationsByGroup=PropUtil.propertiesByMemberOrder(adapter);
-  final RepeatingView memberGroupRv=new RepeatingView(ID_MEMBER_GROUP);
+  final RepeatingView memberGroupRv=new RepeatingView(ID_PROPERTY_GROUP);
   markupContainer.add(memberGroupRv);
   final ImmutableMap<String,PropertyGroupMetadata> propertyGroupMetadataByNameIfAny=columnMetaDataIfAny != null ? Maps.uniqueIndex(columnMetaDataIfAny.getPropertyGroups(),PropertyGroupMetadata.Util.nameOf()) : null;
   final Collection<String> groupNames=propertyGroupMetadataByNameIfAny != null ? propertyGroupMetadataByNameIfAny.keySet() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   for (  final String groupName : groupNames) {
-    final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
-    if (associationsInGroup == null) {
-      continue;
-    }
     final PropertyGroupMetadata propertyGroupMetadata;
     if (propertyGroupMetadataByNameIfAny != null) {
       propertyGroupMetadata=propertyGroupMetadataByNameIfAny.get(groupName);
     }
  else {
+      final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
       propertyGroupMetadata=new PropertyGroupMetadata(groupName);
       propertyGroupMetadata.setProperties(FluentIterable.from(associationsInGroup).transform(new Function<ObjectAssociation,PropertyLayoutMetadata>(){
         @Override public PropertyLayoutMetadata apply(        final ObjectAssociation assoc){
@@ -29,7 +26,7 @@
     }
     final String id=memberGroupRv.newChildId();
     final EntityModel entityModelWithHints=entityModel.cloneWithPropertyGroupMetadata(propertyGroupMetadata);
-    final WebMarkupContainer memberGroupRvContainer=newPropertyGroup(id,entityModelWithHints);
+    final WebMarkupContainer memberGroupRvContainer=new PropertyGroup(id,entityModelWithHints);
     memberGroupRv.add(memberGroupRvContainer);
   }
 }
