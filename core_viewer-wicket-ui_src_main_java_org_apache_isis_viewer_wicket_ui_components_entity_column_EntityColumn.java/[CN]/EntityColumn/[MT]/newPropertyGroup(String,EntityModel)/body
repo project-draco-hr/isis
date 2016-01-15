@@ -1,0 +1,22 @@
+{
+  final PropertyGroupMetadata propertyGroupMetadata=entityModel.getPropertyGroupMetadata();
+  String groupName=propertyGroupMetadata.getName();
+  final ObjectAdapter adapter=entityModel.getObject();
+  final WebMarkupContainer memberGroupRvContainer=new WebMarkupContainer(id);
+  memberGroupRvContainer.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
+  final List<LinkAndLabel> memberGroupActions=Lists.newArrayList();
+  final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
+  memberGroupRvContainer.add(propertyRv);
+  final List<PropertyLayoutMetadata> properties=propertyGroupMetadata.getProperties();
+  for (  PropertyLayoutMetadata property : properties) {
+    final ObjectAssociation association=adapter.getSpecification().getAssociation(property.getId());
+    final WebMarkupContainer propertyRvContainer=new UiHintPathSignificantWebMarkupContainer(propertyRv.newChildId());
+    propertyRv.add(propertyRvContainer);
+    addPropertyToForm(entityModel,(OneToOneAssociation)association,propertyRvContainer,memberGroupActions);
+  }
+  final List<LinkAndLabel> actionsPanel=LinkAndLabel.positioned(memberGroupActions,ActionLayout.Position.PANEL);
+  final List<LinkAndLabel> actionsPanelDropDown=LinkAndLabel.positioned(memberGroupActions,ActionLayout.Position.PANEL_DROPDOWN);
+  AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL,actionsPanel,AdditionalLinksPanel.Style.INLINE_LIST);
+  AdditionalLinksPanel.addAdditionalLinks(memberGroupRvContainer,ID_ASSOCIATED_ACTION_LINKS_PANEL_DROPDOWN,actionsPanelDropDown,AdditionalLinksPanel.Style.DROPDOWN);
+  return memberGroupRvContainer;
+}
