@@ -1,15 +1,16 @@
 {
+  final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(entityModelWithLayoutMetadata);
+  final OneToManyAssociation association=entityCollectionModel.getCollectionMemento().getCollection();
   final CssClassFacet facet=association.getFacet(CssClassFacet.class);
   if (facet != null) {
-    final ObjectAdapter objectAdapter=entityModel.getObject();
+    final ObjectAdapter objectAdapter=entityModelWithLayoutMetadata.getObject();
     final String cssClass=facet.cssClass(objectAdapter);
     CssClassAppender.appendCssClassTo(collectionRvContainer,cssClass);
   }
-  final WebMarkupContainer fieldset=new WebMarkupContainer(ID_COLLECTION_GROUP);
-  collectionRvContainer.add(fieldset);
-  final OneToManyAssociation otma=(OneToManyAssociation)association;
-  final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityModel,otma);
-  fieldset.addOrReplace(collectionPanel);
+  final WebMarkupContainer fieldSet=new WebMarkupContainer(ID_COLLECTION_GROUP);
+  collectionRvContainer.add(fieldSet);
+  final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
+  fieldSet.addOrReplace(collectionPanel);
   Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
   final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
   labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
@@ -17,10 +18,9 @@
   if (description != null) {
     labelComponent.add(new AttributeAppender("title",Model.of(description)));
   }
-  fieldset.add(labelComponent);
-  final EntityCollectionModel entityCollectionModel=collectionPanel.getModel();
-  List<LinkAndLabel> links=entityCollectionModel.getLinks();
-  AdditionalLinksPanel.addAdditionalLinks(fieldset,ID_ADDITIONAL_LINKS,links,AdditionalLinksPanel.Style.INLINE_LIST);
+  fieldSet.add(labelComponent);
+  final List<LinkAndLabel> links=entityCollectionModel.getLinks();
+  AdditionalLinksPanel.addAdditionalLinks(fieldSet,ID_ADDITIONAL_LINKS,links,AdditionalLinksPanel.Style.INLINE_LIST);
   final CollectionSelectorHelper selectorHelper=new CollectionSelectorHelper(entityCollectionModel,getComponentFactoryRegistry(),selectedItemSessionAttribute);
   final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
   if (componentFactories.size() <= 1) {
@@ -34,7 +34,7 @@
     ComponentFactory selectedComponentFactory=componentFactories.get(selected);
     componentFactoryModel.setObject(selectedComponentFactory);
     this.setOutputMarkupId(true);
-    fieldset.addOrReplace(selectorDropdownPanel);
+    fieldSet.addOrReplace(selectorDropdownPanel);
     collectionPanel.setSelectorDropdownPanel(selectorDropdownPanel);
   }
 }
