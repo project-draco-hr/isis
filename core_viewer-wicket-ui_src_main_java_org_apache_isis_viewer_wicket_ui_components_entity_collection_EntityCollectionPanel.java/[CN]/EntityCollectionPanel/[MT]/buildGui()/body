@@ -1,9 +1,10 @@
 {
-  final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(entityModelWithLayoutMetadata);
+  final WebMarkupContainer collectionRvContainer=this;
+  final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(getModel());
   final OneToManyAssociation association=entityCollectionModel.getCollectionMemento().getCollection();
   final CssClassFacet facet=association.getFacet(CssClassFacet.class);
   if (facet != null) {
-    final ObjectAdapter objectAdapter=entityModelWithLayoutMetadata.getObject();
+    final ObjectAdapter objectAdapter=getModel().getObject();
     final String cssClass=facet.cssClass(objectAdapter);
     CssClassAppender.appendCssClassTo(collectionRvContainer,cssClass);
   }
@@ -14,11 +15,11 @@
   Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
   final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
   labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
+  fieldSet.add(labelComponent);
   final String description=association.getDescription();
   if (description != null) {
     labelComponent.add(new AttributeAppender("title",Model.of(description)));
   }
-  fieldSet.add(labelComponent);
   final List<LinkAndLabel> links=entityCollectionModel.getLinks();
   AdditionalLinksPanel.addAdditionalLinks(fieldSet,ID_ADDITIONAL_LINKS,links,AdditionalLinksPanel.Style.INLINE_LIST);
   final CollectionSelectorHelper selectorHelper=new CollectionSelectorHelper(entityCollectionModel,getComponentFactoryRegistry(),selectedItemSessionAttribute);
