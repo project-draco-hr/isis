@@ -90,13 +90,16 @@
       final String groupName=collectionLayoutMetadata.getId();
       final String sequence="" + collectionSequence++;
       FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
-      final ColumnMetadata columnMetadata=collectionLayoutMetadata.getOwner();
-      final ColumnOwner holder=columnMetadata.getOwner();
-      if (holder instanceof TabMetadata) {
-        final TabMetadata tabMetadata=(TabMetadata)holder;
-        if (tabMetadata.getContents().size() == 1 && Strings.isNullOrEmpty(tabMetadata.getName())) {
-          final String collectionName=oneToManyAssociation.getName();
-          tabMetadata.setName(collectionName);
+      final MemberLayoutMetadataOwner memberLayoutMetadataOwner=collectionLayoutMetadata.getOwner();
+      if (memberLayoutMetadataOwner instanceof ColumnMetadata) {
+        final ColumnMetadata columnMetadata=(ColumnMetadata)memberLayoutMetadataOwner;
+        final ColumnOwner holder=columnMetadata.getOwner();
+        if (holder instanceof TabMetadata) {
+          final TabMetadata tabMetadata=(TabMetadata)holder;
+          if (tabMetadata.getContents().size() == 1 && Strings.isNullOrEmpty(tabMetadata.getName())) {
+            final String collectionName=oneToManyAssociation.getName();
+            tabMetadata.setName(collectionName);
+          }
         }
       }
     }
