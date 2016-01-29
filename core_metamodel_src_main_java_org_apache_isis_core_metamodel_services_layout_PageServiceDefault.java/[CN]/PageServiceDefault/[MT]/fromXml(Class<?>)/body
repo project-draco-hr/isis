@@ -1,0 +1,44 @@
+{
+  final String resourceName=resourceNameFor(domainClass);
+  final String xml;
+  try {
+    xml=resourceContentOf(domainClass,resourceName);
+  }
+ catch (  IOException|IllegalArgumentException ex) {
+    final String message=String.format("Failed to locate file %s (relative to %s.class); ex: %s)",resourceName,domainClass.getName(),ex.getMessage());
+    LOG.debug(message);
+    return null;
+  }
+  if (!deploymentCategory.isProduction()) {
+    final Page page=pageByXml.get(xml);
+    if (page != null) {
+      return page;
+    }
+    final String badXml=badXmlByClass.get(domainClass);
+    if (badXml != null) {
+      if (Objects.equals(xml,badXml)) {
+        return null;
+      }
+ else {
+        badXmlByClass.remove(domainClass);
+      }
+    }
+  }
+  try {
+    List<Class<? extends Page>> pageImplementations=pageNormalizerService.pageImplementations();
+    final JAXBContext context=JAXBContext.newInstance(pageImplementations.toArray(new Class[0]));
+    final Page metadata=(Page)jaxbService.fromXml(context,xml);
+    if (!deploymentCategory.isProduction()) {
+      pageByXml.put(xml,metadata);
+    }
+    return metadata;
+  }
+ catch (  Exception ex) {
+    if (!deploymentCategory.isProduction()) {
+      badXmlByClass.put(domainClass,xml);
+    }
+    final String message="Failed to parse " + resourceName + " file ("+ ex.getMessage()+ ")";
+    LOG.warn(message);
+    return null;
+  }
+}

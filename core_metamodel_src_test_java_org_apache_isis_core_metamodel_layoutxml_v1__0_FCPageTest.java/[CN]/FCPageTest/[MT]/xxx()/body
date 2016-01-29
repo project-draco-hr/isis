@@ -1,8 +1,8 @@
 {
-  final FCPage FCPage=new FCPage();
-  FCPage.setTabGroups(Lists.<FCTabGroup>newArrayList());
-  FCPage.getTabGroups().add(new FCTabGroup());
-  FCTabGroup tabGroup=FCPage.getTabGroups().get(0);
+  final FCPage fcPage=new FCPage();
+  fcPage.setTabGroups(Lists.<FCTabGroup>newArrayList());
+  fcPage.getTabGroups().add(new FCTabGroup());
+  FCTabGroup tabGroup=fcPage.getTabGroups().get(0);
   FCTab FCTab=tabGroup.getTabs().get(0);
   FCTab.setName("Common");
   FCColumn left=FCTab.getLeft();
@@ -23,13 +23,14 @@
   namePropertyLayoutData.getActions().add(updateNameActionLayoutData);
   ActionLayoutData deleteActionLayoutData=new ActionLayoutData();
   deleteActionLayoutData.setId("delete");
-  FCPage.setActions(Lists.<ActionLayoutData>newArrayList());
-  FCPage.getActions().add(deleteActionLayoutData);
-  String xml=jaxbService.toXml(FCPage,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,"http://isis.apache.org/schema/applib/layout http://isis.apache.org/schema/applib/layout/layout-1.0.xsd"));
+  fcPage.setActions(Lists.<ActionLayoutData>newArrayList());
+  fcPage.getActions().add(deleteActionLayoutData);
+  final String schemaLocations=new PageNormalizerServiceDefault().schemaLocationsFor(fcPage);
+  String xml=jaxbService.toXml(fcPage,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,schemaLocations));
   System.out.println(xml);
   FCPage FCPageRoundtripped=jaxbService.fromXml(FCPage.class,xml);
-  String xmlRoundtripped=jaxbService.toXml(FCPageRoundtripped,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,"http://isis.apache.org/schema/applib/layout http://isis.apache.org/schema/applib/layout/layout-1.0.xsd"));
+  String xmlRoundtripped=jaxbService.toXml(FCPageRoundtripped,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,schemaLocations));
   assertThat(xml,is(equalTo(xmlRoundtripped)));
   System.out.println("==========");
-  dumpXsd(FCPage);
+  dumpXsd(fcPage);
 }

@@ -1,8 +1,12 @@
 {
   final EntityModel entityModel=(EntityModel)model;
   final ObjectSpecification specification=entityModel.getTypeOfSpecification();
-  final ObjectLayoutMetadataFacet facet=specification.getFacet(ObjectLayoutMetadataFacet.class);
-  final FCPage layoutMetadata=facet.getMetadata();
-  final boolean hasLayout=layoutMetadata != null;
-  return hasLayout ? new EntityTabbedPanel(id,entityModel) : new EntityEditablePanel(id,entityModel);
+  final PageFacet facet=specification.getFacet(PageFacet.class);
+  final Page page=facet.getPage();
+  if (page != null) {
+    if (page instanceof FCPage) {
+      return new EntityTabbedPanel(id,entityModel);
+    }
+  }
+  return new EntityEditablePanel(id,entityModel);
 }

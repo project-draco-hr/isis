@@ -13,10 +13,10 @@
   if (!ObjectAdapter.Util.isVisible(objectAdapter,InteractionInitiatedBy.USER)) {
     throw new ObjectMember.AuthorizationException();
   }
-  final ObjectLayoutMetadataFacet facet=entityModel.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
+  final PageFacet facet=entityModel.getTypeOfSpecification().getFacet(PageFacet.class);
   if (facet != null) {
-    final FCPage metadata=facet.getMetadata();
-    if (metadata == null && !getDeploymentType().isProduction()) {
+    final Page page=facet.getPage();
+    if (page == null && !getDeploymentType().isProduction()) {
       getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
     }
   }

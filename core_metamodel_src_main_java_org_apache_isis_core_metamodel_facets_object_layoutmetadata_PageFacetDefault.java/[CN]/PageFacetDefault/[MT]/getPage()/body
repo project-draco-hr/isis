@@ -1,0 +1,12 @@
+{
+  if (deploymentCategory.isProduction() || blacklisted) {
+    return page;
+  }
+  final Class<?> domainClass=getSpecification().getCorrespondingClass();
+  final Page page=pageService.fromXml(domainClass);
+  if (deploymentCategory.isProduction() && page == null) {
+    blacklisted=true;
+  }
+  this.page=normalize(page);
+  return this.page;
+}

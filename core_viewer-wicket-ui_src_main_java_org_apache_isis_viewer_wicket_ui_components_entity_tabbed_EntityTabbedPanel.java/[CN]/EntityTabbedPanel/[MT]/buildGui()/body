@@ -6,12 +6,12 @@
     final String cssClass=facet.cssClass(objectAdapter);
     CssClassAppender.appendCssClassTo(this,cssClass);
   }
-  final ObjectLayoutMetadataFacet objectLayoutMetadataFacet=model.getTypeOfSpecification().getFacet(ObjectLayoutMetadataFacet.class);
-  final FCPage FCPage=objectLayoutMetadataFacet.getMetadata();
+  final PageFacet PageFacet=model.getTypeOfSpecification().getFacet(PageFacet.class);
+  final FCPage page=(FCPage)PageFacet.getPage();
   addOrReplace(ComponentType.ENTITY_SUMMARY,model);
-  final int leftSpan=addColumnIfRequired(ID_LEFT_COLUMN,FCPage.getLeft(),FCColumn.Hint.LEFT);
-  final TabGroupListPanel middleTabs=addTabGroups(ID_MIDDLE_COLUMN,FCPage.getTabGroups());
-  final int rightSpan=addColumnIfRequired(ID_RIGHT_COLUMN,FCPage.getRight(),FCColumn.Hint.RIGHT);
+  final int leftSpan=addColumnIfRequired(ID_LEFT_COLUMN,page.getLeft(),FCColumn.Hint.LEFT);
+  final TabGroupListPanel middleTabs=addTabGroups(ID_MIDDLE_COLUMN,page.getTabGroups());
+  final int rightSpan=addColumnIfRequired(ID_RIGHT_COLUMN,page.getRight(),FCColumn.Hint.RIGHT);
   final int columnSpans=leftSpan + rightSpan;
   int tabGroupSpan=columnSpans < 12 ? 12 - (columnSpans) : 12;
   CssClassAppender.appendCssClassTo(middleTabs,"col-xs-" + tabGroupSpan);
