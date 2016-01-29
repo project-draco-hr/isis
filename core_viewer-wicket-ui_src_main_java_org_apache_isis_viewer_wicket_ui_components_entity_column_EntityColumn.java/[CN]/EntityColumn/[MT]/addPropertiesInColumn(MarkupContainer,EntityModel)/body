@@ -4,29 +4,29 @@
   final Map<String,List<ObjectAssociation>> associationsByGroup=PropUtil.propertiesByMemberOrder(adapter);
   final RepeatingView memberGroupRv=new RepeatingView(ID_PROPERTY_GROUP);
   markupContainer.add(memberGroupRv);
-  final ImmutableMap<String,PropertyGroupMetadata> propertyGroupMetadataByNameIfAny=columnMetaDataIfAny != null ? Maps.uniqueIndex(columnMetaDataIfAny.getPropertyGroups(),PropertyGroupMetadata.Util.nameOf()) : null;
+  final ImmutableMap<String,FieldSet> propertyGroupMetadataByNameIfAny=columnMetaDataIfAny != null ? Maps.uniqueIndex(columnMetaDataIfAny.getFieldSets(),FieldSet.Util.nameOf()) : null;
   final Collection<String> groupNames=propertyGroupMetadataByNameIfAny != null ? propertyGroupMetadataByNameIfAny.keySet() : ObjectSpecifications.orderByMemberGroups(objSpec,associationsByGroup.keySet(),hint);
   for (  final String groupName : groupNames) {
-    final PropertyGroupMetadata propertyGroupMetadata;
+    final FieldSet fieldSet;
     if (propertyGroupMetadataByNameIfAny != null) {
-      propertyGroupMetadata=propertyGroupMetadataByNameIfAny.get(groupName);
+      fieldSet=propertyGroupMetadataByNameIfAny.get(groupName);
     }
  else {
       final List<ObjectAssociation> associationsInGroup=associationsByGroup.get(groupName);
-      propertyGroupMetadata=new PropertyGroupMetadata(groupName);
-      propertyGroupMetadata.setProperties(FluentIterable.from(associationsInGroup).transform(new Function<ObjectAssociation,PropertyLayoutMetadata>(){
-        @Override public PropertyLayoutMetadata apply(        final ObjectAssociation assoc){
-          return new PropertyLayoutMetadata(assoc.getId());
+      fieldSet=new FieldSet(groupName);
+      fieldSet.setProperties(FluentIterable.from(associationsInGroup).transform(new Function<ObjectAssociation,PropertyLayoutData>(){
+        @Override public PropertyLayoutData apply(        final ObjectAssociation assoc){
+          return new PropertyLayoutData(assoc.getId());
         }
       }
 ).toList());
     }
-    if (propertyGroupMetadata.getProperties().isEmpty()) {
+    if (fieldSet.getProperties().isEmpty()) {
       continue;
     }
     final String id=memberGroupRv.newChildId();
-    final EntityModel entityModelWithHints=entityModel.cloneWithPropertyGroupMetadata(propertyGroupMetadata);
-    final WebMarkupContainer memberGroupRvContainer=new PropertyGroup(id,entityModelWithHints);
+    final EntityModel entityModelWithHints=entityModel.cloneWithPropertyGroupMetadata(fieldSet);
+    final WebMarkupContainer memberGroupRvContainer=new org.apache.isis.viewer.wicket.ui.components.entity.propgroup.PropertyGroup(id,entityModelWithHints);
     memberGroupRv.add(memberGroupRvContainer);
   }
 }

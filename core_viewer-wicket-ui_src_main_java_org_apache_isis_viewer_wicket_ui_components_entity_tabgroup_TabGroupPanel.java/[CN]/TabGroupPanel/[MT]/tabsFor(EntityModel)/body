@@ -1,12 +1,12 @@
 {
   final List<ITab> tabs=Lists.newArrayList();
-  final TabGroupMetadata tabGroup=entityModel.getTabGroupMetadata();
-  final List<TabMetadata> tabMetadataList=FluentIterable.from(tabGroup.getTabs()).filter(TabMetadata.Predicates.notEmpty()).toList();
-  for (  final TabMetadata tabMetadata : tabMetadataList) {
-    tabs.add(new AbstractTab(Model.of(tabMetadata.getName())){
+  final FCTabGroup tabGroup=entityModel.getFCTabGroup();
+  final List<FCTab> FCTabList=FluentIterable.from(tabGroup.getTabs()).filter(FCTab.Predicates.notEmpty()).toList();
+  for (  final FCTab FCTab : FCTabList) {
+    tabs.add(new AbstractTab(Model.of(FCTab.getName())){
       private static final long serialVersionUID1=1L;
       @Override public Panel getPanel(      String panelId){
-        return new TabPanel(panelId,entityModel,tabMetadata);
+        return new TabPanel(panelId,entityModel,FCTab);
       }
     }
 );

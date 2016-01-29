@@ -2,8 +2,8 @@
   final EntityModel entityModel=getModel();
   final ObjectAdapter adapter=entityModel.getObject();
   final Filter<ObjectAssociation> filter;
-  if (columnMetadataIfAny != null) {
-    final ImmutableList<String> collectionIds=FluentIterable.from(columnMetadataIfAny.getCollections()).transform(CollectionLayoutMetadata.Functions.id()).toList();
+  if (FCColumnIfAny != null) {
+    final ImmutableList<String> collectionIds=FluentIterable.from(FCColumnIfAny.getCollections()).transform(CollectionLayoutData.Functions.id()).toList();
     filter=new Filter<ObjectAssociation>(){
       @Override public boolean accept(      final ObjectAssociation objectAssociation){
         return collectionIds.contains(objectAssociation.getId());
@@ -29,8 +29,8 @@
   for (  final ObjectAssociation association : associations) {
     final WebMarkupContainer collectionRvContainer=new WebMarkupContainer(collectionRv.newChildId());
     collectionRv.add(collectionRvContainer);
-    final CollectionLayoutMetadata collectionLayoutMetadata=new CollectionLayoutMetadata(association.getId());
-    final EntityModel entityModelWithCollectionLayoutMetadata=entityModel.cloneWithCollectionLayoutMetadata(collectionLayoutMetadata);
+    final CollectionLayoutData collectionLayoutData=new CollectionLayoutData(association.getId());
+    final EntityModel entityModelWithCollectionLayoutMetadata=entityModel.cloneWithCollectionLayoutMetadata(collectionLayoutData);
     collectionRvContainer.add(new EntityCollectionPanel(ID_COLLECTION,entityModelWithCollectionLayoutMetadata));
   }
 }

@@ -1,11 +1,11 @@
 {
   final EntityModel entityModel=(EntityModel)getModel();
-  final TabMetadata tabMetaDataIfAny=entityModel.getTabMetadata();
+  final FCTab FCTabMetaDataIfAny=entityModel.getFCTab();
   final ColumnSpans columnSpans;
-  if (tabMetaDataIfAny != null) {
-    final ColumnMetadata middle=tabMetaDataIfAny.getMiddle();
-    final ColumnMetadata right=tabMetaDataIfAny.getRight();
-    columnSpans=ColumnSpans.asSpans(tabMetaDataIfAny.getLeft().getSpan(),middle != null ? middle.getSpan() : 0,right != null ? right.getSpan() : 0);
+  if (FCTabMetaDataIfAny != null) {
+    final FCColumn middle=FCTabMetaDataIfAny.getMiddle();
+    final FCColumn right=FCTabMetaDataIfAny.getRight();
+    columnSpans=ColumnSpans.asSpans(FCTabMetaDataIfAny.getLeft().getSpan(),middle != null ? middle.getSpan() : 0,right != null ? right.getSpan() : 0);
   }
  else {
     final MemberGroupLayoutFacet memberGroupLayoutFacet=entityModel.getObject().getSpecification().getFacet(MemberGroupLayoutFacet.class);
@@ -14,7 +14,7 @@
   MarkupContainer leftColumn=new WebMarkupContainer(ID_LEFT_COLUMN);
   add(leftColumn);
   if (columnSpans.getLeft() > 0) {
-    addPropertiesAndCollections(leftColumn,entityModel,tabMetaDataIfAny,Hint.LEFT);
+    addPropertiesAndCollections(leftColumn,entityModel,FCTabMetaDataIfAny,Hint.LEFT);
   }
  else {
     Components.permanentlyHide(this,ID_LEFT_COLUMN);
@@ -23,7 +23,7 @@
   if (columnSpans.getMiddle() > 0) {
     middleColumn=new WebMarkupContainer(ID_MIDDLE_COLUMN);
     add(middleColumn);
-    addPropertiesAndCollections(middleColumn,entityModel,tabMetaDataIfAny,Hint.MIDDLE);
+    addPropertiesAndCollections(middleColumn,entityModel,FCTabMetaDataIfAny,Hint.MIDDLE);
   }
  else {
     middleColumn=null;
@@ -33,7 +33,7 @@
   if (columnSpans.getRight() > 0) {
     rightColumn=new WebMarkupContainer(ID_RIGHT_COLUMN);
     add(rightColumn);
-    addPropertiesAndCollections(rightColumn,entityModel,tabMetaDataIfAny,Hint.RIGHT);
+    addPropertiesAndCollections(rightColumn,entityModel,FCTabMetaDataIfAny,Hint.RIGHT);
   }
  else {
     rightColumn=null;
@@ -49,7 +49,7 @@
     addClassForSpan(rightColumn,Hint.RIGHT.from(columnSpans));
   }
   final Hint leftHint=Hint.LEFT;
-  final ColumnMetadata leftColumnMetaDataIfAny=leftHint.from(tabMetaDataIfAny);
+  final FCColumn leftColumnMetaDataIfAny=leftHint.from(FCTabMetaDataIfAny);
   final boolean hasProperties=leftColumnMetaDataIfAny == null && !PropUtil.propertyGroupNames(entityModel,leftHint,leftColumnMetaDataIfAny).isEmpty();
   if (hasProperties) {
     addButtons(leftColumn);
@@ -58,7 +58,7 @@
  else {
     Components.permanentlyHide(leftColumn,ID_EDIT_BUTTON,ID_OK_BUTTON,ID_CANCEL_BUTTON,ID_FEEDBACK);
   }
-  if (tabMetaDataIfAny == null && columnSpans.getCollections() > 0) {
+  if (FCTabMetaDataIfAny == null && columnSpans.getCollections() > 0) {
     final String idCollectionsToShow;
     final String idCollectionsToHide;
     int collectionSpan;
