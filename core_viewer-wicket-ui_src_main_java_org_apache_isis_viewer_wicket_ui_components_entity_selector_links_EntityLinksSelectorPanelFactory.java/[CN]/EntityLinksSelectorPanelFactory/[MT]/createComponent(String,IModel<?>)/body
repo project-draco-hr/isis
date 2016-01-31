@@ -1,4 +1,16 @@
 {
   final EntityModel entityModel=(EntityModel)model;
+  final ObjectSpecification specification=entityModel.getTypeOfSpecification();
+  final PageFacet facet=specification.getFacet(PageFacet.class);
+  final Page page=facet.getPage();
+  if (page != null) {
+    final EntityModel entityModelWithLayoutMetadata=entityModel.cloneWithLayoutMetadata(page);
+    if (page instanceof FCPage) {
+      return new FCPagePanel(id,entityModelWithLayoutMetadata);
+    }
+    if (page instanceof BS3Page) {
+      return new BS3PagePanel(id,entityModelWithLayoutMetadata);
+    }
+  }
   return new EntityLinksSelectorPanel(id,entityModel,this);
 }
