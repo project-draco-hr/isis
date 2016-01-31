@@ -1,0 +1,15 @@
+{
+  final List<ITab> tabs=Lists.newArrayList();
+  final FCTabGroup tabGroup=(FCTabGroup)entityModel.getLayoutMetadata();
+  final List<FCTab> FCTabList=FluentIterable.from(tabGroup.getTabs()).filter(FCTab.Predicates.notEmpty()).toList();
+  for (  final FCTab FCTab : FCTabList) {
+    tabs.add(new AbstractTab(Model.of(FCTab.getName())){
+      private static final long serialVersionUID1=1L;
+      @Override public Panel getPanel(      String panelId){
+        return new TabPanel(panelId,entityModel,FCTab);
+      }
+    }
+);
+  }
+  return tabs;
+}
