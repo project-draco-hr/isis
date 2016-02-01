@@ -6,16 +6,16 @@
   final AtomicReference<FCColumn> firstColumnRef=new AtomicReference<>();
   final AtomicReference<FCTabGroup> lastTabGroupRef=new AtomicReference<>();
   metadata.visit(new FCPage.VisitorAdapter(){
-    @Override public void visit(    final FCColumn FCColumn){
-      firstColumnRef.compareAndSet(null,FCColumn);
+    @Override public void visit(    final FCColumn fcColumn){
+      firstColumnRef.compareAndSet(null,fcColumn);
     }
     @Override public void visit(    final FieldSet fieldSet){
       if (MemberGroupLayoutFacet.DEFAULT_GROUP.equals(fieldSet.getName())) {
         defaultPropertyGroupRef.compareAndSet(null,fieldSet);
       }
     }
-    @Override public void visit(    final FCTabGroup tabGroup){
-      lastTabGroupRef.set(tabGroup);
+    @Override public void visit(    final FCTabGroup fcTabGroup){
+      lastTabGroupRef.set(fcTabGroup);
     }
   }
 );

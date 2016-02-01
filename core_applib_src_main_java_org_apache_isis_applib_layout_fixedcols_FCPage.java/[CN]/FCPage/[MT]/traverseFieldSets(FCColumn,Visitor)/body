@@ -1,0 +1,13 @@
+{
+  for (  final FieldSet fieldSet : fcColumn.getFieldSets()) {
+    fieldSet.setOwner(fcColumn);
+    visitor.visit(fieldSet);
+    traverseActions(fieldSet,visitor);
+    final List<PropertyLayoutData> properties=fieldSet.getProperties();
+    for (    final PropertyLayoutData propertyLayoutData : properties) {
+      propertyLayoutData.setOwner(fieldSet);
+      visitor.visit(propertyLayoutData);
+      traverseActions(propertyLayoutData,visitor);
+    }
+  }
+}

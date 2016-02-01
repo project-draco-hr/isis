@@ -1,0 +1,19 @@
+{
+  visitor.visit(this);
+  traverseActions(this,visitor);
+  traverseColumn(getLeft(),this,visitor);
+  final List<FCTabGroup> tabGroups=getTabGroups();
+  for (  final FCTabGroup fcTabGroup : tabGroups) {
+    fcTabGroup.setOwner(this);
+    visitor.visit(fcTabGroup);
+    final List<FCTab> tabs=fcTabGroup.getTabs();
+    for (    final FCTab fcTab : tabs) {
+      fcTab.setOwner(fcTabGroup);
+      visitor.visit(fcTab);
+      traverseColumn(fcTab.getLeft(),fcTab,visitor);
+      traverseColumn(fcTab.getMiddle(),fcTab,visitor);
+      traverseColumn(fcTab.getRight(),fcTab,visitor);
+    }
+  }
+  traverseColumn(getRight(),this,visitor);
+}
