@@ -1,0 +1,19 @@
+{
+  for (  final String collectionId : missingCollectionIds) {
+    final BS3Tab bs3Tab=new BS3Tab();
+    bs3Tab.setName(objectSpec.getAssociation(collectionId).getName());
+    tabGroup.getTabs().add(bs3Tab);
+    bs3Tab.setOwner(tabGroup);
+    final BS3Row tabRow=new BS3Row();
+    tabRow.setOwner(bs3Tab);
+    bs3Tab.getRows().add(tabRow);
+    final BS3Col tabRowCol=new BS3Col();
+    tabRowCol.setSpan(12);
+    tabRowCol.setSize(BS3RowContent.Size.MD);
+    tabRowCol.setOwner(tabRow);
+    tabRow.getCols().add(tabRowCol);
+    final CollectionLayoutData layoutMetadata=new CollectionLayoutData(collectionId);
+    layoutMetadata.setDefaultView("table");
+    tabRowCol.getCollections().add(layoutMetadata);
+  }
+}

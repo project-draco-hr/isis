@@ -3,8 +3,15 @@
   final Map<String,OneToOneAssociation> oneToOneAssociationById=ObjectMember.Util.mapById(getOneToOneAssociations(objectSpec));
   final Map<String,OneToManyAssociation> oneToManyAssociationById=ObjectMember.Util.mapById(getOneToManyAssociations(objectSpec));
   final Map<String,ObjectAction> objectActionById=ObjectMember.Util.mapById(objectSpec.getObjectActions(Contributed.INCLUDED));
-  final boolean validation=validateAndDerive(grid,oneToOneAssociationById,oneToManyAssociationById,objectActionById);
-  if (validation) {
+  final boolean valid=validateAndDerive(grid,oneToOneAssociationById,oneToManyAssociationById,objectActionById,objectSpec);
+  if (valid) {
     overwrite(grid,oneToOneAssociationById,oneToManyAssociationById,objectActionById);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Grid:\n\n" + jaxbService.toXml(grid) + "\n\n");
+    }
+  }
+ else {
+    container.warnUser("Grid metadata errors; check the error log");
+    LOG.error("Grid metadata errors:\n\n" + jaxbService.toXml(grid) + "\n\n");
   }
 }

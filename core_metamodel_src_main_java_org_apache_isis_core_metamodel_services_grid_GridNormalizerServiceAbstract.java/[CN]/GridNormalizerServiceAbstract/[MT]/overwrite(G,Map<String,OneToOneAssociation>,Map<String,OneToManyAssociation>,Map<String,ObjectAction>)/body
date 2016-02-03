@@ -35,7 +35,9 @@
         memberOrderName=null;
         memberOrderSequence=actionDomainObjectSequence++;
       }
-      FacetUtil.addFacet(new MemberOrderFacetXml(memberOrderName,"" + memberOrderSequence,translationService,objectAction));
+      if (memberOrderName != null) {
+        FacetUtil.addOrReplaceFacet(new MemberOrderFacetXml(memberOrderName,"" + memberOrderSequence,translationService,objectAction));
+      }
       if (actionLayoutDataOwner instanceof FieldSet) {
         if (actionLayoutData.getPosition() == null || actionLayoutData.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.BELOW || actionLayoutData.getPosition() == org.apache.isis.applib.annotation.ActionLayout.Position.RIGHT) {
           actionLayoutData.setPosition(org.apache.isis.applib.annotation.ActionLayout.Position.PANEL);
@@ -49,47 +51,47 @@
  else {
         actionLayoutData.setPosition(null);
       }
-      FacetUtil.addFacet(ActionPositionFacetForActionXml.create(actionLayoutData,objectAction));
-      FacetUtil.addFacet(BookmarkPolicyFacetForActionXml.create(actionLayoutData,objectAction));
-      FacetUtil.addFacet(CssClassFacetForActionXml.create(actionLayoutData,objectAction));
-      FacetUtil.addFacet(CssClassFaFacetForActionXml.create(actionLayoutData,objectAction));
-      FacetUtil.addFacet(DescribedAsFacetForActionXml.create(actionLayoutData,objectAction));
-      FacetUtil.addFacet(HiddenFacetForActionLayoutXml.create(actionLayoutData,objectAction));
-      FacetUtil.addFacet(NamedFacetForActionXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(ActionPositionFacetForActionXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(BookmarkPolicyFacetForActionXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(CssClassFacetForActionXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(CssClassFaFacetForActionXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(DescribedAsFacetForActionXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(HiddenFacetForActionLayoutXml.create(actionLayoutData,objectAction));
+      FacetUtil.addOrReplaceFacet(NamedFacetForActionXml.create(actionLayoutData,objectAction));
     }
     @Override public void visit(    final PropertyLayoutData propertyLayoutData){
       final OneToOneAssociation oneToOneAssociation=oneToOneAssociationById.get(propertyLayoutData.getId());
       if (oneToOneAssociation == null) {
         return;
       }
-      FacetUtil.addFacet(CssClassFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(DescribedAsFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(HiddenFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(LabelAtFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(MultiLineFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(NamedFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(RenderedAdjustedFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
-      FacetUtil.addFacet(TypicalLengthFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(CssClassFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(DescribedAsFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(HiddenFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(LabelAtFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(MultiLineFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(NamedFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(RenderedAdjustedFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(TypicalLengthFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
       final FieldSet fieldSet=propertyLayoutData.getOwner();
       final String groupName=fieldSet.getName();
       final String sequence=nextInSequenceFor(groupName,propertySequenceByGroup);
-      FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToOneAssociation));
+      FacetUtil.addOrReplaceFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToOneAssociation));
     }
     @Override public void visit(    final CollectionLayoutData collectionLayoutData){
       final OneToManyAssociation oneToManyAssociation=oneToManyAssociationById.get(collectionLayoutData.getId());
       if (oneToManyAssociation == null) {
         return;
       }
-      FacetUtil.addFacet(CssClassFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
-      FacetUtil.addFacet(DefaultViewFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
-      FacetUtil.addFacet(DescribedAsFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
-      FacetUtil.addFacet(HiddenFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
-      FacetUtil.addFacet(NamedFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
-      FacetUtil.addFacet(PagedFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
-      FacetUtil.addFacet(SortedByFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(CssClassFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(DefaultViewFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(DescribedAsFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(HiddenFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(NamedFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(PagedFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(SortedByFacetForCollectionXml.create(collectionLayoutData,oneToManyAssociation));
       final String groupName=collectionLayoutData.getId();
       final String sequence="" + collectionSequence++;
-      FacetUtil.addFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
+      FacetUtil.addOrReplaceFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
       final MemberRegionOwner memberRegionOwner=collectionLayoutData.getOwner();
       if (memberRegionOwner instanceof FCColumn) {
         final FCColumn FCColumn=(FCColumn)memberRegionOwner;
