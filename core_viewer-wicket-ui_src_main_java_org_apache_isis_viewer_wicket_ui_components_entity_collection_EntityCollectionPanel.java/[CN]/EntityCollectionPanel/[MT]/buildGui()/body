@@ -11,7 +11,6 @@
   final WebMarkupContainer fieldSet=new WebMarkupContainer(ID_COLLECTION_GROUP);
   collectionRvContainer.add(fieldSet);
   final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
-  fieldSet.addOrReplace(collectionPanel);
   Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
   final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
   labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
@@ -28,8 +27,7 @@
     permanentlyHide(ID_SELECTOR_DROPDOWN);
   }
  else {
-    CollectionSelectorPanel selectorDropdownPanel;
-    selectorDropdownPanel=new CollectionSelectorPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,selectedItemSessionAttribute);
+    CollectionSelectorPanel selectorDropdownPanel=new CollectionSelectorPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,selectedItemSessionAttribute);
     final Model<ComponentFactory> componentFactoryModel=new Model<>();
     final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
     ComponentFactory selectedComponentFactory=componentFactories.get(selected);
@@ -38,4 +36,5 @@
     fieldSet.addOrReplace(selectorDropdownPanel);
     collectionPanel.setSelectorDropdownPanel(selectorDropdownPanel);
   }
+  fieldSet.addOrReplace(collectionPanel);
 }
