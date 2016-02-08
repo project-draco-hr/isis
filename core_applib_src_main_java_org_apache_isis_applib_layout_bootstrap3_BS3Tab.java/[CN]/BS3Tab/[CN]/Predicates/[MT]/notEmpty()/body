@@ -1,7 +1,50 @@
 {
+  final AtomicBoolean visitingTheNode=new AtomicBoolean(false);
+  final AtomicBoolean foundContent=new AtomicBoolean(false);
   return new Predicate<BS3Tab>(){
-    @Override public boolean apply(    final BS3Tab bs3Tab){
-      return !bs3Tab.getRows().isEmpty();
+    @Override public boolean apply(    final BS3Tab thisBs3Tab){
+      final BS3Grid owningGrid=thisBs3Tab.getGrid();
+      owningGrid.visit(new BS3Grid.VisitorAdapter(){
+        /** 
+ * if found the tab, then reset 'foundContent' to false, and then use 'visitingTheNode' as
+ * a marker to indicate that the visitor is now being passed to the nodes underneath the tab.
+ * In those children, if visited (with the 'visitingTheNode' flag enabled), then simply set the
+ * 'foundContent' flag.
+ */
+        @Override public void preVisit(        final BS3Tab bs3Tab){
+          if (bs3Tab == thisBs3Tab) {
+            foundContent.set(false);
+            visitingTheNode.set(true);
+          }
+        }
+        @Override public void postVisit(        final BS3Tab bs3Tab){
+          if (bs3Tab == thisBs3Tab) {
+            visitingTheNode.set(false);
+          }
+        }
+        @Override public void visit(        final DomainObjectLayoutData domainObjectLayoutData){
+          if (visitingTheNode.get()) {
+            foundContent.set(true);
+          }
+        }
+        @Override public void visit(        final ActionLayoutData actionLayoutData){
+          if (visitingTheNode.get()) {
+            foundContent.set(true);
+          }
+        }
+        @Override public void visit(        final PropertyLayoutData propertyLayoutData){
+          if (visitingTheNode.get()) {
+            foundContent.set(true);
+          }
+        }
+        @Override public void visit(        final CollectionLayoutData collectionLayoutData){
+          if (visitingTheNode.get()) {
+            foundContent.set(true);
+          }
+        }
+      }
+);
+      return foundContent.get();
     }
   }
 ;

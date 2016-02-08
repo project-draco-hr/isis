@@ -5,6 +5,7 @@
     rowContent.setOwner(bs3Row);
     if (rowContent instanceof BS3Col) {
       final BS3Col bs3Col=(BS3Col)rowContent;
+      bs3Visitor.preVisit(bs3Col);
       bs3Visitor.visit(bs3Col);
       traverseDomainObject(bs3Col,visitor);
       traverseTabGroups(bs3Col,visitor);
@@ -12,6 +13,7 @@
       traverseFieldSets(bs3Col,visitor);
       traverseCollections(bs3Col,visitor);
       traverseRows(bs3Col,visitor);
+      bs3Visitor.postVisit(bs3Col);
     }
  else     if (rowContent instanceof BS3ClearFix) {
       final BS3ClearFix bs3ClearFix=(BS3ClearFix)rowContent;
