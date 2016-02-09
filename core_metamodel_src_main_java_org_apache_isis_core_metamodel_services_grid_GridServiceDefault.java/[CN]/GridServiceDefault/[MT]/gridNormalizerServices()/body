@@ -1,0 +1,19 @@
+{
+  if (filteredGridNormalizerServices == null) {
+    List<GridNormalizerService<?>> services=Lists.newArrayList();
+    for (    GridNormalizerService gridNormalizerService : this.gridNormalizerServices) {
+      final Class gridImplementation=gridNormalizerService.gridImplementation();
+      final boolean notSeenBefore=FluentIterable.from(services).filter(new Predicate<GridNormalizerService<?>>(){
+        @Override public boolean apply(        @Nullable final GridNormalizerService<?> gridNormalizerService){
+          return gridNormalizerService.gridImplementation() == gridImplementation;
+        }
+      }
+).isEmpty();
+      if (notSeenBefore) {
+        services.add(gridNormalizerService);
+      }
+    }
+    filteredGridNormalizerServices=services;
+  }
+  return filteredGridNormalizerServices;
+}
