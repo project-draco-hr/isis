@@ -5,10 +5,14 @@
       actionLayoutData.getOwner().getActions().remove(actionLayoutData);
     }
     @Override public void visit(    final CollectionLayoutData collectionLayoutData){
-      collectionLayoutData.getOwner().getCollections().remove(this);
+      collectionLayoutData.getOwner().getCollections().remove(collectionLayoutData);
     }
     @Override public void visit(    final PropertyLayoutData propertyLayoutData){
-      propertyLayoutData.getOwner().getProperties().remove(this);
+      propertyLayoutData.getOwner().getProperties().remove(propertyLayoutData);
+    }
+    @Override public void visit(    final DomainObjectLayoutData domainObjectLayoutData){
+      final DomainObjectLayoutDataOwner owner=domainObjectLayoutData.getOwner();
+      owner.setDomainObject(new DomainObjectLayoutData());
     }
   }
 );
