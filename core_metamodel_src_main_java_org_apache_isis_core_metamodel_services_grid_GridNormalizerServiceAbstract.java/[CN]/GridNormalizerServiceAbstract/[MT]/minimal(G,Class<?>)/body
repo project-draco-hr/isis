@@ -1,3 +1,15 @@
 {
   normalize(grid,domainClass);
+  grid.visit(new FCGrid.VisitorAdapter(){
+    @Override public void visit(    final ActionLayoutData actionLayoutData){
+      actionLayoutData.getOwner().getActions().remove(actionLayoutData);
+    }
+    @Override public void visit(    final CollectionLayoutData collectionLayoutData){
+      collectionLayoutData.getOwner().getCollections().remove(this);
+    }
+    @Override public void visit(    final PropertyLayoutData propertyLayoutData){
+      propertyLayoutData.getOwner().getProperties().remove(this);
+    }
+  }
+);
 }
