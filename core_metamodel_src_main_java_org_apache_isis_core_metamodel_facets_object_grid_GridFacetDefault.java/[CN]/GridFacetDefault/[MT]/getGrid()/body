@@ -1,11 +1,11 @@
 {
-  if (deploymentCategory.isProduction() || blacklisted) {
+  if (deploymentCategory.isProduction() && this.grid != null) {
     return this.grid;
   }
   final Class<?> domainClass=getSpecification().getCorrespondingClass();
-  final Grid grid=gridService.fromXml(domainClass);
-  if (deploymentCategory.isProduction() && grid == null) {
-    blacklisted=true;
+  Grid grid=gridService.fromXml(domainClass);
+  if (grid == null) {
+    grid=deriveGrid();
   }
   this.grid=normalize(grid);
   return this.grid;
