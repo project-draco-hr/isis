@@ -5,6 +5,7 @@
   final LinkedHashMap<String,ActionLayoutData> actionIds=bs3Grid.getAllActionsById();
   final LinkedHashMap<String,BS3Row> rowIds=Maps.newLinkedHashMap();
   final LinkedHashMap<String,BS3Col> colIds=Maps.newLinkedHashMap();
+  final LinkedHashMap<String,FieldSet> fieldSetIds=Maps.newLinkedHashMap();
   final AtomicReference<Boolean> duplicateIdDetected=new AtomicReference<>(false);
   bs3Grid.visit(new BS3Grid.VisitorAdapter(){
     @Override public void visit(    final BS3Row bs3Row){
@@ -30,6 +31,18 @@
         return;
       }
       colIds.put(id,bs3Col);
+    }
+    @Override public void visit(    final FieldSet fieldSet){
+      final String id=fieldSet.getId();
+      if (id == null) {
+        return;
+      }
+      if (rowIds.containsKey(id) || fieldSetIds.containsKey(id)) {
+        fieldSet.setMetadataError("There is another fieldset with this id");
+        duplicateIdDetected.set(true);
+        return;
+      }
+      fieldSetIds.put(id,fieldSet);
     }
   }
 );
@@ -121,9 +134,35 @@
     propertyIds.get(surplusPropertyId).setMetadataError("No such property");
   }
   if (!missingPropertyIds.isEmpty()) {
-    final FieldSet fieldSet=fieldSetForUnreferencedPropertiesRef.get();
-    if (fieldSet != null) {
-      addMissingPropertiesTo(fieldSet,missingPropertyIds);
+    final Map<String,List<OneToOneAssociation>> boundAssociationsByFieldSetId=Maps.newHashMap();
+    final List<String> unboundPropertyIds=Lists.newArrayList(missingPropertyIds);
+    for (    String missingPropertyId : missingPropertyIds) {
+      final OneToOneAssociation otoa=oneToOneAssociationById.get(missingPropertyId);
+      final MemberOrderFacet memberOrderFacet=otoa.getFacet(MemberOrderFacet.class);
+      if (memberOrderFacet != null) {
+        final String name=memberOrderFacet.name();
+        if (fieldSetIds.containsKey(name)) {
+          List<OneToOneAssociation> boundAssociations=boundAssociationsByFieldSetId.get(name);
+          if (boundAssociations == null) {
+            boundAssociations=Lists.newArrayList();
+            boundAssociationsByFieldSetId.put(name,boundAssociations);
+          }
+          boundAssociations.add(otoa);
+          unboundPropertyIds.remove(missingPropertyId);
+        }
+      }
+    }
+    for (    String fieldSetId : boundAssociationsByFieldSetId.keySet()) {
+      final FieldSet fieldSet=fieldSetIds.get(fieldSetId);
+      final List<OneToOneAssociation> associations=boundAssociationsByFieldSetId.get(fieldSetId);
+      associations.sort(byMemberOrderSequence());
+      addPropertiesTo(fieldSet,FluentIterable.from(associations).transform(ObjectAssociation.Functions.toId()).toList());
+    }
+    if (!unboundPropertyIds.isEmpty()) {
+      final FieldSet fieldSet=fieldSetForUnreferencedPropertiesRef.get();
+      if (fieldSet != null) {
+        addPropertiesTo(fieldSet,unboundPropertyIds);
+      }
     }
   }
   final Tuple<List<String>> collectionIdTuple=surplusAndMissing(collectionIds.keySet(),oneToManyAssociationById.keySet());
@@ -133,14 +172,21 @@
     collectionIds.get(surplusCollectionId).setMetadataError("No such collection");
   }
   if (!missingCollectionIds.isEmpty()) {
+    List<OneToManyAssociation> sortedCollections=Lists.newArrayList(FluentIterable.from(missingCollectionIds).transform(new Function<String,OneToManyAssociation>(){
+      @Nullable @Override public OneToManyAssociation apply(      @Nullable final String collectionId){
+        return oneToManyAssociationById.get(collectionId);
+      }
+    }
+).toSortedList(byMemberOrderSequence()));
+    final ImmutableList<String> sortedMissingCollectionIds=FluentIterable.from(sortedCollections).transform(ObjectAssociation.Functions.toId()).toList();
     final BS3TabGroup bs3TabGroup=tabGroupForUnreferencedCollectionsRef.get();
     if (bs3TabGroup != null) {
-      addMissingCollectionsTo(bs3TabGroup,missingCollectionIds,objectSpec);
+      addCollectionsTo(bs3TabGroup,sortedMissingCollectionIds,objectSpec);
     }
  else {
       final BS3Col bs3Col=colForUnreferencedCollectionsRef.get();
       if (bs3Col != null) {
-        addMissingCollectionsTo(bs3Col,missingCollectionIds);
+        addCollectionsTo(bs3Col,sortedMissingCollectionIds);
       }
     }
   }
@@ -167,12 +213,12 @@
   if (!missingActionIds.isEmpty()) {
     final BS3Col bs3Col=colForUnreferencedActionsRef.get();
     if (bs3Col != null) {
-      addMissingActionsTo(bs3Col,missingActionIds);
+      addActionsTo(bs3Col,missingActionIds);
     }
  else {
       final FieldSet fieldSet=fieldSetForUnreferencedActionsRef.get();
       if (fieldSet != null) {
-        addMissingActionsTo(fieldSet,missingActionIds);
+        addActionsTo(fieldSet,missingActionIds);
       }
     }
   }
