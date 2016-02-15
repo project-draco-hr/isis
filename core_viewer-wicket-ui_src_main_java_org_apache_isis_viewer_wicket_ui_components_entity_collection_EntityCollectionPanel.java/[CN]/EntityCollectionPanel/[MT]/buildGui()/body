@@ -1,40 +1,43 @@
 {
-  final WebMarkupContainer collectionRvContainer=this;
+  final WebMarkupContainer div=new WebMarkupContainer(ID_COLLECTION_GROUP);
   final EntityCollectionModel entityCollectionModel=EntityCollectionModel.createParented(getModel());
   final OneToManyAssociation association=entityCollectionModel.getCollectionMemento().getCollection();
-  final CssClassFacet facet=association.getFacet(CssClassFacet.class);
-  if (facet != null) {
-    final ObjectAdapter objectAdapter=getModel().getObject();
-    final String cssClass=facet.cssClass(objectAdapter);
-    CssClassAppender.appendCssClassTo(collectionRvContainer,cssClass);
-  }
-  final WebMarkupContainer fieldSet=new WebMarkupContainer(ID_COLLECTION_GROUP);
-  collectionRvContainer.add(fieldSet);
-  final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
-  Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
-  final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
-  labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
-  fieldSet.add(labelComponent);
-  final String description=association.getDescription();
-  if (description != null) {
-    labelComponent.add(new AttributeAppender("title",Model.of(description)));
-  }
-  final List<LinkAndLabel> links=entityCollectionModel.getLinks();
-  AdditionalLinksPanel.addAdditionalLinks(fieldSet,ID_ADDITIONAL_LINKS,links,AdditionalLinksPanel.Style.INLINE_LIST);
-  final CollectionSelectorHelper selectorHelper=new CollectionSelectorHelper(entityCollectionModel,getComponentFactoryRegistry(),selectedItemSessionAttribute);
-  final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
-  if (componentFactories.size() <= 1) {
-    permanentlyHide(ID_SELECTOR_DROPDOWN);
-  }
+  final ObjectAdapter objectAdapter=getModel().getObject();
+  final Consent visibility=association.isVisible(objectAdapter,InteractionInitiatedBy.USER,Where.OBJECT_FORMS);
+  if (visibility.isAllowed()) {
+    contentDynamicallyVisible=true;
+    final CssClassFacet facet=association.getFacet(CssClassFacet.class);
+    if (facet != null) {
+      final String cssClass=facet.cssClass(objectAdapter);
+      CssClassAppender.appendCssClassTo(div,cssClass);
+    }
+    final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
+    Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
+    final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
+    labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
+    div.add(labelComponent);
+    final String description=association.getDescription();
+    if (description != null) {
+      labelComponent.add(new AttributeAppender("title",Model.of(description)));
+    }
+    final List<LinkAndLabel> links=entityCollectionModel.getLinks();
+    AdditionalLinksPanel.addAdditionalLinks(div,ID_ADDITIONAL_LINKS,links,AdditionalLinksPanel.Style.INLINE_LIST);
+    final CollectionSelectorHelper selectorHelper=new CollectionSelectorHelper(entityCollectionModel,getComponentFactoryRegistry(),selectedItemSessionAttribute);
+    final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
+    if (componentFactories.size() <= 1) {
+      permanentlyHide(ID_SELECTOR_DROPDOWN);
+    }
  else {
-    CollectionSelectorPanel selectorDropdownPanel=new CollectionSelectorPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,selectedItemSessionAttribute);
-    final Model<ComponentFactory> componentFactoryModel=new Model<>();
-    final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
-    ComponentFactory selectedComponentFactory=componentFactories.get(selected);
-    componentFactoryModel.setObject(selectedComponentFactory);
-    this.setOutputMarkupId(true);
-    fieldSet.addOrReplace(selectorDropdownPanel);
-    collectionPanel.setSelectorDropdownPanel(selectorDropdownPanel);
+      CollectionSelectorPanel selectorDropdownPanel=new CollectionSelectorPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,selectedItemSessionAttribute);
+      final Model<ComponentFactory> componentFactoryModel=new Model<>();
+      final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
+      ComponentFactory selectedComponentFactory=componentFactories.get(selected);
+      componentFactoryModel.setObject(selectedComponentFactory);
+      this.setOutputMarkupId(true);
+      div.addOrReplace(selectorDropdownPanel);
+      collectionPanel.setSelectorDropdownPanel(selectorDropdownPanel);
+    }
+    div.addOrReplace(collectionPanel);
   }
-  fieldSet.addOrReplace(collectionPanel);
+  return div;
 }

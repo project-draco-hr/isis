@@ -3,10 +3,14 @@
   final BS3TabGroup tabGroup=(BS3TabGroup)entityModel.getLayoutMetadata();
   final List<BS3Tab> tablist=FluentIterable.from(tabGroup.getTabs()).filter(BS3Tab.Predicates.notEmpty()).toList();
   for (  final BS3Tab bs3Tab : tablist) {
+    final RepeatingViewWithDynamicallyVisibleContent rv=TabPanel.newRows(entityModel,bs3Tab);
     tabs.add(new AbstractTab(Model.of(bs3Tab.getName())){
       private static final long serialVersionUID=1L;
       @Override public Panel getPanel(      String panelId){
-        return new TabPanel(panelId,entityModel,bs3Tab);
+        return new TabPanel(panelId,entityModel,bs3Tab,rv);
+      }
+      @Override public boolean isVisible(){
+        return rv.isContentDynamicallyVisible();
       }
     }
 );

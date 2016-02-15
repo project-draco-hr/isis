@@ -7,7 +7,6 @@
   final WebMarkupContainer div=new WebMarkupContainer(ID_COL);
   CssClassAppender.appendCssClassTo(div,bs3Col.toCssClass());
   Util.appendCssClass(div,bs3Col,ID_COL);
-  this.addOrReplace(div);
   final DomainObjectLayoutData domainObject=bs3Col.getDomainObject();
   final WebMarkupContainer actionOwner;
   final String actionIdToUse;
@@ -21,6 +20,7 @@
     actionOwner=entityHeaderPanel;
     actionIdToUse="entityActions";
     actionIdToHide="actions";
+    contentDynamicallyVisible=true;
   }
  else {
     Components.permanentlyHide(div,ID_ENTITY_HEADER_PANEL);
@@ -29,15 +29,22 @@
     actionIdToHide=null;
   }
   final List<ActionLayoutData> actionLayoutDatas=bs3Col.getActions();
-  final List<ObjectAction> objectActions=FluentIterable.from(actionLayoutDatas).transform(new Function<ActionLayoutData,ObjectAction>(){
+  final List<ObjectAction> visibleActions=FluentIterable.from(actionLayoutDatas).transform(new Function<ActionLayoutData,ObjectAction>(){
     @Nullable @Override public ObjectAction apply(    @Nullable final ActionLayoutData actionLayoutData){
       return getModel().getTypeOfSpecification().getObjectAction(actionLayoutData.getId());
     }
   }
-).filter(Predicates.<ObjectAction>notNull()).toList();
-  final List<LinkAndLabel> entityActionLinks=EntityActionUtil.asLinkAndLabelsForAdditionalLinksPanel(getModel(),objectActions);
+).filter(Predicates.<ObjectAction>notNull()).filter(new Predicate<ObjectAction>(){
+    @Override public boolean apply(    @Nullable final ObjectAction objectAction){
+      final Consent visibility=objectAction.isVisible(getModel().getObject(),InteractionInitiatedBy.USER,Where.OBJECT_FORMS);
+      return visibility.isAllowed();
+    }
+  }
+).toList();
+  final List<LinkAndLabel> entityActionLinks=EntityActionUtil.asLinkAndLabelsForAdditionalLinksPanel(getModel(),visibleActions);
   if (!entityActionLinks.isEmpty()) {
     AdditionalLinksPanel.addAdditionalLinks(actionOwner,actionIdToUse,entityActionLinks,AdditionalLinksPanel.Style.INLINE_LIST);
+    contentDynamicallyVisible=true;
   }
  else {
     Components.permanentlyHide(actionOwner,actionIdToUse);
@@ -47,8 +54,9 @@
   }
   final List<BS3Row> rows=Lists.newArrayList(this.bs3Col.getRows());
   if (!rows.isEmpty()) {
-    final RepeatingView rowsRv=buildRows(ID_ROWS,rows);
+    final RepeatingViewWithDynamicallyVisibleContent rowsRv=buildRows(ID_ROWS,rows);
     div.add(rowsRv);
+    contentDynamicallyVisible=contentDynamicallyVisible || rowsRv.isContentDynamicallyVisible();
   }
  else {
     Components.permanentlyHide(div,ID_ROWS);
@@ -61,7 +69,7 @@
   }
 ).toList();
   if (!tabGroupsWithNonEmptyTabs.isEmpty()) {
-    final RepeatingView tabGroupRv=new RepeatingView(ID_TAB_GROUPS);
+    final RepeatingViewWithDynamicallyVisibleContent tabGroupRv=new RepeatingViewWithDynamicallyVisibleContent(ID_TAB_GROUPS);
     for (    BS3TabGroup bs3TabGroup : tabGroupsWithNonEmptyTabs) {
       final String id=tabGroupRv.newChildId();
       final List<BS3Tab> tabs=FluentIterable.from(bs3TabGroup.getTabs()).filter(BS3Tab.Predicates.notEmpty()).toList();
@@ -71,7 +79,7 @@ case 0:
 case 1:
       final BS3Tab bs3Tab=tabs.get(0);
     final List<BS3Row> tabRows=bs3Tab.getRows();
-  final RepeatingView rowsRv=buildRows(id,tabRows);
+  final RepeatingViewWithDynamicallyVisibleContent rowsRv=buildRows(id,tabRows);
 tabGroupRv.add(rowsRv);
 break;
 default :
@@ -82,6 +90,7 @@ break;
 }
 }
 div.add(tabGroupRv);
+contentDynamicallyVisible=contentDynamicallyVisible || tabGroupRv.isContentDynamicallyVisible();
 }
  else {
 Components.permanentlyHide(div,ID_TAB_GROUPS);
@@ -93,30 +102,39 @@ return !fieldSet.getProperties().isEmpty();
 }
 ).toList();
 if (!fieldSetsWithProperties.isEmpty()) {
-final RepeatingView fieldSetRv=new RepeatingView(ID_FIELD_SETS);
+final RepeatingViewWithDynamicallyVisibleContent fieldSetRv=new RepeatingViewWithDynamicallyVisibleContent(ID_FIELD_SETS);
 for (FieldSet fieldSet : fieldSetsWithProperties) {
 final String id=fieldSetRv.newChildId();
 final EntityModel entityModelWithHints=getModel().cloneWithLayoutMetadata(fieldSet);
-final WebMarkupContainer propertyGroup=new PropertyGroup(id,entityModelWithHints);
+final PropertyGroup propertyGroup=new PropertyGroup(id,entityModelWithHints);
 fieldSetRv.add(propertyGroup);
 }
 div.add(fieldSetRv);
+contentDynamicallyVisible=contentDynamicallyVisible || fieldSetRv.isContentDynamicallyVisible();
 }
  else {
 Components.permanentlyHide(div,ID_FIELD_SETS);
 }
 final List<CollectionLayoutData> collections=bs3Col.getCollections();
 if (!collections.isEmpty()) {
-final RepeatingView collectionRv=new RepeatingView(ID_COLLECTIONS);
+final RepeatingViewWithDynamicallyVisibleContent collectionRv=new RepeatingViewWithDynamicallyVisibleContent(ID_COLLECTIONS);
 for (CollectionLayoutData collection : collections) {
 final String id=collectionRv.newChildId();
 final EntityModel entityModelWithHints=getModel().cloneWithLayoutMetadata(collection);
-final WebMarkupContainer collectionPanel=new EntityCollectionPanel(id,entityModelWithHints);
+final EntityCollectionPanel collectionPanel=new EntityCollectionPanel(id,entityModelWithHints);
 collectionRv.add(collectionPanel);
 }
 div.add(collectionRv);
+contentDynamicallyVisible=contentDynamicallyVisible || collectionRv.isContentDynamicallyVisible();
 }
  else {
 Components.permanentlyHide(div,ID_COLLECTIONS);
+}
+final WebMarkupContainer panel=this;
+if (contentDynamicallyVisible) {
+panel.add(div);
+}
+ else {
+Components.permanentlyHide(panel,div.getId());
 }
 }
