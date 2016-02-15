@@ -138,28 +138,50 @@
   for (  String surplusPropertyId : surplusPropertyIds) {
     propertyIds.get(surplusPropertyId).setMetadataError("No such property");
   }
-  final Map<String,List<OneToOneAssociation>> boundAssociationsByFieldSetId=Maps.newHashMap();
-  if (!missingPropertyIds.isEmpty()) {
-    final List<String> unboundPropertyIds=Lists.newArrayList(missingPropertyIds);
-    for (    String missingPropertyId : missingPropertyIds) {
-      final OneToOneAssociation otoa=oneToOneAssociationById.get(missingPropertyId);
-      final MemberOrderFacet memberOrderFacet=otoa.getFacet(MemberOrderFacet.class);
-      if (memberOrderFacet != null) {
-        final String id=asId(memberOrderFacet.name());
-        if (fieldSetIds.containsKey(id)) {
-          List<OneToOneAssociation> boundAssociations=boundAssociationsByFieldSetId.get(id);
-          if (boundAssociations == null) {
-            boundAssociations=Lists.newArrayList();
-            boundAssociationsByFieldSetId.put(id,boundAssociations);
-          }
-          boundAssociations.add(otoa);
-          unboundPropertyIds.remove(missingPropertyId);
+  final Map<String,Set<String>> boundAssociationIdsByFieldSetId=Maps.newHashMap();
+  for (  FieldSet fieldSet : fieldSetIds.values()) {
+    final String fieldSetId=fieldSet.getId();
+    Set<String> boundAssociationIds=boundAssociationIdsByFieldSetId.get(fieldSetId);
+    if (boundAssociationIds == null) {
+      boundAssociationIds=Sets.newLinkedHashSet();
+      boundAssociationIds.addAll(FluentIterable.from(fieldSet.getProperties()).transform(new Function<PropertyLayoutData,String>(){
+        @Override public String apply(        @Nullable final PropertyLayoutData propertyLayoutData){
+          return propertyLayoutData.getId();
         }
       }
+).toList());
+      boundAssociationIdsByFieldSetId.put(fieldSetId,boundAssociationIds);
     }
-    for (    String fieldSetId : boundAssociationsByFieldSetId.keySet()) {
+  }
+  for (  OneToOneAssociation otoa : oneToOneAssociationById.values()) {
+    final MemberOrderFacet memberOrderFacet=otoa.getFacet(MemberOrderFacet.class);
+    if (memberOrderFacet != null) {
+      final String id=asId(memberOrderFacet.name());
+      if (fieldSetIds.containsKey(id)) {
+        Set<String> boundAssociationIds=boundAssociationIdsByFieldSetId.get(id);
+        if (boundAssociationIds == null) {
+          boundAssociationIds=Sets.newLinkedHashSet();
+          boundAssociationIdsByFieldSetId.put(id,boundAssociationIds);
+        }
+        boundAssociationIds.add(otoa.getId());
+      }
+    }
+  }
+  if (!missingPropertyIds.isEmpty()) {
+    final List<String> unboundPropertyIds=Lists.newArrayList(missingPropertyIds);
+    for (    final String fieldSetId : boundAssociationIdsByFieldSetId.keySet()) {
+      final Set<String> boundPropertyIds=boundAssociationIdsByFieldSetId.get(fieldSetId);
+      unboundPropertyIds.removeAll(boundPropertyIds);
+    }
+    for (    final String fieldSetId : boundAssociationIdsByFieldSetId.keySet()) {
       final FieldSet fieldSet=fieldSetIds.get(fieldSetId);
-      final List<OneToOneAssociation> associations=boundAssociationsByFieldSetId.get(fieldSetId);
+      final Set<String> associationIds=boundAssociationIdsByFieldSetId.get(fieldSetId);
+      final List<OneToOneAssociation> associations=Lists.newArrayList(FluentIterable.from(associationIds).transform(new Function<String,OneToOneAssociation>(){
+        @Nullable @Override public OneToOneAssociation apply(        final String propertyId){
+          return oneToOneAssociationById.get(propertyId);
+        }
+      }
+).filter(Predicates.<OneToOneAssociation>notNull()));
       associations.sort(byMemberOrderSequence());
       addPropertiesTo(fieldSet,FluentIterable.from(associations).transform(ObjectAssociation.Functions.toId()).toList());
     }
@@ -215,13 +237,11 @@
       if (oneToManyAssociationById.containsKey(id)) {
         return false;
       }
-      if (boundAssociationsByFieldSetId.containsKey(id)) {
-        final List<OneToOneAssociation> oneToOneAssociations=boundAssociationsByFieldSetId.get(id);
-        if (!oneToOneAssociations.isEmpty()) {
-          final ActionLayoutData actionLayoutData=new ActionLayoutData(actionId);
-          actionLayoutData.setPosition(ActionLayout.Position.PANEL_DROPDOWN);
-          fieldSetIds.get(id).getActions().add(actionLayoutData);
-        }
+      final Set<String> boundAssociationIds=boundAssociationIdsByFieldSetId.get(id);
+      if (boundAssociationIds != null && !boundAssociationIds.isEmpty()) {
+        final ActionLayoutData actionLayoutData=new ActionLayoutData(actionId);
+        actionLayoutData.setPosition(ActionLayout.Position.PANEL_DROPDOWN);
+        fieldSetIds.get(id).getActions().add(actionLayoutData);
         return false;
       }
       return true;
