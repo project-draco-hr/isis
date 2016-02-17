@@ -1,6 +1,6 @@
 {
   final Map<String,int[]> propertySequenceByGroup=Maps.newHashMap();
-  fcGrid.visit(new FCGrid.VisitorAdapter(){
+  fcGrid.visit(new Grid.VisitorAdapter(){
     private int collectionSequence=1;
     private int actionDomainObjectSequence=1;
     private int actionPropertyGroupSequence=1;
@@ -92,18 +92,6 @@
       final String groupName=collectionLayoutData.getId();
       final String sequence="" + collectionSequence++;
       FacetUtil.addOrReplaceFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToManyAssociation));
-      final MemberRegionOwner memberRegionOwner=collectionLayoutData.getOwner();
-      if (memberRegionOwner instanceof FCColumn) {
-        final FCColumn FCColumn=(FCColumn)memberRegionOwner;
-        final FCColumnOwner holder=FCColumn.getOwner();
-        if (holder instanceof FCTab) {
-          final FCTab FCTab=(FCTab)holder;
-          if (FCTab.getContents().size() == 1 && Strings.isNullOrEmpty(FCTab.getName())) {
-            final String collectionName=oneToManyAssociation.getName();
-            FCTab.setName(collectionName);
-          }
-        }
-      }
     }
   }
 );
