@@ -1,0 +1,12 @@
+{
+  final ScalarModel scalarModel=getScalarModel();
+  final WebMarkupContainer container=new WebMarkupContainer(ID_PROPERTY);
+  add(container);
+  final Component component=getComponentFactoryRegistry().addOrReplaceComponent(container,ComponentType.SCALAR_NAME_AND_VALUE,scalarModel);
+  final ScalarPanelAbstract paramPanel=component instanceof ScalarPanelAbstract ? (ScalarPanelAbstract)component : null;
+  propertyPanel=paramPanel;
+  if (paramPanel != null) {
+    paramPanel.setOutputMarkupId(true);
+    paramPanel.notifyOnChange(this);
+  }
+}

@@ -1,12 +1,7 @@
 {
   ObjectAdapter adapter=getObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
   for (  final ScalarModel scalarModel : propertyScalarModels.values()) {
-    final OneToOneAssociation property=scalarModel.getPropertyMemento().getProperty();
-    if (property.containsDoOpFacet(DisabledFacet.class)) {
-      continue;
-    }
-    final ObjectAdapter associate=scalarModel.getObject();
-    property.set(adapter,associate,InteractionInitiatedBy.USER);
+    scalarModel.applyValue(adapter);
   }
   final ViewModelFacet recreatableObjectFacet=adapter.getSpecification().getFacet(ViewModelFacet.class);
   if (recreatableObjectFacet != null) {

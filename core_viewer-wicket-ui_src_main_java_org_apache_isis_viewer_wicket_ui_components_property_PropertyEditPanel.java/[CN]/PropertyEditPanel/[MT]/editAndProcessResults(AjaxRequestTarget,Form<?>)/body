@@ -1,0 +1,17 @@
+{
+  permanentlyHide(ComponentType.ENTITY_ICON_AND_TITLE);
+  ObjectAdapter targetAdapter=null;
+  try {
+    targetAdapter=getModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    return editTargetAndProcessResults(targetAdapter,target,feedbackForm);
+  }
+ catch (  ConcurrencyException ex) {
+    if (targetAdapter == null) {
+      targetAdapter=getModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    }
+    final EntityPage entityPage=new EntityPage(targetAdapter,null);
+    setResponsePage(entityPage);
+    getMessageBroker().addWarning(ex.getMessage());
+    return false;
+  }
+}

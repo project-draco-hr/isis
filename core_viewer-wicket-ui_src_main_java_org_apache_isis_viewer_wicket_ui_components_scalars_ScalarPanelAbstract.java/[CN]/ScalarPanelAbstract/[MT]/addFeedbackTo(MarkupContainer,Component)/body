@@ -1,3 +1,25 @@
 {
   markupContainer.addOrReplace(new NotificationPanel(ID_FEEDBACK,component,new ComponentFeedbackMessageFilter(component)));
+  final String disableReasonIfAny=scalarModel.disable(getRendering().getWhere());
+  if (disableReasonIfAny == null && scalarModel.isViewMode()) {
+    final WebMarkupContainer editProperty=new WebMarkupContainer(ID_EDIT_PROPERTY);
+    editProperty.setOutputMarkupId(true);
+    editProperty.add(new AjaxEventBehavior("click"){
+      protected void onEvent(      AjaxRequestTarget target){
+        final ActionPrompt prompt=ActionPromptProvider.Util.getFrom(ScalarPanelAbstract.this).getActionPrompt();
+        PropertyEditPromptHeaderPanel titlePanel=new PropertyEditPromptHeaderPanel(prompt.getTitleId(),scalarModel);
+        final PropertyEditPanel propertyEditPanel=(PropertyEditPanel)getComponentFactoryRegistry().createComponent(ComponentType.PROPERTY_EDIT_PROMPT,prompt.getContentId(),scalarModel);
+        propertyEditPanel.setShowHeader(false);
+        prompt.setTitle(titlePanel,target);
+        prompt.setPanel(propertyEditPanel,target);
+        propertyEditPanel.setActionPrompt(prompt);
+        prompt.showPrompt(target);
+      }
+    }
+);
+    markupContainer.addOrReplace(editProperty);
+  }
+ else {
+    Components.permanentlyHide(markupContainer,ID_EDIT_PROPERTY);
+  }
 }

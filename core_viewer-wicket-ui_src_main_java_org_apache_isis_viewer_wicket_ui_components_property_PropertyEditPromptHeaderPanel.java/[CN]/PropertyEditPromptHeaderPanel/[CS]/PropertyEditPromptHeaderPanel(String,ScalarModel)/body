@@ -1,0 +1,11 @@
+{
+  super(id,model);
+  ObjectAdapter targetAdapter=model.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.NO_CHECK);
+  getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
+  add(new Label(ID_PROPERTY_NAME,new AbstractReadOnlyModel<String>(){
+    @Override public String getObject(){
+      return model.getPropertyMemento().getProperty().getName();
+    }
+  }
+));
+}
