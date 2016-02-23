@@ -1,6 +1,7 @@
 {
   final BS3Grid bs3Grid=new BS3Grid();
-  bs3Grid.setDomainClass(getSpecification().getCorrespondingClass());
+  final ObjectSpecification objectSpec=specificationLookup.loadSpecification(domainClass);
+  bs3Grid.setDomainClass(domainClass);
   final BS3Row headerRow=new BS3Row();
   bs3Grid.getRows().add(headerRow);
   final BS3Col headerRowCol=new BS3Col();
@@ -10,7 +11,7 @@
   headerRow.getCols().add(headerRowCol);
   final BS3Row propsRow=new BS3Row();
   bs3Grid.getRows().add(propsRow);
-  final MemberGroupLayoutFacet memberGroupLayoutFacet=getSpecification().getFacet(MemberGroupLayoutFacet.class);
+  final MemberGroupLayoutFacet memberGroupLayoutFacet=objectSpec.getFacet(MemberGroupLayoutFacet.class);
   if (memberGroupLayoutFacet != null) {
     final MemberGroupLayout.ColumnSpans columnSpans=memberGroupLayoutFacet.getColumnSpans();
     addFieldSetsToColumn(propsRow,columnSpans.getLeft(),memberGroupLayoutFacet.getLeft(),true);
@@ -21,7 +22,7 @@
     col.setUnreferencedCollections(true);
     col.setSpan(collectionSpan > 0 ? collectionSpan : 12);
     propsRow.getCols().add(col);
-    final List<OneToManyAssociation> collections=getSpecification().getCollections(Contributed.INCLUDED);
+    final List<OneToManyAssociation> collections=objectSpec.getCollections(Contributed.INCLUDED);
     for (    OneToManyAssociation collection : collections) {
       col.getCollections().add(new CollectionLayoutData(collection.getId()));
     }

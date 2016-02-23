@@ -1,5 +1,5 @@
 {
-  final Map<String,int[]> propertySequenceByGroup=Maps.newHashMap();
+  final AtomicInteger propertySequence=new AtomicInteger(0);
   fcGrid.visit(new Grid.VisitorAdapter(){
     private int collectionSequence=1;
     private int actionDomainObjectSequence=1;
@@ -74,7 +74,7 @@
       FacetUtil.addOrReplaceFacet(TypicalLengthFacetForPropertyXml.create(propertyLayoutData,oneToOneAssociation));
       final FieldSet fieldSet=propertyLayoutData.getOwner();
       final String groupName=fieldSet.getName();
-      final String sequence=nextInSequenceFor(groupName,propertySequenceByGroup);
+      final String sequence="" + (propertySequence.incrementAndGet());
       FacetUtil.addOrReplaceFacet(new MemberOrderFacetXml(groupName,sequence,translationService,oneToOneAssociation));
     }
     @Override public void visit(    final CollectionLayoutData collectionLayoutData){

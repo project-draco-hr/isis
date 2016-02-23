@@ -182,7 +182,7 @@
         }
       }
 ).filter(Predicates.<OneToOneAssociation>notNull()));
-      associations.sort(byMemberOrderSequence());
+      associations.sort(ObjectAssociation.Comparators.byMemberOrderSequence());
       addPropertiesTo(fieldSet,FluentIterable.from(associations).transform(ObjectAssociation.Functions.toId()).toList());
     }
     if (!unboundPropertyIds.isEmpty()) {
@@ -204,7 +204,7 @@
         return oneToManyAssociationById.get(collectionId);
       }
     }
-).toSortedList(byMemberOrderSequence()));
+).toSortedList(ObjectAssociation.Comparators.byMemberOrderSequence()));
     final ImmutableList<String> sortedMissingCollectionIds=FluentIterable.from(sortedCollections).transform(ObjectAssociation.Functions.toId()).toList();
     final BS3TabGroup bs3TabGroup=tabGroupForUnreferencedCollectionsRef.get();
     if (bs3TabGroup != null) {

@@ -15,7 +15,10 @@
   }
   final GridFacet facet=entityModel.getTypeOfSpecification().getFacet(GridFacet.class);
   if (facet != null) {
-    final Grid grid=facet.getGrid();
+    if (!getDeploymentType().isProduction()) {
+      getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
+    }
+    final Grid unused=facet.getGrid();
   }
   if (titleString == null) {
     final String titleStr=objectAdapter.titleString(null);
