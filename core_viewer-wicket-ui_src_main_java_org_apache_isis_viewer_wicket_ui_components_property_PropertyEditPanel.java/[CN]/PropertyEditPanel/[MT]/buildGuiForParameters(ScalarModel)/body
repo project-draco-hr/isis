@@ -6,8 +6,14 @@
     scalarModel.toEditMode();
     getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.PROPERTY_EDIT_FORM,getScalarModel());
     getComponentFactoryRegistry().addOrReplaceComponent(header,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
-    final String propertyName=getScalarModel().getPropertyMemento().getProperty().getName();
-    header.add(new Label(ID_PROPERTY_NAME,Model.of(propertyName)));
+    final OneToOneAssociation property=getScalarModel().getPropertyMemento().getProperty();
+    final String propertyName=property.getName();
+    final Label label=new Label(ID_PROPERTY_NAME,Model.of(propertyName));
+    NamedFacet namedFacet=property.getFacet(NamedFacet.class);
+    if (namedFacet != null) {
+      label.setEscapeModelStrings(namedFacet.escaped());
+    }
+    header.add(label);
   }
  catch (  final ConcurrencyException ex) {
     if (targetAdapter == null) {
