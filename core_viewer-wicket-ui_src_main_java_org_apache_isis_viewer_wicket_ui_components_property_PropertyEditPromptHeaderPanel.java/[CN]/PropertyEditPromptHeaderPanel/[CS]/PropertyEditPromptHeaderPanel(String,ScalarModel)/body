@@ -2,10 +2,17 @@
   super(id,model);
   ObjectAdapter targetAdapter=model.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.NO_CHECK);
   getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
-  add(new Label(ID_PROPERTY_NAME,new AbstractReadOnlyModel<String>(){
+  final Label label=new Label(ID_PROPERTY_NAME,new AbstractReadOnlyModel<String>(){
     @Override public String getObject(){
-      return model.getPropertyMemento().getProperty().getName();
+      final OneToOneAssociation property=model.getPropertyMemento().getProperty();
+      return property.getName();
     }
   }
-));
+);
+  final OneToOneAssociation property=model.getPropertyMemento().getProperty();
+  final NamedFacet namedFacet=property.getFacet(NamedFacet.class);
+  if (namedFacet != null) {
+    label.setEscapeModelStrings(namedFacet.escaped());
+  }
+  add(label);
 }
