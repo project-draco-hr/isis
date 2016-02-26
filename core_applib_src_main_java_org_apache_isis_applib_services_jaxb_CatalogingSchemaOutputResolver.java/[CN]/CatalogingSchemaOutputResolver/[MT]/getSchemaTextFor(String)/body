@@ -1,4 +1,21 @@
 {
   final StreamResultWithWriter streamResult=schemaResultByNamespaceUri.get(namespaceUri);
-  return streamResult != null ? streamResult.asString() : null;
+  if (streamResult == null) {
+    return null;
+  }
+  String xsd=streamResult.asString();
+  try {
+    final DocumentBuilderFactory docBuildFactory=DocumentBuilderFactory.newInstance();
+    final DocumentBuilder parser=docBuildFactory.newDocumentBuilder();
+    final Document document=parser.parse(new InputSource(new StringReader(xsd)));
+    final Element el=document.getDocumentElement();
+    replaceCommonSchemaLocationIfAny(el);
+    final Transformer transformer=TransformerFactory.newInstance().newTransformer();
+    final StringWriter writer=new StringWriter();
+    transformer.transform(new DOMSource(document),new StreamResult(writer));
+    xsd=writer.toString();
+  }
+ catch (  Exception ex) {
+  }
+  return xsd;
 }

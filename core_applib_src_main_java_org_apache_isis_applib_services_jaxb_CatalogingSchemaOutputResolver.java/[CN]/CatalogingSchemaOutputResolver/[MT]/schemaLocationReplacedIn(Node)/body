@@ -1,0 +1,14 @@
+{
+  if (node instanceof Element) {
+    final Element importEl=(Element)node;
+    final Attr schemaLocationAttr=importEl.getAttributeNode("schemaLocation");
+    if (schemaLocationAttr != null) {
+      final String value=schemaLocationAttr.getValue();
+      if (SCHEMA_LOCATION_INCORRECT.endsWith(value)) {
+        schemaLocationAttr.setValue(SCHEMA_LOCATION_CORRECT);
+        return true;
+      }
+    }
+  }
+  return false;
+}
