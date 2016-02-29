@@ -204,7 +204,7 @@
         return oneToManyAssociationById.get(collectionId);
       }
     }
-).toSortedList(ObjectAssociation.Comparators.byMemberOrderSequence()));
+).toSortedList(ObjectMember.Comparators.byMemberOrderSequence()));
     final ImmutableList<String> sortedMissingCollectionIds=FluentIterable.from(sortedCollections).transform(ObjectAssociation.Functions.toId()).toList();
     final BS3TabGroup bs3TabGroup=tabGroupForUnreferencedCollectionsRef.get();
     if (bs3TabGroup != null) {
@@ -221,7 +221,14 @@
   final List<String> surplusActionIds=actionIdTuple.first;
   final List<String> possiblyMissingActionIds=actionIdTuple.second;
   final List<String> associatedActionIds=Lists.newArrayList();
-  FluentIterable.from(possiblyMissingActionIds).forEach(new Consumer<String>(){
+  List<ObjectAction> sortedPossiblyMissingActions=Lists.newArrayList(FluentIterable.from(possiblyMissingActionIds).transform(new Function<String,ObjectAction>(){
+    @Nullable @Override public ObjectAction apply(    @Nullable final String actionId){
+      return objectActionById.get(actionId);
+    }
+  }
+).toSortedList(ObjectMember.Comparators.byMemberOrderSequence()));
+  List<String> sortedPossiblyMissingActionIds=FluentIterable.from(sortedPossiblyMissingActions).transform(ObjectMember.Functions.getId()).toList();
+  FluentIterable.from(sortedPossiblyMissingActionIds).forEach(new Consumer<String>(){
     @Override public void accept(    final String actionId){
       final ObjectAction oa=objectActionById.get(actionId);
       final MemberOrderFacet memberOrderFacet=oa.getFacet(MemberOrderFacet.class);
@@ -275,7 +282,7 @@
     }
   }
 );
-  final List<String> missingActionIds=Lists.newArrayList(possiblyMissingActionIds);
+  final List<String> missingActionIds=Lists.newArrayList(sortedPossiblyMissingActionIds);
   missingActionIds.removeAll(associatedActionIds);
   for (  String surplusActionId : surplusActionIds) {
     actionLayoutDataById.get(surplusActionId).setMetadataError("No such action");
@@ -283,7 +290,7 @@
   if (!missingActionIds.isEmpty()) {
     final BS3Col bs3Col=colForUnreferencedActionsRef.get();
     if (bs3Col != null) {
-      addActionsTo(bs3Col,missingActionIds);
+      addActionsTo(bs3Col,missingActionIds,actionLayoutDataById);
     }
  else {
       final FieldSet fieldSet=fieldSetForUnreferencedActionsRef.get();
