@@ -1,4 +1,10 @@
 {
+  final StringBuilder buf=new StringBuilder();
   final Size size=getSize() != null ? getSize() : Size.MD;
-  return "col-" + size.toCssClassFragment() + "-"+ getSpan();
+  SizeSpan.with(size,getSpan()).appendCssClassFragment(buf);
+  for (  SizeSpan sizeSpan : getSizeSpans()) {
+    sizeSpan.appendCssClassFragment(buf);
+  }
+  buf.append((getCssClass() != null ? " " + getCssClass() : ""));
+  return buf.toString();
 }
