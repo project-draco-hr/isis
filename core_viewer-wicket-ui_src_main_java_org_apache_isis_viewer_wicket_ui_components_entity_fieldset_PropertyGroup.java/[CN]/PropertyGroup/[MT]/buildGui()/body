@@ -7,7 +7,12 @@
   final List<LinkAndLabel> memberGroupActions=Lists.newArrayList();
   final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
   div.add(propertyRv);
-  final ImmutableList<ObjectAssociation> visibleAssociations=FluentIterable.from(properties).transform(new Function<PropertyLayoutData,ObjectAssociation>(){
+  final ImmutableList<ObjectAssociation> visibleAssociations=FluentIterable.from(properties).filter(new Predicate<PropertyLayoutData>(){
+    @Override public boolean apply(    final PropertyLayoutData propertyLayoutData){
+      return propertyLayoutData.getMetadataError() == null;
+    }
+  }
+).transform(new Function<PropertyLayoutData,ObjectAssociation>(){
     @Override public ObjectAssociation apply(    final PropertyLayoutData propertyLayoutData){
       return adapter.getSpecification().getAssociation(propertyLayoutData.getId());
     }
