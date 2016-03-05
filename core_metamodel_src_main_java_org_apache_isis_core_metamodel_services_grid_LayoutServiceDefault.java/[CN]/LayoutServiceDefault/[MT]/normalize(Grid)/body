@@ -1,0 +1,13 @@
+{
+  if (grid.isNormalized()) {
+    return grid;
+  }
+  final Class<?> domainClass=grid.getDomainClass();
+  for (  GridImplementationService gridImplementationService : gridNormalizerServices()) {
+    gridImplementationService.normalize(grid,domainClass);
+  }
+  final String tnsAndSchemaLocation=tnsAndSchemaLocation(grid);
+  grid.setTnsAndSchemaLocation(tnsAndSchemaLocation);
+  grid.setNormalized(true);
+  return grid;
+}

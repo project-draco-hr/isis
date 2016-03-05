@@ -1,0 +1,31 @@
+{
+  final Collection<ObjectSpecification> allSpecs=specificationLoader.allSpecifications();
+  final Collection<ObjectSpecification> domainObjectSpecs=Collections2.filter(allSpecs,new Predicate<ObjectSpecification>(){
+    @Override public boolean apply(    final ObjectSpecification input){
+      return !input.isAbstract() && (input.containsDoOpFacet(JdoPersistenceCapableFacet.class) || input.containsDoOpFacet(ViewModelFacet.class));
+    }
+  }
+);
+  try {
+    final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+    final ZipOutputStream zos=new ZipOutputStream(baos);
+    final OutputStreamWriter writer=new OutputStreamWriter(zos);
+    for (    final ObjectSpecification objectSpec : domainObjectSpecs) {
+      final Class<?> domainClass=objectSpec.getCorrespondingClass();
+      final Grid grid=layoutService.toGrid(domainClass,style);
+      if (grid != null) {
+        zos.putNextEntry(new ZipEntry(zipEntryNameFor(objectSpec)));
+        final String xml=jaxbService.toXml(grid,ImmutableMap.<String,Object>of(Marshaller.JAXB_SCHEMA_LOCATION,grid.getTnsAndSchemaLocation()));
+        writer.write(xml);
+        writer.flush();
+        zos.closeEntry();
+      }
+    }
+    writer.close();
+    final String fileName="layouts." + style.name().toLowerCase() + ".zip";
+    return new Blob(fileName,mimeTypeApplicationZip,baos.toByteArray());
+  }
+ catch (  final IOException ex) {
+    throw new FatalException("Unable to create zip of layouts",ex);
+  }
+}
