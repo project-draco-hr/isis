@@ -14,7 +14,9 @@
     }
   }
  else {
-    container.warnUser("Grid metadata errors; check the error log");
+    if (!deploymentCategory.isProduction()) {
+      container.warnUser("Grid metadata errors for " + grid.getDomainClass().getName() + "; check the error log");
+    }
     LOG.error("Grid metadata errors:\n\n" + jaxbService.toXml(grid) + "\n\n");
   }
 }
