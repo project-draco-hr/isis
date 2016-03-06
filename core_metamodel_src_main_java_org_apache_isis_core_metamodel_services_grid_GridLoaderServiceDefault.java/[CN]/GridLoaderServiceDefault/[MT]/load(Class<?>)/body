@@ -1,0 +1,49 @@
+{
+  final String resourceName=resourceNameFor(domainClass);
+  final String xml;
+  try {
+    xml=resourceContentOf(domainClass,resourceName);
+  }
+ catch (  IOException|IllegalArgumentException ex) {
+    if (LOG.isDebugEnabled()) {
+      final String message=String.format("Failed to locate file %s (relative to %s.class); ex: %s)",resourceName,domainClass.getName(),ex.getMessage());
+      LOG.debug(message);
+    }
+    return null;
+  }
+  if (!deploymentCategory.isProduction()) {
+    final Grid grid=pageByXml.get(xml);
+    if (grid != null) {
+      return grid;
+    }
+    final String badXml=badXmlByClass.get(domainClass);
+    if (badXml != null) {
+      if (Objects.equals(xml,badXml)) {
+        return null;
+      }
+ else {
+        badXmlByClass.remove(domainClass);
+      }
+    }
+  }
+  try {
+    final JAXBContext context=JAXBContext.newInstance(pageImplementations.toArray(new Class[0]));
+    final Grid grid=(Grid)jaxbService.fromXml(context,xml);
+    grid.setDomainClass(domainClass);
+    if (!deploymentCategory.isProduction()) {
+      pageByXml.put(xml,grid);
+    }
+    return grid;
+  }
+ catch (  Exception ex) {
+    if (!deploymentCategory.isProduction()) {
+      badXmlByClass.put(domainClass,xml);
+    }
+    final String message="Failed to parse " + resourceName + " file ("+ ex.getMessage()+ ")";
+    if (deploymentCategory.isPrototyping()) {
+      container.warnUser(message);
+    }
+    LOG.warn(message);
+    return null;
+  }
+}

@@ -1,0 +1,20 @@
+{
+  final List<String> parts=Lists.newArrayList();
+  parts.add(COMMON_TNS);
+  parts.add(COMMON_SCHEMA_LOCATION);
+  FluentIterable.from(gridSystemServices).filter(new Predicate<GridSystemService>(){
+    @Override public boolean apply(    final GridSystemService gridSystemService){
+      final Class<? extends Grid> gridImpl=gridSystemService.gridImplementation();
+      return gridImpl.isAssignableFrom(grid.getClass());
+    }
+  }
+).transform(new Function<GridSystemService,Void>(){
+    @Nullable @Override public Void apply(    final GridSystemService gridSystemService){
+      parts.add(gridSystemService.tns());
+      parts.add(gridSystemService.schemaLocation());
+      return null;
+    }
+  }
+);
+  return Joiner.on(" ").join(parts);
+}
