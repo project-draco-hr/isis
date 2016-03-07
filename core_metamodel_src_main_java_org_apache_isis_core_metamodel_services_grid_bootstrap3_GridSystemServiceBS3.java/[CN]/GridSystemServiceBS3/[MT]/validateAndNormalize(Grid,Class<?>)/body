@@ -186,7 +186,7 @@
         }
       }
 ).filter(Predicates.<OneToOneAssociation>notNull()));
-      associations.sort(ObjectAssociation.Comparators.byMemberOrderSequence());
+      Collections.sort(associations,ObjectMember.Comparators.byMemberOrderSequence());
       addPropertiesTo(fieldSet,FluentIterable.from(associations).transform(ObjectAssociation.Functions.toId()).toList(),propertyLayoutDataById);
     }
     if (!unboundPropertyIds.isEmpty()) {
@@ -232,16 +232,16 @@
   }
 ).toSortedList(ObjectMember.Comparators.byMemberOrderSequence()));
   List<String> sortedPossiblyMissingActionIds=FluentIterable.from(sortedPossiblyMissingActions).transform(ObjectMember.Functions.getId()).toList();
-  FluentIterable.from(sortedPossiblyMissingActionIds).forEach(new Consumer<String>(){
-    @Override public void accept(    final String actionId){
+  FluentIterable.from(sortedPossiblyMissingActionIds).transform(new Function<String,Void>(){
+    @Nullable @Override public Void apply(    @Nullable final String actionId){
       final ObjectAction oa=objectActionById.get(actionId);
       final MemberOrderFacet memberOrderFacet=oa.getFacet(MemberOrderFacet.class);
       if (memberOrderFacet == null) {
-        return;
+        return null;
       }
       final String memberOrderName=memberOrderFacet.name();
       if (memberOrderName == null) {
-        return;
+        return null;
       }
       final String id=asId(memberOrderName);
       if (oneToOneAssociationById.containsKey(id)) {
@@ -263,7 +263,7 @@
           actionLayoutData.setPosition(position);
           addActionTo(owner,actionLayoutData);
         }
-        return;
+        return null;
       }
       if (oneToManyAssociationById.containsKey(id)) {
         associatedActionIds.add(actionId);
@@ -272,7 +272,7 @@
           final ActionLayoutData actionLayoutData=new ActionLayoutData(actionId);
           addActionTo(collectionLayoutData,actionLayoutData);
         }
-        return;
+        return null;
       }
       final Set<String> boundAssociationIds=boundAssociationIdsByFieldSetId.get(id);
       if (boundAssociationIds != null && !boundAssociationIds.isEmpty()) {
@@ -281,8 +281,9 @@
         actionLayoutData.setPosition(ActionLayout.Position.PANEL_DROPDOWN);
         final FieldSet fieldSet=fieldSetIds.get(id);
         addActionTo(fieldSet,actionLayoutData);
-        return;
+        return null;
       }
+      return null;
     }
   }
 );
