@@ -1,18 +1,10 @@
 {
-  final String resourceName=resourceNameFor(domainClass);
-  final String xml;
-  try {
-    xml=resourceContentOf(domainClass,resourceName);
-  }
- catch (  IOException|IllegalArgumentException ex) {
-    if (LOG.isDebugEnabled()) {
-      final String message=String.format("Failed to locate file %s (relative to %s.class); ex: %s)",resourceName,domainClass.getName(),ex.getMessage());
-      LOG.debug(message);
-    }
+  final String xml=loadXml(domainClass);
+  if (xml == null) {
     return null;
   }
-  if (!deploymentCategory.isProduction()) {
-    final Grid grid=pageByXml.get(xml);
+  if (supportsReloading()) {
+    final Grid grid=gridByXml.get(xml);
     if (grid != null) {
       return grid;
     }
@@ -30,17 +22,18 @@
     final JAXBContext context=JAXBContext.newInstance(pageImplementations.toArray(new Class[0]));
     final Grid grid=(Grid)jaxbService.fromXml(context,xml);
     grid.setDomainClass(domainClass);
-    if (!deploymentCategory.isProduction()) {
-      pageByXml.put(xml,grid);
+    if (supportsReloading()) {
+      gridByXml.put(xml,grid);
     }
     return grid;
   }
  catch (  Exception ex) {
-    if (!deploymentCategory.isProduction()) {
+    if (supportsReloading()) {
       badXmlByClass.put(domainClass,xml);
     }
+    final String resourceName=resourceNameFor(domainClass);
     final String message="Failed to parse " + resourceName + " file ("+ ex.getMessage()+ ")";
-    if (deploymentCategory.isPrototyping()) {
+    if (supportsReloading()) {
       container.warnUser(message);
     }
     LOG.warn(message);
