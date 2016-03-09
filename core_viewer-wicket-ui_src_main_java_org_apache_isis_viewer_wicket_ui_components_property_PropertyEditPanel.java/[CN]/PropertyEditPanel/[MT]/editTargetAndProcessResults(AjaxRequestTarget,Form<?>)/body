@@ -16,9 +16,12 @@
   }
   try {
     ObjectAdapter adapter=getScalarModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
-    getScalarModel().applyValue(adapter);
+    final ObjectAdapter objectAdapter=getScalarModel().applyValue(adapter);
+    if (objectAdapter != adapter) {
+      getModel().getParentObjectAdapterMemento().setAdapter(adapter);
+    }
     getTransactionManager().flushTransaction();
-    final EntityPage entityPage=new EntityPage(adapter,null);
+    final EntityPage entityPage=new EntityPage(objectAdapter,null);
     setResponsePage(entityPage);
     return true;
   }

@@ -1,8 +1,15 @@
 {
   final OneToOneAssociation property=getPropertyMemento().getProperty();
-  if (property.containsDoOpFacet(DisabledFacet.class)) {
-    return;
-  }
   final ObjectAdapter associate=getObject();
   property.set(adapter,associate,InteractionInitiatedBy.USER);
+  final ViewModelFacet recreatableObjectFacet=adapter.getSpecification().getFacet(ViewModelFacet.class);
+  if (recreatableObjectFacet != null) {
+    final Object viewModel=adapter.getObject();
+    final boolean cloneable=recreatableObjectFacet.isCloneable(viewModel);
+    if (cloneable) {
+      final Object newViewModel=recreatableObjectFacet.clone(viewModel);
+      adapter=getAdapterManager().adapterFor(newViewModel);
+    }
+  }
+  return adapter;
 }
