@@ -1,0 +1,16 @@
+{
+  Map map=new HashMap(){
+{
+      put("isis.services.container.disableAutoFlush","false");
+    }
+  }
+;
+  repositoryService.init(map);
+  context.checking(new Expectations(){
+{
+      oneOf(mockTransactionService).flushTransaction();
+    }
+  }
+);
+  repositoryService.allMatches(null);
+}
