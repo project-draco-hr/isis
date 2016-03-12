@@ -7,26 +7,32 @@
     if (currentInvocation == null) {
       return;
     }
-    IdentifiedHolder action=currentInvocation.getAction();
-    final PublishedActionFacet publishedActionFacet=action.getFacet(PublishedActionFacet.class);
+    ObjectAction currentAction=currentInvocation.getAction();
+    IdentifiedHolder currentInvocationHolder=currentInvocation.getIdentifiedHolder();
+    final PublishedActionFacet publishedActionFacet=currentInvocationHolder.getFacet(PublishedActionFacet.class);
     if (publishedActionFacet == null) {
       return;
     }
     final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
-    final RootOid adapterOid=(RootOid)currentInvocation.getTarget().getOid();
+    final ObjectAdapter targetAdapter=currentInvocation.getTarget();
+    final RootOid adapterOid=(RootOid)targetAdapter.getOid();
     final String oidStr=getOidMarshaller().marshal(adapterOid);
-    final Identifier actionIdentifier=action.getIdentifier();
+    final Identifier actionIdentifier=currentAction.getIdentifier();
     final String title=oidStr + ": " + actionIdentifier.toNameParmsIdentityString();
     final Command command=currentInvocation.getCommand();
-    final String targetClass=command.getTargetClass();
-    final String targetAction=command.getTargetAction();
-    final Bookmark target=command.getTarget();
-    final String memberIdentifier=command.getMemberIdentifier();
+    final String commandTargetClass=command.getTargetClass();
+    final String commandTargetAction=command.getTargetAction();
+    final Bookmark commandTarget=command.getTarget();
+    final String commandMemberIdentifier=command.getMemberIdentifier();
+    final String actionTargetClass=CommandUtil.targetClassNameFor(targetAdapter);
+    final String actionTargetAction=CommandUtil.targetActionNameFor(currentAction);
+    final Bookmark actionTarget=CommandUtil.bookmarkFor(targetAdapter);
+    final String actionMemberIdentifier=CommandUtil.actionIdentifierFor(currentAction);
     final List<String> parameterNames;
     final List<Class<?>> parameterTypes;
     final Class<?> returnType;
-    if (action instanceof FacetedMethod) {
-      final FacetedMethod facetedMethod=(FacetedMethod)action;
+    if (currentInvocationHolder instanceof FacetedMethod) {
+      final FacetedMethod facetedMethod=(FacetedMethod)currentInvocationHolder;
       returnType=facetedMethod.getType();
       final List<FacetedMethodParameter> parameters=facetedMethod.getParameters();
       parameterNames=immutableList(Iterables.transform(parameters,FacetedMethodParameter.Functions.GET_NAME));
@@ -37,7 +43,7 @@
       parameterTypes=null;
       returnType=null;
     }
-    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,targetClass,targetAction,target,memberIdentifier,parameterNames,parameterTypes,returnType);
+    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
     publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
   }
   finally {
