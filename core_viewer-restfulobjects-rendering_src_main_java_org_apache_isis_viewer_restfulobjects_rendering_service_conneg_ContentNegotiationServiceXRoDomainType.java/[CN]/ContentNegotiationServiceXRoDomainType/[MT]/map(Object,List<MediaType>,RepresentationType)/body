@@ -1,6 +1,11 @@
 {
-  final Iterable<ContentMappingService> contentMappingServices=container.lookupServices(ContentMappingService.class);
-  for (  ContentMappingService contentMappingService : contentMappingServices) {
+  for (  org.apache.isis.applib.conmap.ContentMappingService contentMappingService : contentMappingServices) {
+    Object mappedObject=contentMappingService.map(domainObject,acceptableMediaTypes);
+    if (mappedObject != null) {
+      return mappedObject;
+    }
+  }
+  for (  ContentMappingService contentMappingService : legacyContentMappingServices) {
     Object mappedObject=contentMappingService.map(domainObject,acceptableMediaTypes,representationType);
     if (mappedObject != null) {
       return mappedObject;
