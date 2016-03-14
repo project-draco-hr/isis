@@ -1,0 +1,17 @@
+{
+  ApplicationFeatureType.ensurePackageOrClass(this);
+  if (type == ApplicationFeatureType.CLASS) {
+    return ApplicationFeatureId.newPackage(getPackageName());
+  }
+ else {
+    final String packageName=getPackageName();
+    if (!packageName.contains(".")) {
+      return null;
+    }
+    final Iterable<String> split=Splitter.on(".").split(packageName);
+    final List<String> parts=Lists.newArrayList(split);
+    parts.remove(parts.size() - 1);
+    final String parentPackageName=Joiner.on(".").join(parts);
+    return newPackage(parentPackageName);
+  }
+}
