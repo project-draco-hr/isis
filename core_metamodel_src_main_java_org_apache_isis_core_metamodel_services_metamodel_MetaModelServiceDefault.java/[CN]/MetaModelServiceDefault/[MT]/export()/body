@@ -1,0 +1,34 @@
+{
+  final Collection<ObjectSpecification> specifications=specificationLookup.allSpecifications();
+  final List<DomainMember> rows=Lists.newArrayList();
+  for (  final ObjectSpecification spec : specifications) {
+    if (exclude(spec)) {
+      continue;
+    }
+    final List<ObjectAssociation> properties=spec.getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.PROPERTIES);
+    for (    final ObjectAssociation property : properties) {
+      final OneToOneAssociation otoa=(OneToOneAssociation)property;
+      if (exclude(otoa)) {
+        continue;
+      }
+      rows.add(new DomainMemberDefault(spec,otoa));
+    }
+    final List<ObjectAssociation> associations=spec.getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.COLLECTIONS);
+    for (    final ObjectAssociation collection : associations) {
+      final OneToManyAssociation otma=(OneToManyAssociation)collection;
+      if (exclude(otma)) {
+        continue;
+      }
+      rows.add(new DomainMemberDefault(spec,otma));
+    }
+    final List<ObjectAction> actions=spec.getObjectActions(Contributed.INCLUDED);
+    for (    final ObjectAction action : actions) {
+      if (exclude(action)) {
+        continue;
+      }
+      rows.add(new DomainMemberDefault(spec,action));
+    }
+  }
+  Collections.sort(rows);
+  return rows;
+}
