@@ -1,5 +1,7 @@
 {
   super(id,model);
   this.underlyingIdPrefix=ComponentType.COLLECTION_CONTENTS.toString();
-  selectorHelper=new CollectionSelectorHelper(model,getComponentFactoryRegistry(),model.<String>getSessionAttribute(EntityCollectionModel.SESSION_ATTRIBUTE_SELECTED_ITEM));
+  final EntityModel entityModel=model.getEntityModel();
+  final ScopedSessionAttribute<String> selectedItemSessionAttribute=entityModel != null ? entityModel.<String>getSessionAttribute(EntityCollectionModel.SESSION_ATTRIBUTE_SELECTED_ITEM) : null;
+  selectorHelper=new CollectionSelectorHelper(model,getComponentFactoryRegistry(),selectedItemSessionAttribute);
 }

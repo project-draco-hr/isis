@@ -1,0 +1,14 @@
+{
+  if (component == null) {
+    return null;
+  }
+  String hintKey=hintPathFor(component) + "-" + attributeName;
+  final ScopedSessionAttribute<String> sessionAttribute=getSessionAttribute(attributeName);
+  if (sessionAttribute != null) {
+    final String sessionHint=sessionAttribute.get();
+    if (sessionHint != null) {
+      return sessionHint;
+    }
+  }
+  return hints.get(hintKey);
+}

@@ -1,3 +1,9 @@
 {
-  this(id,collectionModel,new EntityModel(collectionModel.getParentObjectAdapterMemento()),collectionModel.getCollectionMemento().getCollection());
+  super(id,collectionModel);
+  final List<LinkAndLabel> entityActionLinks=Lists.newArrayList();
+  final OneToManyAssociation otma=collectionModel.getCollectionMemento().getCollection();
+  final EntityModel entityModel=collectionModel.getEntityModel();
+  final List<ObjectAction> associatedActions=EntityActionUtil.getObjectActionsForAssociation(entityModel,otma,getDeploymentType());
+  entityActionLinks.addAll(EntityActionUtil.asLinkAndLabelsForAdditionalLinksPanel(entityModel,associatedActions));
+  collectionModel.addEntityActions(entityActionLinks);
 }
