@@ -11,13 +11,9 @@
     return;
   }
   String viewStr=uiHintContainer.getHint(selectorDropdownPanel,UIHINT_VIEW);
-  List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
   if (viewStr != null) {
     try {
-      int view=Integer.parseInt(viewStr);
-      if (view >= 0 && view < componentFactories.size()) {
-        underlyingViewNum=view;
-      }
+      underlyingViewNum=selectorHelper.lookup(viewStr);
       final EntityCollectionModel dummyModel=getModel().asDummy();
       for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
         final Component component=underlyingViews[i];

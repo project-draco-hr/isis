@@ -1,28 +1,24 @@
 {
-  final Integer sessionAttribute=selectedItemSessionAttribute.get();
+  final String sessionAttribute=selectedItemSessionAttribute.get();
   if (sessionAttribute != null) {
     return sessionAttribute;
   }
+  final CollectionLayoutData layoutData=this.model.getLayoutData();
+  if (layoutData != null) {
+    final String defaultView=layoutData.getDefaultView();
+    if (defaultView != null) {
+      return defaultView;
+    }
+  }
   if (hasDefaultViewFacet(model)) {
     DefaultViewFacet defaultViewFacet=model.getCollectionMemento().getCollection().getFacet(DefaultViewFacet.class);
-    for (int i=0; i < componentFactories.size(); i++) {
-      final String componentName=componentFactories.get(i).getName();
+    for (    ComponentFactory componentFactory : componentFactories) {
+      final String componentName=componentFactory.getName();
       final String viewName=defaultViewFacet.value();
       if (componentName.equalsIgnoreCase(viewName)) {
-        return i;
+        return componentName;
       }
     }
   }
-  if (!hasRenderEagerlyFacet(model)) {
-    for (int i=0; i < componentFactories.size(); i++) {
-      if (componentFactories.get(i) instanceof CollectionContentsAsUnresolvedPanelFactory) {
-        return i;
-      }
-    }
-  }
-  int ajaxTableIdx=findAjaxTable(componentFactories);
-  if (ajaxTableIdx >= 0) {
-    return ajaxTableIdx;
-  }
-  return 0;
+  return hasRenderEagerlyFacet(model) ? CollectionContentsAsAjaxTablePanelFactory.NAME : CollectionContentsHiddenPanelFactory.NAME;
 }

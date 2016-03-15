@@ -13,6 +13,7 @@
       CssClassAppender.appendCssClassTo(div,cssClass);
     }
     final CollectionPanel collectionPanel=new CollectionPanel(ID_COLLECTION,entityCollectionModel);
+    div.addOrReplace(collectionPanel);
     Label labelComponent=collectionPanel.createLabel(ID_COLLECTION_NAME,association.getName());
     final NamedFacet namedFacet=association.getFacet(NamedFacet.class);
     labelComponent.setEscapeModelStrings(namedFacet == null || namedFacet.escaped());
@@ -31,14 +32,13 @@
  else {
       CollectionSelectorPanel selectorDropdownPanel=new CollectionSelectorPanel(ID_SELECTOR_DROPDOWN,entityCollectionModel,selectedItemSessionAttribute);
       final Model<ComponentFactory> componentFactoryModel=new Model<>();
-      final int selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
-      ComponentFactory selectedComponentFactory=componentFactories.get(selected);
+      final String selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanel);
+      ComponentFactory selectedComponentFactory=selectorHelper.find(selected);
       componentFactoryModel.setObject(selectedComponentFactory);
       this.setOutputMarkupId(true);
       div.addOrReplace(selectorDropdownPanel);
       collectionPanel.setSelectorDropdownPanel(selectorDropdownPanel);
     }
-    div.addOrReplace(collectionPanel);
   }
   return div;
 }

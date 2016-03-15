@@ -3,19 +3,12 @@
   if (hintContainer != null) {
     String viewStr=hintContainer.getHint(component,UIHINT_EVENT_VIEW_KEY);
     if (viewStr != null) {
-      try {
-        int view=Integer.parseInt(viewStr);
-        if (view >= 0 && view < componentFactories.size()) {
-          return view;
-        }
-      }
- catch (      NumberFormatException ex) {
-      }
+      return viewStr;
     }
   }
-  int initialFactory=determineInitialFactory();
+  String initialFactory=determineInitialFactory();
   if (hintContainer != null) {
-    hintContainer.setHint(component,UIHINT_EVENT_VIEW_KEY,"" + initialFactory);
+    hintContainer.setHint(component,UIHINT_EVENT_VIEW_KEY,initialFactory);
   }
   return initialFactory;
 }

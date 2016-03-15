@@ -1,14 +1,19 @@
 {
   final EntityCollectionModel model=getModel();
   final CollectionSelectorPanel selectorDropdownPanelIfAny=CollectionSelectorProvider.Util.getCollectionSelectorProvider(this);
-  final int selected=selectorDropdownPanelIfAny != null ? selectorHelper.honourViewHintElseDefault(selectorDropdownPanelIfAny) : 0;
+  final String selected=selectorDropdownPanelIfAny != null ? selectorHelper.honourViewHintElseDefault(selectorDropdownPanelIfAny) : CollectionContentsHiddenPanelFactory.NAME;
   final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
   int i=0;
+  int selectedIdx=0;
   underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];
   final EntityCollectionModel emptyModel=model.asDummy();
   for (  ComponentFactory componentFactory : componentFactories) {
     final String underlyingId=underlyingIdPrefix + "-" + i;
-    Component underlyingView=componentFactory.createComponent(underlyingId,i == selected ? model : emptyModel);
+    final boolean isSelected=selected.equals(componentFactory.getName());
+    final Component underlyingView=componentFactory.createComponent(underlyingId,isSelected ? model : emptyModel);
+    if (isSelected) {
+      selectedIdx=i;
+    }
     underlyingViews[i++]=underlyingView;
     this.addOrReplace(underlyingView);
   }
@@ -21,7 +26,7 @@
   for (i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
     Component component=underlyingViews[i];
     if (component != null) {
-      if (i != selected) {
+      if (i != selectedIdx) {
         component.add(new CssClassAppender(INVISIBLE_CLASS));
       }
  else {
