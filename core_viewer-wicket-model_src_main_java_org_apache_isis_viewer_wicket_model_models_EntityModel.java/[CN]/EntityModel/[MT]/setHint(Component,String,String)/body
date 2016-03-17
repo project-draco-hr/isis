@@ -1,18 +1,4 @@
 {
-  if (component == null) {
-    return;
-  }
-  final String scopeKey=UiHintContainer.Util.hintPathFor(component);
-  String hintKey=scopeKey + "-" + attributeName;
-  if (attributeValue != null) {
-    hints.put(hintKey,attributeValue);
-  }
- else {
-    hints.remove(hintKey);
-  }
-  ScopedSessionAttribute scopedSessionAttribute=getSessionAttribute(attributeName);
-  if (scopedSessionAttribute == null) {
-    scopedSessionAttribute=ScopedSessionAttribute.create(this,scopeKey,attributeName);
-  }
-  scopedSessionAttribute.set(attributeValue);
+  ComponentKey componentKey=componentKeyFor(component,keyName);
+  componentKey.set(hintValue);
 }

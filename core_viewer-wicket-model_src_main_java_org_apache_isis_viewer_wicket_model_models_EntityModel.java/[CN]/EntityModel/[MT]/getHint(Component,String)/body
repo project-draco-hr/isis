@@ -1,14 +1,7 @@
 {
-  if (component == null) {
-    return null;
-  }
-  String hintKey=UiHintContainer.Util.hintPathFor(component) + "-" + attributeName;
-  final ScopedSessionAttribute<String> sessionAttribute=getSessionAttribute(attributeName);
+  final ComponentKey<String> sessionAttribute=componentKeyFor(component,keyName);
   if (sessionAttribute != null) {
-    final String sessionHint=sessionAttribute.get();
-    if (sessionHint != null) {
-      return sessionHint;
-    }
+    return sessionAttribute.get();
   }
-  return hints.get(hintKey);
+  return null;
 }
