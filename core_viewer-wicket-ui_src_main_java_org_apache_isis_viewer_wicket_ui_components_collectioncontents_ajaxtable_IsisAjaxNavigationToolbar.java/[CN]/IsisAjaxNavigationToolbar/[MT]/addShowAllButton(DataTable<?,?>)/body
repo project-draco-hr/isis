@@ -3,7 +3,9 @@
   ((MarkupContainer)get("span")).add(new AjaxLink(ID_SHOW_ALL){
     @Override public void onClick(    AjaxRequestTarget target){
       showAllItemsOn(table);
-      getUiHintContainer().setHint(table,HINT_KEY_SHOW_ALL,"true");
+      final UiHintContainer hintContainer=getUiHintContainer();
+      hintContainer.setHint(table,HINT_KEY_SHOW_ALL,"true");
+      send(getPage(),Broadcast.EXACT,new IsisUiHintEvent(hintContainer,target));
       target.add(table);
     }
   }
