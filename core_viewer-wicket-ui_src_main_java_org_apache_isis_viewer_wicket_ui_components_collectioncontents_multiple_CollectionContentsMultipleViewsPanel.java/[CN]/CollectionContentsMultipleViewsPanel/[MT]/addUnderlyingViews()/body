@@ -3,7 +3,12 @@
   final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
   final CollectionSelectorPanel selectorDropdownPanelIfAny=CollectionSelectorProvider.Util.getCollectionSelectorProvider(this);
   final String selected;
-  selected=selectorDropdownPanelIfAny != null ? selectorHelper.honourViewHintElseDefault(selectorDropdownPanelIfAny) : componentFactories.get(0).getName();
+  if (selectorDropdownPanelIfAny != null) {
+    selected=selectorHelper.honourViewHintElseDefault(selectorDropdownPanelIfAny);
+  }
+ else {
+    selected=componentFactories.get(0).getName();
+  }
   int i=0;
   int selectedIdx=0;
   underlyingViews=new Component[MAX_NUM_UNDERLYING_VIEWS];

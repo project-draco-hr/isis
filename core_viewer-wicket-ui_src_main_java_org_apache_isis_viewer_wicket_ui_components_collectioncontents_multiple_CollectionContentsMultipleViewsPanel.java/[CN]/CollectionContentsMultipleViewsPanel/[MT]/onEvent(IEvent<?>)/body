@@ -4,33 +4,35 @@
   if (uiHintEvent == null) {
     return;
   }
-  final UiHintContainer uiHintContainer=uiHintEvent.getUiHintContainer();
-  int underlyingViewNum=0;
   final CollectionSelectorPanel selectorDropdownPanel=CollectionSelectorProvider.Util.getCollectionSelectorProvider(this);
   if (selectorDropdownPanel == null) {
     return;
   }
-  String viewStr=uiHintContainer.getHint(selectorDropdownPanel,UIHINT_VIEW);
-  if (viewStr != null) {
-    try {
-      underlyingViewNum=selectorHelper.lookup(viewStr);
-      final EntityCollectionModel dummyModel=getModel().asDummy();
-      for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
-        final Component component=underlyingViews[i];
-        if (component == null) {
-          continue;
-        }
-        final boolean isSelected=i == underlyingViewNum;
-        applyCssVisibility(component,isSelected);
-        component.setDefaultModel(isSelected ? getModel() : dummyModel);
-      }
-      this.selectedComponent=underlyingViews[underlyingViewNum];
-      final AjaxRequestTarget target=uiHintEvent.getTarget();
-      if (target != null) {
-        target.add(this,selectorDropdownPanel);
-      }
+  String viewStr=null;
+  final UiHintContainer uiHintContainer=uiHintEvent.getUiHintContainer();
+  if (uiHintContainer != null) {
+    viewStr=uiHintContainer.getHint(selectorDropdownPanel,UIHINT_VIEW);
+  }
+  if (viewStr == null) {
+    viewStr=uiHintEvent.hintFor(selectorDropdownPanel,UIHINT_VIEW);
+  }
+  if (viewStr == null) {
+    return;
+  }
+  int underlyingViewNum=selectorHelper.lookup(viewStr);
+  final EntityCollectionModel dummyModel=getModel().asDummy();
+  for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
+    final Component component=underlyingViews[i];
+    if (component == null) {
+      continue;
     }
- catch (    NumberFormatException ex) {
-    }
+    final boolean isSelected=i == underlyingViewNum;
+    applyCssVisibility(component,isSelected);
+    component.setDefaultModel(isSelected ? getModel() : dummyModel);
+  }
+  this.selectedComponent=underlyingViews[underlyingViewNum];
+  final AjaxRequestTarget target=uiHintEvent.getTarget();
+  if (target != null) {
+    target.add(this,selectorDropdownPanel);
   }
 }

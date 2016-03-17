@@ -2,5 +2,8 @@
   this.model=model;
   this.componentFactories=locateComponentFactories(componentFactoryRegistry);
   this.selectedItemSessionAttribute=selectedItemSessionAttribute != null ? selectedItemSessionAttribute : ComponentKey.<String>noop();
-  model.getEntityModel().putSessionAttribute(selectedItemSessionAttribute);
+  final EntityModel entityModel=model.getEntityModel();
+  if (entityModel != null) {
+    entityModel.putSessionAttribute(this.selectedItemSessionAttribute);
+  }
 }
