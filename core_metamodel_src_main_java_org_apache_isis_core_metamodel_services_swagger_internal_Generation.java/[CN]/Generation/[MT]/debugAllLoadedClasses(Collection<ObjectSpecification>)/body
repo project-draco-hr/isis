@@ -1,0 +1,10 @@
+{
+  final ImmutableList<String> specs=FluentIterable.from(allSpecs).transform(new Function<ObjectSpecification,String>(){
+    @Nullable @Override public String apply(    @Nullable final ObjectSpecification objectSpecification){
+      return objectSpecification.getCorrespondingClass().getName();
+    }
+  }
+).toSortedList(Ordering.natural());
+  final String all=Joiner.on(",").join(specs);
+  System.out.println(all);
+}
