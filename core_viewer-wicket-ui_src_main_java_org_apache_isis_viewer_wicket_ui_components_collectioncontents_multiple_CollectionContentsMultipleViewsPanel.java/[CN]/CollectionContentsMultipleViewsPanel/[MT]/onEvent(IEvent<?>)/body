@@ -1,25 +1,18 @@
 {
   super.onEvent(event);
-  final IsisUiHintEvent uiHintEvent=IsisEnvelopeEvent.openLetter(event,IsisUiHintEvent.class);
-  if (uiHintEvent == null) {
+  final IsisSelectorEvent selectorEvent=IsisEnvelopeEvent.openLetter(event,IsisSelectorEvent.class);
+  if (selectorEvent == null) {
     return;
   }
   final CollectionSelectorPanel selectorDropdownPanel=CollectionSelectorProvider.Util.getCollectionSelectorProvider(this);
   if (selectorDropdownPanel == null) {
     return;
   }
-  String viewStr=null;
-  final UiHintContainer uiHintContainer=uiHintEvent.getUiHintContainer();
-  if (uiHintContainer != null) {
-    viewStr=uiHintContainer.getHint(selectorDropdownPanel,UIHINT_VIEW);
-  }
-  if (viewStr == null) {
-    viewStr=uiHintEvent.hintFor(selectorDropdownPanel,UIHINT_VIEW);
-  }
-  if (viewStr == null) {
+  String selectedView=selectorEvent.hintFor(selectorDropdownPanel,UIHINT_VIEW);
+  if (selectedView == null) {
     return;
   }
-  int underlyingViewNum=selectorHelper.lookup(viewStr);
+  int underlyingViewNum=selectorHelper.lookup(selectedView);
   final EntityCollectionModel dummyModel=getModel().asDummy();
   for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
     final Component component=underlyingViews[i];
@@ -31,7 +24,7 @@
     component.setDefaultModel(isSelected ? getModel() : dummyModel);
   }
   this.selectedComponent=underlyingViews[underlyingViewNum];
-  final AjaxRequestTarget target=uiHintEvent.getTarget();
+  final AjaxRequestTarget target=selectorEvent.getTarget();
   if (target != null) {
     target.add(this,selectorDropdownPanel);
   }
