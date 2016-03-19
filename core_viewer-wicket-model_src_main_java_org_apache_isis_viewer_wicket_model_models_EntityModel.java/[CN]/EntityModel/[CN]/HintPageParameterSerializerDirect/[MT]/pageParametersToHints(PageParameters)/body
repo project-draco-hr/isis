@@ -1,14 +1,14 @@
 {
   Set<String> namedKeys=pageParameters.getNamedKeys();
-  List<ComponentKey> newComponentKeys=Lists.newArrayList();
+  List<ComponentHintKey> newComponentHintKeys=Lists.newArrayList();
   for (  String namedKey : namedKeys) {
     if (namedKey.startsWith(PREFIX)) {
       String value=pageParameters.get(namedKey).toString(null);
       String key=namedKey.substring(5);
-      final ComponentKey<Serializable> componentKey=ComponentKey.create(key,entityModel.getHintStore());
-      newComponentKeys.add(componentKey);
-      componentKey.set(value);
+      final ComponentHintKey<Serializable> componentHintKey=ComponentHintKey.create(key,entityModel.getHintStore());
+      newComponentHintKeys.add(componentHintKey);
+      componentHintKey.set(value);
     }
   }
-  return newComponentKeys;
+  return newComponentHintKeys;
 }
