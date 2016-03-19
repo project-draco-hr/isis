@@ -27,8 +27,13 @@
             CollectionSelectorPanel linksSelectorPanel=CollectionSelectorPanel.this;
             linksSelectorPanel.setViewHintAndBroadcast(componentFactory.getName(),target);
             linksSelectorPanel.selectedComponentFactory=componentFactory;
-            selectedItemSessionAttribute.set(componentFactory.getName());
+            componentHintKey.set(domainObjectBookmarkIfAny(),componentFactory.getName());
             target.add(linksSelectorPanel,views);
+          }
+          Bookmark domainObjectBookmarkIfAny(){
+            final EntityCollectionModel entityCollectionModel=CollectionSelectorPanel.this.getModel();
+            final EntityModel entityModel=entityCollectionModel.getEntityModel();
+            return entityModel != null ? entityModel.getObjectAdapterMemento().asBookmark() : null;
           }
           @Override protected void onComponentTag(          ComponentTag tag){
             super.onComponentTag(tag);
