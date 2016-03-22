@@ -1,0 +1,52 @@
+{
+  if (!hasEventBusService()) {
+    return null;
+  }
+  try {
+    final ActionDomainEvent<?> event;
+    if (existingEvent != null && phase.isExecuted()) {
+      event=existingEvent;
+    }
+ else {
+      final Object source=ObjectAdapter.Util.unwrap(targetAdapter);
+      final Object[] arguments=ObjectAdapter.Util.unwrap(argumentAdapters);
+      final Identifier identifier=identified.getIdentifier();
+      event=newActionDomainEvent(eventType,identifier,source,arguments);
+      if (mixedInAdapter != null) {
+        event.setMixedIn(mixedInAdapter.getObject());
+      }
+      if (objectAction != null) {
+        event.setActionSemantics(objectAction.getSemantics());
+        final List<ObjectActionParameter> parameters=objectAction.getParameters();
+        event.setParameterNames(immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_NAME)));
+        event.setParameterTypes(immutableList(Iterables.transform(parameters,ObjectActionParameter.Functions.GET_TYPE)));
+      }
+    }
+    event.setEventPhase(phase);
+    event.setPhase(AbstractInteractionEvent.Phase.from(phase));
+    if (phase.isExecuted()) {
+      event.setReturnValue(ObjectAdapter.Util.unwrap(resultAdapter));
+    }
+    if (command != null) {
+      event.setCommand(command);
+    }
+    if (command != null) {
+      if (phase.isExecuting()) {
+        if (command instanceof Command3) {
+          final Command3 command3=(Command3)command;
+          command3.pushActionDomainEvent(event);
+        }
+ else         if (command instanceof Command2 && event instanceof ActionInteractionEvent) {
+          final Command2 command2=(Command3)command;
+          final ActionInteractionEvent<?> aie=(ActionInteractionEvent<?>)event;
+          command2.pushActionInteractionEvent(aie);
+        }
+      }
+    }
+    getEventBusService().post(event);
+    return event;
+  }
+ catch (  Exception e) {
+    throw new FatalException(e);
+  }
+}

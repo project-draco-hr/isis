@@ -1,3 +1,8 @@
 {
-  return isProposedArgumentSetValidResultSet(target,proposedArguments,interactionInitiatedBy).createConsent();
+  final InteractionResultSet resultSet=new InteractionResultSet();
+  validateArgumentsIndividually(targetObject,proposedArguments,interactionInitiatedBy,resultSet);
+  if (resultSet.isAllowed()) {
+    validateArgumentSet(targetObject,proposedArguments,interactionInitiatedBy,resultSet);
+  }
+  return resultSet.createConsent();
 }

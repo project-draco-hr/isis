@@ -3,7 +3,7 @@
     return null;
   }
   final ActionInvocationContext aic=(ActionInvocationContext)ic;
-  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.VALIDATE,eventType(),null,getIdentified(),ic.getTarget(),aic.getArgs(),null,null);
+  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.VALIDATE,eventType(),null,actionFrom(ic),getIdentified(),ic.getTarget(),ic.getMixedIn(),aic.getArgs(),null,null);
   if (event != null && event.isInvalid()) {
     final TranslatableString reasonTranslatable=event.getInvalidityReasonTranslatable();
     if (reasonTranslatable != null) {

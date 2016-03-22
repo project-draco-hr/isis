@@ -2,8 +2,7 @@
   if (!domainEventHelper.hasEventBusService()) {
     return null;
   }
-  final ObjectAdapter[] argumentAdapters=argumentAdaptersFrom(ic);
-  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.HIDE,eventType(),null,getIdentified(),ic.getTarget(),argumentAdapters,null,null);
+  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.HIDE,eventType(),null,actionFrom(ic),getIdentified(),ic.getTarget(),ic.getMixedIn(),argumentAdaptersFrom(ic),null,null);
   if (event != null && event.isHidden()) {
     return "Hidden by subscriber";
   }
