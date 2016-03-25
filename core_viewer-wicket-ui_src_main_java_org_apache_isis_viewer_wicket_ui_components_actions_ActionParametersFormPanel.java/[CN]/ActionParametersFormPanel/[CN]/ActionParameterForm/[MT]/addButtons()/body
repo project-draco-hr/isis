@@ -2,7 +2,7 @@
   AjaxButton okButton=new AjaxButton(ID_OK_BUTTON,new ResourceModel("okLabel")){
     private static final long serialVersionUID=1L;
     @Override public void onSubmit(    AjaxRequestTarget target,    Form<?> form){
-      boolean succeeded=actionExecutor.executeActionAndProcessResults(target,form);
+      boolean succeeded=executingPanel.executeAndProcessResults(target,form);
       if (succeeded) {
         target.appendJavaScript("isisShowVeil();\n");
         send(getPage(),Broadcast.EXACT,new IsisActionCompletedEvent(getActionModel(),target,form));
@@ -42,7 +42,5 @@
 ;
   cancelButton.setDefaultFormProcessing(false);
   add(cancelButton);
-  if (ActionPromptModalWindow.isActionPromptModalDialogDisabled()) {
-    cancelButton.setVisible(false);
-  }
+  cancelButton.setVisible(false);
 }

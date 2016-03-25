@@ -1,0 +1,9 @@
+{
+  final ApplicationFeatureId classId=ApplicationFeatureId.newClass(packageFqn + "." + className);
+  final ApplicationFeature cls=findClass(classId);
+  if (cls == null) {
+    return Collections.emptyList();
+  }
+  final SortedSet<ApplicationFeatureId> featureIds=cls.membersOf(memberType);
+  return Lists.newArrayList(Iterables.transform(featureIds,ApplicationFeatureId.Functions.GET_MEMBER_NAME));
+}

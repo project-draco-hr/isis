@@ -1,0 +1,13 @@
+{
+  final List<String> parts=Lists.newArrayList();
+  parts.add(COMMON_TNS);
+  parts.add(COMMON_SCHEMA_LOCATION);
+  for (  GridSystemService gridSystemService : gridSystemServices) {
+    final Class<? extends Grid> gridImpl=gridSystemService.gridImplementation();
+    if (gridImpl.isAssignableFrom(grid.getClass())) {
+      parts.add(gridSystemService.tns());
+      parts.add(gridSystemService.schemaLocation());
+    }
+  }
+  return Joiner.on(" ").join(parts);
+}

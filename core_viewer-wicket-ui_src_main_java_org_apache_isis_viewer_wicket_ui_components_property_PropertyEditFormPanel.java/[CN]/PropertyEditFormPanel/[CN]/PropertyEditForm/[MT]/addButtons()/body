@@ -1,0 +1,44 @@
+{
+  AjaxButton okButton=new AjaxButton(ID_OK_BUTTON,new ResourceModel("okLabel")){
+    private static final long serialVersionUID=1L;
+    @Override public void onSubmit(    AjaxRequestTarget target,    Form<?> form){
+      boolean succeeded=executingPanel.executeAndProcessResults(target,form);
+      if (succeeded) {
+        target.appendJavaScript("isisShowVeil();\n");
+        send(getPage(),Broadcast.EXACT,new IsisPropertyEditCompletedEvent(getScalarModel(),target,form));
+        target.add(form);
+      }
+ else {
+        final StringBuilder builder=new StringBuilder();
+        String errorMessagesIfAny=JGrowlUtil.asJGrowlCalls(IsisContext.getMessageBroker());
+        builder.append(errorMessagesIfAny);
+        String buf=builder.toString();
+        target.appendJavaScript(buf);
+        target.add(form);
+      }
+    }
+    /** 
+ * On validation error
+ */
+    @Override protected void onError(    AjaxRequestTarget target,    Form<?> form){
+      super.onError(target,form);
+      target.add(form);
+    }
+  }
+;
+  okButton.add(new JGrowlBehaviour());
+  setDefaultButton(okButton);
+  add(okButton);
+  AjaxButton cancelButton=new AjaxButton(ID_CANCEL_BUTTON,new ResourceModel("cancelLabel")){
+    private static final long serialVersionUID=1L;
+    @Override public void onSubmit(    final AjaxRequestTarget target,    Form<?> form){
+      final ActionPrompt actionPromptIfAny=ActionPromptProvider.Util.getFrom(PropertyEditFormPanel.this).getActionPrompt();
+      if (actionPromptIfAny != null) {
+        actionPromptIfAny.closePrompt(target);
+      }
+    }
+  }
+;
+  cancelButton.setDefaultFormProcessing(false);
+  add(cancelButton);
+}

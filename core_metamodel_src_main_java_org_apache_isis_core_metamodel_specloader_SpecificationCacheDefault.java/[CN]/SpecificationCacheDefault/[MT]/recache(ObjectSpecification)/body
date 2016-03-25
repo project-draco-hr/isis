@@ -2,5 +2,8 @@
   if (!isInitialized()) {
     return;
   }
-  specById.put(spec.getSpecId(),spec);
+  if (!spec.containsDoOpFacet(ObjectSpecIdFacet.class)) {
+    return;
+  }
+  classNameBySpecId.put(spec.getSpecId(),spec.getCorrespondingClass().getName());
 }

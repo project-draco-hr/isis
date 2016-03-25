@@ -3,10 +3,10 @@
   final Sequence seq=context.sequence("create");
   context.checking(new Expectations(){
 {
-      oneOf(mockContainer).newTransientInstance(SimpleObject.class);
+      oneOf(mockRepositoryService).instantiate(SimpleObject.class);
       inSequence(seq);
       will(returnValue(simpleObject));
-      oneOf(mockContainer).persistIfNotAlready(simpleObject);
+      oneOf(mockRepositoryService).persist(simpleObject);
       inSequence(seq);
     }
   }

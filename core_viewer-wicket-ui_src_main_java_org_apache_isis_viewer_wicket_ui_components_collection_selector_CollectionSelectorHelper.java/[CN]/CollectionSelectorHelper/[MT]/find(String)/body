@@ -1,0 +1,14 @@
+{
+  ComponentFactory componentFactory=doFind(selected);
+  if (componentFactory != null) {
+    return componentFactory;
+  }
+  final EntityCollectionModel entityCollectionModel=model;
+  final String fallback;
+  fallback=entityCollectionModel.isParented() ? CollectionContentsHiddenPanelFactory.NAME : CollectionContentsAsAjaxTablePanelFactory.NAME;
+  componentFactory=doFind(fallback);
+  if (componentFactory == null) {
+    throw new IllegalStateException(String.format("Could not locate '%s' (as the fallback collection panel)",fallback));
+  }
+  return componentFactory;
+}

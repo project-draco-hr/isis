@@ -1,20 +1,21 @@
 {
-  if (serviceInitializer != null) {
-    IsisContext.openSession(new InitialisationSession());
+  if (serviceInitializer == null) {
+    return;
+  }
+  IsisContext.openSession(new InitialisationSession());
+  try {
+    getTransactionManager().startTransaction();
     try {
-      getTransactionManager().startTransaction();
-      try {
-        serviceInitializer.preDestroy();
-      }
- catch (      RuntimeException ex) {
-        getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
-      }
+      serviceInitializer.preDestroy();
+    }
+ catch (    RuntimeException ex) {
+      getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+    }
  finally {
-        getTransactionManager().endTransaction();
-      }
+      getTransactionManager().endTransaction();
     }
+  }
   finally {
-      IsisContext.closeSession();
-    }
+    IsisContext.closeSession();
   }
 }

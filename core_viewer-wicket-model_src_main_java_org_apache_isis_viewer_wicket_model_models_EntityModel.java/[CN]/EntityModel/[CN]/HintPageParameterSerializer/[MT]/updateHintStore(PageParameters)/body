@@ -1,0 +1,18 @@
+{
+  Set<String> namedKeys=pageParameters.getNamedKeys();
+  if (namedKeys.contains("no-hints")) {
+    getHintStore().removeAll(entityModel.getObjectAdapterMemento().asBookmark());
+    return;
+  }
+  List<ComponentHintKey> newComponentHintKeys=Lists.newArrayList();
+  for (  String namedKey : namedKeys) {
+    if (namedKey.startsWith(PREFIX)) {
+      String value=pageParameters.get(namedKey).toString(null);
+      String key=namedKey.substring(5);
+      final ComponentHintKey componentHintKey=ComponentHintKey.create(key);
+      newComponentHintKeys.add(componentHintKey);
+      final Bookmark bookmark=entityModel.getObjectAdapterMemento().asBookmark();
+      componentHintKey.set(bookmark,value);
+    }
+  }
+}

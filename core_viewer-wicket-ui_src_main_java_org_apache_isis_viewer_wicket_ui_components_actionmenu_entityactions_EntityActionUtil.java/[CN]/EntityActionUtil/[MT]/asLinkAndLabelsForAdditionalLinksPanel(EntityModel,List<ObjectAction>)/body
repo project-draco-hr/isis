@@ -2,10 +2,10 @@
   final String linkId=AdditionalLinksPanel.ID_ADDITIONAL_LINK;
   final ActionLinkFactory linkFactory=new EntityActionLinkFactory(entityModel);
   final ObjectAdapterMemento adapterMemento=entityModel.getObjectAdapterMemento();
-  return Lists.transform(actions,new Function<ObjectAction,LinkAndLabel>(){
+  return FluentIterable.from(actions).transform(new Function<ObjectAction,LinkAndLabel>(){
     @Override public LinkAndLabel apply(    ObjectAction objectAction){
       return linkFactory.newLink(linkId,adapterMemento,objectAction);
     }
   }
-);
+).filter(Predicates.<LinkAndLabel>notNull()).toList();
 }

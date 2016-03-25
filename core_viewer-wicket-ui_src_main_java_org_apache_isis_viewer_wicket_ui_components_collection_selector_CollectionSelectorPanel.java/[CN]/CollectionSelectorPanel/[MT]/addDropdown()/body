@@ -1,12 +1,12 @@
 {
   final List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
-  final int selected=selectorHelper.honourViewHintElseDefault(this);
+  final String selected=selectorHelper.honourViewHintElseDefault(this);
   if (componentFactories.size() <= 1) {
     permanentlyHide(ID_VIEWS);
   }
  else {
     final Model<ComponentFactory> componentFactoryModel=new Model<>();
-    this.selectedComponentFactory=componentFactories.get(selected);
+    this.selectedComponentFactory=selectorHelper.find(selected);
     componentFactoryModel.setObject(this.selectedComponentFactory);
     final WebMarkupContainer views=new WebMarkupContainer(ID_VIEWS);
     final Label viewButtonTitle=new Label(ID_VIEW_BUTTON_TITLE,"Hidden");
@@ -20,15 +20,20 @@
     final ListView<ComponentFactory> listView=new ListView<ComponentFactory>(ID_VIEW_ITEM,componentFactories){
       private static final long serialVersionUID=1L;
       @Override protected void populateItem(      ListItem<ComponentFactory> item){
-        final int underlyingViewNum=item.getIndex();
         final ComponentFactory componentFactory=item.getModelObject();
         final AbstractLink link=new AjaxLink<Void>(ID_VIEW_LINK){
           private static final long serialVersionUID=1L;
           @Override public void onClick(          AjaxRequestTarget target){
             CollectionSelectorPanel linksSelectorPanel=CollectionSelectorPanel.this;
-            linksSelectorPanel.setViewHintAndBroadcast(underlyingViewNum,target);
+            linksSelectorPanel.setViewHintAndBroadcast(componentFactory.getName(),target);
             linksSelectorPanel.selectedComponentFactory=componentFactory;
+            componentHintKey.set(domainObjectBookmarkIfAny(),componentFactory.getName());
             target.add(linksSelectorPanel,views);
+          }
+          Bookmark domainObjectBookmarkIfAny(){
+            final EntityCollectionModel entityCollectionModel=CollectionSelectorPanel.this.getModel();
+            final EntityModel entityModel=entityCollectionModel.getEntityModel();
+            return entityModel != null ? entityModel.getObjectAdapterMemento().asBookmark() : null;
           }
           @Override protected void onComponentTag(          ComponentTag tag){
             super.onComponentTag(tag);
@@ -41,8 +46,8 @@
         link.add(viewItemTitleLabel);
         Label viewItemIcon=new Label(ID_VIEW_ITEM_ICON,"");
         link.add(viewItemIcon);
-        boolean isEnabled=componentFactory != CollectionSelectorPanel.this.selectedComponentFactory;
-        if (!isEnabled) {
+        final boolean selected=componentFactory == CollectionSelectorPanel.this.selectedComponentFactory;
+        if (selected) {
           viewButtonTitle.setDefaultModel(title);
           IModel<String> cssClass=cssClassFor(componentFactory,viewButtonIcon);
           viewButtonIcon.add(AttributeModifier.replace("class","ViewLinkItem " + cssClass.getObject()));

@@ -1,8 +1,12 @@
 {
   table.setOutputMarkupId(true);
-  ((MarkupContainer)get("span")).add(new AjaxLink("showAll"){
+  ((MarkupContainer)get("span")).add(new AjaxLink(ID_SHOW_ALL){
     @Override public void onClick(    AjaxRequestTarget target){
-      table.setItemsPerPage(Long.MAX_VALUE);
+      showAllItemsOn(table);
+      final UiHintContainer hintContainer=getUiHintContainer();
+      if (hintContainer != null) {
+        hintContainer.setHint(table,HINT_KEY_SHOW_ALL,"true");
+      }
       target.add(table);
     }
   }

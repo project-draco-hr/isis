@@ -1,41 +1,31 @@
 {
   super.onEvent(event);
-  final IsisUiHintEvent uiHintEvent=IsisEnvelopeEvent.openLetter(event,IsisUiHintEvent.class);
-  if (uiHintEvent == null) {
+  final IsisSelectorEvent selectorEvent=IsisEnvelopeEvent.openLetter(event,IsisSelectorEvent.class);
+  if (selectorEvent == null) {
     return;
   }
-  final UiHintContainer uiHintContainer=uiHintEvent.getUiHintContainer();
-  int underlyingViewNum=0;
   final CollectionSelectorPanel selectorDropdownPanel=CollectionSelectorProvider.Util.getCollectionSelectorProvider(this);
   if (selectorDropdownPanel == null) {
     return;
   }
-  String viewStr=uiHintContainer.getHint(selectorDropdownPanel,UIHINT_VIEW);
-  List<ComponentFactory> componentFactories=selectorHelper.getComponentFactories();
-  if (viewStr != null) {
-    try {
-      int view=Integer.parseInt(viewStr);
-      if (view >= 0 && view < componentFactories.size()) {
-        underlyingViewNum=view;
-      }
-      final EntityCollectionModel dummyModel=getModel().asDummy();
-      for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
-        final Component component=underlyingViews[i];
-        if (component == null) {
-          continue;
-        }
-        final boolean isSelected=i == underlyingViewNum;
-        applyCssVisibility(component,isSelected);
-        component.setDefaultModel(isSelected ? getModel() : dummyModel);
-      }
-      this.selectedComponentFactory=ignoreFactory;
-      this.selectedComponent=underlyingViews[underlyingViewNum];
-      final AjaxRequestTarget target=uiHintEvent.getTarget();
-      if (target != null) {
-        target.add(this,selectorDropdownPanel);
-      }
+  String selectedView=selectorEvent.hintFor(selectorDropdownPanel,UIHINT_VIEW);
+  if (selectedView == null) {
+    return;
+  }
+  int underlyingViewNum=selectorHelper.lookup(selectedView);
+  final EntityCollectionModel dummyModel=getModel().asDummy();
+  for (int i=0; i < MAX_NUM_UNDERLYING_VIEWS; i++) {
+    final Component component=underlyingViews[i];
+    if (component == null) {
+      continue;
     }
- catch (    NumberFormatException ex) {
-    }
+    final boolean isSelected=i == underlyingViewNum;
+    applyCssVisibility(component,isSelected);
+    component.setDefaultModel(isSelected ? getModel() : dummyModel);
+  }
+  this.selectedComponent=underlyingViews[underlyingViewNum];
+  final AjaxRequestTarget target=selectorEvent.getTarget();
+  if (target != null) {
+    target.add(this,selectorDropdownPanel);
   }
 }

@@ -1,0 +1,41 @@
+{
+  final ScalarModel scalarModel=getScalarModel();
+  final String invalidReasonIfAny=scalarModel.getReasonInvalidIfAny();
+  if (invalidReasonIfAny != null) {
+    raiseWarning(target,feedbackForm,invalidReasonIfAny);
+    return false;
+  }
+  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+  final Command command;
+  if (commandContext != null) {
+    command=commandContext.getCommand();
+    command.setExecutor(Command.Executor.USER);
+  }
+ else {
+    command=null;
+  }
+  try {
+    ObjectAdapter adapter=getScalarModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    final ObjectAdapter objectAdapter=getScalarModel().applyValue(adapter);
+    if (objectAdapter != adapter) {
+      getModel().getParentObjectAdapterMemento().setAdapter(adapter);
+    }
+    getTransactionManager().flushTransaction();
+    final EntityPage entityPage=new EntityPage(objectAdapter,null);
+    setResponsePage(entityPage);
+    return true;
+  }
+ catch (  RuntimeException ex) {
+    String message=recognizeException(ex,target,feedbackForm);
+    if (message != null) {
+      if (feedbackForm == null) {
+        ActionResultResponseHandlingStrategy.REDIRECT_TO_VOID.handleResults(this,null);
+      }
+      return false;
+    }
+    if (command != null) {
+      command.setException(Throwables.getStackTraceAsString(ex));
+    }
+    throw ex;
+  }
+}

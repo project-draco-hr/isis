@@ -1,7 +1,7 @@
 {
   final Collection<ObjectSpecification> allSpecs=Lists.newArrayList(specificationLoader.allSpecifications());
-  for (  final ObjectSpecification serviceSpec : allSpecs) {
-    final DomainServiceFacet domainServiceFacet=serviceSpec.getFacet(DomainServiceFacet.class);
+  for (  final ObjectSpecification objectSpec : allSpecs) {
+    final DomainServiceFacet domainServiceFacet=objectSpec.getFacet(DomainServiceFacet.class);
     if (domainServiceFacet == null) {
       continue;
     }
@@ -11,13 +11,13 @@
     if (domainServiceFacet.getNatureOfService() != NatureOfService.VIEW_MENU_ONLY && domainServiceFacet.getNatureOfService() != NatureOfService.VIEW && domainServiceFacet.getNatureOfService() != NatureOfService.VIEW_REST_ONLY) {
       continue;
     }
-    final List<ObjectAction> serviceActions=Util.actionsOf(serviceSpec,visibility,classExcluder);
+    final List<ObjectAction> serviceActions=Util.actionsOf(objectSpec,visibility,classExcluder);
     if (serviceActions.isEmpty()) {
       continue;
     }
-    appendServicePath(serviceSpec);
+    appendServicePath(objectSpec);
     for (    final ObjectAction serviceAction : serviceActions) {
-      appendServiceActionInvokePath(serviceSpec,serviceAction);
+      appendServiceActionInvokePath(objectSpec,serviceAction);
     }
   }
 }

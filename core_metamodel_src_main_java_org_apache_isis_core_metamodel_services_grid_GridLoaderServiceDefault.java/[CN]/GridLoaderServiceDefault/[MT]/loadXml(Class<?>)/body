@@ -1,0 +1,13 @@
+{
+  final String resourceName=resourceNameFor(domainClass);
+  try {
+    return resourceContentOf(domainClass,resourceName);
+  }
+ catch (  IOException|IllegalArgumentException ex) {
+    if (LOG.isDebugEnabled()) {
+      final String message=String.format("Failed to locate file %s (relative to %s.class); ex: %s)",resourceName,domainClass.getName(),ex.getMessage());
+      LOG.debug(message);
+    }
+    return null;
+  }
+}

@@ -1,0 +1,42 @@
+{
+  if (exclude(spec)) {
+    return;
+  }
+  final List<ObjectAssociation> properties=spec.getAssociations(Contributed.INCLUDED,ObjectAssociation.Filters.PROPERTIES);
+  final List<ObjectAssociation> collections=spec.getAssociations(Contributed.INCLUDED,ObjectAssociation.Filters.COLLECTIONS);
+  final List<ObjectAction> actions=spec.getObjectActions(Contributed.INCLUDED);
+  if (properties.isEmpty() && collections.isEmpty() && actions.isEmpty()) {
+    return;
+  }
+  final String fullIdentifier=spec.getFullIdentifier();
+  final ApplicationFeatureId classFeatureId=ApplicationFeatureId.newClass(fullIdentifier);
+  final ApplicationFeature classFeature=newFeature(classFeatureId);
+  classFeatures.put(classFeatureId,classFeature);
+  boolean addedMembers=false;
+  for (  final ObjectAssociation property : properties) {
+    final Class<?> returnType=correspondingClassFor(property.getSpecification());
+    final Integer maxLength=returnType == String.class ? valueOf(property,MaxLengthFacet.class) : null;
+    final Integer typicalLength=returnType == String.class ? valueOf(property,TypicalLengthFacet.class) : null;
+    final boolean derived=!property.containsDoOpFacet(PropertySetterFacet.class);
+    final boolean contributed=property instanceof ContributeeMember;
+    addedMembers=newProperty(classFeatureId,property,returnType,contributed,maxLength,typicalLength,derived) || addedMembers;
+  }
+  for (  final ObjectAssociation collection : collections) {
+    final boolean derived=!(collection.containsDoOpFacet(CollectionAddToFacet.class) || collection.containsDoOpFacet(CollectionRemoveFromFacet.class));
+    final Class<?> elementType=correspondingClassFor(collection.getSpecification());
+    final boolean contributed=collection instanceof ContributeeMember;
+    addedMembers=newCollection(classFeatureId,collection,elementType,contributed,derived) || addedMembers;
+  }
+  for (  final ObjectAction action : actions) {
+    final Class<?> returnType=correspondingClassFor(action.getReturnType());
+    final SemanticsOf actionSemantics=SemanticsOf.from(action.getSemantics());
+    final boolean contributed=action instanceof ContributeeMember;
+    addedMembers=newAction(classFeatureId,action,returnType,contributed,actionSemantics) || addedMembers;
+  }
+  if (!addedMembers) {
+    classFeatures.remove(classFeatureId);
+    return;
+  }
+  final ApplicationFeatureId classParentPackageId=addClassParent(classFeatureId);
+  addParents(classParentPackageId);
+}

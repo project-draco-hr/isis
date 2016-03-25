@@ -6,7 +6,7 @@
     configureWicketSelect2();
     String isisConfigDir=getServletContext().getInitParameter("isis.config.dir");
     configureLogging(isisConfigDir);
-    getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
+    getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER);
     getResourceSettings().setParentFolderPlaceholder("$up$");
     determineDeploymentTypeIfRequired();
     RequestCycleListenerCollection requestCycleListeners=getRequestCycleListeners();
@@ -27,32 +27,19 @@
     getDebugSettings().setAjaxDebugModeEnabled(determineAjaxDebugModeEnabled(configuration));
     buildCssBundle();
     filterJavascriptContributions();
-    configureWicketSourcePlugin();
+    configureWicketSourcePluginIfNecessary(configuration);
     int maxEntries=1000;
     setMetaData(AccountConfirmationMap.KEY,new AccountConfirmationMap(maxEntries,Duration.days(1)));
     mountPages();
     @SuppressWarnings("unused") SharedResources sharedResources=getSharedResources();
+    final MetaModelInvalidException mmie=IsisContext.getMetaModelInvalidExceptionIfAny();
+    if (mmie != null) {
+      this.validationErrors.addAll(mmie.getValidationErrors());
+      log(this.validationErrors);
+    }
   }
  catch (  RuntimeException ex) {
-    List<MetaModelInvalidException> mmies=locateMetaModelInvalidExceptions(ex);
-    if (!mmies.isEmpty()) {
-      final MetaModelInvalidException mmie=mmies.get(0);
-      log("");
-      logBanner();
-      log("");
-      validationErrors.addAll(mmie.getValidationErrors());
-      for (      String validationError : validationErrors) {
-        logError(validationError);
-      }
-      log("");
-      log("Please inspect the above messages and correct your domain model.");
-      log("");
-      logBanner();
-      log("");
-    }
- else {
-      LOG.error("Failed to initialize",ex);
-      throw ex;
-    }
+    LOG.error("Failed to initialize",ex);
+    throw ex;
   }
 }

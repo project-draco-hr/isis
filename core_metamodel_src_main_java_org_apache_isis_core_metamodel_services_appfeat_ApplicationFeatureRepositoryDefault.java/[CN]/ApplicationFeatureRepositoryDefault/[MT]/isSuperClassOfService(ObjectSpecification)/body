@@ -1,0 +1,21 @@
+{
+  final List<Object> registeredServices=servicesInjector.getRegisteredServices();
+  final Class<?> specClass=spec.getCorrespondingClass();
+  boolean serviceCls=false;
+  for (  final Object registeredService : registeredServices) {
+    final Class<?> serviceClass=registeredService.getClass();
+    if (specClass.isAssignableFrom(serviceClass)) {
+      serviceCls=true;
+    }
+  }
+  if (!serviceCls) {
+    return false;
+  }
+  for (  final Object registeredService : registeredServices) {
+    final Class<?> serviceClass=registeredService.getClass();
+    if (serviceClass.isAssignableFrom(specClass)) {
+      return false;
+    }
+  }
+  return true;
+}

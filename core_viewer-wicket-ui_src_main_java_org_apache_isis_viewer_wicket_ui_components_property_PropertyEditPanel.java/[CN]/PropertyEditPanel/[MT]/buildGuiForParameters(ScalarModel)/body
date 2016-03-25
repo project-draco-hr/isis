@@ -1,0 +1,26 @@
+{
+  WebMarkupContainer header=addHeader();
+  ObjectAdapter targetAdapter=null;
+  try {
+    targetAdapter=scalarModel.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    scalarModel.toEditMode();
+    getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.PROPERTY_EDIT_FORM,getScalarModel());
+    getComponentFactoryRegistry().addOrReplaceComponent(header,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
+    final OneToOneAssociation property=getScalarModel().getPropertyMemento().getProperty();
+    final String propertyName=property.getName();
+    final Label label=new Label(ID_PROPERTY_NAME,Model.of(propertyName));
+    NamedFacet namedFacet=property.getFacet(NamedFacet.class);
+    if (namedFacet != null) {
+      label.setEscapeModelStrings(namedFacet.escaped());
+    }
+    header.add(label);
+  }
+ catch (  final ConcurrencyException ex) {
+    if (targetAdapter == null) {
+      targetAdapter=scalarModel.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    }
+    final EntityPage entityPage=new EntityPage(targetAdapter,null);
+    setResponsePage(entityPage);
+    getMessageBroker().addWarning(ex.getMessage());
+  }
+}

@@ -1,0 +1,15 @@
+{
+  final ApplicationFeatureId featureId=ApplicationFeatureId.newMember(classFeatureId.getFullyQualifiedName(),memberId);
+  final ApplicationFeature memberFeature=newFeature(featureId);
+  memberFeature.setMemberType(memberType);
+  memberFeature.setReturnTypeName(returnType != null ? returnType.getSimpleName() : null);
+  memberFeature.setContributed(contributed);
+  memberFeature.setDerived(derived);
+  memberFeature.setPropertyMaxLength(maxLength);
+  memberFeature.setPropertyTypicalLength(typicalLength);
+  memberFeature.setActionSemantics(actionSemantics);
+  memberFeatures.put(featureId,memberFeature);
+  featuresMapFor(memberType).put(featureId,memberFeature);
+  final ApplicationFeature classFeature=findClass(classFeatureId);
+  classFeature.addToMembers(featureId,memberType);
+}

@@ -1,0 +1,16 @@
+{
+  if (isPersistent(object)) {
+    return;
+  }
+  final ObjectAdapter adapter=adapterManager.adapterFor(unwrapped(object));
+  if (adapter == null) {
+    throw new PersistFailedException("Object not known to framework; instantiate using newTransientInstance(...) rather than simply new'ing up.");
+  }
+  if (adapter.isParentedCollection()) {
+    return;
+  }
+  if (isPersistent(object)) {
+    throw new PersistFailedException("Object already persistent; OID=" + adapter.getOid());
+  }
+  persistenceSessionService.makePersistent(adapter);
+}

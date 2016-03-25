@@ -1,0 +1,15 @@
+{
+  return new Predicate<ApplicationFeatureId>(){
+    @Override public boolean apply(    final ApplicationFeatureId input){
+      if (input.getType() != ApplicationFeatureType.CLASS) {
+        return false;
+      }
+      final ApplicationFeature feature=applicationFeatures.findFeature(input);
+      if (feature == null) {
+        return false;
+      }
+      return memberType == null || !feature.membersOf(memberType).isEmpty();
+    }
+  }
+;
+}

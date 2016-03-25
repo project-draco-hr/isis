@@ -1,0 +1,21 @@
+{
+  target=new EntityModel();
+  mockParent=context.mock(MarkupContainer.class,"parent");
+  mockComponent1=context.mock(Component.class,"component1");
+  mockComponent2=context.mock(Component.class,"component2");
+  context.checking(new Expectations(){
+{
+      allowing(mockParent).getId();
+      will(returnValue("parent"));
+      allowing(mockComponent1).getId();
+      will(returnValue("id1"));
+      allowing(mockComponent2).getId();
+      will(returnValue("id2"));
+      ignoring(mockComponent1);
+      ignoring(mockComponent2);
+    }
+  }
+);
+  mockComponent1.setParent(mockParent);
+  mockComponent2.setParent(mockParent);
+}
