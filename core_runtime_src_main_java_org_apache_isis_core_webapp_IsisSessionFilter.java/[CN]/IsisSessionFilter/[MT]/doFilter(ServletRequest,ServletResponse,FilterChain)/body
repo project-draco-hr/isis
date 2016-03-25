@@ -1,4 +1,5 @@
 {
+  ensureMetamodelIsValid();
   final HttpServletRequest httpServletRequest=(HttpServletRequest)request;
   final HttpServletResponse httpServletResponse=(HttpServletResponse)response;
   try {
@@ -8,6 +9,10 @@
       return;
     }
     if (requestIsIgnoreExtension(this,httpServletRequest) || ResourceCachingFilter.isCachedResource(httpServletRequest)) {
+      chain.doFilter(request,response);
+      return;
+    }
+    if (requestIsPassThru(httpServletRequest)) {
       chain.doFilter(request,response);
       return;
     }

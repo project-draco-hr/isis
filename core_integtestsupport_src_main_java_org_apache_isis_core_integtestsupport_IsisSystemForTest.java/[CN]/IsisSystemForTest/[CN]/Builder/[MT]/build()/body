@@ -1,22 +1,18 @@
 {
-  final IsisSystemForTest isisSystem=new IsisSystemForTest(appManifestIfAny,configuration,services,fixtures,programmingModelOverride,metaModelValidatorOverride,authenticationRequest,listeners);
+  final IsisSystemForTest isisSystemForTest=new IsisSystemForTest(appManifestIfAny,configuration,services,fixtures,programmingModelOverride,metaModelValidatorOverride,authenticationRequest,listeners);
   if (level != null) {
-    isisSystem.setLevel(level);
+    isisSystemForTest.setLevel(level);
   }
   Runtime.getRuntime().addShutdownHook(new Thread(){
     @Override public synchronized void run(){
       try {
-        if (isisSystem != null) {
-          isisSystem.tearDownSystem();
-        }
+        isisSystemForTest.tearDownSystem();
       }
  catch (      Exception e) {
         e.printStackTrace();
       }
       try {
-        if (isisSystem != null) {
-          isisSystem.shutdown();
-        }
+        isisSystemForTest.shutdown();
       }
  catch (      Exception e) {
         e.printStackTrace();
@@ -30,5 +26,5 @@
     }
   }
 );
-  return isisSystem;
+  return isisSystemForTest;
 }

@@ -1,4 +1,13 @@
 {
   final EntityModel entityModel=(EntityModel)model;
+  final ObjectSpecification specification=entityModel.getTypeOfSpecification();
+  final GridFacet facet=specification.getFacet(GridFacet.class);
+  final Grid grid=facet.getGrid();
+  if (grid != null) {
+    final EntityModel entityModelWithLayoutMetadata=entityModel.cloneWithLayoutMetadata(grid);
+    if (grid instanceof BS3Grid) {
+      return new BS3GridPanel(id,entityModelWithLayoutMetadata);
+    }
+  }
   return new EntityLinksSelectorPanel(id,entityModel,this);
 }

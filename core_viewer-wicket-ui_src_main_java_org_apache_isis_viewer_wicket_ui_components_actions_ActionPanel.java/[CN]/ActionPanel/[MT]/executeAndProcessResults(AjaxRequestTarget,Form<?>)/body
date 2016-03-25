@@ -1,0 +1,17 @@
+{
+  permanentlyHide(ComponentType.ENTITY_ICON_AND_TITLE);
+  ObjectAdapter targetAdapter=null;
+  try {
+    targetAdapter=getModel().getTargetAdapter();
+    return executeActionOnTargetAndProcessResults(target,feedbackForm);
+  }
+ catch (  ConcurrencyException ex) {
+    if (targetAdapter == null) {
+      targetAdapter=getModel().getTargetAdapter();
+    }
+    ActionResultResponse resultResponse=ActionResultResponseType.OBJECT.interpretResult(this.getActionModel(),targetAdapter,ex);
+    resultResponse.getHandlingStrategy().handleResults(this,resultResponse);
+    getMessageBroker().addWarning(ex.getMessage());
+    return false;
+  }
+}

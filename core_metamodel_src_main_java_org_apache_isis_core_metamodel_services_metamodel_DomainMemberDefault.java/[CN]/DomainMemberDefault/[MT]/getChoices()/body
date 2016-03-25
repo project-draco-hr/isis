@@ -1,0 +1,16 @@
+{
+switch (memberType) {
+case PROPERTY:
+    return interpretRowAndFacet(PropertyChoicesFacet.class);
+case COLLECTION:
+  return "";
+default :
+final List<ObjectActionParameter> parameters=this.action.getParameters();
+final SortedSet<String> interpretations=Sets.newTreeSet();
+for (ObjectActionParameter param : parameters) {
+final ActionParameterChoicesFacet facet=param.getFacet(ActionParameterChoicesFacet.class);
+addIfNotEmpty(interpretFacet(facet),interpretations);
+}
+return !interpretations.isEmpty() ? Joiner.on(";").join(interpretations) : interpretRowAndFacet(ActionChoicesFacet.class);
+}
+}

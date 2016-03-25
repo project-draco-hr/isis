@@ -8,16 +8,11 @@
       final TextField<String> textField=new TextField<String>("textField",new LoadableDetachableModel<String>(){
         private static final long serialVersionUID=1L;
         @SuppressWarnings({"rawtypes","unchecked"}) @Override protected String load(){
-          if (subscribingLink instanceof BookmarkablePageLink) {
-            final BookmarkablePageLink<?> link=(BookmarkablePageLink<?>)subscribingLink;
-            final Class pageClass=link.getPageClass();
-            final PageParameters pageParameters=link.getPageParameters();
-            final CharSequence urlFor=link.urlFor(pageClass,pageParameters);
-            return getRequestCycle().getUrlRenderer().renderFullUrl(Url.parse(urlFor));
-          }
- else {
-            return "";
-          }
+          final Class pageClass=ZeroClipboardPanel.this.getPage().getPageClass();
+          final EntityModel entityModel=ZeroClipboardPanel.this.getModel();
+          final PageParameters pageParameters=entityModel.getPageParameters();
+          final CharSequence urlFor=getRequestCycle().urlFor(pageClass,pageParameters);
+          return getRequestCycle().getUrlRenderer().renderFullUrl(Url.parse(urlFor));
         }
       }
 );

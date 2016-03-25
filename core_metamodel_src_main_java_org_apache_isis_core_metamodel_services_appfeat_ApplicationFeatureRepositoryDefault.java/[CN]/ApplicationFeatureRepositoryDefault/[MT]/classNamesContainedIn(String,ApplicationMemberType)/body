@@ -1,0 +1,9 @@
+{
+  final ApplicationFeatureId packageId=ApplicationFeatureId.newPackage(packageFqn);
+  final ApplicationFeature pkg=findPackage(packageId);
+  if (pkg == null) {
+    return Collections.emptyList();
+  }
+  final SortedSet<ApplicationFeatureId> contents=pkg.getContents();
+  return Lists.newArrayList(Iterables.transform(Iterables.filter(contents,ApplicationFeatureId.Predicates.isClassContaining(memberType,this)),ApplicationFeatureId.Functions.GET_CLASS_NAME));
+}

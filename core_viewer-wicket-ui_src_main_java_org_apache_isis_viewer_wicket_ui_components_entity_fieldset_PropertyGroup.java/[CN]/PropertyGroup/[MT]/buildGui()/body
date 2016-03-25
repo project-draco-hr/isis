@@ -1,0 +1,43 @@
+{
+  final List<PropertyLayoutData> properties=fieldSet.getProperties();
+  final ObjectAdapter adapter=getModel().load(AdapterManager.ConcurrencyChecking.NO_CHECK);
+  final WebMarkupContainer div=new WebMarkupContainer(ID_MEMBER_GROUP);
+  String groupName=fieldSet.getName();
+  div.add(new Label(ID_MEMBER_GROUP_NAME,groupName));
+  final List<LinkAndLabel> memberGroupActions=Lists.newArrayList();
+  final RepeatingView propertyRv=new RepeatingView(ID_PROPERTIES);
+  div.add(propertyRv);
+  final ImmutableList<ObjectAssociation> visibleAssociations=FluentIterable.from(properties).filter(new Predicate<PropertyLayoutData>(){
+    @Override public boolean apply(    final PropertyLayoutData propertyLayoutData){
+      return propertyLayoutData.getMetadataError() == null;
+    }
+  }
+).transform(new Function<PropertyLayoutData,ObjectAssociation>(){
+    @Override public ObjectAssociation apply(    final PropertyLayoutData propertyLayoutData){
+      return adapter.getSpecification().getAssociation(propertyLayoutData.getId());
+    }
+  }
+).filter(new Predicate<ObjectAssociation>(){
+    @Override public boolean apply(    @Nullable final ObjectAssociation objectAssociation){
+      final Consent visibility=objectAssociation.isVisible(adapter,InteractionInitiatedBy.USER,Where.OBJECT_FORMS);
+      return visibility.isAllowed();
+    }
+  }
+).toList();
+  for (  final ObjectAssociation association : visibleAssociations) {
+    final WebMarkupContainer propertyRvContainer=new WebMarkupContainer(propertyRv.newChildId());
+    propertyRv.add(propertyRvContainer);
+    addPropertyToForm(getModel(),(OneToOneAssociation)association,propertyRvContainer,memberGroupActions);
+    visible=true;
+  }
+  final List<LinkAndLabel> actionsPanel=LinkAndLabel.positioned(memberGroupActions,ActionLayout.Position.PANEL);
+  final List<LinkAndLabel> actionsPanelDropDown=LinkAndLabel.positioned(memberGroupActions,ActionLayout.Position.PANEL_DROPDOWN);
+  AdditionalLinksPanel.addAdditionalLinks(div,ID_ASSOCIATED_ACTION_LINKS_PANEL,actionsPanel,AdditionalLinksPanel.Style.INLINE_LIST);
+  AdditionalLinksPanel.addAdditionalLinks(div,ID_ASSOCIATED_ACTION_LINKS_PANEL_DROPDOWN,actionsPanelDropDown,AdditionalLinksPanel.Style.DROPDOWN);
+  if (!visible) {
+    Components.permanentlyHide(this,div.getId());
+  }
+ else {
+    this.add(div);
+  }
+}

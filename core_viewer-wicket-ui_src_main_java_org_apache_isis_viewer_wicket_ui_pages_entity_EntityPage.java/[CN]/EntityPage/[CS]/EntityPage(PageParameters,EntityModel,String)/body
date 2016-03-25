@@ -10,28 +10,24 @@
     removeAnyBreadcrumb(model);
     throw new ObjectMember.AuthorizationException(ex);
   }
-  if (!isVisible(objectAdapter)) {
+  if (!ObjectAdapter.Util.isVisible(objectAdapter,InteractionInitiatedBy.USER)) {
     throw new ObjectMember.AuthorizationException();
   }
-  if (!getDeploymentType().isProduction()) {
-    getSpecificationLoader().invalidateCacheFor(objectAdapter.getObject());
+  final ObjectSpecification objectSpec=entityModel.getTypeOfSpecification();
+  final GridFacet facet=objectSpec.getFacet(GridFacet.class);
+  if (facet != null) {
+    final Grid unused=facet.getGrid();
   }
   if (titleString == null) {
     final String titleStr=objectAdapter.titleString(null);
     setTitle(titleStr);
   }
   WebMarkupContainer entityPageContainer=new WebMarkupContainer("entityPageContainer");
-  entityPageContainer.add(new CssClassAppender(new AbstractReadOnlyModel<String>(){
-    @Override public String getObject(){
-      ObjectAdapter adapter=entityModel.getObject();
-      return adapter.getObject().getClass().getSimpleName();
-    }
-  }
-));
+  CssClassAppender.appendCssClassTo(entityPageContainer,objectSpec.getFullIdentifier().replace('.','-'));
+  CssClassAppender.appendCssClassTo(entityPageContainer,objectSpec.getCorrespondingClass().getSimpleName());
   themeDiv.addOrReplace(entityPageContainer);
   addChildComponents(entityPageContainer,model);
   bookmarkPage(model);
   addBreadcrumb(entityModel);
   addBookmarkedPages(entityPageContainer);
-  send(this,Broadcast.BREADTH,new IsisUiHintEvent(entityModel,null));
 }

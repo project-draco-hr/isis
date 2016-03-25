@@ -1,0 +1,42 @@
+{
+  final String xml=loadXml(domainClass);
+  if (xml == null) {
+    return null;
+  }
+  if (supportsReloading()) {
+    final Grid grid=gridByXml.get(xml);
+    if (grid != null) {
+      return grid;
+    }
+    final String badXml=badXmlByClass.get(domainClass);
+    if (badXml != null) {
+      if (Objects.equals(xml,badXml)) {
+        return null;
+      }
+ else {
+        badXmlByClass.remove(domainClass);
+      }
+    }
+  }
+  try {
+    final JAXBContext context=JAXBContext.newInstance(pageImplementations.toArray(new Class[0]));
+    final Grid grid=(Grid)jaxbService.fromXml(context,xml);
+    grid.setDomainClass(domainClass);
+    if (supportsReloading()) {
+      gridByXml.put(xml,grid);
+    }
+    return grid;
+  }
+ catch (  Exception ex) {
+    if (supportsReloading()) {
+      badXmlByClass.put(domainClass,xml);
+    }
+    final String resourceName=resourceNameFor(domainClass);
+    final String message="Failed to parse " + resourceName + " file ("+ ex.getMessage()+ ")";
+    if (supportsReloading()) {
+      container.warnUser(message);
+    }
+    LOG.warn(message);
+    return null;
+  }
+}

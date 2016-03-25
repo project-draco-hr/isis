@@ -1,0 +1,14 @@
+{
+  final List<FieldSet> fieldSets=fieldSetOwner.getFieldSets();
+  for (  FieldSet fieldSet : Lists.newArrayList(fieldSets)) {
+    fieldSet.setOwner(fieldSetOwner);
+    visitor.visit(fieldSet);
+    traverseActions(fieldSet,visitor);
+    final List<PropertyLayoutData> properties=fieldSet.getProperties();
+    for (    final PropertyLayoutData property : Lists.newArrayList(properties)) {
+      property.setOwner(fieldSet);
+      visitor.visit(property);
+      traverseActions(property,visitor);
+    }
+  }
+}

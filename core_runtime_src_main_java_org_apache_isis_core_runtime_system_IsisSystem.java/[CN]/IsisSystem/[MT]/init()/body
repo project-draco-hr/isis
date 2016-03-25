@@ -32,13 +32,21 @@
     IsisContext.setConfiguration(configuration);
     deploymentType.initContext(sessionFactory);
     specificationLoader.init(runtimeContext);
-    authenticationManager.init();
-    authorizationManager.init();
-    persistenceSessionFactory.init();
-    specificationLoader.validateAndAssert();
-    this.serviceInitializer=initializeServices();
-    installFixturesIfRequired();
-    translateServicesAndEnumConstants();
+    try {
+      specificationLoader.validateAndAssert();
+      authenticationManager.init();
+      authorizationManager.init();
+      persistenceSessionFactory.init();
+      this.serviceInitializer=initializeServices();
+      installFixturesIfRequired();
+      translateServicesAndEnumConstants();
+    }
+ catch (    final MetaModelInvalidException ex) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Meta model invalid",ex);
+      }
+      IsisContext.setMetaModelInvalidException(ex);
+    }
   }
  catch (  final IsisSystemException ex) {
     LOG.error("failed to initialise",ex);

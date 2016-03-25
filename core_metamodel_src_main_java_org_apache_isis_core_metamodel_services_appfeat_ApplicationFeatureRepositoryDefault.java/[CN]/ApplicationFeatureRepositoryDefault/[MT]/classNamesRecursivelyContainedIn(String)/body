@@ -1,0 +1,9 @@
+{
+  final ApplicationFeatureId packageId=ApplicationFeatureId.newPackage(packageFqn);
+  final ApplicationFeature pkg=findPackage(packageId);
+  if (pkg == null) {
+    return Collections.emptyList();
+  }
+  final Set<ApplicationFeatureId> classIds=this.classFeatures.keySet();
+  return Lists.newArrayList(Iterables.transform(Iterables.filter(classIds,ApplicationFeatureId.Predicates.isClassRecursivelyWithin(packageId)),ApplicationFeatureId.Functions.GET_CLASS_NAME));
+}

@@ -10,7 +10,13 @@
  else {
         final ActionPromptProvider promptProvider=ActionPromptProvider.Util.getFrom(getPage());
         final ActionPrompt actionPrompt=promptProvider.getActionPrompt();
-        ActionPromptHeaderPanel titlePanel=new ActionPromptHeaderPanel(actionPrompt.getTitleId(),actionModel);
+        final ActionPromptHeaderPanel titlePanel=PersistenceSession.ConcurrencyChecking.executeWithConcurrencyCheckingDisabled(new Callable<ActionPromptHeaderPanel>(){
+          @Override public ActionPromptHeaderPanel call() throws Exception {
+            final String titleId=actionPrompt.getTitleId();
+            return new ActionPromptHeaderPanel(titleId,actionModel);
+          }
+        }
+);
         final ActionPanel actionPanel=(ActionPanel)getComponentFactoryRegistry().createComponent(ComponentType.ACTION_PROMPT,actionPrompt.getContentId(),actionModel);
         actionPanel.setShowHeader(false);
         actionPrompt.setTitle(titlePanel,target);

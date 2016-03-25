@@ -1,0 +1,46 @@
+{
+  normalize(grid,domainClass);
+  final ObjectSpecification objectSpec=specificationLookup.loadSpecification(domainClass);
+  grid.visit(new Grid.VisitorAdapter(){
+    @Override public void visit(    final ActionLayoutData actionLayoutData){
+      final ObjectAction objectAction=objectSpec.getObjectAction(actionLayoutData.getId());
+      setBookmarkingIfAny(actionLayoutData,objectAction);
+      setCssClassIfAny(actionLayoutData,objectAction);
+      setCssClassFaIfAny(actionLayoutData,objectAction);
+      setDescribedAsIfAny(actionLayoutData,objectAction);
+      setHiddenIfAny(actionLayoutData,objectAction);
+      setNamedIfAny(actionLayoutData,objectAction);
+      setActionPositionIfAny(actionLayoutData,objectAction);
+    }
+    @Override public void visit(    final CollectionLayoutData collectionLayoutData){
+      final ObjectAssociation collection=objectSpec.getAssociation(collectionLayoutData.getId());
+      setCssClassIfAny(collectionLayoutData,collection);
+      setDefaultViewIfAny(collectionLayoutData,collection);
+      setDescribedAsIfAny(collectionLayoutData,collection);
+      setHiddenIfAny(collectionLayoutData,collection);
+      setNamedIfAny(collectionLayoutData,collection);
+      setPagedIfAny(collectionLayoutData,collection);
+      setSortedByIfAny(collectionLayoutData,collection);
+    }
+    @Override public void visit(    final PropertyLayoutData propertyLayoutData){
+      final ObjectAssociation property=objectSpec.getAssociation(propertyLayoutData.getId());
+      setCssClassIfAny(propertyLayoutData,property);
+      setDescribedAsIfAny(propertyLayoutData,property);
+      setHiddenIfAny(propertyLayoutData,property);
+      setNamedIfAny(propertyLayoutData,property);
+      setLabelPositionIfAny(propertyLayoutData,property);
+      setMultiLineIfAny(propertyLayoutData,property);
+      setRenderedAsDayBeforeIfAny(propertyLayoutData,property);
+      setTypicalLengthIfAny(propertyLayoutData,property);
+    }
+    @Override public void visit(    final DomainObjectLayoutData domainObjectLayoutData){
+      setBookmarkingIfAny(domainObjectLayoutData,objectSpec);
+      setCssClassIfAny(domainObjectLayoutData,objectSpec);
+      setCssClassFaIfAny(domainObjectLayoutData,objectSpec);
+      setDescribedAsIfAny(domainObjectLayoutData,objectSpec);
+      setNamedIfAny(domainObjectLayoutData,objectSpec);
+      setPluralIfAny(domainObjectLayoutData,objectSpec);
+    }
+  }
+);
+}

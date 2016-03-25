@@ -31,17 +31,21 @@
       if ("(edit)".equals(command.getMemberIdentifier())) {
       }
  else {
-        command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
-        final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
-        if (backgroundService != null) {
-          final Object targetObject=unwrap(targetAdapter);
-          final Object[] args=CommandUtil.objectsFor(arguments);
-          final ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
-          if (aim != null) {
-            command.setMemento(aim.asMementoString());
-          }
+        if (command.getMemberIdentifier() == null) {
+          command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
+        }
+        if (command.getMemento() == null) {
+          final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
+          if (backgroundService != null) {
+            final Object targetObject=unwrap(targetAdapter);
+            final Object[] args=CommandUtil.objectsFor(arguments);
+            final ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
+            if (aim != null) {
+              command.setMemento(aim.asMementoString());
+            }
  else {
-            throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
+              throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
+            }
           }
         }
       }
@@ -73,12 +77,13 @@
     Object result;
     if (cacheable) {
       final QueryResultsCache queryResultsCache=getServicesInjector().lookupService(QueryResultsCache.class);
+      final Object[] targetPojoPlusExecutionParameters=ArrayExtensions.appendT(executionParameters,targetPojo);
       result=queryResultsCache.execute(new Callable<Object>(){
         @Override public Object call() throws Exception {
           return method.invoke(targetPojo,executionParameters);
         }
       }
-,targetPojo.getClass(),method.getName(),executionParameters);
+,targetPojo.getClass(),method.getName(),targetPojoPlusExecutionParameters);
     }
  else {
       result=method.invoke(targetPojo,executionParameters);
@@ -88,8 +93,8 @@
     }
     if (result == null) {
       if (targetAdapter.getSpecification().isViewModelCloneable(targetAdapter)) {
-        final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)targetAdapter.getObject();
-        final Object clone=cloneable.clone();
+        final ViewModelFacet facet=targetAdapter.getSpecification().getFacet(ViewModelFacet.class);
+        final Object clone=facet.clone(targetAdapter.getObject());
         final ObjectAdapter clonedAdapter=getAdapterManager().adapterFor(clone);
         return InvocationResult.forActionThatReturned(clonedAdapter);
       }
@@ -97,8 +102,8 @@
     }
     ObjectAdapter resultAdapter=getAdapterManager().adapterFor(result);
     if (resultAdapter.getSpecification().isViewModelCloneable(resultAdapter)) {
-      final ViewModel.Cloneable cloneable=(ViewModel.Cloneable)result;
-      result=cloneable.clone();
+      final ViewModelFacet facet=resultAdapter.getSpecification().getFacet(ViewModelFacet.class);
+      result=facet.clone(result);
       resultAdapter=getAdapterManager().adapterFor(result);
     }
     final TypeOfFacet typeOfFacet=getFacetHolder().getFacet(TypeOfFacet.class);
@@ -109,8 +114,12 @@
         command.setResult(bookmark);
       }
     }
-    final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
-    currentInvocation.set(publishedActionFacet != null ? new CurrentInvocation(targetAdapter,getIdentified(),arguments,resultAdapter,command) : null);
+    if (currentInvocation.get() == null) {
+      final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
+      if (publishedActionFacet != null) {
+        currentInvocation.set(new CurrentInvocation(targetAdapter,owningAction,getIdentified(),arguments,resultAdapter,command));
+      }
+    }
     return InvocationResult.forActionThatReturned(resultAdapter);
   }
  catch (  final IllegalArgumentException e) {

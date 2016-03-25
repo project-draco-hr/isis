@@ -1,0 +1,16 @@
+{
+  final ImmutableList<String> existingIds=FluentIterable.from(fieldSet.getProperties()).transform(new Function<PropertyLayoutData,String>(){
+    @Nullable @Override public String apply(    @Nullable final PropertyLayoutData propertyLayoutData){
+      return propertyLayoutData.getId();
+    }
+  }
+).toList();
+  for (  final String propertyId : propertyIds) {
+    if (!existingIds.contains(propertyId)) {
+      final PropertyLayoutData propertyLayoutData=new PropertyLayoutData(propertyId);
+      fieldSet.getProperties().add(propertyLayoutData);
+      propertyLayoutData.setOwner(fieldSet);
+      propertyLayoutDataById.put(propertyId,propertyLayoutData);
+    }
+  }
+}

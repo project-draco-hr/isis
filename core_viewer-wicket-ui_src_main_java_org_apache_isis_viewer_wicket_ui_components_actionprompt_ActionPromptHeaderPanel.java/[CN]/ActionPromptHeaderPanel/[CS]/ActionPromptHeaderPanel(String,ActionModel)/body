@@ -2,10 +2,17 @@
   super(id,model);
   ObjectAdapter targetAdapter=model.getTargetAdapter();
   getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
-  add(new Label(ID_ACTION_NAME,new AbstractReadOnlyModel<String>(){
+  final Label label=new Label(ID_ACTION_NAME,new AbstractReadOnlyModel<String>(){
     @Override public String getObject(){
-      return model.getActionMemento().getAction().getName();
+      final ObjectAction action=model.getActionMemento().getAction();
+      return action.getName();
     }
   }
-));
+);
+  final ObjectAction action=model.getActionMemento().getAction();
+  NamedFacet namedFacet=action.getFacet(NamedFacet.class);
+  if (namedFacet != null) {
+    label.setEscapeModelStrings(namedFacet.escaped());
+  }
+  add(label);
 }
