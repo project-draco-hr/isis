@@ -21,7 +21,12 @@
       getModel().getParentObjectAdapterMemento().setAdapter(adapter);
     }
     getTransactionManager().flushTransaction();
-    final EntityPage entityPage=new EntityPage(objectAdapter,null);
+    final EntityPage entityPage=AdapterManager.ConcurrencyChecking.executeWithConcurrencyCheckingDisabled(new Callable<EntityPage>(){
+      @Override public EntityPage call() throws Exception {
+        return new EntityPage(objectAdapter,null);
+      }
+    }
+);
     setResponsePage(entityPage);
     return true;
   }
