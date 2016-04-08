@@ -1,0 +1,14 @@
+{
+  RootOid oid=RootOid.create(bookmark);
+  final ObjectAdapter adapter=adapterFor(oid);
+  if (adapter == null) {
+    return null;
+  }
+  if (fieldResetPolicy == BookmarkService2.FieldResetPolicy.RESET) {
+    getPersistenceSession().refreshRootInTransaction(adapter);
+  }
+ else {
+    getPersistenceSession().loadObjectInTransaction(oid);
+  }
+  return adapter.getObject();
+}
