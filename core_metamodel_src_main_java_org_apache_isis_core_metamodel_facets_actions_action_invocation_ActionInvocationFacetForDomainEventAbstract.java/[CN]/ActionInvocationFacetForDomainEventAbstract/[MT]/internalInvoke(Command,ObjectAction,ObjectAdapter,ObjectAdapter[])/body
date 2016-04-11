@@ -35,11 +35,11 @@
           command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
         }
         if (command.getMemento() == null) {
-          final BackgroundService backgroundService=getServicesInjector().lookupService(BackgroundService.class);
-          if (backgroundService != null) {
+          final CommandMementoService commandMementoService=getServicesInjector().lookupService(CommandMementoService.class);
+          if (commandMementoService != null) {
             final Object targetObject=unwrap(targetAdapter);
             final Object[] args=CommandUtil.objectsFor(arguments);
-            final ActionInvocationMemento aim=backgroundService.asActionInvocationMemento(method,targetObject,args);
+            final ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(method,targetObject,args);
             if (aim != null) {
               command.setMemento(aim.asMementoString());
             }
