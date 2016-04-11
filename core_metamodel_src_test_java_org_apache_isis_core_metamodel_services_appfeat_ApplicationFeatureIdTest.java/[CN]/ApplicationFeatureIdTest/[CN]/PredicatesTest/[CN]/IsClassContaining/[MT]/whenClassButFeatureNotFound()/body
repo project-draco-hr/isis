@@ -1,0 +1,11 @@
+{
+  final ApplicationFeatureId classFeature=ApplicationFeatureId.newClass("com.mycompany.Bar");
+  context.checking(new Expectations(){
+{
+      allowing(mockApplicationFeatureRepository).findFeature(classFeature);
+      will(returnValue(null));
+    }
+  }
+);
+  assertThat(ApplicationFeatureId.Predicates.isClassContaining(ApplicationMemberType.ACTION,mockApplicationFeatureRepository).apply(classFeature),is(false));
+}

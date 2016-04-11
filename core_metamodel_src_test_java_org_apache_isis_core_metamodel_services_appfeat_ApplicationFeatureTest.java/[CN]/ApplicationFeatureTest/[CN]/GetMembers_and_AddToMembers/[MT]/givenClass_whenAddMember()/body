@@ -1,0 +1,9 @@
+{
+  final ApplicationFeature applicationFeature=new ApplicationFeature(ApplicationFeatureId.newClass("com.mycompany.Bar"));
+  final ApplicationFeatureId memberFeatureId=ApplicationFeatureId.newMember("com.mycompany.Bar","foo");
+  final ApplicationFeatureId memberFeatureId2=ApplicationFeatureId.newMember("com.mycompany.Bar","boz");
+  applicationFeature.addToMembers(memberFeatureId,ApplicationMemberType.PROPERTY);
+  applicationFeature.addToMembers(memberFeatureId2,ApplicationMemberType.PROPERTY);
+  assertThat(applicationFeature.getProperties().size(),is(2));
+  assertThat(applicationFeature.getProperties(),containsInAnyOrder(memberFeatureId,memberFeatureId2));
+}

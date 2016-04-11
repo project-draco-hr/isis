@@ -1,0 +1,18 @@
+{
+  final ApplicationFeatureId classFeature=ApplicationFeatureId.newClass("com.mycompany.Bar");
+  context.checking(new Expectations(){
+{
+      oneOf(mockApplicationFeatureRepository).findFeature(classFeature);
+      will(returnValue(mockApplicationFeature));
+      allowing(mockApplicationFeature).membersOf(ApplicationMemberType.ACTION);
+      will(returnValue(new TreeSet<ApplicationFeatureId>(){
+{
+          add(ApplicationFeatureId.newMember("com.mycompany.Bar#foo"));
+        }
+      }
+));
+    }
+  }
+);
+  assertThat(ApplicationFeatureId.Predicates.isClassContaining(ApplicationMemberType.ACTION,mockApplicationFeatureRepository).apply(classFeature),is(true));
+}

@@ -1,0 +1,15 @@
+{
+  final ApplicationFeatureId classFeatureId=ApplicationFeatureId.newClass("com.mycompany.Bar");
+  final ApplicationFeature newlyCreatedParent=new ApplicationFeature();
+  context.checking(new Expectations(){
+{
+      oneOf(mockContainer).newTransientInstance(ApplicationFeature.class);
+      will(returnValue(newlyCreatedParent));
+    }
+  }
+);
+  final ApplicationFeatureId classParentId=applicationFeatureRepository.addClassParent(classFeatureId);
+  Assert.assertThat(classParentId,is(equalTo(classFeatureId.getParentPackageId())));
+  final ApplicationFeature classPackage=applicationFeatureRepository.findPackage(classParentId);
+  assertThat(classPackage,is(newlyCreatedParent));
+}
