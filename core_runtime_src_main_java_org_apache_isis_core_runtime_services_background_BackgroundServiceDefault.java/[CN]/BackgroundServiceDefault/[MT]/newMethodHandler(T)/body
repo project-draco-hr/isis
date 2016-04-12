@@ -15,16 +15,11 @@
         throw new UnsupportedOperationException("Only actions can be executed in the background " + "(method " + proxiedMethod.getName() + " represents a "+ member.getFeatureType().name()+ "')");
       }
       final ObjectAction action=(ObjectAction)member;
-      final String actionIdentifier=CommandUtil.actionIdentifierFor(action);
       final String targetClassName=CommandUtil.targetClassNameFor(targetAdapter);
       final String targetActionName=CommandUtil.targetActionNameFor(action);
       final String targetArgs=CommandUtil.argDescriptionFor(action,adaptersFor(args));
-      final Bookmark domainObjectBookmark=bookmarkService.bookmarkFor(domainObject);
-      final List<Class<?>> argTypes=Lists.newArrayList();
-      final List<Object> argObjs=Lists.newArrayList();
-      CommandUtil.buildMementoArgLists(mementoService,bookmarkService,proxiedMethod,args,argTypes,argObjs);
       final Command command=commandContext.getCommand();
-      final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,actionIdentifier,domainObjectBookmark,argTypes,argObjs);
+      final ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(proxyMethod,domainObject,args);
       backgroundCommandService.schedule(aim,command,targetClassName,targetActionName,targetArgs);
       return null;
     }
