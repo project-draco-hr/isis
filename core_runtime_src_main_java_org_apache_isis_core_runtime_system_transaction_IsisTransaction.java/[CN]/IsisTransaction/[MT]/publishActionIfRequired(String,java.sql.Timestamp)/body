@@ -13,7 +13,6 @@
     if (publishedActionFacet == null) {
       return;
     }
-    final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
     final ObjectAdapter targetAdapter=currentInvocation.getTarget();
     final RootOid adapterOid=(RootOid)targetAdapter.getOid();
     final String oidStr=getOidMarshaller().marshal(adapterOid);
@@ -38,7 +37,9 @@
       parameterTypes=null;
       returnType=null;
     }
-    final EventMetadata metadata=newEventMetadata(EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
+    final Command command1=this.command;
+    final EventMetadata metadata=newEventMetadata(command1,EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
+    final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
     publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
   }
   finally {
