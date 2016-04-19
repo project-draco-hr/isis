@@ -3,45 +3,7 @@
   if (paramDto.isNull()) {
     return null;
   }
-  final ValueDto valueDto=valueDtoFor(paramDto);
+  final ValueDto valueDto=CommandMementoDtoUtils.argumentFor(paramDto);
   final ValueType parameterType=paramDto.getParameterType();
-switch (parameterType) {
-case STRING:
-    return (T)valueDto.getString();
-case BYTE:
-  return (T)valueDto.getByte();
-case SHORT:
-return (T)valueDto.getShort();
-case INT:
-return (T)valueDto.getInt();
-case LONG:
-return (T)valueDto.getLong();
-case FLOAT:
-return (T)valueDto.getFloat();
-case DOUBLE:
-return (T)valueDto.getDouble();
-case BOOLEAN:
-return (T)valueDto.isBoolean();
-case CHAR:
-final String aChar=valueDto.getChar();
-if (Strings.isNullOrEmpty(aChar)) {
-return null;
-}
-return (T)(Object)aChar.charAt(0);
-case BIG_DECIMAL:
-return (T)valueDto.getBigDecimal();
-case BIG_INTEGER:
-return (T)valueDto.getBigInteger();
-case JODA_DATE_TIME:
-return (T)JodaDateTimeXMLGregorianCalendarAdapter.parse(valueDto.getDateTime());
-case JODA_LOCAL_DATE:
-return (T)JodaLocalDateXMLGregorianCalendarAdapter.parse(valueDto.getLocalDate());
-case JODA_LOCAL_DATE_TIME:
-return (T)JodaLocalDateTimeXMLGregorianCalendarAdapter.parse(valueDto.getLocalDateTime());
-case JODA_LOCAL_TIME:
-return (T)JodaLocalTimeXMLGregorianCalendarAdapter.parse(valueDto.getLocalTime());
-case REFERENCE:
-return (T)valueDto.getReference();
-}
-throw new IllegalStateException("Parameter type was not recognised (possible bug)");
+  return CommonDtoUtils.getValue(valueDto,parameterType);
 }

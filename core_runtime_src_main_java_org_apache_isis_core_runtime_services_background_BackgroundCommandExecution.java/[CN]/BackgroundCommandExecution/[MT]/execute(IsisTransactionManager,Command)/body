@@ -2,33 +2,70 @@
   transactionManager.executeWithinTransaction(new TransactionalClosure(){
     @Override public void execute(){
       commandContext.setCommand(command);
+      final String memento=command.getMemento();
+      final boolean legacy=memento.startsWith("<memento");
       try {
         command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
         command.setExecutor(Executor.BACKGROUND);
-        final String memento=command.getMemento();
-        final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,memento);
-        final String actionId=aim.getActionId();
-        final Bookmark targetBookmark=aim.getTarget();
-        final Object targetObject=bookmarkService.lookup(targetBookmark);
-        final ObjectAdapter targetAdapter=adapterFor(targetObject);
-        final ObjectSpecification specification=targetAdapter.getSpecification();
-        final ObjectAction objectAction=findAction(specification,actionId);
-        if (objectAction == null) {
-          throw new Exception("Unknown action '" + actionId + "'");
+        if (legacy) {
+          final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,memento);
+          final String actionId=aim.getActionId();
+          final Bookmark targetBookmark=aim.getTarget();
+          final Object targetObject=bookmarkService.lookup(targetBookmark);
+          final ObjectAdapter targetAdapter=adapterFor(targetObject);
+          final ObjectSpecification specification=targetAdapter.getSpecification();
+          final ObjectAction objectAction=findAction(specification,actionId);
+          if (objectAction == null) {
+            throw new Exception("Unknown action '" + actionId + "'");
+          }
+          final ObjectAdapter[] argAdapters=argAdaptersFor(aim);
+          final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
+          if (resultAdapter != null) {
+            Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
+            command.setResult(resultBookmark);
+          }
         }
-        final ObjectAdapter[] argAdapters=argAdaptersFor(aim);
-        final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
-        if (resultAdapter != null) {
-          Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
-          command.setResult(resultBookmark);
+ else {
+          final CommandMementoDto dto=jaxbService.fromXml(CommandMementoDto.class,memento);
+          final ActionDto actionDto=dto.getAction();
+          final String actionId=actionDto.getActionIdentifier();
+          final List<OidDto> targetOidDtos=dto.getTargets();
+          for (          OidDto targetOidDto : targetOidDtos) {
+            final Bookmark bookmark=Bookmark.from(targetOidDto);
+            final Object targetObject=bookmarkService.lookup(bookmark);
+            final ObjectAdapter targetAdapter=adapterFor(targetObject);
+            final String mixinFqClassName=actionDto.getMixinFqClassName();
+            final ObjectAction objectAction=findObjectAction(mixinFqClassName,targetAdapter,actionId);
+            final ObjectAdapter[] argAdapters=argAdaptersFor(dto);
+            objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
+          }
         }
       }
  catch (      Exception e) {
-        command.setException(Throwables.getStackTraceAsString(e));
+        if (legacy) {
+          command.setException(Throwables.getStackTraceAsString(e));
+        }
+ else {
+        }
       }
  finally {
         command.setCompletedAt(Clock.getTimeAsJavaSqlTimestamp());
       }
+    }
+    private ObjectAction findObjectAction(    final String mixinFqClassName,    final ObjectAdapter targetAdapter,    final String actionId) throws Exception {
+      final ObjectAction objectAction;
+      if (mixinFqClassName != null) {
+        final ObjectSpecification mixinSpec=getSpecificationLoader().loadSpecification(mixinFqClassName);
+        objectAction=mixinSpec.getObjectAction(actionId);
+      }
+ else {
+        final ObjectSpecification specification=targetAdapter.getSpecification();
+        objectAction=findAction(specification,actionId);
+      }
+      if (objectAction == null) {
+        throw new Exception("Unknown action '" + actionId + "'");
+      }
+      return objectAction;
     }
   }
 );

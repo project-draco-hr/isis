@@ -7,12 +7,12 @@
     final Object targetPojo=unwrap(targetAdapter);
     final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
     if (bulkFacet != null) {
-      final ActionInvocationContext actionInvocationContext=getServicesInjector().lookupService(ActionInvocationContext.class);
+      final ActionInvocationContext actionInvocationContext=getActionInvocationContext();
       if (actionInvocationContext != null && actionInvocationContext.getInvokedOn() == null) {
         actionInvocationContext.setInvokedOn(InvokedOn.OBJECT);
         actionInvocationContext.setDomainObjects(Collections.singletonList(targetPojo));
       }
-      final Bulk.InteractionContext bulkInteractionContext=getServicesInjector().lookupService(Bulk.InteractionContext.class);
+      final Bulk.InteractionContext bulkInteractionContext=getBulkInteractionContext();
       if (bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
         bulkInteractionContext.setInvokedAs(Bulk.InteractionContext.InvokedAs.REGULAR);
         actionInvocationContext.setDomainObjects(Collections.singletonList(targetPojo));
@@ -28,23 +28,29 @@
         final Bookmark targetBookmark=CommandUtil.bookmarkFor(targetAdapter);
         command.setTarget(targetBookmark);
       }
-      if ("(edit)".equals(command.getMemberIdentifier())) {
+      if (Command.ACTION_IDENTIFIER_FOR_EDIT.equals(command.getMemberIdentifier())) {
       }
  else {
         if (command.getMemberIdentifier() == null) {
           command.setMemberIdentifier(CommandUtil.actionIdentifierFor(owningAction));
         }
         if (command.getMemento() == null) {
-          final CommandMementoService commandMementoService=getServicesInjector().lookupService(CommandMementoService.class);
-          if (commandMementoService != null) {
-            final Object targetObject=unwrap(targetAdapter);
-            final Object[] args=CommandUtil.objectsFor(arguments);
-            final ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(method,targetObject,args);
+          final CommandMementoService commandMementoService=getCommandMementoService();
+          final Object targetObject=unwrap(targetAdapter);
+          final Object[] args=CommandUtil.objectsFor(arguments);
+          final CommandMementoDto dto=commandMementoService.asCommandMemento(Collections.singletonList(targetAdapter),owningAction,arguments);
+          if (dto != null) {
+            final String mementoXml=CommandMementoDtoUtils.toXml(dto);
+            command.setMemento(mementoXml);
+          }
+ else {
+            ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(method,targetObject,args);
             if (aim != null) {
               command.setMemento(aim.asMementoString());
             }
  else {
-              throw new IsisException("Unable to build memento for action " + owningAction.getIdentifier().toClassAndNameIdentityString());
+              String actionIdentifier=owningAction.getIdentifier().toClassAndNameIdentityString();
+              throw new IsisException("Unable to build memento for action " + actionIdentifier);
             }
           }
         }
@@ -60,7 +66,7 @@
       }
     }
     if (command != null && command.getExecutor() == Command.Executor.USER && command.getExecuteIn() == org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND) {
-      final CommandService commandService=getServicesInjector().lookupService(CommandService.class);
+      final CommandService commandService=getCommandService();
       if (commandService.persistIfPossible(command)) {
         final ObjectAdapter resultAdapter=getAdapterManager().adapterFor(command);
         return InvocationResult.forActionThatReturned(resultAdapter);
@@ -76,7 +82,7 @@
     final boolean cacheable=semanticsFacet != null && semanticsFacet.value().isSafeAndRequestCacheable();
     Object result;
     if (cacheable) {
-      final QueryResultsCache queryResultsCache=getServicesInjector().lookupService(QueryResultsCache.class);
+      final QueryResultsCache queryResultsCache=getQueryResultsCache();
       final Object[] targetPojoPlusExecutionParameters=ArrayExtensions.appendT(executionParameters,targetPojo);
       result=queryResultsCache.execute(new Callable<Object>(){
         @Override public Object call() throws Exception {

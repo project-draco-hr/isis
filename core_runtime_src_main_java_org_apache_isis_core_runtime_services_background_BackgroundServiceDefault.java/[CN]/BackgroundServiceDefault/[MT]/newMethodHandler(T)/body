@@ -17,8 +17,17 @@
       final ObjectAction action=(ObjectAction)member;
       final String targetClassName=CommandUtil.targetClassNameFor(targetAdapter);
       final String targetActionName=CommandUtil.targetActionNameFor(action);
-      final String targetArgs=CommandUtil.argDescriptionFor(action,adaptersFor(args));
+      final ObjectAdapter[] argAdapters=adaptersFor(args);
+      final String targetArgs=CommandUtil.argDescriptionFor(action,argAdapters);
       final Command command=commandContext.getCommand();
+      if (backgroundCommandService instanceof BackgroundCommandService2) {
+        final BackgroundCommandService2 backgroundCommandService2=(BackgroundCommandService2)backgroundCommandService;
+        final CommandMementoDto dto=commandMementoService.asCommandMemento(Collections.singletonList(targetAdapter),action,argAdapters);
+        if (dto != null) {
+          backgroundCommandService2.schedule(dto,command,targetClassName,targetActionName,targetArgs);
+          return null;
+        }
+      }
       final ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(proxyMethod,domainObject,args);
       backgroundCommandService.schedule(aim,command,targetClassName,targetActionName,targetArgs);
       return null;
