@@ -3,10 +3,10 @@
     @Override public void execute(){
       commandContext.setCommand(command);
       final String memento=command.getMemento();
-      final boolean legacy=memento.startsWith("<memento");
       try {
         command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
         command.setExecutor(Executor.BACKGROUND);
+        final boolean legacy=memento.startsWith("<memento");
         if (legacy) {
           final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,memento);
           final String actionId=aim.getActionId();
@@ -37,16 +37,16 @@
             final String mixinFqClassName=actionDto.getMixinFqClassName();
             final ObjectAction objectAction=findObjectAction(mixinFqClassName,targetAdapter,actionId);
             final ObjectAdapter[] argAdapters=argAdaptersFor(dto);
-            objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
+            final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
+            if (resultAdapter != null) {
+              Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
+              command.setResult(resultBookmark);
+            }
           }
         }
       }
  catch (      Exception e) {
-        if (legacy) {
-          command.setException(Throwables.getStackTraceAsString(e));
-        }
- else {
-        }
+        command.setException(Throwables.getStackTraceAsString(e));
       }
  finally {
         command.setCompletedAt(Clock.getTimeAsJavaSqlTimestamp());
