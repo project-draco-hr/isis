@@ -24,6 +24,16 @@
       final Bookmark targetBookmark=CommandUtil.bookmarkFor(mixedInAdapter);
       command.setTarget(targetBookmark);
     }
+    if (command.getMemento() == null) {
+      final CommandMementoService commandMementoService=getCommandMementoService();
+      final CommandMementoDto dto=commandMementoService.asCommandMemento(Collections.singletonList(mixedInAdapter),this,arguments);
+      if (dto != null) {
+        final String mementoXml=CommandMementoDtoUtils.toXml(dto);
+        command.setMemento(mementoXml);
+      }
+ else {
+      }
+    }
   }
   return mixinAction.execute(mixinAdapterFor(mixinType,mixedInAdapter),arguments,interactionInitiatedBy);
 }
