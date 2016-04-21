@@ -23,15 +23,12 @@
   ServicesInstaller servicesInstaller=this.installerLookup.servicesInstaller(null);
   persistenceMechanismInstaller=this.installerLookup.persistenceMechanismInstaller(configProperty(SystemConstants.OBJECT_PERSISTOR_INSTALLER_KEY));
   reflectorInstaller=this.installerLookup.reflectorInstaller(configProperty(SystemConstants.REFLECTOR_KEY));
-  TransactionFacetDecoratorInstaller transactionFacetDecoratorInstaller=this.installerLookup.getInstaller(TransactionFacetDecoratorInstaller.class);
   ensureThatState(authenticationInstaller,is(not(nullValue())),"authenticationInstaller could not be looked up");
   ensureThatState(authorizationInstaller,is(not(nullValue())),"authorizationInstaller could not be looked up");
   ensureThatState(servicesInstaller,is(not(nullValue())),"servicesInstaller could not be looked up");
   ensureThatState(fixturesInstaller,is(not(nullValue())),"fixtureInstaller could not be looked up");
-  ensureThatState(transactionFacetDecoratorInstaller,is(not(nullValue())),"transactionFacetDecoratorInstaller could not be looked up");
   ensureThatState(persistenceMechanismInstaller,is(not(nullValue())),"persistenceMechanismInstaller could not be looked up");
   ensureThatState(reflectorInstaller,is(not(nullValue())),"reflectorInstaller could not be looked up");
-  reflectorInstaller.addFacetDecoratorInstaller(transactionFacetDecoratorInstaller);
   configuration=this.installerLookup.getConfiguration();
   authenticationManager=authenticationInstaller.createAuthenticationManager();
   authorizationManager=authorizationInstaller.createAuthorizationManager();
