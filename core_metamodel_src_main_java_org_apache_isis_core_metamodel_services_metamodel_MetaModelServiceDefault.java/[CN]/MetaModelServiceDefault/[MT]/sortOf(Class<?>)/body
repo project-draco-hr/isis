@@ -1,0 +1,26 @@
+{
+  if (domainType == null) {
+    return null;
+  }
+  final ObjectSpecification objectSpec=specificationLookup.loadSpecification(domainType);
+  if (objectSpec.isService()) {
+    return Sort.DOMAIN_SERVICE;
+  }
+  if (objectSpec.isViewModel()) {
+    return Sort.VIEW_MODEL;
+  }
+  if (objectSpec.isValue()) {
+    return Sort.VALUE;
+  }
+  if (objectSpec.isMixin()) {
+    return Sort.VALUE;
+  }
+  if (objectSpec.isParentedOrFreeCollection()) {
+    return Sort.COLLECTION;
+  }
+  final Class<?> correspondingClass=objectSpec.getCorrespondingClass();
+  if (Persistable.class.isAssignableFrom(correspondingClass)) {
+    return Sort.JDO_ENTITY;
+  }
+  throw new IllegalArgumentException(String.format("Unable to determine what sort of domain object is '%s'",objectSpec.getFullIdentifier()));
+}
