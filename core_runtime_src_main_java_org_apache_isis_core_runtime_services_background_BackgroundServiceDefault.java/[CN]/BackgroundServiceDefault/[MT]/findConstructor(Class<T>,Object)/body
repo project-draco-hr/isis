@@ -1,0 +1,10 @@
+{
+  final Constructor<?>[] constructors=proxySubclass.getConstructors();
+  for (  Constructor<?> constructor : constructors) {
+    final Class<?>[] parameterTypes=constructor.getParameterTypes();
+    if (parameterTypes.length == 1 && parameterTypes[0].isAssignableFrom(mixedInIfAny.getClass())) {
+      return constructor;
+    }
+  }
+  throw new IllegalArgumentException(String.format("Could not locate 1-arg constructor for mixin type of '%s' accepting an instance of '%s'",proxySubclass,mixedInIfAny.getClass().getName()));
+}

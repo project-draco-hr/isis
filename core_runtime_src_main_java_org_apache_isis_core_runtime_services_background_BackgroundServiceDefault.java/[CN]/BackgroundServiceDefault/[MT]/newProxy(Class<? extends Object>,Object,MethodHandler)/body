@@ -10,12 +10,19 @@
 );
   final Class<T> proxySubclass=proxyFactory.createClass();
   try {
-    final T newInstance=proxySubclass.newInstance();
+    final T newInstance;
+    if (mixedInIfAny == null) {
+      newInstance=proxySubclass.newInstance();
+    }
+ else {
+      Constructor constructor=findConstructor(proxySubclass,mixedInIfAny);
+      newInstance=(T)constructor.newInstance(mixedInIfAny);
+    }
     final ProxyObject proxyObject=(ProxyObject)newInstance;
     proxyObject.setHandler(methodHandler);
     return newInstance;
   }
- catch (  final InstantiationException|IllegalAccessException e) {
+ catch (  final InstantiationException|IllegalAccessException|InvocationTargetException e) {
     throw new IsisException(e);
   }
 }

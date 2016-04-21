@@ -1,0 +1,63 @@
+{
+  return new MethodHandler(){
+    @Override public Object invoke(    final Object proxied,    final Method proxyMethod,    final Method proxiedMethod,    final Object[] args) throws Throwable {
+      final boolean inheritedFromObject=proxyMethod.getDeclaringClass().equals(Object.class);
+      if (inheritedFromObject) {
+        return proxyMethod.invoke(target,args);
+      }
+      final ObjectSpecificationDefault targetObjSpec=getJavaSpecificationOfOwningClass(proxyMethod);
+      final ObjectMember member=targetObjSpec.getMember(proxyMethod);
+      if (member == null) {
+        return proxyMethod.invoke(target,args);
+      }
+      if (!(member instanceof ObjectAction)) {
+        throw new UnsupportedOperationException("Only actions can be executed in the background " + "(method " + proxiedMethod.getName() + " represents a "+ member.getFeatureType().name()+ "')");
+      }
+      ObjectAction action=(ObjectAction)member;
+      final Object domainObject;
+      if (mixedInIfAny == null) {
+        domainObject=target;
+      }
+ else {
+        domainObject=mixedInIfAny;
+        action=findMixedInAction(action,mixedInIfAny);
+      }
+      final ObjectAdapter domainObjectAdapter=getAdapterManager().adapterFor(domainObject);
+      final String domainObjectClassName=CommandUtil.targetClassNameFor(domainObjectAdapter);
+      final String targetActionName=CommandUtil.targetActionNameFor(action);
+      final ObjectAdapter[] argAdapters=adaptersFor(args);
+      final String targetArgs=CommandUtil.argDescriptionFor(action,argAdapters);
+      final Command command=commandContext.getCommand();
+      if (backgroundCommandService instanceof BackgroundCommandService2) {
+        final BackgroundCommandService2 bcs2=(BackgroundCommandService2)backgroundCommandService;
+        final List<ObjectAdapter> targetList=Collections.singletonList(domainObjectAdapter);
+        final CommandMementoDto dto=commandMementoService.asCommandMemento(targetList,action,argAdapters);
+        bcs2.schedule(dto,command,domainObjectClassName,targetActionName,targetArgs);
+      }
+ else {
+        final ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(proxyMethod,target,args);
+        backgroundCommandService.schedule(aim,command,domainObjectClassName,targetActionName,targetArgs);
+      }
+      return null;
+    }
+    private ObjectAction findMixedInAction(    final ObjectAction action,    final Object domainObject){
+      final String actionId=action.getId();
+      final ObjectSpecification domainSpec=getAdapterManager().adapterFor(domainObject).getSpecification();
+      List<ObjectAction> objectActions=domainSpec.getObjectActions(Contributed.INCLUDED);
+      for (      ObjectAction objectAction : objectActions) {
+        if (objectAction instanceof ObjectActionMixedIn) {
+          ObjectActionMixedIn objectActionMixedIn=(ObjectActionMixedIn)objectAction;
+          if (objectActionMixedIn.hasMixinAction(action)) {
+            return objectActionMixedIn;
+          }
+        }
+      }
+      throw new IllegalArgumentException(String.format("Unable to find mixin action '%s' for %s",actionId,domainSpec.getFullIdentifier()));
+    }
+    ObjectAdapter[] adaptersFor(    final Object[] args){
+      final AdapterManager adapterManager=getAdapterManager();
+      return CommandUtil.adaptersFor(args,adapterManager);
+    }
+  }
+;
+}
