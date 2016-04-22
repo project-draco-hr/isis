@@ -59,6 +59,13 @@
     final LocalTime argValue=(LocalTime)val;
     valueDto.setLocalTime(JodaLocalTimeXMLGregorianCalendarAdapter.print(argValue));
   }
+ else   if (type.isEnum()) {
+    final Enum argValue=(Enum)val;
+    final EnumDto enumDto=new EnumDto();
+    valueDto.setEnum(enumDto);
+    enumDto.setEnumType(argValue.getClass().getName());
+    enumDto.setEnumName(argValue.name());
+  }
  else {
     return false;
   }

@@ -34,6 +34,11 @@ case JODA_LOCAL_DATE_TIME:
 return (T)JodaLocalDateTimeXMLGregorianCalendarAdapter.parse(valueDto.getLocalDateTime());
 case JODA_LOCAL_TIME:
 return (T)JodaLocalTimeXMLGregorianCalendarAdapter.parse(valueDto.getLocalTime());
+case ENUM:
+final EnumDto enumDto=valueDto.getEnum();
+final String enumType=enumDto.getEnumType();
+final Class<? extends Enum> enumClass=loadClass3(enumType);
+return (T)Enum.valueOf(enumClass,enumDto.getEnumName());
 case REFERENCE:
 return (T)valueDto.getReference();
 }
