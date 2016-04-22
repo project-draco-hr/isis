@@ -1,39 +1,8 @@
 {
-  final BulkFacet bulkFacet=getFacet(BulkFacet.class);
-  if (bulkFacet != null) {
-    final ActionInvocationContext actionInvocationContext=getServicesInjector().lookupService(ActionInvocationContext.class);
-    if (actionInvocationContext != null && actionInvocationContext.getInvokedOn() == null) {
-      actionInvocationContext.setInvokedOn(InvokedOn.OBJECT);
-      actionInvocationContext.setDomainObjects(Collections.singletonList(mixedInAdapter.getObject()));
-    }
-    final Bulk.InteractionContext bulkInteractionContext=getServicesInjector().lookupService(Bulk.InteractionContext.class);
-    if (bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
-      bulkInteractionContext.setInvokedAs(Bulk.InteractionContext.InvokedAs.REGULAR);
-      actionInvocationContext.setDomainObjects(Collections.singletonList(mixedInAdapter.getObject()));
-    }
-  }
-  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
-  final Command command=commandContext != null ? commandContext.getCommand() : null;
-  if (command != null && command.getExecutor() == Executor.USER) {
-    if (command.getTarget() != null) {
-    }
- else {
-      command.setTargetClass(CommandUtil.targetClassNameFor(mixedInAdapter));
-      command.setTargetAction(CommandUtil.targetActionNameFor(this));
-      command.setArguments(CommandUtil.argDescriptionFor(this,arguments));
-      final Bookmark targetBookmark=CommandUtil.bookmarkFor(mixedInAdapter);
-      command.setTarget(targetBookmark);
-    }
-    if (command.getMemento() == null) {
-      final CommandMementoService commandMementoService=getCommandMementoService();
-      final CommandMementoDto dto=commandMementoService.asCommandMemento(Collections.singletonList(mixedInAdapter),this,arguments);
-      if (dto != null) {
-        final String mementoXml=CommandMementoDtoUtils.toXml(dto);
-        command.setMemento(mementoXml);
-      }
- else {
-      }
-    }
-  }
-  return mixinAction.execute(mixinAdapterFor(mixinType,mixedInAdapter),arguments,interactionInitiatedBy);
+  setupActionInvocationContext(mixedInAdapter);
+  final CommandContext commandContext=getCommandContext();
+  final Command command=commandContext.getCommand();
+  setupCommandTarget(mixedInAdapter,arguments);
+  setupCommandMementoAndExecutionContext(mixedInAdapter,arguments);
+  return mixinAction.execute(mixinAdapterFor(mixedInAdapter),arguments,interactionInitiatedBy);
 }

@@ -1,0 +1,21 @@
+{
+  final boolean filterForVisibility=getConfiguration().getBoolean("isis.reflector.facet.filterVisibility",true);
+  if (!filterForVisibility) {
+    return resultAdapter;
+  }
+  final Object result=resultAdapter.getObject();
+  if (result instanceof Collection || result.getClass().isArray()) {
+    final CollectionFacet facet=CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter);
+    final Iterable<ObjectAdapter> adapterList=facet.iterable(resultAdapter);
+    final List<ObjectAdapter> visibleAdapters=ObjectAdapter.Util.visibleAdapters(adapterList,interactionInitiatedBy);
+    final Object visibleObjects=CollectionUtils.copyOf(Lists.transform(visibleAdapters,ObjectAdapter.Functions.getObject()),method.getReturnType());
+    if (visibleObjects != null) {
+      return getAdapterManager().adapterFor(visibleObjects);
+    }
+    return resultAdapter;
+  }
+ else {
+    boolean visible=ObjectAdapter.Util.isVisible(resultAdapter,interactionInitiatedBy);
+    return visible ? resultAdapter : null;
+  }
+}

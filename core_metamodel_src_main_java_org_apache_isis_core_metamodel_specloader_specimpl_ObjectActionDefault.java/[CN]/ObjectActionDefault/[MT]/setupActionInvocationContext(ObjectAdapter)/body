@@ -1,0 +1,16 @@
+{
+  final Object targetPojo=unwrap(targetAdapter);
+  final BulkFacet bulkFacet=getFacetHolder().getFacet(BulkFacet.class);
+  if (bulkFacet != null) {
+    final org.apache.isis.applib.services.actinvoc.ActionInvocationContext actionInvocationContext=getActionInvocationContext();
+    if (actionInvocationContext != null && actionInvocationContext.getInvokedOn() == null) {
+      actionInvocationContext.setInvokedOn(InvokedOn.OBJECT);
+      actionInvocationContext.setDomainObjects(Collections.singletonList(targetPojo));
+    }
+    final Bulk.InteractionContext bulkInteractionContext=getBulkInteractionContext();
+    if (bulkInteractionContext != null && bulkInteractionContext.getInvokedAs() == null) {
+      bulkInteractionContext.setInvokedAs(Bulk.InteractionContext.InvokedAs.REGULAR);
+      bulkInteractionContext.setDomainObjects(Collections.singletonList(targetPojo));
+    }
+  }
+}

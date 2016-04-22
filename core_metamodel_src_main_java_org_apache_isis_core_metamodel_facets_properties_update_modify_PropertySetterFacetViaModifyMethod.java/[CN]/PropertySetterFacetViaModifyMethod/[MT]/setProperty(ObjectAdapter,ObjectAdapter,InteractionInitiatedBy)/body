@@ -1,16 +1,13 @@
 {
   final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
-  final Command command;
-  if (commandContext != null) {
-    command=commandContext.getCommand();
-    command.setExecutor(Command.Executor.USER);
-    command.setTarget(CommandUtil.bookmarkFor(targetAdapter));
-    command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
-    command.setTargetAction(Command.ACTION_IDENTIFIER_FOR_EDIT);
-    command.setMemberIdentifier(Command.ACTION_IDENTIFIER_FOR_EDIT);
-    command.setExecuteIn(org.apache.isis.applib.annotation.Command.ExecuteIn.FOREGROUND);
-    command.setPersistence(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED);
-    command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
-  }
+  final Command command=commandContext.getCommand();
+  command.setExecutor(Command.Executor.USER);
+  command.setTarget(CommandUtil.bookmarkFor(targetAdapter));
+  command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
+  command.setTargetAction(Command.ACTION_IDENTIFIER_FOR_EDIT);
+  command.setMemberIdentifier(Command.ACTION_IDENTIFIER_FOR_EDIT);
+  command.setExecuteIn(org.apache.isis.applib.annotation.Command.ExecuteIn.FOREGROUND);
+  command.setPersistence(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED);
+  command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
   ObjectAdapter.InvokeUtils.invoke(method,targetAdapter,valueAdapter);
 }

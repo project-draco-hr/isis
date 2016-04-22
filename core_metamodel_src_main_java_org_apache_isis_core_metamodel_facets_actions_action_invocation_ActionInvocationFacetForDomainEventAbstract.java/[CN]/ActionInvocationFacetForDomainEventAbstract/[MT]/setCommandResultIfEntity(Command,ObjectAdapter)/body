@@ -1,0 +1,25 @@
+{
+  if (command.getResult() != null) {
+    return;
+  }
+  if (resultAdapter == null) {
+    return;
+  }
+  final Class<?> domainType=resultAdapter.getSpecification().getCorrespondingClass();
+  final MetaModelService2.Sort sort=getMetaModelService().sortOf(domainType);
+switch (sort) {
+case JDO_ENTITY:
+    final Object domainObject=resultAdapter.getObject();
+  if (!getRepositoryService().isPersistent(domainObject)) {
+    getTransactionService().flushTransaction();
+  }
+if (getRepositoryService().isPersistent(domainObject)) {
+  BookmarkService bookmarkService=getBookmarkService();
+  Bookmark bookmark=bookmarkService.bookmarkFor(domainObject);
+  command.setResult(bookmark);
+}
+break;
+default :
+break;
+}
+}

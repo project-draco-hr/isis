@@ -1,0 +1,15 @@
+{
+  final CommandContext commandContext=getCommandContext();
+  final Command command=commandContext.getCommand();
+  if (command.getExecutor() != Command.Executor.USER) {
+    return;
+  }
+  if (command.getTarget() != null) {
+    return;
+  }
+  command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
+  command.setTargetAction(CommandUtil.targetActionNameFor(this));
+  command.setArguments(CommandUtil.argDescriptionFor(this,arguments));
+  final Bookmark targetBookmark=CommandUtil.bookmarkFor(targetAdapter);
+  command.setTarget(targetBookmark);
+}
