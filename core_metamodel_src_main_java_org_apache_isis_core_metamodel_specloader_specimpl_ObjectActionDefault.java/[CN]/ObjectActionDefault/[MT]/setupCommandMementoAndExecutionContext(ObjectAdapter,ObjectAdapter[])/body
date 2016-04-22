@@ -11,7 +11,8 @@
     return;
   }
   final CommandMementoService commandMementoService=getCommandMementoService();
-  final CommandMementoDto dto=commandMementoService.asCommandMemento(Collections.singletonList(targetAdapter),this,arguments);
+  List<ObjectAdapter> commandTargetAdapters=commandTargetAdaptersHolder.get() != null ? commandTargetAdaptersHolder.get() : Collections.singletonList(targetAdapter);
+  final CommandMementoDto dto=commandMementoService.asCommandMemento(commandTargetAdapters,this,arguments);
   final String mementoXml=CommandMementoDtoUtils.toXml(dto);
   command.setMemento(mementoXml);
   final CommandFacet commandFacet=getFacetHolder().getFacet(CommandFacet.class);

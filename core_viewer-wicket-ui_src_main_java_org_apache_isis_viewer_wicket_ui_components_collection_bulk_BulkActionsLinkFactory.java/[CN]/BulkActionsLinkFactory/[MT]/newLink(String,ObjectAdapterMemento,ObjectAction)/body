@@ -7,7 +7,7 @@
       final ConcurrencyChecking concurrencyChecking=ConcurrencyChecking.concurrencyCheckingFor(objectAction.getSemantics());
       try {
         final List<ObjectAdapterMemento> toggleMementosList=model.getToggleMementosList();
-        final Iterable<ObjectAdapter> toggledAdapters=Iterables.transform(toggleMementosList,ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking));
+        final List<ObjectAdapter> toggledAdapters=FluentIterable.from(toggleMementosList).transform(ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking)).toList();
         final List<Object> domainObjects=Lists.newArrayList(Iterables.transform(toggledAdapters,ObjectAdapter.Functions.getObject()));
         final ActionInvocationContext actionInvocationContext=getServicesInjector().lookupService(ActionInvocationContext.class);
         if (actionInvocationContext != null) {
@@ -35,7 +35,12 @@
           if (bulkInteractionContext != null) {
             bulkInteractionContext.setIndex(i++);
           }
-          lastReturnedAdapter=objectAction.executeWithRuleChecking(adapter,new ObjectAdapter[]{},InteractionInitiatedBy.USER,ActionModel.WHERE_FOR_ACTION_INVOCATION);
+          lastReturnedAdapter=ObjectActionDefault.withTargetAdapters(toggledAdapters,new Callable<ObjectAdapter>(){
+            @Override public ObjectAdapter call() throws Exception {
+              return objectAction.executeWithRuleChecking(adapter,new ObjectAdapter[]{},InteractionInitiatedBy.USER,ActionModel.WHERE_FOR_ACTION_INVOCATION);
+            }
+          }
+);
         }
         model.clearToggleMementosList();
         toggleboxColumn.clearToggles();
