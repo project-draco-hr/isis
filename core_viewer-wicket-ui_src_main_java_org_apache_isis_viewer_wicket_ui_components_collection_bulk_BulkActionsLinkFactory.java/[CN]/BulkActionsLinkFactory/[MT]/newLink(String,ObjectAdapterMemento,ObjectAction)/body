@@ -19,15 +19,15 @@
           bulkInteractionContext.setInvokedAs(Bulk.InteractionContext.InvokedAs.BULK);
           bulkInteractionContext.setDomainObjects(domainObjects);
         }
-        final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
-        final Command command;
-        if (commandContext != null) {
-          command=commandContext.getCommand();
-          command.setExecutor(Executor.USER);
-        }
         ObjectAdapter lastReturnedAdapter=null;
         int i=0;
         for (        final ObjectAdapter adapter : toggledAdapters) {
+          final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+          final Command command;
+          if (commandContext != null) {
+            command=commandContext.getCommand();
+            command.setExecutor(Executor.USER);
+          }
           int numParameters=objectAction.getParameterCount();
           if (numParameters != 0) {
             return;
@@ -35,12 +35,9 @@
           if (bulkInteractionContext != null) {
             bulkInteractionContext.setIndex(i++);
           }
-          lastReturnedAdapter=ObjectActionDefault.withTargetAdapters(toggledAdapters,new Callable<ObjectAdapter>(){
-            @Override public ObjectAdapter call() throws Exception {
-              return objectAction.executeWithRuleChecking(adapter,new ObjectAdapter[]{},InteractionInitiatedBy.USER,ActionModel.WHERE_FOR_ACTION_INVOCATION);
-            }
-          }
-);
+          lastReturnedAdapter=objectAction.executeWithRuleChecking(adapter,new ObjectAdapter[]{},InteractionInitiatedBy.USER,ActionModel.WHERE_FOR_ACTION_INVOCATION);
+          TransactionService transactionService=getServicesInjector().lookupService(TransactionService.class);
+          transactionService.nextTransaction();
         }
         model.clearToggleMementosList();
         toggleboxColumn.clearToggles();
