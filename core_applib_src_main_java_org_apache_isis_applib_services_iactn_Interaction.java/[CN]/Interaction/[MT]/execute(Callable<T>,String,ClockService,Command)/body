@@ -1,0 +1,23 @@
+{
+  Timestamp startedAt=clockService.nowAsJavaSqlTimestamp();
+  Execution currentExecution=push(startedAt,memberId);
+  if (command.getStartedAt() == null) {
+    command.setStartedAt(startedAt);
+  }
+  try {
+    try {
+      T result=callable.call();
+      currentExecution.setResult(result);
+      return result;
+    }
+ catch (    Exception e) {
+      RuntimeException re=e instanceof RuntimeException ? (RuntimeException)e : new RuntimeException(e);
+      currentExecution.setException(re);
+      throw re;
+    }
+  }
+  finally {
+    final Timestamp completedAt=clockService.nowAsJavaSqlTimestamp();
+    pop(completedAt);
+  }
+}

@@ -13,8 +13,10 @@
       command=createCommand();
       transactionId=UUID.randomUUID();
     }
-    initComand(transactionId,command);
+    final Interaction interaction=new Interaction();
+    initCommandAndInteraction(transactionId,command,interaction);
     commandContext.setCommand(command);
+    interactionContext.setInteraction(interaction);
     initOtherApplibServicesIfConfigured();
     final MessageBroker messageBroker=MessageBroker.acquire(getAuthenticationSession());
     this.transaction=new IsisTransaction(this,messageBroker,persistenceSession,servicesInjector,transactionId);

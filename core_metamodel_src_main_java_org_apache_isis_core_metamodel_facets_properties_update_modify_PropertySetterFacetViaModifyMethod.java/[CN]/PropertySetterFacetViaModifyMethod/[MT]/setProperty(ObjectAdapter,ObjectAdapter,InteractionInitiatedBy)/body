@@ -1,6 +1,8 @@
 {
   final CommandContext commandContext=getCommandContext();
   final Command command=commandContext.getCommand();
+  final InteractionContext interactionContext=getInteractionContext();
+  final Interaction interaction=interactionContext.getInteraction();
   command.setExecutor(Command.Executor.USER);
   command.setTarget(CommandUtil.bookmarkFor(targetAdapter));
   command.setTargetClass(CommandUtil.targetClassNameFor(targetAdapter));
@@ -8,6 +10,10 @@
   command.setMemberIdentifier(Command.ACTION_IDENTIFIER_FOR_EDIT);
   command.setExecuteIn(org.apache.isis.applib.annotation.Command.ExecuteIn.FOREGROUND);
   command.setPersistence(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED);
-  command.setStartedAt(getClockService().nowAsJavaSqlTimestamp());
-  ObjectAdapter.InvokeUtils.invoke(method,targetAdapter,valueAdapter);
+  interaction.execute(new Callable<Object>(){
+    @Override public Object call(){
+      return ObjectAdapter.InvokeUtils.invoke(method,targetAdapter,valueAdapter);
+    }
+  }
+,getIdentified().getIdentifier().toFullIdentityString(),getClockService(),command);
 }
