@@ -1,5 +1,5 @@
 {
-  if (publishingService == null) {
+  if (publishingServiceIfAny == null) {
     return Collections.emptyList();
   }
   List<ObjectAdapter> enlistedAdapters=Lists.newArrayList(changeKindByEnlistedAdapter.keySet());
@@ -14,7 +14,7 @@
     final String enlistedAdapterClass=CommandUtil.targetClassNameFor(enlistedAdapter);
     final Bookmark enlistedTarget=enlistedAdapterOid.asBookmark();
     final EventMetadata metadata=newEventMetadata(currentUser,timestamp,changeKind,enlistedAdapterClass,enlistedTarget);
-    publishingService.publishObject(payloadFactory,metadata,enlistedAdapter,changeKind,objectStringifier());
+    publishingServiceIfAny.publishObject(payloadFactory,metadata,enlistedAdapter,changeKind,objectStringifier());
   }
   return enlistedAdapters;
 }

@@ -1,17 +1,3 @@
 {
-  boolean noneInProgress=false;
-  if (getTransaction() == null || getTransaction().getState().isComplete()) {
-    noneInProgress=true;
-    startRequestOnRequestScopedServices();
-    createCommandIfConfigured();
-    initOtherApplibServicesIfConfigured();
-    IsisTransaction isisTransaction=createTransaction();
-    transactionLevel=0;
-    persistenceSession.startTransaction();
-    startTransactionOnCommandIfConfigured(isisTransaction.getTransactionId());
-  }
-  transactionLevel++;
-  if (LOG.isDebugEnabled()) {
-    LOG.debug("startTransaction: level " + (transactionLevel - 1) + "->"+ (transactionLevel)+ (noneInProgress ? " (no transaction in progress or was previously completed; transaction created)" : ""));
-  }
+  startTransaction(null);
 }

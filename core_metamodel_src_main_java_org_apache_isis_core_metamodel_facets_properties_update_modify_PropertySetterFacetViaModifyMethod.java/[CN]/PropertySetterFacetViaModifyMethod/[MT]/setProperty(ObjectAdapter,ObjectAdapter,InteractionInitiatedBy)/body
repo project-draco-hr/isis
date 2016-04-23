@@ -1,5 +1,5 @@
 {
-  final CommandContext commandContext=getServicesInjector().lookupService(CommandContext.class);
+  final CommandContext commandContext=getCommandContext();
   final Command command=commandContext.getCommand();
   command.setExecutor(Command.Executor.USER);
   command.setTarget(CommandUtil.bookmarkFor(targetAdapter));
@@ -8,6 +8,6 @@
   command.setMemberIdentifier(Command.ACTION_IDENTIFIER_FOR_EDIT);
   command.setExecuteIn(org.apache.isis.applib.annotation.Command.ExecuteIn.FOREGROUND);
   command.setPersistence(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED);
-  command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
+  command.setStartedAt(getClockService().nowAsJavaSqlTimestamp());
   ObjectAdapter.InvokeUtils.invoke(method,targetAdapter,valueAdapter);
 }

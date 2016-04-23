@@ -1,11 +1,9 @@
 {
-  transactionManager.executeWithinTransaction(new TransactionalClosure(){
+  transactionManager.executeWithinTransaction(backgroundCommand,new TransactionalClosure(){
     @Override public void execute(){
-      commandContext.setCommand(command);
-      final String memento=command.getMemento();
+      final String memento=backgroundCommand.getMemento();
       try {
-        command.setStartedAt(Clock.getTimeAsJavaSqlTimestamp());
-        command.setExecutor(Executor.BACKGROUND);
+        backgroundCommand.setExecutor(Executor.BACKGROUND);
         final boolean legacy=memento.startsWith("<memento");
         if (legacy) {
           final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,memento);
@@ -16,13 +14,13 @@
           final ObjectSpecification specification=targetAdapter.getSpecification();
           final ObjectAction objectAction=findAction(specification,actionId);
           if (objectAction == null) {
-            throw new Exception("Unknown action '" + actionId + "'");
+            throw new Exception(String.format("Unknown action '%s'",actionId));
           }
           final ObjectAdapter[] argAdapters=argAdaptersFor(aim);
           final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
           if (resultAdapter != null) {
             Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
-            command.setResult(resultBookmark);
+            backgroundCommand.setResult(resultBookmark);
           }
         }
  else {
@@ -39,16 +37,16 @@
             final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
             if (resultAdapter != null) {
               Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
-              command.setResult(resultBookmark);
+              backgroundCommand.setResult(resultBookmark);
             }
           }
         }
       }
  catch (      Exception e) {
-        command.setException(Throwables.getStackTraceAsString(e));
+        backgroundCommand.setException(Throwables.getStackTraceAsString(e));
       }
  finally {
-        command.setCompletedAt(Clock.getTimeAsJavaSqlTimestamp());
+        backgroundCommand.setCompletedAt(clockService.nowAsJavaSqlTimestamp());
       }
     }
     private ObjectAction findObjectAction(    final ObjectAdapter targetAdapter,    final String actionId) throws Exception {

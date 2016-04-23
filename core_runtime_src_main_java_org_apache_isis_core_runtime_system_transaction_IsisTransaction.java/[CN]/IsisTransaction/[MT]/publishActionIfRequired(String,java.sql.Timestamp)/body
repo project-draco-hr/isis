@@ -1,5 +1,5 @@
 {
-  if (publishingService == null) {
+  if (publishingServiceIfAny == null) {
     return;
   }
   try {
@@ -40,7 +40,7 @@
     final Command command1=this.command;
     final EventMetadata metadata=newEventMetadata(command1,EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
     final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
-    publishingService.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
+    publishingServiceIfAny.publishAction(payloadFactory,metadata,currentInvocation,objectStringifier());
   }
   finally {
     ActionInvocationFacet.currentInvocation.set(null);

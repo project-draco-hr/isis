@@ -1,0 +1,29 @@
+{
+  boolean noneInProgress=false;
+  if (getTransaction() == null || getTransaction().getState().isComplete()) {
+    noneInProgress=true;
+    startRequestOnRequestScopedServices();
+    final Command command;
+    final UUID transactionId;
+    if (existingCommandIfAny != null) {
+      command=existingCommandIfAny;
+      transactionId=command.getTransactionId();
+    }
+ else {
+      command=createCommand();
+      transactionId=UUID.randomUUID();
+    }
+    initComand(transactionId,command);
+    commandContext.setCommand(command);
+    initOtherApplibServicesIfConfigured();
+    final MessageBroker messageBroker=MessageBroker.acquire(getAuthenticationSession());
+    this.transaction=new IsisTransaction(this,messageBroker,persistenceSession,servicesInjector,transactionId);
+    transactionLevel=0;
+    persistenceSession.startTransaction();
+    commandService.startTransaction(command,transactionId);
+  }
+  transactionLevel++;
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("startTransaction: level " + (transactionLevel - 1) + "->"+ (transactionLevel)+ (noneInProgress ? " (no transaction in progress or was previously completed; transaction created)" : ""));
+  }
+}

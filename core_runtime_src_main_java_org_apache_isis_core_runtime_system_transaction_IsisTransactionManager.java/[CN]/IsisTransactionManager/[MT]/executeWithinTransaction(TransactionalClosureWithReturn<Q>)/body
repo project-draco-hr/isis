@@ -1,22 +1,3 @@
 {
-  final boolean initiallyInTransaction=inTransaction();
-  if (!initiallyInTransaction) {
-    startTransaction();
-  }
-  try {
-    final Q retVal=closure.execute();
-    if (!initiallyInTransaction) {
-      endTransaction();
-    }
-    return retVal;
-  }
- catch (  final RuntimeException ex) {
-    if (!initiallyInTransaction) {
-      abortTransaction();
-    }
- else {
-      getTransaction().setAbortCause(new IsisException(ex));
-    }
-    throw ex;
-  }
+  return executeWithinTransaction(null,closure);
 }

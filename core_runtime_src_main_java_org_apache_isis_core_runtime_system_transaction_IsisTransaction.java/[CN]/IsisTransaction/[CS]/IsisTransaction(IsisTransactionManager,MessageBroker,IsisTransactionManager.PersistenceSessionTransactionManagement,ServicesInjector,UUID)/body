@@ -1,0 +1,19 @@
+{
+  ensureThatArg(transactionManager,is(not(nullValue())),"transaction manager is required");
+  ensureThatArg(messageBroker,is(not(nullValue())),"message broker is required");
+  ensureThatArg(servicesInjector,is(not(nullValue())),"services injector is required");
+  this.transactionManager=transactionManager;
+  this.messageBroker=messageBroker;
+  this.servicesInjector=servicesInjector;
+  this.commandContext=lookupService(CommandContext.class);
+  this.commandService=lookupService(CommandService.class);
+  this.auditingServiceIfAny=lookupServiceIfAny(AuditingService3.class);
+  this.publishingServiceIfAny=getPublishingServiceIfAny(servicesInjector);
+  command=commandContext.getCommand();
+  this.transactionId=transactionId;
+  this.state=State.IN_PROGRESS;
+  this.persistenceSession=persistenceSession;
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("new transaction " + this);
+  }
+}
