@@ -1,0 +1,31 @@
+{
+  final ObjectAdapter objectAdapter;
+  try {
+    objectAdapter=model.getObject();
+  }
+ catch (  final RuntimeException ex) {
+    removeAnyBookmark(model);
+    removeAnyBreadcrumb(model);
+    throw new ObjectMember.AuthorizationException(ex);
+  }
+  if (!ObjectAdapter.Util.isVisible(objectAdapter,InteractionInitiatedBy.USER)) {
+    throw new ObjectMember.AuthorizationException();
+  }
+  final ObjectSpecification objectSpec=model.getTypeOfSpecification();
+  final GridFacet facet=objectSpec.getFacet(GridFacet.class);
+  if (facet != null) {
+    final Grid unused=facet.getGrid();
+  }
+  if (titleString == null) {
+    final String titleStr=objectAdapter.titleString(null);
+    setTitle(titleStr);
+  }
+  WebMarkupContainer entityPageContainer=new WebMarkupContainer("entityPageContainer");
+  CssClassAppender.appendCssClassTo(entityPageContainer,objectSpec.getFullIdentifier().replace('.','-'));
+  CssClassAppender.appendCssClassTo(entityPageContainer,objectSpec.getCorrespondingClass().getSimpleName());
+  themeDiv.addOrReplace(entityPageContainer);
+  addChildComponents(entityPageContainer,model);
+  bookmarkPage(model);
+  addBreadcrumb(model);
+  addBookmarkedPages(entityPageContainer);
+}
