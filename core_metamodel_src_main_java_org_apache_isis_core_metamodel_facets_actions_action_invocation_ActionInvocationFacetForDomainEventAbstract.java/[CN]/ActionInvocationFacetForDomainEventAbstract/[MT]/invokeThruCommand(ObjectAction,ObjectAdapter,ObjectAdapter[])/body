@@ -12,10 +12,13 @@
     resultAdapter=getAdapterManager().adapterFor(command);
   }
  else {
-    interaction.execute(new Callable<Object>(){
-      @Override public Object call(){
+    final Object target=ObjectAdapter.Util.unwrap(targetAdapter);
+    final List<Object> arguments=ObjectAdapter.Util.unwrap(Arrays.asList(argumentAdapters));
+    final Interaction.ActionArgs actionArgs=new Interaction.ActionArgs(command,target,arguments);
+    final Interaction.MemberCallable callable=new Interaction.MemberCallable<Interaction.ActionArgs>(){
+      @Override public Object call(      final Interaction.ActionArgs actionArgs){
         try {
-          final Object resultPojo=invokeMethodElseFromCache(targetAdapter,arguments);
+          final Object resultPojo=invokeMethodElseFromCache(targetAdapter,argumentAdapters);
           if (LOG.isDebugEnabled()) {
             LOG.debug(" action result " + resultPojo);
           }
@@ -27,7 +30,8 @@
         }
       }
     }
-,getIdentified().getIdentifier().toFullIdentityString(),getClockService(),command);
+;
+    interaction.execute(callable,actionArgs,getClockService());
     final Interaction.Execution priorExecution=interaction.getPriorExecution();
     final RuntimeException executionExceptionIfAny=priorExecution.getException();
     if (executionExceptionIfAny != null) {
@@ -35,7 +39,7 @@
     }
     resultAdapter=getAdapterManager().adapterFor(priorExecution.getResult());
     setCommandResultIfEntity(command,resultAdapter);
-    captureCurrentInvocationForPublishing(owningAction,targetAdapter,arguments,command,resultAdapter);
+    captureCurrentInvocationForPublishing(owningAction,targetAdapter,argumentAdapters,command,resultAdapter);
   }
   return resultAdapter;
 }

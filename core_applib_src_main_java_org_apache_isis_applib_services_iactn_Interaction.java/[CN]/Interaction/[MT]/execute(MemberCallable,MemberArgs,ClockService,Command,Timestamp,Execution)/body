@@ -1,14 +1,12 @@
 {
-  Timestamp startedAt=clockService.nowAsJavaSqlTimestamp();
-  Execution currentExecution=push(startedAt,memberId);
   if (command.getStartedAt() == null) {
     command.setStartedAt(startedAt);
   }
   try {
     try {
-      T result=callable.call();
+      Object result=memberCallable.call(memberArgs);
       currentExecution.setResult(result);
-      return result;
+      return (T)result;
     }
  catch (    Exception e) {
       RuntimeException re=e instanceof RuntimeException ? (RuntimeException)e : new RuntimeException(e);
