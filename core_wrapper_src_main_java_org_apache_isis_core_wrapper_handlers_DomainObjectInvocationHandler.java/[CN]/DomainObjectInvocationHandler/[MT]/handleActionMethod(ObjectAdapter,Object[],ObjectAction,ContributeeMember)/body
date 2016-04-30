@@ -40,9 +40,7 @@
     final InteractionInitiatedBy interactionInitiatedBy=getInteractionInitiatedBy();
     final ObjectAdapter actionReturnNO=objectAction.execute(targetAdapter,argAdapters,interactionInitiatedBy);
     final IsisTransaction transaction=IsisContext.getTransactionManager().getTransaction();
-    final String currentUser=IsisContext.getAuthenticationSession().getUserName();
-    final Timestamp timestamp=Clock.getTimeAsJavaSqlTimestamp();
-    transaction.publishActionIfRequired(currentUser,timestamp);
+    transaction.publishActionIfRequired();
     return ObjectAdapter.Util.unwrap(actionReturnNO);
   }
   return null;
