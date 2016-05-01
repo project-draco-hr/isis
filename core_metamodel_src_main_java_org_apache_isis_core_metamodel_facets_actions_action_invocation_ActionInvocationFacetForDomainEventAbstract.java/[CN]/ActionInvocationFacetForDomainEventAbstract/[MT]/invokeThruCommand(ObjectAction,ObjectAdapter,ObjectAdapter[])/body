@@ -7,7 +7,7 @@
   if (command.getExecutor() == Command.Executor.USER && command.getExecuteIn() == org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND) {
     final CommandService commandService=getCommandService();
     if (!commandService.persistIfPossible(command)) {
-      throw new IsisException("Unable to schedule action '" + owningAction.getIdentifier().toClassAndNameIdentityString() + "' to run in background: "+ "CommandService does not support persistent commands ");
+      throw new IsisException(String.format("Unable to schedule action '%s' to run in background; CommandService does not support persistent commands ",owningAction.getIdentifier().toClassAndNameIdentityString()));
     }
     resultAdapter=getAdapterManager().adapterFor(command);
   }
@@ -39,7 +39,12 @@
     }
     resultAdapter=getAdapterManager().adapterFor(priorExecution.getResult());
     setCommandResultIfEntity(command,resultAdapter);
-    captureCurrentInvocationForPublishing(owningAction,targetAdapter,argumentAdapters,command,resultAdapter);
+    final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
+    if (publishedActionFacet != null && currentInvocation.get() == null) {
+      final CurrentInvocation currentInvocation1=new CurrentInvocation(targetAdapter,owningAction,getIdentified(),argumentAdapters,resultAdapter,command);
+      currentInvocation.set(currentInvocation1);
+    }
+    getPublishingServiceInternal().publishAction();
   }
   return resultAdapter;
 }

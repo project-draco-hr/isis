@@ -8,5 +8,8 @@
   final String enlistedAdapterClass=CommandUtil.targetClassNameFor(enlistedAdapter);
   final Bookmark enlistedTarget=enlistedAdapterOid.asBookmark();
   final EventMetadata metadata=newEventMetadata(currentUser,timestamp,changeKind,enlistedAdapterClass,enlistedTarget);
-  publishObject(payloadFactory,metadata,enlistedAdapter,changeKind);
+  final Object pojo=ObjectAdapter.Util.unwrap(undeletedElseEmpty(enlistedAdapter));
+  final EventPayload payload=payloadFactory.payloadFor(pojo,changeKind);
+  payload.withStringifier(stringifier);
+  publishingServiceIfAny.publish(metadata,payload);
 }
