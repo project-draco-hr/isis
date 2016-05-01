@@ -3,8 +3,9 @@
   final ObjectAdapter objectAdapter=this.objectAdapter;
   final ObjectActionArgHelper argHelper=new ObjectActionArgHelper(rendererContext,objectAdapter,action);
   final List<ObjectAdapter> argAdapters=argHelper.parseAndValidateArguments(arguments);
-  final ObjectAdapter[] argArray2=argAdapters.toArray(new ObjectAdapter[0]);
-  final ObjectAdapter returnedAdapter=action.execute(objectAdapter,argArray2,InteractionInitiatedBy.USER);
+  final ObjectAdapter mixedInAdapter=null;
+  final ObjectAdapter[] argAdapterArr=argAdapters.toArray(new ObjectAdapter[argAdapters.size()]);
+  final ObjectAdapter returnedAdapter=action.execute(objectAdapter,mixedInAdapter,argAdapterArr,InteractionInitiatedBy.USER);
   final ObjectAndActionInvocation objectAndActionInvocation=new ObjectAndActionInvocation(objectAdapter,action,arguments,returnedAdapter,selfLink);
   transactionService.flushTransaction();
   return representationService.actionResult(representationServiceContext,objectAndActionInvocation,selfLink);

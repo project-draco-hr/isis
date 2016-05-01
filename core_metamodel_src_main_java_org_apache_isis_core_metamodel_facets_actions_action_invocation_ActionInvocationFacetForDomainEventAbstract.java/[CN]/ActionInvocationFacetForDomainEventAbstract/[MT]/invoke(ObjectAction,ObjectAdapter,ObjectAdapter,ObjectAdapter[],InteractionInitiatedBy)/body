@@ -1,0 +1,14 @@
+{
+  final CommandContext commandContext=getCommandContext();
+  final Command command=commandContext.getCommand();
+  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,owningAction,targetAdapter,mixedInAdapter,arguments,command,null);
+  final InvocationResult invocationResult=invoke(owningAction,targetAdapter,arguments);
+  final ObjectAdapter invocationResultAdapter=invocationResult.getAdapter();
+  if (invocationResult.getWhetherInvoked()) {
+    domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,owningAction,targetAdapter,mixedInAdapter,arguments,command,invocationResultAdapter);
+  }
+  if (invocationResultAdapter == null) {
+    return null;
+  }
+  return filteredIfRequired(invocationResultAdapter,interactionInitiatedBy);
+}
