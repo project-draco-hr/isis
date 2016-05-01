@@ -1,0 +1,20 @@
+{
+  final CurrentInvocation currentInvocation=ActionInvocationFacet.currentInvocation.get();
+  if (currentInvocation == null) {
+    return;
+  }
+ else {
+    final ObjectAction currentAction=currentInvocation.getAction();
+    final IdentifiedHolder identifiedHolder=currentInvocation.getIdentifiedHolder();
+    final ObjectAdapter targetAdapter=currentInvocation.getTarget();
+    final List<ObjectAdapter> parameterAdapters=currentInvocation.getParameters();
+    final ObjectAdapter resultAdapter=currentInvocation.getResult();
+    try {
+      if (getPublishingServiceInternal().publishAction(currentAction,identifiedHolder,targetAdapter,parameterAdapters,resultAdapter))       return;
+    }
+  finally {
+      ActionInvocationFacet.currentInvocation.set(null);
+    }
+    getPublishingServiceInternal().publishAction();
+  }
+}
