@@ -1,44 +1,4 @@
 {
-  if (!canPublish()) {
-    return;
-  }
-  final String currentUser=userService.getUser().getName();
-  final Timestamp timestamp=clockService.nowAsJavaSqlTimestamp();
-  final PublishedActionFacet publishedActionFacet=identifiedHolder.getFacet(PublishedActionFacet.class);
-  if (publishedActionFacet == null) {
-    return;
-  }
-  final RootOid adapterOid=(RootOid)targetAdapter.getOid();
-  final String oidStr=getOidMarshaller().marshal(adapterOid);
-  final Identifier actionIdentifier=objectAction.getIdentifier();
-  final String title=oidStr + ": " + actionIdentifier.toNameParmsIdentityString();
-  final String actionTargetClass=CommandUtil.targetClassNameFor(targetAdapter);
-  final String actionTargetAction=CommandUtil.targetActionNameFor(objectAction);
-  final Bookmark actionTarget=CommandUtil.bookmarkFor(targetAdapter);
-  final String actionMemberIdentifier=CommandUtil.actionIdentifierFor(objectAction);
-  final List<String> parameterNames;
-  final List<Class<?>> parameterTypes;
-  final Class<?> returnType;
-  if (identifiedHolder instanceof FacetedMethod) {
-    final FacetedMethod facetedMethod=(FacetedMethod)identifiedHolder;
-    returnType=facetedMethod.getType();
-    final List<FacetedMethodParameter> parameters=facetedMethod.getParameters();
-    parameterNames=immutableList(Iterables.transform(parameters,FacetedMethodParameter.Functions.GET_NAME));
-    parameterTypes=immutableList(Iterables.transform(parameters,FacetedMethodParameter.Functions.GET_TYPE));
-  }
- else {
-    parameterNames=null;
-    parameterTypes=null;
-    returnType=null;
-  }
-  final Command command=commandContext.getCommand();
-  final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
-  final int nextEventSequence=command.next(sequenceName.abbr());
-  final UUID transactionId=command.getTransactionId();
-  final EventMetadata metadata=new EventMetadata(transactionId,nextEventSequence,EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
-  final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
-  final ObjectStringifier stringifier=objectStringifier();
-  final EventPayload payload=payloadFactory.payloadFor(identifiedHolder.getIdentifier(),ObjectAdapter.Util.unwrap(undeletedElseEmpty(targetAdapter)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(parameterAdapters)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(resultAdapter)));
-  payload.withStringifier(stringifier);
-  publishingServiceIfAny.publish(metadata,payload);
+  publishActionToPublishingService(objectAction,identifiedHolder,targetAdapter,parameterAdapters,resultAdapter);
+  publishActionToPublisherServices(objectAction,identifiedHolder,targetAdapter,parameterAdapters,resultAdapter);
 }
