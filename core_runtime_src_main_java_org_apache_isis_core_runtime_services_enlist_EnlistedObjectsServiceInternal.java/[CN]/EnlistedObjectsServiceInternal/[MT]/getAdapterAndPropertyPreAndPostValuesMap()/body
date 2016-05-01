@@ -1,0 +1,18 @@
+{
+  final Map<AdapterAndProperty,PreAndPostValues> processedObjectProperties=Maps.newLinkedHashMap();
+  while (!changedObjectProperties.isEmpty()) {
+    final Set<AdapterAndProperty> keys=Sets.newLinkedHashSet(changedObjectProperties.keySet());
+    for (    final AdapterAndProperty aap : keys) {
+      final PreAndPostValues papv=changedObjectProperties.remove(aap);
+      final ObjectAdapter adapter=aap.getAdapter();
+      if (adapter.isDestroyed()) {
+        papv.setPost(IsisTransaction.Placeholder.DELETED);
+      }
+ else {
+        papv.setPost(aap.getPropertyValue());
+      }
+      processedObjectProperties.put(aap,papv);
+    }
+  }
+  return processedObjectProperties;
+}

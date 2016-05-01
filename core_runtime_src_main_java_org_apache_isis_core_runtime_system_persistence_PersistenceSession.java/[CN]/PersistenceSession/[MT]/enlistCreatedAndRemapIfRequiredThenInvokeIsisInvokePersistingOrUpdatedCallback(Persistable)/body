@@ -7,8 +7,8 @@
     remapAsPersistent(adapter,persistentOid);
     CallbackFacet.Util.callCallback(adapter,PersistedCallbackFacet.class);
     postLifecycleEventIfRequired(adapter,PersistedLifecycleEventFacet.class);
-    final IsisTransaction transaction=getCurrentTransaction();
-    transaction.enlistCreated(adapter);
+    final EnlistedObjectsServiceInternal enlistedObjectsServiceInternal=getServicesInjector().lookupService(EnlistedObjectsServiceInternal.class);
+    enlistedObjectsServiceInternal.enlistCreated(adapter);
   }
  else {
     CallbackFacet.Util.callCallback(adapter,UpdatedCallbackFacet.class);

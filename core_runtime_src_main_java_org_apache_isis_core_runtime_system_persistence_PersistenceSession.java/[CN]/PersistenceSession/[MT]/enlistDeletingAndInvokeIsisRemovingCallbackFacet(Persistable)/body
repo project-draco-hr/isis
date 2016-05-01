@@ -1,7 +1,7 @@
 {
   ObjectAdapter adapter=adapterFor(pojo);
-  final IsisTransaction transaction=getCurrentTransaction();
-  transaction.enlistDeleting(adapter);
+  final EnlistedObjectsServiceInternal enlistedObjectsServiceInternal=getServicesInjector().lookupService(EnlistedObjectsServiceInternal.class);
+  enlistedObjectsServiceInternal.enlistDeleting(adapter);
   CallbackFacet.Util.callCallback(adapter,RemovingCallbackFacet.class);
   postLifecycleEventIfRequired(adapter,RemovingLifecycleEventFacet.class);
 }

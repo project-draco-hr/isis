@@ -11,32 +11,18 @@
     return;
   }
   try {
-    final Map<AdapterAndProperty,PreAndPostValues> processedObjectProperties=Maps.newLinkedHashMap();
-    while (!changedObjectProperties.isEmpty()) {
-      final Set<AdapterAndProperty> keys=Sets.newLinkedHashSet(changedObjectProperties.keySet());
-      for (      final AdapterAndProperty aap : keys) {
-        final PreAndPostValues papv=changedObjectProperties.remove(aap);
-        final ObjectAdapter adapter=aap.getAdapter();
-        if (adapter.isDestroyed()) {
-          papv.setPost(Placeholder.DELETED);
-        }
- else {
-          papv.setPost(aap.getPropertyValue());
-        }
-        processedObjectProperties.put(aap,papv);
-      }
+    final Command command=commandContext.getCommand();
+    final boolean hasChangedAdapters=enlistedObjectsServiceInternal.hasChangedAdapters();
+    if (hasChangedAdapters && command.getMemberIdentifier() != null) {
+      command.setPersistHint(true);
     }
-    final Set<Entry<AdapterAndProperty,PreAndPostValues>> changedObjectProperties=Collections.unmodifiableSet(Sets.filter(processedObjectProperties.entrySet(),PreAndPostValues.Predicates.CHANGED));
-    ensureCommandsPersistedIfDirtyXactn(changedObjectProperties);
-    try {
-      auditingServiceInternal.audit(changedObjectProperties);
-    }
-  finally {
-      this.changedObjectProperties.clear();
-    }
-    publishingServiceInternal.publishObjects(this.changeKindByEnlistedAdapter);
+    auditingServiceInternal.audit();
+    publishingServiceInternal.publishObjects();
     doFlush();
-    closeOtherApplibServicesIfConfigured();
+    final ActionInvocationContext actionInvocationContext=lookupService(ActionInvocationContext.class);
+    if (actionInvocationContext != null) {
+      Bulk.InteractionContext.current.set(null);
+    }
     completeCommandAndInteractionAndClearDomainEvents();
     doFlush();
   }

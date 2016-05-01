@@ -1,0 +1,31 @@
+{
+  final PublishedObject.ChangeKind previous=changeKindByEnlistedAdapter.get(adapter);
+  if (previous == null) {
+    changeKindByEnlistedAdapter.put(adapter,current);
+    return true;
+  }
+switch (previous) {
+case CREATE:
+switch (current) {
+case DELETE:
+      changeKindByEnlistedAdapter.remove(adapter);
+case CREATE:
+case UPDATE:
+    return false;
+}
+break;
+case UPDATE:
+switch (current) {
+case DELETE:
+changeKindByEnlistedAdapter.put(adapter,current);
+return true;
+case CREATE:
+case UPDATE:
+return false;
+}
+break;
+case DELETE:
+return false;
+}
+return previous == null;
+}

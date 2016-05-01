@@ -11,6 +11,7 @@
   }
   CallbackFacet.Util.callCallback(adapter,UpdatingCallbackFacet.class);
   postLifecycleEventIfRequired(adapter,UpdatingLifecycleEventFacet.class);
-  getCurrentTransaction().enlistUpdating(adapter);
+  final EnlistedObjectsServiceInternal enlistedObjectsServiceInternal=getServicesInjector().lookupService(EnlistedObjectsServiceInternal.class);
+  enlistedObjectsServiceInternal.enlistUpdating(adapter);
   ensureRootObject(pojo);
 }
