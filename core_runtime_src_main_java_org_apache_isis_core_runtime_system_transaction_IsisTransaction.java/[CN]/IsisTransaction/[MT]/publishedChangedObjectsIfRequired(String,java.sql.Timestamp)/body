@@ -5,15 +5,6 @@
   List<ObjectAdapter> enlistedAdapters=Lists.newArrayList(changeKindByEnlistedAdapter.keySet());
   for (  final ObjectAdapter enlistedAdapter : enlistedAdapters) {
     final ChangeKind changeKind=changeKindByEnlistedAdapter.get(enlistedAdapter);
-    final PublishedObjectFacet publishedObjectFacet=enlistedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
-    if (publishedObjectFacet == null) {
-      continue;
-    }
-    final PublishedObject.PayloadFactory payloadFactory=publishedObjectFacet.value();
-    final RootOid enlistedAdapterOid=(RootOid)enlistedAdapter.getOid();
-    final String enlistedAdapterClass=CommandUtil.targetClassNameFor(enlistedAdapter);
-    final Bookmark enlistedTarget=enlistedAdapterOid.asBookmark();
-    final EventMetadata metadata=newEventMetadata(currentUser,timestamp,changeKind,enlistedAdapterClass,enlistedTarget);
-    publishingServiceInternal.publishObject(payloadFactory,metadata,enlistedAdapter,changeKind);
+    publishingServiceInternal.publishObject(currentUser,timestamp,enlistedAdapter,changeKind);
   }
 }

@@ -1,0 +1,12 @@
+{
+  final PublishedObjectFacet publishedObjectFacet=enlistedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
+  if (publishedObjectFacet == null) {
+    return;
+  }
+  final PublishedObject.PayloadFactory payloadFactory=publishedObjectFacet.value();
+  final RootOid enlistedAdapterOid=(RootOid)enlistedAdapter.getOid();
+  final String enlistedAdapterClass=CommandUtil.targetClassNameFor(enlistedAdapter);
+  final Bookmark enlistedTarget=enlistedAdapterOid.asBookmark();
+  final EventMetadata metadata=newEventMetadata(currentUser,timestamp,changeKind,enlistedAdapterClass,enlistedTarget);
+  publishObject(payloadFactory,metadata,enlistedAdapter,changeKind);
+}

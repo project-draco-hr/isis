@@ -40,9 +40,19 @@
       returnType=null;
     }
     final Command command=commandContext.getCommand();
-    final EventMetadata metadata=newEventMetadata(command,EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
+    final Command command1=commandContext.getCommand();
+    final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
+    final int nextEventSequence=command1.next(sequenceName.abbr());
+    final UUID transactionId=command1.getTransactionId();
+    final EventMetadata metadata=new EventMetadata(transactionId,nextEventSequence,EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
     final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
-    publishAction(payloadFactory,metadata,currentInvocation);
+    final ObjectStringifier stringifier=objectStringifier();
+    final ObjectAdapter target=currentInvocation.getTarget();
+    final ObjectAdapter result=currentInvocation.getResult();
+    final List<ObjectAdapter> parameters=currentInvocation.getParameters();
+    final EventPayload payload=payloadFactory.payloadFor(currentInvocation.getIdentifiedHolder().getIdentifier(),ObjectAdapter.Util.unwrap(undeletedElseEmpty(target)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(parameters)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(result)));
+    payload.withStringifier(stringifier);
+    publishingServiceIfAny.publish(metadata,payload);
   }
   finally {
     ActionInvocationFacet.currentInvocation.set(null);
