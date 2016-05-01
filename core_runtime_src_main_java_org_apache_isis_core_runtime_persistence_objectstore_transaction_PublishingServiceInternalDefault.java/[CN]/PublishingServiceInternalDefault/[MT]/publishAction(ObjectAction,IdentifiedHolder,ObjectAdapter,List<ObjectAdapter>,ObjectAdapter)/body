@@ -1,12 +1,12 @@
 {
   if (!canPublish()) {
-    return true;
+    return;
   }
   final String currentUser=userService.getUser().getName();
   final Timestamp timestamp=clockService.nowAsJavaSqlTimestamp();
   final PublishedActionFacet publishedActionFacet=identifiedHolder.getFacet(PublishedActionFacet.class);
   if (publishedActionFacet == null) {
-    return true;
+    return;
   }
   final RootOid adapterOid=(RootOid)targetAdapter.getOid();
   final String oidStr=getOidMarshaller().marshal(adapterOid);
@@ -41,5 +41,4 @@
   final EventPayload payload=payloadFactory.payloadFor(identifiedHolder.getIdentifier(),ObjectAdapter.Util.unwrap(undeletedElseEmpty(targetAdapter)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(parameterAdapters)),ObjectAdapter.Util.unwrap(undeletedElseEmpty(resultAdapter)));
   payload.withStringifier(stringifier);
   publishingServiceIfAny.publish(metadata,payload);
-  return false;
 }

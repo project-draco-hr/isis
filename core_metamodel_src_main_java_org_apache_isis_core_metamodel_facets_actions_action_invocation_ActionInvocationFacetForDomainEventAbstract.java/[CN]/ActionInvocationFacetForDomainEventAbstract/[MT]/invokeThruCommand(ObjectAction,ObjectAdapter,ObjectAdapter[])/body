@@ -40,11 +40,11 @@
     resultAdapter=getAdapterManager().adapterFor(priorExecution.getResult());
     setCommandResultIfEntity(command,resultAdapter);
     final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
-    if (publishedActionFacet != null && currentInvocation.get() == null) {
-      final CurrentInvocation currentInvocation1=new CurrentInvocation(targetAdapter,owningAction,getIdentified(),argumentAdapters,resultAdapter,command);
-      currentInvocation.set(currentInvocation1);
+    if (publishedActionFacet != null) {
+      final IdentifiedHolder identifiedHolder=getIdentified();
+      final List<ObjectAdapter> parameterAdapters=Arrays.asList(argumentAdapters);
+      getPublishingServiceInternal().publishAction(owningAction,identifiedHolder,targetAdapter,parameterAdapters,resultAdapter);
     }
-    publishAction();
   }
   return resultAdapter;
 }
