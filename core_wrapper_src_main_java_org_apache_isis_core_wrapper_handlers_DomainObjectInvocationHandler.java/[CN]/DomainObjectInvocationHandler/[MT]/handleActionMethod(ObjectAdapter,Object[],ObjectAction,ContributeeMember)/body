@@ -39,8 +39,8 @@
   if (getExecutionMode().shouldExecute()) {
     final InteractionInitiatedBy interactionInitiatedBy=getInteractionInitiatedBy();
     final ObjectAdapter actionReturnNO=objectAction.execute(targetAdapter,argAdapters,interactionInitiatedBy);
-    final IsisTransaction transaction=IsisContext.getTransactionManager().getTransaction();
-    transaction.publishActionIfRequired();
+    final PublishingServiceInternal publishingServiceInternal=getPublishingServiceInternal();
+    publishingServiceInternal.publishAction();
     return ObjectAdapter.Util.unwrap(actionReturnNO);
   }
   return null;

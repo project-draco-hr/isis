@@ -1,10 +1,12 @@
 {
-  if (!publishingServiceInternal.canPublish()) {
+  if (!canPublish()) {
     return;
   }
+  final String currentUser=userService.getUser().getName();
+  final Timestamp timestamp=clockService.nowAsJavaSqlTimestamp();
   List<ObjectAdapter> enlistedAdapters=Lists.newArrayList(changeKindByEnlistedAdapter.keySet());
   for (  final ObjectAdapter enlistedAdapter : enlistedAdapters) {
     final ChangeKind changeKind=changeKindByEnlistedAdapter.get(enlistedAdapter);
-    publishingServiceInternal.publishObject(currentUser,timestamp,enlistedAdapter,changeKind);
+    publishObject(enlistedAdapter,changeKind,currentUser,timestamp);
   }
 }
