@@ -28,7 +28,17 @@
     }
     final Set<Entry<AdapterAndProperty,PreAndPostValues>> changedObjectProperties=Collections.unmodifiableSet(Sets.filter(processedObjectProperties.entrySet(),PreAndPostValues.Predicates.CHANGED));
     ensureCommandsPersistedIfDirtyXactn(changedObjectProperties);
-    preCommitServices(changedObjectProperties);
+    try {
+      auditingServiceInternal.audit(changedObjectProperties);
+    }
+  finally {
+      this.changedObjectProperties.clear();
+    }
+    publishingServiceInternal.publishObjects(this.changeKindByEnlistedAdapter);
+    doFlush();
+    closeOtherApplibServicesIfConfigured();
+    completeCommandAndInteractionAndClearDomainEvents();
+    doFlush();
   }
  catch (  final RuntimeException ex) {
     setAbortCause(new IsisTransactionManagerException(ex));

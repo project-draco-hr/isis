@@ -1,0 +1,10 @@
+{
+  if (!canAudit()) {
+    return;
+  }
+  final String currentUser=userService.getUser().getName();
+  final java.sql.Timestamp currentTime=clockService.nowAsJavaSqlTimestamp();
+  for (  Map.Entry<IsisTransaction.AdapterAndProperty,IsisTransaction.PreAndPostValues> auditEntry : changedObjectProperties) {
+    auditChangedProperty(currentTime,currentUser,auditEntry);
+  }
+}
