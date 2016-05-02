@@ -1,0 +1,11 @@
+{
+  final List<ParamDto> params=actionDto.getParameters();
+  final List<ObjectAdapter> args=Lists.newArrayList(Iterables.transform(params,new Function<ParamDto,ObjectAdapter>(){
+    @Override public ObjectAdapter apply(    final ParamDto paramDto){
+      final Object arg=CommandDtoUtils.paramArgOf(paramDto);
+      return adapterFor(arg);
+    }
+  }
+));
+  return args.toArray(new ObjectAdapter[]{});
+}

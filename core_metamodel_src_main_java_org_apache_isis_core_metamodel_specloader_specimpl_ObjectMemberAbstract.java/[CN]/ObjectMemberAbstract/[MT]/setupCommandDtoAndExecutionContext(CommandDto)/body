@@ -1,0 +1,24 @@
+{
+  final CommandContext commandContext=getCommandContext();
+  final Command command=commandContext.getCommand();
+  if (command.getExecutor() != Command.Executor.USER) {
+    return;
+  }
+  if (Command.ACTION_IDENTIFIER_FOR_EDIT.equals(command.getMemberIdentifier())) {
+    return;
+  }
+  if (command.getMemento() != null) {
+    return;
+  }
+  final String mementoXml=CommandDtoUtils.toXml(dto);
+  command.setMemento(mementoXml);
+  final CommandFacet commandFacet=getFacetHolder().getFacet(CommandFacet.class);
+  if (commandFacet != null && !commandFacet.isDisabled()) {
+    command.setExecuteIn(commandFacet.executeIn());
+    command.setPersistence(commandFacet.persistence());
+  }
+ else {
+    command.setExecuteIn(org.apache.isis.applib.annotation.Command.ExecuteIn.FOREGROUND);
+    command.setPersistence(org.apache.isis.applib.annotation.Command.Persistence.IF_HINTED);
+  }
+}

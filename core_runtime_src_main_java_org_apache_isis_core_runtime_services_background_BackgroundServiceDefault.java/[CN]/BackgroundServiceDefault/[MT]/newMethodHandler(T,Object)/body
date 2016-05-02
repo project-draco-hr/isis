@@ -24,18 +24,18 @@
       }
       final ObjectAdapter domainObjectAdapter=getAdapterManager().adapterFor(domainObject);
       final String domainObjectClassName=CommandUtil.targetClassNameFor(domainObjectAdapter);
-      final String targetActionName=CommandUtil.targetActionNameFor(action);
+      final String targetActionName=CommandUtil.targetMemberNameFor(action);
       final ObjectAdapter[] argAdapters=adaptersFor(args);
       final String targetArgs=CommandUtil.argDescriptionFor(action,argAdapters);
       final Command command=commandContext.getCommand();
       if (backgroundCommandService instanceof BackgroundCommandService2) {
         final BackgroundCommandService2 bcs2=(BackgroundCommandService2)backgroundCommandService;
         final List<ObjectAdapter> targetList=Collections.singletonList(domainObjectAdapter);
-        final CommandMementoDto dto=commandMementoService.asCommandMemento(targetList,action,argAdapters);
+        final CommandDto dto=commandDtoService.asCommandDto(targetList,action,argAdapters);
         bcs2.schedule(dto,command,domainObjectClassName,targetActionName,targetArgs);
       }
  else {
-        final ActionInvocationMemento aim=commandMementoService.asActionInvocationMemento(proxyMethod,target,args);
+        final ActionInvocationMemento aim=commandDtoService.asActionInvocationMemento(proxyMethod,target,args);
         backgroundCommandService.schedule(aim,command,domainObjectClassName,targetActionName,targetArgs);
       }
       return null;

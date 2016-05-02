@@ -27,23 +27,30 @@
           }
         }
  else {
-          final CommandMementoDto dto=jaxbService.fromXml(CommandMementoDto.class,memento);
-          final ActionDto actionDto=dto.getAction();
-          final String actionId=actionDto.getMemberIdentifier();
-          final List<OidDto> targetOidDtos=dto.getTargets();
-          for (          OidDto targetOidDto : targetOidDtos) {
-            final Bookmark bookmark=Bookmark.from(targetOidDto);
-            final Object targetObject=bookmarkService.lookup(bookmark);
-            final ObjectAdapter targetAdapter=adapterFor(targetObject);
-            final ObjectAction objectAction=findObjectAction(targetAdapter,actionId);
-            final ObjectAdapter mixedInAdapter=null;
-            final ObjectAdapter[] argAdapters=argAdaptersFor(dto);
-            final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,mixedInAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
-            Object unused=backgroundInteraction.getPriorExecution().getReturned();
-            if (resultAdapter != null) {
-              Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
-              backgroundCommand.setResult(resultBookmark);
+          final CommandDto dto=jaxbService.fromXml(CommandDto.class,memento);
+          final MemberDto memberDto=dto.getMember();
+          final String memberId=memberDto.getMemberIdentifier();
+          final InteractionTypeDto interactionType=dto.getInteractionType();
+          if (interactionType == InteractionTypeDto.ACTION_INVOCATION) {
+            final ActionDto actionDto=(ActionDto)memberDto;
+            final List<OidDto> targetOidDtos=dto.getTargets();
+            for (            OidDto targetOidDto : targetOidDtos) {
+              final Bookmark bookmark=Bookmark.from(targetOidDto);
+              final Object targetObject=bookmarkService.lookup(bookmark);
+              final ObjectAdapter targetAdapter=adapterFor(targetObject);
+              final ObjectAction objectAction=findObjectAction(targetAdapter,memberId);
+              final ObjectAdapter[] argAdapters=argAdaptersFor(actionDto);
+              final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,null,argAdapters,InteractionInitiatedBy.FRAMEWORK);
+              Object unused=backgroundInteraction.getPriorExecution().getReturned();
+              if (resultAdapter != null) {
+                Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
+                backgroundCommand.setResult(resultBookmark);
+              }
             }
+          }
+ else {
+            final PropertyDto propertyDto=(PropertyDto)memberDto;
+            throw new RuntimeException("Not yet implemented");
           }
         }
       }

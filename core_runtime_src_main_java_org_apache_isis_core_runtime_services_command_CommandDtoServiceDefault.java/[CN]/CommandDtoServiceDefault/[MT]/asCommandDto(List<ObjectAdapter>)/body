@@ -1,0 +1,12 @@
+{
+  final CommandDto dto=new CommandDto();
+  dto.setMajorVersion("1");
+  dto.setMinorVersion("0");
+  dto.setTransactionId(UUID.randomUUID().toString());
+  for (  ObjectAdapter targetAdapter : targetAdapters) {
+    final RootOid rootOid=(RootOid)targetAdapter.getOid();
+    final Bookmark bookmark=rootOid.asBookmark();
+    dto.getTargets().add(bookmark.toOidDto());
+  }
+  return dto;
+}
