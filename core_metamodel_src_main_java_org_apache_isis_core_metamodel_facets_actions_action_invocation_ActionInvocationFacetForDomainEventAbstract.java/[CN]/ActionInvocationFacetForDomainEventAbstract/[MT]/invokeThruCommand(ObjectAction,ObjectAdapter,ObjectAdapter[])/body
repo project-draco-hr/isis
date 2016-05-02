@@ -17,13 +17,16 @@
     final List<Object> arguments=ObjectAdapter.Util.unwrap(Arrays.asList(argumentAdapters));
     final Interaction.ActionArgs actionArgs=new Interaction.ActionArgs(actionId,target,arguments);
     final Interaction.MemberCallable callable=new Interaction.MemberCallable<Interaction.ActionArgs>(){
-      @Override public Object call(      final Interaction.ActionArgs actionArgs){
+      @Override public Object call(      final Interaction.Execution currentExecution,      final Interaction.ActionArgs actionArgs){
         try {
           final Object resultPojo=invokeMethodElseFromCache(targetAdapter,argumentAdapters);
           if (LOG.isDebugEnabled()) {
             LOG.debug(" action result " + resultPojo);
           }
           ObjectAdapter resultAdapter=cloneIfViewModelCloneable(resultPojo,targetAdapter);
+          final List<ObjectAdapter> parameterAdapters=Arrays.asList(argumentAdapters);
+          final ActionInvocationDto invocationDto=getInteractionDtoServiceInternal().asActionInvocationDto(owningAction,targetAdapter,parameterAdapters,resultAdapter);
+          currentExecution.setDto(invocationDto);
           return resultAdapter != null ? resultAdapter.getObject() : null;
         }
  catch (        InvocationTargetException|IllegalAccessException e) {

@@ -1,0 +1,12 @@
+{
+  if (publisherServices == null || publisherServices.isEmpty()) {
+    return;
+  }
+  final InteractionExecutionDto executionDto=execution.getDto();
+  final String transactionId=commandContext.getCommand().getTransactionId().toString();
+  final InteractionDto interactionDto=InteractionDtoUtils.newInteractionDto(transactionId);
+  InteractionDtoUtils.addExecution(interactionDto,executionDto);
+  for (  PublisherService publisherService : publisherServices) {
+    publisherService.publish(interactionDto);
+  }
+}

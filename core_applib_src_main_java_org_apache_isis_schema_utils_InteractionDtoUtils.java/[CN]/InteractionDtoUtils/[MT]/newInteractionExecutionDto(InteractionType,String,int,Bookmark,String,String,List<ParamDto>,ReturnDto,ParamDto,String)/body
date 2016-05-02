@@ -1,0 +1,25 @@
+{
+  final InteractionExecutionDto executionDto;
+  if (type == InteractionType.ACTION_INVOCATION) {
+    final ActionInvocationDto invocation=new ActionInvocationDto();
+    final ActionInvocationDto.Parameters parameters=invocation.getParameters();
+    parameters.getParameter().addAll(parameterDtos);
+    invocation.setReturned(returnDto);
+    executionDto=invocation;
+  }
+ else {
+    final PropertyModificationDto modification=new PropertyModificationDto();
+    modification.setNewValue(newValueDto);
+    executionDto=modification;
+  }
+  executionDto.setSequence(sequence);
+  executionDto.setId(transactionId + "." + sequence);
+  final OidDto target=new OidDto();
+  target.setObjectType(targetBookmark.getObjectType());
+  target.setObjectIdentifier(target.getObjectIdentifier());
+  executionDto.setTarget(target);
+  executionDto.setTitle(targetTitle);
+  executionDto.setUser(user);
+  executionDto.setMemberIdentifier(memberIdentifier);
+  return executionDto;
+}
