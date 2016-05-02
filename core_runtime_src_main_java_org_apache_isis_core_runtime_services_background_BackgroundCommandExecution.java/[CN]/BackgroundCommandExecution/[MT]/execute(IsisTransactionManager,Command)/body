@@ -13,7 +13,7 @@
           final Object targetObject=bookmarkService.lookup(targetBookmark);
           final ObjectAdapter targetAdapter=adapterFor(targetObject);
           final ObjectSpecification specification=targetAdapter.getSpecification();
-          final ObjectAction objectAction=findAction(specification,actionId);
+          final ObjectAction objectAction=findActionElseNull(specification,actionId);
           if (objectAction == null) {
             throw new RuntimeException(String.format("Unknown action '%s'",actionId));
           }
@@ -30,8 +30,8 @@
           final CommandDto dto=jaxbService.fromXml(CommandDto.class,memento);
           final MemberDto memberDto=dto.getMember();
           final String memberId=memberDto.getMemberIdentifier();
-          final InteractionTypeDto interactionType=dto.getInteractionType();
-          if (interactionType == InteractionTypeDto.ACTION_INVOCATION) {
+          final InteractionType interactionType=dto.getInteractionType();
+          if (interactionType == InteractionType.ACTION_INVOCATION) {
             final ActionDto actionDto=(ActionDto)memberDto;
             final List<OidDto> targetOidDtos=dto.getTargets();
             for (            OidDto targetOidDto : targetOidDtos) {
@@ -50,7 +50,15 @@
           }
  else {
             final PropertyDto propertyDto=(PropertyDto)memberDto;
-            throw new RuntimeException("Not yet implemented");
+            final List<OidDto> targetOidDtos=dto.getTargets();
+            for (            OidDto targetOidDto : targetOidDtos) {
+              final Bookmark bookmark=Bookmark.from(targetOidDto);
+              final Object targetObject=bookmarkService.lookup(bookmark);
+              final ObjectAdapter targetAdapter=adapterFor(targetObject);
+              final OneToOneAssociation property=findOneToOneAssociation(targetAdapter,memberId);
+              final ObjectAdapter newValueAdapter=newValueAdapterFor(propertyDto);
+              property.set(targetAdapter,newValueAdapter,InteractionInitiatedBy.FRAMEWORK);
+            }
           }
         }
       }
@@ -62,13 +70,20 @@
       backgroundCommand.setCompletedAt(backgroundInteraction.getPriorExecution().getCompletedAt());
     }
     private ObjectAction findObjectAction(    final ObjectAdapter targetAdapter,    final String actionId) throws RuntimeException {
-      final ObjectAction objectAction;
       final ObjectSpecification specification=targetAdapter.getSpecification();
-      objectAction=findAction(specification,actionId);
+      final ObjectAction objectAction=findActionElseNull(specification,actionId);
       if (objectAction == null) {
         throw new RuntimeException(String.format("Unknown action '%s'",actionId));
       }
       return objectAction;
+    }
+    private OneToOneAssociation findOneToOneAssociation(    final ObjectAdapter targetAdapter,    final String propertyId) throws RuntimeException {
+      final ObjectSpecification specification=targetAdapter.getSpecification();
+      final OneToOneAssociation property=findOneToOneAssociationElseNull(specification,propertyId);
+      if (property == null) {
+        throw new RuntimeException(String.format("Unknown property '%s'",propertyId));
+      }
+      return property;
     }
   }
 );
