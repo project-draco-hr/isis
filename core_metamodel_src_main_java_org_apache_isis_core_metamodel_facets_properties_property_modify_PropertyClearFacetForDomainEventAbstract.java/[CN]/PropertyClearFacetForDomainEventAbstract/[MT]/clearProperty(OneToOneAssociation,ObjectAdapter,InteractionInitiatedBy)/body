@@ -1,0 +1,12 @@
+{
+  if (clearFacet == null) {
+    return;
+  }
+  final Object oldValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,null);
+  clearPropertyInternal(owningProperty,targetAdapter,interactionInitiatedBy);
+  final Object actualNewValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
+  if (!Objects.equal(oldValue,actualNewValue)) {
+    domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTED,eventType(),verify(event),getIdentified(),targetAdapter,oldValue,actualNewValue);
+  }
+}

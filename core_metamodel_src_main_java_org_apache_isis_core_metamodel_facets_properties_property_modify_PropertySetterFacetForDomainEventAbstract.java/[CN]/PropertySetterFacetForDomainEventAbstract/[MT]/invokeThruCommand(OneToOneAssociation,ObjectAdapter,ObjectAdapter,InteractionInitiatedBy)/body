@@ -1,0 +1,31 @@
+{
+  final CommandContext commandContext=getCommandContext();
+  final Command command=commandContext.getCommand();
+  final InteractionContext interactionContext=getInteractionContext();
+  final Interaction interaction=interactionContext.getInteraction();
+  final String propertyId=owningProperty.getIdentifier().toClassAndNameIdentityString();
+  if (command.getExecutor() == Command.Executor.USER && command.getExecuteIn() == org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND) {
+    final CommandService commandService=getCommandService();
+    if (!commandService.persistIfPossible(command)) {
+      throw new IsisException(String.format("Unable to persist command for property '%s'; CommandService does not support persistent commands ",propertyId));
+    }
+  }
+ else {
+    final Object target=ObjectAdapter.Util.unwrap(targetAdapter);
+    final Object argValue=ObjectAdapter.Util.unwrap(valueAdapter);
+    final Interaction.PropertyArgs propertyArgs=new Interaction.PropertyArgs(propertyId,target,argValue);
+    final Interaction.MemberCallable<?> callable=new Interaction.MemberCallable<Interaction.PropertyArgs>(){
+      @Override public Object call(      final Interaction.PropertyArgs propertyArgs11){
+        setterFacet.setProperty(owningProperty,targetAdapter,valueAdapter,interactionInitiatedBy);
+        return null;
+      }
+    }
+;
+    interaction.execute(callable,propertyArgs,getClockService(),command);
+    final Interaction.Execution priorExecution=interaction.getPriorExecution();
+    final RuntimeException executionExceptionIfAny=priorExecution.getException();
+    if (executionExceptionIfAny != null) {
+      throw executionExceptionIfAny;
+    }
+  }
+}
