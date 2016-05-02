@@ -1,0 +1,31 @@
+{
+  final InteractionDto interactionDto=new InteractionDto();
+  interactionDto.setMajorVersion("1");
+  interactionDto.setMinorVersion("0");
+  interactionDto.setTransactionId(transactionId.toString());
+  final InteractionExecutionDto executionDto;
+  if (type == Type.ACTION_INVOCATION) {
+    final ActionInvocationDto invocation=actionInvocationFor(interactionDto);
+    final ActionInvocationDto.Parameters parameters=invocation.getParameters();
+    parameters.getParameter().addAll(parameterDtos);
+    invocation.setReturned(returnDto);
+    executionDto=invocation;
+  }
+ else {
+    final PropertyModificationDto modification=propertyModificationFor(interactionDto);
+    executionDto=modification;
+  }
+  executionDto.setSequence(sequence);
+  executionDto.setId(interactionDto.getTransactionId() + "." + sequence);
+  final OidDto target=new OidDto();
+  target.setObjectType(targetBookmark.getObjectType());
+  target.setObjectIdentifier(target.getObjectIdentifier());
+  executionDto.setTarget(target);
+  executionDto.setTitle(targetTitle);
+  executionDto.setUser(user);
+  executionDto.setMemberIdentifier(memberIdentifier);
+  final PeriodDto timings=timingsFor(executionDto);
+  timings.setStart(JavaSqlTimestampXmlGregorianCalendarAdapter.print(startedAt));
+  timings.setComplete(JavaSqlTimestampXmlGregorianCalendarAdapter.print(completedAt));
+  return interactionDto;
+}

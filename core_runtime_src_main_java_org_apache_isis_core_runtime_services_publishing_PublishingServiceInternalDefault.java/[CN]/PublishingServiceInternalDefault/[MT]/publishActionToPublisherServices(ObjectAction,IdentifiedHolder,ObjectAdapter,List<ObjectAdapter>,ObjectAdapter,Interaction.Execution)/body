@@ -21,10 +21,10 @@
   final ObjectAdapter argAdapter=resultAdapter;
   final Object resultPojo=argAdapter != null ? argAdapter.getObject() : null;
   final ReturnDto returnDto=new ReturnDto();
-  MemberInteractionMementoDtoUtils.setValue(returnDto,returnType,resultPojo);
+  InteractionDtoUtils.setValue(returnDto,returnType,resultPojo);
   for (  PublisherService publisherService : publisherServices) {
-    final MemberInteractionMementoDto aimDto=MemberInteractionMementoDtoUtils.newActionDto(transactionId,nextEventSequence,targetBookmark,targetTitle,actionDto.getMemberIdentifier(),actionDto.getParameters(),returnDto,currentUser,startedAt,completedAt);
-    MemberInteractionMementoDtoUtils.addReturn(aimDto,returnType,resultPojo,bookmarkService);
-    publisherService.publish(aimDto);
+    final InteractionDto interactionDto=InteractionDtoUtils.newActionDto(transactionId,nextEventSequence,targetBookmark,targetTitle,actionDto.getMemberIdentifier(),actionDto.getParameters(),returnDto,currentUser,startedAt,completedAt);
+    InteractionDtoUtils.addReturn(interactionDto,returnType,resultPojo,bookmarkService);
+    publisherService.publish(interactionDto);
   }
 }
