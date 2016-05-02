@@ -1,0 +1,13 @@
+{
+  if (!type.meetsPrereqs(this)) {
+    return;
+  }
+  final Object oldValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
+  final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
+  final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,newValue);
+  setPropertyInternal(type,owningAssociation,targetAdapter,newValueAdapter,interactionInitiatedBy);
+  final Object actualNewValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
+  if (!Objects.equal(oldValue,actualNewValue)) {
+    domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTED,eventType(),verify(event),getIdentified(),targetAdapter,oldValue,actualNewValue);
+  }
+}
