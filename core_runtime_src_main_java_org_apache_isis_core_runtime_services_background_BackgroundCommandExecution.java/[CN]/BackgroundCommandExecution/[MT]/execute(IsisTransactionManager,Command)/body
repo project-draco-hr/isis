@@ -23,13 +23,13 @@
           if (resultAdapter != null) {
             Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
             backgroundCommand.setResult(resultBookmark);
-            backgroundInteraction.getCurrentExecution().setResult(resultAdapter.getObject());
+            backgroundInteraction.getCurrentExecution().setReturned(resultAdapter.getObject());
           }
         }
  else {
           final CommandMementoDto dto=jaxbService.fromXml(CommandMementoDto.class,memento);
           final ActionDto actionDto=dto.getAction();
-          final String actionId=actionDto.getActionIdentifier();
+          final String actionId=actionDto.getMemberIdentifier();
           final List<OidDto> targetOidDtos=dto.getTargets();
           for (          OidDto targetOidDto : targetOidDtos) {
             final Bookmark bookmark=Bookmark.from(targetOidDto);
@@ -39,7 +39,7 @@
             final ObjectAdapter mixedInAdapter=null;
             final ObjectAdapter[] argAdapters=argAdaptersFor(dto);
             final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,mixedInAdapter,argAdapters,InteractionInitiatedBy.FRAMEWORK);
-            Object unused=backgroundInteraction.getPriorExecution().getResult();
+            Object unused=backgroundInteraction.getPriorExecution().getReturned();
             if (resultAdapter != null) {
               Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
               backgroundCommand.setResult(resultBookmark);
@@ -49,8 +49,8 @@
       }
  catch (      RuntimeException e) {
         backgroundCommand.setException(Throwables.getStackTraceAsString(e));
-        RuntimeException unused=backgroundInteraction.getPriorExecution().getException();
-        backgroundInteraction.getCurrentExecution().setException(e);
+        RuntimeException unused=backgroundInteraction.getPriorExecution().getThrew();
+        backgroundInteraction.getCurrentExecution().setThrew(e);
       }
       backgroundCommand.setCompletedAt(backgroundInteraction.getPriorExecution().getCompletedAt());
     }

@@ -10,7 +10,7 @@
   final Bookmark targetBookmark=bookmarkService.bookmarkFor(targetPojo);
   final String actionClassNameId=execution.getMemberArgs().getMemberId();
   final String actionId=actionClassNameId.substring(actionClassNameId.indexOf('#') + 1);
-  final String title=targetBookmark.toString() + ": " + actionId;
+  final String targetTitle=targetBookmark.toString() + ": " + actionId;
   final String currentUser=userService.getUser().getName();
   final Timestamp startedAt=execution.getStartedAt();
   final Timestamp completedAt=execution.getCompletedAt();
@@ -21,10 +21,10 @@
   final ObjectAdapter argAdapter=resultAdapter;
   final Object resultPojo=argAdapter != null ? argAdapter.getObject() : null;
   final ReturnDto returnDto=new ReturnDto();
-  ActionInvocationMementoDtoUtils.setValue(returnDto,returnType,resultPojo);
+  MemberInteractionMementoDtoUtils.setValue(returnDto,returnType,resultPojo);
   for (  PublisherService publisherService : publisherServices) {
-    final ActionInvocationMementoDto aimDto=ActionInvocationMementoDtoUtils.newDto(transactionId,nextEventSequence,targetBookmark,actionDto,title,currentUser,startedAt,completedAt,returnDto);
-    ActionInvocationMementoDtoUtils.addReturn(aimDto,returnType,resultPojo,bookmarkService);
+    final MemberInteractionMementoDto aimDto=MemberInteractionMementoDtoUtils.newActionDto(transactionId,nextEventSequence,targetBookmark,targetTitle,actionDto.getMemberIdentifier(),actionDto.getParameters(),returnDto,currentUser,startedAt,completedAt);
+    MemberInteractionMementoDtoUtils.addReturn(aimDto,returnType,resultPojo,bookmarkService);
     publisherService.publish(aimDto);
   }
 }
