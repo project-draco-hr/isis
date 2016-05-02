@@ -9,17 +9,7 @@
   }
   final ActionDto actionDto=new ActionDto();
   dto.setAction(actionDto);
-  final String actionIdentifier=CommandUtil.actionIdentifierFor(objectAction);
-  actionDto.setActionIdentifier(actionIdentifier);
-  List<ObjectActionParameter> actionParameters=objectAction.getParameters();
-  for (int paramNum=0; paramNum < actionParameters.size(); paramNum++) {
-    final ObjectActionParameter actionParameter=actionParameters.get(paramNum);
-    final String parameterName=actionParameter.getName();
-    final Class<?> paramType=actionParameter.getSpecification().getCorrespondingClass();
-    ObjectAdapter argAdapter=argAdapters[paramNum];
-    final Object arg=argAdapter != null ? argAdapter.getObject() : null;
-    CommandMementoDtoUtils.addParamArg(actionDto.getParameters(),parameterName,paramType,arg,bookmarkService);
-  }
+  addActionArgs(objectAction,actionDto,argAdapters);
   dto.setTransactionId(UUID.randomUUID().toString());
   return dto;
 }

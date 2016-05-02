@@ -1,5 +1,12 @@
 {
-  final ActionInvocationMementoDto aim=ActionInvocationMementoDtoUtils.newDto(UUID.randomUUID(),1,"com.mycompany.myapp.Customer#placeOrder",new Bookmark("CUS","12345"),"John Customer","freddyUser",new java.sql.Timestamp(new java.util.Date().getTime()));
+  final ActionDto actionDto=new ActionDto();
+  actionDto.setActionIdentifier("com.mycompany.Customer#placeOrder");
+  final Timestamp startedAt=new Timestamp(new Date().getTime());
+  final Timestamp completedAt=new Timestamp(startedAt.getTime() + 1000);
+  final ReturnDto returnDto=new ReturnDto();
+  returnDto.setReturnType(ValueType.BOOLEAN);
+  returnDto.setNull(true);
+  final ActionInvocationMementoDto aim=ActionInvocationMementoDtoUtils.newDto(UUID.randomUUID(),1,new Bookmark("CUS","12345"),actionDto,"John Customer","freddyUser",startedAt,completedAt,returnDto);
   ActionInvocationMementoDtoUtils.addParamArg(aim,"aString",String.class,"Fred",null);
   ActionInvocationMementoDtoUtils.addParamArg(aim,"nullString",String.class,(String)null,null);
   ActionInvocationMementoDtoUtils.addParamArg(aim,"aByte",Byte.class,(Byte)(byte)123,null);
