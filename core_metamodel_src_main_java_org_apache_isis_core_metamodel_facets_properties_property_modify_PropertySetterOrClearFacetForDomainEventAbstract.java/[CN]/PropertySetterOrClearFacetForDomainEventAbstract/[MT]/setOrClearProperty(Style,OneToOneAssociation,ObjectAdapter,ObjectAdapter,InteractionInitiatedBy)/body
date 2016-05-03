@@ -1,9 +1,13 @@
 {
+  if (!style.hasCorrespondingFacet(this)) {
+    return;
+  }
   final CommandContext commandContext=getCommandContext();
   final Command command=commandContext.getCommand();
+  owningAssociation.setupCommand(targetAdapter,newValueAdapter);
   final InteractionContext interactionContext=getInteractionContext();
   final Interaction interaction=interactionContext.getInteraction();
-  final String propertyId=owningProperty.getIdentifier().toClassAndNameIdentityString();
+  final String propertyId=owningAssociation.getIdentifier().toClassAndNameIdentityString();
   if (command.getExecutor() == Command.Executor.USER && command.getExecuteIn() == org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND) {
     final CommandService commandService=getCommandService();
     if (!commandService.persistIfPossible(command)) {
@@ -12,12 +16,23 @@
   }
  else {
     final Object target=ObjectAdapter.Util.unwrap(targetAdapter);
-    final Object argValue=ObjectAdapter.Util.unwrap(valueAdapterOrNull);
+    final Object argValue=ObjectAdapter.Util.unwrap(newValueAdapter);
     final Interaction.PropertyArgs propertyArgs=new Interaction.PropertyArgs(propertyId,target,argValue);
     final Interaction.MemberCallable<?> callable=new Interaction.MemberCallable<Interaction.PropertyArgs>(){
       @Override public Object call(      final Interaction.Execution currentExecution,      final Interaction.PropertyArgs propertyArgs11){
-        type.invoke(PropertySetterOrClearFacetForDomainEventAbstract.this,owningProperty,targetAdapter,valueAdapterOrNull,interactionInitiatedBy);
-        return null;
+        try {
+          final Object oldValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
+          final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
+          final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,newValue);
+          style.invoke(PropertySetterOrClearFacetForDomainEventAbstract.this,owningAssociation,targetAdapter,newValueAdapter,interactionInitiatedBy);
+          final Object actualNewValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
+          if (!Objects.equal(oldValue,actualNewValue)) {
+            domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTED,eventType(),verify(event),getIdentified(),targetAdapter,oldValue,actualNewValue);
+          }
+          return null;
+        }
+  finally {
+        }
       }
     }
 ;
