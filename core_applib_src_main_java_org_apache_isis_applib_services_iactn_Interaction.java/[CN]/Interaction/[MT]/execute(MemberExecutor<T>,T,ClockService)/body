@@ -1,0 +1,17 @@
+{
+  try {
+    try {
+      Object result=memberExecutor.execute(execution);
+      execution.setReturned(result);
+      return result;
+    }
+ catch (    Exception ex) {
+      currentExecution.setThrew(ex);
+      throw ex;
+    }
+  }
+  finally {
+    final Timestamp completedAt=clockService.nowAsJavaSqlTimestamp();
+    pop(completedAt);
+  }
+}

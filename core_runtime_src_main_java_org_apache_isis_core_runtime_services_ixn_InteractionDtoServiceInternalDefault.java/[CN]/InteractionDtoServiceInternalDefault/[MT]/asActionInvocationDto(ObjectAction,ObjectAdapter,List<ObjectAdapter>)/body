@@ -1,0 +1,16 @@
+{
+  final Command command=commandContext.getCommand();
+  final UUID transactionId=command.getTransactionId();
+  final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
+  final int nextEventSequence=command.next(sequenceName.abbr());
+  final Object targetPojo=targetAdapter.getObject();
+  final Bookmark targetBookmark=bookmarkService.bookmarkFor(targetPojo);
+  final String actionClassNameId=objectAction.getIdentifier().toClassAndNameIdentityString();
+  final String actionId=actionClassNameId.substring(actionClassNameId.indexOf('#') + 1);
+  final String targetTitle=targetBookmark.toString() + ": " + actionId;
+  final String currentUser=userService.getUser().getName();
+  final ActionDto actionDto=new ActionDto();
+  commandDtoServiceInternal.addActionArgs(objectAction,actionDto,argumentAdapters.toArray(new ObjectAdapter[]{}));
+  final String transactionIdStr=transactionId.toString();
+  return InteractionDtoUtils.newActionInvocation(nextEventSequence,targetBookmark,targetTitle,actionDto.getMemberIdentifier(),actionDto.getParameters(),currentUser,transactionIdStr);
+}
