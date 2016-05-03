@@ -1,14 +1,71 @@
 {
   final CommandContext commandContext=getCommandContext();
   final Command command=commandContext.getCommand();
-  final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,owningAction,targetAdapter,mixedInAdapter,arguments,command,null);
-  final InvocationResult invocationResult=invokeInternal(owningAction,targetAdapter,arguments);
-  final ObjectAdapter invocationResultAdapter=invocationResult.getAdapter();
-  if (invocationResult.getWhetherInvoked()) {
-    domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,owningAction,targetAdapter,mixedInAdapter,arguments,command,invocationResultAdapter);
+  owningAction.setupCommand(targetAdapter,argumentAdapters);
+  final InteractionContext interactionContext=getInteractionContext();
+  final Interaction interaction=interactionContext.getInteraction();
+  final String actionId=owningAction.getIdentifier().toClassAndNameIdentityString();
+  final ObjectAdapter resultAdapter;
+  if (command.getExecutor() == Command.Executor.USER && command.getExecuteIn() == org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND) {
+    final CommandService commandService=getCommandService();
+    if (!commandService.persistIfPossible(command)) {
+      throw new IsisException(String.format("Unable to persist command for action '%s'; CommandService does not support persistent commands ",actionId));
+    }
+    resultAdapter=getAdapterManager().adapterFor(command);
   }
-  if (invocationResultAdapter == null) {
-    return null;
+ else {
+    owningAction.setupActionInvocationContext(targetAdapter);
+    final Object targetPojo=ObjectAdapter.Util.unwrap(targetAdapter);
+    final List<Object> argumentPojos=ObjectAdapter.Util.unwrap(Arrays.asList(argumentAdapters));
+    final Interaction.ActionArgs actionArgs=new Interaction.ActionArgs(actionId,targetPojo,argumentPojos);
+    final Interaction.MemberCallable callable=new Interaction.MemberCallable<Interaction.ActionArgs>(){
+      @Override public Object call(      final Interaction.Execution currentExecution,      final Interaction.ActionArgs actionArgs){
+        try {
+          final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,null);
+          final Object resultPojo=invokeMethodElseFromCache(targetAdapter,argumentAdapters);
+          final ObjectAdapter resultAdapterPossiblyCloned=cloneIfViewModelCloneable(resultPojo,targetAdapter);
+          final List<ObjectAdapter> parameterAdapters=Arrays.asList(argumentAdapters);
+          final ActionInvocationDto invocationDto=getInteractionDtoServiceInternal().asActionInvocationDto(owningAction,targetAdapter,parameterAdapters,resultAdapterPossiblyCloned);
+          currentExecution.setDto(invocationDto);
+          domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,resultAdapterPossiblyCloned);
+          return ObjectAdapter.Util.unwrap(resultAdapterPossiblyCloned);
+        }
+ catch (        IllegalAccessException ex) {
+          throw new ReflectiveActionException("Illegal access of " + method,ex);
+        }
+catch (        InvocationTargetException ex) {
+          final Throwable targetException=ex.getTargetException();
+          if (targetException instanceof IllegalStateException) {
+            throw new ReflectiveActionException(String.format("IllegalStateException thrown while executing %s %s",method,targetException.getMessage()),targetException);
+          }
+          if (targetException instanceof RecoverableException) {
+            if (!getTransactionState().canCommit()) {
+              final Throwable targetExceptionCause=targetException.getCause();
+              Throwable nonRecoverableCause=targetExceptionCause != null ? targetExceptionCause : targetException;
+              final String message=trim(nonRecoverableCause.getMessage(),300);
+              throw new NonRecoverableException(message,nonRecoverableCause);
+            }
+          }
+          ThrowableExtensions.throwWithinIsisException(ex,"Exception executing " + method);
+          return null;
+        }
+      }
+    }
+;
+    interaction.execute(callable,actionArgs,getClockService(),command);
+    final Interaction.Execution priorExecution=interaction.getPriorExecution();
+    final RuntimeException executionExceptionIfAny=priorExecution.getThrew();
+    if (executionExceptionIfAny != null) {
+      throw executionExceptionIfAny;
+    }
+    resultAdapter=getAdapterManager().adapterFor(priorExecution.getReturned());
+    setCommandResultIfEntity(command,resultAdapter);
+    final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
+    if (publishedActionFacet != null) {
+      final IdentifiedHolder identifiedHolder=getIdentified();
+      final List<ObjectAdapter> parameterAdapters=Arrays.asList(argumentAdapters);
+      getPublishingServiceInternal().publishAction(priorExecution,owningAction,identifiedHolder,targetAdapter,parameterAdapters,resultAdapter);
+    }
   }
-  return filteredIfRequired(invocationResultAdapter,interactionInitiatedBy);
+  return filteredIfRequired(resultAdapter,interactionInitiatedBy);
 }
