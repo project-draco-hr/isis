@@ -21,8 +21,8 @@
     final Interaction.MemberExecutor<Interaction.PropertyModification> executor=new Interaction.MemberExecutor<Interaction.PropertyModification>(){
       @Override public Object execute(      final Interaction.PropertyModification currentExecution){
         try {
-          final PropertyModificationDto invocationDto=getInteractionDtoServiceInternal().asPropertyModificationDto(owningProperty,targetAdapter,newValueAdapter);
-          currentExecution.setDto(invocationDto);
+          final PropertyEditDto editDto=getInteractionDtoServiceInternal().asPropertyEditDto(owningProperty,targetAdapter,newValueAdapter);
+          currentExecution.setDto(editDto);
           final Object oldValue=getterFacet.getProperty(targetAdapter,interactionInitiatedBy);
           final Object newValue=ObjectAdapter.Util.unwrap(newValueAdapter);
           final PropertyDomainEvent<?,?> event=domainEventHelper.postEventForProperty(AbstractDomainEvent.Phase.EXECUTING,eventType(),null,getIdentified(),targetAdapter,oldValue,newValue);
