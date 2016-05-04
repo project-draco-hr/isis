@@ -26,6 +26,8 @@ case BIG_DECIMAL:
 return (T)valueDto.getBigDecimal();
 case BIG_INTEGER:
 return (T)valueDto.getBigInteger();
+case JAVA_SQL_TIMESTAMP:
+return (T)JavaSqlTimestampXmlGregorianCalendarAdapter.parse(valueDto.getDateTime());
 case JODA_DATE_TIME:
 return (T)JodaDateTimeXMLGregorianCalendarAdapter.parse(valueDto.getDateTime());
 case JODA_LOCAL_DATE:
@@ -37,10 +39,13 @@ return (T)JodaLocalTimeXMLGregorianCalendarAdapter.parse(valueDto.getLocalTime()
 case ENUM:
 final EnumDto enumDto=valueDto.getEnum();
 final String enumType=enumDto.getEnumType();
-final Class<? extends Enum> enumClass=loadClass3(enumType);
+final Class<? extends Enum> enumClass=loadClassElseThrow(enumType);
 return (T)Enum.valueOf(enumClass,enumDto.getEnumName());
 case REFERENCE:
 return (T)valueDto.getReference();
+case VOID:
+return null;
+default :
+throw new IllegalArgumentException(String.format("getValueDto(...): do not recognize valueType %s (likely a framework error)",valueType));
 }
-throw new IllegalStateException("Value type was not recognised (possible bug)");
 }
