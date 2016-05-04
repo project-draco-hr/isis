@@ -10,7 +10,7 @@
           final ActionInvocationMemento aim=new ActionInvocationMemento(mementoService,memento);
           final String actionId=aim.getActionId();
           final Bookmark targetBookmark=aim.getTarget();
-          final Object targetObject=bookmarkService.lookup(targetBookmark);
+          final Object targetObject=bookmarkService.lookup(targetBookmark,BookmarkService2.FieldResetPolicy.RESET);
           final ObjectAdapter targetAdapter=adapterFor(targetObject);
           final ObjectSpecification specification=targetAdapter.getSpecification();
           final ObjectAction objectAction=findActionElseNull(specification,actionId);
@@ -30,10 +30,11 @@
           final CommandDto dto=jaxbService.fromXml(CommandDto.class,memento);
           final MemberDto memberDto=dto.getMember();
           final String memberId=memberDto.getMemberIdentifier();
+          final OidsDto oidsDto=CommandDtoUtils.targetsFor(dto);
+          final List<OidDto> targetOidDtos=oidsDto.getOid();
           final InteractionType interactionType=memberDto.getInteractionType();
           if (interactionType == InteractionType.ACTION_INVOCATION) {
             final ActionDto actionDto=(ActionDto)memberDto;
-            final List<OidDto> targetOidDtos=dto.getTargets();
             for (            OidDto targetOidDto : targetOidDtos) {
               final Bookmark bookmark=Bookmark.from(targetOidDto);
               final Object targetObject=bookmarkService.lookup(bookmark);
@@ -50,7 +51,6 @@
           }
  else {
             final PropertyDto propertyDto=(PropertyDto)memberDto;
-            final List<OidDto> targetOidDtos=dto.getTargets();
             for (            OidDto targetOidDto : targetOidDtos) {
               final Bookmark bookmark=Bookmark.from(targetOidDto);
               final Object targetObject=bookmarkService.lookup(bookmark);

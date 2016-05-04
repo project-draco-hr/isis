@@ -1,0 +1,122 @@
+{
+switch (valueType) {
+case STRING:
+{
+      final String argValue=(String)val;
+      valueDto.setString(argValue);
+      return valueDto;
+    }
+case BYTE:
+{
+    final Byte argValue=(Byte)val;
+    valueDto.setByte(argValue);
+    return valueDto;
+  }
+case SHORT:
+{
+  final Short argValue=(Short)val;
+  valueDto.setShort(argValue);
+  return valueDto;
+}
+case INT:
+{
+final Integer argValue=(Integer)val;
+valueDto.setInt(argValue);
+return valueDto;
+}
+case LONG:
+{
+final Long argValue=(Long)val;
+valueDto.setLong(argValue);
+return valueDto;
+}
+case CHAR:
+{
+final Character argValue=(Character)val;
+valueDto.setChar("" + argValue);
+return valueDto;
+}
+case BOOLEAN:
+{
+final Boolean argValue=(Boolean)val;
+valueDto.setBoolean(argValue);
+return valueDto;
+}
+case FLOAT:
+{
+final Float argValue=(Float)val;
+valueDto.setFloat(argValue);
+return valueDto;
+}
+case DOUBLE:
+{
+final Double argValue=(Double)val;
+valueDto.setDouble(argValue);
+return valueDto;
+}
+case BIG_INTEGER:
+{
+final BigInteger argValue=(BigInteger)val;
+valueDto.setBigInteger(argValue);
+return valueDto;
+}
+case BIG_DECIMAL:
+{
+final BigDecimal argValue=(BigDecimal)val;
+valueDto.setBigDecimal(argValue);
+return valueDto;
+}
+case JODA_DATE_TIME:
+{
+final DateTime argValue=(DateTime)val;
+valueDto.setDateTime(JodaDateTimeXMLGregorianCalendarAdapter.print(argValue));
+return valueDto;
+}
+case JODA_LOCAL_DATE_TIME:
+{
+final LocalDateTime argValue=(LocalDateTime)val;
+valueDto.setLocalDateTime(JodaLocalDateTimeXMLGregorianCalendarAdapter.print(argValue));
+return valueDto;
+}
+case JODA_LOCAL_DATE:
+{
+final LocalDate argValue=(LocalDate)val;
+valueDto.setLocalDate(JodaLocalDateXMLGregorianCalendarAdapter.print(argValue));
+return valueDto;
+}
+case JODA_LOCAL_TIME:
+{
+final LocalTime argValue=(LocalTime)val;
+valueDto.setLocalTime(JodaLocalTimeXMLGregorianCalendarAdapter.print(argValue));
+return valueDto;
+}
+case JAVA_SQL_TIMESTAMP:
+{
+final java.sql.Timestamp argValue=(java.sql.Timestamp)val;
+valueDto.setTimestamp(JavaSqlTimestampXmlGregorianCalendarAdapter.print(argValue));
+return valueDto;
+}
+case ENUM:
+{
+final Enum argValue=(Enum)val;
+final EnumDto enumDto=new EnumDto();
+valueDto.setEnum(enumDto);
+enumDto.setEnumType(argValue.getClass().getName());
+enumDto.setEnumName(argValue.name());
+return valueDto;
+}
+case REFERENCE:
+{
+final Bookmark bookmark=val instanceof Bookmark ? (Bookmark)val : bookmarkService.bookmarkFor(val);
+if (bookmark != null) {
+OidDto argValue=bookmark != null ? bookmark.toOidDto() : null;
+valueDto.setReference(argValue);
+}
+return valueDto;
+}
+case VOID:
+return null;
+default :
+throw new IllegalArgumentException(String.format("newValueDto(): do not recognize valueType %s (likely a framework error)",valueType));
+}
+}
