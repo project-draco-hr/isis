@@ -2,8 +2,9 @@
   final MemberExecutionDto executionDto;
   if (type == InteractionType.ACTION_INVOCATION) {
     final ActionInvocationDto invocation=new ActionInvocationDto();
-    final ActionInvocationDto.Parameters parameters=invocation.getParameters();
-    parameters.getParameter().addAll(parameterDtos);
+    final ActionInvocationDto.Parameters invocationParameters=parametersFor(invocation);
+    invocation.setParameters(invocationParameters);
+    invocationParameters.getParameter().addAll(parameterDtos);
     executionDto=invocation;
   }
  else {

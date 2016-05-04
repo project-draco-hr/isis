@@ -1,3 +1,17 @@
 {
-  throw new RuntimeException("not yet implemented");
+  final Command command=commandContext.getCommand();
+  final UUID transactionId=command.getTransactionId();
+  final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
+  final int nextEventSequence=command.next(sequenceName.abbr());
+  final Object targetPojo=targetAdapter.getObject();
+  final Bookmark targetBookmark=bookmarkService.bookmarkFor(targetPojo);
+  final String propertyIdentifier=property.getIdentifier().toClassAndNameIdentityString();
+  final String propertyId=propertyIdentifier.substring(propertyIdentifier.indexOf('#') + 1);
+  final String targetTitle=targetBookmark.toString() + ": " + propertyId;
+  final String currentUser=userService.getUser().getName();
+  final PropertyDto propertyDto=new PropertyDto();
+  commandDtoServiceInternal.addPropertyValue(property,propertyDto,newValueAdapterIfAny);
+  final ValueWithTypeDto newValue=propertyDto.getNewValue();
+  final String transactionIdStr=transactionId.toString();
+  return InteractionDtoUtils.newPropertyEdit(nextEventSequence,targetBookmark,targetTitle,propertyDto.getMemberIdentifier(),newValue,currentUser,transactionIdStr);
 }
