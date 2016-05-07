@@ -1,8 +1,7 @@
 {
   final EventType eventType=PublishingServiceInternalDefault.eventTypeFor(changeKind);
-  final Command command=commandContext.getCommand();
-  final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
-  final int nextEventSequence=command.next(sequenceName.abbr());
-  final UUID transactionId=command.getTransactionId();
+  final Interaction interaction=interactionContext.getInteraction();
+  final int nextEventSequence=interaction.next(Interaction.Sequence.PUBLISHED_EVENT.id());
+  final UUID transactionId=interaction.getTransactionId();
   return new EventMetadata(transactionId,nextEventSequence,eventType,currentUser,timestamp,enlistedTarget.toString(),enlistedAdapterClass,null,enlistedTarget,null,null,null,null);
 }

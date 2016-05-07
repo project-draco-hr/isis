@@ -31,10 +31,9 @@
     parameterTypes=null;
     returnType=null;
   }
-  final Command command=commandContext.getCommand();
-  final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
-  final int nextEventSequence=command.next(sequenceName.abbr());
-  final UUID transactionId=command.getTransactionId();
+  final Interaction interaction=interactionContext.getInteraction();
+  final int nextEventSequence=interaction.next(Interaction.Sequence.PUBLISHED_EVENT.id());
+  final UUID transactionId=interaction.getTransactionId();
   final EventMetadata metadata=new EventMetadata(transactionId,nextEventSequence,EventType.ACTION_INVOCATION,currentUser,timestamp,title,actionTargetClass,actionTargetAction,actionTarget,actionMemberIdentifier,parameterNames,parameterTypes,returnType);
   final PublishedAction.PayloadFactory payloadFactory=publishedActionFacet.value();
   final ObjectStringifier stringifier=objectStringifier();

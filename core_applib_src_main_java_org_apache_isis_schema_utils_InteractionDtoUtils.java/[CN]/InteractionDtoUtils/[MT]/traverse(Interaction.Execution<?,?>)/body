@@ -1,0 +1,11 @@
+{
+  final MemberExecutionDto parentDto=clone(parentExecution.getDto());
+  final List<Interaction.Execution<?,?>> children=parentExecution.getChildren();
+  for (  Interaction.Execution<?,?> childExecution : children) {
+    final MemberExecutionDto childDto=clone(childExecution.getDto());
+    final MemberExecutionDto.ChildExecutions childExecutions=InteractionDtoUtils.childExecutionsOf(parentDto);
+    childExecutions.getExecution().add(childDto);
+    traverse(childExecution);
+  }
+  return parentDto;
+}

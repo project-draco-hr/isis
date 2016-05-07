@@ -1,8 +1,7 @@
 {
-  final Command command=commandContext.getCommand();
-  final UUID transactionId=command.getTransactionId();
-  final Interaction.SequenceName sequenceName=Interaction.SequenceName.PUBLISHED_EVENT;
-  final int nextEventSequence=command.next(sequenceName.abbr());
+  final Interaction interaction=interactionContext.getInteraction();
+  final UUID transactionId=interaction.getTransactionId();
+  final int nextEventSequence=interaction.next(Interaction.Sequence.INTERACTION.id());
   final Object targetPojo=targetAdapter.getObject();
   final Bookmark targetBookmark=bookmarkService.bookmarkFor(targetPojo);
   final String actionIdentifier=objectAction.getIdentifier().toClassAndNameIdentityString();

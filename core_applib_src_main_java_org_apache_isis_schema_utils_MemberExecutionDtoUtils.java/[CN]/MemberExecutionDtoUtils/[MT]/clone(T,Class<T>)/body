@@ -1,0 +1,17 @@
+{
+  try {
+    JAXBContext jaxbContext=JAXBContext.newInstance(dtoClass);
+    final Marshaller marshaller=jaxbContext.createMarshaller();
+    final QName name=new QName("",dtoClass.getSimpleName());
+    final JAXBElement<T> jaxbElement=new JAXBElement<>(name,dtoClass,null,dto);
+    final StringWriter stringWriter=new StringWriter();
+    marshaller.marshal(jaxbElement,stringWriter);
+    final StringReader reader=new StringReader(stringWriter.toString());
+    final Unmarshaller unmarshaller=jaxbContext.createUnmarshaller();
+    final JAXBElement<T> root=unmarshaller.unmarshal(new StreamSource(reader),dtoClass);
+    return root.getValue();
+  }
+ catch (  JAXBException e) {
+    throw new RuntimeException(e);
+  }
+}
