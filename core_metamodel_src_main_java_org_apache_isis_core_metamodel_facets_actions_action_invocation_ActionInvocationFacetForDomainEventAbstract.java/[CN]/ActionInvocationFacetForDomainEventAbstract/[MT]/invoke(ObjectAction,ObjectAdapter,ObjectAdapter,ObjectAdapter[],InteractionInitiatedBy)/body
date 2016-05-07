@@ -23,6 +23,11 @@
         try {
           final ActionInvocationDto invocationDto=getInteractionDtoServiceInternal().asActionInvocationDto(owningAction,targetAdapter,argumentAdapterList);
           currentExecution.setDto(invocationDto);
+          final Timestamp startedAt=getClockService().nowAsJavaSqlTimestamp();
+          execution.setStartedAt(startedAt);
+          if (command.getStartedAt() == null) {
+            command.setStartedAt(startedAt);
+          }
           final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,null);
           currentExecution.setEvent(event);
           final Object resultPojo=invokeMethodElseFromCache(targetAdapter,argumentAdapters);
@@ -52,7 +57,7 @@ catch (        InvocationTargetException ex) {
       }
     }
 ;
-    interaction.execute(callable,execution,getClockService(),command);
+    interaction.execute(callable,execution);
     final Interaction.Execution<ActionInvocationDto,?> priorExecution=interaction.getPriorExecution();
     final Exception executionExceptionIfAny=priorExecution.getThrew();
     if (executionExceptionIfAny != null) {

@@ -13,5 +13,7 @@
   persistenceQueryProcessorByClass.put(PersistenceQueryFindAllInstances.class,new PersistenceQueryFindAllInstancesProcessor(psQueryProcessorMgmt));
   persistenceQueryProcessorByClass.put(PersistenceQueryFindUsingApplibQueryDefault.class,new PersistenceQueryFindUsingApplibQueryProcessor(psQueryProcessorMgmt));
   initServices();
+  final MetricsServiceDefault metricsServiceDefault=servicesInjector.lookupService(MetricsServiceDefault.class);
+  persistenceManager.addInstanceLifecycleListener(metricsServiceDefault,(Class[])null);
   setState(State.OPEN);
 }

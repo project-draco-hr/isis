@@ -1,0 +1,10 @@
+{
+  execution.startedAt=timestamp;
+  final MetricsDto metricsDto=metricsFor(execution);
+  final PeriodDto periodDto=timingsFor(metricsDto);
+  periodDto.setStartedAt(JavaSqlTimestampXmlGregorianCalendarAdapter.print(timestamp));
+  final ObjectCountsDto objectCountsDto=objectCountsFor(metricsDto);
+  numberObjectsLoadedFor(objectCountsDto).setBefore(numberObjectsLoaded);
+  numberObjectsDirtiedFor(objectCountsDto).setBefore(numberObjectsDirtied);
+  numberObjectPropertiesModifiedFor(objectCountsDto).setBefore(numberObjectPropertiesModified);
+}
