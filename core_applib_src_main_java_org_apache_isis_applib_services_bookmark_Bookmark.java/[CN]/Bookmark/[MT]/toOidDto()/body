@@ -1,7 +1,8 @@
 {
-  OidDto oidDto=new OidDto();
-  oidDto.setObjectState(getObjectState().toBookmarkState());
-  oidDto.setObjectType(getObjectType());
-  oidDto.setObjectIdentifier(getIdentifier());
+  final OidDto oidDto=new OidDto();
+  oidDto.setType(getObjectType());
+  oidDto.setId(getIdentifier());
+  final BookmarkObjectState bookmarkState=getObjectState().toBookmarkState();
+  oidDto.setObjectState(bookmarkState != BookmarkObjectState.PERSISTENT ? bookmarkState : null);
   return oidDto;
 }

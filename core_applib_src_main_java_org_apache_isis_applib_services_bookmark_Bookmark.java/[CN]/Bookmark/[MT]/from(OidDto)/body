@@ -1,6 +1,8 @@
 {
   final BookmarkObjectState bookmarkObjectState=oidDto.getObjectState();
   final ObjectState objectState=ObjectState.from(bookmarkObjectState);
-  final Bookmark bookmark=new Bookmark(objectState.getCode() + oidDto.getObjectType(),oidDto.getObjectIdentifier());
+  final String objectType=coalesce(oidDto.getType(),oidDto.getObjectType());
+  final String objectId=coalesce(oidDto.getId(),oidDto.getObjectIdentifier());
+  final Bookmark bookmark=new Bookmark(objectState.getCode() + objectType,objectId);
   return bookmark;
 }
