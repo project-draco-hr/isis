@@ -1,0 +1,22 @@
+{
+  final CommandReification command=property != null ? property.command() : CommandReification.AS_CONFIGURED;
+  final CommandPersistence commandPersistence=property != null ? property.commandPersistence() : CommandPersistence.PERSISTED;
+  final CommandExecuteIn commandExecuteIn=property != null ? property.commandExecuteIn() : CommandExecuteIn.FOREGROUND;
+  final Persistence persistence=CommandPersistence.from(commandPersistence);
+  final ExecuteIn executeIn=CommandExecuteIn.from(commandExecuteIn);
+switch (command) {
+case AS_CONFIGURED:
+    final CommandPropertiesConfiguration setting=CommandPropertiesConfiguration.parse(configuration);
+switch (setting) {
+case NONE:
+    return null;
+default :
+  return property != null ? new CommandFacetForPropertyAnnotationAsConfigured(persistence,executeIn,Enablement.ENABLED,holder) : CommandFacetFromConfiguration.create(holder);
+}
+case DISABLED:
+return null;
+case ENABLED:
+return new CommandFacetForPropertyAnnotation(persistence,executeIn,Enablement.ENABLED,holder);
+}
+return null;
+}

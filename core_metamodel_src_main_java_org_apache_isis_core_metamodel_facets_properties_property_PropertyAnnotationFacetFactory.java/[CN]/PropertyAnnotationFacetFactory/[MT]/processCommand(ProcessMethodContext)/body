@@ -1,0 +1,12 @@
+{
+  final Class<?> cls=processMethodContext.getCls();
+  final Method method=processMethodContext.getMethod();
+  final Property property=Annotations.getAnnotation(method,Property.class);
+  final FacetedMethod facetHolder=processMethodContext.getFacetHolder();
+  final FacetHolder holder=facetHolder;
+  if (HasTransactionId.class.isAssignableFrom(processMethodContext.getCls())) {
+    return;
+  }
+  final CommandFacet commandFacet=CommandFacetForPropertyAnnotation.create(property,configuration,holder);
+  FacetUtil.addFacet(commandFacet);
+}

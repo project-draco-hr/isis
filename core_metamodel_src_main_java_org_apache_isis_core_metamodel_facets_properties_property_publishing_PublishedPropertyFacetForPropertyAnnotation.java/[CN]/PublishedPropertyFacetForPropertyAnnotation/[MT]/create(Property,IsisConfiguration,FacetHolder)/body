@@ -1,0 +1,18 @@
+{
+  final Publishing publishing=property != null ? property.publishing() : Publishing.AS_CONFIGURED;
+switch (publishing) {
+case AS_CONFIGURED:
+    final PublishPropertiesConfiguration setting=PublishPropertiesConfiguration.parse(configuration);
+switch (setting) {
+case NONE:
+    return null;
+default :
+  return property != null ? new PublishedPropertyFacetForPropertyAnnotationAsConfigured(holder) : new PublishedPropertyFacetFromConfiguration(holder);
+}
+case DISABLED:
+return null;
+case ENABLED:
+return new PublishedPropertyFacetForPropertyAnnotation(holder);
+}
+return null;
+}

@@ -3,13 +3,5 @@
   if (publishedObjectFacet == null) {
     return;
   }
-  final PublishedObject.PayloadFactory payloadFactory=publishedObjectFacet.value();
-  final RootOid enlistedAdapterOid=(RootOid)enlistedAdapter.getOid();
-  final String enlistedAdapterClass=CommandUtil.targetClassNameFor(enlistedAdapter);
-  final Bookmark enlistedTarget=enlistedAdapterOid.asBookmark();
-  final EventMetadata metadata=newEventMetadata(currentUser,timestamp,changeKind,enlistedAdapterClass,enlistedTarget);
-  final Object pojo=ObjectAdapter.Util.unwrap(undeletedElseEmpty(enlistedAdapter));
-  final EventPayload payload=payloadFactory.payloadFor(pojo,changeKind);
-  payload.withStringifier(stringifier);
-  publishingServiceIfAny.publish(metadata,payload);
+  publishObjectToPublishingService(enlistedAdapter,changeKind,currentUser,timestamp,stringifier);
 }
