@@ -1,0 +1,13 @@
+{
+  if (publishingServiceIfAny == null) {
+    return;
+  }
+  final String currentUser=userService.getUser().getName();
+  final Timestamp timestamp=clockService.nowAsJavaSqlTimestamp();
+  final ObjectStringifier stringifier=objectStringifier();
+  for (  final Map.Entry<ObjectAdapter,ChangeKind> adapterAndChange : changeKindByEnlistedAdapter.entrySet()) {
+    final ObjectAdapter enlistedAdapter=adapterAndChange.getKey();
+    final ChangeKind changeKind=adapterAndChange.getValue();
+    publishObjectToPublishingService(enlistedAdapter,changeKind,currentUser,timestamp,stringifier);
+  }
+}

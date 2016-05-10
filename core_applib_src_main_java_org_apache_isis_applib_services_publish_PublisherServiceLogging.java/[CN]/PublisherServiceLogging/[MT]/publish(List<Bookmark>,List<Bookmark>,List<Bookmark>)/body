@@ -1,0 +1,10 @@
+{
+  if (!LOG.isDebugEnabled()) {
+    return;
+  }
+  final Command command=commandContext.getCommand();
+  final String transactionId=command.getTransactionId().toString();
+  final String userName=userService.getUser().getName();
+  final ChangesDto changesDto=ChangesDtoUtils.newChangesDto(transactionId,userName,created,updated,deleted);
+  LOG.debug(ChangesDtoUtils.toXml(changesDto));
+}
