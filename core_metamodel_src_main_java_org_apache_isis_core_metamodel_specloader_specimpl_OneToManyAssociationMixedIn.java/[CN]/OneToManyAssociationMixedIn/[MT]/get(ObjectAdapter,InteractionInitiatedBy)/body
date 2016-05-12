@@ -1,4 +1,9 @@
 {
   final ObjectAdapter mixinAdapter=mixinAdapterFor(mixinType,mixedInAdapter);
-  return mixinAction.executeInternal(mixinAdapter,mixedInAdapter,new ObjectAdapter[0],interactionInitiatedBy);
+  return getPublishingServiceInternal().withPublishingSuppressed(new PublishingServiceInternal.Block<ObjectAdapter>(){
+    @Override public ObjectAdapter exec(){
+      return mixinAction.executeInternal(mixinAdapter,mixedInAdapter,new ObjectAdapter[0],interactionInitiatedBy);
+    }
+  }
+);
 }
