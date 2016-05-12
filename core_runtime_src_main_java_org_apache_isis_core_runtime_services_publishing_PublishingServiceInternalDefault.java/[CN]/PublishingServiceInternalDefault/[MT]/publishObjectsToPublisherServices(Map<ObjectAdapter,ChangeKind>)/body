@@ -1,34 +1,9 @@
 {
-  final List<Bookmark> created=Lists.newArrayList();
-  final List<Bookmark> updated=Lists.newArrayList();
-  final List<Bookmark> deleted=Lists.newArrayList();
-  for (  final Map.Entry<ObjectAdapter,ChangeKind> adapterAndChange : changeKindByEnlistedAdapter.entrySet()) {
-    final ObjectAdapter enlistedAdapter=adapterAndChange.getKey();
-    final PublishedObjectFacet publishedObjectFacet=enlistedAdapter.getSpecification().getFacet(PublishedObjectFacet.class);
-    if (publishedObjectFacet == null) {
-      continue;
-    }
-    final ChangeKind changeKind=adapterAndChange.getValue();
-    final RootOid rootOid=(RootOid)enlistedAdapter.getOid();
-    final Bookmark bookmark=rootOid.asBookmark();
-switch (changeKind) {
-case CREATE:
-      created.add(bookmark);
-    break;
-case UPDATE:
-  updated.add(bookmark);
-break;
-case DELETE:
-deleted.add(bookmark);
-break;
-default :
-throw new RuntimeException("ChangeKind '" + changeKind + "' not recognized");
-}
-}
-if (created.isEmpty() && updated.isEmpty() && deleted.isEmpty()) {
-return;
-}
-for (PublisherService publisherService : publisherServices) {
-publisherService.publish(created,updated,deleted);
-}
+  if (changeKindByEnlistedAdapter.isEmpty()) {
+    return;
+  }
+  final ChangedObjects changedObjects=newEnlistedObjects(changeKindByEnlistedAdapter);
+  for (  PublisherService publisherService : publisherServices) {
+    publisherService.publish(changedObjects);
+  }
 }
