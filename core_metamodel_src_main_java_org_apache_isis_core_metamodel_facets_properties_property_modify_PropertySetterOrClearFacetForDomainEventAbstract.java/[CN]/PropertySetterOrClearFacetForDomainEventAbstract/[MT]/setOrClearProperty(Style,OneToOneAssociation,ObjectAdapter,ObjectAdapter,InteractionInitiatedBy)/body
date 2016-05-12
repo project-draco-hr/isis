@@ -16,7 +16,9 @@
  else {
     final Object target=ObjectAdapter.Util.unwrap(targetAdapter);
     final Object argValue=ObjectAdapter.Util.unwrap(newValueAdapter);
-    final Interaction.PropertyEdit execution=new Interaction.PropertyEdit(interaction,propertyId,target,argValue);
+    final String targetMember=CommandUtil.targetMemberNameFor(owningProperty);
+    final String targetClass=CommandUtil.targetClassNameFor(targetAdapter);
+    final Interaction.PropertyEdit execution=new Interaction.PropertyEdit(interaction,propertyId,target,argValue,targetMember,targetClass);
     final Interaction.MemberExecutor<Interaction.PropertyEdit> executor=new Interaction.MemberExecutor<Interaction.PropertyEdit>(){
       @Override public Object execute(      final Interaction.PropertyEdit currentExecution){
         try {

@@ -1,0 +1,16 @@
+{
+  final OidsDto oidsDto=new OidsDto();
+  final Map<PublishedObject.ChangeKind,Collection<ObjectAdapter>> adaptersByChange=adaptersByChange();
+  final Collection<ObjectAdapter> adapters=adaptersByChange.get(kind);
+  if (adapters != null) {
+    final ImmutableList<OidDto> oidDtos=FluentIterable.from(adapters).transform(new Function<ObjectAdapter,OidDto>(){
+      @Override public OidDto apply(      final ObjectAdapter objectAdapter){
+        final RootOid rootOid=(RootOid)objectAdapter.getOid();
+        return rootOid.asOidDto();
+      }
+    }
+).toList();
+    oidsDto.getOid().addAll(oidDtos);
+  }
+  return oidsDto;
+}

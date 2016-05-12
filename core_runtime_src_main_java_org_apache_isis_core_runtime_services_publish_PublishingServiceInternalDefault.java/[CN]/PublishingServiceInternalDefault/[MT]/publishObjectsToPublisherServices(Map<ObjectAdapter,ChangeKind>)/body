@@ -1,0 +1,10 @@
+{
+  final Map<ObjectAdapter,ChangeKind> changeKindByPublishedAdapter=Maps.filterKeys(changeKindByEnlistedAdapter,PublishedObjectFacet.Predicates.isPublished());
+  if (changeKindByPublishedAdapter.isEmpty()) {
+    return;
+  }
+  final PublishedObjects publishedObjects=newPublishedObjects(changeKindByPublishedAdapter);
+  for (  PublisherService publisherService : publisherServices) {
+    publisherService.publish(publishedObjects);
+  }
+}
