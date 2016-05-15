@@ -1,16 +1,11 @@
 {
   final Set<Map.Entry<AdapterAndProperty,PreAndPostValues>> changedObjectProperties=changedObjectsServiceInternal.getChangedObjectProperties();
-  try {
-    if (!canAudit()) {
-      return;
-    }
-    final String currentUser=userService.getUser().getName();
-    final java.sql.Timestamp currentTime=clockService.nowAsJavaSqlTimestamp();
-    for (    Map.Entry<AdapterAndProperty,PreAndPostValues> auditEntry : changedObjectProperties) {
-      auditChangedProperty(currentTime,currentUser,auditEntry);
-    }
+  if (!canAudit()) {
+    return;
   }
-  finally {
-    changedObjectsServiceInternal.clearChangedObjectProperties();
+  final String currentUser=userService.getUser().getName();
+  final java.sql.Timestamp currentTime=clockService.nowAsJavaSqlTimestamp();
+  for (  Map.Entry<AdapterAndProperty,PreAndPostValues> auditEntry : changedObjectProperties) {
+    auditChangedProperty(currentTime,currentUser,auditEntry);
   }
 }
