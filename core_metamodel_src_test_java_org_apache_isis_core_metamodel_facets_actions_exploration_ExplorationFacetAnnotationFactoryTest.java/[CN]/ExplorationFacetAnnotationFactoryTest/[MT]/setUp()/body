@@ -7,6 +7,8 @@
 {
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
       allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
       will(returnValue(mockAuthenticationSession));
     }
@@ -14,5 +16,5 @@
 );
   facetFactory=new ExplorationFacetAnnotationFactory();
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
 }

@@ -1,7 +1,14 @@
 {
   final HideForContextFacetViaMethodFactory facetFactory=new HideForContextFacetViaMethodFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
 class Customer {
     @SuppressWarnings("unused") public String getFirstName(){

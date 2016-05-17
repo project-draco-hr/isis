@@ -2,7 +2,14 @@
   final HiddenFacetStaticMethodFactory facetFactory=new HiddenFacetStaticMethodFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOtherOrders");
   final Method alwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideOtherOrders");
   facetFactory.process(new ProcessMethodContext(CustomerStatic.class,null,null,collectionAccessorMethod,methodRemover,facetedMethod));

@@ -1,7 +1,14 @@
 {
   final HiddenFacetStaticMethodFactory facetFactory=new HiddenFacetStaticMethodFactory();
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactory.setSpecificationLoader(programmableReflector);
   final Method actionMethod=findMethod(CustomerStatic.class,"someAction",new Class[]{int.class,Long.class});
   final Method alwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideSomeAction",new Class[]{});

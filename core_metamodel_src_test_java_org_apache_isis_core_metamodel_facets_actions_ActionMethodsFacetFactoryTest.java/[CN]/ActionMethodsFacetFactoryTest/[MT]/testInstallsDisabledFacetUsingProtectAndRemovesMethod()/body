@@ -2,7 +2,14 @@
   final DisabledFacetStaticMethodFacetFactory facetFactory=new DisabledFacetStaticMethodFacetFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   programmableReflector.setLoadSpecificationStringReturn(voidSpec);
   final Method actionMethod=findMethod(CustomerStatic.class,"someAction",new Class[]{int.class,Long.class});
   final Method protectMethod=findMethod(CustomerStatic.class,"protectSomeAction",new Class[]{});

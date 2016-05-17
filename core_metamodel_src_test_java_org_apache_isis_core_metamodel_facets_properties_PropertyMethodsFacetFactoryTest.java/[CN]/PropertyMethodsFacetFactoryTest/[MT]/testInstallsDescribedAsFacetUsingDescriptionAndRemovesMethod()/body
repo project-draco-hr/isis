@@ -1,7 +1,14 @@
 {
   final DescribedAsFacetStaticMethodFactory facetFactory=new DescribedAsFacetStaticMethodFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
   final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getFirstName");
   final Method descriptionMethod=findMethod(CustomerStatic.class,"descriptionFirstName");

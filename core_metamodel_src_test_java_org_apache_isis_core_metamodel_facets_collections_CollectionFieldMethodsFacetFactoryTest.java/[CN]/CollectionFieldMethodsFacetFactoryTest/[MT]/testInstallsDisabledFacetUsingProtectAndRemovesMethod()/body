@@ -2,7 +2,14 @@
   final DisabledFacetStaticMethodFacetFactory facetFactory=new DisabledFacetStaticMethodFacetFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   final Method collectionAccessorMethod=findMethod(CustomerStatic.class,"getOrders");
   final Method protectMethod=findMethod(CustomerStatic.class,"protectOrders");
   facetFactory.process(new ProcessMethodContext(CustomerStatic.class,null,null,collectionAccessorMethod,methodRemover,facetedMethod));

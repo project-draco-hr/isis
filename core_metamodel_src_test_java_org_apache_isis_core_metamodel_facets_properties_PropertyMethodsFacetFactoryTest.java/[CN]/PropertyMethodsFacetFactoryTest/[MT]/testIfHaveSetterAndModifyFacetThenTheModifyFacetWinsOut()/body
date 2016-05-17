@@ -1,11 +1,25 @@
 {
   final PropertySetAndClearFacetFactory facetFactory=new PropertySetAndClearFacetFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
   final PropertyModifyFacetFactory facetFactoryForModify=new PropertyModifyFacetFactory();
   facetFactoryForModify.setSpecificationLoader(programmableReflector);
-  facetFactoryForModify.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactoryForModify.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactoryForModify.setDeploymentCategory(DeploymentCategory.PRODUCTION);
 class Customer {
     @SuppressWarnings("unused") public String getFirstName(){

@@ -1,7 +1,14 @@
 {
   final HiddenFacetStaticMethodFactory facetFactory=new HiddenFacetStaticMethodFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
   final Method propertyAccessorMethod=findMethod(CustomerStatic.class,"getLastName");
   final Method propertyAlwaysHideMethod=findMethod(CustomerStatic.class,"alwaysHideLastName");

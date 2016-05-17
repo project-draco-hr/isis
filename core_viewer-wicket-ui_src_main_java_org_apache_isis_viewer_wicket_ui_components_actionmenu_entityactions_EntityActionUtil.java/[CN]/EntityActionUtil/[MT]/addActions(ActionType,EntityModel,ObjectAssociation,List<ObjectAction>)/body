@@ -1,8 +1,6 @@
 {
   final ObjectSpecification adapterSpec=entityModel.getTypeOfSpecification();
   final ObjectAdapter adapter=entityModel.load(ConcurrencyChecking.NO_CHECK);
-  final AuthenticationSessionProvider asa=(AuthenticationSessionProvider)Session.get();
-  AuthenticationSession authSession=asa.getAuthenticationSession();
   final ObjectSpecification objectSpecification=entityModel.getTypeOfSpecification();
   @SuppressWarnings({"unchecked","deprecation"}) Filter<ObjectAction> filter=Filters.and(ObjectAction.Filters.memberOrderOf(association),ObjectAction.Filters.dynamicallyVisible(adapter,InteractionInitiatedBy.USER,Where.ANYWHERE),ObjectAction.Filters.notBulkOnly(),ObjectAction.Filters.excludeWizardActions(objectSpecification));
   final List<ObjectAction> userActions=adapterSpec.getObjectActions(type,Contributed.INCLUDED,filter);

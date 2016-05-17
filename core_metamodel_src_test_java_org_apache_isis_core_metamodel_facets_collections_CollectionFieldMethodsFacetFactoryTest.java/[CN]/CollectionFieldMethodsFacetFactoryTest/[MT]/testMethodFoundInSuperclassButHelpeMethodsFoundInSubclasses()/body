@@ -2,7 +2,14 @@
   final CollectionAccessorFacetViaAccessorFactory facetFactoryForAccessor=new CollectionAccessorFacetViaAccessorFactory();
   facetFactoryForAccessor.setSpecificationLoader(programmableReflector);
   facetFactoryForAccessor.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactoryForAccessor.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactoryForAccessor.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   final CollectionAddToRemoveFromAndValidateFacetFactory facetFactoryForHelpers=new CollectionAddToRemoveFromAndValidateFacetFactory();
   facetFactoryForHelpers.setSpecificationLoader(programmableReflector);
   facetFactoryForHelpers.setServicesInjector(mockServicesInjector);

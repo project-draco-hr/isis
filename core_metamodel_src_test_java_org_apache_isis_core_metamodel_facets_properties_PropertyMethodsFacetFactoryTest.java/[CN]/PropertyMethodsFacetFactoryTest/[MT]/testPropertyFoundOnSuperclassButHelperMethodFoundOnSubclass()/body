@@ -1,16 +1,37 @@
 {
   final PropertyAccessorFacetViaAccessorFactory facetFactory=new PropertyAccessorFacetViaAccessorFactory();
   facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactory.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
   final HideForContextFacetViaMethodFactory facetFactoryForHide=new HideForContextFacetViaMethodFactory();
   facetFactoryForHide.setSpecificationLoader(programmableReflector);
-  facetFactoryForHide.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactoryForHide.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactoryForHide.setDeploymentCategory(DeploymentCategory.PRODUCTION);
   final DisableForContextFacetViaMethodFactory facetFactoryForDisable=new DisableForContextFacetViaMethodFactory();
   facetFactoryForDisable.setSpecificationLoader(programmableReflector);
   facetFactoryForDisable.setServicesInjector(mockServicesInjector);
-  facetFactoryForDisable.setAuthenticationSessionProvider(mockAuthenticationSessionProvider);
+  facetFactoryForDisable.setServicesInjector(mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+    }
+  }
+);
   facetFactoryForDisable.setDeploymentCategory(DeploymentCategory.PRODUCTION);
 class Customer {
     @SuppressWarnings("unused") public String getFirstName(){
