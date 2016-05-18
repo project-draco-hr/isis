@@ -2,5 +2,13 @@
   facetFactory=new DomainObjectAnnotationFacetFactory();
   facetFactory.setConfiguration(mockConfiguration);
   facetFactory.setServicesInjector(mockServicesInjector);
-  facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+    }
+  }
+);
 }

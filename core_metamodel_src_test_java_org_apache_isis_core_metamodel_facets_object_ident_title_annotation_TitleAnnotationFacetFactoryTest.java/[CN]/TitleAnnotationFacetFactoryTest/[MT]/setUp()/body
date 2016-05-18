@@ -4,11 +4,12 @@
   facetFactory.setAdapterManager(mockAdapterManager);
   facetFactory.setSpecificationLoader(mockSpecificationLoaderSpi);
   facetFactory.setServicesInjector(mockServicesInjector);
-  facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
   context.checking(new Expectations(){
 {
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
       will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
       allowing(mockLocalizationProvider).getLocalization();
       will(returnValue(new LocalizationDefault()));
     }

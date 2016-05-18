@@ -1,15 +1,6 @@
 {
   final ActionNamedDebugExplorationFacetFactory facetFactory=new ActionNamedDebugExplorationFacetFactory();
-  facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setServicesInjector(mockServicesInjector);
-  context.checking(new Expectations(){
-{
-      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
-      will(returnValue(mockAuthenticationSessionProvider));
-    }
-  }
-);
+  injectServicesIntoAndAllowingServiceInjectorLookups(facetFactory);
   programmableReflector.setLoadSpecificationStringReturn(voidSpec);
 class Customer {
     @SuppressWarnings("unused") public void explorationDebugAnActionWithExplorationAndDebugPrefix(){

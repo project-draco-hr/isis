@@ -6,10 +6,12 @@
 {
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
       will(returnValue(mockAuthenticationSessionProvider));
+      final DeploymentCategory deploymentCategory=DeploymentCategory.PRODUCTION;
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
     }
   }
 );
-  facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
 class Customer {
     @SuppressWarnings("unused") public String getFirstName(){
       return null;

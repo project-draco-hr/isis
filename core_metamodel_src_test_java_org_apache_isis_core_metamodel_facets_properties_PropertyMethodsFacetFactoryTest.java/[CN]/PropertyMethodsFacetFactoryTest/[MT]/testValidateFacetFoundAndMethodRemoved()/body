@@ -1,16 +1,6 @@
 {
   final PropertyValidateFacetViaMethodFactory facetFactory=new PropertyValidateFacetViaMethodFactory();
-  facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setServicesInjector(mockServicesInjector);
-  facetFactory.setServicesInjector(mockServicesInjector);
-  context.checking(new Expectations(){
-{
-      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
-      will(returnValue(mockAuthenticationSessionProvider));
-    }
-  }
-);
-  facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
+  injectServicesIntoAndAllowingServiceInjectorLookups(facetFactory);
 class Customer {
     @SuppressWarnings("unused") public String getFirstName(){
       return null;

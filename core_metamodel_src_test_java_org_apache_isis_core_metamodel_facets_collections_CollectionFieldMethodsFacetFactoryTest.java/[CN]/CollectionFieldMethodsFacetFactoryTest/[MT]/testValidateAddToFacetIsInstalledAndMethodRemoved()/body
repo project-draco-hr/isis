@@ -1,16 +1,6 @@
 {
   final CollectionAddToRemoveFromAndValidateFacetFactory facetFactory=new CollectionAddToRemoveFromAndValidateFacetFactory();
-  facetFactory.setSpecificationLoader(programmableReflector);
-  facetFactory.setServicesInjector(mockServicesInjector);
-  facetFactory.setDeploymentCategory(DeploymentCategory.PRODUCTION);
-  facetFactory.setServicesInjector(mockServicesInjector);
-  context.checking(new Expectations(){
-{
-      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
-      will(returnValue(mockAuthenticationSessionProvider));
-    }
-  }
-);
+  injectServicesIntoAndAllowingServiceInjectorLookups(facetFactory);
 @SuppressWarnings("hiding") class Order {
   }
 class Customer {
