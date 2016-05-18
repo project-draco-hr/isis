@@ -2,5 +2,7 @@
   super.setUp();
   facetFactory=new EncodableFacetAnnotationElseConfigurationFactory();
   isisConfigurationDefault=new IsisConfigurationDefault();
-  facetFactory.setConfiguration(isisConfigurationDefault);
+  ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault(Collections.emptyList());
+  servicesInjector.addFallbackIfRequired(ConfigurationServiceInternal.class,isisConfigurationDefault=new IsisConfigurationDefault());
+  facetFactory.setServicesInjector(servicesInjector);
 }

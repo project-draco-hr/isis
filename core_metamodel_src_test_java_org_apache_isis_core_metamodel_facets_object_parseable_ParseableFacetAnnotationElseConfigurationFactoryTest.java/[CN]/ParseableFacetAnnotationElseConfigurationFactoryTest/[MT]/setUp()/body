@@ -14,7 +14,6 @@
 );
   facetFactory=new ParseableFacetAnnotationElseConfigurationFactory();
   isisConfigurationDefault=new IsisConfigurationDefault();
-  facetFactory.setConfiguration(isisConfigurationDefault);
   facetFactory.setServicesInjector(mockServicesInjector);
   context.checking(new Expectations(){
 {
@@ -22,6 +21,8 @@
       will(returnValue(mockAuthenticationSessionProvider));
       allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
       will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(isisConfigurationDefault));
     }
   }
 );

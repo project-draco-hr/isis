@@ -1,12 +1,13 @@
 {
   facetFactory=new ActionAnnotationFacetFactory();
-  facetFactory.setConfiguration(mockConfiguration);
   facetFactory.setSpecificationLoader(mockSpecificationLoaderSpi);
   facetFactory.setServicesInjector(mockServicesInjector);
   context.checking(new Expectations(){
 {
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
       will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(mockConfiguration));
       allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
       will(returnValue(mockDeploymentCategoryProvider));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();

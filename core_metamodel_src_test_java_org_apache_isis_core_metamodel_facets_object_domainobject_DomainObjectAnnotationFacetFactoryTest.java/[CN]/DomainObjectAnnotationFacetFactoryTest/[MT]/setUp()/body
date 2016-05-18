@@ -1,6 +1,5 @@
 {
   facetFactory=new DomainObjectAnnotationFacetFactory();
-  facetFactory.setConfiguration(mockConfiguration);
   facetFactory.setServicesInjector(mockServicesInjector);
   context.checking(new Expectations(){
 {
@@ -8,6 +7,8 @@
       will(returnValue(mockDeploymentCategoryProvider));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(mockConfiguration));
     }
   }
 );

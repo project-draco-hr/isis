@@ -1,4 +1,6 @@
 {
   this(type.getName());
-  runtimeContext=new RuntimeContextNoRuntime(new ServicesInjectorDefault(Collections.emptyList()),null);
+  ServicesInjectorDefault servicesInjector=new ServicesInjectorDefault(Collections.emptyList());
+  servicesInjector.addFallbackIfRequired(ConfigurationServiceInternal.class,new IsisConfigurationDefault(null));
+  runtimeContext=new RuntimeContextNoRuntime(servicesInjector,null);
 }

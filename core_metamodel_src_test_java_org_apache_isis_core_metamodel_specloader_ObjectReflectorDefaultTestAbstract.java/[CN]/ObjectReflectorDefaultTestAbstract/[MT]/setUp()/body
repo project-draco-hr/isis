@@ -8,6 +8,13 @@
   }
 );
   final ObjectReflectorDefault reflector=new ObjectReflectorDefault(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),mockServicesInjector);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(new IsisConfigurationDefault(null)));
+    }
+  }
+);
   runtimeContext=new RuntimeContextNoRuntime(new ServicesInjectorDefault(Collections.emptyList()),reflector);
   reflector.init(runtimeContext);
   specification=loadSpecification(reflector);
