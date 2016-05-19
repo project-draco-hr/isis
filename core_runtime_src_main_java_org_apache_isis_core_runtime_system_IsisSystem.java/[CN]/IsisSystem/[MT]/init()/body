@@ -28,7 +28,7 @@
     servicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
     final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
     servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
-    final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader);
+    final RuntimeContext runtimeContext=new RuntimeContext(servicesInjector);
     runtimeContext.injectInto(specificationLoader);
     for (    Object service : servicesInjector.getRegisteredServices()) {
       runtimeContext.injectInto(service);

@@ -18,11 +18,16 @@
       ignoring(mockServicesInjector).getRegisteredServices();
       ignoring(mockServicesInjector).isRegisteredService(with(any(Class.class)));
       ignoring(mockSpecificationLoader).allServiceClasses();
+      ignoring(mockPersistenceSessionServiceInternal);
+      ignoring(mockTransactionStateProviderInternal);
+      ignoring(mockMessageBrokerServiceInternal);
+      ignoring(mockLocalizationProviderInternal);
     }
   }
 );
   final SpecificationLoader reflector=new SpecificationLoader(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),mockServicesInjector);
-  runtimeContext=new RuntimeContextNoRuntime(new ServicesInjector(Collections.emptyList()),reflector);
+  final ServicesInjector servicesInjector=new ServicesInjector(Lists.newArrayList(mockPersistenceSessionServiceInternal,mockLocalizationProviderInternal,mockMessageBrokerServiceInternal,mockTransactionStateProviderInternal,mockGridService,mockConfiguration,mockSpecificationLoader,mockDeploymentCategoryProvider));
+  runtimeContext=new RuntimeContext(servicesInjector);
   reflector.init(runtimeContext);
   specification=loadSpecification(reflector);
 }
