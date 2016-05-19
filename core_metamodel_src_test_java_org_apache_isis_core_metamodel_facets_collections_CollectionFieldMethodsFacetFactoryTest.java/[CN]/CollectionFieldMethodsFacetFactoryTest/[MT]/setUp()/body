@@ -11,13 +11,16 @@
       will(returnValue(DeploymentCategory.PRODUCTION));
       allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
       will(returnValue(mockAuthenticationSession));
-    }
-  }
-);
-  context.checking(new Expectations(){
-{
       allowing(mockServicesInjector).lookupService(TranslationService.class);
       will(returnValue(mockTranslationService));
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(stubConfiguration));
     }
   }
 );

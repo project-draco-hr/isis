@@ -8,7 +8,9 @@
       will(returnArgument(1));
       allowing(mockConfiguration).getString("isis.locale");
       will(returnValue(null));
-      allowing(mockDependencyInjector).injectServicesInto(with(any(Object.class)));
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).injectServicesInto(with(any(Object.class)));
       never(mockAuthenticationSessionProvider);
       never(mockAdapterManager);
     }

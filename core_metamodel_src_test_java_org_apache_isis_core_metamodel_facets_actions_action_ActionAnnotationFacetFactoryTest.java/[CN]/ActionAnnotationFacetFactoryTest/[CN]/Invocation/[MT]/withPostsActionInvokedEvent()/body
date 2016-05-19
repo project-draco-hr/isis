@@ -12,6 +12,13 @@ class SomeActionInvokedDomainEvent extends ActionInvokedEvent<Customer> {
   actionMethod=findMethod(cls,"someAction");
   allowingLoadSpecificationRequestsFor(cls,actionMethod.getReturnType());
   expectRemoveMethod(actionMethod);
+  context.checking(new Expectations(){
+{
+      allowing(mockConfiguration).getBoolean("isis.reflector.facet.actionAnnotation.domainEvent.postForDefault",true);
+      will(returnValue(true));
+    }
+  }
+);
   final ProcessMethodContext processMethodContext=new ProcessMethodContext(cls,null,null,actionMethod,mockMethodRemover,facetedMethod);
   facetFactory.processInvocation(processMethodContext);
   final Facet domainEventFacet=facetedMethod.getFacet(ActionDomainEventFacet.class);

@@ -2,17 +2,23 @@
   context.checking(new Expectations(){
 {
       ignoring(mockConfiguration);
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(new IsisConfigurationDefault(null)));
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(GridService.class);
+      will(returnValue(mockGridService));
+      ignoring(mockGridService).existsFor(with(any(Class.class)));
+      ignoring(mockServicesInjector).getRegisteredServices();
+      ignoring(mockServicesInjector).isRegisteredService(with(any(Class.class)));
     }
   }
 );
   final ObjectReflectorDefault reflector=new ObjectReflectorDefault(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),mockServicesInjector);
-  context.checking(new Expectations(){
-{
-      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
-      will(returnValue(new IsisConfigurationDefault(null)));
-    }
-  }
-);
   runtimeContext=new RuntimeContextNoRuntime(new ServicesInjectorDefault(Collections.emptyList()),reflector);
   reflector.init(runtimeContext);
   specification=loadSpecification(reflector);

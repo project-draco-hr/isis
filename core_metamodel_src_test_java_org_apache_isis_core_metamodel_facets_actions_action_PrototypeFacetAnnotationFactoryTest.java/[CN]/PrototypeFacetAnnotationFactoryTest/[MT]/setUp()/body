@@ -1,7 +1,5 @@
 {
   super.setUp();
-  mockDeploymentCategoryProvider=context.mock(DeploymentCategoryProvider.class);
-  mockAuthenticationSessionProvider=context.mock(AuthenticationSessionProvider.class);
   final AuthenticationSession mockAuthenticationSession=context.mock(AuthenticationSession.class);
   context.checking(new Expectations(){
 {
@@ -11,16 +9,11 @@
       will(returnValue(mockDeploymentCategoryProvider));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
-    }
-  }
-);
-  facetFactory=new ActionAnnotationFacetFactory();
-  facetFactory.setServicesInjector(mockServicesInjector);
-  context.checking(new Expectations(){
-{
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
       will(returnValue(mockAuthenticationSessionProvider));
     }
   }
 );
+  facetFactory=new ActionAnnotationFacetFactory();
+  facetFactory.setServicesInjector(mockServicesInjector);
 }

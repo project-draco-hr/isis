@@ -9,17 +9,22 @@
   mockAuthenticationSessionProvider=context.mock(AuthenticationSessionProvider.class);
   mockServicesInjector=context.mock(ServicesInjector.class);
   mockTranslationService=context.mock(TranslationService.class);
-  context.checking(new Expectations(){
-{
-      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
-      will(returnValue(DeploymentCategory.PRODUCTION));
-    }
-  }
-);
+  stubConfiguration=new IsisConfigurationDefault();
+  mockAuthenticationSession=context.mock(AuthenticationSession.class);
   context.checking(new Expectations(){
 {
       allowing(mockServicesInjector).lookupService(TranslationService.class);
       will(returnValue(mockTranslationService));
+      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      will(returnValue(stubConfiguration));
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
+      will(returnValue(mockAuthenticationSession));
     }
   }
 );

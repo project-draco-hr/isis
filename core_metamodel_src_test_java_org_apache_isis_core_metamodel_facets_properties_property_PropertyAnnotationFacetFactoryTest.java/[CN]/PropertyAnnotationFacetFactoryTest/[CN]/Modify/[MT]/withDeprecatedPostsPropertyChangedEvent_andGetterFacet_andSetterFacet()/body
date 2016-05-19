@@ -17,6 +17,13 @@ class NamedChangedDomainEvent extends PropertyChangedEvent<Customer,String> {
   addSetterFacet(facetedMethod);
   addClearFacet(facetedMethod);
   allowingLoadSpecificationRequestsFor(cls,propertyMethod.getReturnType());
+  context.checking(new Expectations(){
+{
+      oneOf(mockConfiguration).getBoolean("isis.reflector.facet.propertyAnnotation.domainEvent.postForDefault",true);
+      will(returnValue(true));
+    }
+  }
+);
   final FacetFactory.ProcessMethodContext processMethodContext=new FacetFactory.ProcessMethodContext(cls,null,null,propertyMethod,mockMethodRemover,facetedMethod);
   facetFactory.processModify(processMethodContext);
   final Facet domainEventFacet=facetedMethod.getFacet(PropertyDomainEventFacet.class);
