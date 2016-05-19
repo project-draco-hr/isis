@@ -17,16 +17,13 @@
     primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
     isisConfigurationBuilder.addDefaultConfigurationResources();
     final DeploymentType deploymentType=determineDeploymentType(isisConfigurationBuilder,servletContext);
-    addConfigurationResourcesForWebApps(isisConfigurationBuilder);
     addConfigurationResourcesForDeploymentType(isisConfigurationBuilder,deploymentType);
-    IsisWebAppBootstrapperUtil.addConfigurationResourcesForViewers(isisConfigurationBuilder,servletContext);
     isisConfigurationBuilder.add(WebAppConstants.WEB_APP_DIR,webappDir);
     isisConfigurationBuilder.add(SystemConstants.NOSPLASH_KEY,"true");
-    final InstallerLookup installerLookup=new InstallerLookup();
-    injector=createGuiceInjector(isisConfigurationBuilder,deploymentType,installerLookup);
+    IsisConfigurationDefault isisConfiguration=isisConfigurationBuilder.getConfiguration();
+    final InstallerLookup installerLookup=new InstallerLookup(isisConfiguration);
+    injector=createGuiceInjector(isisConfiguration,deploymentType);
     final IsisSystem system=injector.getInstance(IsisSystem.class);
-    isisConfigurationBuilder.lockConfiguration();
-    isisConfigurationBuilder.dumpResourcesToLog();
     servletContext.setAttribute(WebAppConstants.ISIS_SYSTEM_KEY,system);
   }
  catch (  final RuntimeException e) {

@@ -14,7 +14,8 @@
     requestCycleListeners.add(requestCycleListenerForIsis);
     requestCycleListeners.add(new PageRequestHandlerTracker());
     final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
-    final IsisInjectModule isisModule=newIsisModule(deploymentType,isisConfigurationBuilder);
+    final IsisConfigurationDefault configuration=isisConfigurationBuilder.getConfiguration();
+    final IsisInjectModule isisModule=newIsisModule(deploymentType,configuration);
     final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
     initWicketComponentInjection(injector);
     injector.injectMembers(this);
@@ -22,7 +23,6 @@
       WebRequestCycleForIsis webRequestCycleForIsis=(WebRequestCycleForIsis)requestCycleListenerForIsis;
       webRequestCycleForIsis.setPageClassRegistry(pageClassRegistry);
     }
-    final IsisConfiguration configuration=isisConfigurationBuilder.getConfiguration();
     this.getMarkupSettings().setStripWicketTags(determineStripWicketTags(configuration));
     getDebugSettings().setAjaxDebugModeEnabled(determineAjaxDebugModeEnabled(configuration));
     buildCssBundle();
