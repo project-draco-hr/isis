@@ -1,0 +1,15 @@
+{
+  final ObjectSpecification spec=internalLoadSpecification(type);
+  if (spec == null) {
+    return null;
+  }
+  if (cache.isInitialized()) {
+    if (spec.containsDoOpFacet(ObjectSpecIdFacet.class)) {
+      ObjectSpecId specId=spec.getSpecId();
+      if (cache.getByObjectType(specId) == null) {
+        cache.recache(spec);
+      }
+    }
+  }
+  return spec;
+}
