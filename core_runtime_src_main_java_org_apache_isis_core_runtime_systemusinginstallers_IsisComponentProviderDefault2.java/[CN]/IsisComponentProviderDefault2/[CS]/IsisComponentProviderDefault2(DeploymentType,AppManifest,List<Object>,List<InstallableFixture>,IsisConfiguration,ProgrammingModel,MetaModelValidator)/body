@@ -1,24 +1,10 @@
 {
-  super(deploymentType,appManifestIfAny);
-  this.configuration=elseDefault(configurationOverride);
-  final String fixtureClassNamesCsv;
-  if (appManifest != null) {
-    putAppManifestKey(appManifest);
-    findAndRegisterTypes(appManifest);
-    specifyServicesAndRegisteredEntitiesUsing(appManifest);
-    List<Class<? extends FixtureScript>> fixtureClasses=appManifest.getFixtures();
-    fixtureClassNamesCsv=classNamesFrom(fixtureClasses);
-    overrideConfigurationUsing(appManifest);
-    this.services=createServices(configuration);
-  }
- else {
-    fixtureClassNamesCsv=classNamesFrom(fixturesOverride);
-    this.services=elseDefault(servicesOverride,configuration);
-  }
+  super(deploymentType,appManifestIfAny,elseDefault(configurationOverride));
+  this.services=appManifestIfAny != null ? new ServicesInstallerFromConfigurationAndAnnotation(getConfiguration()).getServices() : servicesOverride != null ? servicesOverride : new ServicesInstallerFromConfiguration(getConfiguration()).getServices();
+  final String fixtureClassNamesCsv=classNamesFrom(appManifestIfAny != null ? appManifestIfAny.getFixtures() : fixturesOverride);
   putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
-  this.fixturesInstaller=new FixturesInstallerFromConfiguration(configuration);
-  this.authenticationManager=createAuthenticationManager(configuration);
-  this.authorizationManager=createAuthorizationManager(configuration);
-  this.programmingModel=elseDefault(programmingModelOverride,configuration);
+  this.authenticationManager=createAuthenticationManager();
+  this.authorizationManager=createAuthorizationManager();
+  this.programmingModel=elseDefault(programmingModelOverride);
   this.metaModelValidator=elseDefault(metaModelValidatorOverride);
 }

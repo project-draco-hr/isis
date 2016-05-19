@@ -19,11 +19,11 @@
     servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
     servicesInjector.addFallbackIfRequired(ConfigurationServiceInternal.class,configuration);
     servicesInjector.validateServices();
-    final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager(deploymentType);
-    final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager(deploymentType);
+    final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager();
+    final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager();
     final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
     final SpecificationLoader specificationLoader=isisComponentProvider.provideSpecificationLoader(deploymentType,servicesInjector,metaModelRefiners);
-    final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector,specificationLoader);
+    final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
     final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader);
     runtimeContext.injectInto(specificationLoader);
     for (    Object service : servicesInjector.getRegisteredServices()) {
