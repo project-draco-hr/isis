@@ -1,13 +1,13 @@
 {
-  final IsisRunner runner=new IsisRunner(args,new OptionHandlerDeploymentTypeWebServer());
-  addOptionHandlersAndValidators(runner);
-  if (!runner.parseAndValidate()) {
+  loggingConfigurer.configureLogging(guessConfigDirectory(),args);
+  final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilder();
+  isisConfigurationBuilder.addResourceStreamSources(resourceStreamSources());
+  if (!isisConfigurationBuilder.parseAndPrimeWith(standardHandlers(),args)) {
     return;
   }
-  runner.setConfigurationBuilder(new IsisConfigurationBuilderDefault());
-  runner.primeConfigurationWithCommandLineOptions();
-  runner.loadInitialProperties();
-  final WebServerBootstrapper bootstrapper=new WebServerBootstrapper(runner);
-  bootstrapper.bootstrap(null);
-  jettyServer=bootstrapper.getJettyServer();
+  jettyServer=createJettyServerAndBindConfig(isisConfigurationBuilder);
+  final IsisConfiguration configuration=isisConfigurationBuilder.peekConfiguration();
+  final String startupModeStr=configuration.getString(EMBEDDED_WEB_SERVER_STARTUP_MODE_KEY,EMBEDDED_WEB_SERVER_STARTUP_MODE_DEFAULT);
+  final StartupMode startupMode=StartupMode.lookup(startupModeStr);
+  start(jettyServer,startupMode);
 }

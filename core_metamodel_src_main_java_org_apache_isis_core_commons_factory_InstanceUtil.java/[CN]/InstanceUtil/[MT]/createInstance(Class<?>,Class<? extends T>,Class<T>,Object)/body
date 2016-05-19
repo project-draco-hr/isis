@@ -1,0 +1,35 @@
+{
+  Assert.assertNotNull("Class to instantiate must be specified",cls);
+  try {
+    if (requiredType == null || requiredType.isAssignableFrom(cls)) {
+      final Class<T> tClass=ObjectExtensions.asT(cls);
+      if (args == null || args.length == 0) {
+        return tClass.newInstance();
+      }
+ else {
+        Class<?>[] paramTypes=new Class[args.length];
+        for (int i=0; i < args.length; i++) {
+          final Object arg=args[i];
+          paramTypes[i]=arg.getClass();
+        }
+        final Constructor<T> constructor=tClass.getConstructor(paramTypes);
+        return constructor.newInstance(args);
+      }
+    }
+ else {
+      throw new InstanceCreationClassException(String.format("Class '%s' is not of type '%s'",cls.getName(),requiredType));
+    }
+  }
+ catch (  final NoClassDefFoundError e) {
+    throw new InstanceCreationClassException(String.format("Class '%s'found , but is missing a dependent class: %s",cls,e.getMessage()),e);
+  }
+catch (  final InstantiationException|InvocationTargetException e) {
+    throw new InstanceCreationException(String.format("Could not instantiate an object of class '%s'; %s",cls.getName(),e.getMessage()));
+  }
+catch (  final IllegalAccessException e) {
+    throw new InstanceCreationException(String.format("Could not access the class '%s'; %s",cls.getName(),e.getMessage()));
+  }
+catch (  NoSuchMethodException e) {
+    throw new InstanceCreationException(String.format("Could not find constructor in the class '%s'; %s",cls.getName(),e.getMessage()));
+  }
+}

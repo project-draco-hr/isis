@@ -1,0 +1,13 @@
+{
+  try {
+    final ObjectName objectName=new ObjectName("Isis:name=" + name);
+    server.registerMBean(object,objectName);
+    LOG.info(name + " JMX mbean registered: " + object);
+  }
+ catch (  final MalformedObjectNameException|NullPointerException|MBeanRegistrationException|NotCompliantMBeanException e) {
+    throw new RuntimeException(e);
+  }
+catch (  final InstanceAlreadyExistsException e) {
+    LOG.info(name + " JMX mbean already registered: " + object);
+  }
+}

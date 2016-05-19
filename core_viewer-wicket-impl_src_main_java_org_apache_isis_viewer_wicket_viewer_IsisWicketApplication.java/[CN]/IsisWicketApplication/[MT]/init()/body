@@ -8,13 +8,14 @@
     configureLogging(isisConfigDir);
     getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
     getResourceSettings().setParentFolderPlaceholder("$up$");
-    determineDeploymentTypeIfRequired();
+    final IsisConfigurationBuilder isisConfigurationBuilder=obtainConfigBuilder();
+    isisConfigurationBuilder.addDefaultConfigurationResources();
+    final IsisConfigurationDefault configuration=isisConfigurationBuilder.getConfiguration();
+    deploymentType=determineDeploymentType(configuration.getString("isis.deploymentType"));
     RequestCycleListenerCollection requestCycleListeners=getRequestCycleListeners();
     IRequestCycleListener requestCycleListenerForIsis=newWebRequestCycleForIsis();
     requestCycleListeners.add(requestCycleListenerForIsis);
     requestCycleListeners.add(new PageRequestHandlerTracker());
-    final IsisConfigurationBuilder isisConfigurationBuilder=createConfigBuilder();
-    final IsisConfigurationDefault configuration=isisConfigurationBuilder.getConfiguration();
     final IsisInjectModule isisModule=newIsisModule(deploymentType,configuration);
     final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
     initWicketComponentInjection(injector);

@@ -1,0 +1,18 @@
+{
+  Class<? extends T> defaultType=null;
+  if (defaultTypeName != null) {
+    try {
+      defaultType=ObjectExtensions.asT(Thread.currentThread().getContextClassLoader().loadClass(defaultTypeName));
+      if (defaultType == null) {
+        throw new InstanceCreationClassException(String.format("Failed to load default type '%s'",defaultTypeName));
+      }
+    }
+ catch (    final ClassNotFoundException e) {
+      throw new UnavailableClassException(String.format("The default type '%s' cannot be found",defaultTypeName));
+    }
+catch (    final NoClassDefFoundError e) {
+      throw new InstanceCreationClassException(String.format("Default type '%s' found, but is missing a dependent class: %s",defaultTypeName,e.getMessage()),e);
+    }
+  }
+  return createInstance(className,defaultType,requiredType,args);
+}

@@ -26,22 +26,22 @@
       actionDomainEventType=ActionDomainEvent.Default.class;
       actionDomainEventFacet=new ActionDomainEventFacetDefault(actionDomainEventType,servicesInjector,getSpecificationLoader(),holder);
     }
-    if (EventUtil.eventTypeIsPostable(actionDomainEventFacet.getEventType(),ActionDomainEvent.Noop.class,ActionDomainEvent.Default.class,"isis.reflector.facet.actionAnnotation.domainEvent.postForDefault",this.configuration)) {
+    if (EventUtil.eventTypeIsPostable(actionDomainEventFacet.getEventType(),ActionDomainEvent.Noop.class,ActionDomainEvent.Default.class,"isis.reflector.facet.actionAnnotation.domainEvent.postForDefault",getConfiguration())) {
       FacetUtil.addFacet(actionDomainEventFacet);
     }
     final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;
     if (postsActionInvokedEvent != null) {
       final Class<? extends ActionInvokedEvent<?>> actionInvokedEventType=postsActionInvokedEvent.value();
-      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),configuration,servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider),processMethodContext);
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider),processMethodContext);
     }
  else     if (actionInteraction != null) {
-      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),configuration,servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider),processMethodContext);
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider),processMethodContext);
     }
  else     if (action != null) {
-      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),configuration,servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider);
+      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider);
     }
  else {
-      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromDefault(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),configuration,servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider);
+      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromDefault(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),getAdapterManager(),transactionStateProvider);
     }
     FacetUtil.addFacet(actionInvocationFacet);
   }

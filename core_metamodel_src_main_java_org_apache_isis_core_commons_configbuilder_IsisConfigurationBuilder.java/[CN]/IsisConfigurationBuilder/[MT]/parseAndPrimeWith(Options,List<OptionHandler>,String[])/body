@@ -1,0 +1,18 @@
+{
+  final BootPrinter printer=new BootPrinter(getClass());
+  final CommandLineParser parser=new BasicParser();
+  try {
+    final CommandLine commandLine=parser.parse(options,args);
+    for (    final OptionHandler optionHandler : optionHandlers) {
+      if (!optionHandler.handle(commandLine,printer,options)) {
+        return false;
+      }
+    }
+  }
+ catch (  final ParseException e) {
+    printer.printErrorMessage(e.getMessage());
+    printer.printHelp(options);
+    return false;
+  }
+  return true;
+}

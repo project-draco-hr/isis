@@ -1,12 +1,12 @@
 {
   final Defaulted annotation=Annotations.getAnnotation(cls,Defaulted.class);
   if (annotation != null) {
-    final DefaultedFacetAbstract facet=new DefaultedFacetAnnotation(cls,getIsisConfiguration(),holder,servicesInjector);
+    final DefaultedFacetAbstract facet=new DefaultedFacetAnnotation(cls,getConfiguration(),holder,servicesInjector);
     if (facet.isValid()) {
       return facet;
     }
   }
-  final String providerName=DefaultsProviderUtil.defaultsProviderNameFromConfiguration(cls,getIsisConfiguration());
+  final String providerName=DefaultsProviderUtil.defaultsProviderNameFromConfiguration(cls,getConfiguration());
   if (!Strings.isNullOrEmpty(providerName)) {
     final DefaultedFacetFromConfiguration facet=new DefaultedFacetFromConfiguration(providerName,holder,servicesInjector);
     if (facet.isValid()) {

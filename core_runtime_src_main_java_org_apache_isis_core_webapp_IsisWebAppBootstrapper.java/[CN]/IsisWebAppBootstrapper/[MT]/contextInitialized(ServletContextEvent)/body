@@ -1,27 +1,16 @@
 {
   try {
     final ServletContext servletContext=servletContextEvent.getServletContext();
-    final String webappDir=servletContext.getRealPath("/");
     final String webInfDir=servletContext.getRealPath("/WEB-INF");
     loggingConfigurer.configureLogging(webInfDir,new String[0]);
-    final String configLocation=servletContext.getInitParameter(WebAppConstants.CONFIG_DIR_PARAM);
-    final ResourceStreamSourceComposite compositeSource=new ResourceStreamSourceComposite(ResourceStreamSourceContextLoaderClassPath.create(),new ResourceStreamSourceForWebInf(servletContext));
-    if (configLocation != null) {
-      LOG.info("Config override location: " + configLocation);
-      compositeSource.addResourceStreamSource(ResourceStreamSourceFileSystem.create(configLocation));
-    }
- else {
-      LOG.info("Config override location: No override location configured");
-    }
-    final IsisConfigurationBuilder isisConfigurationBuilder=new IsisConfigurationBuilderResourceStreams(compositeSource);
-    primeConfigurationBuilder(isisConfigurationBuilder,servletContext);
+    final IsisConfigurationBuilder isisConfigurationBuilder=obtainIsisConfigurationBuilder(servletContext);
     isisConfigurationBuilder.addDefaultConfigurationResources();
-    final DeploymentType deploymentType=determineDeploymentType(isisConfigurationBuilder,servletContext);
+    final DeploymentType deploymentType=determineDeploymentType(servletContext,isisConfigurationBuilder);
     addConfigurationResourcesForDeploymentType(isisConfigurationBuilder,deploymentType);
+    final String webappDir=servletContext.getRealPath("/");
     isisConfigurationBuilder.add(WebAppConstants.WEB_APP_DIR,webappDir);
     isisConfigurationBuilder.add(SystemConstants.NOSPLASH_KEY,"true");
-    IsisConfigurationDefault isisConfiguration=isisConfigurationBuilder.getConfiguration();
-    final InstallerLookup installerLookup=new InstallerLookup(isisConfiguration);
+    final IsisConfigurationDefault isisConfiguration=isisConfigurationBuilder.getConfiguration();
     injector=createGuiceInjector(isisConfiguration,deploymentType);
     final IsisSystem system=injector.getInstance(IsisSystem.class);
     servletContext.setAttribute(WebAppConstants.ISIS_SYSTEM_KEY,system);
