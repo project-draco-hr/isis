@@ -1,4 +1,18 @@
 {
   allowingEmployeeHasSmithAdapter();
+  context.checking(new Expectations(){
+{
+      oneOf(mockConfiguration).getBoolean("isis.reflector.facet.filterVisibility",true);
+      will(returnValue(true));
+      allowing(mockAdapterForStringSmith).getSpecification();
+      will(returnValue(mockStringSpec));
+      ignoring(mockStringSpec);
+      allowing(mockAdapterForStringSmith).isDestroyed();
+      will(returnValue(false));
+      allowing(mockPersistenceSessionService).adapterFor("Smith");
+      will(returnValue(mockAdapterForStringSmith));
+    }
+  }
+);
   assertThat(employeeWO.getName(),is(employeeDO.getName()));
 }

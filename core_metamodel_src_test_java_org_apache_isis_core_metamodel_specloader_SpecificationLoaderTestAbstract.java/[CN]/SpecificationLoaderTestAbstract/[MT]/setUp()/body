@@ -10,16 +10,19 @@
       will(returnValue(DeploymentCategory.PRODUCTION));
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
       will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      will(returnValue(mockSpecificationLoader));
       allowing(mockServicesInjector).lookupService(GridService.class);
       will(returnValue(mockGridService));
       ignoring(mockGridService).existsFor(with(any(Class.class)));
       ignoring(mockServicesInjector).getRegisteredServices();
       ignoring(mockServicesInjector).isRegisteredService(with(any(Class.class)));
+      ignoring(mockSpecificationLoader).allServiceClasses();
     }
   }
 );
   final SpecificationLoader reflector=new SpecificationLoader(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),mockServicesInjector);
-  runtimeContext=new RuntimeContextNoRuntime(new ServicesInjectorDefault(Collections.emptyList()),reflector);
+  runtimeContext=new RuntimeContextNoRuntime(new ServicesInjector(Collections.emptyList()),reflector);
   reflector.init(runtimeContext);
   specification=loadSpecification(reflector);
 }

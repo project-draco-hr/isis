@@ -2,8 +2,17 @@
   allowingJonesStringValueAdapter();
   context.checking(new Expectations(){
 {
-      oneOf(mockAdapterManager).adapterFor("Jones");
+      allowing(mockAdapterForStringJones).titleString(null);
+      ignoring(mockCommand);
+      oneOf(mockConfiguration).getBoolean("isis.reflector.facet.filterVisibility",true);
+      will(returnValue(true));
+      allowing(mockAdapterForStringJones).isDestroyed();
+      will(returnValue(false));
+      allowing(mockAdapterForStringJones).getSpecification();
+      will(returnValue(mockStringSpec));
+      allowing(mockPersistenceSessionService).adapterFor("Jones");
       will(returnValue(mockAdapterForStringJones));
+      ignoring(mockStringSpec);
     }
   }
 );

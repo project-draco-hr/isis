@@ -7,12 +7,16 @@
   wrapperFactory.setAdapterManager(mockAdapterManager);
   wrapperFactory.authenticationSessionProvider=mockAuthenticationSessionProvider;
   wrapperFactory.setPersistenceSessionService(mockPersistenceSessionService);
-  wrapperFactory.setSpecificationLoader(mockSpecificationLoader);
+  wrapperFactory.specificationLoader=mockSpecificationLoader;
   context.checking(new Expectations(){
 {
+      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      will(returnValue(mockSpecificationLoader));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
       allowing(mockAdapterManager).getAdapterFor(employeeDO);
+      will(returnValue(mockEmployeeAdapter));
+      allowing(mockAdapterManager).adapterFor(employeeDO);
       will(returnValue(mockEmployeeAdapter));
       allowing(mockAdapterManager).adapterFor(passwordValue);
       will(returnValue(mockPasswordAdapter));

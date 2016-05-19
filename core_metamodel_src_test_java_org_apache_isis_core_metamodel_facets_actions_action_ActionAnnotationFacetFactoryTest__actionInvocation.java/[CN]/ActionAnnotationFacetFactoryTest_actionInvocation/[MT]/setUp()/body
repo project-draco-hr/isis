@@ -2,5 +2,20 @@
   super.setUp();
   this.facetFactory=new ActionAnnotationFacetFactory();
   ;
-  injectServicesIntoAndAllowingServiceInjectorLookups(facetFactory);
+  context.checking(new Expectations(){
+{
+      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
+      will(returnValue(mockAuthenticationSessionProvider));
+      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      will(returnValue(mockSpecificationLoader));
+      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
+      will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
+      will(returnValue(DeploymentCategory.PRODUCTION));
+      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      will(returnValue(mockSpecificationLoader));
+    }
+  }
+);
+  facetFactory.setServicesInjector(mockServicesInjector);
 }

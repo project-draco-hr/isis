@@ -2,8 +2,6 @@
   context.allowing(mockSpecificationLoader);
   facetFactory=new TitleAnnotationFacetFactory();
   facetFactory.setAdapterManager(mockAdapterManager);
-  facetFactory.setSpecificationLoader(mockSpecificationLoader);
-  facetFactory.setServicesInjector(mockServicesInjector);
   context.checking(new Expectations(){
 {
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
@@ -12,16 +10,14 @@
       will(returnValue(mockDeploymentCategoryProvider));
       allowing(mockLocalizationProvider).getLocalization();
       will(returnValue(new LocalizationDefault()));
-    }
-  }
-);
-  context.checking(new Expectations(){
-{
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
       allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
       will(returnValue(mockAuthenticationSession));
+      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      will(returnValue(mockSpecificationLoader));
     }
   }
 );
+  facetFactory.setServicesInjector(mockServicesInjector);
 }

@@ -14,16 +14,20 @@
     FixtureClock.initialize();
   }
   try {
-    final IsisConfigurationDefault configuration=(IsisConfigurationDefault)isisComponentProvider.getConfiguration();
-    ServicesInjectorDefault servicesInjector=isisComponentProvider.provideServiceInjector();
+    final IsisConfigurationDefault configuration=componentProvider.getConfiguration();
+    ServicesInjector servicesInjector=componentProvider.provideServiceInjector();
     servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
     servicesInjector.addFallbackIfRequired(ConfigurationServiceInternal.class,configuration);
     servicesInjector.validateServices();
-    final AuthenticationManager authenticationManager=isisComponentProvider.provideAuthenticationManager();
-    final AuthorizationManager authorizationManager=isisComponentProvider.provideAuthorizationManager();
+    final AuthenticationManager authenticationManager=componentProvider.provideAuthenticationManager();
+    servicesInjector.addFallbackIfRequired(AuthenticationManager.class,authenticationManager);
+    final AuthorizationManager authorizationManager=componentProvider.provideAuthorizationManager();
+    servicesInjector.addFallbackIfRequired(AuthorizationManager.class,authorizationManager);
     final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
-    final SpecificationLoader specificationLoader=isisComponentProvider.provideSpecificationLoader(deploymentType,servicesInjector,metaModelRefiners);
-    final PersistenceSessionFactory persistenceSessionFactory=isisComponentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
+    final SpecificationLoader specificationLoader=componentProvider.provideSpecificationLoader(deploymentType,servicesInjector,metaModelRefiners);
+    servicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
+    final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
+    servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
     final RuntimeContextFromSession runtimeContext=new RuntimeContextFromSession(deploymentType.getDeploymentCategory(),configuration,servicesInjector,specificationLoader);
     runtimeContext.injectInto(specificationLoader);
     for (    Object service : servicesInjector.getRegisteredServices()) {
