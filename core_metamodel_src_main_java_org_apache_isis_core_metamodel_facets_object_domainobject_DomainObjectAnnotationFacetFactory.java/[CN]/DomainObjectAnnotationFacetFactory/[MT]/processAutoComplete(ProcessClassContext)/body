@@ -3,9 +3,9 @@
   final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
   final AutoComplete annotation=Annotations.getAnnotation(processClassContext.getCls(),AutoComplete.class);
-  Facet facet=autoCompleteValidator.flagIfPresent(AutoCompleteFacetForAutoCompleteAnnotation.create(annotation,facetHolder,getDeploymentCategory(),getSpecificationLoader(),servicesInjector,adapterManager));
+  Facet facet=autoCompleteValidator.flagIfPresent(AutoCompleteFacetForAutoCompleteAnnotation.create(annotation,facetHolder,getDeploymentCategory(),getSpecificationLoader(),servicesInjector,persistenceSessionServiceInternal));
   if (facet == null) {
-    facet=AutoCompleteFacetForDomainObjectAnnotation.create(domainObject,facetHolder,getDeploymentCategory(),getSpecificationLoader(),servicesInjector,getAuthenticationSessionProvider(),adapterManager);
+    facet=AutoCompleteFacetForDomainObjectAnnotation.create(domainObject,facetHolder,getDeploymentCategory(),getSpecificationLoader(),servicesInjector,getAuthenticationSessionProvider(),persistenceSessionServiceInternal);
   }
   FacetUtil.addFacet(facet);
 }

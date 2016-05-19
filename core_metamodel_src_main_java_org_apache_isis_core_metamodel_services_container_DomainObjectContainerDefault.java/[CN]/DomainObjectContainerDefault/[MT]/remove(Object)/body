@@ -2,9 +2,9 @@
   if (persistentObject == null) {
     throw new IllegalArgumentException("Must specify a reference for disposing an object");
   }
-  final ObjectAdapter adapter=getAdapterManager().adapterFor(unwrapped(persistentObject));
+  final ObjectAdapter adapter=persistenceSessionServiceInternal.adapterFor(unwrapped(persistentObject));
   if (!isPersistent(persistentObject)) {
     throw new RepositoryException("Object not persistent: " + adapter);
   }
-  getPersistenceSessionService().remove(adapter);
+  persistenceSessionServiceInternal.remove(adapter);
 }

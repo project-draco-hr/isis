@@ -1,5 +1,5 @@
 {
-  final ObjectAdapter adapter=getAdapterManager().adapterFor(unwrapped(domainObject));
+  final ObjectAdapter adapter=persistenceSessionServiceInternal.adapterFor(unwrapped(domainObject));
   if (adapter == null) {
     throw new PersistFailedException("Object not known to framework; instantiate using newTransientInstance(...) rather than simply new'ing up.");
   }
@@ -9,5 +9,5 @@
   if (isPersistent(domainObject)) {
     throw new PersistFailedException("Object already persistent; OID=" + adapter.getOid());
   }
-  getPersistenceSessionService().makePersistent(adapter);
+  persistenceSessionServiceInternal.makePersistent(adapter);
 }

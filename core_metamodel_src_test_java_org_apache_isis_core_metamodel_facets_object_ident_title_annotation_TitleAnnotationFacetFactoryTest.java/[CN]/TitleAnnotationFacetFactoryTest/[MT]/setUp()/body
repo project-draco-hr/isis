@@ -1,7 +1,7 @@
 {
   context.allowing(mockSpecificationLoader);
   facetFactory=new TitleAnnotationFacetFactory();
-  facetFactory.setAdapterManager(mockAdapterManager);
+  facetFactory.setServicesInjector(mockServicesInjector);
   context.checking(new Expectations(){
 {
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
@@ -16,6 +16,8 @@
       will(returnValue(mockAuthenticationSession));
       allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
       will(returnValue(mockSpecificationLoader));
+      allowing(mockServicesInjector).lookupService(PersistenceSessionServiceInternal.class);
+      will(returnValue(mockAdapterManager));
     }
   }
 );

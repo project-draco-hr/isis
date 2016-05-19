@@ -29,9 +29,8 @@
     final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
     servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
     final RuntimeContext runtimeContext=new RuntimeContext(servicesInjector);
-    runtimeContext.injectInto(specificationLoader);
     for (    Object service : servicesInjector.getRegisteredServices()) {
-      runtimeContext.injectInto(service);
+      servicesInjector.injectInto(service);
     }
     sessionFactory=new IsisSessionFactory(deploymentType,configuration,servicesInjector,specificationLoader,authenticationManager,authorizationManager,persistenceSessionFactory);
     IsisContext.setConfiguration(configuration);
