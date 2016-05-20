@@ -1,10 +1,11 @@
 {
+  stubServicesInjector=new ServicesInjector(Lists.newArrayList(mockAuthenticationSessionProvider,mockSpecificationLoader,mockPersistenceSessionServiceInternal,mockMessageBrokerServiceInternal));
   context.checking(new Expectations(){
 {
-      one(mockFacetedMethod).getIdentifier();
+      oneOf(mockFacetedMethod).getIdentifier();
       will(returnValue(Identifier.actionIdentifier("Customer","reduceheadcount")));
     }
   }
 );
-  action=new ObjectActionDefault(mockFacetedMethod,mockServicesInjector);
+  action=new ObjectActionDefault(mockFacetedMethod,stubServicesInjector);
 }

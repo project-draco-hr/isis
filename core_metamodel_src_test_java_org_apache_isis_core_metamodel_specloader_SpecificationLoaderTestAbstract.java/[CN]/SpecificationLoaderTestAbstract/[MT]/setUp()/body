@@ -1,23 +1,9 @@
 {
   context.checking(new Expectations(){
 {
-      ignoring(mockConfiguration);
-      allowing(mockServicesInjector).getConfigurationServiceInternal();
-      will(returnValue(new IsisConfigurationDefault(null)));
-      allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
-      will(returnValue(mockDeploymentCategoryProvider));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
-      allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
-      will(returnValue(mockAuthenticationSessionProvider));
-      allowing(mockServicesInjector).getSpecificationLoader();
-      will(returnValue(mockSpecificationLoader));
-      allowing(mockServicesInjector).lookupService(GridService.class);
-      will(returnValue(mockGridService));
       ignoring(mockGridService).existsFor(with(any(Class.class)));
-      ignoring(mockServicesInjector).getRegisteredServices();
-      ignoring(mockServicesInjector).isRegisteredService(with(any(Class.class)));
-      ignoring(mockSpecificationLoader).allServiceClasses();
       ignoring(mockPersistenceSessionServiceInternal);
       ignoring(mockTransactionStateProviderInternal);
       ignoring(mockMessageBrokerServiceInternal);
@@ -25,8 +11,10 @@
     }
   }
 );
-  final ServicesInjector servicesInjector=new ServicesInjector(Lists.newArrayList(mockPersistenceSessionServiceInternal,mockLocalizationProviderInternal,mockMessageBrokerServiceInternal,mockTransactionStateProviderInternal,mockGridService,mockConfiguration,mockSpecificationLoader,mockDeploymentCategoryProvider));
-  final SpecificationLoader reflector=new SpecificationLoader(DeploymentCategory.PRODUCTION,mockConfiguration,new ProgrammingModelFacetsJava5(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),servicesInjector);
-  reflector.init();
-  specification=loadSpecification(reflector);
+  stubConfiguration=new IsisConfigurationDefault(null);
+  stubServicesInjector=new ServicesInjector(Lists.newArrayList(mockAuthenticationSessionProvider,stubConfiguration,mockDeploymentCategoryProvider,mockPersistenceSessionServiceInternal,mockLocalizationProviderInternal,mockMessageBrokerServiceInternal,mockTransactionStateProviderInternal,mockGridService,mockDeploymentCategoryProvider));
+  final SpecificationLoader specificationLoader=new SpecificationLoader(DeploymentCategory.PRODUCTION,stubConfiguration,new ProgrammingModelFacetsJava5(),new MetaModelValidatorDefault(),Lists.<LayoutMetadataReader>newArrayList(new LayoutMetadataReaderFromJson()),stubServicesInjector);
+  stubServicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
+  specificationLoader.init();
+  specification=loadSpecification(specificationLoader);
 }

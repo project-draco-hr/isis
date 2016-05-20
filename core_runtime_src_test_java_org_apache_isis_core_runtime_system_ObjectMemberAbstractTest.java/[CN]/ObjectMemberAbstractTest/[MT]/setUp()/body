@@ -1,5 +1,6 @@
 {
   org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+  stubServicesInjector=new ServicesInjector(Lists.<Object>newArrayList(mockSpecificationLoader,mockSpecificationLoader));
   context.checking(new Expectations(){
 {
       allowing(mockAuthenticationSessionProvider).getAuthenticationSession();
@@ -9,7 +10,7 @@
 );
   persistentAdapter=PojoAdapterBuilder.create().with(mockSpecificationLoader).withOid("CUS|1").withPojo(mockPersistable).build();
   transientAdapter=PojoAdapterBuilder.create().with(mockSpecificationLoader).with(Persistence.TRANSIENT).withPojo(mockPersistable).build();
-  testMember=new ObjectMemberAbstractImpl("id");
+  testMember=new ObjectMemberAbstractImpl("id",stubServicesInjector);
   context.checking(new Expectations(){
 {
       allowing(mockSpecificationLoader).lookupBySpecId(ObjectSpecId.of("CUS"));
