@@ -1,14 +1,17 @@
 {
+  if (shouldIgnore(adapter)) {
+    return;
+  }
   enlistForPublishing(adapter,PublishedObject.ChangeKind.UPDATE);
   for (  ObjectAssociation property : adapter.getSpecification().getAssociations(Contributed.EXCLUDED,ObjectAssociation.Filters.PROPERTIES)) {
     final AdapterAndProperty aap=AdapterAndProperty.of(adapter,property);
     if (property.isNotPersisted()) {
       continue;
     }
-    if (changedObjectProperties.containsKey(aap)) {
+    if (enlistedObjectProperties.containsKey(aap)) {
       return;
     }
     PreAndPostValues papv=PreAndPostValues.pre(aap.getPropertyValue());
-    changedObjectProperties.put(aap,papv);
+    enlistedObjectProperties.put(aap,papv);
   }
 }

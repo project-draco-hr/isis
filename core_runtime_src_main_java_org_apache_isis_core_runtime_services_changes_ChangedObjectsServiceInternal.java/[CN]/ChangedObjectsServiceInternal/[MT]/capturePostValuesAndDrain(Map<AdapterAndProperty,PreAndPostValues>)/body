@@ -1,5 +1,5 @@
 {
-  final Map<AdapterAndProperty,PreAndPostValues> processedObjectProperties=Maps.newLinkedHashMap();
+  final Map<AdapterAndProperty,PreAndPostValues> processedObjectProperties1=Maps.newLinkedHashMap();
   while (!changedObjectProperties.isEmpty()) {
     final Set<AdapterAndProperty> keys=Sets.newLinkedHashSet(changedObjectProperties.keySet());
     for (    final AdapterAndProperty aap : keys) {
@@ -11,8 +11,8 @@
  else {
         papv.setPost(aap.getPropertyValue());
       }
-      processedObjectProperties.put(aap,papv);
+      processedObjectProperties1.put(aap,papv);
     }
   }
-  return processedObjectProperties;
+  return Collections.unmodifiableSet(Sets.filter(processedObjectProperties1.entrySet(),PreAndPostValues.Predicates.CHANGED));
 }

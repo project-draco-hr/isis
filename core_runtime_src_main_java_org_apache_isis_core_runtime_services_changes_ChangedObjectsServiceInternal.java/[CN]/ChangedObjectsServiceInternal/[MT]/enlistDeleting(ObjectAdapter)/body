@@ -1,4 +1,7 @@
 {
+  if (shouldIgnore(adapter)) {
+    return;
+  }
   final boolean enlisted=enlistForPublishing(adapter,PublishedObject.ChangeKind.DELETE);
   if (!enlisted) {
     return;
@@ -8,10 +11,10 @@
     if (property.isNotPersisted()) {
       continue;
     }
-    if (changedObjectProperties.containsKey(aap)) {
+    if (enlistedObjectProperties.containsKey(aap)) {
       return;
     }
     PreAndPostValues papv=PreAndPostValues.pre(aap.getPropertyValue());
-    changedObjectProperties.put(aap,papv);
+    enlistedObjectProperties.put(aap,papv);
   }
 }
