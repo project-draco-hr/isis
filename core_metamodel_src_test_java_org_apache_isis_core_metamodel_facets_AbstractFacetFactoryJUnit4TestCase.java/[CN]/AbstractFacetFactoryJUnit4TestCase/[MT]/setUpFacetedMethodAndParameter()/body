@@ -3,15 +3,19 @@
 {
       allowing(mockServicesInjector).lookupService(DeploymentCategoryProvider.class);
       will(returnValue(mockDeploymentCategoryProvider));
+      allowing(mockServicesInjector).lookupService(TransactionStateProviderInternal.class);
+      will(returnValue(mockTransactionStateProviderInternal));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
-      allowing(mockServicesInjector).lookupService(ConfigurationServiceInternal.class);
+      allowing(mockServicesInjector).getConfigurationServiceInternal();
       will(returnValue(mockConfiguration));
+      allowing(mockServicesInjector).getPersistenceSessionServiceInternal();
+      will(returnValue(mockPersistenceSessionServiceInternal));
       allowing(mockServicesInjector).lookupService(TranslationService.class);
       will(returnValue(mockTranslationService));
       allowing(mockServicesInjector).lookupService(AuthenticationSessionProvider.class);
       will(returnValue(mockAuthenticationSessionProvider));
-      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      allowing(mockServicesInjector).getSpecificationLoader();
       will(returnValue(mockSpecificationLoader));
     }
   }

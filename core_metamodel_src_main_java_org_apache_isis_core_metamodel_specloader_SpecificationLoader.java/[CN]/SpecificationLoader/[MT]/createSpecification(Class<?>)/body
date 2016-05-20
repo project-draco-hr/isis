@@ -1,13 +1,9 @@
 {
-  final ServicesInjector servicesInjector=getRuntimeContext().getServicesInjector();
-  final PersistenceSessionServiceInternal persistenceSessionServiceInternal=servicesInjector.lookupService(PersistenceSessionServiceInternal.class);
-  final ObjectSpecificationDependencies specContext=new ObjectSpecificationDependencies(deploymentCategory,servicesInjector,this,facetProcessor);
-  final ObjectMemberDependencies objectMemberDependencies=new ObjectMemberDependencies(this,servicesInjector,persistenceSessionServiceInternal);
   if (FreeStandingList.class.isAssignableFrom(cls)) {
-    return new ObjectSpecificationOnStandaloneList(specContext,objectMemberDependencies);
+    return new ObjectSpecificationOnStandaloneList(servicesInjector,facetProcessor);
   }
  else {
     final FacetedMethodsBuilderContext facetedMethodsBuilderContext=new FacetedMethodsBuilderContext(this,facetProcessor,layoutMetadataReaders);
-    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,specContext,objectMemberDependencies);
+    return new ObjectSpecificationDefault(cls,facetedMethodsBuilderContext,servicesInjector,facetProcessor);
   }
 }

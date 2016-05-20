@@ -1,5 +1,4 @@
 {
-  objectMemberDependencies=new ObjectMemberDependencies(mockSpecificationLoader,mockServicesInjector,mockPersistenceSessionServiceInternal);
   employeeRepository=new EmployeeRepositoryImpl();
   employeeDO=new Employee();
   employeeDO.setName("Smith");
@@ -22,7 +21,7 @@
       will(returnValue(mockAuthenticationSessionProvider));
       allowing(mockDeploymentCategoryProvider).getDeploymentCategory();
       will(returnValue(DeploymentCategory.PRODUCTION));
-      allowing(mockServicesInjector).lookupService(SpecificationLoader.class);
+      allowing(mockServicesInjector).getSpecificationLoader();
       will(returnValue(mockSpecificationLoader));
       allowing(mockSpecificationLoader).loadSpecification(String.class);
       will(returnValue(mockStringSpec));
@@ -56,7 +55,7 @@
   final Method employeeDisableNameMethod=methodOf(Employee.class,"disableName");
   final Method employeeValidateNameMethod=methodOf(Employee.class,"validateName",String.class);
   final Method employeeClearNameMethod=methodOf(Employee.class,"clearName");
-  employeeNameMember=new OneToOneAssociationDefault(facetedMethodForProperty(employeeSetNameMethod,employeeGetNameMethod,employeeModifyNameMethod,employeeClearNameMethod,employeeHideNameMethod,employeeDisableNameMethod,employeeValidateNameMethod),objectMemberDependencies);
+  employeeNameMember=new OneToOneAssociationDefault(facetedMethodForProperty(employeeSetNameMethod,employeeGetNameMethod,employeeModifyNameMethod,employeeClearNameMethod,employeeHideNameMethod,employeeDisableNameMethod,employeeValidateNameMethod),mockServicesInjector);
   context.checking(new Expectations(){
 {
       allowing(mockEmployeeSpec).getMember(employeeGetNameMethod);

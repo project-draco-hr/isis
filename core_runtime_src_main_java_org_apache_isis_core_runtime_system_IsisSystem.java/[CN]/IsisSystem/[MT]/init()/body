@@ -28,14 +28,13 @@
     servicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
     final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
     servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
-    final RuntimeContext runtimeContext=new RuntimeContext(servicesInjector);
     for (    Object service : servicesInjector.getRegisteredServices()) {
       servicesInjector.injectInto(service);
     }
     sessionFactory=new IsisSessionFactory(deploymentType,configuration,servicesInjector,specificationLoader,authenticationManager,authorizationManager,persistenceSessionFactory);
     IsisContext.setConfiguration(configuration);
     deploymentType.initContext(sessionFactory);
-    specificationLoader.init(runtimeContext);
+    specificationLoader.init();
     try {
       specificationLoader.validateAndAssert();
       authenticationManager.init();

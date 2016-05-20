@@ -1,0 +1,25 @@
+{
+  super(mixinAction.getFacetedMethod(),typeOfSpec(mixinAction,servicesInjector),servicesInjector);
+  this.mixinType=mixinType;
+  this.mixinAction=mixinAction;
+  this.mixedInType=mixedInType;
+  final NotPersistedFacet notPersistedFacet=new NotPersistedFacetAbstract(this){
+  }
+;
+  final DisabledFacet disabledFacet=disabledFacet();
+  final TypeOfFacet typeOfFacet=new TypeOfFacetAbstract(getSpecification().getCorrespondingClass(),this,servicesInjector.getSpecificationLoader()){
+  }
+;
+  FacetUtil.addFacet(notPersistedFacet);
+  FacetUtil.addFacet(disabledFacet);
+  FacetUtil.addFacet(typeOfFacet);
+  FacetUtil.copyFacets(mixinAction.getFacetedMethod(),facetHolder);
+  final String name=getName();
+  if (Strings.isNullOrEmpty(name) || Objects.equal(name,DEFAULT_MEMBER_NAME)) {
+    String memberName=ObjectActionMixedIn.determineNameFrom(mixinAction);
+    FacetUtil.addFacet(new NamedFacetInferred(memberName,facetHolder));
+  }
+  final Identifier mixinIdentifier=mixinAction.getFacetedMethod().getIdentifier();
+  List<String> memberParameterNames=mixinIdentifier.getMemberParameterNames();
+  identifier=Identifier.actionIdentifier(mixedInType.getCorrespondingClass().getName(),getId(),memberParameterNames);
+}
