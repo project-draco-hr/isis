@@ -1,39 +1,20 @@
 {
   this.isisConfiguration=isisConfiguration;
-  final InputStream in=getInstallerRegistryStream(IsisInstallerRegistry.INSTALLER_REGISTRY_FILE);
-  final BufferedReader reader=new BufferedReader(new InputStreamReader(in));
-  try {
-    String line;
-    while ((line=reader.readLine()) != null) {
-      final String className=StringExtensions.asFirstWord(line);
-      if (className.length() == 0 || className.startsWith("#")) {
-        continue;
-      }
-      try {
-        final Installer object=(Installer)InstanceUtil.createInstance(className,isisConfiguration);
-        LOG.debug("created component installer: " + object.getName() + " - "+ className);
-        installerList.add(object);
-      }
- catch (      final UnavailableClassException e) {
-        LOG.info("component installer not found; it will not be available: " + className);
-      }
-catch (      final InstanceCreationClassException e) {
-        LOG.info("instance creation exception: " + e.getMessage());
-      }
-catch (      final InstanceCreationException e) {
-        throw e;
-      }
+  final List<String> installerClassNames=Lists.newArrayList("org.apache.isis.core.security.authentication.BypassAuthenticationManagerInstaller","org.apache.isis.security.shiro.authentication.ShiroAuthenticationManagerInstaller","org.apache.isis.core.security.authorization.BypassAuthorizationManagerInstaller","org.apache.isis.security.shiro.authorization.ShiroAuthorizationManagerInstaller");
+  for (  String className : installerClassNames) {
+    if (className.length() == 0 || className.startsWith("#")) {
+      continue;
+    }
+    try {
+      final Installer object=(Installer)InstanceUtil.createInstance(className,isisConfiguration);
+      LOG.debug("created component installer: " + object.getName() + " - "+ className);
+      installerList.add(object);
+    }
+ catch (    final UnavailableClassException e) {
+      LOG.info("component installer not found; it will not be available: " + className);
+    }
+catch (    final InstanceCreationClassException e) {
+      LOG.info("instance creation exception: " + e.getMessage());
     }
   }
- catch (  final IOException e) {
-    throw new IsisException(e);
-  }
- finally {
-    close(reader);
-  }
-  final List<ComponentDetails> installerVersionList=new ArrayList<ComponentDetails>();
-  for (  final Installer installer : installerList) {
-    installerVersionList.add(new InstallerVersion(installer));
-  }
-  AboutIsis.setComponentDetails(installerVersionList);
 }
