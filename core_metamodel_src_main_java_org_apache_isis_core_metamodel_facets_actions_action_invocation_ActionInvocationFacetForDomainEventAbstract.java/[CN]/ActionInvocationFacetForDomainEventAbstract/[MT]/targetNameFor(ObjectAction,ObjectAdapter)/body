@@ -1,0 +1,16 @@
+{
+  if (mixedInAdapter != null) {
+    ObjectSpecification onType=owningAction.getOnType();
+    ObjectSpecification mixedInSpec=mixedInAdapter.getSpecification();
+    List<ObjectAction> objectActions1=mixedInSpec.getObjectActions(Contributed.INCLUDED);
+    for (    ObjectAction objectAction : objectActions1) {
+      if (objectAction instanceof MixedInMember2) {
+        MixedInMember2 action=(MixedInMember2)objectAction;
+        if (action.getMixinType() == onType) {
+          return action.getName();
+        }
+      }
+    }
+  }
+  return CommandUtil.targetMemberNameFor(owningAction);
+}

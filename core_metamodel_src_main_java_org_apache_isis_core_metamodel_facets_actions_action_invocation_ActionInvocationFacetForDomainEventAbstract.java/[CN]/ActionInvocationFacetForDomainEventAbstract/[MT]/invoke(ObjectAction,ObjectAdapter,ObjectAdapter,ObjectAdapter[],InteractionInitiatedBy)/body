@@ -13,17 +13,18 @@
     returnedAdapter=getAdapterManager().adapterFor(command);
   }
  else {
-    owningAction.setupActionInvocationContext(targetAdapter);
-    final Object targetPojo=ObjectAdapter.Util.unwrap(targetAdapter);
+    final ObjectAdapter mixinElseRegularAdapter=mixedInAdapter != null ? mixedInAdapter : targetAdapter;
+    owningAction.setupBulkActionInvocationContext(mixinElseRegularAdapter);
+    final Object mixinElseRegularPojo=ObjectAdapter.Util.unwrap(mixinElseRegularAdapter);
     final List<ObjectAdapter> argumentAdapterList=Arrays.asList(argumentAdapters);
     final List<Object> argumentPojos=ObjectAdapter.Util.unwrap(argumentAdapterList);
-    final String targetMember=CommandUtil.targetMemberNameFor(owningAction);
-    final String targetClass=CommandUtil.targetClassNameFor(targetAdapter);
-    final Interaction.ActionInvocation execution=new Interaction.ActionInvocation(interaction,actionId,targetPojo,argumentPojos,targetMember,targetClass);
+    final String targetMember=targetNameFor(owningAction,mixedInAdapter);
+    final String targetClass=CommandUtil.targetClassNameFor(mixinElseRegularAdapter);
+    final Interaction.ActionInvocation execution=new Interaction.ActionInvocation(interaction,actionId,mixinElseRegularPojo,argumentPojos,targetMember,targetClass);
     final Interaction.MemberExecutor<Interaction.ActionInvocation> callable=new Interaction.MemberExecutor<Interaction.ActionInvocation>(){
       @Override public Object execute(      final Interaction.ActionInvocation currentExecution){
         try {
-          final ActionInvocationDto invocationDto=getInteractionDtoServiceInternal().asActionInvocationDto(owningAction,targetAdapter,argumentAdapterList);
+          final ActionInvocationDto invocationDto=getInteractionDtoServiceInternal().asActionInvocationDto(owningAction,mixinElseRegularAdapter,argumentAdapterList);
           currentExecution.setDto(invocationDto);
           final Timestamp startedAt=getClockService().nowAsJavaSqlTimestamp();
           execution.setStartedAt(startedAt);
@@ -33,7 +34,7 @@
           final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,null);
           currentExecution.setEvent(event);
           final Object resultPojo=invokeMethodElseFromCache(targetAdapter,argumentAdapters);
-          final ObjectAdapter resultAdapterPossiblyCloned=cloneIfViewModelCloneable(resultPojo,targetAdapter);
+          final ObjectAdapter resultAdapterPossiblyCloned=cloneIfViewModelCloneable(resultPojo,mixinElseRegularAdapter);
           domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,resultAdapterPossiblyCloned);
           return ObjectAdapter.Util.unwrap(resultAdapterPossiblyCloned);
         }
