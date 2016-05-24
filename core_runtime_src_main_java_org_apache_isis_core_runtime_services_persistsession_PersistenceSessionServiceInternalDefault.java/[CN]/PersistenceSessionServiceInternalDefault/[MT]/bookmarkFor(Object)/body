@@ -1,3 +1,12 @@
 {
-  return new DomainObjectContainerResolve().bookmarkFor(domainObject);
+  final ObjectAdapter adapter=getPersistenceSession().adapterFor(domainObject);
+  final Oid oid=adapter.getOid();
+  if (oid == null) {
+    return null;
+  }
+  if (!(oid instanceof RootOid)) {
+    return null;
+  }
+  final RootOid rootOid=(RootOid)oid;
+  return rootOid.asBookmark();
 }

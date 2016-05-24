@@ -9,9 +9,8 @@
   final IsisLifecycleListener2.PersistenceSessionLifecycleManagement psLifecycleMgmt=this;
   final IsisLifecycleListener2 isisLifecycleListener=new IsisLifecycleListener2(psLifecycleMgmt);
   persistenceManager.addInstanceLifecycleListener(isisLifecycleListener,(Class[])null);
-  final PersistenceQueryProcessorAbstract.PersistenceSessionQueryProcessorManagement psQueryProcessorMgmt=this;
-  persistenceQueryProcessorByClass.put(PersistenceQueryFindAllInstances.class,new PersistenceQueryFindAllInstancesProcessor(psQueryProcessorMgmt));
-  persistenceQueryProcessorByClass.put(PersistenceQueryFindUsingApplibQueryDefault.class,new PersistenceQueryFindUsingApplibQueryProcessor(psQueryProcessorMgmt));
+  persistenceQueryProcessorByClass.put(PersistenceQueryFindAllInstances.class,new PersistenceQueryFindAllInstancesProcessor(this));
+  persistenceQueryProcessorByClass.put(PersistenceQueryFindUsingApplibQueryDefault.class,new PersistenceQueryFindUsingApplibQueryProcessor(this));
   initServices();
   final MetricsServiceDefault metricsServiceDefault=servicesInjector.lookupService(MetricsServiceDefault.class);
   persistenceManager.addInstanceLifecycleListener(metricsServiceDefault,(Class[])null);
