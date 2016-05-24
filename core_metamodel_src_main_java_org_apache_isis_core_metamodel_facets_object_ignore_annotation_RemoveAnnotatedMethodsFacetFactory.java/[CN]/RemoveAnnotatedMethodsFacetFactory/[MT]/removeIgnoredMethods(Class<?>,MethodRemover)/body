@@ -1,0 +1,16 @@
+{
+  if (cls == null) {
+    return;
+  }
+  final Method[] methods=cls.getMethods();
+  for (  final Method method : methods) {
+    removeAnnotatedMethods(methodRemover,method,PreDestroy.class);
+    removeAnnotatedMethods(methodRemover,method,PostConstruct.class);
+    removeAnnotatedMethods(methodRemover,method,Ignore.class);
+    removeAnnotatedMethods(methodRemover,method,Programmatic.class);
+    removeAnnotatedMethods(methodRemover,method,Subscribe.class);
+    if (eventHandlerClass != null) {
+      removeAnnotatedMethods(methodRemover,method,eventHandlerClass);
+    }
+  }
+}
