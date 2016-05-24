@@ -1,7 +1,4 @@
 {
-  isisConfigurationBuilder.addResourceStreamSource(ResourceStreamSourceContextLoaderClassPath.create());
-  isisConfigurationBuilder.addResourceStreamSource(new ResourceStreamSourceCurrentClassClassPath());
-  isisConfigurationBuilder.addResourceStreamSource(new ResourceStreamSourceForWebInf(servletContext));
   final String configLocation=servletContext.getInitParameter(WebAppConstants.CONFIG_DIR_PARAM);
   if (configLocation != null) {
     LOG.info("Config override location: " + configLocation);
@@ -9,5 +6,8 @@
   }
  else {
     LOG.info("Config override location: No override location configured");
+    isisConfigurationBuilder.addResourceStreamSource(ResourceStreamSourceContextLoaderClassPath.create());
+    isisConfigurationBuilder.addResourceStreamSource(new ResourceStreamSourceCurrentClassClassPath());
+    isisConfigurationBuilder.addResourceStreamSource(new ResourceStreamSourceForWebInf(servletContext));
   }
 }
