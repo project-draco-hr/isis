@@ -1,5 +1,12 @@
 {
   assertNotInitialized();
+  if (deprecatedPolicy == DeprecatedPolicy.IGNORE) {
+    if (facetFactoryInstanceOrClass instanceof FacetFactory) {
+      if (facetFactoryInstanceOrClass.getClass().isAnnotationPresent(Deprecated.class)) {
+        return;
+      }
+    }
+  }
 switch (position) {
 case BEGINNING:
     facetFactoryInstancesOrClasses.add(0,facetFactoryInstanceOrClass);
