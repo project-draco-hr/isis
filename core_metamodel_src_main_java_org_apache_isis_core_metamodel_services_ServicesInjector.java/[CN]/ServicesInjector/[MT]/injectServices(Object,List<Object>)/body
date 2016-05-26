@@ -1,6 +1,10 @@
 {
   final Class<?> cls=object.getClass();
   autowireViaFields(object,services,cls);
-  autowireViaPrefixedMethods(object,services,cls,"set");
-  autowireViaPrefixedMethods(object,services,cls,"inject");
+  if (autowireSetters) {
+    autowireViaPrefixedMethods(object,services,cls,"set");
+  }
+  if (autowireInject) {
+    autowireViaPrefixedMethods(object,services,cls,"inject");
+  }
 }
