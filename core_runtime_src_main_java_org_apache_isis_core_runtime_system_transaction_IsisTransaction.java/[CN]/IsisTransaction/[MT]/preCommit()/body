@@ -20,6 +20,9 @@
     throw ex;
   }
  finally {
-    changedObjectsServiceInternal.clearChangedObjectProperties();
+    changedObjectsServiceInternal.resetForNextTransaction();
+    if (metricsService instanceof WithTransactionScope) {
+      ((WithTransactionScope)metricsService).resetForNextTransaction();
+    }
   }
 }
