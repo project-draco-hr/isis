@@ -1,7 +1,11 @@
 {
-  if (getState() == State.CLOSED) {
+  if (state == State.CLOSED) {
     return;
   }
+  completeCommandFromInteractionAndClearDomainEvents();
+  transactionManager.flushTransaction();
+  Bulk.InteractionContext.current.set(null);
+  endRequestOnRequestScopeServices();
   try {
     final IsisTransaction currentTransaction=transactionManager.getTransaction();
     if (currentTransaction != null && !currentTransaction.getState().isComplete()) {
@@ -34,5 +38,5 @@
  catch (  final Throwable ex) {
     LOG.error("close: pojoAdapterMap#close() failed; continuing to avoid memory leakage");
   }
-  setState(State.CLOSED);
+  this.state=State.CLOSED;
 }

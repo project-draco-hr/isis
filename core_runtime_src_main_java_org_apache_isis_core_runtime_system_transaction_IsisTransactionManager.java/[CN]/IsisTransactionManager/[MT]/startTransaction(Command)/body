@@ -2,27 +2,18 @@
   boolean noneInProgress=false;
   if (getTransaction() == null || getTransaction().getState().isComplete()) {
     noneInProgress=true;
-    startRequestOnRequestScopedServices();
+    final Interaction interaction=interactionContext.getInteraction();
     final Command command;
-    final UUID transactionId;
     if (existingCommandIfAny != null) {
-      command=existingCommandIfAny;
-      transactionId=command.getTransactionId();
+      commandContext.setCommand(existingCommandIfAny);
+      interaction.setTransactionId(existingCommandIfAny.getTransactionId());
     }
- else {
-      command=createCommand();
-      transactionId=UUID.randomUUID();
-    }
-    final Interaction interaction=factoryService.instantiate(Interaction.class);
-    initCommandAndInteraction(transactionId,command,interaction);
-    commandContext.setCommand(command);
-    interactionContext.setInteraction(interaction);
-    initOtherApplibServicesIfConfigured();
+    command=commandContext.getCommand();
+    final UUID transactionId=command.getTransactionId();
     final MessageBroker messageBroker=MessageBroker.acquire(getAuthenticationSession());
     this.transaction=new IsisTransaction(this,messageBroker,servicesInjector,transactionId);
     transactionLevel=0;
     persistenceSession.startTransaction();
-    commandService.startTransaction(command,transactionId);
   }
   transactionLevel++;
   if (LOG.isDebugEnabled()) {

@@ -52,7 +52,7 @@
  else {
           T service=serviceByThread.get();
           if (service == null) {
-            return null;
+            throw new IllegalStateException("No service of type " + cls + " is available on this ");
           }
           final Object proxiedReturn=proxyMethod.invoke(service,args);
           return proxiedReturn;
@@ -62,10 +62,7 @@
 );
     return newInstance;
   }
- catch (  final InstantiationException e) {
-    throw new IsisException(e);
-  }
-catch (  final IllegalAccessException e) {
+ catch (  final InstantiationException|IllegalAccessException e) {
     throw new IsisException(e);
   }
 }

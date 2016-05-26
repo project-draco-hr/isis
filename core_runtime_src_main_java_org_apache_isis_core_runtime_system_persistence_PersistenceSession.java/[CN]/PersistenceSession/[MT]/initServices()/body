@@ -3,14 +3,7 @@
   for (  final Object service : registeredServices) {
     final ObjectSpecification serviceSpecification=specificationLoader.loadSpecification(service.getClass());
     serviceSpecification.markAsService();
-    final RootOid existingOid=getOidForService(serviceSpecification);
-    final ObjectAdapter serviceAdapter=existingOid == null ? adapterFor(service) : mapRecreatedPojo(existingOid,service);
-    if (serviceAdapter.getOid().isTransient()) {
-      remapAsPersistent(serviceAdapter,null);
-    }
-    if (existingOid == null) {
-      final RootOid persistentOid=(RootOid)serviceAdapter.getOid();
-      this.registeredServices.put(persistentOid.getObjectSpecId(),persistentOid);
-    }
+    final ObjectAdapter serviceAdapter=adapterFor(service);
+    remapAsPersistentIfRequired(serviceAdapter);
   }
 }

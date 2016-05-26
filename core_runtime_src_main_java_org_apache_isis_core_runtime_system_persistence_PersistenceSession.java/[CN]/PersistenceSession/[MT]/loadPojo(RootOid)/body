@@ -8,7 +8,8 @@
     result=persistenceManager.getObjectById(cls,jdoObjectId);
   }
  catch (  final RuntimeException e) {
-    final List<ExceptionRecognizer> exceptionRecognizers=getServicesInjector().lookupServices(ExceptionRecognizer.class);
+    Class<ExceptionRecognizer> serviceClass=ExceptionRecognizer.class;
+    final List<ExceptionRecognizer> exceptionRecognizers=lookupServices(serviceClass);
     for (    ExceptionRecognizer exceptionRecognizer : exceptionRecognizers) {
       if (exceptionRecognizer instanceof ExceptionRecognizer2) {
         final ExceptionRecognizer2 recognizer=(ExceptionRecognizer2)exceptionRecognizer;

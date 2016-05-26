@@ -12,7 +12,22 @@
   persistenceQueryProcessorByClass.put(PersistenceQueryFindAllInstances.class,new PersistenceQueryFindAllInstancesProcessor(this));
   persistenceQueryProcessorByClass.put(PersistenceQueryFindUsingApplibQueryDefault.class,new PersistenceQueryFindUsingApplibQueryProcessor(this));
   initServices();
-  final MetricsServiceDefault metricsServiceDefault=servicesInjector.lookupService(MetricsServiceDefault.class);
-  persistenceManager.addInstanceLifecycleListener(metricsServiceDefault,(Class[])null);
-  setState(State.OPEN);
+  startRequestOnRequestScopedServices();
+  if (metricsService instanceof InstanceLifecycleListener) {
+    final InstanceLifecycleListener metricsService=(InstanceLifecycleListener)this.metricsService;
+    persistenceManager.addInstanceLifecycleListener(metricsService,(Class[])null);
+  }
+  final Command command=createCommand();
+  final UUID transactionId=UUID.randomUUID();
+  final Interaction interaction=factoryService.instantiate(Interaction.class);
+  final Timestamp timestamp=clockService.nowAsJavaSqlTimestamp();
+  final String userName=userService.getUser().getName();
+  command.setTimestamp(timestamp);
+  command.setUser(userName);
+  command.setTransactionId(transactionId);
+  interaction.setTransactionId(transactionId);
+  commandContext.setCommand(command);
+  interactionContext.setInteraction(interaction);
+  Bulk.InteractionContext.current.set(bulkInteractionContext);
+  this.state=State.OPEN;
 }

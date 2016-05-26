@@ -2,16 +2,26 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("creating " + this);
   }
+  this.servicesInjector=servicesInjector;
+  this.jdoPersistenceManagerFactory=jdoPersistenceManagerFactory;
+  this.fixturesInstalledFlag=fixturesInstalledFlag;
   this.configuration=configuration;
   this.specificationLoader=specificationLoader;
   this.authenticationSession=authenticationSession;
-  this.fixturesInstalledFlag=fixturesInstalledFlag;
-  this.servicesInjector=servicesInjector;
-  this.jdoPersistenceManagerFactory=jdoPersistenceManagerFactory;
+  this.commandContext=lookupService(CommandContext.class);
+  this.commandService=lookupService(CommandService.class);
+  this.interactionContext=lookupService(InteractionContext.class);
+  this.eventBusService=lookupService(EventBusService.class);
+  this.changedObjectsServiceInternal=lookupService(ChangedObjectsServiceInternal.class);
+  this.metricsService=lookupService(MetricsService.class);
+  this.factoryService=lookupService(FactoryService.class);
+  this.clockService=lookupService(ClockService.class);
+  this.userService=lookupService(UserService.class);
+  this.bulkInteractionContext=lookupService(Bulk.InteractionContext.class);
   final AdapterManager adapterManager=this;
   this.persistenceQueryFactory=new PersistenceQueryFactory(adapterManager,specificationLoader);
   this.transactionManager=new IsisTransactionManager(this,servicesInjector);
-  setState(State.NOT_INITIALIZED);
+  this.state=State.NOT_INITIALIZED;
   final boolean concurrencyCheckingGloballyDisabled=configuration.getBoolean("isis.persistor.disableConcurrencyChecking",false);
   this.concurrencyCheckingGloballyEnabled=!concurrencyCheckingGloballyDisabled;
 }

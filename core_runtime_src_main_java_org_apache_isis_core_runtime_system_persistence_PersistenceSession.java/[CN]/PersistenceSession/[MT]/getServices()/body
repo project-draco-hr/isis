@@ -2,7 +2,11 @@
   final List<Object> services=servicesInjector.getRegisteredServices();
   final List<ObjectAdapter> serviceAdapters=Lists.newArrayList();
   for (  final Object servicePojo : services) {
-    serviceAdapters.add(getService(servicePojo));
+    ObjectAdapter serviceAdapter=getAdapterFor(servicePojo);
+    if (serviceAdapter == null) {
+      throw new IllegalStateException("ObjectAdapter for service " + servicePojo + " does not exist?!?");
+    }
+    serviceAdapters.add(serviceAdapter);
   }
   return serviceAdapters;
 }

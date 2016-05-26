@@ -11,24 +11,12 @@
     return;
   }
   try {
-    final Command command=commandContext.getCommand();
-    final boolean hasChangedAdapters=changedObjectsServiceInternal.hasChangedAdapters();
-    if (hasChangedAdapters && command.getMemberIdentifier() != null) {
-      command.setPersistHint(true);
-    }
     auditingServiceInternal.audit();
     publishingServiceInternal.publishObjects();
-    doFlush();
-    final ActionInvocationContext actionInvocationContext=lookupService(ActionInvocationContext.class);
-    if (actionInvocationContext != null) {
-      Bulk.InteractionContext.current.set(null);
-    }
-    completeCommandAndInteractionAndClearDomainEvents();
     doFlush();
   }
  catch (  final RuntimeException ex) {
     setAbortCause(new IsisTransactionManagerException(ex));
-    completeCommandAndInteractionAndClearDomainEvents();
     throw ex;
   }
  finally {

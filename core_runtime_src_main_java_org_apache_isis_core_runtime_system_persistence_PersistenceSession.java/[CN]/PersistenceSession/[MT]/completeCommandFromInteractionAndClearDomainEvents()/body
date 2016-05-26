@@ -6,6 +6,11 @@
     final Timestamp completedAt=priorExecution.getCompletedAt();
     command.setCompletedAt(completedAt);
   }
+  if (command.getMemberIdentifier() != null) {
+    if (metricsService.numberObjectsDirtied() > 0) {
+      command.setPersistHint(true);
+    }
+  }
   commandService.complete(command);
   if (command instanceof Command3) {
     final Command3 command3=(Command3)command;
