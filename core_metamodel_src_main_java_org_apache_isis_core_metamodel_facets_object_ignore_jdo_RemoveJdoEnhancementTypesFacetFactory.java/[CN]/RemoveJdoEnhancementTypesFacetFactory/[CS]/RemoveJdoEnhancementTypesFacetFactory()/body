@@ -1,3 +1,10 @@
 {
-  super("javax.jdo.spi.PersistenceCapable");
+  super(FeatureType.OBJECTS_ONLY);
+  final String typeToIgnoreIfOnClasspath="javax.jdo.spi.PersistenceCapable";
+  try {
+    Class<?> typeToIgnore=InstanceUtil.loadClass(typeToIgnoreIfOnClasspath);
+    addMethodsToBeIgnored(typeToIgnore);
+  }
+ catch (  Exception ex) {
+  }
 }

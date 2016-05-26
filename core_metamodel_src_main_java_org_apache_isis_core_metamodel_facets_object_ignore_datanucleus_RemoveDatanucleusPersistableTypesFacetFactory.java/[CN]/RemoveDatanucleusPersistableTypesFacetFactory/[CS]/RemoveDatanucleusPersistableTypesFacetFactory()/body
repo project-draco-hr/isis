@@ -1,3 +1,10 @@
 {
-  super("org.datanucleus.enhancement.Persistable");
+  super(FeatureType.OBJECTS_ONLY);
+  final String typeToIgnoreIfOnClasspath="org.datanucleus.enhancement.Persistable";
+  try {
+    Class<?> typeToIgnore=InstanceUtil.loadClass(typeToIgnoreIfOnClasspath);
+    addMethodsToBeIgnored(typeToIgnore);
+  }
+ catch (  Exception ex) {
+  }
 }
