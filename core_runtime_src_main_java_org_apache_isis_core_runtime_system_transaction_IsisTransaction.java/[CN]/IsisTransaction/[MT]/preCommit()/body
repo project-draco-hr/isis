@@ -1,28 +1,2 @@
 {
-  ensureThatState(getState().canCommit(),is(true),"state is: " + getState());
-  ensureThatState(abortCause,is(nullValue()),"cannot commit: an abort cause has been set");
-  if (LOG.isDebugEnabled()) {
-    LOG.debug("preCommit transaction " + this);
-  }
-  if (getState() == State.COMMITTED) {
-    if (LOG.isInfoEnabled()) {
-      LOG.info("already committed; ignoring");
-    }
-    return;
-  }
-  try {
-    auditingServiceInternal.audit();
-    publishingServiceInternal.publishObjects();
-    doFlush();
-  }
- catch (  final RuntimeException ex) {
-    setAbortCause(new IsisTransactionManagerException(ex));
-    throw ex;
-  }
- finally {
-    changedObjectsServiceInternal.resetForNextTransaction();
-    if (metricsService instanceof WithTransactionScope) {
-      ((WithTransactionScope)metricsService).resetForNextTransaction();
-    }
-  }
 }
