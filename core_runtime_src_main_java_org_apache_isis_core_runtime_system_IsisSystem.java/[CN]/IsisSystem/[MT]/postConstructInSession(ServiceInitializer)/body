@@ -1,0 +1,20 @@
+{
+  IsisContext.openSession(new InitialisationSession());
+  try {
+    getTransactionManager().startTransaction();
+    try {
+      serviceInitializer.postConstruct();
+      return;
+    }
+ catch (    RuntimeException ex) {
+      getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      return;
+    }
+ finally {
+      getTransactionManager().endTransaction();
+    }
+  }
+  finally {
+    IsisContext.closeSession();
+  }
+}

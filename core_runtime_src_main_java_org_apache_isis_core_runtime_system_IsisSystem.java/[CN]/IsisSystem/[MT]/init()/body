@@ -40,7 +40,9 @@
       authenticationManager.init();
       authorizationManager.init();
       persistenceSessionFactory.init();
-      this.serviceInitializer=initializeServices();
+      this.serviceInitializer=new ServiceInitializer(getConfiguration(),sessionFactory.getServices());
+      serviceInitializer.validate();
+      postConstructInSession(this.serviceInitializer);
       installFixturesIfRequired();
       translateServicesAndEnumConstants();
     }

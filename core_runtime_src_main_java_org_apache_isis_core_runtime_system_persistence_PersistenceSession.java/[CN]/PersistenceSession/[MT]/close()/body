@@ -4,8 +4,6 @@
   }
   completeCommandFromInteractionAndClearDomainEvents();
   transactionManager.flushTransaction();
-  Bulk.InteractionContext.current.set(null);
-  endRequestOnRequestScopeServices();
   try {
     final IsisTransaction currentTransaction=transactionManager.getTransaction();
     if (currentTransaction != null && !currentTransaction.getState().isComplete()) {
@@ -20,6 +18,9 @@
  catch (  final Throwable ex) {
     LOG.error("close: failed to end transaction; continuing to avoid memory leakage");
   }
+  Bulk.InteractionContext.current.set(null);
+  preDestroyOnRequestScopedServices();
+  endRequestOnRequestScopeServices();
   try {
     persistenceManager.close();
   }
