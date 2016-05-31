@@ -1,6 +1,5 @@
 {
   final Interaction interaction=interactionContext.getInteraction();
-  final UUID transactionId=interaction.getTransactionId();
   final int nextEventSequence=interaction.next(Interaction.Sequence.INTERACTION.id());
   final Object targetPojo=targetAdapter.getObject();
   final Bookmark targetBookmark=bookmarkService.bookmarkFor(targetPojo);
@@ -11,6 +10,5 @@
   final PropertyDto propertyDto=new PropertyDto();
   commandDtoServiceInternal.addPropertyValue(property,propertyDto,newValueAdapterIfAny);
   final ValueWithTypeDto newValue=propertyDto.getNewValue();
-  final String transactionIdStr=transactionId.toString();
-  return InteractionDtoUtils.newPropertyEdit(nextEventSequence,targetBookmark,targetTitle,propertyDto.getMemberIdentifier(),newValue,currentUser,transactionIdStr);
+  return InteractionDtoUtils.newPropertyEdit(nextEventSequence,targetBookmark,targetTitle,propertyDto.getMemberIdentifier(),newValue,currentUser);
 }
