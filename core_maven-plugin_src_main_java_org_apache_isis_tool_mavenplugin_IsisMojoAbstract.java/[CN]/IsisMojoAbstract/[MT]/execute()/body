@@ -6,6 +6,12 @@
   final IsisSystem isisSystem=new IsisSystem(componentProvider);
   try {
     isisSystem.init();
+    if (!isisSystem.isMetaModelValid()) {
+      MetaModelInvalidException metaModelInvalidException=IsisContext.getMetaModelInvalidExceptionIfAny();
+      Set<String> validationErrors=metaModelInvalidException.getValidationErrors();
+      context.throwFailureException(validationErrors.size() + " meta-model problems found.",validationErrors);
+      return;
+    }
     IsisContext.doInSession(new Runnable(){
       @Override public void run(){
         try {
