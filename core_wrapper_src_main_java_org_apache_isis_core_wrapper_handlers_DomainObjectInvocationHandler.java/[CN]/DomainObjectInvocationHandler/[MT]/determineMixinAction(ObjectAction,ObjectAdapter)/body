@@ -1,0 +1,13 @@
+{
+  final ObjectSpecification specification=actualTargetAdapter.getSpecification();
+  final List<ObjectAction> objectActions=specification.getObjectActions(Contributed.INCLUDED);
+  for (  final ObjectAction action : objectActions) {
+    if (action instanceof ObjectActionMixedIn) {
+      ObjectActionMixedIn mixedInAction=(ObjectActionMixedIn)action;
+      if (mixedInAction.hasMixinAction(objectAction)) {
+        return mixedInAction;
+      }
+    }
+  }
+  throw new RuntimeException("Unable to find the mixed-in action corresponding to " + objectAction.getIdentifier().toFullIdentityString());
+}

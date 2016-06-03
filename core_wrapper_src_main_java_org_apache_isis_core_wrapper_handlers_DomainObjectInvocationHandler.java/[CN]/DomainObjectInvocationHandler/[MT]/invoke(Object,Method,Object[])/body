@@ -63,8 +63,19 @@
     if (intent == Intent.CHECK_IF_VALID) {
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
     }
-    final ObjectAction noa=(ObjectAction)objectMember;
-    return handleActionMethod(targetAdapter,args,noa,contributeeMember);
+    final ObjectAction objectAction=(ObjectAction)objectMember;
+    final ObjectAction actualObjectAction;
+    final ObjectAdapter actualTargetAdapter;
+    final MixinFacet mixinFacet=targetAdapter.getSpecification().getFacet(MixinFacet.class);
+    if (mixinFacet != null) {
+      actualTargetAdapter=mixinFacet.mixedIn(targetAdapter);
+      actualObjectAction=determineMixinAction(objectAction,actualTargetAdapter);
+    }
+ else {
+      actualTargetAdapter=targetAdapter;
+      actualObjectAction=objectAction;
+    }
+    return handleActionMethod(actualTargetAdapter,args,actualObjectAction,contributeeMember);
   }
   throw new UnsupportedOperationException(String.format("Unknown member type '%s'",objectMember));
 }
