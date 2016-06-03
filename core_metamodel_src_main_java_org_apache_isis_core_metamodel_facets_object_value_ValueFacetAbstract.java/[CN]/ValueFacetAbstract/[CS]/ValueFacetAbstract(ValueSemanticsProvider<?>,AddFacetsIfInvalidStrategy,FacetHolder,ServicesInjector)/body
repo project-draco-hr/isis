@@ -1,0 +1,40 @@
+{
+  super(type(),holder);
+  this.semanticsProvider=semanticsProvider;
+  this.servicesInjector=servicesInjector;
+  if (!isValid() && !addFacetsIfInvalid.shouldAddFacetsIfInvalid()) {
+    return;
+  }
+  facetHolder.addFacet((Facet)this);
+  final boolean immutable=semanticsProvider == null || semanticsProvider.isImmutable();
+  if (immutable) {
+    facetHolder.addFacet(new ImmutableFacetViaValueSemantics(holder));
+  }
+  final boolean equalByContent=semanticsProvider == null || semanticsProvider.isEqualByContent();
+  if (equalByContent) {
+    facetHolder.addFacet(new EqualByContentFacetViaValueSemantics(holder));
+  }
+  if (semanticsProvider != null) {
+    final EncoderDecoder<?> encoderDecoder=semanticsProvider.getEncoderDecoder();
+    if (encoderDecoder != null) {
+      facetHolder.addFacet(new EncodableFacetUsingEncoderDecoder(encoderDecoder,holder,getAdapterMap(),this.servicesInjector));
+    }
+    final Parser<?> parser=semanticsProvider.getParser();
+    if (parser != null) {
+      facetHolder.addFacet(new ParseableFacetUsingParser(parser,holder,this.servicesInjector));
+      facetHolder.addFacet(new TitleFacetUsingParser(parser,holder,this.servicesInjector));
+      facetHolder.addFacet(new TypicalLengthFacetUsingParser(parser,holder,this.servicesInjector));
+      if (parser instanceof Parser2) {
+        final Parser2 parser2=(Parser2)parser;
+        final Integer maxLength=parser2.maxLength();
+        if (maxLength != null) {
+          facetHolder.addFacet(new MaxLengthFacetUsingParser2(parser2,holder,this.servicesInjector));
+        }
+      }
+    }
+    final DefaultsProvider<?> defaultsProvider=semanticsProvider.getDefaultsProvider();
+    if (defaultsProvider != null) {
+      facetHolder.addFacet(new DefaultedFacetUsingDefaultsProvider(defaultsProvider,holder,this.servicesInjector));
+    }
+  }
+}
