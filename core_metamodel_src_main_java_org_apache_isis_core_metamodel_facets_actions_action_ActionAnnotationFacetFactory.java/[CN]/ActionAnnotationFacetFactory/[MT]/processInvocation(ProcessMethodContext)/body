@@ -32,16 +32,16 @@
     final ActionInvocationFacetForDomainEventAbstract actionInvocationFacet;
     if (postsActionInvokedEvent != null) {
       final Class<? extends ActionInvokedEvent<?>> actionInvokedEventType=postsActionInvokedEvent.value();
-      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),adapterManager,transactionStateProviderInternal),processMethodContext);
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForPostsActionInvokedEventAnnotation(actionInvokedEventType,actionMethod,typeSpec,returnSpec,holder,servicesInjector),processMethodContext);
     }
  else     if (actionInteraction != null) {
-      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),adapterManager,transactionStateProviderInternal),processMethodContext);
+      actionInvocationFacet=actionInteractionValidator.flagIfPresent(new ActionInvocationFacetForDomainEventFromActionInteractionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,servicesInjector),processMethodContext);
     }
  else     if (action != null) {
-      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),adapterManager,transactionStateProviderInternal);
+      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromActionAnnotation(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,servicesInjector);
     }
  else {
-      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromDefault(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,getDeploymentCategory(),getConfiguration(),servicesInjector,getAuthenticationSessionProvider(),adapterManager,transactionStateProviderInternal);
+      actionInvocationFacet=new ActionInvocationFacetForDomainEventFromDefault(actionDomainEventType,actionMethod,typeSpec,returnSpec,holder,servicesInjector);
     }
     FacetUtil.addFacet(actionInvocationFacet);
   }
