@@ -1,3 +1,15 @@
 {
-  this(id,model,type,converter,new DateTimeConfig());
+  super(id,model,type);
+  DateTimeConfig config=new DateTimeConfig();
+  setOutputMarkupId(true);
+  this.converter=converter;
+  final String dateTimePattern=converter.getDateTimePattern(getLocale());
+  final String pattern=convertToMomentJsFormat(dateTimePattern);
+  config.withFormat(pattern);
+  boolean patternContainsTimeComponent=pattern.contains("HH");
+  if (patternContainsTimeComponent) {
+    config.sideBySide(true);
+  }
+  config.calendarWeeks(true);
+  this.config=config;
 }
