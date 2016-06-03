@@ -5,7 +5,12 @@
   }
   final ObjectAdapter repositoryAdapter=adapterManager.getAdapterFor(repository);
   final ObjectAdapter searchAdapter=adapterManager.adapterFor(search);
-  final ObjectAdapter resultAdapter=repositoryAction.execute(repositoryAdapter,null,new ObjectAdapter[]{searchAdapter},interactionInitiatedBy);
+  final ObjectAdapter resultAdapter=getPublishingServiceInternal().withPublishingSuppressed(new PublishingServiceInternal.Block<ObjectAdapter>(){
+    @Override public ObjectAdapter exec(){
+      return repositoryAction.execute(repositoryAdapter,null,new ObjectAdapter[]{searchAdapter},interactionInitiatedBy);
+    }
+  }
+);
   if (CollectionFacet.Utils.getCollectionFacetFromSpec(resultAdapter) == null) {
     return Collections.emptyList();
   }
