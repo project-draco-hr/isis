@@ -64,12 +64,18 @@
       throw new UnsupportedOperationException(String.format("Cannot invoke supporting method '%s'; use only the 'invoke' method",memberName));
     }
     final ObjectAction objectAction=(ObjectAction)objectMember;
-    final ObjectAction actualObjectAction;
-    final ObjectAdapter actualTargetAdapter;
+    ObjectAction actualObjectAction;
+    ObjectAdapter actualTargetAdapter;
     final MixinFacet mixinFacet=targetAdapter.getSpecification().getFacet(MixinFacet.class);
     if (mixinFacet != null) {
-      actualTargetAdapter=mixinFacet.mixedIn(targetAdapter);
-      actualObjectAction=determineMixinAction(objectAction,actualTargetAdapter);
+      try {
+        actualTargetAdapter=mixinFacet.mixedIn(targetAdapter);
+        actualObjectAction=determineMixinAction(objectAction,actualTargetAdapter);
+      }
+ catch (      RuntimeException ex) {
+        actualTargetAdapter=targetAdapter;
+        actualObjectAction=objectAction;
+      }
     }
  else {
       actualTargetAdapter=targetAdapter;
