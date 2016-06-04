@@ -1,9 +1,8 @@
 {
   Assert.assertNotNull(type);
   final String typeName=type.getName();
-  final SpecificationCacheDefault specificationCache=cache;
-synchronized (specificationCache) {
-    final ObjectSpecification spec=specificationCache.get(typeName);
+synchronized (cache) {
+    final ObjectSpecification spec=cache.get(typeName);
     if (spec != null) {
       return spec;
     }
@@ -14,7 +13,7 @@ synchronized (specificationCache) {
     if (specification == null) {
       throw new IsisException("Failed to create specification for class " + typeName);
     }
-    specificationCache.cache(typeName,specification);
+    cache.cache(typeName,specification);
     introspectIfRequired(specification);
     return specification;
   }
