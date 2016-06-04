@@ -1,0 +1,14 @@
+{
+  if (parameters != null) {
+    return parameters;
+  }
+  final List<ObjectActionParameter> mixinActionParameters=mixinAction.getParameters();
+  final List<ObjectActionParameter> mixedInParameters=Lists.newArrayList();
+  for (  ObjectActionParameter mixinActionParameter : mixinActionParameters) {
+    final ObjectActionParameterAbstract mixinParameter=(ObjectActionParameterAbstract)mixinActionParameter;
+    final ObjectActionParameterMixedIn mixedInParameter;
+    mixedInParameter=new OneToOneActionParameterMixedIn(mixinParameter,this);
+    mixedInParameters.add(mixedInParameter);
+  }
+  return mixedInParameters;
+}

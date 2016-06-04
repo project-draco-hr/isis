@@ -1,0 +1,19 @@
+{
+  if (parameters != null) {
+    return parameters;
+  }
+  final List<ObjectActionParameter> serviceParameters=serviceAction.getParameters();
+  final List<ObjectActionParameter> contributeeParameters=Lists.newArrayList();
+  int contributeeParamNum=0;
+  for (int serviceParamNum=0; serviceParamNum < serviceParameters.size(); serviceParamNum++) {
+    if (serviceParamNum == contributeeParam) {
+      continue;
+    }
+    final ObjectActionParameterAbstract serviceParameter=(ObjectActionParameterAbstract)serviceParameters.get(serviceParamNum);
+    final ObjectActionParameterContributee contributedParam;
+    contributedParam=new OneToOneActionParameterContributee(getServiceAdapter(),serviceParameter,contributeeParamNum,this);
+    contributeeParameters.add(contributedParam);
+    contributeeParamNum++;
+  }
+  return contributeeParameters;
+}
