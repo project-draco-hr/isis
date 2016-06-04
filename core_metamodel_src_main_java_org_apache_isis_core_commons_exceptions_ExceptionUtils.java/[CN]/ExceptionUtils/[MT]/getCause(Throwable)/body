@@ -1,5 +1,20 @@
 {
-synchronized (CAUSE_METHOD_NAMES) {
-    return getCause(throwable,CAUSE_METHOD_NAMES);
+  if (throwable == null) {
+    return null;
   }
+  Throwable cause=getCauseUsingWellKnownTypes(throwable);
+  if (cause == null) {
+    for (    String methodName : CAUSE_METHOD_NAMES) {
+      if (methodName != null) {
+        cause=getCauseUsingMethodName(throwable,methodName);
+        if (cause != null) {
+          break;
+        }
+      }
+    }
+    if (cause == null) {
+      cause=getCauseUsingFieldName(throwable,"detail");
+    }
+  }
+  return cause;
 }

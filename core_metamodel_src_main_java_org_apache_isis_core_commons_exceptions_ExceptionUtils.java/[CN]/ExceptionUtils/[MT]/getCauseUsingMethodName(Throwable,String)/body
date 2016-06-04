@@ -1,22 +1,18 @@
 {
-  Method method=null;
+  Method method;
   try {
-    method=throwable.getClass().getMethod(methodName,null);
+    method=throwable.getClass().getMethod(methodName);
   }
- catch (  NoSuchMethodException ignored) {
+ catch (  NoSuchMethodException|SecurityException ignored) {
+    return null;
   }
-catch (  SecurityException ignored) {
+  if (!Throwable.class.isAssignableFrom(method.getReturnType())) {
+    return null;
   }
-  if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {
-    try {
-      return (Throwable)method.invoke(throwable,EMPTY_OBJECT_ARRAY);
-    }
- catch (    IllegalAccessException ignored) {
-    }
-catch (    IllegalArgumentException ignored) {
-    }
-catch (    InvocationTargetException ignored) {
-    }
+  try {
+    return (Throwable)method.invoke(throwable);
   }
-  return null;
+ catch (  IllegalAccessException|IllegalArgumentException|InvocationTargetException ignored) {
+    return null;
+  }
 }

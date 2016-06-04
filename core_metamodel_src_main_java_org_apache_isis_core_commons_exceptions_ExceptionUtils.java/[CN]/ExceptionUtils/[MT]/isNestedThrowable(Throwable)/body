@@ -12,18 +12,14 @@
     return true;
   }
   Class cls=throwable.getClass();
-synchronized (CAUSE_METHOD_NAMES) {
-    for (int i=0, isize=CAUSE_METHOD_NAMES.length; i < isize; i++) {
-      try {
-        Method method=cls.getMethod(CAUSE_METHOD_NAMES[i],null);
-        if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {
-          return true;
-        }
+  for (  final String causeMethodName : CAUSE_METHOD_NAMES) {
+    try {
+      Method method=cls.getMethod(causeMethodName,null);
+      if (method != null && Throwable.class.isAssignableFrom(method.getReturnType())) {
+        return true;
       }
- catch (      NoSuchMethodException ignored) {
-      }
-catch (      SecurityException ignored) {
-      }
+    }
+ catch (    NoSuchMethodException|SecurityException ignored) {
     }
   }
   try {
@@ -32,9 +28,7 @@ catch (      SecurityException ignored) {
       return true;
     }
   }
- catch (  NoSuchFieldException ignored) {
-  }
-catch (  SecurityException ignored) {
+ catch (  NoSuchFieldException|SecurityException ignored) {
   }
   return false;
 }
