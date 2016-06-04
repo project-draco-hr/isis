@@ -1,5 +1,9 @@
 {
   Assert.assertNotNull(type);
   final String typeName=type.getName();
-  return loadSpecificationForSubstitutedClassSynchronized(type,nature,typeName);
+  final ObjectSpecification spec=cache.get(typeName);
+  if (spec != null) {
+    return spec;
+  }
+  return loadSpecificationForSubstitutedClassSynchronized(type,nature);
 }
