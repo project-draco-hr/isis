@@ -1,5 +1,8 @@
 {
-  final ObjectSpecification specification=actualTargetAdapter.getSpecification();
+  if (domainObjectAdapter == null) {
+    return null;
+  }
+  final ObjectSpecification specification=domainObjectAdapter.getSpecification();
   final List<ObjectAction> objectActions=specification.getObjectActions(Contributed.INCLUDED);
   for (  final ObjectAction action : objectActions) {
     if (action instanceof ObjectActionMixedIn) {
@@ -9,5 +12,5 @@
       }
     }
   }
-  throw new RuntimeException("Unable to find the mixed-in action corresponding to " + objectAction.getIdentifier().toFullIdentityString());
+  return null;
 }

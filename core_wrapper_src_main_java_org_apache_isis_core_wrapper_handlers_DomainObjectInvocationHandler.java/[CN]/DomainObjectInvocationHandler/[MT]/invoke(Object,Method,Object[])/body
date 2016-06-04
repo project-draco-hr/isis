@@ -68,11 +68,9 @@
     ObjectAdapter actualTargetAdapter;
     final MixinFacet mixinFacet=targetAdapter.getSpecification().getFacet(MixinFacet.class);
     if (mixinFacet != null) {
-      try {
-        actualTargetAdapter=mixinFacet.mixedIn(targetAdapter);
-        actualObjectAction=determineMixinAction(objectAction,actualTargetAdapter);
-      }
- catch (      RuntimeException ex) {
+      actualTargetAdapter=mixinFacet.mixedIn(targetAdapter,MixinFacet.Policy.IGNORE_FAILURES);
+      actualObjectAction=determineMixinAction(actualTargetAdapter,objectAction);
+      if (actualTargetAdapter == null || actualObjectAction == null) {
         actualTargetAdapter=targetAdapter;
         actualObjectAction=objectAction;
       }
