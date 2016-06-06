@@ -12,7 +12,15 @@
   final String preValue=papv.getPreString();
   final String postValue=papv.getPostString();
   final String targetClass=CommandUtil.targetClassNameFor(adapter);
-  final Command command=commandContext.getCommand();
-  final UUID transactionId=command.getTransactionId();
-  auditingServiceIfAny.audit(transactionId,targetClass,target,memberId,propertyId,preValue,postValue,user,timestamp);
+  Transaction transaction=transactionService.currentTransaction();
+  final UUID transactionId=transaction.getTransactionId();
+  final int sequence=transaction.getSequence();
+  if (auditingServiceIfAny != null) {
+    auditingServiceIfAny.audit(transactionId,targetClass,target,memberId,propertyId,preValue,postValue,user,timestamp);
+  }
+  for (  AuditerService auditerService : auditerServices) {
+    if (auditerService.isEnabled()) {
+      auditerService.audit(transactionId,sequence,targetClass,target,memberId,propertyId,preValue,postValue,user,timestamp);
+    }
+  }
 }
