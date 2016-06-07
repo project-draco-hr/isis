@@ -1,0 +1,14 @@
+{
+  this.interactionId=interactionId;
+  this.sequence=sequence;
+  final PersistenceSessionServiceInternalDefault persistenceSessionService=servicesInjector.lookupServiceElseFail(PersistenceSessionServiceInternalDefault.class);
+  this.transactionManager=persistenceSessionService.getTransactionManager();
+  this.messageBroker=servicesInjector.getMessageBroker();
+  this.publishingServiceInternal=servicesInjector.lookupServiceElseFail(PublishingServiceInternal.class);
+  this.auditingServiceInternal=servicesInjector.lookupServiceElseFail(AuditingServiceInternal.class);
+  withTransactionScopes=servicesInjector.lookupServices(WithTransactionScope.class);
+  this.state=State.IN_PROGRESS;
+  if (LOG.isDebugEnabled()) {
+    LOG.debug("new transaction " + this);
+  }
+}
