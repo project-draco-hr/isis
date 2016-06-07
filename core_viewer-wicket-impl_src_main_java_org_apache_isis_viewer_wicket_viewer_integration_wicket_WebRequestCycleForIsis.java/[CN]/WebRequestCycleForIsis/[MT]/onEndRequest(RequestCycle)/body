@@ -1,11 +1,10 @@
 {
-  final IsisSession session=getIsisContext().getSessionInstance();
-  if (session != null) {
+  if (IsisContext.inSession()) {
     try {
       getTransactionManager().endTransaction();
     }
   finally {
-      getIsisContext().closeSessionInstance();
+      IsisContext.closeSession();
     }
   }
 }

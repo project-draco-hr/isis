@@ -1,4 +1,8 @@
 {
-  final PersistenceSession persistenceSession=persistenceSessionFactory.createPersistenceSession(servicesInjector,getSpecificationLoader(),authenticationSession);
-  return newIsisSession(authenticationSession,persistenceSession);
+  closeSession();
+  final PersistenceSession persistenceSession=persistenceSessionFactory.createPersistenceSession(servicesInjector,authenticationSession);
+  IsisSession session=new IsisSession(authenticationSession,persistenceSession);
+  currentSession.set(session);
+  session.open();
+  return session;
 }

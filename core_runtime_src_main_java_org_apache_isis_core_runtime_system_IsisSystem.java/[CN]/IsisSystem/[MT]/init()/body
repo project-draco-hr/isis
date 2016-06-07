@@ -31,9 +31,8 @@
     for (    Object service : servicesInjector.getRegisteredServices()) {
       servicesInjector.injectInto(service);
     }
-    sessionFactory=new IsisSessionFactory(deploymentType,configuration,servicesInjector,specificationLoader,authenticationManager,authorizationManager,persistenceSessionFactory);
-    IsisContext.setConfiguration(configuration);
-    deploymentType.initContext(sessionFactory);
+    sessionFactory=new IsisSessionFactory(deploymentType,servicesInjector);
+    IsisContext.set(sessionFactory);
     specificationLoader.init();
     try {
       specificationLoader.validateAndAssert();
