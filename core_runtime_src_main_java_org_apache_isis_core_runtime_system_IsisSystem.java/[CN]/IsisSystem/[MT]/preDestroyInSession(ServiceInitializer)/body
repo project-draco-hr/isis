@@ -2,17 +2,18 @@
   if (serviceInitializer == null) {
     return;
   }
+  IsisTransactionManager transactionManager=getCurrentSessionTransactionManager();
   IsisContext.openSession(new InitialisationSession());
   try {
-    getTransactionManager().startTransaction();
+    transactionManager.startTransaction();
     try {
       serviceInitializer.preDestroy();
     }
  catch (    RuntimeException ex) {
-      getTransactionManager().getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      transactionManager.getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
     }
  finally {
-      getTransactionManager().endTransaction();
+      transactionManager.endTransaction();
     }
   }
   finally {

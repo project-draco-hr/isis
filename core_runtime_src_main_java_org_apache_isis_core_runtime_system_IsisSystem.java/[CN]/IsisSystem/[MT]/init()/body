@@ -2,19 +2,17 @@
   if (initialized) {
     throw new IllegalStateException("Already initialized");
   }
- else {
-    initialized=true;
-  }
+  initialized=true;
   LOG.info("initialising Isis System");
   LOG.info("working directory: " + new File(".").getAbsolutePath());
-  LOG.info("resource stream source: " + getConfiguration().getResourceStreamSource());
-  localeInitializer.initLocale(getConfiguration());
-  timeZoneInitializer.initTimeZone(getConfiguration());
+  final IsisConfigurationDefault configuration=componentProvider.getConfiguration();
+  LOG.info("resource stream source: " + configuration.getResourceStreamSource());
+  localeInitializer.initLocale(configuration);
+  timeZoneInitializer.initTimeZone(configuration);
   if (!deploymentType.isProduction() && !Clock.isInitialized()) {
     FixtureClock.initialize();
   }
   try {
-    final IsisConfigurationDefault configuration=componentProvider.getConfiguration();
     ServicesInjector servicesInjector=componentProvider.provideServiceInjector(configuration);
     servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
     servicesInjector.addFallbackIfRequired(ConfigurationServiceInternal.class,configuration);
@@ -33,15 +31,15 @@
     }
     sessionFactory=new IsisSessionFactory(deploymentType,servicesInjector);
     IsisContext.set(sessionFactory);
-    specificationLoader.init();
     try {
+      specificationLoader.init();
       specificationLoader.validateAndAssert();
       authenticationManager.init();
       authorizationManager.init();
       persistenceSessionFactory.init();
-      this.serviceInitializer=new ServiceInitializer(getConfiguration(),sessionFactory.getServices());
+      serviceInitializer=new ServiceInitializer(configuration,servicesInjector.getRegisteredServices());
       serviceInitializer.validate();
-      postConstructInSession(this.serviceInitializer);
+      postConstructInSession(serviceInitializer);
       installFixturesIfRequired();
       translateServicesAndEnumConstants();
     }

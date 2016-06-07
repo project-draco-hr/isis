@@ -1,21 +1,22 @@
 {
+  final ServicesInjector servicesInjector=getServicesInjector();
   IsisContext.openSession(new InitialisationSession());
   try {
-    final List<Object> services=sessionFactory.getServices();
-    final DomainObjectContainer container=lookupService(DomainObjectContainer.class);
+    final List<Object> services=servicesInjector.getRegisteredServices();
+    final TitleService titleService=servicesInjector.lookupServiceElseFail(TitleService.class);
     for (    Object service : services) {
-      final String unused=container.titleOf(service);
+      final String unused=titleService.titleOf(service);
     }
-    for (    final ObjectSpecification objSpec : allSpecifications()) {
+    for (    final ObjectSpecification objSpec : servicesInjector.getSpecificationLoader().allSpecifications()) {
       final Class<?> correspondingClass=objSpec.getCorrespondingClass();
       if (correspondingClass.isEnum()) {
         final Object[] enumConstants=correspondingClass.getEnumConstants();
         for (        Object enumConstant : enumConstants) {
-          final String unused=container.titleOf(enumConstant);
+          final String unused=titleService.titleOf(enumConstant);
         }
       }
     }
-    final TranslationService translationService=lookupService(TranslationService.class);
+    final TranslationService translationService=servicesInjector.lookupServiceElseFail(TranslationService.class);
     final String context=IsisSystem.class.getName();
     translationService.translate(context,MSG_ARE_YOU_SURE);
     translationService.translate(context,MSG_CONFIRM);
