@@ -5,8 +5,8 @@
   this.servicesInjector=servicesInjector;
   this.jdoPersistenceManagerFactory=jdoPersistenceManagerFactory;
   this.fixturesInstalledFlag=fixturesInstalledFlag;
-  this.configuration=configuration;
-  this.specificationLoader=specificationLoader;
+  this.configuration=servicesInjector.getConfigurationServiceInternal();
+  this.specificationLoader=servicesInjector.getSpecificationLoader();
   this.authenticationSession=authenticationSession;
   this.commandContext=lookupService(CommandContext.class);
   this.commandService=lookupService(CommandService.class);
@@ -19,9 +19,9 @@
   this.userService=lookupService(UserService.class);
   this.bulkInteractionContext=lookupService(Bulk.InteractionContext.class);
   final AdapterManager adapterManager=this;
-  this.persistenceQueryFactory=new PersistenceQueryFactory(adapterManager,specificationLoader);
+  this.persistenceQueryFactory=new PersistenceQueryFactory(adapterManager,this.specificationLoader);
   this.transactionManager=new IsisTransactionManager(this,servicesInjector);
   this.state=State.NOT_INITIALIZED;
-  final boolean concurrencyCheckingGloballyDisabled=configuration.getBoolean("isis.persistor.disableConcurrencyChecking",false);
+  final boolean concurrencyCheckingGloballyDisabled=this.configuration.getBoolean("isis.persistor.disableConcurrencyChecking",false);
   this.concurrencyCheckingGloballyEnabled=!concurrencyCheckingGloballyDisabled;
 }
