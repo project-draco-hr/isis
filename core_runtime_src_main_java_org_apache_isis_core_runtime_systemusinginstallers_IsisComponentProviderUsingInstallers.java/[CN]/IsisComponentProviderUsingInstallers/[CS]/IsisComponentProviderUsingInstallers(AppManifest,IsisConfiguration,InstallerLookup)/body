@@ -1,0 +1,25 @@
+{
+  super(appManifestIfAny(appManifestIfAny,configuration),configuration);
+  if (getAppManifestIfAny() != null) {
+    final String authenticationMechanism=getAppManifestIfAny().getAuthenticationMechanism();
+    putConfigurationProperty(SystemConstants.AUTHENTICATION_INSTALLER_KEY,authenticationMechanism);
+    final String authorizationMechanism=getAppManifestIfAny().getAuthorizationMechanism();
+    putConfigurationProperty(SystemConstants.AUTHORIZATION_INSTALLER_KEY,authorizationMechanism);
+  }
+  if (getAppManifestIfAny() != null) {
+    List<Class<? extends FixtureScript>> fixtureClasses=getAppManifestIfAny().getFixtures();
+    final String fixtureClassNamesCsv=classNamesFrom(fixtureClasses);
+    putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
+  }
+  final String requestedAuthencn=getConfiguration().getString(SystemConstants.AUTHENTICATION_INSTALLER_KEY);
+  AuthenticationManagerInstaller authenticationInstaller=installerLookup.authenticationManagerInstaller(requestedAuthencn);
+  final String requestedAuthorzn=getConfiguration().getString(SystemConstants.AUTHORIZATION_INSTALLER_KEY);
+  AuthorizationManagerInstaller authorizationInstaller=installerLookup.authorizationManagerInstaller(requestedAuthorzn);
+  ServicesInstaller servicesInstaller=new ServicesInstallerFromConfigurationAndAnnotation(getConfiguration());
+  ensureThatState(authenticationInstaller,is(not(nullValue())),"authenticationInstaller could not be looked up");
+  ensureThatState(authorizationInstaller,is(not(nullValue())),"authorizationInstaller could not be looked up");
+  authenticationManager=authenticationInstaller.createAuthenticationManager();
+  authorizationManager=authorizationInstaller.createAuthorizationManager();
+  services=servicesInstaller.getServices();
+  ensureInitialized();
+}

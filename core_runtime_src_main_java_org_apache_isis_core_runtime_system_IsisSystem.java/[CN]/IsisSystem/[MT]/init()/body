@@ -9,7 +9,7 @@
   LOG.info("resource stream source: " + configuration.getResourceStreamSource());
   localeInitializer.initLocale(configuration);
   timeZoneInitializer.initTimeZone(configuration);
-  if (!deploymentType.isProduction() && !Clock.isInitialized()) {
+  if (!getDeploymentCategory().isProduction() && !Clock.isInitialized()) {
     FixtureClock.initialize();
   }
   try {
@@ -22,14 +22,14 @@
     final AuthorizationManager authorizationManager=componentProvider.provideAuthorizationManager();
     servicesInjector.addFallbackIfRequired(AuthorizationManager.class,authorizationManager);
     final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
-    final SpecificationLoader specificationLoader=componentProvider.provideSpecificationLoader(deploymentType,servicesInjector,metaModelRefiners);
+    final SpecificationLoader specificationLoader=componentProvider.provideSpecificationLoader(deploymentCategory,servicesInjector,metaModelRefiners);
     servicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
-    final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentType,servicesInjector);
+    final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentCategory,servicesInjector);
     servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
     for (    Object service : servicesInjector.getRegisteredServices()) {
       servicesInjector.injectInto(service);
     }
-    sessionFactory=new IsisSessionFactory(deploymentType,servicesInjector);
+    sessionFactory=new IsisSessionFactory(deploymentCategory,servicesInjector);
     IsisContext.set(sessionFactory);
     try {
       specificationLoader.init();
