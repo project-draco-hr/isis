@@ -24,7 +24,7 @@
     final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
     final SpecificationLoader specificationLoader=componentProvider.provideSpecificationLoader(deploymentCategory,servicesInjector,metaModelRefiners);
     servicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
-    final PersistenceSessionFactory persistenceSessionFactory=componentProvider.providePersistenceSessionFactory(deploymentCategory,servicesInjector);
+    final PersistenceSessionFactory persistenceSessionFactory=new PersistenceSessionFactory(configuration);
     servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
     for (    Object service : servicesInjector.getRegisteredServices()) {
       servicesInjector.injectInto(service);
