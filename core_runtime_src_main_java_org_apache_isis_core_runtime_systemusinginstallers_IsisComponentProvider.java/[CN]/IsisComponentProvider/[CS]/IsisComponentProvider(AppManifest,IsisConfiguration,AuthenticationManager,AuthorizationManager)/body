@@ -1,0 +1,16 @@
+{
+  if (appManifest == null) {
+    throw new IllegalArgumentException("AppManifest is required");
+  }
+  this.appManifest=appManifest;
+  this.configuration=(IsisConfigurationDefault)configuration;
+  putAppManifestKey(appManifest);
+  findAndRegisterTypes(appManifest);
+  specifyServicesAndRegisteredEntitiesUsing(appManifest);
+  overrideConfigurationUsing(appManifest);
+  this.services=new ServicesInstallerFromConfigurationAndAnnotation(getConfiguration()).getServices();
+  final String fixtureClassNamesCsv=classNamesFrom(getAppManifest().getFixtures());
+  putConfigurationProperty(FixturesInstallerFromConfiguration.FIXTURES,fixtureClassNamesCsv);
+  this.authenticationManager=authenticationManager;
+  this.authorizationManager=authorizationManager;
+}
