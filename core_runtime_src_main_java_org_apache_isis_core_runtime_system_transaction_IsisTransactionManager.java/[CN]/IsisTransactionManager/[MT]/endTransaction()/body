@@ -2,18 +2,18 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("endTransaction: level " + (transactionLevel) + "->"+ (transactionLevel - 1));
   }
-  final IsisTransaction transaction=getTransaction();
+  final IsisTransaction transaction=getCurrentTransaction();
   if (transaction == null || transaction.getState().isComplete()) {
     return;
   }
-  RuntimeException abortCause=this.getTransaction().getAbortCause();
+  RuntimeException abortCause=this.getCurrentTransaction().getAbortCause();
   if (transaction.getState().mustAbort()) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("endTransaction: aborting instead [EARLY TERMINATION], abort cause '" + abortCause.getMessage() + "' has been set");
     }
     try {
       abortTransaction();
-      abortCause=this.getTransaction().getAbortCause();
+      abortCause=this.getCurrentTransaction().getAbortCause();
     }
  catch (    RuntimeException ex) {
       abortCause=ex;
@@ -32,7 +32,7 @@
         LOG.debug("endTransaction: committing");
       }
       try {
-        getTransaction().preCommit();
+        getCurrentTransaction().preCommit();
       }
  catch (      RuntimeException ex) {
         abortCause=ex;
@@ -46,12 +46,12 @@
  catch (      RuntimeException ex) {
         abortCause=ex;
         transactionLevel=1;
-        getTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+        getCurrentTransaction().setAbortCause(new IsisTransactionManagerException(ex));
       }
     }
     if (abortCause == null) {
       try {
-        getTransaction().commit();
+        getCurrentTransaction().commit();
       }
  catch (      RuntimeException ex) {
         abortCause=ex;

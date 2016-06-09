@@ -2,12 +2,12 @@
   if (LOG.isDebugEnabled()) {
     LOG.debug("onRequestHandlerExecuted: handler: " + handler);
   }
-  if (IsisContext.inSession()) {
+  if (IsisContext.getSessionFactory().inSession()) {
     try {
       getTransactionManager().endTransaction();
     }
  catch (    Exception ex) {
-      if (getTransactionManager().getTransaction().getState().isComplete()) {
+      if (getTransactionManager().getCurrentTransaction().getState().isComplete()) {
         getTransactionManager().startTransaction();
       }
       if (handler instanceof RenderPageRequestHandler) {

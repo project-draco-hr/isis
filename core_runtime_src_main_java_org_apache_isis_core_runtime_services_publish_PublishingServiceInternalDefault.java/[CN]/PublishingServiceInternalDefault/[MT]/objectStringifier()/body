@@ -4,9 +4,9 @@
       if (object == null) {
         return null;
       }
-      final ObjectAdapter adapter=IsisContext.getPersistenceSession().adapterFor(object);
+      final ObjectAdapter adapter=IsisContext.getSessionFactory().getCurrentSession().getPersistenceSession().adapterFor(object);
       Oid oid=adapter.getOid();
-      return oid != null ? oid.enString(getOidMarshaller()) : encodedValueOf(adapter);
+      return oid != null ? oid.enString(oidMarshaller) : encodedValueOf(adapter);
     }
     private String encodedValueOf(    ObjectAdapter adapter){
       EncodableFacet facet=adapter.getSpecification().getFacet(EncodableFacet.class);

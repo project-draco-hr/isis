@@ -2,6 +2,7 @@
   ensureMetamodelIsValid();
   final HttpServletRequest httpServletRequest=(HttpServletRequest)request;
   final HttpServletResponse httpServletResponse=(HttpServletResponse)response;
+  final IsisSessionFactory sessionFactory=getSessionFactory();
   try {
     final String queryString=httpServletRequest.getQueryString();
     if (queryString != null && queryString.contains(QUERY_STRING_FORCE_LOGOUT)) {
@@ -19,7 +20,7 @@
     final AuthenticationSession authSession=authSessionStrategy.lookupValid(httpServletRequest,httpServletResponse);
     if (authSession != null) {
       authSessionStrategy.bind(httpServletRequest,httpServletResponse,authSession);
-      openSession(authSession);
+      sessionFactory.openSession(authSession);
       chain.doFilter(request,response);
       return;
     }
@@ -35,6 +36,6 @@
     }
   }
   finally {
-    closeSession();
+    sessionFactory.closeSession();
   }
 }

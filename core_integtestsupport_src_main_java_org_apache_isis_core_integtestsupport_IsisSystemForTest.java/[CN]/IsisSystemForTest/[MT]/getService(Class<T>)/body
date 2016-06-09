@@ -1,11 +1,4 @@
 {
-  if (serviceClass == DomainObjectContainer.class) {
-    return (T)getContainer();
-  }
-  final ServicesInjector servicesInjector=getPersistenceSession().getServicesInjector();
-  final T service=servicesInjector.lookupService(serviceClass);
-  if (service == null) {
-    throw new RuntimeException("Could not find a service of type: " + serviceClass.getName());
-  }
-  return service;
+  final ServicesInjector servicesInjector=isisSystem.getSessionFactory().getServicesInjector();
+  return servicesInjector.lookupServiceElseFail(serviceClass);
 }

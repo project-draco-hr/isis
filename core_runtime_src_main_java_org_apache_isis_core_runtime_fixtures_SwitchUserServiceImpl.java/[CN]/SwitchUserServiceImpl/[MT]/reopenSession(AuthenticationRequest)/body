@@ -1,7 +1,7 @@
 {
-  getTransactionManager().endTransaction();
-  IsisContext.closeSession();
-  final AuthenticationSession session=getAuthenticationManager().authenticate(authRequest);
-  IsisContext.openSession(session);
-  getTransactionManager().startTransaction();
+  persistenceSessionServiceInternal.commit();
+  isisSessionFactory.closeSession();
+  final AuthenticationSession authenticationSession=authenticationManager.authenticate(authRequest);
+  isisSessionFactory.openSession(authenticationSession);
+  persistenceSessionServiceInternal.beginTran();
 }

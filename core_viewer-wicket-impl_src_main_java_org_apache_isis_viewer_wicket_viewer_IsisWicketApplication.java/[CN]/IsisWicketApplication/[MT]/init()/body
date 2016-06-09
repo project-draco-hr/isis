@@ -11,7 +11,7 @@
     final IsisConfigurationBuilder isisConfigurationBuilder=obtainConfigBuilder();
     isisConfigurationBuilder.addDefaultConfigurationResources();
     final IsisConfigurationDefault configuration=isisConfigurationBuilder.getConfiguration();
-    deploymentType=determineDeploymentType(configuration.getString("isis.deploymentType"));
+    DeploymentTypeWicketAbstract deploymentType=determineDeploymentType(configuration.getString("isis.deploymentType"));
     RequestCycleListenerCollection requestCycleListeners=getRequestCycleListeners();
     IRequestCycleListener requestCycleListenerForIsis=newWebRequestCycleForIsis();
     requestCycleListeners.add(requestCycleListenerForIsis);
@@ -28,7 +28,7 @@
     getDebugSettings().setAjaxDebugModeEnabled(determineAjaxDebugModeEnabled(configuration));
     buildCssBundle();
     filterJavascriptContributions();
-    configureWicketSourcePluginIfNecessary(configuration);
+    configureWicketSourcePluginIfNecessary();
     int maxEntries=1000;
     setMetaData(AccountConfirmationMap.KEY,new AccountConfirmationMap(maxEntries,Duration.days(1)));
     mountPages();

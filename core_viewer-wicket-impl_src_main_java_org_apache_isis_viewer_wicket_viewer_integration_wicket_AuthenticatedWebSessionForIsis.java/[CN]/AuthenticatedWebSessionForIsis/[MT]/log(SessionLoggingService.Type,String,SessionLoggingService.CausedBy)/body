@@ -1,7 +1,7 @@
 {
   final SessionLoggingService sessionLoggingService=getSessionLoggingService();
   if (sessionLoggingService != null) {
-    IsisContext.doInSession(new Runnable(){
+    IsisContext.getSessionFactory().doInSession(new Runnable(){
       @Override public void run(){
         int sessionHashCode=System.identityHashCode(AuthenticatedWebSessionForIsis.this);
         sessionLoggingService.log(type,username,Clock.getTimeAsDateTime().toDate(),causedBy,Integer.toString(sessionHashCode));

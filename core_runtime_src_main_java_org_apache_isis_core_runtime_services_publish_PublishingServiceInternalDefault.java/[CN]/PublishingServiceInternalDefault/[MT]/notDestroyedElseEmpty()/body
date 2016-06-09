@@ -1,0 +1,16 @@
+{
+  return new Function<ObjectAdapter,ObjectAdapter>(){
+    public ObjectAdapter apply(    ObjectAdapter adapter){
+      if (adapter == null) {
+        return null;
+      }
+      if (!adapter.isDestroyed()) {
+        return adapter;
+      }
+      Object replacementObject=getPersistenceSession().instantiateAndInjectServices(adapter.getSpecification());
+      getPersistenceSession().remapRecreatedPojo(adapter,replacementObject);
+      return adapter;
+    }
+  }
+;
+}

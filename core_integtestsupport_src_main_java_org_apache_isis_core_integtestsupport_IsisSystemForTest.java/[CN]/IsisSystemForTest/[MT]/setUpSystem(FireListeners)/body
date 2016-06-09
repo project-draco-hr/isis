@@ -14,7 +14,7 @@
     isisSystem=new IsisSystem(componentProvider,DeploymentCategory.PRODUCTION);
     FixtureClock.initialize();
     isisSystem.init();
-    IsisContext.closeSession();
+    isisSystem.getSessionFactory().closeSession();
     final MetaModelInvalidException ex=IsisContext.getMetaModelInvalidExceptionIfAny();
     if (ex != null) {
       IsisContext.testReset();
@@ -26,7 +26,7 @@
       fail("Metamodel is invalid: \n" + buf.toString());
     }
   }
-  final AuthenticationManager authenticationManager=IsisContext.getAuthenticationManager();
+  final AuthenticationManager authenticationManager=isisSystem.getSessionFactory().getAuthenticationManager();
   authenticationSession=authenticationManager.authenticate(authenticationRequestIfAny);
   openSession();
   wireAndInstallFixtures();

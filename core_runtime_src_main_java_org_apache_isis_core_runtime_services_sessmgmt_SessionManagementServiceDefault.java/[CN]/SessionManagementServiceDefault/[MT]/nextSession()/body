@@ -1,7 +1,7 @@
 {
-  final AuthenticationSession authenticationSession=IsisContext.getAuthenticationSession();
-  IsisContext.getPersistenceSession().getTransactionManager().endTransaction();
-  IsisContext.closeSession();
-  IsisContext.openSession(authenticationSession);
-  IsisContext.getPersistenceSession().getTransactionManager().startTransaction();
+  final AuthenticationSession authenticationSession=isisSessionFactory.getCurrentSession().getAuthenticationSession();
+  isisSessionFactory.getCurrentSession().getPersistenceSession().getTransactionManager().endTransaction();
+  isisSessionFactory.closeSession();
+  isisSessionFactory.openSession(authenticationSession);
+  isisSessionFactory.getCurrentSession().getPersistenceSession().startTransaction();
 }

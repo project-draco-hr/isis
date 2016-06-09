@@ -1,10 +1,6 @@
 {
-  RootOid oid=getOidMarshaller().unmarshal(oam.persistentOidStr,RootOid.class);
-  try {
-    final ObjectAdapter adapter=getPersistenceSession().adapterFor(oid,concurrencyChecking);
-    return adapter;
-  }
-  finally {
-    oam.persistentOidStr=oid.enString(getOidMarshaller());
-  }
+  ObjectSpecId objectSpecId=oam.objectSpecId;
+  ObjectSpecification objectSpec=SpecUtils.getSpecificationFor(objectSpecId);
+  final EncodableFacet encodableFacet=objectSpec.getFacet(EncodableFacet.class);
+  return encodableFacet.fromEncodedString(oam.encodableValue);
 }

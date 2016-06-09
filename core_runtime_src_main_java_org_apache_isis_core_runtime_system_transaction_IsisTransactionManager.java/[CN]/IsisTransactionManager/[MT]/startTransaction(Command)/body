@@ -1,6 +1,6 @@
 {
   boolean noneInProgress=false;
-  if (getTransaction() == null || getTransaction().getState().isComplete()) {
+  if (getCurrentTransaction() == null || getCurrentTransaction().getState().isComplete()) {
     noneInProgress=true;
     final Interaction interaction=interactionContext.getInteraction();
     final Command command;
@@ -10,7 +10,7 @@
     }
     command=commandContext.getCommand();
     final UUID transactionId=command.getTransactionId();
-    this.transaction=new IsisTransaction(transactionId,interaction.next(Interaction.Sequence.TRANSACTION.id()),servicesInjector);
+    this.currentTransaction=new IsisTransaction(transactionId,interaction.next(Interaction.Sequence.TRANSACTION.id()),servicesInjector);
     transactionLevel=0;
     persistenceSession.startTransaction();
   }
