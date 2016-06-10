@@ -1,6 +1,6 @@
 {
-  final FixturesInstallerDelegate fid=new FixturesInstallerDelegate(getPersistenceSession());
-  for (  InstallableFixture fixture : fixtures) {
+  final FixturesInstallerDelegate fid=new FixturesInstallerDelegate(isisSessionFactory);
+  for (  final InstallableFixture fixture : fixtures) {
     fid.addFixture(fixture);
   }
   fid.installFixtures();
@@ -10,7 +10,7 @@
   if (transactionState.canCommit()) {
     commitTran();
     try {
-      bounceSystem();
+      nextSession();
     }
  catch (    Exception e) {
       throw new RuntimeException(e);

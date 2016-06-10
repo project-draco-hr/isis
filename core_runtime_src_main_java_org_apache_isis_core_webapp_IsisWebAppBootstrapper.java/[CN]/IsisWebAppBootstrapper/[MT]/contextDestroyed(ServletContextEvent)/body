@@ -2,11 +2,10 @@
   LOG.info("server shutting down");
   final ServletContext servletContext=ev.getServletContext();
   try {
-    final IsisSystem system=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
-    if (system != null) {
+    final IsisSystem isisSystem=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
+    if (isisSystem != null) {
       LOG.info("calling system shutdown");
-      system.shutdown();
-      IsisContext.shutdown();
+      isisSystem.getSessionFactory().destroyServicesAndShutdown();
     }
   }
   finally {

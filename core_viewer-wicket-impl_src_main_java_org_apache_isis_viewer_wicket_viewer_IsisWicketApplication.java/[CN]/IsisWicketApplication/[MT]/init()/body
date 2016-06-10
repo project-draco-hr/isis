@@ -16,7 +16,8 @@
     IRequestCycleListener requestCycleListenerForIsis=newWebRequestCycleForIsis();
     requestCycleListeners.add(requestCycleListenerForIsis);
     requestCycleListeners.add(new PageRequestHandlerTracker());
-    final IsisInjectModule isisModule=newIsisModule(deploymentType.getDeploymentCategory(),configuration);
+    final DeploymentCategory deploymentCategory=deploymentType.getDeploymentCategory();
+    final IsisInjectModule isisModule=newIsisModule(deploymentCategory,configuration);
     final Injector injector=Guice.createInjector(isisModule,newIsisWicketModule());
     initWicketComponentInjection(injector);
     injector.injectMembers(this);

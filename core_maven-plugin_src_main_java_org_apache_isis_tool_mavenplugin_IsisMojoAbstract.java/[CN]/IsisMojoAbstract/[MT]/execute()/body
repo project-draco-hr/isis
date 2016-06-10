@@ -3,18 +3,20 @@
   final Plugin plugin=MavenProjects.lookupPlugin(mavenProject,CURRENT_PLUGIN_KEY);
   final AppManifest manifest=InstanceUtil.createInstance(this.appManifest,AppManifest.class);
   final IsisSystem isisSystem=new IsisSystem(manifest);
+  IsisSessionFactory isisSessionFactory=null;
   try {
-    isisSystem.init();
+    isisSessionFactory=isisSystem.buildSessionFactory();
     if (!isisSystem.isMetaModelValid()) {
       MetaModelInvalidException metaModelInvalidException=IsisContext.getMetaModelInvalidExceptionIfAny();
       Set<String> validationErrors=metaModelInvalidException.getValidationErrors();
       context.throwFailureException(validationErrors.size() + " meta-model problems found.",validationErrors);
       return;
     }
-    IsisContext.getSessionFactory().doInSession(new Runnable(){
+    final IsisSessionFactory isisSessionFactoryFinal=isisSessionFactory;
+    isisSessionFactory.doInSession(new Runnable(){
       @Override public void run(){
         try {
-          doExecute(context,isisSystem);
+          doExecute(context,isisSessionFactoryFinal);
         }
  catch (        IOException e) {
           ;
@@ -33,6 +35,8 @@ catch (        MojoFailureException e) {
     throw e;
   }
  finally {
-    isisSystem.shutdown();
+    if (isisSessionFactory != null) {
+      isisSessionFactory.destroyServicesAndShutdown();
+    }
   }
 }

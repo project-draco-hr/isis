@@ -1,0 +1,10 @@
+{
+  final SwaggerService swaggerService=isisSessionFactory.getServicesInjector().lookupService(SwaggerService.class);
+  final MavenProject mavenProject=context.getMavenProject();
+  final File outputDir=determineOutputDir(mavenProject,output);
+  final List<SwaggerService.Visibility> visibilityList=determineVisibility(visibilities);
+  for (  SwaggerService.Visibility visibility : visibilityList) {
+    final File swaggerSpecFile=buildSwaggerSpecFile(visibility,format,outputDir,fileNamePrefix);
+    writeSwaggerSpec(swaggerService,visibility,format,swaggerSpecFile);
+  }
+}

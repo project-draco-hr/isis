@@ -1,0 +1,45 @@
+{
+  serviceInitializer=new ServiceInitializer(configuration,servicesInjector.getRegisteredServices());
+  serviceInitializer.validate();
+  openSession(new InitialisationSession());
+  try {
+    IsisTransactionManager transactionManager=getCurrentSessionTransactionManager();
+    transactionManager.startTransaction();
+    try {
+      serviceInitializer.postConstruct();
+    }
+ catch (    RuntimeException ex) {
+      transactionManager.getCurrentTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+    }
+ finally {
+      transactionManager.endTransaction();
+    }
+    final FixturesInstallerFromConfiguration fixtureInstaller=new FixturesInstallerFromConfiguration(this);
+    fixtureInstaller.installFixtures();
+    if (!deploymentCategory.isProduction()) {
+      logonFixture=fixtureInstaller.getLogonFixture();
+    }
+    final List<Object> services=servicesInjector.getRegisteredServices();
+    final TitleService titleService=servicesInjector.lookupServiceElseFail(TitleService.class);
+    for (    Object service : services) {
+      final String unused=titleService.titleOf(service);
+    }
+    for (    final ObjectSpecification objSpec : servicesInjector.getSpecificationLoader().allSpecifications()) {
+      final Class<?> correspondingClass=objSpec.getCorrespondingClass();
+      if (correspondingClass.isEnum()) {
+        final Object[] enumConstants=correspondingClass.getEnumConstants();
+        for (        Object enumConstant : enumConstants) {
+          final String unused=titleService.titleOf(enumConstant);
+        }
+      }
+    }
+    final TranslationService translationService=servicesInjector.lookupServiceElseFail(TranslationService.class);
+    final String context=IsisSystem.class.getName();
+    translationService.translate(context,IsisSystem.MSG_ARE_YOU_SURE);
+    translationService.translate(context,IsisSystem.MSG_CONFIRM);
+    translationService.translate(context,IsisSystem.MSG_CANCEL);
+  }
+  finally {
+    closeSession();
+  }
+}

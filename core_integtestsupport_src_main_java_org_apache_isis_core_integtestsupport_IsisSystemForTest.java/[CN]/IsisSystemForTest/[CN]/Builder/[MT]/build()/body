@@ -6,19 +6,15 @@
   Runtime.getRuntime().addShutdownHook(new Thread(){
     @Override public synchronized void run(){
       try {
-        isisSystemForTest.tearDownSystem();
+        isisSystemForTest.closeSession();
       }
  catch (      Exception e) {
         e.printStackTrace();
       }
       try {
-        isisSystemForTest.shutdown();
-      }
- catch (      Exception e) {
-        e.printStackTrace();
-      }
-      try {
-        isisSystemForTest.isisSystem.getSessionFactory().shutdown();
+        if (isisSystemForTest.isisSessionFactory != null) {
+          isisSystemForTest.isisSessionFactory.destroyServicesAndShutdown();
+        }
       }
  catch (      Exception e) {
         e.printStackTrace();
