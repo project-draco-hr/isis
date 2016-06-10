@@ -2,12 +2,12 @@
   permanentlyHide(ComponentType.ENTITY_ICON_AND_TITLE);
   ObjectAdapter targetAdapter=null;
   try {
-    targetAdapter=getModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    targetAdapter=getModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK,getModel().getPersistenceSession(),getSpecificationLoader());
     return editTargetAndProcessResults(target,feedbackForm);
   }
  catch (  ConcurrencyException ex) {
     if (targetAdapter == null) {
-      targetAdapter=getModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+      targetAdapter=getModel().getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK,getModel().getPersistenceSession(),getSpecificationLoader());
     }
     final EntityPage entityPage=new EntityPage(targetAdapter,null);
     setResponsePage(entityPage);

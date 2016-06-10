@@ -1,0 +1,13 @@
+{
+  final ObjectAdapter currAdapter=getObjectAdapter(ConcurrencyChecking.NO_CHECK,persistenceSession,specificationLoader);
+  for (  ObjectAdapterMemento each : list) {
+    if (each == null) {
+      continue;
+    }
+    final ObjectAdapter otherAdapter=each.getObjectAdapter(ConcurrencyChecking.NO_CHECK,persistenceSession,specificationLoader);
+    if (currAdapter == otherAdapter) {
+      return true;
+    }
+  }
+  return false;
+}

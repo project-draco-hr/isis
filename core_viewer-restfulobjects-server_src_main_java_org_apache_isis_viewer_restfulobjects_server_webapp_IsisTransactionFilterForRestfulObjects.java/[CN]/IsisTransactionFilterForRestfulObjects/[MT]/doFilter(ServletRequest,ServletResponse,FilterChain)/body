@@ -1,16 +1,18 @@
 {
-  if (!getSessionFactory().inSession()) {
+  final IsisSessionFactory isisSessionFactory=isisSessionFactoryFrom(request);
+  if (!isisSessionFactory.inSession()) {
     chain.doFilter(request,response);
     return;
   }
-  getTransactionManager().startTransaction();
+  final IsisTransactionManager isisTransactionManager=transactionManagerFrom(isisSessionFactory);
+  isisTransactionManager.startTransaction();
   try {
     chain.doFilter(request,response);
   }
   finally {
-    final boolean inTransaction=inTransaction();
+    final boolean inTransaction=isisSessionFactory.inTransaction();
     if (inTransaction) {
-      getTransactionManager().endTransaction();
+      isisTransactionManager.endTransaction();
     }
   }
 }

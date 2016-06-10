@@ -3,11 +3,11 @@
   final AbstractLink link=new Link<Object>(linkId){
     private static final long serialVersionUID=1L;
     @Override public void onClick(){
-      final ObjectAction objectAction=actionMemento.getAction();
+      final ObjectAction objectAction=actionMemento.getAction(getSpecificationLoader());
       final ConcurrencyChecking concurrencyChecking=ConcurrencyChecking.concurrencyCheckingFor(objectAction.getSemantics());
       try {
         final List<ObjectAdapterMemento> toggleMementosList=model.getToggleMementosList();
-        final List<ObjectAdapter> toggledAdapters=FluentIterable.from(toggleMementosList).transform(ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking)).toList();
+        final List<ObjectAdapter> toggledAdapters=FluentIterable.from(toggleMementosList).transform(ObjectAdapterMemento.Functions.fromMemento(concurrencyChecking,getPersistenceSession(),getSpecificationLoader())).toList();
         final List<Object> domainObjects=Lists.newArrayList(Iterables.transform(toggledAdapters,ObjectAdapter.Functions.getObject()));
         final ActionInvocationContext actionInvocationContext=getServicesInjector().lookupService(ActionInvocationContext.class);
         if (actionInvocationContext != null) {
@@ -44,7 +44,7 @@
         model.clearToggleMementosList();
         toggleboxColumn.clearToggles();
         final ActionModel actionModel=model.getActionModelHint();
-        if (actionModel != null && actionModel.getActionMemento().getAction().getSemantics().isIdempotentInNature()) {
+        if (actionModel != null && actionModel.getActionMemento().getAction(getSpecificationLoader()).getSemantics().isIdempotentInNature()) {
           ObjectAdapter resultAdapter=actionModel.getObject();
           model.setObjectList(resultAdapter);
         }
@@ -74,13 +74,13 @@ catch (      final RuntimeException ex) {
     private void recover(){
       final List<ObjectAdapterMemento> toggleMementosList=Lists.newArrayList(model.getToggleMementosList());
       for (      ObjectAdapterMemento oam : toggleMementosList) {
-        oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+        oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK,getPersistenceSession(),getSpecificationLoader());
       }
       model.setObject(persistentAdaptersWithin(model.getObject()));
       final List<ObjectAdapter> adapters=model.getObject();
       model.clearToggleMementosList();
       for (      ObjectAdapterMemento oam : toggleMementosList) {
-        final ObjectAdapter objectAdapter=oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+        final ObjectAdapter objectAdapter=oam.getObjectAdapter(ConcurrencyChecking.NO_CHECK,getPersistenceSession(),getSpecificationLoader());
         if (adapters.contains(objectAdapter)) {
           model.toggleSelectionOn(objectAdapter);
         }

@@ -1,7 +1,7 @@
 {
   final PropertyMemento propertyMemento=scalarModel.getPropertyMemento();
-  final OneToOneAssociation property=propertyMemento.getProperty();
-  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK);
+  final OneToOneAssociation property=propertyMemento.getProperty(scalarModel.getSpecificationLoader());
+  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK,scalarModel.getPersistenceSession(),scalarModel.getSpecificationLoader());
   final ObjectAdapter[] choices=property.getAutoComplete(parentAdapter,searchArg,InteractionInitiatedBy.USER);
   return choicesAsList(choices);
 }

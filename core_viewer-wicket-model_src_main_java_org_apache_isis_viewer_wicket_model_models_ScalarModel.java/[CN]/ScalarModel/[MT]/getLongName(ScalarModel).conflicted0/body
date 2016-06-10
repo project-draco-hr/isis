@@ -1,5 +1,10 @@
 {
-  ObjectSpecId objectSpecId=scalarModel.parentObjectAdapterMemento.getObjectSpecId();
-  final String specShortName=SpecUtils.getSpecificationFor(objectSpecId).getShortIdentifier();
-  return specShortName + "-" + scalarModel.getPropertyMemento().getProperty().getId();
+  final ObjectAdapterMemento adapterMemento=scalarModel.getObjectAdapterMemento();
+  if (adapterMemento == null) {
+    return null;
+  }
+  ObjectSpecId objectSpecId=adapterMemento.getObjectSpecId();
+  final String specShortName=SpecUtils.getSpecificationFor(objectSpecId,scalarModel.getSpecificationLoader()).getShortIdentifier();
+  final String parmId=scalarModel.getParameterMemento().getActionParameter(scalarModel.getSpecificationLoader()).getIdentifier().toNameIdentityString();
+  return specShortName + "-" + parmId+ "-"+ scalarModel.getParameterMemento().getNumber();
 }

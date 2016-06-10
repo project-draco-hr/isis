@@ -2,11 +2,11 @@
   WebMarkupContainer header=addHeader();
   ObjectAdapter targetAdapter=null;
   try {
-    targetAdapter=scalarModel.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+    targetAdapter=scalarModel.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK,scalarModel.getPersistenceSession(),scalarModel.getSpecificationLoader());
     scalarModel.toEditMode();
     getComponentFactoryRegistry().addOrReplaceComponent(this,ComponentType.PROPERTY_EDIT_FORM,getScalarModel());
     getComponentFactoryRegistry().addOrReplaceComponent(header,ComponentType.ENTITY_ICON_AND_TITLE,new EntityModel(targetAdapter));
-    final OneToOneAssociation property=getScalarModel().getPropertyMemento().getProperty();
+    final OneToOneAssociation property=getScalarModel().getPropertyMemento().getProperty(scalarModel.getSpecificationLoader());
     final String propertyName=property.getName();
     final Label label=new Label(ID_PROPERTY_NAME,Model.of(propertyName));
     NamedFacet namedFacet=property.getFacet(NamedFacet.class);
@@ -17,7 +17,7 @@
   }
  catch (  final ConcurrencyException ex) {
     if (targetAdapter == null) {
-      targetAdapter=scalarModel.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK);
+      targetAdapter=scalarModel.getParentObjectAdapterMemento().getObjectAdapter(AdapterManager.ConcurrencyChecking.CHECK,getPersistenceSession(),getSpecificationLoader());
     }
     final EntityPage entityPage=new EntityPage(targetAdapter,null);
     setResponsePage(entityPage);

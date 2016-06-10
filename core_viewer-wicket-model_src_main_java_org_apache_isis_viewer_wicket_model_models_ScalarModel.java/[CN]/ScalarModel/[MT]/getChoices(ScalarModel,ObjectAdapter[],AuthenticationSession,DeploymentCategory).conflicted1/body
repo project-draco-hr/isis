@@ -1,7 +1,7 @@
 {
   final ActionParameterMemento parameterMemento=scalarModel.getParameterMemento();
-  final ObjectActionParameter actionParameter=parameterMemento.getActionParameter();
-  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK);
+  final ObjectActionParameter actionParameter=parameterMemento.getActionParameter(scalarModel.getSpecificationLoader());
+  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK,scalarModel.getPersistenceSession(),scalarModel.getSpecificationLoader());
   final ObjectAdapter[] choices=actionParameter.getChoices(parentAdapter,argumentsIfAvailable,InteractionInitiatedBy.USER);
   return choicesAsList(choices);
 }

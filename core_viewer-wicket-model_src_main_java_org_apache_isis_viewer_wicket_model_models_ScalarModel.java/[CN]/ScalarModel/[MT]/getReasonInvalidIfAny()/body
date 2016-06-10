@@ -1,6 +1,6 @@
 {
-  final OneToOneAssociation property=getPropertyMemento().getProperty();
-  final ObjectAdapter adapter=getParentObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK);
+  final OneToOneAssociation property=getPropertyMemento().getProperty(getSpecificationLoader());
+  final ObjectAdapter adapter=getParentObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.CHECK,getPersistenceSession(),getSpecificationLoader());
   final ObjectAdapter associate=getObject();
   final Consent validity=property.isAssociationValid(adapter,associate,InteractionInitiatedBy.USER);
   return validity.isAllowed() ? null : validity.getReason();

@@ -1,0 +1,18 @@
+{
+  if ("guava".equals(implementation)) {
+    return new EventBusImplementationForGuava();
+  }
+  if ("axon".equals(implementation)) {
+    return new EventBusImplementationForAxonSimple();
+  }
+  final Class<?> aClass=ClassUtil.forName(implementation);
+  if (EventBusImplementation.class.isAssignableFrom(aClass)) {
+    try {
+      return (EventBusImplementation)aClass.newInstance();
+    }
+ catch (    InstantiationException|IllegalAccessException e) {
+      throw new NonRecoverableException(e);
+    }
+  }
+  throw new NonRecoverableException("Could not instantiate event bus implementation '" + implementation + "'");
+}
