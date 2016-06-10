@@ -1,0 +1,18 @@
+{
+  final IsisSessionFactory sessionFactory=this;
+  boolean noSession=!sessionFactory.inSession();
+  try {
+    if (noSession) {
+      sessionFactory.openSession(authenticationSession);
+    }
+    return callable.call();
+  }
+ catch (  Exception x) {
+    throw new RuntimeException(String.format("An error occurred while executing code in %s session",noSession ? "a temporary" : "a"),x);
+  }
+ finally {
+    if (noSession) {
+      sessionFactory.closeSession();
+    }
+  }
+}

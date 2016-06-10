@@ -18,7 +18,7 @@
     final ObjectAdapter resultAdapter=getActionModel().executeHandlingApplicationExceptions();
     getTransactionManager().flushTransaction();
     ActionResultResponse resultResponse=ActionResultResponseType.determineAndInterpretResult(this.getActionModel(),target,resultAdapter);
-    resultResponse.getHandlingStrategy().handleResults(this,resultResponse);
+    resultResponse.getHandlingStrategy().handleResults(this,resultResponse,getIsisSessionFactory());
     if (actionModel.isBookmarkable()) {
       bookmarkPage(actionModel);
     }
@@ -32,7 +32,7 @@
     String message=recognizeException(ex,target,feedbackForm);
     if (message != null) {
       if (feedbackForm == null) {
-        ActionResultResponseHandlingStrategy.REDIRECT_TO_VOID.handleResults(this,null);
+        ActionResultResponseHandlingStrategy.REDIRECT_TO_VOID.handleResults(this,null,getIsisSessionFactory());
       }
       return false;
     }

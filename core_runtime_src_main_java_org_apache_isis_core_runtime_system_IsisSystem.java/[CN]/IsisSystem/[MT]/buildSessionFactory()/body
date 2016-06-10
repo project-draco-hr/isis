@@ -31,16 +31,14 @@
     isisSessionFactory=new IsisSessionFactory(deploymentCategory,servicesInjector);
     servicesInjector.addFallbackIfRequired(IsisSessionFactory.class,isisSessionFactory);
     servicesInjector.addFallbackIfRequired(OidMarshaller.class,isisSessionFactory.getOidMarshaller());
-    for (    Object service : servicesInjector.getRegisteredServices()) {
-      servicesInjector.injectInto(service);
-    }
+    servicesInjector.autowire();
     IsisContext.setSessionFactory(isisSessionFactory);
     try {
       specificationLoader.init();
       specificationLoader.validateAndAssert();
       authenticationManager.init();
       authorizationManager.init();
-      persistenceSessionFactory.init();
+      persistenceSessionFactory.init(specificationLoader);
       isisSessionFactory.constructServices();
     }
  catch (    final MetaModelInvalidException ex) {

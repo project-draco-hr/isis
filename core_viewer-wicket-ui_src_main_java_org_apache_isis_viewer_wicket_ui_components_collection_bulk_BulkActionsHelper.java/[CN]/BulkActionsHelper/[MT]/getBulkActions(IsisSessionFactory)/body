@@ -1,0 +1,21 @@
+{
+  final EntityCollectionModel model=getModel();
+  if (model.isParented()) {
+    return Collections.emptyList();
+  }
+  final ObjectSpecification typeSpec=model.getTypeOfSpecification();
+  List<ObjectAction> objectActions=typeSpec.getObjectActions(ActionType.USER,Contributed.INCLUDED,Filters.<ObjectAction>any());
+  final DeploymentCategory deploymentCategory=isisSessionFactory.getDeploymentCategory();
+  if (!deploymentCategory.isProduction()) {
+    List<ObjectAction> explorationActions=typeSpec.getObjectActions(ActionType.EXPLORATION,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    List<ObjectAction> prototypeActions=typeSpec.getObjectActions(ActionType.PROTOTYPE,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    objectActions.addAll(explorationActions);
+    objectActions.addAll(prototypeActions);
+  }
+  if (isDebugMode()) {
+    List<ObjectAction> debugActions=typeSpec.getObjectActions(ActionType.DEBUG,Contributed.INCLUDED,Filters.<ObjectAction>any());
+    objectActions.addAll(debugActions);
+  }
+  List<ObjectAction> flattenedActions=objectActions;
+  return Lists.newArrayList(Iterables.filter(flattenedActions,BULK));
+}

@@ -1,11 +1,11 @@
 {
   final Class<?> contextClass=determineContextClassElse(component,IsisWicketApplication.class);
   final String context=contextClass.getName();
-  if (IsisContext.getSessionFactory().inSession()) {
+  if (getIsisSessionFactory().inSession()) {
     return translate(key,context);
   }
  else {
-    return IsisContext.getSessionFactory().doInSession(new Callable<String>(){
+    return getIsisSessionFactory().doInSession(new Callable<String>(){
       @Override public String call() throws Exception {
         return translate(key,context);
       }

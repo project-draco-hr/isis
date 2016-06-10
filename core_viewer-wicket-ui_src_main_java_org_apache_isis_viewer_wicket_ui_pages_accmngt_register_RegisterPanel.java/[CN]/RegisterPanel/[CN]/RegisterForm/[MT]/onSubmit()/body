@@ -1,9 +1,9 @@
 {
   final UserDetails userDetails=getModelObject();
-  IsisContext.getSessionFactory().doInSession(new Runnable(){
+  getSessionFactory().doInSession(new Runnable(){
     @Override public void run(){
-      final UserRegistrationService userRegistrationService=IsisContext.getSessionFactory().getCurrentSession().getPersistenceSession().getServicesInjector().lookupService(UserRegistrationService.class);
-      IsisContext.getSessionFactory().getCurrentSession().getPersistenceSession().getTransactionManager().executeWithinTransaction(new TransactionalClosure(){
+      final UserRegistrationService userRegistrationService=getSessionFactory().getServicesInjector().lookupService(UserRegistrationService.class);
+      getSessionFactory().getCurrentSession().getPersistenceSession().getTransactionManager().executeWithinTransaction(new TransactionalClosure(){
         @Override public void execute(){
           userRegistrationService.registerUser(userDetails);
           removeAccountConfirmation();
