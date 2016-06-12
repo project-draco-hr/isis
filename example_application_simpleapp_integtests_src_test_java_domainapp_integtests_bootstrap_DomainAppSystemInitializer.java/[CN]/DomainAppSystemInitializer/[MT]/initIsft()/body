@@ -1,8 +1,17 @@
 {
   IsisSystemForTest isft=IsisSystemForTest.getElseNull();
   if (isft == null) {
-    isft=new IsisSystemForTest.Builder().withLoggingAt(org.apache.log4j.Level.INFO).with(new DomainAppAppManifest()).with(new IsisConfigurationForJdoIntegTests()).build();
-    isft.initIfRequiredThenOpenSession();
+    isft=new IsisSystemForTest.Builder().withLoggingAt(org.apache.log4j.Level.INFO).with(new DomainAppAppManifest(){
+      @Override public Map<String,String> getConfigurationProperties(){
+        final Map<String,String> map=Maps.newHashMap();
+        IsisConfigurationForJdoIntegTests.withJavaxJdoRunInMemoryProperties(map);
+        IsisConfigurationForJdoIntegTests.withDatanucleusProperties(map);
+        IsisConfigurationForJdoIntegTests.withIsisIntegTestProperties(map);
+        return map;
+      }
+    }
+).build();
+    isft.setUpSystem();
     IsisSystemForTest.set(isft);
   }
 }
