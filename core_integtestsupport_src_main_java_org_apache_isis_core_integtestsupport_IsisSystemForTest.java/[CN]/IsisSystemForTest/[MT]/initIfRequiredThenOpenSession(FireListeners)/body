@@ -11,9 +11,9 @@
     IsisLoggingConfigurer isisLoggingConfigurer=new IsisLoggingConfigurer(getLevel());
     isisLoggingConfigurer.configureLogging(".",new String[]{});
     componentProvider=new IsisComponentProviderDefault(appManifestIfAny,configurationOverride);
-    final IsisSystem isisSystem=new IsisSystem(componentProvider,DeploymentCategory.PRODUCTION);
+    final IsisSessionFactoryBuilder isisSessionFactoryBuilder=new IsisSessionFactoryBuilder(componentProvider,DeploymentCategory.PRODUCTION);
     FixtureClock.initialize();
-    isisSessionFactory=isisSystem.buildSessionFactory();
+    isisSessionFactory=isisSessionFactoryBuilder.buildSessionFactory();
     closeSession();
     final MetaModelInvalidException ex=IsisContext.getMetaModelInvalidExceptionIfAny();
     if (ex != null) {

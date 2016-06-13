@@ -2,14 +2,14 @@
   LOG.info("server shutting down");
   final ServletContext servletContext=ev.getServletContext();
   try {
-    final IsisSystem isisSystem=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
-    if (isisSystem != null) {
+    final IsisSessionFactory isisSessionFactory=(IsisSessionFactory)servletContext.getAttribute(WebAppConstants.ISIS_SESSION_FACTORY);
+    if (isisSessionFactory != null) {
       LOG.info("calling system shutdown");
-      isisSystem.getSessionFactory().destroyServicesAndShutdown();
+      isisSessionFactory.destroyServicesAndShutdown();
     }
   }
   finally {
-    servletContext.removeAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
+    servletContext.removeAttribute(WebAppConstants.ISIS_SESSION_FACTORY);
     LOG.info("server shut down");
   }
 }

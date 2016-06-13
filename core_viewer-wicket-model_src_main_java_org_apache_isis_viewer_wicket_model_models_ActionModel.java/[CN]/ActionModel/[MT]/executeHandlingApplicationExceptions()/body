@@ -6,7 +6,8 @@
  catch (  final RuntimeException ex) {
     final RecoverableException appEx=getApplicationExceptionIfAny(ex);
     if (appEx != null) {
-      getServicesInjector().getMessageBroker().setApplicationError(appEx.getMessage());
+      final MessageBroker messageBroker=getCurrentSession().getAuthenticationSession().getMessageBroker();
+      messageBroker.setApplicationError(appEx.getMessage());
       return null;
     }
     throw ex;

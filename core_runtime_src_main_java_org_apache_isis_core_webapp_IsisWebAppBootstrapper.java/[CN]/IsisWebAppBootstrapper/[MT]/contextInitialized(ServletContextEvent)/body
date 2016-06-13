@@ -12,9 +12,9 @@
     final IsisConfigurationDefault isisConfiguration=isisConfigurationBuilder.getConfiguration();
     final DeploymentCategory deploymentCategory=deploymentType.getDeploymentCategory();
     final IsisInjectModule isisModule=new IsisInjectModule(deploymentCategory,isisConfiguration);
-    this.injector=Guice.createInjector(isisModule);
-    final IsisSystem system=injector.getInstance(IsisSystem.class);
-    servletContext.setAttribute(WebAppConstants.ISIS_SYSTEM_KEY,system);
+    final Injector injector=Guice.createInjector(isisModule);
+    injector.injectMembers(this);
+    servletContext.setAttribute(WebAppConstants.ISIS_SESSION_FACTORY,isisSessionFactory);
   }
  catch (  final RuntimeException e) {
     LOG.error("startup failed",e);

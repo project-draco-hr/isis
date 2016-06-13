@@ -9,12 +9,12 @@
     }
   }
   final ServletContext servletContext=getServletContext(httpServletRequest);
-  final IsisSystem system=(IsisSystem)servletContext.getAttribute(WebAppConstants.ISIS_SYSTEM_KEY);
-  if (system == null) {
+  final IsisSessionFactory sessionFactory=(IsisSessionFactory)servletContext.getAttribute(WebAppConstants.ISIS_SESSION_FACTORY);
+  if (sessionFactory == null) {
     return null;
   }
-  final LogonFixture logonFixture=system.getSessionFactory().getLogonFixture();
-  if (system.getDeploymentCategory().isExploring()) {
+  final LogonFixture logonFixture=sessionFactory.getLogonFixture();
+  if (sessionFactory.getDeploymentCategory().isExploring()) {
     authSession=authenticationManager.authenticate(new AuthenticationRequestExploration(logonFixture));
     if (authSession != null) {
       return authSession;

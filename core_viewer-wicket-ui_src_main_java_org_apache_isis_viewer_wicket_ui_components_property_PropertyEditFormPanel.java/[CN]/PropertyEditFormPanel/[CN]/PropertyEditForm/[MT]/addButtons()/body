@@ -10,7 +10,8 @@
       }
  else {
         final StringBuilder builder=new StringBuilder();
-        String errorMessagesIfAny=JGrowlUtil.asJGrowlCalls(getServicesInjector().getMessageBroker());
+        final MessageBroker messageBroker=getIsisSessionFactory().getCurrentSession().getAuthenticationSession().getMessageBroker();
+        String errorMessagesIfAny=JGrowlUtil.asJGrowlCalls(messageBroker);
         builder.append(errorMessagesIfAny);
         String buf=builder.toString();
         target.appendJavaScript(buf);

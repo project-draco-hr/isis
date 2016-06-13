@@ -1,0 +1,55 @@
+{
+  if (initialized) {
+    throw new IllegalStateException("Already initialized");
+  }
+  initialized=true;
+  LOG.info("initialising Isis System");
+  LOG.info("working directory: " + new File(".").getAbsolutePath());
+  final IsisConfigurationDefault configuration=componentProvider.getConfiguration();
+  LOG.info("resource stream source: " + configuration.getResourceStreamSource());
+  localeInitializer.initLocale(configuration);
+  timeZoneInitializer.initTimeZone(configuration);
+  if (!getDeploymentCategory().isProduction() && !Clock.isInitialized()) {
+    FixtureClock.initialize();
+  }
+  IsisSessionFactory isisSessionFactory;
+  try {
+    final ServicesInjector servicesInjector=componentProvider.provideServiceInjector(configuration);
+    servicesInjector.addFallbackIfRequired(DeploymentCategoryProvider.class,new DeploymentCategoryProviderDefault(deploymentCategory));
+    servicesInjector.addFallbackIfRequired(ConfigurationServiceInternal.class,configuration);
+    servicesInjector.addFallbackIfRequired(FixtureScripts.class,new FixtureScriptsDefault());
+    final AuthenticationManager authenticationManager=componentProvider.provideAuthenticationManager();
+    servicesInjector.addFallbackIfRequired(AuthenticationManager.class,authenticationManager);
+    final AuthorizationManager authorizationManager=componentProvider.provideAuthorizationManager();
+    servicesInjector.addFallbackIfRequired(AuthorizationManager.class,authorizationManager);
+    final Collection<MetaModelRefiner> metaModelRefiners=refiners(authenticationManager,authorizationManager,new PersistenceSessionFactoryMetamodelRefiner());
+    final SpecificationLoader specificationLoader=componentProvider.provideSpecificationLoader(servicesInjector,metaModelRefiners);
+    servicesInjector.addFallbackIfRequired(SpecificationLoader.class,specificationLoader);
+    final PersistenceSessionFactory persistenceSessionFactory=new PersistenceSessionFactory(configuration);
+    servicesInjector.addFallbackIfRequired(PersistenceSessionFactory.class,persistenceSessionFactory);
+    servicesInjector.validateServices();
+    isisSessionFactory=new IsisSessionFactory(deploymentCategory,servicesInjector);
+    servicesInjector.addFallbackIfRequired(IsisSessionFactory.class,isisSessionFactory);
+    servicesInjector.autowire();
+    IsisContext.setSessionFactory(isisSessionFactory);
+    try {
+      specificationLoader.init();
+      specificationLoader.validateAndAssert();
+      authenticationManager.init();
+      authorizationManager.init();
+      persistenceSessionFactory.init(specificationLoader);
+      isisSessionFactory.constructServices();
+    }
+ catch (    final MetaModelInvalidException ex) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Meta model invalid",ex);
+      }
+      IsisContext.setMetaModelInvalidException(ex);
+    }
+  }
+ catch (  final IsisSystemException ex) {
+    LOG.error("failed to initialise",ex);
+    throw new RuntimeException(ex);
+  }
+  return isisSessionFactory;
+}

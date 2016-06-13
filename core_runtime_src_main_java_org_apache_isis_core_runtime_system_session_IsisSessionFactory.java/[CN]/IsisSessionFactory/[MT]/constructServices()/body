@@ -34,10 +34,12 @@
       }
     }
     final TranslationService translationService=servicesInjector.lookupServiceElseFail(TranslationService.class);
-    final String context=IsisSystem.class.getName();
-    translationService.translate(context,IsisSystem.MSG_ARE_YOU_SURE);
-    translationService.translate(context,IsisSystem.MSG_CONFIRM);
-    translationService.translate(context,IsisSystem.MSG_CANCEL);
+    final String context=IsisSessionFactoryBuilder.class.getName();
+    final MessageRegistry messageRegistry=new MessageRegistry();
+    final List<String> messages=messageRegistry.listMessages();
+    for (    String message : messages) {
+      translationService.translate(context,message);
+    }
   }
   finally {
     closeSession();
