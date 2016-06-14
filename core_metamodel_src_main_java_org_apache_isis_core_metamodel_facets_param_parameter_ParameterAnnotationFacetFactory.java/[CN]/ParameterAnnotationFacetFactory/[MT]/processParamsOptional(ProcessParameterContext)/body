@@ -8,17 +8,25 @@
     final Class<?> parameterType=parameterTypes[paramNum];
     if (parameterAnnotation instanceof Optional) {
       final Optional annotation=(Optional)parameterAnnotation;
-      final Facet facet=MandatoryFacetInvertedByOptionalAnnotationOnParameter.create(annotation,parameterType,holder);
-      FacetUtil.addFacet(optionalValidator.flagIfPresent(facet,processParameterContext));
-      return;
+      FacetUtil.addFacet(optionalValidator.flagIfPresent(MandatoryFacetInvertedByOptionalAnnotationOnParameter.create(annotation,parameterType,holder),processParameterContext));
+    }
+  }
+  for (  final Annotation parameterAnnotation : parameterAnnotations) {
+    final Class<?> parameterType=parameterTypes[paramNum];
+    if (parameterAnnotation instanceof javax.annotation.Nullable) {
+      final Nullable annotation=(Nullable)parameterAnnotation;
+      final MandatoryFacet facet=MandatoryFacetInvertedByNullableAnnotationOnParameter.create(annotation,parameterType,holder);
+      FacetUtil.addFacet(facet);
+      conflictingOptionalityValidator.flagIfConflict(facet,"Conflicting @Nullable with other optionality annotation");
     }
   }
   for (  final Annotation parameterAnnotation : parameterAnnotations) {
     if (parameterAnnotation instanceof Parameter) {
       final Parameter parameter=(Parameter)parameterAnnotation;
       final Class<?> parameterType=parameterTypes[paramNum];
-      FacetUtil.addFacet(MandatoryFacetForParameterAnnotation.create(parameter,parameterType,holder));
-      return;
+      final MandatoryFacet facet=MandatoryFacetForParameterAnnotation.create(parameter,parameterType,holder);
+      FacetUtil.addFacet(facet);
+      conflictingOptionalityValidator.flagIfConflict(facet,"Conflicting @Parameter#optionality with other optionality annotation");
     }
   }
 }

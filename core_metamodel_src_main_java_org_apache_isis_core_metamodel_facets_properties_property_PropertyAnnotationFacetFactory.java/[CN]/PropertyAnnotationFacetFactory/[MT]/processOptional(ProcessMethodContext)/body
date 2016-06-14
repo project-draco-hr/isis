@@ -2,14 +2,17 @@
   final Method method=processMethodContext.getMethod();
   final FacetHolder holder=processMethodContext.getFacetHolder();
   final Optional optionalAnnotation=Annotations.getAnnotation(method,Optional.class);
-  MandatoryFacet facet=optionalValidator.flagIfPresent(MandatoryFacetInvertedByOptionalAnnotationOnProperty.create(optionalAnnotation,method,holder),processMethodContext);
+  FacetUtil.addFacet(optionalValidator.flagIfPresent(MandatoryFacetInvertedByOptionalAnnotationOnProperty.create(optionalAnnotation,method,holder),processMethodContext));
   final Mandatory mandatoryAnnotation=Annotations.getAnnotation(method,Mandatory.class);
-  if (facet == null) {
-    facet=mandatoryValidator.flagIfPresent(MandatoryFacetForMandatoryAnnotationOnProperty.create(mandatoryAnnotation,holder),processMethodContext);
-  }
-  final Property property=Annotations.getAnnotation(method,Property.class);
-  if (facet == null) {
-    facet=MandatoryFacetForPropertyAnnotation.create(property,method,holder);
-  }
+  final MandatoryFacet facet=mandatoryValidator.flagIfPresent(MandatoryFacetForMandatoryAnnotationOnProperty.create(mandatoryAnnotation,holder),processMethodContext);
   FacetUtil.addFacet(facet);
+  conflictingOptionalityValidator.flagIfConflict(facet,"Conflicting @Mandatory with other optionality annotation");
+  final Nullable nullableAnnotation=Annotations.getAnnotation(method,Nullable.class);
+  final MandatoryFacet facet2=MandatoryFacetInvertedByNullableAnnotationOnProperty.create(nullableAnnotation,method,holder);
+  FacetUtil.addFacet(facet2);
+  conflictingOptionalityValidator.flagIfConflict(facet2,"Conflicting @Nullable with other optionality annotation");
+  final Property property=Annotations.getAnnotation(method,Property.class);
+  final MandatoryFacet facet3=MandatoryFacetForPropertyAnnotation.create(property,method,holder);
+  FacetUtil.addFacet(facet3);
+  conflictingOptionalityValidator.flagIfConflict(facet3,"Conflicting Property#optionality with other optionality annotation");
 }
