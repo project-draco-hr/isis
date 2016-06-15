@@ -1,0 +1,10 @@
+{
+  final Method actionMethod=processMethodContext.getMethod();
+  final String capitalizedName=StringExtensions.asCapitalizedName(actionMethod.getName());
+  if (!capitalizedName.startsWith(EXPLORATION_PREFIX)) {
+    return;
+  }
+  final FacetHolder facetedMethod=processMethodContext.getFacetHolder();
+  final Facet facet=new PrototypeFacetViaExplorationPrefixNamingConvention(facetedMethod,getDeploymentCategory());
+  FacetUtil.addFacet(explorationValidator.flagIfPresent(facet,processMethodContext));
+}
