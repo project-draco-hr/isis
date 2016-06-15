@@ -1,0 +1,17 @@
+{
+  if (futures == null) {
+    return null;
+  }
+  final long t0=System.currentTimeMillis();
+  try {
+    final List<Object> returnValues=Lists.newArrayList();
+    for (    Future<Object> future : futures) {
+      returnValues.add(join(future));
+    }
+    return returnValues;
+  }
+  finally {
+    final long t1=System.currentTimeMillis();
+    LOG.info("join'ing {} tasks: waited {} milliseconds ",futures.size(),(t1 - t0));
+  }
+}
