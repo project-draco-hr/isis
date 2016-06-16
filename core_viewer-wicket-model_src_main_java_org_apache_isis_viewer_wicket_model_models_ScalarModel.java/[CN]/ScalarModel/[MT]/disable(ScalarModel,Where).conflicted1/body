@@ -1,3 +1,11 @@
 {
-  return null;
+  final ObjectAdapter parentAdapter=scalarModel.parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.CHECK,scalarModel.getPersistenceSession(),scalarModel.getSpecificationLoader());
+  final OneToOneAssociation property=scalarModel.getPropertyMemento().getProperty(scalarModel.getSpecificationLoader());
+  try {
+    final Consent usable=property.isUsable(parentAdapter,InteractionInitiatedBy.USER,where);
+    return usable.isAllowed() ? null : usable.getReason();
+  }
+ catch (  final Exception ex) {
+    return ex.getLocalizedMessage();
+  }
 }
