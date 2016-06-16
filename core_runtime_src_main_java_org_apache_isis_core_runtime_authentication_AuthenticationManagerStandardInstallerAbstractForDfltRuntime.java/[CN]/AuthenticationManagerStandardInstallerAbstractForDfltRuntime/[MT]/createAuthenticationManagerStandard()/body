@@ -1,3 +1,7 @@
 {
-  return new AuthenticationManagerStandardForDfltRuntime(getConfiguration());
+  final IsisConfiguration configuration=getConfiguration();
+  final AuthenticationManagerStandard authenticationManager=new AuthenticationManagerStandard(configuration);
+  authenticationManager.addAuthenticatorToStart(new ExplorationAuthenticator(configuration));
+  authenticationManager.addAuthenticatorToStart(new LogonFixtureAuthenticator(configuration));
+  return authenticationManager;
 }

@@ -2,7 +2,9 @@
   init(RepresentationType.HOME_PAGE,Where.NOWHERE,RepresentationService.Intent.NOT_APPLICABLE);
   final HomePageReprRenderer renderer=new HomePageReprRenderer(getResourceContext(),null,JsonRepresentation.newMap());
   renderer.includesSelf();
-  getAuthenticationManager().closeSession(getResourceContext().getAuthenticationSession());
+  final AuthenticationSession authenticationSession=getResourceContext().getAuthenticationSession();
+  getAuthenticationManager().closeSession(authenticationSession);
+  getIsisSessionFactory().closeSession();
   try {
     final URI location=new URI("?" + IsisSessionFilter.QUERY_STRING_FORCE_LOGOUT);
     return Response.temporaryRedirect(location).build();
