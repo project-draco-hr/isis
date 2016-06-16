@@ -2,7 +2,10 @@
   if (contributed.isIncluded() && !contributeeAndMixedInActionsAdded) {
 synchronized (this.objectActions) {
       final List<ObjectAction> actions=Lists.newArrayList(this.objectActions);
-      if (containsDoOpFacet(MixinFacet.class) || containsDoOpFacet(DomainServiceFacet.class)) {
+      final boolean containsMixin=containsDoOpFacet(MixinFacet.class);
+      final boolean containsDomainService=containsDoOpFacet(DomainServiceFacet.class);
+      final boolean isService=isService();
+      if (containsMixin || containsDomainService || isService) {
       }
  else {
         actions.addAll(createContributeeActions());
