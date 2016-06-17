@@ -1,81 +1,10 @@
 {
-  final CommandContext commandContext=getCommandContext();
-  final Command command=commandContext.getCommand();
-  final InteractionContext interactionContext=getInteractionContext();
-  final Interaction interaction=interactionContext.getInteraction();
-  final String actionId=owningAction.getIdentifier().toClassAndNameIdentityString();
-  final ObjectAdapter returnedAdapter;
-  if (command.getExecutor() == Command.Executor.USER && command.getExecuteIn() == org.apache.isis.applib.annotation.Command.ExecuteIn.BACKGROUND) {
-    final CommandService commandService=getCommandService();
-    if (!commandService.persistIfPossible(command)) {
-      throw new IsisException(String.format("Unable to persist command for action '%s'; CommandService does not support persistent commands ",actionId));
-    }
-    returnedAdapter=getAdapterManager().adapterFor(command);
-  }
- else {
-    final ObjectAdapter mixinElseRegularAdapter=mixedInAdapter != null ? mixedInAdapter : targetAdapter;
-    owningAction.setupBulkActionInvocationContext(mixinElseRegularAdapter);
-    final Object mixinElseRegularPojo=ObjectAdapter.Util.unwrap(mixinElseRegularAdapter);
-    final List<ObjectAdapter> argumentAdapterList=Arrays.asList(argumentAdapters);
-    final List<Object> argumentPojos=ObjectAdapter.Util.unwrap(argumentAdapterList);
-    final String targetMember=targetNameFor(owningAction,mixedInAdapter);
-    final String targetClass=CommandUtil.targetClassNameFor(mixinElseRegularAdapter);
-    final Interaction.ActionInvocation execution=new Interaction.ActionInvocation(interaction,actionId,mixinElseRegularPojo,argumentPojos,targetMember,targetClass);
-    final Interaction.MemberExecutor<Interaction.ActionInvocation> callable=new Interaction.MemberExecutor<Interaction.ActionInvocation>(){
-      @Override public Object execute(      final Interaction.ActionInvocation currentExecution){
-        try {
-          final ActionInvocationDto invocationDto=getInteractionDtoServiceInternal().asActionInvocationDto(owningAction,mixinElseRegularAdapter,argumentAdapterList);
-          currentExecution.setDto(invocationDto);
-          final Timestamp startedAt=getClockService().nowAsJavaSqlTimestamp();
-          execution.setStartedAt(startedAt);
-          if (command.getStartedAt() == null) {
-            command.setStartedAt(startedAt);
-          }
-          final ActionDomainEvent<?> event=domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTING,eventType,null,owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,null);
-          currentExecution.setEvent(event);
-          final Object resultPojo=invokeMethodElseFromCache(targetAdapter,argumentAdapters);
-          final ObjectAdapter resultAdapterPossiblyCloned=cloneIfViewModelCloneable(resultPojo,mixinElseRegularAdapter);
-          domainEventHelper.postEventForAction(AbstractDomainEvent.Phase.EXECUTED,eventType,verify(event),owningAction,owningAction,targetAdapter,mixedInAdapter,argumentAdapters,command,resultAdapterPossiblyCloned);
-          return ObjectAdapter.Util.unwrap(resultAdapterPossiblyCloned);
-        }
- catch (        IllegalAccessException ex) {
-          throw new ReflectiveActionException("Illegal access of " + method,ex);
-        }
-catch (        InvocationTargetException ex) {
-          final Throwable targetException=ex.getTargetException();
-          if (targetException instanceof IllegalStateException) {
-            throw new ReflectiveActionException(String.format("IllegalStateException thrown while executing %s %s",method,targetException.getMessage()),targetException);
-          }
-          if (targetException instanceof RecoverableException) {
-            if (!getTransactionState().canCommit()) {
-              final Throwable targetExceptionCause=targetException.getCause();
-              Throwable nonRecoverableCause=targetExceptionCause != null ? targetExceptionCause : targetException;
-              final String message=trim(nonRecoverableCause.getMessage(),300);
-              throw new NonRecoverableException(message,nonRecoverableCause);
-            }
-          }
-          ThrowableExtensions.throwWithinIsisException(ex,"Exception executing " + method);
-          return null;
-        }
-      }
-    }
-;
-    interaction.execute(callable,execution);
-    final Interaction.Execution<ActionInvocationDto,?> priorExecution=interaction.getPriorExecution();
-    final Exception executionExceptionIfAny=priorExecution.getThrew();
-    if (executionExceptionIfAny != null) {
-      throw executionExceptionIfAny instanceof RuntimeException ? ((RuntimeException)executionExceptionIfAny) : new RuntimeException(executionExceptionIfAny);
-    }
-    final Object returnedPojo=priorExecution.getReturned();
-    returnedAdapter=adapterManager.adapterFor(returnedPojo);
-    getInteractionDtoServiceInternal().updateResult(priorExecution.getDto(),owningAction,returnedPojo);
-    setCommandResultIfEntity(command,returnedAdapter);
-    final PublishedActionFacet publishedActionFacet=getIdentified().getFacet(PublishedActionFacet.class);
-    if (publishedActionFacet != null) {
-      final IdentifiedHolder identifiedHolder=getIdentified();
-      final List<ObjectAdapter> parameterAdapters=Arrays.asList(argumentAdapters);
-      getPublishingServiceInternal().publishAction(priorExecution,owningAction,identifiedHolder,targetAdapter,parameterAdapters,returnedAdapter);
+  final ObjectAdapter[] holder=new ObjectAdapter[1];
+  getPersistenceSessionServiceInternal().executeWithinTransaction(new TransactionalClosure(){
+    @Override public void execute(){
+      holder[0]=doInvoke(owningAction,targetAdapter,mixedInAdapter,argumentAdapters,interactionInitiatedBy);
     }
   }
-  return filteredIfRequired(returnedAdapter,interactionInitiatedBy);
+);
+  return holder[0];
 }
