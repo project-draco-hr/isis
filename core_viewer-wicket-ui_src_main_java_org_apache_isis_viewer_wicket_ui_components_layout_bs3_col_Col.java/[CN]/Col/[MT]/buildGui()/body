@@ -131,7 +131,8 @@ final RepeatingViewWithDynamicallyVisibleContent collectionRv=new RepeatingViewW
 for (CollectionLayoutData collection : collections) {
 final String id=collectionRv.newChildId();
 final EntityModel entityModelWithHints=getModel().cloneWithLayoutMetadata(collection);
-final EntityCollectionPanel collectionPanel=new EntityCollectionPanel(id,entityModelWithHints);
+final ComponentFactory componentFactory=getComponentFactoryRegistry().findComponentFactory(ComponentType.ENTITY_COLLECTION,entityModelWithHints);
+final Component collectionPanel=componentFactory.createComponent(id,entityModelWithHints);
 collectionRv.add(collectionPanel);
 }
 div.add(collectionRv);
