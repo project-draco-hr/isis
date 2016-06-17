@@ -1,15 +1,3 @@
 {
-  final ObjectAdapter adapter=entityCollectionModel.getParentObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK,entityCollectionModel.getPersistenceSession(),entityCollectionModel.getSpecificationLoader());
-  final OneToManyAssociation collection=entityCollectionModel.collectionMemento.getCollection(entityCollectionModel.getSpecificationLoader());
-  final ObjectAdapter collectionAsAdapter=collection.get(adapter,InteractionInitiatedBy.USER);
-  final List<Object> objectList=asIterable(collectionAsAdapter);
-  final Class<? extends Comparator<?>> sortedBy=entityCollectionModel.sortedBy;
-  if (sortedBy != null) {
-    @SuppressWarnings("unchecked") final Comparator<Object> comparator=(Comparator<Object>)InstanceUtil.createInstance(sortedBy);
-    entityCollectionModel.getIsisSessionFactory().getServicesInjector().injectServicesInto(comparator);
-    Collections.sort(objectList,comparator);
-  }
-  final Iterable<ObjectAdapter> adapterIterable=Iterables.transform(objectList,ObjectAdapter.Functions.adapterForUsing(entityCollectionModel.getPersistenceSession()));
-  final List<ObjectAdapter> adapterList=Lists.newArrayList(adapterIterable);
-  return adapterList;
+  return Lists.newArrayList(Iterables.filter(Iterables.transform(entityCollectionModel.mementoList,ObjectAdapterMemento.Functions.fromMemento(ConcurrencyChecking.NO_CHECK,entityCollectionModel.getPersistenceSession(),entityCollectionModel.getSpecificationLoader())),Predicates.notNull()));
 }
