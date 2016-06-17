@@ -6,7 +6,12 @@
   final AuthenticationToken token=asAuthenticationToken(request);
   final Subject currentSubject=SecurityUtils.getSubject();
   if (currentSubject.isAuthenticated()) {
-    currentSubject.logout();
+    if (autoLogout) {
+      currentSubject.logout();
+    }
+ else {
+      return authenticationSessionFor(request,code,token,currentSubject);
+    }
   }
   try {
     currentSubject.login(token);
@@ -35,7 +40,5 @@ catch (  AuthenticationException ae) {
     LOG.error("Unable to authenticate",ae);
     return null;
   }
-  List<String> roles=getRoles(currentSubject,token);
-  roles.addAll(request.getRoles());
-  return new SimpleSession(request.getName(),roles,code);
+  return authenticationSessionFor(request,code,token,currentSubject);
 }
