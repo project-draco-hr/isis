@@ -1,6 +1,9 @@
 {
-  if (IsisContext.getMetaModelInvalidExceptionIfAny() != null) {
-    fail("Metamodel invalid");
+  final MetaModelInvalidException mmie=IsisContext.getMetaModelInvalidExceptionIfAny();
+  if (mmie != null) {
+    final Set<String> validationErrors=mmie.getValidationErrors();
+    final String validationMsg=Joiner.on("\n").join(validationErrors);
+    fail(validationMsg);
     return;
   }
   boolean firstTime=isisSessionFactory == null;
