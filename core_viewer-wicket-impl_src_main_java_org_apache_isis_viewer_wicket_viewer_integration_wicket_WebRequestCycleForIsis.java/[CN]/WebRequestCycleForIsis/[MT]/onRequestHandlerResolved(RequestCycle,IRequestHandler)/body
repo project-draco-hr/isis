@@ -1,0 +1,13 @@
+{
+  final MetaModelInvalidException mmie=IsisContext.getMetaModelInvalidExceptionIfAny();
+  if (mmie != null) {
+    if (handler instanceof RenderPageRequestHandler) {
+      RenderPageRequestHandler requestHandler=(RenderPageRequestHandler)handler;
+      final IRequestablePage nextPage=requestHandler.getPage();
+      if (nextPage instanceof ErrorPage || nextPage instanceof MmvErrorPage) {
+        return;
+      }
+      throw mmie;
+    }
+  }
+}

@@ -35,10 +35,6 @@
     try {
       specificationLoader.init();
       specificationLoader.validateAndAssert();
-      authenticationManager.init(deploymentCategory);
-      authorizationManager.init(deploymentCategory);
-      persistenceSessionFactory.init(specificationLoader);
-      isisSessionFactory.constructServices();
     }
  catch (    final MetaModelInvalidException ex) {
       if (LOG.isDebugEnabled()) {
@@ -46,6 +42,10 @@
       }
       IsisContext.setMetaModelInvalidException(ex);
     }
+    authenticationManager.init(deploymentCategory);
+    authorizationManager.init(deploymentCategory);
+    persistenceSessionFactory.init(specificationLoader);
+    isisSessionFactory.constructServices();
   }
  catch (  final IsisSystemException ex) {
     LOG.error("failed to initialise",ex);
