@@ -1,0 +1,18 @@
+{
+  if (domainObject == null) {
+    return null;
+  }
+  final Class<?> repositoryClass=domainObject.autoCompleteRepository();
+  if (repositoryClass == null || repositoryClass == Object.class) {
+    return null;
+  }
+  final String actionName=domainObject.autoCompleteAction();
+  if (!isServiceType(cls,"@DomainObject",repositoryClass)) {
+    return null;
+  }
+  final Method repositoryMethod=findRepositoryMethod(cls,"@DomainObject",repositoryClass,actionName);
+  if (repositoryMethod == null) {
+    return null;
+  }
+  return new AutoCompleteFacetForDomainObjectAnnotation(facetHolder,repositoryClass,repositoryMethod,servicesInjector);
+}

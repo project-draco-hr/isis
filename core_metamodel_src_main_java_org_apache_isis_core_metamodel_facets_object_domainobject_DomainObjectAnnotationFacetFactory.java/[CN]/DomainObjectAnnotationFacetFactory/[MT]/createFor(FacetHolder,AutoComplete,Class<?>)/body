@@ -1,0 +1,15 @@
+{
+  if (annotation == null) {
+    return null;
+  }
+  final Class<?> repositoryClass=annotation.repository();
+  final String actionName=annotation.action();
+  if (!isServiceType(cls,"@AutoComplete",repositoryClass)) {
+    return null;
+  }
+  final Method repositoryMethod=findRepositoryMethod(cls,"@AutoComplete",repositoryClass,actionName);
+  if (repositoryMethod == null) {
+    return null;
+  }
+  return new AutoCompleteFacetForAutoCompleteAnnotation(facetHolder,repositoryClass,repositoryMethod,servicesInjector);
+}

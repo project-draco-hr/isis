@@ -24,16 +24,18 @@
       entityLink.setRequired(getModel().isRequired());
       select2Field=Select2ChoiceUtil.newSelect2Choice(ID_AUTO_COMPLETE,model,getModel());
       setProviderAndCurrAndPending(select2Field,getModel().getActionArgsHint());
-      if (!getModel().hasChoices()) {
-        final Settings settings=select2Field.getSettings();
+      final Settings settings=select2Field.getSettings();
+      if (getModel().hasChoices()) {
+        settings.setPlaceholder(getModel().getName());
+      }
+ else       if (getModel().hasAutoComplete()) {
         final int minLength=getModel().getAutoCompleteMinLength();
         settings.setMinimumInputLength(minLength);
         settings.setPlaceholder(getModel().getName());
       }
-      if (hasObjectAutoComplete()) {
+ else       if (hasObjectAutoComplete()) {
         final ObjectSpecification typeOfSpecification=getModel().getTypeOfSpecification();
         final AutoCompleteFacet autoCompleteFacet=typeOfSpecification.getFacet(AutoCompleteFacet.class);
-        final Settings settings=select2Field.getSettings();
         final int minLength=autoCompleteFacet.getMinLength();
         settings.setMinimumInputLength(minLength);
       }

@@ -1,11 +1,11 @@
 {
   final Class<?> cls=processClassContext.getCls();
-  final DomainObject domainObject=Annotations.getAnnotation(cls,DomainObject.class);
   final FacetHolder facetHolder=processClassContext.getFacetHolder();
-  final AutoComplete annotation=Annotations.getAnnotation(processClassContext.getCls(),AutoComplete.class);
-  Facet facet=autoCompleteValidator.flagIfPresent(AutoCompleteFacetForAutoCompleteAnnotation.create(annotation,facetHolder,servicesInjector));
+  final AutoComplete autoCompleteAnnot=Annotations.getAnnotation(cls,AutoComplete.class);
+  Facet facet=autoCompleteValidator.flagIfPresent(createFor(facetHolder,autoCompleteAnnot,cls));
   if (facet == null) {
-    facet=AutoCompleteFacetForDomainObjectAnnotation.create(domainObject,facetHolder,servicesInjector);
+    final DomainObject domainObjectAnnot=Annotations.getAnnotation(cls,DomainObject.class);
+    facet=createFor(domainObjectAnnot,facetHolder,cls);
   }
   FacetUtil.addFacet(facet);
 }

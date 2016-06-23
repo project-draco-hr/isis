@@ -1,0 +1,13 @@
+{
+  final Method[] methods=repositoryClass.getMethods();
+  for (  Method method : methods) {
+    if (method.getName().equals(methodName)) {
+      final Class<?>[] parameterTypes=method.getParameterTypes();
+      if (parameterTypes.length == 1 && parameterTypes[0].equals(String.class)) {
+        return method;
+      }
+    }
+  }
+  autoCompleteInvalid.addFailure("%s annotation on %s specifies action '%s' that does not exist in repository '%s'",annotationName,cls.getName(),methodName,repositoryClass.getName());
+  return null;
+}
