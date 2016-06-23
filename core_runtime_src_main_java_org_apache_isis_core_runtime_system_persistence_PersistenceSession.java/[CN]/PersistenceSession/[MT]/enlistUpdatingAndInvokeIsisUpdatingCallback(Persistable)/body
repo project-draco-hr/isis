@@ -9,8 +9,11 @@
   if (adapter.isTransient()) {
     return;
   }
-  CallbackFacet.Util.callCallback(adapter,UpdatingCallbackFacet.class);
-  postLifecycleEventIfRequired(adapter,UpdatingLifecycleEventFacet.class);
+  final boolean wasAlreadyEnlisted=changedObjectsServiceInternal.isEnlisted(adapter);
   changedObjectsServiceInternal.enlistUpdating(adapter);
+  if (!wasAlreadyEnlisted) {
+    CallbackFacet.Util.callCallback(adapter,UpdatingCallbackFacet.class);
+    postLifecycleEventIfRequired(adapter,UpdatingLifecycleEventFacet.class);
+  }
   ensureRootObject(pojo);
 }
