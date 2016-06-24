@@ -1,4 +1,8 @@
 {
   super(resourceStreamSource);
-  addStandardProperties();
+  final Map<String,String> map=Maps.newHashMap();
+  AppManifest.Util.withJavaxJdoRunInMemoryProperties(map);
+  AppManifest.Util.withDataNucleusProperties(map);
+  AppManifest.Util.withIsisIntegTestProperties(map);
+  add(asProperties(map),ContainsPolicy.IGNORE);
 }
