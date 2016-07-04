@@ -1,0 +1,12 @@
+{
+  final List<SimpleObject> all=Lists.newArrayList();
+  context.checking(new Expectations(){
+{
+      oneOf(mockRepositoryService).allInstances(SimpleObject.class);
+      will(returnValue(all));
+    }
+  }
+);
+  final List<SimpleObject> list=simpleObjectRepository.listAll();
+  assertThat(list).isEqualTo(all);
+}
