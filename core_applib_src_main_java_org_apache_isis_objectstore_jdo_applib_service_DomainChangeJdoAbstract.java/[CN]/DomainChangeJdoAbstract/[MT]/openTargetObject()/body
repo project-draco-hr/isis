@@ -1,3 +1,12 @@
 {
-  return Util.lookupBookmark(getTarget(),bookmarkService,container);
+  try {
+    return bookmarkService != null ? bookmarkService.lookup(getTarget(),BookmarkService2.FieldResetPolicy.DONT_RESET) : null;
+  }
+ catch (  RuntimeException ex) {
+    if (ex.getClass().getName().contains("ObjectNotFoundException")) {
+      messageService.warnUser("Object not found - has it since been deleted?");
+      return null;
+    }
+    throw ex;
+  }
 }
