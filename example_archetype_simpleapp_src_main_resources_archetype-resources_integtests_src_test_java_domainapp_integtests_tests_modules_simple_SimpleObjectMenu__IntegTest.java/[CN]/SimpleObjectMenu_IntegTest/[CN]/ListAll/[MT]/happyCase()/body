@@ -1,0 +1,9 @@
+{
+  RecreateSimpleObjects fs=new RecreateSimpleObjects();
+  fixtureScripts.runFixtureScript(fs,null);
+  transactionService.nextTransaction();
+  final List<SimpleObject> all=wrap(menu).listAll();
+  assertThat(all).hasSize(fs.getSimpleObjects().size());
+  SimpleObject simpleObject=wrap(all.get(0));
+  assertThat(simpleObject.getName()).isEqualTo(fs.getSimpleObjects().get(0).getName());
+}

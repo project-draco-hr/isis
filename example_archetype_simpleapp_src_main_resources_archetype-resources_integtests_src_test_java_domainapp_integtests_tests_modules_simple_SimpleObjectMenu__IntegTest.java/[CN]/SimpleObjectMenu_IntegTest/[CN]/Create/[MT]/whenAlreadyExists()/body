@@ -1,0 +1,10 @@
+{
+  FixtureScript fs=new SimpleObjectsTearDown();
+  fixtureScripts.runFixtureScript(fs,null);
+  transactionService.nextTransaction();
+  wrap(menu).create("Faz");
+  transactionService.nextTransaction();
+  expectedExceptions.expectCause(causalChainContains(SQLIntegrityConstraintViolationException.class));
+  wrap(menu).create("Faz");
+  transactionService.nextTransaction();
+}

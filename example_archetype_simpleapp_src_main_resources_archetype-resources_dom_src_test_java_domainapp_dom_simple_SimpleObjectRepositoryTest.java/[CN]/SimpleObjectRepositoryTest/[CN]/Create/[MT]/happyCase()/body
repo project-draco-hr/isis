@@ -1,0 +1,16 @@
+{
+  final String someName="Foobar";
+  final Sequence seq=context.sequence("create");
+  context.checking(new Expectations(){
+{
+      oneOf(mockServiceRegistry).injectServicesInto(with(any(SimpleObject.class)));
+      inSequence(seq);
+      oneOf(mockRepositoryService).persist(with(nameOf(someName)));
+      inSequence(seq);
+    }
+  }
+);
+  final SimpleObject obj=simpleObjectRepository.create(someName);
+  assertThat(obj).isNotNull();
+  assertThat(obj.getName()).isEqualTo(someName);
+}
