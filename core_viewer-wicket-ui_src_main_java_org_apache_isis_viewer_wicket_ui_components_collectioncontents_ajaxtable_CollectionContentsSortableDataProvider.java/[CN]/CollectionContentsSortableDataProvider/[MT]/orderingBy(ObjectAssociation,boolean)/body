@@ -3,10 +3,16 @@
     @Override public int compare(    final ObjectAdapter p,    final ObjectAdapter q){
       final ObjectAdapter pSort=sortProperty.get(p,InteractionInitiatedBy.FRAMEWORK);
       final ObjectAdapter qSort=sortProperty.get(q,InteractionInitiatedBy.FRAMEWORK);
-      Ordering<ObjectAdapter> naturalOrdering=ascending ? ORDERING_BY_NATURAL.nullsFirst() : ORDERING_BY_NATURAL.nullsLast();
+      Ordering<ObjectAdapter> naturalOrdering;
+      if (ascending) {
+        naturalOrdering=ORDERING_BY_NATURAL.nullsFirst();
+      }
+ else {
+        naturalOrdering=ORDERING_BY_NATURAL.reverse().nullsLast();
+      }
       return naturalOrdering.compare(pSort,qSort);
     }
   }
 ;
-  return ascending ? ordering : ordering.reverse();
+  return ordering;
 }
