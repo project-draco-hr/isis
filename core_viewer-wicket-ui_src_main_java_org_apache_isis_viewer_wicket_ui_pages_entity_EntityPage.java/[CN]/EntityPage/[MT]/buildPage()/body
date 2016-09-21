@@ -12,9 +12,9 @@
     throw new ObjectMember.AuthorizationException();
   }
   final ObjectSpecification objectSpec=model.getTypeOfSpecification();
-  final GridFacet facet=objectSpec.getFacet(GridFacet.class);
-  if (facet != null) {
-    final Grid unused=facet.getGrid();
+  final GridFacet gridFacet=objectSpec.getFacet(GridFacet.class);
+  if (gridFacet != null) {
+    final Grid unused=gridFacet.getGrid();
   }
   if (titleString == null) {
     final String titleStr=objectAdapter.titleString(null);
@@ -23,6 +23,11 @@
   WebMarkupContainer entityPageContainer=new WebMarkupContainer("entityPageContainer");
   CssClassAppender.appendCssClassTo(entityPageContainer,objectSpec.getFullIdentifier().replace('.','-'));
   CssClassAppender.appendCssClassTo(entityPageContainer,objectSpec.getCorrespondingClass().getSimpleName());
+  CssClassFacet cssClassFacet=objectSpec.getFacet(CssClassFacet.class);
+  if (cssClassFacet != null) {
+    final String cssClass=cssClassFacet.cssClass(objectAdapter);
+    CssClassAppender.appendCssClassTo(entityPageContainer,cssClass);
+  }
   themeDiv.addOrReplace(entityPageContainer);
   addChildComponents(entityPageContainer,model);
   bookmarkPage(model);
