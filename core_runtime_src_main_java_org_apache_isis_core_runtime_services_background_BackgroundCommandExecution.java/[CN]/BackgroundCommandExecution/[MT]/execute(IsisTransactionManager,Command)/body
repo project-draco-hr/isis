@@ -62,10 +62,10 @@
       }
  catch (      RuntimeException e) {
         backgroundCommand.setException(Throwables.getStackTraceAsString(e));
-        Exception unused=backgroundInteraction.getPriorExecution().getThrew();
-        backgroundInteraction.getCurrentExecution().setThrew(e);
+        transactionManager.getCurrentTransaction().clearAbortCauseAndContinue();
       }
-      backgroundCommand.setCompletedAt(backgroundInteraction.getPriorExecution().getCompletedAt());
+      final Interaction.Execution priorExecution=backgroundInteraction.getPriorExecution();
+      backgroundCommand.setCompletedAt(priorExecution.getCompletedAt());
     }
     private ObjectAction findObjectAction(    final ObjectAdapter targetAdapter,    final String actionId) throws RuntimeException {
       final ObjectSpecification specification=targetAdapter.getSpecification();
