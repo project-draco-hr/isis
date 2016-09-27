@@ -36,9 +36,7 @@
           if (interactionType == InteractionType.ACTION_INVOCATION) {
             final ActionDto actionDto=(ActionDto)memberDto;
             for (            OidDto targetOidDto : targetOidDtos) {
-              final Bookmark bookmark=Bookmark.from(targetOidDto);
-              final Object targetObject=bookmarkService.lookup(bookmark);
-              final ObjectAdapter targetAdapter=adapterFor(targetObject);
+              final ObjectAdapter targetAdapter=targetAdapterFor(targetOidDto);
               final ObjectAction objectAction=findObjectAction(targetAdapter,memberId);
               final ObjectAdapter[] argAdapters=argAdaptersFor(actionDto);
               final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,null,argAdapters,InteractionInitiatedBy.FRAMEWORK);
