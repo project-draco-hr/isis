@@ -2,10 +2,10 @@
   if (bookmark == null) {
     return null;
   }
-  try {
-    return persistenceSessionServiceInternal.lookup(bookmark,fieldResetPolicy);
+  final String objectType=bookmark.getObjectType();
+  final Object service=lookupService(objectType);
+  if (service != null) {
+    return service;
   }
- catch (  ObjectNotFoundException ex) {
-    return null;
-  }
+  return lookupInternal(bookmark,fieldResetPolicy);
 }
