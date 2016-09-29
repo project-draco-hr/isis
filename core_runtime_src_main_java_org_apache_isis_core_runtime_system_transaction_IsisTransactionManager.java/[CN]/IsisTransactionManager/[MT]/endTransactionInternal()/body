@@ -1,0 +1,67 @@
+{
+  final IsisTransaction transaction=getCurrentTransaction();
+  RuntimeException abortCause=this.getCurrentTransaction().getAbortCause();
+  if (transaction.getState().mustAbort()) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("endTransaction: aborting instead [EARLY TERMINATION], abort cause '{}' has been set",abortCause.getMessage());
+    }
+    try {
+      abortTransaction();
+      abortCause=this.getCurrentTransaction().getAbortCause();
+    }
+ catch (    RuntimeException ex) {
+      abortCause=ex;
+    }
+    if (abortCause != null) {
+      throw abortCause;
+    }
+ else {
+      return;
+    }
+  }
+  if ((transactionLevel - 1) == 0) {
+    if (abortCause == null) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("endTransaction: committing");
+      }
+      try {
+        getCurrentTransaction().preCommit();
+      }
+ catch (      Exception ex) {
+        abortCause=ex instanceof RuntimeException ? (RuntimeException)ex : new RuntimeException(ex);
+        getCurrentTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      }
+    }
+    if (abortCause == null) {
+      try {
+        persistenceSession.endTransaction();
+      }
+ catch (      Exception ex) {
+        abortCause=ex instanceof RuntimeException ? (RuntimeException)ex : new RuntimeException(ex);
+        getCurrentTransaction().setAbortCause(new IsisTransactionManagerException(ex));
+      }
+    }
+    transactionLevel=0;
+    if (abortCause != null) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("endTransaction: aborting instead, abort cause has been set");
+      }
+      try {
+        abortTransaction();
+      }
+ catch (      RuntimeException ex) {
+      }
+      throw abortCause;
+    }
+ else {
+      getCurrentTransaction().commit();
+    }
+  }
+ else   if (transactionLevel < 0) {
+    LOG.error("endTransaction: transactionLevel={}",transactionLevel);
+    transactionLevel=0;
+    IllegalStateException ex=new IllegalStateException(" no transaction running to end (transactionLevel < 0)");
+    getCurrentTransaction().setAbortCause(new IsisException(ex));
+    throw ex;
+  }
+}

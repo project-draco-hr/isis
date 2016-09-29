@@ -1,78 +1,30 @@
 {
-  if (LOG.isDebugEnabled()) {
-    LOG.debug("endTransaction: level " + (transactionLevel) + "->"+ (transactionLevel - 1));
-  }
   final IsisTransaction transaction=getCurrentTransaction();
-  if (transaction == null || transaction.getState().isComplete()) {
+  if (transaction == null) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("endTransaction: level {} (no transaction exists)",transactionLevel);
+    }
     return;
   }
-  RuntimeException abortCause=this.getCurrentTransaction().getAbortCause();
-  if (transaction.getState().mustAbort()) {
+ else   if (transaction.getState().isComplete()) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("endTransaction: aborting instead [EARLY TERMINATION], abort cause '" + abortCause.getMessage() + "' has been set");
+      LOG.debug("endTransaction: level {} (previous transaction completed)",transactionLevel);
     }
-    try {
-      abortTransaction();
-      abortCause=this.getCurrentTransaction().getAbortCause();
-    }
- catch (    RuntimeException ex) {
-      abortCause=ex;
-    }
-    if (abortCause != null) {
-      throw abortCause;
-    }
+    return;
+  }
  else {
-      return;
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("endTransaction: level {}->{}",transactionLevel,transactionLevel - 1);
     }
   }
-  transactionLevel--;
-  if (transactionLevel == 0) {
-    if (abortCause == null) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("endTransaction: committing");
-      }
-      try {
-        getCurrentTransaction().preCommit();
-      }
- catch (      RuntimeException ex) {
-        abortCause=ex;
-        transactionLevel=1;
-      }
-    }
-    if (abortCause == null) {
-      try {
-        persistenceSession.endTransaction();
-      }
- catch (      RuntimeException ex) {
-        abortCause=ex;
-        transactionLevel=1;
-        getCurrentTransaction().setAbortCause(new IsisTransactionManagerException(ex));
-      }
-    }
-    if (abortCause == null) {
-      try {
-        getCurrentTransaction().commit();
-      }
- catch (      RuntimeException ex) {
-        abortCause=ex;
-        transactionLevel=1;
-      }
-    }
-    if (abortCause != null) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("endTransaction: aborting instead, abort cause has been set");
-      }
-      try {
-        abortTransaction();
-      }
- catch (      RuntimeException ex) {
-      }
-      throw abortCause;
-    }
+  try {
+    endTransactionInternal();
   }
- else   if (transactionLevel < 0) {
-    LOG.error("endTransaction: transactionLevel=" + transactionLevel);
-    transactionLevel=0;
-    throw new IllegalStateException(" no transaction running to end (transactionLevel < 0)");
+  finally {
+    final IsisTransaction.State state=getCurrentTransaction().getState();
+    int transactionLevel=this.transactionLevel;
+    if (transactionLevel == 0 && !state.isComplete()) {
+      LOG.error("endTransaction: inconsistency detected between transactionLevel {} and transactionState '{}'",transactionLevel,state);
+    }
   }
 }
