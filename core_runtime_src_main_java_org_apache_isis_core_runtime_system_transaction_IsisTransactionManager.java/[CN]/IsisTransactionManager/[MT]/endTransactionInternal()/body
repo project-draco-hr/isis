@@ -19,7 +19,11 @@
       return;
     }
   }
-  if ((transactionLevel - 1) == 0) {
+  int nextTransactionLevel=transactionLevel - 1;
+  if (nextTransactionLevel > 0) {
+    transactionLevel--;
+  }
+ else   if (nextTransactionLevel == 0) {
     if (abortCause == null) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("endTransaction: committing");
@@ -57,7 +61,7 @@
       getCurrentTransaction().commit();
     }
   }
- else   if (transactionLevel < 0) {
+ else {
     LOG.error("endTransaction: transactionLevel={}",transactionLevel);
     transactionLevel=0;
     IllegalStateException ex=new IllegalStateException(" no transaction running to end (transactionLevel < 0)");
