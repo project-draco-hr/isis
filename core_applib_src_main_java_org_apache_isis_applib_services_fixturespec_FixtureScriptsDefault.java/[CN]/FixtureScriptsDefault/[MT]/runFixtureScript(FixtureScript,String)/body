@@ -1,3 +1,9 @@
 {
-  return super.runFixtureScript(fixtureScript,parameters);
+  try {
+    eventBusService.post(new FixturesInstallingEvent(this));
+    return super.runFixtureScript(fixtureScript,parameters);
+  }
+  finally {
+    eventBusService.post(new FixturesInstalledEvent(this));
+  }
 }

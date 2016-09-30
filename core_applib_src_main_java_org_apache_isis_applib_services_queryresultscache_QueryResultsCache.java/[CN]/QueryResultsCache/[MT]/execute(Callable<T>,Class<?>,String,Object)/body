@@ -1,4 +1,12 @@
 {
+  if (control.isFixturesInstalling()) {
+    try {
+      return callable.call();
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
   final Key cacheKey=new Key(callingClass,methodName,keys);
-  return execute(callable,cacheKey);
+  return executeWithCaching(callable,cacheKey);
 }
