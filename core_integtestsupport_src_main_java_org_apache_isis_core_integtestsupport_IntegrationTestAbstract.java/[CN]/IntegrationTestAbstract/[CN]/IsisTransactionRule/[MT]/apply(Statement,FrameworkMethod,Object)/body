@@ -10,6 +10,7 @@
         isft.nextSession();
       }
  catch (      final Throwable e) {
+        endTransactionTilDone();
         isft.nextSession();
         final List<Throwable> causalChain=Throwables.getCausalChain(e);
         for (        final Throwable cause : causalChain) {
@@ -18,6 +19,17 @@
           }
         }
         throw e;
+      }
+    }
+    protected void endTransactionTilDone(){
+      IsisTransactionManager tranMgr=isft.getIsisSessionFactory().getCurrentSession().getPersistenceSession().getTransactionManager();
+      int count=0;
+      while (tranMgr.getTransactionLevel() > 0 && count++ < 10) {
+        try {
+          tranMgr.endTransaction();
+        }
+ catch (        Exception ignore) {
+        }
       }
     }
   }
