@@ -20,8 +20,9 @@
       logonFixture=fixtureInstaller.getLogonFixture();
     }
     final List<Object> services=servicesInjector.getRegisteredServices();
+    final List<Object> copyOfServices=Lists.newArrayList(services);
     final TitleService titleService=servicesInjector.lookupServiceElseFail(TitleService.class);
-    for (    Object service : services) {
+    for (    Object service : copyOfServices) {
       final String unused=titleService.titleOf(service);
     }
     for (    final ObjectSpecification objSpec : servicesInjector.getSpecificationLoader().allSpecifications()) {
