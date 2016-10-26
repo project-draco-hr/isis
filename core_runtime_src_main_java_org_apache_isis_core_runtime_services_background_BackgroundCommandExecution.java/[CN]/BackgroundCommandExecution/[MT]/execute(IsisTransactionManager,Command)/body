@@ -40,7 +40,6 @@
               final ObjectAction objectAction=findObjectAction(targetAdapter,memberId);
               final ObjectAdapter[] argAdapters=argAdaptersFor(actionDto);
               final ObjectAdapter resultAdapter=objectAction.execute(targetAdapter,null,argAdapters,InteractionInitiatedBy.FRAMEWORK);
-              Object unused=backgroundInteraction.getPriorExecution().getReturned();
               if (resultAdapter != null) {
                 Bookmark resultBookmark=CommandUtil.bookmarkFor(resultAdapter);
                 backgroundCommand.setResult(resultBookmark);
@@ -65,7 +64,8 @@
         transactionManager.getCurrentTransaction().clearAbortCauseAndContinue();
       }
       final Interaction.Execution priorExecution=backgroundInteraction.getPriorExecution();
-      backgroundCommand.setCompletedAt(priorExecution.getCompletedAt());
+      final Timestamp completedAt=priorExecution != null ? priorExecution.getCompletedAt() : clockService.nowAsJavaSqlTimestamp();
+      backgroundCommand.setCompletedAt(completedAt);
     }
     private ObjectAction findObjectAction(    final ObjectAdapter targetAdapter,    final String actionId) throws RuntimeException {
       final ObjectSpecification specification=targetAdapter.getSpecification();
