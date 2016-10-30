@@ -1,0 +1,13 @@
+{
+  IsisConfigurationDefault cfg=new IsisConfigurationDefault(resourceStreamSourceChain);
+  final Set<String> keysToCopy=new HashSet<String>(Arrays.asList(Optional.of(keys).or(new String[0])));
+  Properties props=new Properties();
+  props.putAll(Maps.filterEntries(configuration.asMap(),new Predicate<Entry<String,String>>(){
+    @Override public boolean apply(    Entry<String,String> entry){
+      return keysToCopy.contains(entry.getKey());
+    }
+  }
+));
+  cfg.add(props,ContainsPolicy.OVERWRITE);
+  return cfg;
+}
