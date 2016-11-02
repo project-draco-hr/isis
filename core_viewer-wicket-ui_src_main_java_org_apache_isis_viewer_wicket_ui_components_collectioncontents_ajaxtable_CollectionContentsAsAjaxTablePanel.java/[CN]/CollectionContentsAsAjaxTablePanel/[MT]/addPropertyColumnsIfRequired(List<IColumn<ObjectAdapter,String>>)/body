@@ -8,7 +8,32 @@
   final ObjectSpecification parentSpecIfAny=getModel().isParented() ? getModel().getParentObjectAdapterMemento().getObjectAdapter(ConcurrencyChecking.NO_CHECK,getPersistenceSession(),getSpecificationLoader()).getSpecification() : null;
   @SuppressWarnings("unchecked") final Filter<ObjectAssociation> filter=Filters.and(ObjectAssociation.Filters.PROPERTIES,ObjectAssociation.Filters.staticallyVisible(whereContext),associationDoesNotReferenceParent(parentSpecIfAny));
   final List<? extends ObjectAssociation> propertyList=typeOfSpec.getAssociations(Contributed.INCLUDED,filter);
+  final Map<String,ObjectAssociation> propertyById=Maps.newLinkedHashMap();
   for (  final ObjectAssociation property : propertyList) {
+    propertyById.put(property.getId(),property);
+  }
+  Set<String> propertyIds=propertyById.keySet();
+  final List<TableColumnOrderService> tableColumnOrderServices=getServicesInjector().lookupServices(TableColumnOrderService.class);
+  Set<String> propertyReorderedIds=null;
+  for (  TableColumnOrderService tableColumnOrderService : tableColumnOrderServices) {
+    final ObjectAdapterMemento parentObjectAdapterMemento=getModel().getParentObjectAdapterMemento();
+    final Class<?> collectionType=getModel().getTypeOfSpecification().getCorrespondingClass();
+    if (parentObjectAdapterMemento != null) {
+      final ObjectAdapter parentObjectAdapter=parentObjectAdapterMemento.getObjectAdapter(ConcurrencyChecking.NO_CHECK,getPersistenceSession(),getSpecificationLoader());
+      final Object parent=parentObjectAdapter.getObject();
+      final String collectionId=getModel().getCollectionMemento().getId();
+      propertyReorderedIds=tableColumnOrderService.orderParented(parent,collectionId,collectionType,propertyIds);
+    }
+ else {
+      propertyReorderedIds=tableColumnOrderService.orderStandalone(collectionType,propertyIds);
+    }
+    if (propertyReorderedIds != null) {
+      propertyIds=propertyReorderedIds;
+      break;
+    }
+  }
+  for (  final String propertyId : propertyIds) {
+    final ObjectAssociation property=propertyById.get(propertyId);
     final ColumnAbstract<ObjectAdapter> nopc=createObjectAdapterPropertyColumn(property);
     columns.add(nopc);
   }
